@@ -30,7 +30,7 @@ interface MemoryService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MemoryService
 
-    /** CreateMemory */
+    /** Create a memory */
     fun create(memoryStoreId: String, params: MemoryCreateParams): BetaManagedAgentsMemory =
         create(memoryStoreId, params, RequestOptions.none())
 
@@ -52,7 +52,7 @@ interface MemoryService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsMemory
 
-    /** GetMemory */
+    /** Retrieve a memory */
     fun retrieve(memoryId: String, params: MemoryRetrieveParams): BetaManagedAgentsMemory =
         retrieve(memoryId, params, RequestOptions.none())
 
@@ -74,7 +74,7 @@ interface MemoryService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsMemory
 
-    /** UpdateMemory */
+    /** Update a memory */
     fun update(memoryId: String, params: MemoryUpdateParams): BetaManagedAgentsMemory =
         update(memoryId, params, RequestOptions.none())
 
@@ -96,7 +96,7 @@ interface MemoryService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsMemory
 
-    /** ListMemories */
+    /** List memories */
     fun list(memoryStoreId: String): MemoryListPage = list(memoryStoreId, MemoryListParams.none())
 
     /** @see list */
@@ -126,7 +126,7 @@ interface MemoryService {
     fun list(memoryStoreId: String, requestOptions: RequestOptions): MemoryListPage =
         list(memoryStoreId, MemoryListParams.none(), requestOptions)
 
-    /** DeleteMemory */
+    /** Delete a memory */
     fun delete(memoryId: String, params: MemoryDeleteParams): BetaManagedAgentsDeletedMemory =
         delete(memoryId, params, RequestOptions.none())
 

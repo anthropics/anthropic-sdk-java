@@ -22,7 +22,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** CreateMemoryStore */
+/** Create a memory store */
 class MemoryStoreCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
@@ -35,18 +35,28 @@ private constructor(
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
+     * Human-readable name for the store. Required; 1–255 characters; no control characters. The
+     * mount-path slug under `/mnt/memory/` is derived from this name (lowercased, non-alphanumeric
+     * runs collapsed to a hyphen). Names need not be unique within a workspace.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun name(): String = body.name()
 
     /**
+     * Free-text description of what the store contains, up to 1024 characters. Included in the
+     * agent's system prompt when the store is attached, so word it to be useful to the agent.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun description(): Optional<String> = body.description()
 
     /**
+     * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs to).
+     * Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Not visible to the agent.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -147,6 +157,12 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /**
+         * Human-readable name for the store. Required; 1–255 characters; no control characters. The
+         * mount-path slug under `/mnt/memory/` is derived from this name (lowercased,
+         * non-alphanumeric runs collapsed to a hyphen). Names need not be unique within a
+         * workspace.
+         */
         fun name(name: String) = apply { body.name(name) }
 
         /**
@@ -157,6 +173,10 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
+        /**
+         * Free-text description of what the store contains, up to 1024 characters. Included in the
+         * agent's system prompt when the store is attached, so word it to be useful to the agent.
+         */
         fun description(description: String) = apply { body.description(description) }
 
         /**
@@ -168,6 +188,11 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
+        /**
+         * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs
+         * to). Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Not visible to
+         * the agent.
+         */
         fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
 
         /**
@@ -329,6 +354,7 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
+    /** Request parameters for creating a `memory_store`. */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -350,18 +376,30 @@ private constructor(
         ) : this(name, description, metadata, mutableMapOf())
 
         /**
+         * Human-readable name for the store. Required; 1–255 characters; no control characters. The
+         * mount-path slug under `/mnt/memory/` is derived from this name (lowercased,
+         * non-alphanumeric runs collapsed to a hyphen). Names need not be unique within a
+         * workspace.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun name(): String = name.getRequired("name")
 
         /**
+         * Free-text description of what the store contains, up to 1024 characters. Included in the
+         * agent's system prompt when the store is attached, so word it to be useful to the agent.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
+         * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs
+         * to). Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Not visible to
+         * the agent.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
@@ -431,6 +469,12 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /**
+             * Human-readable name for the store. Required; 1–255 characters; no control characters.
+             * The mount-path slug under `/mnt/memory/` is derived from this name (lowercased,
+             * non-alphanumeric runs collapsed to a hyphen). Names need not be unique within a
+             * workspace.
+             */
             fun name(name: String) = name(JsonField.of(name))
 
             /**
@@ -442,6 +486,11 @@ private constructor(
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
+            /**
+             * Free-text description of what the store contains, up to 1024 characters. Included in
+             * the agent's system prompt when the store is attached, so word it to be useful to the
+             * agent.
+             */
             fun description(description: String) = description(JsonField.of(description))
 
             /**
@@ -455,6 +504,11 @@ private constructor(
                 this.description = description
             }
 
+            /**
+             * Arbitrary key-value tags for your own bookkeeping (such as the end user a store
+             * belongs to). Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Not
+             * visible to the agent.
+             */
             fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
             /**
@@ -561,6 +615,10 @@ private constructor(
             "Body{name=$name, description=$description, metadata=$metadata, additionalProperties=$additionalProperties}"
     }
 
+    /**
+     * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs to).
+     * Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Not visible to the agent.
+     */
     class Metadata
     @JsonCreator
     private constructor(

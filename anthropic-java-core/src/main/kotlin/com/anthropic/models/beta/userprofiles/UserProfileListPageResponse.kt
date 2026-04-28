@@ -85,6 +85,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .data()
+         * .nextPage()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -94,7 +95,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var data: JsonField<MutableList<BetaUserProfile>>? = null
-        private var nextPage: JsonField<String> = JsonMissing.of()
+        private var nextPage: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -171,6 +172,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .data()
+         * .nextPage()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -178,7 +180,7 @@ private constructor(
         fun build(): UserProfileListPageResponse =
             UserProfileListPageResponse(
                 checkRequired("data", data).map { it.toImmutable() },
-                nextPage,
+                checkRequired("nextPage", nextPage),
                 additionalProperties.toMutableMap(),
             )
     }

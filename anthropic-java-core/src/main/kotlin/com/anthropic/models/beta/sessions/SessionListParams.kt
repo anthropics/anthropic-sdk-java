@@ -28,6 +28,7 @@ private constructor(
     private val createdAtLte: OffsetDateTime?,
     private val includeArchived: Boolean?,
     private val limit: Int?,
+    private val memoryStoreId: String?,
     private val order: Order?,
     private val page: String?,
     private val betas: List<AnthropicBeta>?,
@@ -58,6 +59,9 @@ private constructor(
 
     /** Maximum number of results to return. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
+
+    /** Filter sessions whose resources contain a memory_store with this memory store ID. */
+    fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
     /** Sort direction for results, ordered by created_at. Defaults to desc (newest first). */
     fun order(): Optional<Order> = Optional.ofNullable(order)
@@ -95,6 +99,7 @@ private constructor(
         private var createdAtLte: OffsetDateTime? = null
         private var includeArchived: Boolean? = null
         private var limit: Int? = null
+        private var memoryStoreId: String? = null
         private var order: Order? = null
         private var page: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
@@ -111,6 +116,7 @@ private constructor(
             createdAtLte = sessionListParams.createdAtLte
             includeArchived = sessionListParams.includeArchived
             limit = sessionListParams.limit
+            memoryStoreId = sessionListParams.memoryStoreId
             order = sessionListParams.order
             page = sessionListParams.page
             betas = sessionListParams.betas?.toMutableList()
@@ -193,6 +199,13 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
+
+        /** Filter sessions whose resources contain a memory_store with this memory store ID. */
+        fun memoryStoreId(memoryStoreId: String?) = apply { this.memoryStoreId = memoryStoreId }
+
+        /** Alias for calling [Builder.memoryStoreId] with `memoryStoreId.orElse(null)`. */
+        fun memoryStoreId(memoryStoreId: Optional<String>) =
+            memoryStoreId(memoryStoreId.getOrNull())
 
         /** Sort direction for results, ordered by created_at. Defaults to desc (newest first). */
         fun order(order: Order?) = apply { this.order = order }
@@ -343,6 +356,7 @@ private constructor(
                 createdAtLte,
                 includeArchived,
                 limit,
+                memoryStoreId,
                 order,
                 page,
                 betas?.toImmutable(),
@@ -378,6 +392,7 @@ private constructor(
                 }
                 includeArchived?.let { put("include_archived", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
+                memoryStoreId?.let { put("memory_store_id", it) }
                 order?.let { put("order", it.toString()) }
                 page?.let { put("page", it) }
                 putAll(additionalQueryParams)
@@ -526,6 +541,7 @@ private constructor(
             createdAtLte == other.createdAtLte &&
             includeArchived == other.includeArchived &&
             limit == other.limit &&
+            memoryStoreId == other.memoryStoreId &&
             order == other.order &&
             page == other.page &&
             betas == other.betas &&
@@ -543,6 +559,7 @@ private constructor(
             createdAtLte,
             includeArchived,
             limit,
+            memoryStoreId,
             order,
             page,
             betas,
@@ -551,5 +568,5 @@ private constructor(
         )
 
     override fun toString() =
-        "SessionListParams{agentId=$agentId, agentVersion=$agentVersion, createdAtGt=$createdAtGt, createdAtGte=$createdAtGte, createdAtLt=$createdAtLt, createdAtLte=$createdAtLte, includeArchived=$includeArchived, limit=$limit, order=$order, page=$page, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SessionListParams{agentId=$agentId, agentVersion=$agentVersion, createdAtGt=$createdAtGt, createdAtGte=$createdAtGte, createdAtLt=$createdAtLt, createdAtLte=$createdAtLte, includeArchived=$includeArchived, limit=$limit, memoryStoreId=$memoryStoreId, order=$order, page=$page, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

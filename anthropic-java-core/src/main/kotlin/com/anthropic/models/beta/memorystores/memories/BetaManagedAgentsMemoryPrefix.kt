@@ -17,6 +17,13 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * A rolled-up directory marker returned by
+ * [List memories](/en/api/beta/memory_stores/memories/list) when `depth` is set. Indicates that one
+ * or more memories exist deeper than the requested depth under this prefix. This is a list-time
+ * rollup, not a stored resource; it has no ID and no lifecycle. Each prefix counts toward the page
+ * `limit` and interleaves with `memory` items in path order.
+ */
 class BetaManagedAgentsMemoryPrefix
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -32,6 +39,9 @@ private constructor(
     ) : this(path, type, mutableMapOf())
 
     /**
+     * The rolled-up path prefix, including a trailing `/` (e.g. `/projects/foo/`). Pass this value
+     * as `path_prefix` on a subsequent list call to drill into the directory.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -98,6 +108,10 @@ private constructor(
             additionalProperties = betaManagedAgentsMemoryPrefix.additionalProperties.toMutableMap()
         }
 
+        /**
+         * The rolled-up path prefix, including a trailing `/` (e.g. `/projects/foo/`). Pass this
+         * value as `path_prefix` on a subsequent list call to drill into the directory.
+         */
         fun path(path: String) = path(JsonField.of(path))
 
         /**

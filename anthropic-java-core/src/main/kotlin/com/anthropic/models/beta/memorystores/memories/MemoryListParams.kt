@@ -15,7 +15,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** ListMemories */
+/** List memories */
 class MemoryListParams
 private constructor(
     private val memoryStoreId: String?,

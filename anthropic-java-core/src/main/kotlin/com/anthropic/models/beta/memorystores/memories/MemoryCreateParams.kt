@@ -22,7 +22,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** CreateMemory */
+/** Create a memory */
 class MemoryCreateParams
 private constructor(
     private val memoryStoreId: String?,
@@ -42,12 +42,20 @@ private constructor(
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
+     * UTF-8 text content for the new memory. Maximum 100 kB (102,400 bytes). Required; pass `""`
+     * explicitly to create an empty memory.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun content(): Optional<String> = body.content()
 
     /**
+     * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with `/`,
+     * contain at least one non-empty segment, and be at most 1,024 bytes. Must not contain empty
+     * segments, `.` or `..` segments, control or format characters, and must be NFC-normalized.
+     * Paths are case-sensitive.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -157,6 +165,10 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /**
+         * UTF-8 text content for the new memory. Maximum 100 kB (102,400 bytes). Required; pass
+         * `""` explicitly to create an empty memory.
+         */
         fun content(content: String?) = apply { body.content(content) }
 
         /** Alias for calling [Builder.content] with `content.orElse(null)`. */
@@ -170,6 +182,12 @@ private constructor(
          */
         fun content(content: JsonField<String>) = apply { body.content(content) }
 
+        /**
+         * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with `/`,
+         * contain at least one non-empty segment, and be at most 1,024 bytes. Must not contain
+         * empty segments, `.` or `..` segments, control or format characters, and must be
+         * NFC-normalized. Paths are case-sensitive.
+         */
         fun path(path: String) = apply { body.path(path) }
 
         /**
@@ -345,6 +363,13 @@ private constructor(
             }
             .build()
 
+    /**
+     * Request parameters for [Create a memory](/en/api/beta/memory_stores/memories/create). The
+     * path must be unoccupied: if a memory already exists at the path, or the path is an ancestor
+     * or descendant of an existing memory's path, the request returns `memory_path_conflict_error`
+     * (HTTP 409). Create never overwrites; to modify an existing memory, use
+     * [Update a memory](/en/api/beta/memory_stores/memories/update).
+     */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -360,12 +385,20 @@ private constructor(
         ) : this(content, path, mutableMapOf())
 
         /**
+         * UTF-8 text content for the new memory. Maximum 100 kB (102,400 bytes). Required; pass
+         * `""` explicitly to create an empty memory.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun content(): Optional<String> = content.getOptional("content")
 
         /**
+         * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with `/`,
+         * contain at least one non-empty segment, and be at most 1,024 bytes. Must not contain
+         * empty segments, `.` or `..` segments, control or format characters, and must be
+         * NFC-normalized. Paths are case-sensitive.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
@@ -425,6 +458,10 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /**
+             * UTF-8 text content for the new memory. Maximum 100 kB (102,400 bytes). Required; pass
+             * `""` explicitly to create an empty memory.
+             */
             fun content(content: String?) = content(JsonField.ofNullable(content))
 
             /** Alias for calling [Builder.content] with `content.orElse(null)`. */
@@ -439,6 +476,12 @@ private constructor(
              */
             fun content(content: JsonField<String>) = apply { this.content = content }
 
+            /**
+             * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with
+             * `/`, contain at least one non-empty segment, and be at most 1,024 bytes. Must not
+             * contain empty segments, `.` or `..` segments, control or format characters, and must
+             * be NFC-normalized. Paths are case-sensitive.
+             */
             fun path(path: String) = path(JsonField.of(path))
 
             /**

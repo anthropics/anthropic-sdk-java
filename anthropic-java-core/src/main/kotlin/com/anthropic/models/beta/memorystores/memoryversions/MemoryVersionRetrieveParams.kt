@@ -13,7 +13,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** GetMemoryVersion */
+/** Retrieve a memory version */
 class MemoryVersionRetrieveParams
 private constructor(
     private val memoryStoreId: String,

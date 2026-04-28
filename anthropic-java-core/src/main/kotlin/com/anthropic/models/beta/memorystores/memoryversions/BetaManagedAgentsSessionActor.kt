@@ -17,6 +17,10 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Attribution for a write made by an agent during a session, through the mounted filesystem at
+ * `/mnt/memory/`.
+ */
 class BetaManagedAgentsSessionActor
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -32,6 +36,9 @@ private constructor(
     ) : this(sessionId, type, mutableMapOf())
 
     /**
+     * ID of the session that performed the write (a `sesn_...` value). Look up the session via
+     * [Retrieve a session](/en/api/sessions-retrieve) for further provenance.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -98,6 +105,10 @@ private constructor(
             additionalProperties = betaManagedAgentsSessionActor.additionalProperties.toMutableMap()
         }
 
+        /**
+         * ID of the session that performed the write (a `sesn_...` value). Look up the session via
+         * [Retrieve a session](/en/api/sessions-retrieve) for further provenance.
+         */
         fun sessionId(sessionId: String) = sessionId(JsonField.of(sessionId))
 
         /**

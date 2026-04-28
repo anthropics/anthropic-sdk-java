@@ -20,6 +20,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * A `memory_store`: a named container for agent memories, scoped to a workspace. Attach a store to
+ * a session via `resources[]` to mount it as a directory the agent can read and write.
+ */
 class BetaManagedAgentsMemoryStore
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -65,6 +69,9 @@ private constructor(
     )
 
     /**
+     * Unique identifier for the memory store (a `memstore_...` tagged ID). Use this when attaching
+     * the store to a session, or in the `{memory_store_id}` path parameter of subsequent calls.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -79,6 +86,9 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
+     * Human-readable name for the store. 1–255 characters. The store's mount-path slug under
+     * `/mnt/memory/` is derived from this name.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -107,12 +117,20 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
+     * Free-text description of what the store contains, up to 1024 characters. Included in the
+     * agent's system prompt when the store is attached, so word it to be useful to the agent. Empty
+     * string when unset.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun description(): Optional<String> = description.getOptional("description")
 
     /**
+     * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs to).
+     * Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Returned on retrieve/list
+     * but not filterable.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -235,6 +253,11 @@ private constructor(
             additionalProperties = betaManagedAgentsMemoryStore.additionalProperties.toMutableMap()
         }
 
+        /**
+         * Unique identifier for the memory store (a `memstore_...` tagged ID). Use this when
+         * attaching the store to a session, or in the `{memory_store_id}` path parameter of
+         * subsequent calls.
+         */
         fun id(id: String) = id(JsonField.of(id))
 
         /**
@@ -257,6 +280,10 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
+        /**
+         * Human-readable name for the store. 1–255 characters. The store's mount-path slug under
+         * `/mnt/memory/` is derived from this name.
+         */
         fun name(name: String) = name(JsonField.of(name))
 
         /**
@@ -306,6 +333,11 @@ private constructor(
             this.archivedAt = archivedAt
         }
 
+        /**
+         * Free-text description of what the store contains, up to 1024 characters. Included in the
+         * agent's system prompt when the store is attached, so word it to be useful to the agent.
+         * Empty string when unset.
+         */
         fun description(description: String) = description(JsonField.of(description))
 
         /**
@@ -317,6 +349,11 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
+        /**
+         * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs
+         * to). Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Returned on
+         * retrieve/list but not filterable.
+         */
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
         /**
@@ -540,6 +577,11 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /**
+     * Arbitrary key-value tags for your own bookkeeping (such as the end user a store belongs to).
+     * Up to 16 pairs; keys 1–64 characters; values up to 512 characters. Returned on retrieve/list
+     * but not filterable.
+     */
     class Metadata
     @JsonCreator
     private constructor(

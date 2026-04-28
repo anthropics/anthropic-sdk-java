@@ -17,6 +17,12 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Tombstone returned by [Delete a memory](/en/api/beta/memory_stores/memories/delete). The memory's
+ * version history persists and remains listable via
+ * [List memory versions](/en/api/beta/memory_stores/memory_versions/list) until the store itself is
+ * deleted.
+ */
 class BetaManagedAgentsDeletedMemory
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -32,6 +38,8 @@ private constructor(
     ) : this(id, type, mutableMapOf())
 
     /**
+     * ID of the deleted memory (a `mem_...` value).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -99,6 +107,7 @@ private constructor(
                 betaManagedAgentsDeletedMemory.additionalProperties.toMutableMap()
         }
 
+        /** ID of the deleted memory (a `mem_...` value). */
         fun id(id: String) = id(JsonField.of(id))
 
         /**

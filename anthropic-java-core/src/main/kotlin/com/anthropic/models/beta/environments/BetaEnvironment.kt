@@ -18,7 +18,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Unified Environment resource for both cloud and BYOC environments. */
+/** Unified Environment resource for both cloud and self-hosted environments. */
 class BetaEnvironment
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

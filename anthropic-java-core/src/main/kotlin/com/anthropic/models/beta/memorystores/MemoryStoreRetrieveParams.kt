@@ -11,7 +11,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** GetMemoryStore */
+/** Retrieve a memory store */
 class MemoryStoreRetrieveParams
 private constructor(
     private val memoryStoreId: String?,
