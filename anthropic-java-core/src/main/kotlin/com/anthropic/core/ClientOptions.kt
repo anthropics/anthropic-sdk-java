@@ -369,7 +369,7 @@ private constructor(
 
         fun timeout(): Timeout = timeout
 
-        /** Updates configuration using environment variables. */
+        /** Updates configuration using environment variables. */
         fun fromEnv() = apply {
             System.getenv("ANTHROPIC_CUSTOM_HEADERS")?.let { customHeadersEnv ->
                 for (line in customHeadersEnv.split("\n")) {
