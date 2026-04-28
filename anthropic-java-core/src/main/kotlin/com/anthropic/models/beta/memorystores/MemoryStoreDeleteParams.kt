@@ -12,7 +12,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** DeleteMemoryStore */
+/** Delete a memory store */
 class MemoryStoreDeleteParams
 private constructor(
     private val memoryStoreId: String?,

@@ -18,6 +18,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** A page of `memory_store` results, ordered by `created_at` descending (newest first). */
 class MemoryStoreListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -35,12 +36,18 @@ private constructor(
     ) : this(data, nextPage, mutableMapOf())
 
     /**
+     * Memory stores on this page, newest first. Empty when there are no stores matching the
+     * filters.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun data(): Optional<List<BetaManagedAgentsMemoryStore>> = data.getOptional("data")
 
     /**
+     * Opaque cursor for the next page (a `page_...` value). Pass as `page` on the next request.
+     * `null` when there are no more results.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -96,6 +103,10 @@ private constructor(
             additionalProperties = memoryStoreListPageResponse.additionalProperties.toMutableMap()
         }
 
+        /**
+         * Memory stores on this page, newest first. Empty when there are no stores matching the
+         * filters.
+         */
         fun data(data: List<BetaManagedAgentsMemoryStore>) = data(JsonField.of(data))
 
         /**
@@ -121,6 +132,10 @@ private constructor(
                 }
         }
 
+        /**
+         * Opaque cursor for the next page (a `page_...` value). Pass as `page` on the next request.
+         * `null` when there are no more results.
+         */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 
         /** Alias for calling [Builder.nextPage] with `nextPage.orElse(null)`. */

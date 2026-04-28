@@ -18,6 +18,12 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Identifies who performed a write or redact operation. Captured at write time on the
+ * `memory_version` row. The API key that created a session is not recorded on agent writes;
+ * attribution answers who made the write, not who is ultimately responsible. Look up session
+ * provenance separately via the [Sessions API](/en/api/sessions-retrieve).
+ */
 @JsonDeserialize(using = BetaManagedAgentsActor.Deserializer::class)
 @JsonSerialize(using = BetaManagedAgentsActor.Serializer::class)
 class BetaManagedAgentsActor
@@ -28,10 +34,16 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    /**
+     * Attribution for a write made by an agent during a session, through the mounted filesystem at
+     * `/mnt/memory/`.
+     */
     fun session(): Optional<BetaManagedAgentsSessionActor> = Optional.ofNullable(session)
 
+    /** Attribution for a write made directly via the public API (outside of any session). */
     fun api(): Optional<BetaManagedAgentsApiActor> = Optional.ofNullable(api)
 
+    /** Attribution for a write made by a human user through the Anthropic Console. */
     fun user(): Optional<BetaManagedAgentsUserActor> = Optional.ofNullable(user)
 
     fun isSession(): Boolean = session != null
@@ -40,10 +52,16 @@ private constructor(
 
     fun isUser(): Boolean = user != null
 
+    /**
+     * Attribution for a write made by an agent during a session, through the mounted filesystem at
+     * `/mnt/memory/`.
+     */
     fun asSession(): BetaManagedAgentsSessionActor = session.getOrThrow("session")
 
+    /** Attribution for a write made directly via the public API (outside of any session). */
     fun asApi(): BetaManagedAgentsApiActor = api.getOrThrow("api")
 
+    /** Attribution for a write made by a human user through the Anthropic Console. */
     fun asUser(): BetaManagedAgentsUserActor = user.getOrThrow("user")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
@@ -133,12 +151,18 @@ private constructor(
 
     companion object {
 
+        /**
+         * Attribution for a write made by an agent during a session, through the mounted filesystem
+         * at `/mnt/memory/`.
+         */
         @JvmStatic
         fun ofSession(session: BetaManagedAgentsSessionActor) =
             BetaManagedAgentsActor(session = session)
 
+        /** Attribution for a write made directly via the public API (outside of any session). */
         @JvmStatic fun ofApi(api: BetaManagedAgentsApiActor) = BetaManagedAgentsActor(api = api)
 
+        /** Attribution for a write made by a human user through the Anthropic Console. */
         @JvmStatic
         fun ofUser(user: BetaManagedAgentsUserActor) = BetaManagedAgentsActor(user = user)
     }
@@ -149,10 +173,16 @@ private constructor(
      */
     interface Visitor<out T> {
 
+        /**
+         * Attribution for a write made by an agent during a session, through the mounted filesystem
+         * at `/mnt/memory/`.
+         */
         fun visitSession(session: BetaManagedAgentsSessionActor): T
 
+        /** Attribution for a write made directly via the public API (outside of any session). */
         fun visitApi(api: BetaManagedAgentsApiActor): T
 
+        /** Attribution for a write made by a human user through the Anthropic Console. */
         fun visitUser(user: BetaManagedAgentsUserActor): T
 
         /**

@@ -18,6 +18,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Response payload for [List memories](/en/api/beta/memory_stores/memories/list). */
 class MemoryListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -35,12 +36,18 @@ private constructor(
     ) : this(data, nextPage, mutableMapOf())
 
     /**
+     * One page of results. Each item is either a `memory` object or, when `depth` was set, a
+     * `memory_prefix` rollup marker. Items appear in the requested `order_by`/`order`.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun data(): Optional<List<BetaManagedAgentsMemoryListItem>> = data.getOptional("data")
 
     /**
+     * Opaque cursor for the next page (a `page_...` value), or `null` if there are no more results.
+     * Pass as `page` on the next request.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -94,6 +101,10 @@ private constructor(
             additionalProperties = memoryListPageResponse.additionalProperties.toMutableMap()
         }
 
+        /**
+         * One page of results. Each item is either a `memory` object or, when `depth` was set, a
+         * `memory_prefix` rollup marker. Items appear in the requested `order_by`/`order`.
+         */
         fun data(data: List<BetaManagedAgentsMemoryListItem>) = data(JsonField.of(data))
 
         /**
@@ -147,6 +158,10 @@ private constructor(
                     .build()
             )
 
+        /**
+         * Opaque cursor for the next page (a `page_...` value), or `null` if there are no more
+         * results. Pass as `page` on the next request.
+         */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 
         /** Alias for calling [Builder.nextPage] with `nextPage.orElse(null)`. */

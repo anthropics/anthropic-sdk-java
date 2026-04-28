@@ -19,6 +19,13 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * A `memory` object: a single text document at a hierarchical path inside a memory store. The
+ * `content` field is populated when `view=full` and `null` when `view=basic`; the
+ * `content_size_bytes` and `content_sha256` fields are always populated so sync clients can diff
+ * without fetching content. Memories are addressed by their `mem_...` ID; the path is the create
+ * key and can be changed via update.
+ */
 class BetaManagedAgentsMemory
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -74,18 +81,29 @@ private constructor(
     )
 
     /**
+     * Unique identifier for this memory (a `mem_...` value). Stable across renames; use this ID,
+     * not the path, to read, update, or delete the memory.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
 
     /**
+     * Lowercase hex SHA-256 digest of the UTF-8 `content` bytes (64 characters). The server applies
+     * no normalization, so clients can compute the same hash locally for staleness checks and as
+     * the value for a `content_sha256` precondition on update. Always populated, regardless of
+     * `view`.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun contentSha256(): String = contentSha256.getRequired("content_sha256")
 
     /**
+     * Size of `content` in bytes (the UTF-8 plaintext length). Always populated, regardless of
+     * `view`.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -100,18 +118,28 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
+     * ID of the memory store this memory belongs to (a `memstore_...` value).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun memoryStoreId(): String = memoryStoreId.getRequired("memory_store_id")
 
     /**
+     * ID of the `memory_version` representing this memory's current content (a `memver_...` value).
+     * This is the authoritative head pointer; `memory_version` objects do not carry an `is_latest`
+     * flag, so compare against this field instead. Enumerate the full history via
+     * [List memory versions](/en/api/beta/memory_stores/memory_versions/list).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun memoryVersionId(): String = memoryVersionId.getRequired("memory_version_id")
 
     /**
+     * Hierarchical path of the memory within the store, e.g. `/projects/foo/notes.md`. Always
+     * starts with `/`. Paths are case-sensitive and unique within a store. Maximum 1,024 bytes.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -132,6 +160,9 @@ private constructor(
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
     /**
+     * The memory's UTF-8 text content. Populated when `view=full`; `null` when `view=basic`.
+     * Maximum 100 kB (102,400 bytes).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -283,6 +314,10 @@ private constructor(
             additionalProperties = betaManagedAgentsMemory.additionalProperties.toMutableMap()
         }
 
+        /**
+         * Unique identifier for this memory (a `mem_...` value). Stable across renames; use this
+         * ID, not the path, to read, update, or delete the memory.
+         */
         fun id(id: String) = id(JsonField.of(id))
 
         /**
@@ -293,6 +328,12 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
+        /**
+         * Lowercase hex SHA-256 digest of the UTF-8 `content` bytes (64 characters). The server
+         * applies no normalization, so clients can compute the same hash locally for staleness
+         * checks and as the value for a `content_sha256` precondition on update. Always populated,
+         * regardless of `view`.
+         */
         fun contentSha256(contentSha256: String) = contentSha256(JsonField.of(contentSha256))
 
         /**
@@ -306,6 +347,10 @@ private constructor(
             this.contentSha256 = contentSha256
         }
 
+        /**
+         * Size of `content` in bytes (the UTF-8 plaintext length). Always populated, regardless of
+         * `view`.
+         */
         fun contentSizeBytes(contentSizeBytes: Int) =
             contentSizeBytes(JsonField.of(contentSizeBytes))
 
@@ -332,6 +377,7 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
+        /** ID of the memory store this memory belongs to (a `memstore_...` value). */
         fun memoryStoreId(memoryStoreId: String) = memoryStoreId(JsonField.of(memoryStoreId))
 
         /**
@@ -345,6 +391,12 @@ private constructor(
             this.memoryStoreId = memoryStoreId
         }
 
+        /**
+         * ID of the `memory_version` representing this memory's current content (a `memver_...`
+         * value). This is the authoritative head pointer; `memory_version` objects do not carry an
+         * `is_latest` flag, so compare against this field instead. Enumerate the full history via
+         * [List memory versions](/en/api/beta/memory_stores/memory_versions/list).
+         */
         fun memoryVersionId(memoryVersionId: String) =
             memoryVersionId(JsonField.of(memoryVersionId))
 
@@ -359,6 +411,10 @@ private constructor(
             this.memoryVersionId = memoryVersionId
         }
 
+        /**
+         * Hierarchical path of the memory within the store, e.g. `/projects/foo/notes.md`. Always
+         * starts with `/`. Paths are case-sensitive and unique within a store. Maximum 1,024 bytes.
+         */
         fun path(path: String) = path(JsonField.of(path))
 
         /**
@@ -391,6 +447,10 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
 
+        /**
+         * The memory's UTF-8 text content. Populated when `view=full`; `null` when `view=basic`.
+         * Maximum 100 kB (102,400 bytes).
+         */
         fun content(content: String?) = content(JsonField.ofNullable(content))
 
         /** Alias for calling [Builder.content] with `content.orElse(null)`. */

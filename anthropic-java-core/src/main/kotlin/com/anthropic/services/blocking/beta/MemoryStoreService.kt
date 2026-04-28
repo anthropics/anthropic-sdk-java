@@ -37,7 +37,7 @@ interface MemoryStoreService {
 
     fun memoryVersions(): MemoryVersionService
 
-    /** CreateMemoryStore */
+    /** Create a memory store */
     fun create(params: MemoryStoreCreateParams): BetaManagedAgentsMemoryStore =
         create(params, RequestOptions.none())
 
@@ -47,7 +47,7 @@ interface MemoryStoreService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsMemoryStore
 
-    /** GetMemoryStore */
+    /** Retrieve a memory store */
     fun retrieve(memoryStoreId: String): BetaManagedAgentsMemoryStore =
         retrieve(memoryStoreId, MemoryStoreRetrieveParams.none())
 
@@ -82,7 +82,7 @@ interface MemoryStoreService {
     ): BetaManagedAgentsMemoryStore =
         retrieve(memoryStoreId, MemoryStoreRetrieveParams.none(), requestOptions)
 
-    /** UpdateMemoryStore */
+    /** Update a memory store */
     fun update(memoryStoreId: String): BetaManagedAgentsMemoryStore =
         update(memoryStoreId, MemoryStoreUpdateParams.none())
 
@@ -117,7 +117,7 @@ interface MemoryStoreService {
     ): BetaManagedAgentsMemoryStore =
         update(memoryStoreId, MemoryStoreUpdateParams.none(), requestOptions)
 
-    /** ListMemoryStores */
+    /** List memory stores */
     fun list(): MemoryStoreListPage = list(MemoryStoreListParams.none())
 
     /** @see list */
@@ -134,7 +134,7 @@ interface MemoryStoreService {
     fun list(requestOptions: RequestOptions): MemoryStoreListPage =
         list(MemoryStoreListParams.none(), requestOptions)
 
-    /** DeleteMemoryStore */
+    /** Delete a memory store */
     fun delete(memoryStoreId: String): BetaManagedAgentsDeletedMemoryStore =
         delete(memoryStoreId, MemoryStoreDeleteParams.none())
 
@@ -169,7 +169,7 @@ interface MemoryStoreService {
     ): BetaManagedAgentsDeletedMemoryStore =
         delete(memoryStoreId, MemoryStoreDeleteParams.none(), requestOptions)
 
-    /** ArchiveMemoryStore */
+    /** Archive a memory store */
     fun archive(memoryStoreId: String): BetaManagedAgentsMemoryStore =
         archive(memoryStoreId, MemoryStoreArchiveParams.none())
 

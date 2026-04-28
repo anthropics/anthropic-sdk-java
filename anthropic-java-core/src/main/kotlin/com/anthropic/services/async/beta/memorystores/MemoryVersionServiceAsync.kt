@@ -27,7 +27,7 @@ interface MemoryVersionServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MemoryVersionServiceAsync
 
-    /** GetMemoryVersion */
+    /** Retrieve a memory version */
     fun retrieve(
         memoryVersionId: String,
         params: MemoryVersionRetrieveParams,
@@ -53,7 +53,7 @@ interface MemoryVersionServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsMemoryVersion>
 
-    /** ListMemoryVersions */
+    /** List memory versions */
     fun list(memoryStoreId: String): CompletableFuture<MemoryVersionListPageAsync> =
         list(memoryStoreId, MemoryVersionListParams.none())
 
@@ -89,7 +89,7 @@ interface MemoryVersionServiceAsync {
     ): CompletableFuture<MemoryVersionListPageAsync> =
         list(memoryStoreId, MemoryVersionListParams.none(), requestOptions)
 
-    /** RedactMemoryVersion */
+    /** Redact a memory version */
     fun redact(
         memoryVersionId: String,
         params: MemoryVersionRedactParams,

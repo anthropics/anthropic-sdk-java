@@ -12,7 +12,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** GetMemory */
+/** Retrieve a memory */
 class MemoryRetrieveParams
 private constructor(
     private val memoryStoreId: String,

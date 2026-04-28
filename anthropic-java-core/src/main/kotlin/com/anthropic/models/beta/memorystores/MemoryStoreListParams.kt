@@ -13,7 +13,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** ListMemoryStores */
+/** List memory stores */
 class MemoryStoreListParams
 private constructor(
     private val createdAtGte: OffsetDateTime?,
@@ -26,19 +26,34 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Return stores created at or after this time (inclusive). */
+    /**
+     * Return only stores whose `created_at` is at or after this time (inclusive). Sent on the wire
+     * as `created_at[gte]`.
+     */
     fun createdAtGte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGte)
 
-    /** Return stores created at or before this time (inclusive). */
+    /**
+     * Return only stores whose `created_at` is at or before this time (inclusive). Sent on the wire
+     * as `created_at[lte]`.
+     */
     fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
 
-    /** Query parameter for include_archived */
+    /**
+     * When `true`, archived stores are included in the results. Defaults to `false` (archived
+     * stores are excluded).
+     */
     fun includeArchived(): Optional<Boolean> = Optional.ofNullable(includeArchived)
 
-    /** Query parameter for limit */
+    /**
+     * Maximum number of stores to return per page. Must be between 1 and 100. Defaults to 20 when
+     * omitted.
+     */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Query parameter for page */
+    /**
+     * Opaque pagination cursor (a `page_...` value). Pass the `next_page` value from a previous
+     * response to fetch the next page; omit for the first page.
+     */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -84,21 +99,30 @@ private constructor(
             additionalQueryParams = memoryStoreListParams.additionalQueryParams.toBuilder()
         }
 
-        /** Return stores created at or after this time (inclusive). */
+        /**
+         * Return only stores whose `created_at` is at or after this time (inclusive). Sent on the
+         * wire as `created_at[gte]`.
+         */
         fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
 
         /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
         fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
             createdAtGte(createdAtGte.getOrNull())
 
-        /** Return stores created at or before this time (inclusive). */
+        /**
+         * Return only stores whose `created_at` is at or before this time (inclusive). Sent on the
+         * wire as `created_at[lte]`.
+         */
         fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
 
         /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
         fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
             createdAtLte(createdAtLte.getOrNull())
 
-        /** Query parameter for include_archived */
+        /**
+         * When `true`, archived stores are included in the results. Defaults to `false` (archived
+         * stores are excluded).
+         */
         fun includeArchived(includeArchived: Boolean?) = apply {
             this.includeArchived = includeArchived
         }
@@ -114,7 +138,10 @@ private constructor(
         fun includeArchived(includeArchived: Optional<Boolean>) =
             includeArchived(includeArchived.getOrNull())
 
-        /** Query parameter for limit */
+        /**
+         * Maximum number of stores to return per page. Must be between 1 and 100. Defaults to 20
+         * when omitted.
+         */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -127,7 +154,10 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Query parameter for page */
+        /**
+         * Opaque pagination cursor (a `page_...` value). Pass the `next_page` value from a previous
+         * response to fetch the next page; omit for the first page.
+         */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */

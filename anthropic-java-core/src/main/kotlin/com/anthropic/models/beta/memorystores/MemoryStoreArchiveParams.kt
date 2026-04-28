@@ -12,7 +12,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** ArchiveMemoryStore */
+/** Archive a memory store */
 class MemoryStoreArchiveParams
 private constructor(
     private val memoryStoreId: String?,

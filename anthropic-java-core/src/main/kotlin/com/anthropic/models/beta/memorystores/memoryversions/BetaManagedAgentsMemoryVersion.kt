@@ -19,6 +19,13 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * A `memory_version` object: one immutable, attributed row in a memory's append-only history. Every
+ * non-no-op mutation to a memory produces a new version. Versions belong to the store (not the
+ * individual memory) and persist after the memory is deleted. Retrieving a redacted version returns
+ * 200 with `content`, `path`, `content_size_bytes`, and `content_sha256` set to `null`; branch on
+ * `redacted_at`, not HTTP status.
+ */
 class BetaManagedAgentsMemoryVersion
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -87,6 +94,8 @@ private constructor(
     )
 
     /**
+     * Unique identifier for this version (a `memver_...` value).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -101,19 +110,27 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
+     * ID of the memory this version snapshots (a `mem_...` value). Remains valid after the memory
+     * is deleted; pass it as `memory_id` to
+     * [List memory versions](/en/api/beta/memory_stores/memory_versions/list) to retrieve the full
+     * lineage including the `deleted` row.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun memoryId(): String = memoryId.getRequired("memory_id")
 
     /**
+     * ID of the memory store this version belongs to (a `memstore_...` value).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun memoryStoreId(): String = memoryStoreId.getRequired("memory_store_id")
 
     /**
-     * MemoryVersionOperation enum
+     * The kind of mutation a `memory_version` records. Every non-no-op mutation to a memory appends
+     * exactly one version row with one of these values.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -127,30 +144,46 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
+     * The memory's UTF-8 text content as of this version. `null` when `view=basic`, when
+     * `operation` is `deleted`, or when `redacted_at` is set.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun content(): Optional<String> = content.getOptional("content")
 
     /**
+     * Lowercase hex SHA-256 digest of `content` as of this version (64 characters). `null` when
+     * `redacted_at` is set or `operation` is `deleted`. Populated regardless of `view` otherwise.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun contentSha256(): Optional<String> = contentSha256.getOptional("content_sha256")
 
     /**
+     * Size of `content` in bytes as of this version. `null` when `redacted_at` is set or
+     * `operation` is `deleted`. Populated regardless of `view` otherwise.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun contentSizeBytes(): Optional<Int> = contentSizeBytes.getOptional("content_size_bytes")
 
     /**
+     * Identifies who performed a write or redact operation. Captured at write time on the
+     * `memory_version` row. The API key that created a session is not recorded on agent writes;
+     * attribution answers who made the write, not who is ultimately responsible. Look up session
+     * provenance separately via the [Sessions API](/en/api/sessions-retrieve).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun createdBy(): Optional<BetaManagedAgentsActor> = createdBy.getOptional("created_by")
 
     /**
+     * The memory's path at the time of this write. `null` if and only if `redacted_at` is set.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -165,6 +198,11 @@ private constructor(
     fun redactedAt(): Optional<OffsetDateTime> = redactedAt.getOptional("redacted_at")
 
     /**
+     * Identifies who performed a write or redact operation. Captured at write time on the
+     * `memory_version` row. The API key that created a session is not recorded on agent writes;
+     * attribution answers who made the write, not who is ultimately responsible. Look up session
+     * provenance separately via the [Sessions API](/en/api/sessions-retrieve).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -346,6 +384,7 @@ private constructor(
                 betaManagedAgentsMemoryVersion.additionalProperties.toMutableMap()
         }
 
+        /** Unique identifier for this version (a `memver_...` value). */
         fun id(id: String) = id(JsonField.of(id))
 
         /**
@@ -368,6 +407,12 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
+        /**
+         * ID of the memory this version snapshots (a `mem_...` value). Remains valid after the
+         * memory is deleted; pass it as `memory_id` to
+         * [List memory versions](/en/api/beta/memory_stores/memory_versions/list) to retrieve the
+         * full lineage including the `deleted` row.
+         */
         fun memoryId(memoryId: String) = memoryId(JsonField.of(memoryId))
 
         /**
@@ -378,6 +423,7 @@ private constructor(
          */
         fun memoryId(memoryId: JsonField<String>) = apply { this.memoryId = memoryId }
 
+        /** ID of the memory store this version belongs to (a `memstore_...` value). */
         fun memoryStoreId(memoryStoreId: String) = memoryStoreId(JsonField.of(memoryStoreId))
 
         /**
@@ -391,7 +437,10 @@ private constructor(
             this.memoryStoreId = memoryStoreId
         }
 
-        /** MemoryVersionOperation enum */
+        /**
+         * The kind of mutation a `memory_version` records. Every non-no-op mutation to a memory
+         * appends exactly one version row with one of these values.
+         */
         fun operation(operation: BetaManagedAgentsMemoryVersionOperation) =
             operation(JsonField.of(operation))
 
@@ -416,6 +465,10 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
+        /**
+         * The memory's UTF-8 text content as of this version. `null` when `view=basic`, when
+         * `operation` is `deleted`, or when `redacted_at` is set.
+         */
         fun content(content: String?) = content(JsonField.ofNullable(content))
 
         /** Alias for calling [Builder.content] with `content.orElse(null)`. */
@@ -429,6 +482,11 @@ private constructor(
          */
         fun content(content: JsonField<String>) = apply { this.content = content }
 
+        /**
+         * Lowercase hex SHA-256 digest of `content` as of this version (64 characters). `null` when
+         * `redacted_at` is set or `operation` is `deleted`. Populated regardless of `view`
+         * otherwise.
+         */
         fun contentSha256(contentSha256: String?) =
             contentSha256(JsonField.ofNullable(contentSha256))
 
@@ -447,6 +505,10 @@ private constructor(
             this.contentSha256 = contentSha256
         }
 
+        /**
+         * Size of `content` in bytes as of this version. `null` when `redacted_at` is set or
+         * `operation` is `deleted`. Populated regardless of `view` otherwise.
+         */
         fun contentSizeBytes(contentSizeBytes: Int?) =
             contentSizeBytes(JsonField.ofNullable(contentSizeBytes))
 
@@ -472,6 +534,12 @@ private constructor(
             this.contentSizeBytes = contentSizeBytes
         }
 
+        /**
+         * Identifies who performed a write or redact operation. Captured at write time on the
+         * `memory_version` row. The API key that created a session is not recorded on agent writes;
+         * attribution answers who made the write, not who is ultimately responsible. Look up
+         * session provenance separately via the [Sessions API](/en/api/sessions-retrieve).
+         */
         fun createdBy(createdBy: BetaManagedAgentsActor) = createdBy(JsonField.of(createdBy))
 
         /**
@@ -547,6 +615,9 @@ private constructor(
                     .build()
             )
 
+        /**
+         * The memory's path at the time of this write. `null` if and only if `redacted_at` is set.
+         */
         fun path(path: String?) = path(JsonField.ofNullable(path))
 
         /** Alias for calling [Builder.path] with `path.orElse(null)`. */
@@ -577,6 +648,12 @@ private constructor(
             this.redactedAt = redactedAt
         }
 
+        /**
+         * Identifies who performed a write or redact operation. Captured at write time on the
+         * `memory_version` row. The API key that created a session is not recorded on agent writes;
+         * attribution answers who made the write, not who is ultimately responsible. Look up
+         * session provenance separately via the [Sessions API](/en/api/sessions-retrieve).
+         */
         fun redactedBy(redactedBy: BetaManagedAgentsActor) = redactedBy(JsonField.of(redactedBy))
 
         /**

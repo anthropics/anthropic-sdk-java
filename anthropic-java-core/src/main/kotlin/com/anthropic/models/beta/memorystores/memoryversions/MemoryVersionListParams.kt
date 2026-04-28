@@ -14,7 +14,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** ListMemoryVersions */
+/** List memory versions */
 class MemoryVersionListParams
 private constructor(
     private val memoryStoreId: String?,

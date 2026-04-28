@@ -17,6 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
+/** Confirmation that a `memory_store` was deleted. */
 class BetaManagedAgentsDeletedMemoryStore
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -32,6 +33,9 @@ private constructor(
     ) : this(id, type, mutableMapOf())
 
     /**
+     * ID of the deleted memory store (a `memstore_...` identifier). The store and all its memories
+     * and versions are no longer retrievable.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -101,6 +105,10 @@ private constructor(
                 betaManagedAgentsDeletedMemoryStore.additionalProperties.toMutableMap()
         }
 
+        /**
+         * ID of the deleted memory store (a `memstore_...` identifier). The store and all its
+         * memories and versions are no longer retrievable.
+         */
         fun id(id: String) = id(JsonField.of(id))
 
         /**

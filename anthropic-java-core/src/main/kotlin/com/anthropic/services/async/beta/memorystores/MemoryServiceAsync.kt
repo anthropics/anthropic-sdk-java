@@ -30,7 +30,7 @@ interface MemoryServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MemoryServiceAsync
 
-    /** CreateMemory */
+    /** Create a memory */
     fun create(
         memoryStoreId: String,
         params: MemoryCreateParams,
@@ -55,7 +55,7 @@ interface MemoryServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsMemory>
 
-    /** GetMemory */
+    /** Retrieve a memory */
     fun retrieve(
         memoryId: String,
         params: MemoryRetrieveParams,
@@ -80,7 +80,7 @@ interface MemoryServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsMemory>
 
-    /** UpdateMemory */
+    /** Update a memory */
     fun update(
         memoryId: String,
         params: MemoryUpdateParams,
@@ -104,7 +104,7 @@ interface MemoryServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsMemory>
 
-    /** ListMemories */
+    /** List memories */
     fun list(memoryStoreId: String): CompletableFuture<MemoryListPageAsync> =
         list(memoryStoreId, MemoryListParams.none())
 
@@ -139,7 +139,7 @@ interface MemoryServiceAsync {
     ): CompletableFuture<MemoryListPageAsync> =
         list(memoryStoreId, MemoryListParams.none(), requestOptions)
 
-    /** DeleteMemory */
+    /** Delete a memory */
     fun delete(
         memoryId: String,
         params: MemoryDeleteParams,

@@ -22,7 +22,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** UpdateMemory */
+/** Update a memory */
 class MemoryUpdateParams
 private constructor(
     private val memoryStoreId: String,
@@ -45,18 +45,32 @@ private constructor(
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
+     * New UTF-8 text content for the memory. Maximum 100 kB (102,400 bytes). Omit to leave the
+     * content unchanged (e.g., for a rename-only update).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun content(): Optional<String> = body.content()
 
     /**
+     * New path for the memory (a rename). Must start with `/`, contain at least one non-empty
+     * segment, and be at most 1,024 bytes. Must not contain empty segments, `.` or `..` segments,
+     * control or format characters, and must be NFC-normalized. Paths are case-sensitive. The
+     * memory's `id` is preserved across renames. Omit to leave the path unchanged.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun path(): Optional<String> = body.path()
 
     /**
+     * Optimistic-concurrency precondition: the update applies only if the memory's stored
+     * `content_sha256` equals the supplied value. On mismatch, the request returns
+     * `memory_precondition_failed_error` (HTTP 409); re-read the memory and retry against the fresh
+     * state. If the precondition fails but the stored state already exactly matches the requested
+     * `content` and `path`, the server returns 200 instead of 409.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -176,6 +190,10 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /**
+         * New UTF-8 text content for the memory. Maximum 100 kB (102,400 bytes). Omit to leave the
+         * content unchanged (e.g., for a rename-only update).
+         */
         fun content(content: String?) = apply { body.content(content) }
 
         /** Alias for calling [Builder.content] with `content.orElse(null)`. */
@@ -189,6 +207,13 @@ private constructor(
          */
         fun content(content: JsonField<String>) = apply { body.content(content) }
 
+        /**
+         * New path for the memory (a rename). Must start with `/`, contain at least one non-empty
+         * segment, and be at most 1,024 bytes. Must not contain empty segments, `.` or `..`
+         * segments, control or format characters, and must be NFC-normalized. Paths are
+         * case-sensitive. The memory's `id` is preserved across renames. Omit to leave the path
+         * unchanged.
+         */
         fun path(path: String?) = apply { body.path(path) }
 
         /** Alias for calling [Builder.path] with `path.orElse(null)`. */
@@ -202,6 +227,13 @@ private constructor(
          */
         fun path(path: JsonField<String>) = apply { body.path(path) }
 
+        /**
+         * Optimistic-concurrency precondition: the update applies only if the memory's stored
+         * `content_sha256` equals the supplied value. On mismatch, the request returns
+         * `memory_precondition_failed_error` (HTTP 409); re-read the memory and retry against the
+         * fresh state. If the precondition fails but the stored state already exactly matches the
+         * requested `content` and `path`, the server returns 200 instead of 409.
+         */
         fun precondition(precondition: BetaManagedAgentsPrecondition) = apply {
             body.precondition(precondition)
         }
@@ -383,6 +415,14 @@ private constructor(
             }
             .build()
 
+    /**
+     * Request parameters for [Update a memory](/en/api/beta/memory_stores/memories/update). At
+     * least one of `content` or `path` must be provided. Renaming onto a path occupied by a
+     * different memory returns `memory_path_conflict_error` (HTTP 409). Rename never overwrites;
+     * delete or rename the blocking memory first. An update where every supplied field already
+     * matches the stored value is a no-op: it returns 200 with the existing memory and writes no
+     * new version.
+     */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -402,18 +442,33 @@ private constructor(
         ) : this(content, path, precondition, mutableMapOf())
 
         /**
+         * New UTF-8 text content for the memory. Maximum 100 kB (102,400 bytes). Omit to leave the
+         * content unchanged (e.g., for a rename-only update).
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun content(): Optional<String> = content.getOptional("content")
 
         /**
+         * New path for the memory (a rename). Must start with `/`, contain at least one non-empty
+         * segment, and be at most 1,024 bytes. Must not contain empty segments, `.` or `..`
+         * segments, control or format characters, and must be NFC-normalized. Paths are
+         * case-sensitive. The memory's `id` is preserved across renames. Omit to leave the path
+         * unchanged.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun path(): Optional<String> = path.getOptional("path")
 
         /**
+         * Optimistic-concurrency precondition: the update applies only if the memory's stored
+         * `content_sha256` equals the supplied value. On mismatch, the request returns
+         * `memory_precondition_failed_error` (HTTP 409); re-read the memory and retry against the
+         * fresh state. If the precondition fails but the stored state already exactly matches the
+         * requested `content` and `path`, the server returns 200 instead of 409.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
@@ -478,6 +533,10 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /**
+             * New UTF-8 text content for the memory. Maximum 100 kB (102,400 bytes). Omit to leave
+             * the content unchanged (e.g., for a rename-only update).
+             */
             fun content(content: String?) = content(JsonField.ofNullable(content))
 
             /** Alias for calling [Builder.content] with `content.orElse(null)`. */
@@ -492,6 +551,13 @@ private constructor(
              */
             fun content(content: JsonField<String>) = apply { this.content = content }
 
+            /**
+             * New path for the memory (a rename). Must start with `/`, contain at least one
+             * non-empty segment, and be at most 1,024 bytes. Must not contain empty segments, `.`
+             * or `..` segments, control or format characters, and must be NFC-normalized. Paths are
+             * case-sensitive. The memory's `id` is preserved across renames. Omit to leave the path
+             * unchanged.
+             */
             fun path(path: String?) = path(JsonField.ofNullable(path))
 
             /** Alias for calling [Builder.path] with `path.orElse(null)`. */
@@ -506,6 +572,13 @@ private constructor(
              */
             fun path(path: JsonField<String>) = apply { this.path = path }
 
+            /**
+             * Optimistic-concurrency precondition: the update applies only if the memory's stored
+             * `content_sha256` equals the supplied value. On mismatch, the request returns
+             * `memory_precondition_failed_error` (HTTP 409); re-read the memory and retry against
+             * the fresh state. If the precondition fails but the stored state already exactly
+             * matches the requested `content` and `path`, the server returns 200 instead of 409.
+             */
             fun precondition(precondition: BetaManagedAgentsPrecondition) =
                 precondition(JsonField.of(precondition))
 

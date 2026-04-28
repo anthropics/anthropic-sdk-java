@@ -7,7 +7,10 @@ import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
-/** MemoryVersionOperation enum */
+/**
+ * The kind of mutation a `memory_version` records. Every non-no-op mutation to a memory appends
+ * exactly one version row with one of these values.
+ */
 class BetaManagedAgentsMemoryVersionOperation
 @JsonCreator
 private constructor(private val value: JsonField<String>) : Enum {

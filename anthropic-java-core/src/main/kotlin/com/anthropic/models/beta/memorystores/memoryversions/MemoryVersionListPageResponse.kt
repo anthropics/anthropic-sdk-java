@@ -18,6 +18,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Response payload for [List memory versions](/en/api/beta/memory_stores/memory_versions/list). */
 class MemoryVersionListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -35,12 +36,18 @@ private constructor(
     ) : this(data, nextPage, mutableMapOf())
 
     /**
+     * One page of `memory_version` objects, ordered by `created_at` descending (newest first), with
+     * `id` as tiebreak.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun data(): Optional<List<BetaManagedAgentsMemoryVersion>> = data.getOptional("data")
 
     /**
+     * Opaque cursor for the next page (a `page_...` value), or `null` if there are no more results.
+     * Pass as `page` on the next request.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -97,6 +104,10 @@ private constructor(
             additionalProperties = memoryVersionListPageResponse.additionalProperties.toMutableMap()
         }
 
+        /**
+         * One page of `memory_version` objects, ordered by `created_at` descending (newest first),
+         * with `id` as tiebreak.
+         */
         fun data(data: List<BetaManagedAgentsMemoryVersion>) = data(JsonField.of(data))
 
         /**
@@ -122,6 +133,10 @@ private constructor(
                 }
         }
 
+        /**
+         * Opaque cursor for the next page (a `page_...` value), or `null` if there are no more
+         * results. Pass as `page` on the next request.
+         */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 
         /** Alias for calling [Builder.nextPage] with `nextPage.orElse(null)`. */

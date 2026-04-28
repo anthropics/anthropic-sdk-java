@@ -21,7 +21,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** UpdateMemoryStore */
+/** Update a memory store */
 class MemoryStoreUpdateParams
 private constructor(
     private val memoryStoreId: String?,
@@ -37,6 +37,8 @@ private constructor(
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
+     * New description for the store, up to 1024 characters. Pass an empty string to clear it.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -53,6 +55,9 @@ private constructor(
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
+     * New human-readable name for the store. 1–255 characters; no control characters. Renaming
+     * changes the slug used for the store's `mount_path` in sessions created after the update.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -156,6 +161,9 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /**
+         * New description for the store, up to 1024 characters. Pass an empty string to clear it.
+         */
         fun description(description: String?) = apply { body.description(description) }
 
         /** Alias for calling [Builder.description] with `description.orElse(null)`. */
@@ -189,6 +197,10 @@ private constructor(
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
 
+        /**
+         * New human-readable name for the store. 1–255 characters; no control characters. Renaming
+         * changes the slug used for the store's `mount_path` in sessions created after the update.
+         */
         fun name(name: String?) = apply { body.name(name) }
 
         /** Alias for calling [Builder.name] with `name.orElse(null)`. */
@@ -373,6 +385,8 @@ private constructor(
         ) : this(description, metadata, name, mutableMapOf())
 
         /**
+         * New description for the store, up to 1024 characters. Pass an empty string to clear it.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
@@ -389,6 +403,9 @@ private constructor(
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
         /**
+         * New human-readable name for the store. 1–255 characters; no control characters. Renaming
+         * changes the slug used for the store's `mount_path` in sessions created after the update.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
@@ -451,6 +468,10 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /**
+             * New description for the store, up to 1024 characters. Pass an empty string to clear
+             * it.
+             */
             fun description(description: String?) = description(JsonField.ofNullable(description))
 
             /** Alias for calling [Builder.description] with `description.orElse(null)`. */
@@ -486,6 +507,11 @@ private constructor(
              */
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
+            /**
+             * New human-readable name for the store. 1–255 characters; no control characters.
+             * Renaming changes the slug used for the store's `mount_path` in sessions created after
+             * the update.
+             */
             fun name(name: String?) = name(JsonField.ofNullable(name))
 
             /** Alias for calling [Builder.name] with `name.orElse(null)`. */

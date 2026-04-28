@@ -13,7 +13,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** RedactMemoryVersion */
+/** Redact a memory version */
 class MemoryVersionRedactParams
 private constructor(
     private val memoryStoreId: String,
