@@ -6,6 +6,7 @@ import com.anthropic.backends.AnthropicBackend
 import com.anthropic.backends.Backend
 import com.anthropic.client.AnthropicClientAsync
 import com.anthropic.client.AnthropicClientAsyncImpl
+import com.anthropic.config.ProfileConfigProvider
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.Sleeper
 import com.anthropic.core.Timeout
@@ -13,7 +14,6 @@ import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.QueryParams
-import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.net.Proxy
 import java.time.Clock
@@ -384,10 +384,30 @@ class AnthropicOkHttpClientAsync private constructor() {
          * |`baseUrl`  |`anthropic.baseUrl`  |`ANTHROPIC_BASE_URL`  |true    |`"https://api.anthropic.com"`|
          *
          * System properties take precedence over environment variables.
+         *
+         * In addition to the static credentials above, calling this method enables the full
+         * credential-resolution chain, which reads these environment variables:
+         * - `ANTHROPIC_PROFILE` — selects a named profile from an on-disk config file. When set,
+         *   the profile must resolve successfully or an error is raised (no silent fallback).
+         * - `ANTHROPIC_FEDERATION_RULE_ID`, `ANTHROPIC_ORGANIZATION_ID`,
+         *   `ANTHROPIC_IDENTITY_TOKEN_FILE` (or `ANTHROPIC_IDENTITY_TOKEN`),
+         *   `ANTHROPIC_SERVICE_ACCOUNT_ID` — configure workload identity federation directly from
+         *   the environment, without a profile file.
+         * - `ANTHROPIC_CONFIG_DIR` — overrides the directory used for on-disk profile and
+         *   credential-cache lookups.
+         *
+         * If none of the env vars above yield a credential, the resolver loads configuration from
+         * disk: it looks for a profile file in `ANTHROPIC_CONFIG_DIR`, then `~/.config/anthropic`,
+         * then `%APPDATA%\Anthropic` on Windows, and uses the `active_config` marker (or the
+         * literal `default` profile) to pick which profile to load.
          */
         fun fromEnv() = apply {
             clientOptions.fromEnv()
             ensureDefaultBackendBuilder("fromEnv").fromEnv()
+        }
+
+        fun configurationProvider(provider: ProfileConfigProvider) = apply {
+            ensureDefaultBackendBuilder("configurationProvider").configurationProvider(provider)
         }
 
         fun backend(backend: Backend) = apply {
@@ -418,23 +438,27 @@ class AnthropicOkHttpClientAsync private constructor() {
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): AnthropicClientAsync =
-            AnthropicClientAsyncImpl(
-                clientOptions
-                    .httpClient(
-                        OkHttpClient.builder()
-                            .timeout(clientOptions.timeout())
-                            .proxy(proxy)
-                            .maxIdleConnections(maxIdleConnections)
-                            .keepAliveDuration(keepAliveDuration)
-                            .dispatcherExecutorService(dispatcherExecutorService)
-                            .sslSocketFactory(sslSocketFactory)
-                            .trustManager(trustManager)
-                            .hostnameVerifier(hostnameVerifier)
-                            .backend(ensureBackend())
-                            .build()
-                    )
+        fun build(): AnthropicClientAsync {
+            val backend = ensureBackend()
+
+            val rawHttpClient =
+                OkHttpClient.builder()
+                    .timeout(clientOptions.timeout())
+                    .proxy(proxy)
+                    .maxIdleConnections(maxIdleConnections)
+                    .keepAliveDuration(keepAliveDuration)
+                    .dispatcherExecutorService(dispatcherExecutorService)
+                    .sslSocketFactory(sslSocketFactory)
+                    .trustManager(trustManager)
+                    .hostnameVerifier(hostnameVerifier)
+                    .backend(backend)
                     .build()
-            )
+
+            if (backend is AnthropicBackend) {
+                backend.applyCredentials(rawHttpClient, clientOptions)
+            }
+
+            return AnthropicClientAsyncImpl(clientOptions.httpClient(rawHttpClient).build())
+        }
     }
 }

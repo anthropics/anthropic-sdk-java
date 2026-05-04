@@ -1,8 +1,15 @@
 package com.anthropic.backends
 
+import com.anthropic.config.ProfileConfig
+import com.anthropic.config.ProfileConfigProvider
+import com.anthropic.core.RequestOptions
+import com.anthropic.core.auth.InMemoryIdentityTokenProvider
+import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.HttpResponse
 import java.util.Optional
+import java.util.concurrent.CompletableFuture
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -94,9 +101,8 @@ internal class AnthropicBackendTest {
         val backend = createBackend(API_KEY, null, null)
         val authorizedRequest = backend.authorizeRequest(createRequest())
 
-        assertThatThrownBy { backend.authorizeRequest(authorizedRequest) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageStartingWith("Request already authorized")
+        val secondAuthorizedRequest = backend.authorizeRequest(authorizedRequest)
+        assertThat(secondAuthorizedRequest).isSameAs(authorizedRequest)
     }
 
     @Test
@@ -104,9 +110,8 @@ internal class AnthropicBackendTest {
         val backend = createBackend(null, AUTH_TOKEN, null)
         val authorizedRequest = backend.authorizeRequest(createRequest())
 
-        assertThatThrownBy { backend.authorizeRequest(authorizedRequest) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageStartingWith("Request already authorized")
+        val secondAuthorizedRequest = backend.authorizeRequest(authorizedRequest)
+        assertThat(secondAuthorizedRequest).isSameAs(authorizedRequest)
     }
 
     @Test
@@ -158,6 +163,88 @@ internal class AnthropicBackendTest {
         assertThat(backend.apiKey).isNull()
         assertThat(backend.authToken).isNull()
     }
+
+    @Test
+    fun builderAcceptsFederationTokenProvider() {
+        val identityProvider = InMemoryIdentityTokenProvider("test")
+
+        val backend =
+            AnthropicBackend.builder()
+                .federationTokenProvider(
+                    identityTokenProvider = identityProvider,
+                    federationRuleId = "fdrl_test123",
+                    organizationId = "org_test456",
+                )
+                .build()
+
+        assertThat(backend).isNotNull()
+    }
+
+    @Test
+    fun builderAcceptsConfigurationProvider() {
+        val provider =
+            object : ProfileConfigProvider {
+                override fun get(): ProfileConfig = ProfileConfig.builder().build()
+            }
+
+        val backend = AnthropicBackend.builder().configurationProvider(provider).build()
+
+        assertThat(backend).isNotNull()
+    }
+
+    @Test
+    fun resolveCredentialsWithFederationConfigReturnsCredentials() {
+        val identityProvider = InMemoryIdentityTokenProvider("test-identity-token")
+        val mockHttpClient = createMockHttpClient()
+
+        val backend =
+            AnthropicBackend.builder()
+                .federationTokenProvider(
+                    identityTokenProvider = identityProvider,
+                    federationRuleId = "fdrl_test",
+                    organizationId = "org_test",
+                )
+                .build()
+
+        val credentials = backend.resolveCredentials(mockHttpClient)
+        assertThat(credentials).isNotNull()
+        assertThat(credentials!!.provider).isNotNull()
+    }
+
+    @Test
+    fun resolveCredentialsReturnsNullWithoutFederationConfig() {
+        val backend = AnthropicBackend.builder().apiKey("test-key").build()
+        val mockHttpClient = createMockHttpClient()
+
+        assertThat(backend.resolveCredentials(mockHttpClient)).isNull()
+    }
+
+    @Test
+    fun resolveCredentialsReturnsNullWhenApiKeySet() {
+        val backend = AnthropicBackend.builder().apiKey("test-key").fromEnv().build()
+        val mockHttpClient = createMockHttpClient()
+
+        assertThat(backend.resolveCredentials(mockHttpClient)).isNull()
+    }
+
+    private fun createMockHttpClient(): HttpClient =
+        object : HttpClient {
+            override fun execute(
+                request: HttpRequest,
+                requestOptions: RequestOptions,
+            ): HttpResponse {
+                throw UnsupportedOperationException()
+            }
+
+            override fun executeAsync(
+                request: HttpRequest,
+                requestOptions: RequestOptions,
+            ): CompletableFuture<HttpResponse> {
+                throw UnsupportedOperationException()
+            }
+
+            override fun close() {}
+        }
 
     private fun createBackend(): AnthropicBackend = createBackend(API_KEY, null, null)
 

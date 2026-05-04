@@ -2,12 +2,14 @@
 
 package com.anthropic.core
 
+import com.anthropic.core.auth.CredentialResult
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.PhantomReachableClosingHttpClient
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
+import com.anthropic.internal.core.http.AuthorizingHttpClient
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
 import java.time.Duration
@@ -110,6 +112,7 @@ private constructor(
      * Defaults to 2.
      */
     @get:JvmName("maxRetries") val maxRetries: Int,
+    private val credentialResult: CredentialResult?,
 ) {
 
     init {
@@ -155,6 +158,7 @@ private constructor(
         private var responseValidation: Boolean = false
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
+        private var credentialResult: CredentialResult? = null
 
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
@@ -170,6 +174,7 @@ private constructor(
             responseValidation = clientOptions.responseValidation
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
+            credentialResult = clientOptions.credentialResult
         }
 
         /**
@@ -293,6 +298,11 @@ private constructor(
          */
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
 
+        @JvmSynthetic
+        internal fun credentials(credentials: CredentialResult?) = apply {
+            this.credentialResult = credentials
+        }
+
         fun headers(headers: Headers) = apply {
             this.headers.clear()
             putAllHeaders(headers)
@@ -400,7 +410,7 @@ private constructor(
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): ClientOptions {
-            val httpClient = checkRequired("httpClient", httpClient)
+            val rawHttpClient = checkRequired("httpClient", httpClient)
             val streamHandlerExecutor =
                 streamHandlerExecutor
                     ?: PhantomReachableExecutorService(
@@ -435,10 +445,20 @@ private constructor(
             headers.replaceAll(this.headers.build())
             queryParams.replaceAll(this.queryParams.build())
 
+            val authorizedHttpClient =
+                credentialResult?.let { result ->
+                    AuthorizingHttpClient.builder()
+                        .httpClient(rawHttpClient)
+                        .tokenProvider(result.provider)
+                        .defaultBaseUrl(baseUrl ?: "https://api.anthropic.com")
+                        .workspaceId(result.workspaceId)
+                        .build()
+                } ?: rawHttpClient
+
             return ClientOptions(
-                httpClient,
+                rawHttpClient,
                 RetryingHttpClient.builder()
-                    .httpClient(httpClient)
+                    .httpClient(authorizedHttpClient)
                     .sleeper(sleeper)
                     .clock(clock)
                     .maxRetries(maxRetries)
@@ -454,6 +474,7 @@ private constructor(
                 responseValidation,
                 timeout,
                 maxRetries,
+                credentialResult,
             )
         }
     }
