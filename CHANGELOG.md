@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.28.0 (2026-05-04)
+
+Full Changelog: [v2.27.0...v2.28.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.27.0...v2.28.0)
+
+### Features
+
+* **api:** improve Managed Agents APIs ([8453f3e](https://github.com/anthropics/anthropic-sdk-java/commit/8453f3e714d45d55c2077156abc680048c8e4aaa))
+* **client:** add Workload Identity Federation, interactive OAuth, and auth profiles ([b5f1d02](https://github.com/anthropics/anthropic-sdk-java/commit/b5f1d0237d7bf952a6de2289c8ae38dc67d9fff6))
+* **client:** more robust error parsing ([d523547](https://github.com/anthropics/anthropic-sdk-java/commit/d523547299cc4a9c7c1030bfda9868b904fff2c7))
+* support setting headers via env ([03bb766](https://github.com/anthropics/anthropic-sdk-java/commit/03bb766528d32ed59ee4a3b238d206403d9c1ccf))
+
+
+### Chores
+
+* fix lint error ([59f5446](https://github.com/anthropics/anthropic-sdk-java/commit/59f5446133346425d2bd190089c6d25534b7bace))
+
+
+### Documentation
+
+* clarify forwards compat behavior ([f48cfb4](https://github.com/anthropics/anthropic-sdk-java/commit/f48cfb4ec51d224936ef96e367517d86236cd465))
+
 ## 2.27.0 (2026-04-23)
 
 Full Changelog: [v2.26.0...v2.27.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.26.0...v2.27.0)
