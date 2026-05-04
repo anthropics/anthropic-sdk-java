@@ -245,7 +245,7 @@ client.async().messages().createStreaming(params)
     .subscribe(chunk -> {
         System.out.println(chunk);
     })
-    .onCompleteFuture();
+    .onCompleteFuture()
     .whenComplete((unused, error) -> {
         if (error != null) {
             System.out.println("Something went wrong!");
