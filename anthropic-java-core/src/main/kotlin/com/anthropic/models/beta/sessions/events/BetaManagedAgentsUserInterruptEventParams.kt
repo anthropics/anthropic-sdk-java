@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Parameters for sending an interrupt to pause the agent. */
@@ -22,13 +23,17 @@ class BetaManagedAgentsUserInterruptEventParams
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val type: JsonField<Type>,
+    private val sessionThreadId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of()
-    ) : this(type, mutableMapOf())
+        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("session_thread_id")
+        @ExcludeMissing
+        sessionThreadId: JsonField<String> = JsonMissing.of(),
+    ) : this(type, sessionThreadId, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -37,11 +42,29 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
+     * If absent, interrupts every non-archived thread in a multiagent session (or the primary alone
+     * in a single-agent session). If present, interrupts only the named thread.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun sessionThreadId(): Optional<String> = sessionThreadId.getOptional("session_thread_id")
+
+    /**
      * Returns the raw JSON value of [type].
      *
      * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+
+    /**
+     * Returns the raw JSON value of [sessionThreadId].
+     *
+     * Unlike [sessionThreadId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("session_thread_id")
+    @ExcludeMissing
+    fun _sessionThreadId(): JsonField<String> = sessionThreadId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -73,6 +96,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var type: JsonField<Type>? = null
+        private var sessionThreadId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -80,6 +104,7 @@ private constructor(
             betaManagedAgentsUserInterruptEventParams: BetaManagedAgentsUserInterruptEventParams
         ) = apply {
             type = betaManagedAgentsUserInterruptEventParams.type
+            sessionThreadId = betaManagedAgentsUserInterruptEventParams.sessionThreadId
             additionalProperties =
                 betaManagedAgentsUserInterruptEventParams.additionalProperties.toMutableMap()
         }
@@ -93,6 +118,28 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
+
+        /**
+         * If absent, interrupts every non-archived thread in a multiagent session (or the primary
+         * alone in a single-agent session). If present, interrupts only the named thread.
+         */
+        fun sessionThreadId(sessionThreadId: String?) =
+            sessionThreadId(JsonField.ofNullable(sessionThreadId))
+
+        /** Alias for calling [Builder.sessionThreadId] with `sessionThreadId.orElse(null)`. */
+        fun sessionThreadId(sessionThreadId: Optional<String>) =
+            sessionThreadId(sessionThreadId.getOrNull())
+
+        /**
+         * Sets [Builder.sessionThreadId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.sessionThreadId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun sessionThreadId(sessionThreadId: JsonField<String>) = apply {
+            this.sessionThreadId = sessionThreadId
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -128,6 +175,7 @@ private constructor(
         fun build(): BetaManagedAgentsUserInterruptEventParams =
             BetaManagedAgentsUserInterruptEventParams(
                 checkRequired("type", type),
+                sessionThreadId,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -148,6 +196,7 @@ private constructor(
         }
 
         type().validate()
+        sessionThreadId()
         validated = true
     }
 
@@ -164,7 +213,10 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (type.asKnown().getOrNull()?.validity() ?: 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (type.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (sessionThreadId.asKnown().isPresent) 1 else 0)
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -303,13 +355,14 @@ private constructor(
 
         return other is BetaManagedAgentsUserInterruptEventParams &&
             type == other.type &&
+            sessionThreadId == other.sessionThreadId &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(type, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(type, sessionThreadId, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsUserInterruptEventParams{type=$type, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsUserInterruptEventParams{type=$type, sessionThreadId=$sessionThreadId, additionalProperties=$additionalProperties}"
 }

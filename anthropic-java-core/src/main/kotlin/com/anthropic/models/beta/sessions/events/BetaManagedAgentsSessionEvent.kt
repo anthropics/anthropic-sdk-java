@@ -34,6 +34,9 @@ private constructor(
     private val agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent? = null,
     private val agentToolUse: BetaManagedAgentsAgentToolUseEvent? = null,
     private val agentToolResult: BetaManagedAgentsAgentToolResultEvent? = null,
+    private val agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent? =
+        null,
+    private val agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent? = null,
     private val agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent? =
         null,
     private val sessionError: BetaManagedAgentsSessionErrorEvent? = null,
@@ -41,9 +44,25 @@ private constructor(
     private val sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent? = null,
     private val sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent? = null,
     private val sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent? = null,
+    private val sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent? = null,
+    private val spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent? =
+        null,
+    private val spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent? = null,
     private val spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent? = null,
     private val spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent? = null,
+    private val spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent? =
+        null,
+    private val userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent? = null,
     private val sessionDeleted: BetaManagedAgentsSessionDeletedEvent? = null,
+    private val sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent? =
+        null,
+    private val sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent? = null,
+    private val sessionThreadStatusTerminated:
+        BetaManagedAgentsSessionThreadStatusTerminatedEvent? =
+        null,
+    private val sessionThreadStatusRescheduled:
+        BetaManagedAgentsSessionThreadStatusRescheduledEvent? =
+        null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -97,6 +116,20 @@ private constructor(
     fun agentToolResult(): Optional<BetaManagedAgentsAgentToolResultEvent> =
         Optional.ofNullable(agentToolResult)
 
+    /**
+     * Delivery event written to the target thread's input stream when an agent-to-agent message
+     * arrives.
+     */
+    fun agentThreadMessageReceived(): Optional<BetaManagedAgentsAgentThreadMessageReceivedEvent> =
+        Optional.ofNullable(agentThreadMessageReceived)
+
+    /**
+     * Observability event emitted to the sender's output stream when an agent-to-agent message is
+     * sent.
+     */
+    fun agentThreadMessageSent(): Optional<BetaManagedAgentsAgentThreadMessageSentEvent> =
+        Optional.ofNullable(agentThreadMessageSent)
+
     /** Indicates that context compaction (summarization) occurred during the session. */
     fun agentThreadContextCompacted(): Optional<BetaManagedAgentsAgentThreadContextCompactedEvent> =
         Optional.ofNullable(agentThreadContextCompacted)
@@ -121,6 +154,26 @@ private constructor(
     fun sessionStatusTerminated(): Optional<BetaManagedAgentsSessionStatusTerminatedEvent> =
         Optional.ofNullable(sessionStatusTerminated)
 
+    /**
+     * Emitted when a subagent is spawned as a new thread. Written to the parent thread's output
+     * stream so clients observing the session see child creation.
+     */
+    fun sessionThreadCreated(): Optional<BetaManagedAgentsSessionThreadCreatedEvent> =
+        Optional.ofNullable(sessionThreadCreated)
+
+    /** Emitted when an outcome evaluation cycle begins. */
+    fun spanOutcomeEvaluationStart(): Optional<BetaManagedAgentsSpanOutcomeEvaluationStartEvent> =
+        Optional.ofNullable(spanOutcomeEvaluationStart)
+
+    /**
+     * Emitted when an outcome evaluation cycle completes. Carries the verdict and aggregate token
+     * usage. A verdict of `needs_revision` means another evaluation cycle follows; `satisfied`,
+     * `max_iterations_reached`, `failed`, or `interrupted` are terminal — no further evaluation
+     * cycles follow.
+     */
+    fun spanOutcomeEvaluationEnd(): Optional<BetaManagedAgentsSpanOutcomeEvaluationEndEvent> =
+        Optional.ofNullable(spanOutcomeEvaluationEnd)
+
     /** Emitted when a model request is initiated by the agent. */
     fun spanModelRequestStart(): Optional<BetaManagedAgentsSpanModelRequestStartEvent> =
         Optional.ofNullable(spanModelRequestStart)
@@ -130,11 +183,57 @@ private constructor(
         Optional.ofNullable(spanModelRequestEnd)
 
     /**
+     * Periodic heartbeat emitted while an outcome evaluation cycle is in progress. Distinguishes
+     * 'evaluation is actively running' from 'evaluation is stuck' between the corresponding
+     * `span.outcome_evaluation_start` and `span.outcome_evaluation_end` events.
+     */
+    fun spanOutcomeEvaluationOngoing():
+        Optional<BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent> =
+        Optional.ofNullable(spanOutcomeEvaluationOngoing)
+
+    /**
+     * Echo of a `user.define_outcome` input event. Carries the server-generated `outcome_id` that
+     * subsequent `span.outcome_evaluation_*` events reference.
+     */
+    fun userDefineOutcome(): Optional<BetaManagedAgentsUserDefineOutcomeEvent> =
+        Optional.ofNullable(userDefineOutcome)
+
+    /**
      * Emitted when a session has been deleted. Terminates any active event stream — no further
      * events will be emitted for this session.
      */
     fun sessionDeleted(): Optional<BetaManagedAgentsSessionDeletedEvent> =
         Optional.ofNullable(sessionDeleted)
+
+    /**
+     * A session thread has begun executing. Emitted on the thread's own stream and cross-posted to
+     * the primary stream for child threads.
+     */
+    fun sessionThreadStatusRunning(): Optional<BetaManagedAgentsSessionThreadStatusRunningEvent> =
+        Optional.ofNullable(sessionThreadStatusRunning)
+
+    /**
+     * A session thread has yielded and is awaiting input. Emitted on the thread's own stream and
+     * cross-posted to the primary stream for child threads.
+     */
+    fun sessionThreadStatusIdle(): Optional<BetaManagedAgentsSessionThreadStatusIdleEvent> =
+        Optional.ofNullable(sessionThreadStatusIdle)
+
+    /**
+     * A session thread has terminated and will accept no further input. Emitted on the thread's own
+     * stream and cross-posted to the primary stream for child threads.
+     */
+    fun sessionThreadStatusTerminated():
+        Optional<BetaManagedAgentsSessionThreadStatusTerminatedEvent> =
+        Optional.ofNullable(sessionThreadStatusTerminated)
+
+    /**
+     * A session thread hit a transient error and is retrying automatically. Emitted on the thread's
+     * own stream and cross-posted to the primary stream for child threads.
+     */
+    fun sessionThreadStatusRescheduled():
+        Optional<BetaManagedAgentsSessionThreadStatusRescheduledEvent> =
+        Optional.ofNullable(sessionThreadStatusRescheduled)
 
     fun isUserMessage(): Boolean = userMessage != null
 
@@ -158,6 +257,10 @@ private constructor(
 
     fun isAgentToolResult(): Boolean = agentToolResult != null
 
+    fun isAgentThreadMessageReceived(): Boolean = agentThreadMessageReceived != null
+
+    fun isAgentThreadMessageSent(): Boolean = agentThreadMessageSent != null
+
     fun isAgentThreadContextCompacted(): Boolean = agentThreadContextCompacted != null
 
     fun isSessionError(): Boolean = sessionError != null
@@ -170,11 +273,29 @@ private constructor(
 
     fun isSessionStatusTerminated(): Boolean = sessionStatusTerminated != null
 
+    fun isSessionThreadCreated(): Boolean = sessionThreadCreated != null
+
+    fun isSpanOutcomeEvaluationStart(): Boolean = spanOutcomeEvaluationStart != null
+
+    fun isSpanOutcomeEvaluationEnd(): Boolean = spanOutcomeEvaluationEnd != null
+
     fun isSpanModelRequestStart(): Boolean = spanModelRequestStart != null
 
     fun isSpanModelRequestEnd(): Boolean = spanModelRequestEnd != null
 
+    fun isSpanOutcomeEvaluationOngoing(): Boolean = spanOutcomeEvaluationOngoing != null
+
+    fun isUserDefineOutcome(): Boolean = userDefineOutcome != null
+
     fun isSessionDeleted(): Boolean = sessionDeleted != null
+
+    fun isSessionThreadStatusRunning(): Boolean = sessionThreadStatusRunning != null
+
+    fun isSessionThreadStatusIdle(): Boolean = sessionThreadStatusIdle != null
+
+    fun isSessionThreadStatusTerminated(): Boolean = sessionThreadStatusTerminated != null
+
+    fun isSessionThreadStatusRescheduled(): Boolean = sessionThreadStatusRescheduled != null
 
     /** A user message event in the session conversation. */
     fun asUserMessage(): BetaManagedAgentsUserMessageEvent = userMessage.getOrThrow("userMessage")
@@ -225,6 +346,20 @@ private constructor(
     fun asAgentToolResult(): BetaManagedAgentsAgentToolResultEvent =
         agentToolResult.getOrThrow("agentToolResult")
 
+    /**
+     * Delivery event written to the target thread's input stream when an agent-to-agent message
+     * arrives.
+     */
+    fun asAgentThreadMessageReceived(): BetaManagedAgentsAgentThreadMessageReceivedEvent =
+        agentThreadMessageReceived.getOrThrow("agentThreadMessageReceived")
+
+    /**
+     * Observability event emitted to the sender's output stream when an agent-to-agent message is
+     * sent.
+     */
+    fun asAgentThreadMessageSent(): BetaManagedAgentsAgentThreadMessageSentEvent =
+        agentThreadMessageSent.getOrThrow("agentThreadMessageSent")
+
     /** Indicates that context compaction (summarization) occurred during the session. */
     fun asAgentThreadContextCompacted(): BetaManagedAgentsAgentThreadContextCompactedEvent =
         agentThreadContextCompacted.getOrThrow("agentThreadContextCompacted")
@@ -249,6 +384,26 @@ private constructor(
     fun asSessionStatusTerminated(): BetaManagedAgentsSessionStatusTerminatedEvent =
         sessionStatusTerminated.getOrThrow("sessionStatusTerminated")
 
+    /**
+     * Emitted when a subagent is spawned as a new thread. Written to the parent thread's output
+     * stream so clients observing the session see child creation.
+     */
+    fun asSessionThreadCreated(): BetaManagedAgentsSessionThreadCreatedEvent =
+        sessionThreadCreated.getOrThrow("sessionThreadCreated")
+
+    /** Emitted when an outcome evaluation cycle begins. */
+    fun asSpanOutcomeEvaluationStart(): BetaManagedAgentsSpanOutcomeEvaluationStartEvent =
+        spanOutcomeEvaluationStart.getOrThrow("spanOutcomeEvaluationStart")
+
+    /**
+     * Emitted when an outcome evaluation cycle completes. Carries the verdict and aggregate token
+     * usage. A verdict of `needs_revision` means another evaluation cycle follows; `satisfied`,
+     * `max_iterations_reached`, `failed`, or `interrupted` are terminal — no further evaluation
+     * cycles follow.
+     */
+    fun asSpanOutcomeEvaluationEnd(): BetaManagedAgentsSpanOutcomeEvaluationEndEvent =
+        spanOutcomeEvaluationEnd.getOrThrow("spanOutcomeEvaluationEnd")
+
     /** Emitted when a model request is initiated by the agent. */
     fun asSpanModelRequestStart(): BetaManagedAgentsSpanModelRequestStartEvent =
         spanModelRequestStart.getOrThrow("spanModelRequestStart")
@@ -258,11 +413,54 @@ private constructor(
         spanModelRequestEnd.getOrThrow("spanModelRequestEnd")
 
     /**
+     * Periodic heartbeat emitted while an outcome evaluation cycle is in progress. Distinguishes
+     * 'evaluation is actively running' from 'evaluation is stuck' between the corresponding
+     * `span.outcome_evaluation_start` and `span.outcome_evaluation_end` events.
+     */
+    fun asSpanOutcomeEvaluationOngoing(): BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent =
+        spanOutcomeEvaluationOngoing.getOrThrow("spanOutcomeEvaluationOngoing")
+
+    /**
+     * Echo of a `user.define_outcome` input event. Carries the server-generated `outcome_id` that
+     * subsequent `span.outcome_evaluation_*` events reference.
+     */
+    fun asUserDefineOutcome(): BetaManagedAgentsUserDefineOutcomeEvent =
+        userDefineOutcome.getOrThrow("userDefineOutcome")
+
+    /**
      * Emitted when a session has been deleted. Terminates any active event stream — no further
      * events will be emitted for this session.
      */
     fun asSessionDeleted(): BetaManagedAgentsSessionDeletedEvent =
         sessionDeleted.getOrThrow("sessionDeleted")
+
+    /**
+     * A session thread has begun executing. Emitted on the thread's own stream and cross-posted to
+     * the primary stream for child threads.
+     */
+    fun asSessionThreadStatusRunning(): BetaManagedAgentsSessionThreadStatusRunningEvent =
+        sessionThreadStatusRunning.getOrThrow("sessionThreadStatusRunning")
+
+    /**
+     * A session thread has yielded and is awaiting input. Emitted on the thread's own stream and
+     * cross-posted to the primary stream for child threads.
+     */
+    fun asSessionThreadStatusIdle(): BetaManagedAgentsSessionThreadStatusIdleEvent =
+        sessionThreadStatusIdle.getOrThrow("sessionThreadStatusIdle")
+
+    /**
+     * A session thread has terminated and will accept no further input. Emitted on the thread's own
+     * stream and cross-posted to the primary stream for child threads.
+     */
+    fun asSessionThreadStatusTerminated(): BetaManagedAgentsSessionThreadStatusTerminatedEvent =
+        sessionThreadStatusTerminated.getOrThrow("sessionThreadStatusTerminated")
+
+    /**
+     * A session thread hit a transient error and is retrying automatically. Emitted on the thread's
+     * own stream and cross-posted to the primary stream for child threads.
+     */
+    fun asSessionThreadStatusRescheduled(): BetaManagedAgentsSessionThreadStatusRescheduledEvent =
+        sessionThreadStatusRescheduled.getOrThrow("sessionThreadStatusRescheduled")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -308,6 +506,10 @@ private constructor(
             agentMcpToolResult != null -> visitor.visitAgentMcpToolResult(agentMcpToolResult)
             agentToolUse != null -> visitor.visitAgentToolUse(agentToolUse)
             agentToolResult != null -> visitor.visitAgentToolResult(agentToolResult)
+            agentThreadMessageReceived != null ->
+                visitor.visitAgentThreadMessageReceived(agentThreadMessageReceived)
+            agentThreadMessageSent != null ->
+                visitor.visitAgentThreadMessageSent(agentThreadMessageSent)
             agentThreadContextCompacted != null ->
                 visitor.visitAgentThreadContextCompacted(agentThreadContextCompacted)
             sessionError != null -> visitor.visitSessionError(sessionError)
@@ -317,10 +519,26 @@ private constructor(
             sessionStatusIdle != null -> visitor.visitSessionStatusIdle(sessionStatusIdle)
             sessionStatusTerminated != null ->
                 visitor.visitSessionStatusTerminated(sessionStatusTerminated)
+            sessionThreadCreated != null -> visitor.visitSessionThreadCreated(sessionThreadCreated)
+            spanOutcomeEvaluationStart != null ->
+                visitor.visitSpanOutcomeEvaluationStart(spanOutcomeEvaluationStart)
+            spanOutcomeEvaluationEnd != null ->
+                visitor.visitSpanOutcomeEvaluationEnd(spanOutcomeEvaluationEnd)
             spanModelRequestStart != null ->
                 visitor.visitSpanModelRequestStart(spanModelRequestStart)
             spanModelRequestEnd != null -> visitor.visitSpanModelRequestEnd(spanModelRequestEnd)
+            spanOutcomeEvaluationOngoing != null ->
+                visitor.visitSpanOutcomeEvaluationOngoing(spanOutcomeEvaluationOngoing)
+            userDefineOutcome != null -> visitor.visitUserDefineOutcome(userDefineOutcome)
             sessionDeleted != null -> visitor.visitSessionDeleted(sessionDeleted)
+            sessionThreadStatusRunning != null ->
+                visitor.visitSessionThreadStatusRunning(sessionThreadStatusRunning)
+            sessionThreadStatusIdle != null ->
+                visitor.visitSessionThreadStatusIdle(sessionThreadStatusIdle)
+            sessionThreadStatusTerminated != null ->
+                visitor.visitSessionThreadStatusTerminated(sessionThreadStatusTerminated)
+            sessionThreadStatusRescheduled != null ->
+                visitor.visitSessionThreadStatusRescheduled(sessionThreadStatusRescheduled)
             else -> visitor.unknown(_json)
         }
 
@@ -401,6 +619,18 @@ private constructor(
                     agentToolResult.validate()
                 }
 
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ) {
+                    agentThreadMessageReceived.validate()
+                }
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ) {
+                    agentThreadMessageSent.validate()
+                }
+
                 override fun visitAgentThreadContextCompacted(
                     agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
                 ) {
@@ -435,6 +665,24 @@ private constructor(
                     sessionStatusTerminated.validate()
                 }
 
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ) {
+                    sessionThreadCreated.validate()
+                }
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ) {
+                    spanOutcomeEvaluationStart.validate()
+                }
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ) {
+                    spanOutcomeEvaluationEnd.validate()
+                }
+
                 override fun visitSpanModelRequestStart(
                     spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
                 ) {
@@ -447,10 +695,48 @@ private constructor(
                     spanModelRequestEnd.validate()
                 }
 
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ) {
+                    spanOutcomeEvaluationOngoing.validate()
+                }
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ) {
+                    userDefineOutcome.validate()
+                }
+
                 override fun visitSessionDeleted(
                     sessionDeleted: BetaManagedAgentsSessionDeletedEvent
                 ) {
                     sessionDeleted.validate()
+                }
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ) {
+                    sessionThreadStatusRunning.validate()
+                }
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ) {
+                    sessionThreadStatusIdle.validate()
+                }
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ) {
+                    sessionThreadStatusTerminated.validate()
+                }
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ) {
+                    sessionThreadStatusRescheduled.validate()
                 }
             }
         )
@@ -515,6 +801,14 @@ private constructor(
                     agentToolResult: BetaManagedAgentsAgentToolResultEvent
                 ) = agentToolResult.validity()
 
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ) = agentThreadMessageReceived.validity()
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ) = agentThreadMessageSent.validity()
+
                 override fun visitAgentThreadContextCompacted(
                     agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
                 ) = agentThreadContextCompacted.validity()
@@ -538,6 +832,18 @@ private constructor(
                     sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
                 ) = sessionStatusTerminated.validity()
 
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ) = sessionThreadCreated.validity()
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ) = spanOutcomeEvaluationStart.validity()
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ) = spanOutcomeEvaluationEnd.validity()
+
                 override fun visitSpanModelRequestStart(
                     spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
                 ) = spanModelRequestStart.validity()
@@ -546,9 +852,35 @@ private constructor(
                     spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
                 ) = spanModelRequestEnd.validity()
 
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ) = spanOutcomeEvaluationOngoing.validity()
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ) = userDefineOutcome.validity()
+
                 override fun visitSessionDeleted(
                     sessionDeleted: BetaManagedAgentsSessionDeletedEvent
                 ) = sessionDeleted.validity()
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ) = sessionThreadStatusRunning.validity()
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ) = sessionThreadStatusIdle.validity()
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ) = sessionThreadStatusTerminated.validity()
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ) = sessionThreadStatusRescheduled.validity()
 
                 override fun unknown(json: JsonValue?) = 0
             }
@@ -571,15 +903,26 @@ private constructor(
             agentMcpToolResult == other.agentMcpToolResult &&
             agentToolUse == other.agentToolUse &&
             agentToolResult == other.agentToolResult &&
+            agentThreadMessageReceived == other.agentThreadMessageReceived &&
+            agentThreadMessageSent == other.agentThreadMessageSent &&
             agentThreadContextCompacted == other.agentThreadContextCompacted &&
             sessionError == other.sessionError &&
             sessionStatusRescheduled == other.sessionStatusRescheduled &&
             sessionStatusRunning == other.sessionStatusRunning &&
             sessionStatusIdle == other.sessionStatusIdle &&
             sessionStatusTerminated == other.sessionStatusTerminated &&
+            sessionThreadCreated == other.sessionThreadCreated &&
+            spanOutcomeEvaluationStart == other.spanOutcomeEvaluationStart &&
+            spanOutcomeEvaluationEnd == other.spanOutcomeEvaluationEnd &&
             spanModelRequestStart == other.spanModelRequestStart &&
             spanModelRequestEnd == other.spanModelRequestEnd &&
-            sessionDeleted == other.sessionDeleted
+            spanOutcomeEvaluationOngoing == other.spanOutcomeEvaluationOngoing &&
+            userDefineOutcome == other.userDefineOutcome &&
+            sessionDeleted == other.sessionDeleted &&
+            sessionThreadStatusRunning == other.sessionThreadStatusRunning &&
+            sessionThreadStatusIdle == other.sessionThreadStatusIdle &&
+            sessionThreadStatusTerminated == other.sessionThreadStatusTerminated &&
+            sessionThreadStatusRescheduled == other.sessionThreadStatusRescheduled
     }
 
     override fun hashCode(): Int =
@@ -595,15 +938,26 @@ private constructor(
             agentMcpToolResult,
             agentToolUse,
             agentToolResult,
+            agentThreadMessageReceived,
+            agentThreadMessageSent,
             agentThreadContextCompacted,
             sessionError,
             sessionStatusRescheduled,
             sessionStatusRunning,
             sessionStatusIdle,
             sessionStatusTerminated,
+            sessionThreadCreated,
+            spanOutcomeEvaluationStart,
+            spanOutcomeEvaluationEnd,
             spanModelRequestStart,
             spanModelRequestEnd,
+            spanOutcomeEvaluationOngoing,
+            userDefineOutcome,
             sessionDeleted,
+            sessionThreadStatusRunning,
+            sessionThreadStatusIdle,
+            sessionThreadStatusTerminated,
+            sessionThreadStatusRescheduled,
         )
 
     override fun toString(): String =
@@ -625,6 +979,10 @@ private constructor(
             agentToolUse != null -> "BetaManagedAgentsSessionEvent{agentToolUse=$agentToolUse}"
             agentToolResult != null ->
                 "BetaManagedAgentsSessionEvent{agentToolResult=$agentToolResult}"
+            agentThreadMessageReceived != null ->
+                "BetaManagedAgentsSessionEvent{agentThreadMessageReceived=$agentThreadMessageReceived}"
+            agentThreadMessageSent != null ->
+                "BetaManagedAgentsSessionEvent{agentThreadMessageSent=$agentThreadMessageSent}"
             agentThreadContextCompacted != null ->
                 "BetaManagedAgentsSessionEvent{agentThreadContextCompacted=$agentThreadContextCompacted}"
             sessionError != null -> "BetaManagedAgentsSessionEvent{sessionError=$sessionError}"
@@ -636,12 +994,30 @@ private constructor(
                 "BetaManagedAgentsSessionEvent{sessionStatusIdle=$sessionStatusIdle}"
             sessionStatusTerminated != null ->
                 "BetaManagedAgentsSessionEvent{sessionStatusTerminated=$sessionStatusTerminated}"
+            sessionThreadCreated != null ->
+                "BetaManagedAgentsSessionEvent{sessionThreadCreated=$sessionThreadCreated}"
+            spanOutcomeEvaluationStart != null ->
+                "BetaManagedAgentsSessionEvent{spanOutcomeEvaluationStart=$spanOutcomeEvaluationStart}"
+            spanOutcomeEvaluationEnd != null ->
+                "BetaManagedAgentsSessionEvent{spanOutcomeEvaluationEnd=$spanOutcomeEvaluationEnd}"
             spanModelRequestStart != null ->
                 "BetaManagedAgentsSessionEvent{spanModelRequestStart=$spanModelRequestStart}"
             spanModelRequestEnd != null ->
                 "BetaManagedAgentsSessionEvent{spanModelRequestEnd=$spanModelRequestEnd}"
+            spanOutcomeEvaluationOngoing != null ->
+                "BetaManagedAgentsSessionEvent{spanOutcomeEvaluationOngoing=$spanOutcomeEvaluationOngoing}"
+            userDefineOutcome != null ->
+                "BetaManagedAgentsSessionEvent{userDefineOutcome=$userDefineOutcome}"
             sessionDeleted != null ->
                 "BetaManagedAgentsSessionEvent{sessionDeleted=$sessionDeleted}"
+            sessionThreadStatusRunning != null ->
+                "BetaManagedAgentsSessionEvent{sessionThreadStatusRunning=$sessionThreadStatusRunning}"
+            sessionThreadStatusIdle != null ->
+                "BetaManagedAgentsSessionEvent{sessionThreadStatusIdle=$sessionThreadStatusIdle}"
+            sessionThreadStatusTerminated != null ->
+                "BetaManagedAgentsSessionEvent{sessionThreadStatusTerminated=$sessionThreadStatusTerminated}"
+            sessionThreadStatusRescheduled != null ->
+                "BetaManagedAgentsSessionEvent{sessionThreadStatusRescheduled=$sessionThreadStatusRescheduled}"
             _json != null -> "BetaManagedAgentsSessionEvent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaManagedAgentsSessionEvent")
         }
@@ -711,6 +1087,24 @@ private constructor(
         fun ofAgentToolResult(agentToolResult: BetaManagedAgentsAgentToolResultEvent) =
             BetaManagedAgentsSessionEvent(agentToolResult = agentToolResult)
 
+        /**
+         * Delivery event written to the target thread's input stream when an agent-to-agent message
+         * arrives.
+         */
+        @JvmStatic
+        fun ofAgentThreadMessageReceived(
+            agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+        ) = BetaManagedAgentsSessionEvent(agentThreadMessageReceived = agentThreadMessageReceived)
+
+        /**
+         * Observability event emitted to the sender's output stream when an agent-to-agent message
+         * is sent.
+         */
+        @JvmStatic
+        fun ofAgentThreadMessageSent(
+            agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+        ) = BetaManagedAgentsSessionEvent(agentThreadMessageSent = agentThreadMessageSent)
+
         /** Indicates that context compaction (summarization) occurred during the session. */
         @JvmStatic
         fun ofAgentThreadContextCompacted(
@@ -747,6 +1141,32 @@ private constructor(
             sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
         ) = BetaManagedAgentsSessionEvent(sessionStatusTerminated = sessionStatusTerminated)
 
+        /**
+         * Emitted when a subagent is spawned as a new thread. Written to the parent thread's output
+         * stream so clients observing the session see child creation.
+         */
+        @JvmStatic
+        fun ofSessionThreadCreated(
+            sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+        ) = BetaManagedAgentsSessionEvent(sessionThreadCreated = sessionThreadCreated)
+
+        /** Emitted when an outcome evaluation cycle begins. */
+        @JvmStatic
+        fun ofSpanOutcomeEvaluationStart(
+            spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+        ) = BetaManagedAgentsSessionEvent(spanOutcomeEvaluationStart = spanOutcomeEvaluationStart)
+
+        /**
+         * Emitted when an outcome evaluation cycle completes. Carries the verdict and aggregate
+         * token usage. A verdict of `needs_revision` means another evaluation cycle follows;
+         * `satisfied`, `max_iterations_reached`, `failed`, or `interrupted` are terminal — no
+         * further evaluation cycles follow.
+         */
+        @JvmStatic
+        fun ofSpanOutcomeEvaluationEnd(
+            spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+        ) = BetaManagedAgentsSessionEvent(spanOutcomeEvaluationEnd = spanOutcomeEvaluationEnd)
+
         /** Emitted when a model request is initiated by the agent. */
         @JvmStatic
         fun ofSpanModelRequestStart(
@@ -759,12 +1179,75 @@ private constructor(
             BetaManagedAgentsSessionEvent(spanModelRequestEnd = spanModelRequestEnd)
 
         /**
+         * Periodic heartbeat emitted while an outcome evaluation cycle is in progress.
+         * Distinguishes 'evaluation is actively running' from 'evaluation is stuck' between the
+         * corresponding `span.outcome_evaluation_start` and `span.outcome_evaluation_end` events.
+         */
+        @JvmStatic
+        fun ofSpanOutcomeEvaluationOngoing(
+            spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+        ) =
+            BetaManagedAgentsSessionEvent(
+                spanOutcomeEvaluationOngoing = spanOutcomeEvaluationOngoing
+            )
+
+        /**
+         * Echo of a `user.define_outcome` input event. Carries the server-generated `outcome_id`
+         * that subsequent `span.outcome_evaluation_*` events reference.
+         */
+        @JvmStatic
+        fun ofUserDefineOutcome(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent) =
+            BetaManagedAgentsSessionEvent(userDefineOutcome = userDefineOutcome)
+
+        /**
          * Emitted when a session has been deleted. Terminates any active event stream — no further
          * events will be emitted for this session.
          */
         @JvmStatic
         fun ofSessionDeleted(sessionDeleted: BetaManagedAgentsSessionDeletedEvent) =
             BetaManagedAgentsSessionEvent(sessionDeleted = sessionDeleted)
+
+        /**
+         * A session thread has begun executing. Emitted on the thread's own stream and cross-posted
+         * to the primary stream for child threads.
+         */
+        @JvmStatic
+        fun ofSessionThreadStatusRunning(
+            sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+        ) = BetaManagedAgentsSessionEvent(sessionThreadStatusRunning = sessionThreadStatusRunning)
+
+        /**
+         * A session thread has yielded and is awaiting input. Emitted on the thread's own stream
+         * and cross-posted to the primary stream for child threads.
+         */
+        @JvmStatic
+        fun ofSessionThreadStatusIdle(
+            sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+        ) = BetaManagedAgentsSessionEvent(sessionThreadStatusIdle = sessionThreadStatusIdle)
+
+        /**
+         * A session thread has terminated and will accept no further input. Emitted on the thread's
+         * own stream and cross-posted to the primary stream for child threads.
+         */
+        @JvmStatic
+        fun ofSessionThreadStatusTerminated(
+            sessionThreadStatusTerminated: BetaManagedAgentsSessionThreadStatusTerminatedEvent
+        ) =
+            BetaManagedAgentsSessionEvent(
+                sessionThreadStatusTerminated = sessionThreadStatusTerminated
+            )
+
+        /**
+         * A session thread hit a transient error and is retrying automatically. Emitted on the
+         * thread's own stream and cross-posted to the primary stream for child threads.
+         */
+        @JvmStatic
+        fun ofSessionThreadStatusRescheduled(
+            sessionThreadStatusRescheduled: BetaManagedAgentsSessionThreadStatusRescheduledEvent
+        ) =
+            BetaManagedAgentsSessionEvent(
+                sessionThreadStatusRescheduled = sessionThreadStatusRescheduled
+            )
     }
 
     /**
@@ -816,6 +1299,22 @@ private constructor(
         /** Event representing the result of an agent tool execution. */
         fun visitAgentToolResult(agentToolResult: BetaManagedAgentsAgentToolResultEvent): T
 
+        /**
+         * Delivery event written to the target thread's input stream when an agent-to-agent message
+         * arrives.
+         */
+        fun visitAgentThreadMessageReceived(
+            agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+        ): T
+
+        /**
+         * Observability event emitted to the sender's output stream when an agent-to-agent message
+         * is sent.
+         */
+        fun visitAgentThreadMessageSent(
+            agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+        ): T
+
         /** Indicates that context compaction (summarization) occurred during the session. */
         fun visitAgentThreadContextCompacted(
             agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
@@ -844,6 +1343,29 @@ private constructor(
             sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
         ): T
 
+        /**
+         * Emitted when a subagent is spawned as a new thread. Written to the parent thread's output
+         * stream so clients observing the session see child creation.
+         */
+        fun visitSessionThreadCreated(
+            sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+        ): T
+
+        /** Emitted when an outcome evaluation cycle begins. */
+        fun visitSpanOutcomeEvaluationStart(
+            spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+        ): T
+
+        /**
+         * Emitted when an outcome evaluation cycle completes. Carries the verdict and aggregate
+         * token usage. A verdict of `needs_revision` means another evaluation cycle follows;
+         * `satisfied`, `max_iterations_reached`, `failed`, or `interrupted` are terminal — no
+         * further evaluation cycles follow.
+         */
+        fun visitSpanOutcomeEvaluationEnd(
+            spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+        ): T
+
         /** Emitted when a model request is initiated by the agent. */
         fun visitSpanModelRequestStart(
             spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
@@ -855,10 +1377,57 @@ private constructor(
         ): T
 
         /**
+         * Periodic heartbeat emitted while an outcome evaluation cycle is in progress.
+         * Distinguishes 'evaluation is actively running' from 'evaluation is stuck' between the
+         * corresponding `span.outcome_evaluation_start` and `span.outcome_evaluation_end` events.
+         */
+        fun visitSpanOutcomeEvaluationOngoing(
+            spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+        ): T
+
+        /**
+         * Echo of a `user.define_outcome` input event. Carries the server-generated `outcome_id`
+         * that subsequent `span.outcome_evaluation_*` events reference.
+         */
+        fun visitUserDefineOutcome(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent): T
+
+        /**
          * Emitted when a session has been deleted. Terminates any active event stream — no further
          * events will be emitted for this session.
          */
         fun visitSessionDeleted(sessionDeleted: BetaManagedAgentsSessionDeletedEvent): T
+
+        /**
+         * A session thread has begun executing. Emitted on the thread's own stream and cross-posted
+         * to the primary stream for child threads.
+         */
+        fun visitSessionThreadStatusRunning(
+            sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+        ): T
+
+        /**
+         * A session thread has yielded and is awaiting input. Emitted on the thread's own stream
+         * and cross-posted to the primary stream for child threads.
+         */
+        fun visitSessionThreadStatusIdle(
+            sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+        ): T
+
+        /**
+         * A session thread has terminated and will accept no further input. Emitted on the thread's
+         * own stream and cross-posted to the primary stream for child threads.
+         */
+        fun visitSessionThreadStatusTerminated(
+            sessionThreadStatusTerminated: BetaManagedAgentsSessionThreadStatusTerminatedEvent
+        ): T
+
+        /**
+         * A session thread hit a transient error and is retrying automatically. Emitted on the
+         * thread's own stream and cross-posted to the primary stream for child threads.
+         */
+        fun visitSessionThreadStatusRescheduled(
+            sessionThreadStatusRescheduled: BetaManagedAgentsSessionThreadStatusRescheduledEvent
+        ): T
 
         /**
          * Maps an unknown variant of [BetaManagedAgentsSessionEvent] to a value of type [T].
@@ -972,6 +1541,27 @@ private constructor(
                         ?.let { BetaManagedAgentsSessionEvent(agentToolResult = it, _json = json) }
                         ?: BetaManagedAgentsSessionEvent(_json = json)
                 }
+                "agent.thread_message_received" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsAgentThreadMessageReceivedEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(
+                                agentThreadMessageReceived = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
+                "agent.thread_message_sent" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsAgentThreadMessageSentEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(agentThreadMessageSent = it, _json = json)
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
                 "agent.thread_context_compacted" -> {
                     return tryDeserialize(
                             node,
@@ -1034,6 +1624,39 @@ private constructor(
                             )
                         } ?: BetaManagedAgentsSessionEvent(_json = json)
                 }
+                "session.thread_created" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSessionThreadCreatedEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(sessionThreadCreated = it, _json = json)
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
+                "span.outcome_evaluation_start" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSpanOutcomeEvaluationStartEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(
+                                spanOutcomeEvaluationStart = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
+                "span.outcome_evaluation_end" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSpanOutcomeEvaluationEndEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(
+                                spanOutcomeEvaluationEnd = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
                 "span.model_request_start" -> {
                     return tryDeserialize(
                             node,
@@ -1052,6 +1675,27 @@ private constructor(
                             BetaManagedAgentsSessionEvent(spanModelRequestEnd = it, _json = json)
                         } ?: BetaManagedAgentsSessionEvent(_json = json)
                 }
+                "span.outcome_evaluation_ongoing" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(
+                                spanOutcomeEvaluationOngoing = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
+                "user.define_outcome" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsUserDefineOutcomeEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(userDefineOutcome = it, _json = json)
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
                 "session.deleted" -> {
                     return tryDeserialize(
                             node,
@@ -1059,6 +1703,54 @@ private constructor(
                         )
                         ?.let { BetaManagedAgentsSessionEvent(sessionDeleted = it, _json = json) }
                         ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
+                "session.thread_status_running" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSessionThreadStatusRunningEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(
+                                sessionThreadStatusRunning = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
+                "session.thread_status_idle" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSessionThreadStatusIdleEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(
+                                sessionThreadStatusIdle = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
+                "session.thread_status_terminated" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSessionThreadStatusTerminatedEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(
+                                sessionThreadStatusTerminated = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
+                "session.thread_status_rescheduled" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSessionThreadStatusRescheduledEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsSessionEvent(
+                                sessionThreadStatusRescheduled = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsSessionEvent(_json = json)
                 }
             }
 
@@ -1088,6 +1780,10 @@ private constructor(
                 value.agentMcpToolResult != null -> generator.writeObject(value.agentMcpToolResult)
                 value.agentToolUse != null -> generator.writeObject(value.agentToolUse)
                 value.agentToolResult != null -> generator.writeObject(value.agentToolResult)
+                value.agentThreadMessageReceived != null ->
+                    generator.writeObject(value.agentThreadMessageReceived)
+                value.agentThreadMessageSent != null ->
+                    generator.writeObject(value.agentThreadMessageSent)
                 value.agentThreadContextCompacted != null ->
                     generator.writeObject(value.agentThreadContextCompacted)
                 value.sessionError != null -> generator.writeObject(value.sessionError)
@@ -1098,11 +1794,28 @@ private constructor(
                 value.sessionStatusIdle != null -> generator.writeObject(value.sessionStatusIdle)
                 value.sessionStatusTerminated != null ->
                     generator.writeObject(value.sessionStatusTerminated)
+                value.sessionThreadCreated != null ->
+                    generator.writeObject(value.sessionThreadCreated)
+                value.spanOutcomeEvaluationStart != null ->
+                    generator.writeObject(value.spanOutcomeEvaluationStart)
+                value.spanOutcomeEvaluationEnd != null ->
+                    generator.writeObject(value.spanOutcomeEvaluationEnd)
                 value.spanModelRequestStart != null ->
                     generator.writeObject(value.spanModelRequestStart)
                 value.spanModelRequestEnd != null ->
                     generator.writeObject(value.spanModelRequestEnd)
+                value.spanOutcomeEvaluationOngoing != null ->
+                    generator.writeObject(value.spanOutcomeEvaluationOngoing)
+                value.userDefineOutcome != null -> generator.writeObject(value.userDefineOutcome)
                 value.sessionDeleted != null -> generator.writeObject(value.sessionDeleted)
+                value.sessionThreadStatusRunning != null ->
+                    generator.writeObject(value.sessionThreadStatusRunning)
+                value.sessionThreadStatusIdle != null ->
+                    generator.writeObject(value.sessionThreadStatusIdle)
+                value.sessionThreadStatusTerminated != null ->
+                    generator.writeObject(value.sessionThreadStatusTerminated)
+                value.sessionThreadStatusRescheduled != null ->
+                    generator.writeObject(value.sessionThreadStatusRescheduled)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsSessionEvent")
             }

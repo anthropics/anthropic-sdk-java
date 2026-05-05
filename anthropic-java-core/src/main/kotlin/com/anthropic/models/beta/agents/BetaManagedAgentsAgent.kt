@@ -14,6 +14,7 @@ import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagent
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -42,6 +43,7 @@ private constructor(
     private val mcpServers: JsonField<List<BetaManagedAgentsMcpServerUrlDefinition>>,
     private val metadata: JsonField<Metadata>,
     private val model: JsonField<BetaManagedAgentsModelConfig>,
+    private val multiagent: JsonField<BetaManagedAgentsMultiagent>,
     private val name: JsonField<String>,
     private val skills: JsonField<List<Skill>>,
     private val system: JsonField<String>,
@@ -71,6 +73,9 @@ private constructor(
         @JsonProperty("model")
         @ExcludeMissing
         model: JsonField<BetaManagedAgentsModelConfig> = JsonMissing.of(),
+        @JsonProperty("multiagent")
+        @ExcludeMissing
+        multiagent: JsonField<BetaManagedAgentsMultiagent> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("skills") @ExcludeMissing skills: JsonField<List<Skill>> = JsonMissing.of(),
         @JsonProperty("system") @ExcludeMissing system: JsonField<String> = JsonMissing.of(),
@@ -88,6 +93,7 @@ private constructor(
         mcpServers,
         metadata,
         model,
+        multiagent,
         name,
         skills,
         system,
@@ -146,6 +152,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun model(): BetaManagedAgentsModelConfig = model.getRequired("model")
+
+    /**
+     * Resolved coordinator topology with a concrete agent roster.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun multiagent(): Optional<BetaManagedAgentsMultiagent> = multiagent.getOptional("multiagent")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -251,6 +265,15 @@ private constructor(
     fun _model(): JsonField<BetaManagedAgentsModelConfig> = model
 
     /**
+     * Returns the raw JSON value of [multiagent].
+     *
+     * Unlike [multiagent], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("multiagent")
+    @ExcludeMissing
+    fun _multiagent(): JsonField<BetaManagedAgentsMultiagent> = multiagent
+
+    /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
@@ -327,6 +350,7 @@ private constructor(
          * .mcpServers()
          * .metadata()
          * .model()
+         * .multiagent()
          * .name()
          * .skills()
          * .system()
@@ -350,6 +374,7 @@ private constructor(
             null
         private var metadata: JsonField<Metadata>? = null
         private var model: JsonField<BetaManagedAgentsModelConfig>? = null
+        private var multiagent: JsonField<BetaManagedAgentsMultiagent>? = null
         private var name: JsonField<String>? = null
         private var skills: JsonField<MutableList<Skill>>? = null
         private var system: JsonField<String>? = null
@@ -368,6 +393,7 @@ private constructor(
             mcpServers = betaManagedAgentsAgent.mcpServers.map { it.toMutableList() }
             metadata = betaManagedAgentsAgent.metadata
             model = betaManagedAgentsAgent.model
+            multiagent = betaManagedAgentsAgent.multiagent
             name = betaManagedAgentsAgent.name
             skills = betaManagedAgentsAgent.skills.map { it.toMutableList() }
             system = betaManagedAgentsAgent.system
@@ -480,6 +506,42 @@ private constructor(
          * yet supported value.
          */
         fun model(model: JsonField<BetaManagedAgentsModelConfig>) = apply { this.model = model }
+
+        /** Resolved coordinator topology with a concrete agent roster. */
+        fun multiagent(multiagent: BetaManagedAgentsMultiagent?) =
+            multiagent(JsonField.ofNullable(multiagent))
+
+        /** Alias for calling [Builder.multiagent] with `multiagent.orElse(null)`. */
+        fun multiagent(multiagent: Optional<BetaManagedAgentsMultiagent>) =
+            multiagent(multiagent.getOrNull())
+
+        /**
+         * Sets [Builder.multiagent] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.multiagent] with a well-typed
+         * [BetaManagedAgentsMultiagent] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun multiagent(multiagent: JsonField<BetaManagedAgentsMultiagent>) = apply {
+            this.multiagent = multiagent
+        }
+
+        /**
+         * Alias for calling [multiagent] with the following:
+         * ```java
+         * BetaManagedAgentsMultiagent.builder()
+         *     .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
+         *     .agents(agents)
+         *     .build()
+         * ```
+         */
+        fun coordinatorMultiagent(agents: List<BetaManagedAgentsAgentReference>) =
+            multiagent(
+                BetaManagedAgentsMultiagent.builder()
+                    .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
+                    .agents(agents)
+                    .build()
+            )
 
         fun name(name: String) = name(JsonField.of(name))
 
@@ -636,6 +698,7 @@ private constructor(
          * .mcpServers()
          * .metadata()
          * .model()
+         * .multiagent()
          * .name()
          * .skills()
          * .system()
@@ -656,6 +719,7 @@ private constructor(
                 checkRequired("mcpServers", mcpServers).map { it.toImmutable() },
                 checkRequired("metadata", metadata),
                 checkRequired("model", model),
+                checkRequired("multiagent", multiagent),
                 checkRequired("name", name),
                 checkRequired("skills", skills).map { it.toImmutable() },
                 checkRequired("system", system),
@@ -689,6 +753,7 @@ private constructor(
         mcpServers().forEach { it.validate() }
         metadata().validate()
         model().validate()
+        multiagent().ifPresent { it.validate() }
         name()
         skills().forEach { it.validate() }
         system()
@@ -721,6 +786,7 @@ private constructor(
             (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (model.asKnown().getOrNull()?.validity() ?: 0) +
+            (multiagent.asKnown().getOrNull()?.validity() ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (skills.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (system.asKnown().isPresent) 1 else 0) +
@@ -1448,6 +1514,7 @@ private constructor(
             mcpServers == other.mcpServers &&
             metadata == other.metadata &&
             model == other.model &&
+            multiagent == other.multiagent &&
             name == other.name &&
             skills == other.skills &&
             system == other.system &&
@@ -1467,6 +1534,7 @@ private constructor(
             mcpServers,
             metadata,
             model,
+            multiagent,
             name,
             skills,
             system,
@@ -1481,5 +1549,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsAgent{id=$id, archivedAt=$archivedAt, createdAt=$createdAt, description=$description, mcpServers=$mcpServers, metadata=$metadata, model=$model, name=$name, skills=$skills, system=$system, tools=$tools, type=$type, updatedAt=$updatedAt, version=$version, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsAgent{id=$id, archivedAt=$archivedAt, createdAt=$createdAt, description=$description, mcpServers=$mcpServers, metadata=$metadata, model=$model, multiagent=$multiagent, name=$name, skills=$skills, system=$system, tools=$tools, type=$type, updatedAt=$updatedAt, version=$version, additionalProperties=$additionalProperties}"
 }

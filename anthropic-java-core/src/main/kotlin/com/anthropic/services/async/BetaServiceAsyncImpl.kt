@@ -23,6 +23,8 @@ import com.anthropic.services.async.beta.UserProfileServiceAsync
 import com.anthropic.services.async.beta.UserProfileServiceAsyncImpl
 import com.anthropic.services.async.beta.VaultServiceAsync
 import com.anthropic.services.async.beta.VaultServiceAsyncImpl
+import com.anthropic.services.async.beta.WebhookServiceAsync
+import com.anthropic.services.async.beta.WebhookServiceAsyncImpl
 import java.util.function.Consumer
 
 class BetaServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -54,6 +56,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     private val skills: SkillServiceAsync by lazy { SkillServiceAsyncImpl(clientOptions) }
 
+    private val webhooks: WebhookServiceAsync by lazy { WebhookServiceAsyncImpl(clientOptions) }
+
     private val userProfiles: UserProfileServiceAsync by lazy {
         UserProfileServiceAsyncImpl(clientOptions)
     }
@@ -80,6 +84,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun files(): FileServiceAsync = files
 
     override fun skills(): SkillServiceAsync = skills
+
+    override fun webhooks(): WebhookServiceAsync = webhooks
 
     override fun userProfiles(): UserProfileServiceAsync = userProfiles
 
@@ -122,6 +128,10 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
             SkillServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val webhooks: WebhookServiceAsync.WithRawResponse by lazy {
+            WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val userProfiles: UserProfileServiceAsync.WithRawResponse by lazy {
             UserProfileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -150,6 +160,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         override fun files(): FileServiceAsync.WithRawResponse = files
 
         override fun skills(): SkillServiceAsync.WithRawResponse = skills
+
+        override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks
 
         override fun userProfiles(): UserProfileServiceAsync.WithRawResponse = userProfiles
     }

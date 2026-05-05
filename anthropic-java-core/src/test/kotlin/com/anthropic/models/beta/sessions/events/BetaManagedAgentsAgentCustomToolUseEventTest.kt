@@ -24,6 +24,7 @@ internal class BetaManagedAgentsAgentCustomToolUseEventTest {
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentCustomToolUseEvent.Type.AGENT_CUSTOM_TOOL_USE)
+                .sessionThreadId("session_thread_id")
                 .build()
 
         assertThat(betaManagedAgentsAgentCustomToolUseEvent.id()).isEqualTo("id")
@@ -38,6 +39,8 @@ internal class BetaManagedAgentsAgentCustomToolUseEventTest {
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaManagedAgentsAgentCustomToolUseEvent.type())
             .isEqualTo(BetaManagedAgentsAgentCustomToolUseEvent.Type.AGENT_CUSTOM_TOOL_USE)
+        assertThat(betaManagedAgentsAgentCustomToolUseEvent.sessionThreadId())
+            .contains("session_thread_id")
     }
 
     @Test
@@ -54,6 +57,7 @@ internal class BetaManagedAgentsAgentCustomToolUseEventTest {
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentCustomToolUseEvent.Type.AGENT_CUSTOM_TOOL_USE)
+                .sessionThreadId("session_thread_id")
                 .build()
 
         val roundtrippedBetaManagedAgentsAgentCustomToolUseEvent =

@@ -49,7 +49,21 @@ internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessa
                 "session.error",
                 "session.deleted",
                 "span.model_request_start",
-                "span.model_request_end" -> yield(message)
+                "span.model_request_end",
+                "span.outcome_evaluation_start",
+                "span.outcome_evaluation_ongoing",
+                "span.outcome_evaluation_end",
+                "user.define_outcome",
+                "agent.thread_message_received",
+                "agent.thread_message_sent",
+                "agent.session_thread_message_received",
+                "agent.session_thread_message_sent",
+                "session.thread_created",
+                "session.thread_status_created",
+                "session.thread_status_running",
+                "session.thread_status_idle",
+                "session.thread_status_rescheduled",
+                "session.thread_status_terminated" -> yield(message)
                 "ping" -> continue
                 "error" -> {
                     throw SseException.builder()

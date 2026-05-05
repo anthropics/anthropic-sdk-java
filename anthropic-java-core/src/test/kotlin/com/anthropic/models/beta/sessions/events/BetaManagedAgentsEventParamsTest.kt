@@ -28,6 +28,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userInterrupt()).isEmpty
         assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
     }
 
     @Test
@@ -55,6 +56,7 @@ internal class BetaManagedAgentsEventParamsTest {
         val userInterrupt =
             BetaManagedAgentsUserInterruptEventParams.builder()
                 .type(BetaManagedAgentsUserInterruptEventParams.Type.USER_INTERRUPT)
+                .sessionThreadId("session_thread_id")
                 .build()
 
         val betaManagedAgentsEventParams =
@@ -64,6 +66,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userInterrupt()).contains(userInterrupt)
         assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
     }
 
     @Test
@@ -73,6 +76,7 @@ internal class BetaManagedAgentsEventParamsTest {
             BetaManagedAgentsEventParams.ofUserInterrupt(
                 BetaManagedAgentsUserInterruptEventParams.builder()
                     .type(BetaManagedAgentsUserInterruptEventParams.Type.USER_INTERRUPT)
+                    .sessionThreadId("session_thread_id")
                     .build()
             )
 
@@ -103,6 +107,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userToolConfirmation())
             .contains(userToolConfirmation)
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
     }
 
     @Test
@@ -147,6 +152,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
         assertThat(betaManagedAgentsEventParams.userCustomToolResult())
             .contains(userCustomToolResult)
+        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
     }
 
     @Test
@@ -162,6 +168,48 @@ internal class BetaManagedAgentsEventParamsTest {
                     )
                     .addTextContent("Where is my order #1234?")
                     .isError(true)
+                    .build()
+            )
+
+        val roundtrippedBetaManagedAgentsEventParams =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaManagedAgentsEventParams),
+                jacksonTypeRef<BetaManagedAgentsEventParams>(),
+            )
+
+        assertThat(roundtrippedBetaManagedAgentsEventParams).isEqualTo(betaManagedAgentsEventParams)
+    }
+
+    @Test
+    fun ofUserDefineOutcome() {
+        val userDefineOutcome =
+            BetaManagedAgentsUserDefineOutcomeEventParams.builder()
+                .description("Produce a 2-page summary as summary.md")
+                .textRubric("Must cover all five sections; cite sources inline.")
+                .type(BetaManagedAgentsUserDefineOutcomeEventParams.Type.USER_DEFINE_OUTCOME)
+                .maxIterations(3)
+                .build()
+
+        val betaManagedAgentsEventParams =
+            BetaManagedAgentsEventParams.ofUserDefineOutcome(userDefineOutcome)
+
+        assertThat(betaManagedAgentsEventParams.userMessage()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userInterrupt()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).contains(userDefineOutcome)
+    }
+
+    @Test
+    fun ofUserDefineOutcomeRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaManagedAgentsEventParams =
+            BetaManagedAgentsEventParams.ofUserDefineOutcome(
+                BetaManagedAgentsUserDefineOutcomeEventParams.builder()
+                    .description("Produce a 2-page summary as summary.md")
+                    .textRubric("Must cover all five sections; cite sources inline.")
+                    .type(BetaManagedAgentsUserDefineOutcomeEventParams.Type.USER_DEFINE_OUTCOME)
+                    .maxIterations(3)
                     .build()
             )
 

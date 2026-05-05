@@ -214,6 +214,14 @@ private constructor(
             body.addUserCustomToolResultEvent(customToolUseId)
         }
 
+        /**
+         * Alias for calling [addEvent] with
+         * `BetaManagedAgentsEventParams.ofUserDefineOutcome(userDefineOutcome)`.
+         */
+        fun addEvent(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams) = apply {
+            body.addEvent(userDefineOutcome)
+        }
+
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
         }
@@ -532,6 +540,13 @@ private constructor(
                         .customToolUseId(customToolUseId)
                         .build()
                 )
+
+            /**
+             * Alias for calling [addEvent] with
+             * `BetaManagedAgentsEventParams.ofUserDefineOutcome(userDefineOutcome)`.
+             */
+            fun addEvent(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams) =
+                addEvent(BetaManagedAgentsEventParams.ofUserDefineOutcome(userDefineOutcome))
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()

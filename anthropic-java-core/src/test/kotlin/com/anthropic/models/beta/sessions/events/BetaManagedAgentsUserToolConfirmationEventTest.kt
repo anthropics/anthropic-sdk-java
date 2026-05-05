@@ -20,6 +20,7 @@ internal class BetaManagedAgentsUserToolConfirmationEventTest {
                 .type(BetaManagedAgentsUserToolConfirmationEvent.Type.USER_TOOL_CONFIRMATION)
                 .denyMessage("deny_message")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .sessionThreadId("session_thread_id")
                 .build()
 
         assertThat(betaManagedAgentsUserToolConfirmationEvent.id()).isEqualTo("id")
@@ -32,6 +33,8 @@ internal class BetaManagedAgentsUserToolConfirmationEventTest {
             .contains("deny_message")
         assertThat(betaManagedAgentsUserToolConfirmationEvent.processedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(betaManagedAgentsUserToolConfirmationEvent.sessionThreadId())
+            .contains("session_thread_id")
     }
 
     @Test
@@ -45,6 +48,7 @@ internal class BetaManagedAgentsUserToolConfirmationEventTest {
                 .type(BetaManagedAgentsUserToolConfirmationEvent.Type.USER_TOOL_CONFIRMATION)
                 .denyMessage("deny_message")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .sessionThreadId("session_thread_id")
                 .build()
 
         val roundtrippedBetaManagedAgentsUserToolConfirmationEvent =

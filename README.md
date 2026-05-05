@@ -50,8 +50,8 @@ import com.anthropic.models.messages.Message;
 import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
 
-// Configures using the `anthropic.apiKey`, `anthropic.authToken` and `anthropic.baseUrl` system properties
-// Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
+// Configures using the `anthropic.apiKey`, `anthropic.authToken`, `anthropic.webhookSigningKey` and `anthropic.baseUrl` system properties
+// Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_WEBHOOK_SIGNING_KEY` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
 MessageCreateParams params = MessageCreateParams.builder()
@@ -70,8 +70,8 @@ Configure the client using system properties or environment variables:
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 
-// Configures using the `anthropic.apiKey`, `anthropic.authToken` and `anthropic.baseUrl` system properties
-// Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
+// Configures using the `anthropic.apiKey`, `anthropic.authToken`, `anthropic.webhookSigningKey` and `anthropic.baseUrl` system properties
+// Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_WEBHOOK_SIGNING_KEY` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 ```
 
@@ -93,8 +93,8 @@ import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 
 AnthropicClient client = AnthropicOkHttpClient.builder()
-    // Configures using the `anthropic.apiKey`, `anthropic.authToken` and `anthropic.baseUrl` system properties
-    // Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
+    // Configures using the `anthropic.apiKey`, `anthropic.authToken`, `anthropic.webhookSigningKey` and `anthropic.baseUrl` system properties
+    // Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_WEBHOOK_SIGNING_KEY` and `ANTHROPIC_BASE_URL` environment variables
     .fromEnv()
     .apiKey("my-anthropic-api-key")
     .build();
@@ -102,11 +102,12 @@ AnthropicClient client = AnthropicOkHttpClient.builder()
 
 See this table for the available options:
 
-| Setter      | System property       | Environment variable   | Required | Default value                 |
-| ----------- | --------------------- | ---------------------- | -------- | ----------------------------- |
-| `apiKey`    | `anthropic.apiKey`    | `ANTHROPIC_API_KEY`    | false    | -                             |
-| `authToken` | `anthropic.authToken` | `ANTHROPIC_AUTH_TOKEN` | false    | -                             |
-| `baseUrl`   | `anthropic.baseUrl`   | `ANTHROPIC_BASE_URL`   | true     | `"https://api.anthropic.com"` |
+| Setter       | System property               | Environment variable            | Required | Default value                 |
+| ------------ | ----------------------------- | ------------------------------- | -------- | ----------------------------- |
+| `apiKey`     | `anthropic.apiKey`            | `ANTHROPIC_API_KEY`             | false    | -                             |
+| `authToken`  | `anthropic.authToken`         | `ANTHROPIC_AUTH_TOKEN`          | false    | -                             |
+| `webhookKey` | `anthropic.webhookSigningKey` | `ANTHROPIC_WEBHOOK_SIGNING_KEY` | false    | -                             |
+| `baseUrl`    | `anthropic.baseUrl`           | `ANTHROPIC_BASE_URL`            | true     | `"https://api.anthropic.com"` |
 
 System properties take precedence over environment variables.
 
@@ -155,8 +156,8 @@ import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `anthropic.apiKey`, `anthropic.authToken` and `anthropic.baseUrl` system properties
-// Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
+// Configures using the `anthropic.apiKey`, `anthropic.authToken`, `anthropic.webhookSigningKey` and `anthropic.baseUrl` system properties
+// Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_WEBHOOK_SIGNING_KEY` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
 MessageCreateParams params = MessageCreateParams.builder()
@@ -177,8 +178,8 @@ import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `anthropic.apiKey`, `anthropic.authToken` and `anthropic.baseUrl` system properties
-// Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` environment variables
+// Configures using the `anthropic.apiKey`, `anthropic.authToken`, `anthropic.webhookSigningKey` and `anthropic.baseUrl` system properties
+// Or configures using the `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_WEBHOOK_SIGNING_KEY` and `ANTHROPIC_BASE_URL` environment variables
 AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 
 MessageCreateParams params = MessageCreateParams.builder()

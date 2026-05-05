@@ -11,6 +11,8 @@ import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
 import com.fasterxml.jackson.annotation.JsonCreator
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -19,15 +21,32 @@ import kotlin.jvm.optionals.getOrNull
 class EventListParams
 private constructor(
     private val sessionId: String?,
+    private val createdAtGt: OffsetDateTime?,
+    private val createdAtGte: OffsetDateTime?,
+    private val createdAtLt: OffsetDateTime?,
+    private val createdAtLte: OffsetDateTime?,
     private val limit: Int?,
     private val order: Order?,
     private val page: String?,
+    private val types: List<String>?,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun sessionId(): Optional<String> = Optional.ofNullable(sessionId)
+
+    /** Return events created after this time (exclusive). */
+    fun createdAtGt(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGt)
+
+    /** Return events created at or after this time (inclusive). */
+    fun createdAtGte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGte)
+
+    /** Return events created before this time (exclusive). */
+    fun createdAtLt(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLt)
+
+    /** Return events created at or before this time (inclusive). */
+    fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
 
     /** Query parameter for limit */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
@@ -37,6 +56,12 @@ private constructor(
 
     /** Opaque pagination cursor from a previous response's next_page. */
     fun page(): Optional<String> = Optional.ofNullable(page)
+
+    /**
+     * Filter by event type. Values match the `type` field on returned events (for example,
+     * `user.message` or `agent.tool_use`). Omit to return all event types.
+     */
+    fun types(): Optional<List<String>> = Optional.ofNullable(types)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
@@ -61,9 +86,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var sessionId: String? = null
+        private var createdAtGt: OffsetDateTime? = null
+        private var createdAtGte: OffsetDateTime? = null
+        private var createdAtLt: OffsetDateTime? = null
+        private var createdAtLte: OffsetDateTime? = null
         private var limit: Int? = null
         private var order: Order? = null
         private var page: String? = null
+        private var types: MutableList<String>? = null
         private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -71,9 +101,14 @@ private constructor(
         @JvmSynthetic
         internal fun from(eventListParams: EventListParams) = apply {
             sessionId = eventListParams.sessionId
+            createdAtGt = eventListParams.createdAtGt
+            createdAtGte = eventListParams.createdAtGte
+            createdAtLt = eventListParams.createdAtLt
+            createdAtLte = eventListParams.createdAtLte
             limit = eventListParams.limit
             order = eventListParams.order
             page = eventListParams.page
+            types = eventListParams.types?.toMutableList()
             betas = eventListParams.betas?.toMutableList()
             additionalHeaders = eventListParams.additionalHeaders.toBuilder()
             additionalQueryParams = eventListParams.additionalQueryParams.toBuilder()
@@ -83,6 +118,34 @@ private constructor(
 
         /** Alias for calling [Builder.sessionId] with `sessionId.orElse(null)`. */
         fun sessionId(sessionId: Optional<String>) = sessionId(sessionId.getOrNull())
+
+        /** Return events created after this time (exclusive). */
+        fun createdAtGt(createdAtGt: OffsetDateTime?) = apply { this.createdAtGt = createdAtGt }
+
+        /** Alias for calling [Builder.createdAtGt] with `createdAtGt.orElse(null)`. */
+        fun createdAtGt(createdAtGt: Optional<OffsetDateTime>) =
+            createdAtGt(createdAtGt.getOrNull())
+
+        /** Return events created at or after this time (inclusive). */
+        fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
+
+        /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
+        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
+            createdAtGte(createdAtGte.getOrNull())
+
+        /** Return events created before this time (exclusive). */
+        fun createdAtLt(createdAtLt: OffsetDateTime?) = apply { this.createdAtLt = createdAtLt }
+
+        /** Alias for calling [Builder.createdAtLt] with `createdAtLt.orElse(null)`. */
+        fun createdAtLt(createdAtLt: Optional<OffsetDateTime>) =
+            createdAtLt(createdAtLt.getOrNull())
+
+        /** Return events created at or before this time (inclusive). */
+        fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
+
+        /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
+        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
+            createdAtLte(createdAtLte.getOrNull())
 
         /** Query parameter for limit */
         fun limit(limit: Int?) = apply { this.limit = limit }
@@ -108,6 +171,22 @@ private constructor(
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
+
+        /**
+         * Filter by event type. Values match the `type` field on returned events (for example,
+         * `user.message` or `agent.tool_use`). Omit to return all event types.
+         */
+        fun types(types: List<String>?) = apply { this.types = types?.toMutableList() }
+
+        /** Alias for calling [Builder.types] with `types.orElse(null)`. */
+        fun types(types: Optional<List<String>>) = types(types.getOrNull())
+
+        /**
+         * Adds a single [String] to [types].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addType(type: String) = apply { types = (types ?: mutableListOf()).apply { add(type) } }
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
@@ -239,9 +318,14 @@ private constructor(
         fun build(): EventListParams =
             EventListParams(
                 sessionId,
+                createdAtGt,
+                createdAtGte,
+                createdAtLt,
+                createdAtLte,
                 limit,
                 order,
                 page,
+                types?.toImmutable(),
                 betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -265,9 +349,22 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                createdAtGt?.let {
+                    put("created_at[gt]", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
+                createdAtGte?.let {
+                    put("created_at[gte]", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
+                createdAtLt?.let {
+                    put("created_at[lt]", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
+                createdAtLte?.let {
+                    put("created_at[lte]", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
                 limit?.let { put("limit", it.toString()) }
                 order?.let { put("order", it.toString()) }
                 page?.let { put("page", it) }
+                types?.forEach { put("types[]", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -416,17 +513,35 @@ private constructor(
 
         return other is EventListParams &&
             sessionId == other.sessionId &&
+            createdAtGt == other.createdAtGt &&
+            createdAtGte == other.createdAtGte &&
+            createdAtLt == other.createdAtLt &&
+            createdAtLte == other.createdAtLte &&
             limit == other.limit &&
             order == other.order &&
             page == other.page &&
+            types == other.types &&
             betas == other.betas &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(sessionId, limit, order, page, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            sessionId,
+            createdAtGt,
+            createdAtGte,
+            createdAtLt,
+            createdAtLte,
+            limit,
+            order,
+            page,
+            types,
+            betas,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "EventListParams{sessionId=$sessionId, limit=$limit, order=$order, page=$page, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "EventListParams{sessionId=$sessionId, createdAtGt=$createdAtGt, createdAtGte=$createdAtGte, createdAtLt=$createdAtLt, createdAtLte=$createdAtLte, limit=$limit, order=$order, page=$page, types=$types, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

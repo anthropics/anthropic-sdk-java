@@ -17,7 +17,9 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkillParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfigParams
+import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSelfParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsUrlMcpServerParams
+import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -51,6 +53,17 @@ internal class AgentServiceTest {
                     .metadata(
                         AgentCreateParams.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
+                    .multiagent(
+                        BetaManagedAgentsMultiagentParams.builder()
+                            .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                            .addAgent(
+                                BetaManagedAgentsMultiagentSelfParams.builder()
+                                    .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                                    .build()
+                            )
+                            .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                             .build()
                     )
                     .addSkill(
@@ -156,6 +169,17 @@ internal class AgentServiceTest {
                         BetaManagedAgentsModelConfigParams.builder()
                             .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
                             .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
+                            .build()
+                    )
+                    .multiagent(
+                        BetaManagedAgentsMultiagentParams.builder()
+                            .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                            .addAgent(
+                                BetaManagedAgentsMultiagentSelfParams.builder()
+                                    .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                                    .build()
+                            )
+                            .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                             .build()
                     )
                     .name("name")

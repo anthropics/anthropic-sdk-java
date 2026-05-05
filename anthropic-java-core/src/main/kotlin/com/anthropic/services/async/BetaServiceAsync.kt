@@ -13,6 +13,7 @@ import com.anthropic.services.async.beta.SessionServiceAsync
 import com.anthropic.services.async.beta.SkillServiceAsync
 import com.anthropic.services.async.beta.UserProfileServiceAsync
 import com.anthropic.services.async.beta.VaultServiceAsync
+import com.anthropic.services.async.beta.WebhookServiceAsync
 import java.util.function.Consumer
 
 interface BetaServiceAsync {
@@ -47,6 +48,8 @@ interface BetaServiceAsync {
 
     fun skills(): SkillServiceAsync
 
+    fun webhooks(): WebhookServiceAsync
+
     fun userProfiles(): UserProfileServiceAsync
 
     /** A view of [BetaServiceAsync] that provides access to raw HTTP responses for each method. */
@@ -76,6 +79,8 @@ interface BetaServiceAsync {
         fun files(): FileServiceAsync.WithRawResponse
 
         fun skills(): SkillServiceAsync.WithRawResponse
+
+        fun webhooks(): WebhookServiceAsync.WithRawResponse
 
         fun userProfiles(): UserProfileServiceAsync.WithRawResponse
     }

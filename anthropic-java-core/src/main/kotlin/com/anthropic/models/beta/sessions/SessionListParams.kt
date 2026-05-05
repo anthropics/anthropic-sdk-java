@@ -31,6 +31,7 @@ private constructor(
     private val memoryStoreId: String?,
     private val order: Order?,
     private val page: String?,
+    private val statuses: List<Status>?,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -69,6 +70,9 @@ private constructor(
     /** Opaque pagination cursor from a previous response's next_page. */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
+    /** Filter by session status. Repeat the parameter to match any of multiple statuses. */
+    fun statuses(): Optional<List<Status>> = Optional.ofNullable(statuses)
+
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
@@ -102,6 +106,7 @@ private constructor(
         private var memoryStoreId: String? = null
         private var order: Order? = null
         private var page: String? = null
+        private var statuses: MutableList<Status>? = null
         private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -119,6 +124,7 @@ private constructor(
             memoryStoreId = sessionListParams.memoryStoreId
             order = sessionListParams.order
             page = sessionListParams.page
+            statuses = sessionListParams.statuses?.toMutableList()
             betas = sessionListParams.betas?.toMutableList()
             additionalHeaders = sessionListParams.additionalHeaders.toBuilder()
             additionalQueryParams = sessionListParams.additionalQueryParams.toBuilder()
@@ -218,6 +224,21 @@ private constructor(
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
+
+        /** Filter by session status. Repeat the parameter to match any of multiple statuses. */
+        fun statuses(statuses: List<Status>?) = apply { this.statuses = statuses?.toMutableList() }
+
+        /** Alias for calling [Builder.statuses] with `statuses.orElse(null)`. */
+        fun statuses(statuses: Optional<List<Status>>) = statuses(statuses.getOrNull())
+
+        /**
+         * Adds a single [Status] to [statuses].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addStatus(status: Status) = apply {
+            statuses = (statuses ?: mutableListOf()).apply { add(status) }
+        }
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
@@ -359,6 +380,7 @@ private constructor(
                 memoryStoreId,
                 order,
                 page,
+                statuses?.toImmutable(),
                 betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -395,6 +417,7 @@ private constructor(
                 memoryStoreId?.let { put("memory_store_id", it) }
                 order?.let { put("order", it.toString()) }
                 page?.let { put("page", it) }
+                statuses?.forEach { put("statuses[]", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -536,6 +559,155 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /** SessionStatus enum */
+    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val RESCHEDULING = of("rescheduling")
+
+            @JvmField val RUNNING = of("running")
+
+            @JvmField val IDLE = of("idle")
+
+            @JvmField val TERMINATED = of("terminated")
+
+            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+        }
+
+        /** An enum containing [Status]'s known values. */
+        enum class Known {
+            RESCHEDULING,
+            RUNNING,
+            IDLE,
+            TERMINATED,
+        }
+
+        /**
+         * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Status] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            RESCHEDULING,
+            RUNNING,
+            IDLE,
+            TERMINATED,
+            /** An enum member indicating that [Status] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                RESCHEDULING -> Value.RESCHEDULING
+                RUNNING -> Value.RUNNING
+                IDLE -> Value.IDLE
+                TERMINATED -> Value.TERMINATED
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                RESCHEDULING -> Known.RESCHEDULING
+                RUNNING -> Known.RUNNING
+                IDLE -> Known.IDLE
+                TERMINATED -> Known.TERMINATED
+                else -> throw AnthropicInvalidDataException("Unknown Status: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Status = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Status && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -553,6 +725,7 @@ private constructor(
             memoryStoreId == other.memoryStoreId &&
             order == other.order &&
             page == other.page &&
+            statuses == other.statuses &&
             betas == other.betas &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -571,11 +744,12 @@ private constructor(
             memoryStoreId,
             order,
             page,
+            statuses,
             betas,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "SessionListParams{agentId=$agentId, agentVersion=$agentVersion, createdAtGt=$createdAtGt, createdAtGte=$createdAtGte, createdAtLt=$createdAtLt, createdAtLte=$createdAtLte, includeArchived=$includeArchived, limit=$limit, memoryStoreId=$memoryStoreId, order=$order, page=$page, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SessionListParams{agentId=$agentId, agentVersion=$agentVersion, createdAtGt=$createdAtGt, createdAtGte=$createdAtGte, createdAtLt=$createdAtLt, createdAtLte=$createdAtLte, includeArchived=$includeArchived, limit=$limit, memoryStoreId=$memoryStoreId, order=$order, page=$page, statuses=$statuses, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

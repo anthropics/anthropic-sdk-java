@@ -31,6 +31,8 @@ import com.anthropic.services.blocking.beta.sessions.EventService
 import com.anthropic.services.blocking.beta.sessions.EventServiceImpl
 import com.anthropic.services.blocking.beta.sessions.ResourceService
 import com.anthropic.services.blocking.beta.sessions.ResourceServiceImpl
+import com.anthropic.services.blocking.beta.sessions.ThreadService
+import com.anthropic.services.blocking.beta.sessions.ThreadServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -51,6 +53,8 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
 
     private val resources: ResourceService by lazy { ResourceServiceImpl(clientOptions) }
 
+    private val threads: ThreadService by lazy { ThreadServiceImpl(clientOptions) }
+
     override fun withRawResponse(): SessionService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): SessionService =
@@ -59,6 +63,8 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
     override fun events(): EventService = events
 
     override fun resources(): ResourceService = resources
+
+    override fun threads(): ThreadService = threads
 
     override fun create(
         params: SessionCreateParams,
@@ -113,6 +119,10 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
             ResourceServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val threads: ThreadService.WithRawResponse by lazy {
+            ThreadServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): SessionService.WithRawResponse =
@@ -123,6 +133,8 @@ class SessionServiceImpl internal constructor(private val clientOptions: ClientO
         override fun events(): EventService.WithRawResponse = events
 
         override fun resources(): ResourceService.WithRawResponse = resources
+
+        override fun threads(): ThreadService.WithRawResponse = threads
 
         private val createHandler: Handler<BetaManagedAgentsSession> =
             jsonHandler<BetaManagedAgentsSession>(clientOptions.jsonMapper)

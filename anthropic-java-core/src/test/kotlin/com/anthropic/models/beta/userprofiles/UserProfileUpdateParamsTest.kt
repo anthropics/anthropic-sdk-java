@@ -21,6 +21,8 @@ internal class UserProfileUpdateParamsTest {
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
+            .name("x")
+            .relationship(UserProfileUpdateParams.Relationship.EXTERNAL)
             .build()
     }
 
@@ -48,6 +50,8 @@ internal class UserProfileUpdateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .name("x")
+                .relationship(UserProfileUpdateParams.Relationship.EXTERNAL)
                 .build()
 
         val headers = params._headers()
@@ -82,6 +86,8 @@ internal class UserProfileUpdateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .name("x")
+                .relationship(UserProfileUpdateParams.Relationship.EXTERNAL)
                 .build()
 
         val body = params._body()
@@ -93,6 +99,8 @@ internal class UserProfileUpdateParamsTest {
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
+        assertThat(body.name()).contains("x")
+        assertThat(body.relationship()).contains(UserProfileUpdateParams.Relationship.EXTERNAL)
     }
 
     @Test

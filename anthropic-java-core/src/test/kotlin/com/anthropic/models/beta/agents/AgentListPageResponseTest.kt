@@ -4,6 +4,7 @@ package com.anthropic.models.beta.agents
 
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
@@ -38,6 +39,18 @@ internal class AgentListPageResponseTest {
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
+                                .build()
+                        )
+                        .multiagent(
+                            BetaManagedAgentsMultiagent.builder()
+                                .addAgent(
+                                    BetaManagedAgentsAgentReference.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
+                                .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
                                 .build()
                         )
                         .name("My First Agent")
@@ -125,6 +138,18 @@ internal class AgentListPageResponseTest {
                             .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                             .build()
                     )
+                    .multiagent(
+                        BetaManagedAgentsMultiagent.builder()
+                            .addAgent(
+                                BetaManagedAgentsAgentReference.builder()
+                                    .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                    .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                    .version(1)
+                                    .build()
+                            )
+                            .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
+                            .build()
+                    )
                     .name("My First Agent")
                     .addSkill(
                         BetaManagedAgentsAnthropicSkill.builder()
@@ -206,6 +231,18 @@ internal class AgentListPageResponseTest {
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
+                                .build()
+                        )
+                        .multiagent(
+                            BetaManagedAgentsMultiagent.builder()
+                                .addAgent(
+                                    BetaManagedAgentsAgentReference.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
+                                .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
                                 .build()
                         )
                         .name("My First Agent")

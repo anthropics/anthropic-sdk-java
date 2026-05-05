@@ -31,6 +31,8 @@ import com.anthropic.services.async.beta.sessions.EventServiceAsync
 import com.anthropic.services.async.beta.sessions.EventServiceAsyncImpl
 import com.anthropic.services.async.beta.sessions.ResourceServiceAsync
 import com.anthropic.services.async.beta.sessions.ResourceServiceAsyncImpl
+import com.anthropic.services.async.beta.sessions.ThreadServiceAsync
+import com.anthropic.services.async.beta.sessions.ThreadServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -52,6 +54,8 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
     private val resources: ResourceServiceAsync by lazy { ResourceServiceAsyncImpl(clientOptions) }
 
+    private val threads: ThreadServiceAsync by lazy { ThreadServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): SessionServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): SessionServiceAsync =
@@ -60,6 +64,8 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun events(): EventServiceAsync = events
 
     override fun resources(): ResourceServiceAsync = resources
+
+    override fun threads(): ThreadServiceAsync = threads
 
     override fun create(
         params: SessionCreateParams,
@@ -117,6 +123,10 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
             ResourceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val threads: ThreadServiceAsync.WithRawResponse by lazy {
+            ThreadServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): SessionServiceAsync.WithRawResponse =
@@ -127,6 +137,8 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
         override fun events(): EventServiceAsync.WithRawResponse = events
 
         override fun resources(): ResourceServiceAsync.WithRawResponse = resources
+
+        override fun threads(): ThreadServiceAsync.WithRawResponse = threads
 
         private val createHandler: Handler<BetaManagedAgentsSession> =
             jsonHandler<BetaManagedAgentsSession>(clientOptions.jsonMapper)

@@ -112,6 +112,7 @@ private constructor(
     @get:JvmName("maxRetries") val maxRetries: Int,
     private val apiKey: String?,
     private val authToken: String?,
+    private val webhookKey: String?,
 ) {
 
     init {
@@ -130,6 +131,8 @@ private constructor(
     fun apiKey(): Optional<String> = Optional.ofNullable(apiKey)
 
     fun authToken(): Optional<String> = Optional.ofNullable(authToken)
+
+    fun webhookKey(): Optional<String> = Optional.ofNullable(webhookKey)
 
     fun toBuilder() = Builder().from(this)
 
@@ -172,6 +175,7 @@ private constructor(
         private var maxRetries: Int = 2
         private var apiKey: String? = null
         private var authToken: String? = null
+        private var webhookKey: String? = null
 
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
@@ -189,6 +193,7 @@ private constructor(
             maxRetries = clientOptions.maxRetries
             apiKey = clientOptions.apiKey
             authToken = clientOptions.authToken
+            webhookKey = clientOptions.webhookKey
         }
 
         /**
@@ -322,6 +327,11 @@ private constructor(
         /** Alias for calling [Builder.authToken] with `authToken.orElse(null)`. */
         fun authToken(authToken: Optional<String>) = authToken(authToken.getOrNull())
 
+        fun webhookKey(webhookKey: String?) = apply { this.webhookKey = webhookKey }
+
+        /** Alias for calling [Builder.webhookKey] with `webhookKey.orElse(null)`. */
+        fun webhookKey(webhookKey: Optional<String>) = webhookKey(webhookKey.getOrNull())
+
         fun headers(headers: Headers) = apply {
             this.headers.clear()
             putAllHeaders(headers)
@@ -409,11 +419,12 @@ private constructor(
          *
          * See this table for the available options:
          *
-         * |Setter     |System property      |Environment variable  |Required|Default value                |
-         * |-----------|---------------------|----------------------|--------|-----------------------------|
-         * |`apiKey`   |`anthropic.apiKey`   |`ANTHROPIC_API_KEY`   |false   |-                            |
-         * |`authToken`|`anthropic.authToken`|`ANTHROPIC_AUTH_TOKEN`|false   |-                            |
-         * |`baseUrl`  |`anthropic.baseUrl`  |`ANTHROPIC_BASE_URL`  |true    |`"https://api.anthropic.com"`|
+         * |Setter      |System property              |Environment variable           |Required|Default value                |
+         * |------------|-----------------------------|-------------------------------|--------|-----------------------------|
+         * |`apiKey`    |`anthropic.apiKey`           |`ANTHROPIC_API_KEY`            |false   |-                            |
+         * |`authToken` |`anthropic.authToken`        |`ANTHROPIC_AUTH_TOKEN`         |false   |-                            |
+         * |`webhookKey`|`anthropic.webhookSigningKey`|`ANTHROPIC_WEBHOOK_SIGNING_KEY`|false   |-                            |
+         * |`baseUrl`   |`anthropic.baseUrl`          |`ANTHROPIC_BASE_URL`           |true    |`"https://api.anthropic.com"`|
          *
          * System properties take precedence over environment variables.
          */
@@ -426,6 +437,9 @@ private constructor(
             }
             (System.getProperty("anthropic.authToken") ?: System.getenv("ANTHROPIC_AUTH_TOKEN"))
                 ?.let { authToken(it) }
+            (System.getProperty("anthropic.webhookSigningKey")
+                    ?: System.getenv("ANTHROPIC_WEBHOOK_SIGNING_KEY"))
+                ?.let { webhookKey(it) }
             System.getenv("ANTHROPIC_CUSTOM_HEADERS")?.let { customHeadersEnv ->
                 for (line in customHeadersEnv.split("\n")) {
                     val colon = line.indexOf(':')
@@ -516,6 +530,7 @@ private constructor(
                 maxRetries,
                 apiKey,
                 authToken,
+                webhookKey,
             )
         }
     }

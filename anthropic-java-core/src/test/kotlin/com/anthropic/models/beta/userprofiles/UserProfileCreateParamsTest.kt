@@ -15,6 +15,8 @@ internal class UserProfileCreateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .externalId("user_12345")
             .metadata(UserProfileCreateParams.Metadata.builder().build())
+            .name("x")
+            .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
             .build()
     }
 
@@ -25,6 +27,8 @@ internal class UserProfileCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .externalId("user_12345")
                 .metadata(UserProfileCreateParams.Metadata.builder().build())
+                .name("x")
+                .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
                 .build()
 
         val headers = params._headers()
@@ -51,12 +55,16 @@ internal class UserProfileCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .externalId("user_12345")
                 .metadata(UserProfileCreateParams.Metadata.builder().build())
+                .name("x")
+                .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
                 .build()
 
         val body = params._body()
 
         assertThat(body.externalId()).contains("user_12345")
         assertThat(body.metadata()).contains(UserProfileCreateParams.Metadata.builder().build())
+        assertThat(body.name()).contains("x")
+        assertThat(body.relationship()).contains(UserProfileCreateParams.Relationship.EXTERNAL)
     }
 
     @Test
