@@ -28,6 +28,7 @@ internal class BetaManagedAgentsAgentMcpToolUseEventTest {
                 .evaluatedPermission(
                     BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
                 )
+                .sessionThreadId("session_thread_id")
                 .build()
 
         assertThat(betaManagedAgentsAgentMcpToolUseEvent.id()).isEqualTo("id")
@@ -46,6 +47,8 @@ internal class BetaManagedAgentsAgentMcpToolUseEventTest {
             .isEqualTo(BetaManagedAgentsAgentMcpToolUseEvent.Type.AGENT_MCP_TOOL_USE)
         assertThat(betaManagedAgentsAgentMcpToolUseEvent.evaluatedPermission())
             .contains(BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW)
+        assertThat(betaManagedAgentsAgentMcpToolUseEvent.sessionThreadId())
+            .contains("session_thread_id")
     }
 
     @Test
@@ -66,6 +69,7 @@ internal class BetaManagedAgentsAgentMcpToolUseEventTest {
                 .evaluatedPermission(
                     BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
                 )
+                .sessionThreadId("session_thread_id")
                 .build()
 
         val roundtrippedBetaManagedAgentsAgentMcpToolUseEvent =

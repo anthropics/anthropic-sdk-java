@@ -18,6 +18,8 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentParams
+import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentRosterEntryParams
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -89,6 +91,15 @@ private constructor(
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
+     * A coordinator topology: the session's primary thread orchestrates work by spawning session
+     * threads, each running an agent drawn from the `agents` roster.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun multiagent(): Optional<BetaManagedAgentsMultiagentParams> = body.multiagent()
+
+    /**
      * Skills available to the agent. Maximum 20.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -146,6 +157,13 @@ private constructor(
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _metadata(): JsonField<Metadata> = body._metadata()
+
+    /**
+     * Returns the raw JSON value of [multiagent].
+     *
+     * Unlike [multiagent], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _multiagent(): JsonField<BetaManagedAgentsMultiagentParams> = body._multiagent()
 
     /**
      * Returns the raw JSON value of [skills].
@@ -341,6 +359,43 @@ private constructor(
          * value.
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
+
+        /**
+         * A coordinator topology: the session's primary thread orchestrates work by spawning
+         * session threads, each running an agent drawn from the `agents` roster.
+         */
+        fun multiagent(multiagent: BetaManagedAgentsMultiagentParams?) = apply {
+            body.multiagent(multiagent)
+        }
+
+        /** Alias for calling [Builder.multiagent] with `multiagent.orElse(null)`. */
+        fun multiagent(multiagent: Optional<BetaManagedAgentsMultiagentParams>) =
+            multiagent(multiagent.getOrNull())
+
+        /**
+         * Sets [Builder.multiagent] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.multiagent] with a well-typed
+         * [BetaManagedAgentsMultiagentParams] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun multiagent(multiagent: JsonField<BetaManagedAgentsMultiagentParams>) = apply {
+            body.multiagent(multiagent)
+        }
+
+        /**
+         * Alias for calling [multiagent] with the following:
+         * ```java
+         * BetaManagedAgentsMultiagentParams.builder()
+         *     .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
+         *     .agents(agents)
+         *     .build()
+         * ```
+         */
+        fun coordinatorMultiagent(agents: List<BetaManagedAgentsMultiagentRosterEntryParams>) =
+            apply {
+                body.coordinatorMultiagent(agents)
+            }
 
         /** Skills available to the agent. Maximum 20. */
         fun skills(skills: List<BetaManagedAgentsSkillParams>) = apply { body.skills(skills) }
@@ -617,6 +672,7 @@ private constructor(
         private val description: JsonField<String>,
         private val mcpServers: JsonField<List<BetaManagedAgentsUrlMcpServerParams>>,
         private val metadata: JsonField<Metadata>,
+        private val multiagent: JsonField<BetaManagedAgentsMultiagentParams>,
         private val skills: JsonField<List<BetaManagedAgentsSkillParams>>,
         private val system: JsonField<String>,
         private val tools: JsonField<List<Tool>>,
@@ -636,6 +692,9 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
+            @JsonProperty("multiagent")
+            @ExcludeMissing
+            multiagent: JsonField<BetaManagedAgentsMultiagentParams> = JsonMissing.of(),
             @JsonProperty("skills")
             @ExcludeMissing
             skills: JsonField<List<BetaManagedAgentsSkillParams>> = JsonMissing.of(),
@@ -647,6 +706,7 @@ private constructor(
             description,
             mcpServers,
             metadata,
+            multiagent,
             skills,
             system,
             tools,
@@ -696,6 +756,16 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
+
+        /**
+         * A coordinator topology: the session's primary thread orchestrates work by spawning
+         * session threads, each running an agent drawn from the `agents` roster.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun multiagent(): Optional<BetaManagedAgentsMultiagentParams> =
+            multiagent.getOptional("multiagent")
 
         /**
          * Skills available to the agent. Maximum 20.
@@ -762,6 +832,15 @@ private constructor(
         @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
 
         /**
+         * Returns the raw JSON value of [multiagent].
+         *
+         * Unlike [multiagent], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("multiagent")
+        @ExcludeMissing
+        fun _multiagent(): JsonField<BetaManagedAgentsMultiagentParams> = multiagent
+
+        /**
          * Returns the raw JSON value of [skills].
          *
          * Unlike [skills], this method doesn't throw if the JSON field has an unexpected type.
@@ -819,6 +898,7 @@ private constructor(
             private var mcpServers: JsonField<MutableList<BetaManagedAgentsUrlMcpServerParams>>? =
                 null
             private var metadata: JsonField<Metadata> = JsonMissing.of()
+            private var multiagent: JsonField<BetaManagedAgentsMultiagentParams> = JsonMissing.of()
             private var skills: JsonField<MutableList<BetaManagedAgentsSkillParams>>? = null
             private var system: JsonField<String> = JsonMissing.of()
             private var tools: JsonField<MutableList<Tool>>? = null
@@ -831,6 +911,7 @@ private constructor(
                 description = body.description
                 mcpServers = body.mcpServers.map { it.toMutableList() }
                 metadata = body.metadata
+                multiagent = body.multiagent
                 skills = body.skills.map { it.toMutableList() }
                 system = body.system
                 tools = body.tools.map { it.toMutableList() }
@@ -941,6 +1022,45 @@ private constructor(
              * supported value.
              */
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+
+            /**
+             * A coordinator topology: the session's primary thread orchestrates work by spawning
+             * session threads, each running an agent drawn from the `agents` roster.
+             */
+            fun multiagent(multiagent: BetaManagedAgentsMultiagentParams?) =
+                multiagent(JsonField.ofNullable(multiagent))
+
+            /** Alias for calling [Builder.multiagent] with `multiagent.orElse(null)`. */
+            fun multiagent(multiagent: Optional<BetaManagedAgentsMultiagentParams>) =
+                multiagent(multiagent.getOrNull())
+
+            /**
+             * Sets [Builder.multiagent] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.multiagent] with a well-typed
+             * [BetaManagedAgentsMultiagentParams] value instead. This method is primarily for
+             * setting the field to an undocumented or not yet supported value.
+             */
+            fun multiagent(multiagent: JsonField<BetaManagedAgentsMultiagentParams>) = apply {
+                this.multiagent = multiagent
+            }
+
+            /**
+             * Alias for calling [multiagent] with the following:
+             * ```java
+             * BetaManagedAgentsMultiagentParams.builder()
+             *     .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
+             *     .agents(agents)
+             *     .build()
+             * ```
+             */
+            fun coordinatorMultiagent(agents: List<BetaManagedAgentsMultiagentRosterEntryParams>) =
+                multiagent(
+                    BetaManagedAgentsMultiagentParams.builder()
+                        .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
+                        .agents(agents)
+                        .build()
+                )
 
             /** Skills available to the agent. Maximum 20. */
             fun skills(skills: List<BetaManagedAgentsSkillParams>) = skills(JsonField.of(skills))
@@ -1128,6 +1248,7 @@ private constructor(
                     description,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
+                    multiagent,
                     (skills ?: JsonMissing.of()).map { it.toImmutable() },
                     system,
                     (tools ?: JsonMissing.of()).map { it.toImmutable() },
@@ -1156,6 +1277,7 @@ private constructor(
             description()
             mcpServers().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
+            multiagent().ifPresent { it.validate() }
             skills().ifPresent { it.forEach { it.validate() } }
             system()
             tools().ifPresent { it.forEach { it.validate() } }
@@ -1183,6 +1305,7 @@ private constructor(
                 (if (description.asKnown().isPresent) 1 else 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                (multiagent.asKnown().getOrNull()?.validity() ?: 0) +
                 (skills.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (system.asKnown().isPresent) 1 else 0) +
                 (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
@@ -1198,6 +1321,7 @@ private constructor(
                 description == other.description &&
                 mcpServers == other.mcpServers &&
                 metadata == other.metadata &&
+                multiagent == other.multiagent &&
                 skills == other.skills &&
                 system == other.system &&
                 tools == other.tools &&
@@ -1211,6 +1335,7 @@ private constructor(
                 description,
                 mcpServers,
                 metadata,
+                multiagent,
                 skills,
                 system,
                 tools,
@@ -1221,7 +1346,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{model=$model, name=$name, description=$description, mcpServers=$mcpServers, metadata=$metadata, skills=$skills, system=$system, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{model=$model, name=$name, description=$description, mcpServers=$mcpServers, metadata=$metadata, multiagent=$multiagent, skills=$skills, system=$system, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /**

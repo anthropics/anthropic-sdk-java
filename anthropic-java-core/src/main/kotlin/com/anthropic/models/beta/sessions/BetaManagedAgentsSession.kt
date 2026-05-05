@@ -35,6 +35,7 @@ private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
     private val environmentId: JsonField<String>,
     private val metadata: JsonField<Metadata>,
+    private val outcomeEvaluations: JsonField<List<BetaManagedAgentsOutcomeEvaluationResource>>,
     private val resources: JsonField<List<BetaManagedAgentsSessionResource>>,
     private val stats: JsonField<BetaManagedAgentsSessionStats>,
     private val status: JsonField<Status>,
@@ -62,6 +63,10 @@ private constructor(
         @ExcludeMissing
         environmentId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
+        @JsonProperty("outcome_evaluations")
+        @ExcludeMissing
+        outcomeEvaluations: JsonField<List<BetaManagedAgentsOutcomeEvaluationResource>> =
+            JsonMissing.of(),
         @JsonProperty("resources")
         @ExcludeMissing
         resources: JsonField<List<BetaManagedAgentsSessionResource>> = JsonMissing.of(),
@@ -87,6 +92,7 @@ private constructor(
         createdAt,
         environmentId,
         metadata,
+        outcomeEvaluations,
         resources,
         stats,
         status,
@@ -140,6 +146,15 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun metadata(): Metadata = metadata.getRequired("metadata")
+
+    /**
+     * Per-outcome evaluation state. One entry per define_outcome event sent to the session.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun outcomeEvaluations(): List<BetaManagedAgentsOutcomeEvaluationResource> =
+        outcomeEvaluations.getRequired("outcome_evaluations")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -250,6 +265,17 @@ private constructor(
     @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
 
     /**
+     * Returns the raw JSON value of [outcomeEvaluations].
+     *
+     * Unlike [outcomeEvaluations], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("outcome_evaluations")
+    @ExcludeMissing
+    fun _outcomeEvaluations(): JsonField<List<BetaManagedAgentsOutcomeEvaluationResource>> =
+        outcomeEvaluations
+
+    /**
      * Returns the raw JSON value of [resources].
      *
      * Unlike [resources], this method doesn't throw if the JSON field has an unexpected type.
@@ -338,6 +364,7 @@ private constructor(
          * .createdAt()
          * .environmentId()
          * .metadata()
+         * .outcomeEvaluations()
          * .resources()
          * .stats()
          * .status()
@@ -360,6 +387,9 @@ private constructor(
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var environmentId: JsonField<String>? = null
         private var metadata: JsonField<Metadata>? = null
+        private var outcomeEvaluations:
+            JsonField<MutableList<BetaManagedAgentsOutcomeEvaluationResource>>? =
+            null
         private var resources: JsonField<MutableList<BetaManagedAgentsSessionResource>>? = null
         private var stats: JsonField<BetaManagedAgentsSessionStats>? = null
         private var status: JsonField<Status>? = null
@@ -378,6 +408,8 @@ private constructor(
             createdAt = betaManagedAgentsSession.createdAt
             environmentId = betaManagedAgentsSession.environmentId
             metadata = betaManagedAgentsSession.metadata
+            outcomeEvaluations =
+                betaManagedAgentsSession.outcomeEvaluations.map { it.toMutableList() }
             resources = betaManagedAgentsSession.resources.map { it.toMutableList() }
             stats = betaManagedAgentsSession.stats
             status = betaManagedAgentsSession.status
@@ -466,6 +498,35 @@ private constructor(
          * value.
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+
+        /** Per-outcome evaluation state. One entry per define_outcome event sent to the session. */
+        fun outcomeEvaluations(
+            outcomeEvaluations: List<BetaManagedAgentsOutcomeEvaluationResource>
+        ) = outcomeEvaluations(JsonField.of(outcomeEvaluations))
+
+        /**
+         * Sets [Builder.outcomeEvaluations] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outcomeEvaluations] with a well-typed
+         * `List<BetaManagedAgentsOutcomeEvaluationResource>` value instead. This method is
+         * primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun outcomeEvaluations(
+            outcomeEvaluations: JsonField<List<BetaManagedAgentsOutcomeEvaluationResource>>
+        ) = apply { this.outcomeEvaluations = outcomeEvaluations.map { it.toMutableList() } }
+
+        /**
+         * Adds a single [BetaManagedAgentsOutcomeEvaluationResource] to [outcomeEvaluations].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addOutcomeEvaluation(outcomeEvaluation: BetaManagedAgentsOutcomeEvaluationResource) =
+            apply {
+                outcomeEvaluations =
+                    (outcomeEvaluations ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("outcomeEvaluations", it).add(outcomeEvaluation)
+                    }
+            }
 
         fun resources(resources: List<BetaManagedAgentsSessionResource>) =
             resources(JsonField.of(resources))
@@ -656,6 +717,7 @@ private constructor(
          * .createdAt()
          * .environmentId()
          * .metadata()
+         * .outcomeEvaluations()
          * .resources()
          * .stats()
          * .status()
@@ -676,6 +738,7 @@ private constructor(
                 checkRequired("createdAt", createdAt),
                 checkRequired("environmentId", environmentId),
                 checkRequired("metadata", metadata),
+                checkRequired("outcomeEvaluations", outcomeEvaluations).map { it.toImmutable() },
                 checkRequired("resources", resources).map { it.toImmutable() },
                 checkRequired("stats", stats),
                 checkRequired("status", status),
@@ -709,6 +772,7 @@ private constructor(
         createdAt()
         environmentId()
         metadata().validate()
+        outcomeEvaluations().forEach { it.validate() }
         resources().forEach { it.validate() }
         stats().validate()
         status().validate()
@@ -741,6 +805,7 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (environmentId.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+            (outcomeEvaluations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (resources.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (stats.asKnown().getOrNull()?.validity() ?: 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1149,6 +1214,7 @@ private constructor(
             createdAt == other.createdAt &&
             environmentId == other.environmentId &&
             metadata == other.metadata &&
+            outcomeEvaluations == other.outcomeEvaluations &&
             resources == other.resources &&
             stats == other.stats &&
             status == other.status &&
@@ -1168,6 +1234,7 @@ private constructor(
             createdAt,
             environmentId,
             metadata,
+            outcomeEvaluations,
             resources,
             stats,
             status,
@@ -1183,5 +1250,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsSession{id=$id, agent=$agent, archivedAt=$archivedAt, createdAt=$createdAt, environmentId=$environmentId, metadata=$metadata, resources=$resources, stats=$stats, status=$status, title=$title, type=$type, updatedAt=$updatedAt, usage=$usage, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsSession{id=$id, agent=$agent, archivedAt=$archivedAt, createdAt=$createdAt, environmentId=$environmentId, metadata=$metadata, outcomeEvaluations=$outcomeEvaluations, resources=$resources, stats=$stats, status=$status, title=$title, type=$type, updatedAt=$updatedAt, usage=$usage, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
 }

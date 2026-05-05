@@ -13,6 +13,7 @@ import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsTokenEndpoi
 import com.anthropic.models.beta.vaults.credentials.CredentialArchiveParams
 import com.anthropic.models.beta.vaults.credentials.CredentialCreateParams
 import com.anthropic.models.beta.vaults.credentials.CredentialDeleteParams
+import com.anthropic.models.beta.vaults.credentials.CredentialMcpOAuthValidateParams
 import com.anthropic.models.beta.vaults.credentials.CredentialRetrieveParams
 import com.anthropic.models.beta.vaults.credentials.CredentialUpdateParams
 import java.time.OffsetDateTime
@@ -182,5 +183,27 @@ internal class CredentialServiceTest {
             )
 
         betaManagedAgentsCredential.validate()
+    }
+
+    @Disabled("prism can't find endpoint with beta only tag")
+    @Test
+    fun mcpOAuthValidate() {
+        val client =
+            AnthropicOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("my-anthropic-api-key")
+                .build()
+        val credentialService = client.beta().vaults().credentials()
+
+        val betaManagedAgentsCredentialValidation =
+            credentialService.mcpOAuthValidate(
+                CredentialMcpOAuthValidateParams.builder()
+                    .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .build()
+            )
+
+        betaManagedAgentsCredentialValidation.validate()
     }
 }

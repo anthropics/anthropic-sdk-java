@@ -31,6 +31,8 @@ internal class UserProfileServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .externalId("user_12345")
                     .metadata(UserProfileCreateParams.Metadata.builder().build())
+                    .name("x")
+                    .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
                     .build()
             )
 
@@ -77,6 +79,8 @@ internal class UserProfileServiceTest {
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
+                    .name("x")
+                    .relationship(UserProfileUpdateParams.Relationship.EXTERNAL)
                     .build()
             )
 

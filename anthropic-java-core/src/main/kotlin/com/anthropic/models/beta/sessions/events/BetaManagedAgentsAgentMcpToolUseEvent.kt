@@ -31,6 +31,7 @@ private constructor(
     private val processedAt: JsonField<OffsetDateTime>,
     private val type: JsonField<Type>,
     private val evaluatedPermission: JsonField<EvaluatedPermission>,
+    private val sessionThreadId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -49,7 +50,20 @@ private constructor(
         @JsonProperty("evaluated_permission")
         @ExcludeMissing
         evaluatedPermission: JsonField<EvaluatedPermission> = JsonMissing.of(),
-    ) : this(id, input, mcpServerName, name, processedAt, type, evaluatedPermission, mutableMapOf())
+        @JsonProperty("session_thread_id")
+        @ExcludeMissing
+        sessionThreadId: JsonField<String> = JsonMissing.of(),
+    ) : this(
+        id,
+        input,
+        mcpServerName,
+        name,
+        processedAt,
+        type,
+        evaluatedPermission,
+        sessionThreadId,
+        mutableMapOf(),
+    )
 
     /**
      * Unique identifier for this event.
@@ -107,6 +121,16 @@ private constructor(
         evaluatedPermission.getOptional("evaluated_permission")
 
     /**
+     * When set, this event was cross-posted from a subagent's thread to surface its permission
+     * request on the primary thread's stream. Empty on the thread's own events. Echo this on a
+     * `user.tool_confirmation` event to route the approval back.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun sessionThreadId(): Optional<String> = sessionThreadId.getOptional("session_thread_id")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -162,6 +186,15 @@ private constructor(
     @ExcludeMissing
     fun _evaluatedPermission(): JsonField<EvaluatedPermission> = evaluatedPermission
 
+    /**
+     * Returns the raw JSON value of [sessionThreadId].
+     *
+     * Unlike [sessionThreadId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("session_thread_id")
+    @ExcludeMissing
+    fun _sessionThreadId(): JsonField<String> = sessionThreadId
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -203,6 +236,7 @@ private constructor(
         private var processedAt: JsonField<OffsetDateTime>? = null
         private var type: JsonField<Type>? = null
         private var evaluatedPermission: JsonField<EvaluatedPermission> = JsonMissing.of()
+        private var sessionThreadId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -216,6 +250,7 @@ private constructor(
             processedAt = betaManagedAgentsAgentMcpToolUseEvent.processedAt
             type = betaManagedAgentsAgentMcpToolUseEvent.type
             evaluatedPermission = betaManagedAgentsAgentMcpToolUseEvent.evaluatedPermission
+            sessionThreadId = betaManagedAgentsAgentMcpToolUseEvent.sessionThreadId
             additionalProperties =
                 betaManagedAgentsAgentMcpToolUseEvent.additionalProperties.toMutableMap()
         }
@@ -306,6 +341,29 @@ private constructor(
             this.evaluatedPermission = evaluatedPermission
         }
 
+        /**
+         * When set, this event was cross-posted from a subagent's thread to surface its permission
+         * request on the primary thread's stream. Empty on the thread's own events. Echo this on a
+         * `user.tool_confirmation` event to route the approval back.
+         */
+        fun sessionThreadId(sessionThreadId: String?) =
+            sessionThreadId(JsonField.ofNullable(sessionThreadId))
+
+        /** Alias for calling [Builder.sessionThreadId] with `sessionThreadId.orElse(null)`. */
+        fun sessionThreadId(sessionThreadId: Optional<String>) =
+            sessionThreadId(sessionThreadId.getOrNull())
+
+        /**
+         * Sets [Builder.sessionThreadId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.sessionThreadId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun sessionThreadId(sessionThreadId: JsonField<String>) = apply {
+            this.sessionThreadId = sessionThreadId
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -351,6 +409,7 @@ private constructor(
                 checkRequired("processedAt", processedAt),
                 checkRequired("type", type),
                 evaluatedPermission,
+                sessionThreadId,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -377,6 +436,7 @@ private constructor(
         processedAt()
         type().validate()
         evaluatedPermission().ifPresent { it.validate() }
+        sessionThreadId()
         validated = true
     }
 
@@ -401,7 +461,8 @@ private constructor(
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
-            (evaluatedPermission.asKnown().getOrNull()?.validity() ?: 0)
+            (evaluatedPermission.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (sessionThreadId.asKnown().isPresent) 1 else 0)
 
     /** Input parameters for the tool call. */
     class Input
@@ -803,6 +864,7 @@ private constructor(
             processedAt == other.processedAt &&
             type == other.type &&
             evaluatedPermission == other.evaluatedPermission &&
+            sessionThreadId == other.sessionThreadId &&
             additionalProperties == other.additionalProperties
     }
 
@@ -815,6 +877,7 @@ private constructor(
             processedAt,
             type,
             evaluatedPermission,
+            sessionThreadId,
             additionalProperties,
         )
     }
@@ -822,5 +885,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsAgentMcpToolUseEvent{id=$id, input=$input, mcpServerName=$mcpServerName, name=$name, processedAt=$processedAt, type=$type, evaluatedPermission=$evaluatedPermission, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsAgentMcpToolUseEvent{id=$id, input=$input, mcpServerName=$mcpServerName, name=$name, processedAt=$processedAt, type=$type, evaluatedPermission=$evaluatedPermission, sessionThreadId=$sessionThreadId, additionalProperties=$additionalProperties}"
 }

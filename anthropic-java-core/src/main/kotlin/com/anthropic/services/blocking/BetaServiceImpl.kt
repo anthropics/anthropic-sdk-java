@@ -23,6 +23,8 @@ import com.anthropic.services.blocking.beta.UserProfileService
 import com.anthropic.services.blocking.beta.UserProfileServiceImpl
 import com.anthropic.services.blocking.beta.VaultService
 import com.anthropic.services.blocking.beta.VaultServiceImpl
+import com.anthropic.services.blocking.beta.WebhookService
+import com.anthropic.services.blocking.beta.WebhookServiceImpl
 import java.util.function.Consumer
 
 class BetaServiceImpl internal constructor(private val clientOptions: ClientOptions) : BetaService {
@@ -49,6 +51,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     private val skills: SkillService by lazy { SkillServiceImpl(clientOptions) }
 
+    private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptions) }
+
     private val userProfiles: UserProfileService by lazy { UserProfileServiceImpl(clientOptions) }
 
     override fun withRawResponse(): BetaService.WithRawResponse = withRawResponse
@@ -73,6 +77,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun files(): FileService = files
 
     override fun skills(): SkillService = skills
+
+    override fun webhooks(): WebhookService = webhooks
 
     override fun userProfiles(): UserProfileService = userProfiles
 
@@ -115,6 +121,10 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
             SkillServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val webhooks: WebhookService.WithRawResponse by lazy {
+            WebhookServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val userProfiles: UserProfileService.WithRawResponse by lazy {
             UserProfileServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -143,6 +153,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
         override fun files(): FileService.WithRawResponse = files
 
         override fun skills(): SkillService.WithRawResponse = skills
+
+        override fun webhooks(): WebhookService.WithRawResponse = webhooks
 
         override fun userProfiles(): UserProfileService.WithRawResponse = userProfiles
     }

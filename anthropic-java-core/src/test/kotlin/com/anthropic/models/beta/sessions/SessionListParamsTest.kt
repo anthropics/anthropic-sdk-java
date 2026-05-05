@@ -25,6 +25,7 @@ internal class SessionListParamsTest {
             .memoryStoreId("memory_store_id")
             .order(SessionListParams.Order.ASC)
             .page("page")
+            .addStatus(SessionListParams.Status.RESCHEDULING)
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
@@ -44,6 +45,7 @@ internal class SessionListParamsTest {
                 .memoryStoreId("memory_store_id")
                 .order(SessionListParams.Order.ASC)
                 .page("page")
+                .addStatus(SessionListParams.Status.RESCHEDULING)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
@@ -79,6 +81,7 @@ internal class SessionListParamsTest {
                 .memoryStoreId("memory_store_id")
                 .order(SessionListParams.Order.ASC)
                 .page("page")
+                .addStatus(SessionListParams.Status.RESCHEDULING)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
@@ -98,6 +101,7 @@ internal class SessionListParamsTest {
                     .put("memory_store_id", "memory_store_id")
                     .put("order", "asc")
                     .put("page", "page")
+                    .put("statuses[]", "rescheduling")
                     .build()
             )
     }

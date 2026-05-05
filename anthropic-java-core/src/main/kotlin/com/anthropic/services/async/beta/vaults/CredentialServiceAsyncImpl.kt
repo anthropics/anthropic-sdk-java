@@ -18,6 +18,7 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsCredential
+import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsCredentialValidation
 import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsDeletedCredential
 import com.anthropic.models.beta.vaults.credentials.CredentialArchiveParams
 import com.anthropic.models.beta.vaults.credentials.CredentialCreateParams
@@ -25,6 +26,7 @@ import com.anthropic.models.beta.vaults.credentials.CredentialDeleteParams
 import com.anthropic.models.beta.vaults.credentials.CredentialListPageAsync
 import com.anthropic.models.beta.vaults.credentials.CredentialListPageResponse
 import com.anthropic.models.beta.vaults.credentials.CredentialListParams
+import com.anthropic.models.beta.vaults.credentials.CredentialMcpOAuthValidateParams
 import com.anthropic.models.beta.vaults.credentials.CredentialRetrieveParams
 import com.anthropic.models.beta.vaults.credentials.CredentialUpdateParams
 import java.util.concurrent.CompletableFuture
@@ -90,6 +92,13 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
     ): CompletableFuture<BetaManagedAgentsCredential> =
         // post /v1/vaults/{vault_id}/credentials/{credential_id}/archive?beta=true
         withRawResponse().archive(params, requestOptions).thenApply { it.parse() }
+
+    override fun mcpOAuthValidate(
+        params: CredentialMcpOAuthValidateParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<BetaManagedAgentsCredentialValidation> =
+        // post /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate?beta=true
+        withRawResponse().mcpOAuthValidate(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         CredentialServiceAsync.WithRawResponse {
@@ -342,6 +351,49 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     errorHandler.handle(response).parseable {
                         response
                             .use { archiveHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val mcpOAuthValidateHandler: Handler<BetaManagedAgentsCredentialValidation> =
+            jsonHandler<BetaManagedAgentsCredentialValidation>(clientOptions.jsonMapper)
+
+        override fun mcpOAuthValidate(
+            params: CredentialMcpOAuthValidateParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BetaManagedAgentsCredentialValidation>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("credentialId", params.credentialId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments(
+                        "v1",
+                        "vaults",
+                        params._pathParam(0),
+                        "credentials",
+                        params._pathParam(1),
+                        "mcp_oauth_validate",
+                    )
+                    .putQueryParam("beta", "true")
+                    .putAllHeaders(DEFAULT_HEADERS)
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { mcpOAuthValidateHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

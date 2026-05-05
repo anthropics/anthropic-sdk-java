@@ -6,12 +6,14 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsCredential
+import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsCredentialValidation
 import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsDeletedCredential
 import com.anthropic.models.beta.vaults.credentials.CredentialArchiveParams
 import com.anthropic.models.beta.vaults.credentials.CredentialCreateParams
 import com.anthropic.models.beta.vaults.credentials.CredentialDeleteParams
 import com.anthropic.models.beta.vaults.credentials.CredentialListPageAsync
 import com.anthropic.models.beta.vaults.credentials.CredentialListParams
+import com.anthropic.models.beta.vaults.credentials.CredentialMcpOAuthValidateParams
 import com.anthropic.models.beta.vaults.credentials.CredentialRetrieveParams
 import com.anthropic.models.beta.vaults.credentials.CredentialUpdateParams
 import java.util.concurrent.CompletableFuture
@@ -191,6 +193,33 @@ interface CredentialServiceAsync {
         params: CredentialArchiveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsCredential>
+
+    /** Validate Credential */
+    fun mcpOAuthValidate(
+        credentialId: String,
+        params: CredentialMcpOAuthValidateParams,
+    ): CompletableFuture<BetaManagedAgentsCredentialValidation> =
+        mcpOAuthValidate(credentialId, params, RequestOptions.none())
+
+    /** @see mcpOAuthValidate */
+    fun mcpOAuthValidate(
+        credentialId: String,
+        params: CredentialMcpOAuthValidateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<BetaManagedAgentsCredentialValidation> =
+        mcpOAuthValidate(params.toBuilder().credentialId(credentialId).build(), requestOptions)
+
+    /** @see mcpOAuthValidate */
+    fun mcpOAuthValidate(
+        params: CredentialMcpOAuthValidateParams
+    ): CompletableFuture<BetaManagedAgentsCredentialValidation> =
+        mcpOAuthValidate(params, RequestOptions.none())
+
+    /** @see mcpOAuthValidate */
+    fun mcpOAuthValidate(
+        params: CredentialMcpOAuthValidateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<BetaManagedAgentsCredentialValidation>
 
     /**
      * A view of [CredentialServiceAsync] that provides access to raw HTTP responses for each
@@ -401,5 +430,36 @@ interface CredentialServiceAsync {
             params: CredentialArchiveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsCredential>>
+
+        /**
+         * Returns a raw HTTP response for `post
+         * /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate?beta=true`, but is
+         * otherwise the same as [CredentialServiceAsync.mcpOAuthValidate].
+         */
+        fun mcpOAuthValidate(
+            credentialId: String,
+            params: CredentialMcpOAuthValidateParams,
+        ): CompletableFuture<HttpResponseFor<BetaManagedAgentsCredentialValidation>> =
+            mcpOAuthValidate(credentialId, params, RequestOptions.none())
+
+        /** @see mcpOAuthValidate */
+        fun mcpOAuthValidate(
+            credentialId: String,
+            params: CredentialMcpOAuthValidateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<BetaManagedAgentsCredentialValidation>> =
+            mcpOAuthValidate(params.toBuilder().credentialId(credentialId).build(), requestOptions)
+
+        /** @see mcpOAuthValidate */
+        fun mcpOAuthValidate(
+            params: CredentialMcpOAuthValidateParams
+        ): CompletableFuture<HttpResponseFor<BetaManagedAgentsCredentialValidation>> =
+            mcpOAuthValidate(params, RequestOptions.none())
+
+        /** @see mcpOAuthValidate */
+        fun mcpOAuthValidate(
+            params: CredentialMcpOAuthValidateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<BetaManagedAgentsCredentialValidation>>
     }
 }

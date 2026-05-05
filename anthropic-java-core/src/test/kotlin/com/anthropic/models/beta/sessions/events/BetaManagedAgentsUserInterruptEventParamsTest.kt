@@ -14,10 +14,13 @@ internal class BetaManagedAgentsUserInterruptEventParamsTest {
         val betaManagedAgentsUserInterruptEventParams =
             BetaManagedAgentsUserInterruptEventParams.builder()
                 .type(BetaManagedAgentsUserInterruptEventParams.Type.USER_INTERRUPT)
+                .sessionThreadId("session_thread_id")
                 .build()
 
         assertThat(betaManagedAgentsUserInterruptEventParams.type())
             .isEqualTo(BetaManagedAgentsUserInterruptEventParams.Type.USER_INTERRUPT)
+        assertThat(betaManagedAgentsUserInterruptEventParams.sessionThreadId())
+            .contains("session_thread_id")
     }
 
     @Test
@@ -26,6 +29,7 @@ internal class BetaManagedAgentsUserInterruptEventParamsTest {
         val betaManagedAgentsUserInterruptEventParams =
             BetaManagedAgentsUserInterruptEventParams.builder()
                 .type(BetaManagedAgentsUserInterruptEventParams.Type.USER_INTERRUPT)
+                .sessionThreadId("session_thread_id")
                 .build()
 
         val roundtrippedBetaManagedAgentsUserInterruptEventParams =

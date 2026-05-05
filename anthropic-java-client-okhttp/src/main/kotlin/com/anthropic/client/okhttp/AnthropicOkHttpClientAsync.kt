@@ -308,6 +308,11 @@ class AnthropicOkHttpClientAsync private constructor() {
         /** Alias for calling [Builder.authToken] with `authToken.orElse(null)`. */
         fun authToken(authToken: Optional<String>) = authToken(authToken.getOrNull())
 
+        fun webhookKey(webhookKey: String?) = apply { clientOptions.webhookKey(webhookKey) }
+
+        /** Alias for calling [Builder.webhookKey] with `webhookKey.orElse(null)`. */
+        fun webhookKey(webhookKey: Optional<String>) = webhookKey(webhookKey.getOrNull())
+
         fun headers(headers: Headers) = apply { clientOptions.headers(headers) }
 
         fun headers(headers: Map<String, Iterable<String>>) = apply {

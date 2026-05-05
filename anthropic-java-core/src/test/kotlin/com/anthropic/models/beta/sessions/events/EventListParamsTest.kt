@@ -5,6 +5,7 @@ package com.anthropic.models.beta.sessions.events
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.models.beta.AnthropicBeta
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -14,9 +15,14 @@ internal class EventListParamsTest {
     fun create() {
         EventListParams.builder()
             .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
+            .createdAtGt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .createdAtGte(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .createdAtLt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .createdAtLte(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .limit(0)
             .order(EventListParams.Order.ASC)
             .page("page")
+            .addType("string")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
@@ -35,9 +41,14 @@ internal class EventListParamsTest {
         val params =
             EventListParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
+                .createdAtGt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .createdAtGte(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .createdAtLt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .createdAtLte(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .limit(0)
                 .order(EventListParams.Order.ASC)
                 .page("page")
+                .addType("string")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
@@ -63,9 +74,14 @@ internal class EventListParamsTest {
         val params =
             EventListParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
+                .createdAtGt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .createdAtGte(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .createdAtLt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .createdAtLte(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .limit(0)
                 .order(EventListParams.Order.ASC)
                 .page("page")
+                .addType("string")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
@@ -74,9 +90,14 @@ internal class EventListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
+                    .put("created_at[gt]", "2019-12-27T18:11:19.117Z")
+                    .put("created_at[gte]", "2019-12-27T18:11:19.117Z")
+                    .put("created_at[lt]", "2019-12-27T18:11:19.117Z")
+                    .put("created_at[lte]", "2019-12-27T18:11:19.117Z")
                     .put("limit", "0")
                     .put("order", "asc")
                     .put("page", "page")
+                    .put("types[]", "string")
                     .build()
             )
     }

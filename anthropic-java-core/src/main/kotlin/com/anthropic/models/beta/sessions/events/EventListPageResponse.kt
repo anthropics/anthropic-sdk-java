@@ -221,6 +221,24 @@ private constructor(
 
         /**
          * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofAgentThreadMessageReceived(agentThreadMessageReceived)`.
+         */
+        fun addData(agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent) =
+            addData(
+                BetaManagedAgentsSessionEvent.ofAgentThreadMessageReceived(
+                    agentThreadMessageReceived
+                )
+            )
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofAgentThreadMessageSent(agentThreadMessageSent)`.
+         */
+        fun addData(agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofAgentThreadMessageSent(agentThreadMessageSent))
+
+        /**
+         * Alias for calling [addData] with
          * `BetaManagedAgentsSessionEvent.ofAgentThreadContextCompacted(agentThreadContextCompacted)`.
          */
         fun addData(
@@ -273,6 +291,33 @@ private constructor(
 
         /**
          * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofSessionThreadCreated(sessionThreadCreated)`.
+         */
+        fun addData(sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofSessionThreadCreated(sessionThreadCreated))
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofSpanOutcomeEvaluationStart(spanOutcomeEvaluationStart)`.
+         */
+        fun addData(spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent) =
+            addData(
+                BetaManagedAgentsSessionEvent.ofSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart
+                )
+            )
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofSpanOutcomeEvaluationEnd(spanOutcomeEvaluationEnd)`.
+         */
+        fun addData(spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent) =
+            addData(
+                BetaManagedAgentsSessionEvent.ofSpanOutcomeEvaluationEnd(spanOutcomeEvaluationEnd)
+            )
+
+        /**
+         * Alias for calling [addData] with
          * `BetaManagedAgentsSessionEvent.ofSpanModelRequestStart(spanModelRequestStart)`.
          */
         fun addData(spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent) =
@@ -287,10 +332,76 @@ private constructor(
 
         /**
          * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofSpanOutcomeEvaluationOngoing(spanOutcomeEvaluationOngoing)`.
+         */
+        fun addData(
+            spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+        ) =
+            addData(
+                BetaManagedAgentsSessionEvent.ofSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing
+                )
+            )
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofUserDefineOutcome(userDefineOutcome)`.
+         */
+        fun addData(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofUserDefineOutcome(userDefineOutcome))
+
+        /**
+         * Alias for calling [addData] with
          * `BetaManagedAgentsSessionEvent.ofSessionDeleted(sessionDeleted)`.
          */
         fun addData(sessionDeleted: BetaManagedAgentsSessionDeletedEvent) =
             addData(BetaManagedAgentsSessionEvent.ofSessionDeleted(sessionDeleted))
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofSessionThreadStatusRunning(sessionThreadStatusRunning)`.
+         */
+        fun addData(sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent) =
+            addData(
+                BetaManagedAgentsSessionEvent.ofSessionThreadStatusRunning(
+                    sessionThreadStatusRunning
+                )
+            )
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofSessionThreadStatusIdle(sessionThreadStatusIdle)`.
+         */
+        fun addData(sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent) =
+            addData(
+                BetaManagedAgentsSessionEvent.ofSessionThreadStatusIdle(sessionThreadStatusIdle)
+            )
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofSessionThreadStatusTerminated(sessionThreadStatusTerminated)`.
+         */
+        fun addData(
+            sessionThreadStatusTerminated: BetaManagedAgentsSessionThreadStatusTerminatedEvent
+        ) =
+            addData(
+                BetaManagedAgentsSessionEvent.ofSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated
+                )
+            )
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofSessionThreadStatusRescheduled(sessionThreadStatusRescheduled)`.
+         */
+        fun addData(
+            sessionThreadStatusRescheduled: BetaManagedAgentsSessionThreadStatusRescheduledEvent
+        ) =
+            addData(
+                BetaManagedAgentsSessionEvent.ofSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled
+                )
+            )
 
         /** Opaque cursor for the next page. Null when no more results. */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))

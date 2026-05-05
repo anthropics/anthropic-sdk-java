@@ -5,6 +5,7 @@ package com.anthropic.models.beta.agents
 import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentParams
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -28,6 +29,17 @@ internal class AgentCreateParamsTest {
             .metadata(
                 AgentCreateParams.Metadata.builder()
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
+            .multiagent(
+                BetaManagedAgentsMultiagentParams.builder()
+                    .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                    .addAgent(
+                        BetaManagedAgentsMultiagentSelfParams.builder()
+                            .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                     .build()
             )
             .addSkill(
@@ -87,6 +99,17 @@ internal class AgentCreateParamsTest {
                 .metadata(
                     AgentCreateParams.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
+                .multiagent(
+                    BetaManagedAgentsMultiagentParams.builder()
+                        .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                        .addAgent(
+                            BetaManagedAgentsMultiagentSelfParams.builder()
+                                .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                         .build()
                 )
                 .addSkill(
@@ -170,6 +193,17 @@ internal class AgentCreateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
+                .multiagent(
+                    BetaManagedAgentsMultiagentParams.builder()
+                        .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                        .addAgent(
+                            BetaManagedAgentsMultiagentSelfParams.builder()
+                                .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
+                        .build()
+                )
                 .addSkill(
                     BetaManagedAgentsAnthropicSkillParams.builder()
                         .skillId("xlsx")
@@ -232,6 +266,18 @@ internal class AgentCreateParamsTest {
             .contains(
                 AgentCreateParams.Metadata.builder()
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
+        assertThat(body.multiagent())
+            .contains(
+                BetaManagedAgentsMultiagentParams.builder()
+                    .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                    .addAgent(
+                        BetaManagedAgentsMultiagentSelfParams.builder()
+                            .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                     .build()
             )
         assertThat(body.skills().getOrNull())

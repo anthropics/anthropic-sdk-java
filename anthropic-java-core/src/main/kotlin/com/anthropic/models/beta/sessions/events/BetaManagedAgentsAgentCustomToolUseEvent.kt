@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -31,6 +32,7 @@ private constructor(
     private val name: JsonField<String>,
     private val processedAt: JsonField<OffsetDateTime>,
     private val type: JsonField<Type>,
+    private val sessionThreadId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -43,7 +45,10 @@ private constructor(
         @ExcludeMissing
         processedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-    ) : this(id, input, name, processedAt, type, mutableMapOf())
+        @JsonProperty("session_thread_id")
+        @ExcludeMissing
+        sessionThreadId: JsonField<String> = JsonMissing.of(),
+    ) : this(id, input, name, processedAt, type, sessionThreadId, mutableMapOf())
 
     /**
      * Unique identifier for this event.
@@ -84,6 +89,16 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
+     * When set, this event was cross-posted from a subagent's thread to surface its custom tool use
+     * on the primary thread's stream. Empty on the thread's own events. Echo this on a
+     * `user.custom_tool_result` event to route the result back.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun sessionThreadId(): Optional<String> = sessionThreadId.getOptional("session_thread_id")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -119,6 +134,15 @@ private constructor(
      * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+
+    /**
+     * Returns the raw JSON value of [sessionThreadId].
+     *
+     * Unlike [sessionThreadId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("session_thread_id")
+    @ExcludeMissing
+    fun _sessionThreadId(): JsonField<String> = sessionThreadId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -158,6 +182,7 @@ private constructor(
         private var name: JsonField<String>? = null
         private var processedAt: JsonField<OffsetDateTime>? = null
         private var type: JsonField<Type>? = null
+        private var sessionThreadId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -169,6 +194,7 @@ private constructor(
             name = betaManagedAgentsAgentCustomToolUseEvent.name
             processedAt = betaManagedAgentsAgentCustomToolUseEvent.processedAt
             type = betaManagedAgentsAgentCustomToolUseEvent.type
+            sessionThreadId = betaManagedAgentsAgentCustomToolUseEvent.sessionThreadId
             additionalProperties =
                 betaManagedAgentsAgentCustomToolUseEvent.additionalProperties.toMutableMap()
         }
@@ -230,6 +256,29 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
+        /**
+         * When set, this event was cross-posted from a subagent's thread to surface its custom tool
+         * use on the primary thread's stream. Empty on the thread's own events. Echo this on a
+         * `user.custom_tool_result` event to route the result back.
+         */
+        fun sessionThreadId(sessionThreadId: String?) =
+            sessionThreadId(JsonField.ofNullable(sessionThreadId))
+
+        /** Alias for calling [Builder.sessionThreadId] with `sessionThreadId.orElse(null)`. */
+        fun sessionThreadId(sessionThreadId: Optional<String>) =
+            sessionThreadId(sessionThreadId.getOrNull())
+
+        /**
+         * Sets [Builder.sessionThreadId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.sessionThreadId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun sessionThreadId(sessionThreadId: JsonField<String>) = apply {
+            this.sessionThreadId = sessionThreadId
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -272,6 +321,7 @@ private constructor(
                 checkRequired("name", name),
                 checkRequired("processedAt", processedAt),
                 checkRequired("type", type),
+                sessionThreadId,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -296,6 +346,7 @@ private constructor(
         name()
         processedAt()
         type().validate()
+        sessionThreadId()
         validated = true
     }
 
@@ -318,7 +369,8 @@ private constructor(
             (input.asKnown().getOrNull()?.validity() ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (processedAt.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0)
+            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (sessionThreadId.asKnown().isPresent) 1 else 0)
 
     /** Input parameters for the tool call. */
     class Input
@@ -570,15 +622,16 @@ private constructor(
             name == other.name &&
             processedAt == other.processedAt &&
             type == other.type &&
+            sessionThreadId == other.sessionThreadId &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, input, name, processedAt, type, additionalProperties)
+        Objects.hash(id, input, name, processedAt, type, sessionThreadId, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsAgentCustomToolUseEvent{id=$id, input=$input, name=$name, processedAt=$processedAt, type=$type, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsAgentCustomToolUseEvent{id=$id, input=$input, name=$name, processedAt=$processedAt, type=$type, sessionThreadId=$sessionThreadId, additionalProperties=$additionalProperties}"
 }

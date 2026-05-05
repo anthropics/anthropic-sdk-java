@@ -16,6 +16,7 @@ import com.anthropic.models.beta.sessions.SessionRetrieveParams
 import com.anthropic.models.beta.sessions.SessionUpdateParams
 import com.anthropic.services.blocking.beta.sessions.EventService
 import com.anthropic.services.blocking.beta.sessions.ResourceService
+import com.anthropic.services.blocking.beta.sessions.ThreadService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -36,6 +37,8 @@ interface SessionService {
     fun events(): EventService
 
     fun resources(): ResourceService
+
+    fun threads(): ThreadService
 
     /** Create Session */
     fun create(params: SessionCreateParams): BetaManagedAgentsSession =
@@ -205,6 +208,8 @@ interface SessionService {
         fun events(): EventService.WithRawResponse
 
         fun resources(): ResourceService.WithRawResponse
+
+        fun threads(): ThreadService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/sessions?beta=true`, but is otherwise the same

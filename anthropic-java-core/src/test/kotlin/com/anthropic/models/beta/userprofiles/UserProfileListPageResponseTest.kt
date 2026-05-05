@@ -20,6 +20,7 @@ internal class UserProfileListPageResponseTest {
                         .id("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .metadata(BetaUserProfile.Metadata.builder().build())
+                        .relationship(BetaUserProfile.Relationship.EXTERNAL)
                         .trustGrants(
                             BetaUserProfile.TrustGrants.builder()
                                 .putAdditionalProperty(
@@ -31,6 +32,7 @@ internal class UserProfileListPageResponseTest {
                         .type(BetaUserProfile.Type.USER_PROFILE)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .externalId("user_12345")
+                        .name("Example User")
                         .build()
                 )
                 .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
@@ -42,6 +44,7 @@ internal class UserProfileListPageResponseTest {
                     .id("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .metadata(BetaUserProfile.Metadata.builder().build())
+                    .relationship(BetaUserProfile.Relationship.EXTERNAL)
                     .trustGrants(
                         BetaUserProfile.TrustGrants.builder()
                             .putAdditionalProperty(
@@ -53,6 +56,7 @@ internal class UserProfileListPageResponseTest {
                     .type(BetaUserProfile.Type.USER_PROFILE)
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .externalId("user_12345")
+                    .name("Example User")
                     .build()
             )
         assertThat(userProfileListPageResponse.nextPage())
@@ -69,6 +73,7 @@ internal class UserProfileListPageResponseTest {
                         .id("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .metadata(BetaUserProfile.Metadata.builder().build())
+                        .relationship(BetaUserProfile.Relationship.EXTERNAL)
                         .trustGrants(
                             BetaUserProfile.TrustGrants.builder()
                                 .putAdditionalProperty(
@@ -80,6 +85,7 @@ internal class UserProfileListPageResponseTest {
                         .type(BetaUserProfile.Type.USER_PROFILE)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .externalId("user_12345")
+                        .name("Example User")
                         .build()
                 )
                 .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")

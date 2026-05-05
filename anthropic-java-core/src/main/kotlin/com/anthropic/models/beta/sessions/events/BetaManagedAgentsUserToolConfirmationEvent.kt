@@ -29,6 +29,7 @@ private constructor(
     private val type: JsonField<Type>,
     private val denyMessage: JsonField<String>,
     private val processedAt: JsonField<OffsetDateTime>,
+    private val sessionThreadId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -46,7 +47,10 @@ private constructor(
         @JsonProperty("processed_at")
         @ExcludeMissing
         processedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(id, result, toolUseId, type, denyMessage, processedAt, mutableMapOf())
+        @JsonProperty("session_thread_id")
+        @ExcludeMissing
+        sessionThreadId: JsonField<String> = JsonMissing.of(),
+    ) : this(id, result, toolUseId, type, denyMessage, processedAt, sessionThreadId, mutableMapOf())
 
     /**
      * Unique identifier for this event.
@@ -98,6 +102,16 @@ private constructor(
     fun processedAt(): Optional<OffsetDateTime> = processedAt.getOptional("processed_at")
 
     /**
+     * When set, the confirmation routes to this subagent's thread rather than the primary. Echo
+     * this from the `session_thread_id` on the `agent.tool_use` or `agent.mcp_tool_use` event that
+     * prompted the approval.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun sessionThreadId(): Optional<String> = sessionThreadId.getOptional("session_thread_id")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -143,6 +157,15 @@ private constructor(
     @ExcludeMissing
     fun _processedAt(): JsonField<OffsetDateTime> = processedAt
 
+    /**
+     * Returns the raw JSON value of [sessionThreadId].
+     *
+     * Unlike [sessionThreadId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("session_thread_id")
+    @ExcludeMissing
+    fun _sessionThreadId(): JsonField<String> = sessionThreadId
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -181,6 +204,7 @@ private constructor(
         private var type: JsonField<Type>? = null
         private var denyMessage: JsonField<String> = JsonMissing.of()
         private var processedAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var sessionThreadId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -193,6 +217,7 @@ private constructor(
             type = betaManagedAgentsUserToolConfirmationEvent.type
             denyMessage = betaManagedAgentsUserToolConfirmationEvent.denyMessage
             processedAt = betaManagedAgentsUserToolConfirmationEvent.processedAt
+            sessionThreadId = betaManagedAgentsUserToolConfirmationEvent.sessionThreadId
             additionalProperties =
                 betaManagedAgentsUserToolConfirmationEvent.additionalProperties.toMutableMap()
         }
@@ -283,6 +308,29 @@ private constructor(
             this.processedAt = processedAt
         }
 
+        /**
+         * When set, the confirmation routes to this subagent's thread rather than the primary. Echo
+         * this from the `session_thread_id` on the `agent.tool_use` or `agent.mcp_tool_use` event
+         * that prompted the approval.
+         */
+        fun sessionThreadId(sessionThreadId: String?) =
+            sessionThreadId(JsonField.ofNullable(sessionThreadId))
+
+        /** Alias for calling [Builder.sessionThreadId] with `sessionThreadId.orElse(null)`. */
+        fun sessionThreadId(sessionThreadId: Optional<String>) =
+            sessionThreadId(sessionThreadId.getOrNull())
+
+        /**
+         * Sets [Builder.sessionThreadId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.sessionThreadId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun sessionThreadId(sessionThreadId: JsonField<String>) = apply {
+            this.sessionThreadId = sessionThreadId
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -325,6 +373,7 @@ private constructor(
                 checkRequired("type", type),
                 denyMessage,
                 processedAt,
+                sessionThreadId,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -350,6 +399,7 @@ private constructor(
         type().validate()
         denyMessage()
         processedAt()
+        sessionThreadId()
         validated = true
     }
 
@@ -373,7 +423,8 @@ private constructor(
             (if (toolUseId.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (denyMessage.asKnown().isPresent) 1 else 0) +
-            (if (processedAt.asKnown().isPresent) 1 else 0)
+            (if (processedAt.asKnown().isPresent) 1 else 0) +
+            (if (sessionThreadId.asKnown().isPresent) 1 else 0)
 
     /** UserToolConfirmationResult enum */
     class Result @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -654,15 +705,25 @@ private constructor(
             type == other.type &&
             denyMessage == other.denyMessage &&
             processedAt == other.processedAt &&
+            sessionThreadId == other.sessionThreadId &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, result, toolUseId, type, denyMessage, processedAt, additionalProperties)
+        Objects.hash(
+            id,
+            result,
+            toolUseId,
+            type,
+            denyMessage,
+            processedAt,
+            sessionThreadId,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsUserToolConfirmationEvent{id=$id, result=$result, toolUseId=$toolUseId, type=$type, denyMessage=$denyMessage, processedAt=$processedAt, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsUserToolConfirmationEvent{id=$id, result=$result, toolUseId=$toolUseId, type=$type, denyMessage=$denyMessage, processedAt=$processedAt, sessionThreadId=$sessionThreadId, additionalProperties=$additionalProperties}"
 }

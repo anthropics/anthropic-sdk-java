@@ -6,12 +6,14 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsCredential
+import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsCredentialValidation
 import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsDeletedCredential
 import com.anthropic.models.beta.vaults.credentials.CredentialArchiveParams
 import com.anthropic.models.beta.vaults.credentials.CredentialCreateParams
 import com.anthropic.models.beta.vaults.credentials.CredentialDeleteParams
 import com.anthropic.models.beta.vaults.credentials.CredentialListPage
 import com.anthropic.models.beta.vaults.credentials.CredentialListParams
+import com.anthropic.models.beta.vaults.credentials.CredentialMcpOAuthValidateParams
 import com.anthropic.models.beta.vaults.credentials.CredentialRetrieveParams
 import com.anthropic.models.beta.vaults.credentials.CredentialUpdateParams
 import com.google.errorprone.annotations.MustBeClosed
@@ -175,6 +177,32 @@ interface CredentialService {
         params: CredentialArchiveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsCredential
+
+    /** Validate Credential */
+    fun mcpOAuthValidate(
+        credentialId: String,
+        params: CredentialMcpOAuthValidateParams,
+    ): BetaManagedAgentsCredentialValidation =
+        mcpOAuthValidate(credentialId, params, RequestOptions.none())
+
+    /** @see mcpOAuthValidate */
+    fun mcpOAuthValidate(
+        credentialId: String,
+        params: CredentialMcpOAuthValidateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): BetaManagedAgentsCredentialValidation =
+        mcpOAuthValidate(params.toBuilder().credentialId(credentialId).build(), requestOptions)
+
+    /** @see mcpOAuthValidate */
+    fun mcpOAuthValidate(
+        params: CredentialMcpOAuthValidateParams
+    ): BetaManagedAgentsCredentialValidation = mcpOAuthValidate(params, RequestOptions.none())
+
+    /** @see mcpOAuthValidate */
+    fun mcpOAuthValidate(
+        params: CredentialMcpOAuthValidateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): BetaManagedAgentsCredentialValidation
 
     /** A view of [CredentialService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -398,5 +426,40 @@ interface CredentialService {
             params: CredentialArchiveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<BetaManagedAgentsCredential>
+
+        /**
+         * Returns a raw HTTP response for `post
+         * /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate?beta=true`, but is
+         * otherwise the same as [CredentialService.mcpOAuthValidate].
+         */
+        @MustBeClosed
+        fun mcpOAuthValidate(
+            credentialId: String,
+            params: CredentialMcpOAuthValidateParams,
+        ): HttpResponseFor<BetaManagedAgentsCredentialValidation> =
+            mcpOAuthValidate(credentialId, params, RequestOptions.none())
+
+        /** @see mcpOAuthValidate */
+        @MustBeClosed
+        fun mcpOAuthValidate(
+            credentialId: String,
+            params: CredentialMcpOAuthValidateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaManagedAgentsCredentialValidation> =
+            mcpOAuthValidate(params.toBuilder().credentialId(credentialId).build(), requestOptions)
+
+        /** @see mcpOAuthValidate */
+        @MustBeClosed
+        fun mcpOAuthValidate(
+            params: CredentialMcpOAuthValidateParams
+        ): HttpResponseFor<BetaManagedAgentsCredentialValidation> =
+            mcpOAuthValidate(params, RequestOptions.none())
+
+        /** @see mcpOAuthValidate */
+        @MustBeClosed
+        fun mcpOAuthValidate(
+            params: CredentialMcpOAuthValidateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaManagedAgentsCredentialValidation>
     }
 }

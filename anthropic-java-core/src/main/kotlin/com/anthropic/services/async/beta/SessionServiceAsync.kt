@@ -16,6 +16,7 @@ import com.anthropic.models.beta.sessions.SessionRetrieveParams
 import com.anthropic.models.beta.sessions.SessionUpdateParams
 import com.anthropic.services.async.beta.sessions.EventServiceAsync
 import com.anthropic.services.async.beta.sessions.ResourceServiceAsync
+import com.anthropic.services.async.beta.sessions.ThreadServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -36,6 +37,8 @@ interface SessionServiceAsync {
     fun events(): EventServiceAsync
 
     fun resources(): ResourceServiceAsync
+
+    fun threads(): ThreadServiceAsync
 
     /** Create Session */
     fun create(params: SessionCreateParams): CompletableFuture<BetaManagedAgentsSession> =
@@ -226,6 +229,8 @@ interface SessionServiceAsync {
         fun events(): EventServiceAsync.WithRawResponse
 
         fun resources(): ResourceServiceAsync.WithRawResponse
+
+        fun threads(): ThreadServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/sessions?beta=true`, but is otherwise the same

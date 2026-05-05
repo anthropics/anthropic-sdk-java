@@ -21,6 +21,7 @@ internal class BetaManagedAgentsUserCustomToolResultEventTest {
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .sessionThreadId("session_thread_id")
                 .build()
 
         assertThat(betaManagedAgentsUserCustomToolResultEvent.id()).isEqualTo("id")
@@ -40,6 +41,8 @@ internal class BetaManagedAgentsUserCustomToolResultEventTest {
         assertThat(betaManagedAgentsUserCustomToolResultEvent.isError()).contains(true)
         assertThat(betaManagedAgentsUserCustomToolResultEvent.processedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(betaManagedAgentsUserCustomToolResultEvent.sessionThreadId())
+            .contains("session_thread_id")
     }
 
     @Test
@@ -53,6 +56,7 @@ internal class BetaManagedAgentsUserCustomToolResultEventTest {
                 .addTextContent("Where is my order #1234?")
                 .isError(true)
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .sessionThreadId("session_thread_id")
                 .build()
 
         val roundtrippedBetaManagedAgentsUserCustomToolResultEvent =

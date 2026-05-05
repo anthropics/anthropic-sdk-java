@@ -27,6 +27,7 @@ private constructor(
     private val userInterrupt: BetaManagedAgentsUserInterruptEventParams? = null,
     private val userToolConfirmation: BetaManagedAgentsUserToolConfirmationEventParams? = null,
     private val userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams? = null,
+    private val userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -46,6 +47,13 @@ private constructor(
     fun userCustomToolResult(): Optional<BetaManagedAgentsUserCustomToolResultEventParams> =
         Optional.ofNullable(userCustomToolResult)
 
+    /**
+     * Parameters for defining an outcome the agent should work toward. The agent begins work on
+     * receipt.
+     */
+    fun userDefineOutcome(): Optional<BetaManagedAgentsUserDefineOutcomeEventParams> =
+        Optional.ofNullable(userDefineOutcome)
+
     fun isUserMessage(): Boolean = userMessage != null
 
     fun isUserInterrupt(): Boolean = userInterrupt != null
@@ -53,6 +61,8 @@ private constructor(
     fun isUserToolConfirmation(): Boolean = userToolConfirmation != null
 
     fun isUserCustomToolResult(): Boolean = userCustomToolResult != null
+
+    fun isUserDefineOutcome(): Boolean = userDefineOutcome != null
 
     /** Parameters for sending a user message to the session. */
     fun asUserMessage(): BetaManagedAgentsUserMessageEventParams =
@@ -69,6 +79,13 @@ private constructor(
     /** Parameters for providing the result of a custom tool execution. */
     fun asUserCustomToolResult(): BetaManagedAgentsUserCustomToolResultEventParams =
         userCustomToolResult.getOrThrow("userCustomToolResult")
+
+    /**
+     * Parameters for defining an outcome the agent should work toward. The agent begins work on
+     * receipt.
+     */
+    fun asUserDefineOutcome(): BetaManagedAgentsUserDefineOutcomeEventParams =
+        userDefineOutcome.getOrThrow("userDefineOutcome")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -107,6 +124,7 @@ private constructor(
             userInterrupt != null -> visitor.visitUserInterrupt(userInterrupt)
             userToolConfirmation != null -> visitor.visitUserToolConfirmation(userToolConfirmation)
             userCustomToolResult != null -> visitor.visitUserCustomToolResult(userCustomToolResult)
+            userDefineOutcome != null -> visitor.visitUserDefineOutcome(userDefineOutcome)
             else -> visitor.unknown(_json)
         }
 
@@ -150,6 +168,12 @@ private constructor(
                 ) {
                     userCustomToolResult.validate()
                 }
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
+                ) {
+                    userDefineOutcome.validate()
+                }
             }
         )
         validated = true
@@ -188,6 +212,10 @@ private constructor(
                     userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
                 ) = userCustomToolResult.validity()
 
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
+                ) = userDefineOutcome.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -201,11 +229,18 @@ private constructor(
             userMessage == other.userMessage &&
             userInterrupt == other.userInterrupt &&
             userToolConfirmation == other.userToolConfirmation &&
-            userCustomToolResult == other.userCustomToolResult
+            userCustomToolResult == other.userCustomToolResult &&
+            userDefineOutcome == other.userDefineOutcome
     }
 
     override fun hashCode(): Int =
-        Objects.hash(userMessage, userInterrupt, userToolConfirmation, userCustomToolResult)
+        Objects.hash(
+            userMessage,
+            userInterrupt,
+            userToolConfirmation,
+            userCustomToolResult,
+            userDefineOutcome,
+        )
 
     override fun toString(): String =
         when {
@@ -215,6 +250,8 @@ private constructor(
                 "BetaManagedAgentsEventParams{userToolConfirmation=$userToolConfirmation}"
             userCustomToolResult != null ->
                 "BetaManagedAgentsEventParams{userCustomToolResult=$userCustomToolResult}"
+            userDefineOutcome != null ->
+                "BetaManagedAgentsEventParams{userDefineOutcome=$userDefineOutcome}"
             _json != null -> "BetaManagedAgentsEventParams{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaManagedAgentsEventParams")
         }
@@ -242,6 +279,14 @@ private constructor(
         fun ofUserCustomToolResult(
             userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
         ) = BetaManagedAgentsEventParams(userCustomToolResult = userCustomToolResult)
+
+        /**
+         * Parameters for defining an outcome the agent should work toward. The agent begins work on
+         * receipt.
+         */
+        @JvmStatic
+        fun ofUserDefineOutcome(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams) =
+            BetaManagedAgentsEventParams(userDefineOutcome = userDefineOutcome)
     }
 
     /**
@@ -264,6 +309,14 @@ private constructor(
         /** Parameters for providing the result of a custom tool execution. */
         fun visitUserCustomToolResult(
             userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
+        ): T
+
+        /**
+         * Parameters for defining an outcome the agent should work toward. The agent begins work on
+         * receipt.
+         */
+        fun visitUserDefineOutcome(
+            userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
         ): T
 
         /**
@@ -323,6 +376,14 @@ private constructor(
                             BetaManagedAgentsEventParams(userCustomToolResult = it, _json = json)
                         } ?: BetaManagedAgentsEventParams(_json = json)
                 }
+                "user.define_outcome" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsUserDefineOutcomeEventParams>(),
+                        )
+                        ?.let { BetaManagedAgentsEventParams(userDefineOutcome = it, _json = json) }
+                        ?: BetaManagedAgentsEventParams(_json = json)
+                }
             }
 
             return BetaManagedAgentsEventParams(_json = json)
@@ -344,6 +405,7 @@ private constructor(
                     generator.writeObject(value.userToolConfirmation)
                 value.userCustomToolResult != null ->
                     generator.writeObject(value.userCustomToolResult)
+                value.userDefineOutcome != null -> generator.writeObject(value.userDefineOutcome)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsEventParams")
             }

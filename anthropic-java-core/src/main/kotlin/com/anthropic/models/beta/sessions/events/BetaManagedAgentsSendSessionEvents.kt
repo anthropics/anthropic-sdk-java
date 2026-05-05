@@ -149,6 +149,10 @@ private constructor(
         fun addData(userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent) =
             addData(Data.ofUserCustomToolResult(userCustomToolResult))
 
+        /** Alias for calling [addData] with `Data.ofUserDefineOutcome(userDefineOutcome)`. */
+        fun addData(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent) =
+            addData(Data.ofUserDefineOutcome(userDefineOutcome))
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -225,6 +229,7 @@ private constructor(
         private val userInterrupt: BetaManagedAgentsUserInterruptEvent? = null,
         private val userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent? = null,
         private val userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent? = null,
+        private val userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -244,6 +249,13 @@ private constructor(
         fun userCustomToolResult(): Optional<BetaManagedAgentsUserCustomToolResultEvent> =
             Optional.ofNullable(userCustomToolResult)
 
+        /**
+         * Echo of a `user.define_outcome` input event. Carries the server-generated `outcome_id`
+         * that subsequent `span.outcome_evaluation_*` events reference.
+         */
+        fun userDefineOutcome(): Optional<BetaManagedAgentsUserDefineOutcomeEvent> =
+            Optional.ofNullable(userDefineOutcome)
+
         fun isUserMessage(): Boolean = userMessage != null
 
         fun isUserInterrupt(): Boolean = userInterrupt != null
@@ -251,6 +263,8 @@ private constructor(
         fun isUserToolConfirmation(): Boolean = userToolConfirmation != null
 
         fun isUserCustomToolResult(): Boolean = userCustomToolResult != null
+
+        fun isUserDefineOutcome(): Boolean = userDefineOutcome != null
 
         /** A user message event in the session conversation. */
         fun asUserMessage(): BetaManagedAgentsUserMessageEvent =
@@ -267,6 +281,13 @@ private constructor(
         /** Event sent by the client providing the result of a custom tool execution. */
         fun asUserCustomToolResult(): BetaManagedAgentsUserCustomToolResultEvent =
             userCustomToolResult.getOrThrow("userCustomToolResult")
+
+        /**
+         * Echo of a `user.define_outcome` input event. Carries the server-generated `outcome_id`
+         * that subsequent `span.outcome_evaluation_*` events reference.
+         */
+        fun asUserDefineOutcome(): BetaManagedAgentsUserDefineOutcomeEvent =
+            userDefineOutcome.getOrThrow("userDefineOutcome")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -307,6 +328,7 @@ private constructor(
                     visitor.visitUserToolConfirmation(userToolConfirmation)
                 userCustomToolResult != null ->
                     visitor.visitUserCustomToolResult(userCustomToolResult)
+                userDefineOutcome != null -> visitor.visitUserDefineOutcome(userDefineOutcome)
                 else -> visitor.unknown(_json)
             }
 
@@ -349,6 +371,12 @@ private constructor(
                     ) {
                         userCustomToolResult.validate()
                     }
+
+                    override fun visitUserDefineOutcome(
+                        userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                    ) {
+                        userDefineOutcome.validate()
+                    }
                 }
             )
             validated = true
@@ -387,6 +415,10 @@ private constructor(
                         userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
                     ) = userCustomToolResult.validity()
 
+                    override fun visitUserDefineOutcome(
+                        userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                    ) = userDefineOutcome.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -400,11 +432,18 @@ private constructor(
                 userMessage == other.userMessage &&
                 userInterrupt == other.userInterrupt &&
                 userToolConfirmation == other.userToolConfirmation &&
-                userCustomToolResult == other.userCustomToolResult
+                userCustomToolResult == other.userCustomToolResult &&
+                userDefineOutcome == other.userDefineOutcome
         }
 
         override fun hashCode(): Int =
-            Objects.hash(userMessage, userInterrupt, userToolConfirmation, userCustomToolResult)
+            Objects.hash(
+                userMessage,
+                userInterrupt,
+                userToolConfirmation,
+                userCustomToolResult,
+                userDefineOutcome,
+            )
 
         override fun toString(): String =
             when {
@@ -412,6 +451,7 @@ private constructor(
                 userInterrupt != null -> "Data{userInterrupt=$userInterrupt}"
                 userToolConfirmation != null -> "Data{userToolConfirmation=$userToolConfirmation}"
                 userCustomToolResult != null -> "Data{userCustomToolResult=$userCustomToolResult}"
+                userDefineOutcome != null -> "Data{userDefineOutcome=$userDefineOutcome}"
                 _json != null -> "Data{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Data")
             }
@@ -439,6 +479,14 @@ private constructor(
             fun ofUserCustomToolResult(
                 userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
             ) = Data(userCustomToolResult = userCustomToolResult)
+
+            /**
+             * Echo of a `user.define_outcome` input event. Carries the server-generated
+             * `outcome_id` that subsequent `span.outcome_evaluation_*` events reference.
+             */
+            @JvmStatic
+            fun ofUserDefineOutcome(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent) =
+                Data(userDefineOutcome = userDefineOutcome)
         }
 
         /** An interface that defines how to map each variant of [Data] to a value of type [T]. */
@@ -458,6 +506,14 @@ private constructor(
             /** Event sent by the client providing the result of a custom tool execution. */
             fun visitUserCustomToolResult(
                 userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+            ): T
+
+            /**
+             * Echo of a `user.define_outcome` input event. Carries the server-generated
+             * `outcome_id` that subsequent `span.outcome_evaluation_*` events reference.
+             */
+            fun visitUserDefineOutcome(
+                userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
             ): T
 
             /**
@@ -511,6 +567,14 @@ private constructor(
                             ?.let { Data(userCustomToolResult = it, _json = json) }
                             ?: Data(_json = json)
                     }
+                    "user.define_outcome" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsUserDefineOutcomeEvent>(),
+                            )
+                            ?.let { Data(userDefineOutcome = it, _json = json) }
+                            ?: Data(_json = json)
+                    }
                 }
 
                 return Data(_json = json)
@@ -531,6 +595,8 @@ private constructor(
                         generator.writeObject(value.userToolConfirmation)
                     value.userCustomToolResult != null ->
                         generator.writeObject(value.userCustomToolResult)
+                    value.userDefineOutcome != null ->
+                        generator.writeObject(value.userDefineOutcome)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Data")
                 }

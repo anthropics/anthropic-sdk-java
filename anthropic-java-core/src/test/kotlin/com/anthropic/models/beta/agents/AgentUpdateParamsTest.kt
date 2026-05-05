@@ -5,6 +5,7 @@ package com.anthropic.models.beta.agents
 import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentParams
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -34,6 +35,17 @@ internal class AgentUpdateParamsTest {
                 BetaManagedAgentsModelConfigParams.builder()
                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
                     .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
+                    .build()
+            )
+            .multiagent(
+                BetaManagedAgentsMultiagentParams.builder()
+                    .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                    .addAgent(
+                        BetaManagedAgentsMultiagentSelfParams.builder()
+                            .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                     .build()
             )
             .name("name")
@@ -110,6 +122,17 @@ internal class AgentUpdateParamsTest {
                     BetaManagedAgentsModelConfigParams.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
+                        .build()
+                )
+                .multiagent(
+                    BetaManagedAgentsMultiagentParams.builder()
+                        .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                        .addAgent(
+                            BetaManagedAgentsMultiagentSelfParams.builder()
+                                .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                         .build()
                 )
                 .name("name")
@@ -197,6 +220,17 @@ internal class AgentUpdateParamsTest {
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
+                .multiagent(
+                    BetaManagedAgentsMultiagentParams.builder()
+                        .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                        .addAgent(
+                            BetaManagedAgentsMultiagentSelfParams.builder()
+                                .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
+                        .build()
+                )
                 .name("name")
                 .addSkill(
                     BetaManagedAgentsAnthropicSkillParams.builder()
@@ -264,6 +298,18 @@ internal class AgentUpdateParamsTest {
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
+            )
+        assertThat(body.multiagent())
+            .contains(
+                BetaManagedAgentsMultiagentParams.builder()
+                    .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                    .addAgent(
+                        BetaManagedAgentsMultiagentSelfParams.builder()
+                            .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
+                    .build()
             )
         assertThat(body.name()).contains("name")
         assertThat(body.skills().getOrNull())

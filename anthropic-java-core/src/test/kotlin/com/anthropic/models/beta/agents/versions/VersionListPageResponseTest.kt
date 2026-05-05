@@ -5,6 +5,7 @@ package com.anthropic.models.beta.agents.versions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgent
+import com.anthropic.models.beta.agents.BetaManagedAgentsAgentReference
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
@@ -15,6 +16,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsCustomSkill
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
+import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
@@ -49,6 +51,18 @@ internal class VersionListPageResponseTest {
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
+                                .build()
+                        )
+                        .multiagent(
+                            BetaManagedAgentsMultiagent.builder()
+                                .addAgent(
+                                    BetaManagedAgentsAgentReference.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
+                                .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
                                 .build()
                         )
                         .name("My First Agent")
@@ -136,6 +150,18 @@ internal class VersionListPageResponseTest {
                             .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                             .build()
                     )
+                    .multiagent(
+                        BetaManagedAgentsMultiagent.builder()
+                            .addAgent(
+                                BetaManagedAgentsAgentReference.builder()
+                                    .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                    .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                    .version(1)
+                                    .build()
+                            )
+                            .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
+                            .build()
+                    )
                     .name("My First Agent")
                     .addSkill(
                         BetaManagedAgentsAnthropicSkill.builder()
@@ -217,6 +243,18 @@ internal class VersionListPageResponseTest {
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
+                                .build()
+                        )
+                        .multiagent(
+                            BetaManagedAgentsMultiagent.builder()
+                                .addAgent(
+                                    BetaManagedAgentsAgentReference.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
+                                .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
                                 .build()
                         )
                         .name("My First Agent")

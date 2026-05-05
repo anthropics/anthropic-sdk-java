@@ -128,6 +128,8 @@ private constructor(
      */
     fun baseUrl(): String? = baseUrl
 
+    fun webhookKey(): Optional<String> = Optional.ofNullable(webhookKey)
+
     fun toBuilder() = Builder().from(this)
 
     companion object {
@@ -159,6 +161,7 @@ private constructor(
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
         private var credentialResult: CredentialResult? = null
+        private var webhookKey: String? = null
 
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
@@ -302,6 +305,11 @@ private constructor(
         internal fun credentials(credentials: CredentialResult?) = apply {
             this.credentialResult = credentials
         }
+
+        fun webhookKey(webhookKey: String?) = apply { this.webhookKey = webhookKey }
+
+        /** Alias for calling [Builder.webhookKey] with `webhookKey.orElse(null)`. */
+        fun webhookKey(webhookKey: Optional<String>) = webhookKey(webhookKey.getOrNull())
 
         fun headers(headers: Headers) = apply {
             this.headers.clear()
@@ -475,6 +483,7 @@ private constructor(
                 timeout,
                 maxRetries,
                 credentialResult,
+                webhookKey,
             )
         }
     }
