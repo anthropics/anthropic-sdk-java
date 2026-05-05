@@ -1,5 +1,28 @@
 # Changelog
 
+## 2.29.0 (2026-05-05)
+
+Full Changelog: [v2.28.0...v2.29.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.28.0...v2.29.0)
+
+### Features
+
+* **client:** allow targeting a workspace for OIDC federation token exchange ([578003a](https://github.com/anthropics/anthropic-sdk-java/commit/578003afed53205ed23789845fc7ed0153ed1100))
+
+
+### Performance Improvements
+
+* **client:** create one json mapper ([556ef49](https://github.com/anthropics/anthropic-sdk-java/commit/556ef492e5a668f1964147b41808ca47a26bb906))
+
+
+### Chores
+
+* remove duplicated dokka setup ([d6b94f4](https://github.com/anthropics/anthropic-sdk-java/commit/d6b94f49fd06f0ceaf6293880e03e7ba95d95d41))
+
+
+### Documentation
+
+* remove bad semicolon ([ffb078b](https://github.com/anthropics/anthropic-sdk-java/commit/ffb078b8285c3a52c45502dabac5ed1890460db8))
+
 ## 2.28.0 (2026-05-04)
 
 Full Changelog: [v2.27.0...v2.28.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.27.0...v2.28.0)
