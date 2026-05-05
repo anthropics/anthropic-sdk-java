@@ -112,6 +112,7 @@ private constructor(
      * Defaults to 2.
      */
     @get:JvmName("maxRetries") val maxRetries: Int,
+    private val webhookKey: String?,
     private val credentialResult: CredentialResult?,
 ) {
 
@@ -177,6 +178,7 @@ private constructor(
             responseValidation = clientOptions.responseValidation
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
+            webhookKey = clientOptions.webhookKey
             credentialResult = clientOptions.credentialResult
         }
 
@@ -482,8 +484,8 @@ private constructor(
                 responseValidation,
                 timeout,
                 maxRetries,
-                credentialResult,
                 webhookKey,
+                credentialResult,
             )
         }
     }

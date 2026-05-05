@@ -53,8 +53,7 @@ internal constructor(
         val call = newCall(preparedRequest, requestOptions)
 
         return try {
-            backend.prepareResponse(
-            call.execute().toHttpResponse())
+            backend.prepareResponse(call.execute().toHttpResponse())
         } catch (e: IOException) {
             throw AnthropicIoException("Request failed", e)
         } finally {
@@ -353,7 +352,7 @@ private fun requiresBody(method: HttpMethod): Boolean =
     }
 
 private fun HttpRequest.toUrl(): String {
-    val builder = baseUrl.toHttpUrl().newBuilder()
+    val builder = baseUrl!!.toHttpUrl().newBuilder()
     pathSegments.forEach(builder::addPathSegment)
     queryParams.keys().forEach { key ->
         queryParams.values(key).forEach { builder.addQueryParameter(key, it) }
