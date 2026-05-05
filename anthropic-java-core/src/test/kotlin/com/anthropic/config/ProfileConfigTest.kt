@@ -99,11 +99,13 @@ internal class ProfileConfigTest {
                 envIdentityTokenFile = "/env/token",
                 envIdentityToken = null,
                 envServiceAccountId = "svac_env",
+                envWorkspaceId = "wrkspc_env",
             )
 
         val auth = filled.authentication().get()
         assertThat(auth.federationRuleId()).contains("fdrl_env")
         assertThat(filled.organizationId()).contains("org_env")
+        assertThat(filled.workspaceId()).contains("wrkspc_env")
         assertThat(auth.identityToken().get().path()).contains("/env/token")
     }
 
@@ -124,6 +126,7 @@ internal class ProfileConfigTest {
                         .build()
                 )
                 .organizationId("org_config")
+                .workspaceId("wrkspc_config")
                 .build()
 
         val filled =
@@ -133,11 +136,13 @@ internal class ProfileConfigTest {
                 envIdentityTokenFile = "/env/token",
                 envIdentityToken = null,
                 envServiceAccountId = null,
+                envWorkspaceId = "wrkspc_env",
             )
 
         val auth = filled.authentication().get()
         assertThat(auth.federationRuleId()).contains("fdrl_config")
         assertThat(filled.organizationId()).contains("org_config")
+        assertThat(filled.workspaceId()).contains("wrkspc_config")
         assertThat(auth.identityToken().get().path()).contains("/config/token")
     }
 }

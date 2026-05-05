@@ -52,6 +52,7 @@ private constructor(
         val federationRuleId: String,
         val organizationId: String,
         val serviceAccountId: String?,
+        val workspaceId: String?,
     )
 
     fun applyCredentials(httpClient: HttpClient, clientOptionsBuilder: ClientOptions.Builder) {
@@ -75,6 +76,7 @@ private constructor(
                     config.federationRuleId,
                     config.organizationId,
                     config.serviceAccountId,
+                    config.workspaceId,
                     httpClient,
                     jsonMapper,
                 )
@@ -203,6 +205,22 @@ private constructor(
             federationRuleId: String,
             organizationId: String,
             serviceAccountId: String?,
+        ) =
+            federationTokenProvider(
+                identityTokenProvider,
+                federationRuleId,
+                organizationId,
+                serviceAccountId,
+                null,
+            )
+
+        @JvmSynthetic
+        internal fun federationTokenProvider(
+            identityTokenProvider: IdentityTokenProvider,
+            federationRuleId: String,
+            organizationId: String,
+            serviceAccountId: String?,
+            workspaceId: String?,
         ) = apply {
             clearCredentials()
             federationConfig =
@@ -211,6 +229,7 @@ private constructor(
                     federationRuleId,
                     organizationId,
                     serviceAccountId,
+                    workspaceId,
                 )
         }
 

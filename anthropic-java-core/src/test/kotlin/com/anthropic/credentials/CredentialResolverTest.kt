@@ -14,7 +14,9 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.NoCredentialsException
+import com.fasterxml.jackson.module.kotlin.readValue
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Instant
@@ -79,7 +81,9 @@ internal class CredentialResolverTest {
                 override fun get(): ProfileConfig = config
             }
 
-        val mockClient = MockHttpClient { _ ->
+        var exchangeBody: Map<String, String>? = null
+        val mockClient = MockHttpClient { request ->
+            exchangeBody = parseJsonParams(extractBody(request))
             createResponse(200, """{"access_token": "config-provider-token", "expires_in": 3600}""")
         }
 
@@ -94,9 +98,13 @@ internal class CredentialResolverTest {
 
         assertThat(result).isNotNull
         assertThat(result.baseUrl).isEqualTo("https://custom.config.provider")
-        assertThat(result.workspaceId).isEqualTo("wrk_config_provider")
+        // For oidc_federation, workspace_id goes in the jwt-bearer exchange body, not the
+        // anthropic-workspace-id header, so CredentialResult.workspaceId must be null.
+        assertThat(result.workspaceId).isNull()
         val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("config-provider-token")
+        assertThat(exchangeBody).isNotNull
+        assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrk_config_provider")
     }
 
     @Test
@@ -170,13 +178,16 @@ internal class CredentialResolverTest {
                     "path": "${tokenFile.toAbsolutePath()}"
                 }
             },
-            "organization_id": "org_explicit"
+            "organization_id": "org_explicit",
+            "workspace_id": "wrkspc_explicit"
         }
         """
                     .trimIndent()
             )
 
-        val mockClient = MockHttpClient { _ ->
+        var exchangeBody: Map<String, String>? = null
+        val mockClient = MockHttpClient { request ->
+            exchangeBody = parseJsonParams(extractBody(request))
             createResponse(
                 200,
                 """{"access_token": "explicit-profile-token", "expires_in": 3600}""",
@@ -196,6 +207,8 @@ internal class CredentialResolverTest {
         assertThat(result).isNotNull
         val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("explicit-profile-token")
+        assertThat(exchangeBody).isNotNull
+        assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrkspc_explicit")
     }
 
     @Test
@@ -248,6 +261,69 @@ internal class CredentialResolverTest {
         assertThat(result).isNotNull
         val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("env-federation-value-token")
+    }
+
+    @Test
+    fun step3EnvFederationPassesWorkspaceId(@TempDir tempDir: Path) {
+        var exchangeBody: Map<String, String>? = null
+        val mockClient = MockHttpClient { request ->
+            exchangeBody = parseJsonParams(extractBody(request))
+            createResponse(
+                200,
+                """{"access_token": "env-federation-workspace-token", "expires_in": 3600}""",
+            )
+        }
+
+        val resolver =
+            CredentialResolver.builder()
+                .envFederationRuleId("fdrl_env")
+                .envOrganizationId("org_env")
+                .envIdentityToken("inline-identity-token")
+                .envWorkspaceId("wrkspc_01abc")
+                .configDir(tempDir)
+                .httpClient(mockClient)
+                .jsonMapper(jsonMapper())
+                .build()
+
+        val result = resolver.resolve()
+
+        assertThat(result).isNotNull
+        result.provider.get("https://api.anthropic.com", false)
+        assertThat(exchangeBody).isNotNull
+        assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrkspc_01abc")
+    }
+
+    @Test
+    fun step3EnvFederationCoercesEmptyWorkspaceIdToUnset(@TempDir tempDir: Path) {
+        // ANTHROPIC_WORKSPACE_ID="" (a defaulted-but-empty CI variable) is treated as unset —
+        // never put "workspace_id": "" on the wire.
+        var exchangeBody: Map<String, String>? = null
+        val mockClient = MockHttpClient { request ->
+            exchangeBody = parseJsonParams(extractBody(request))
+            createResponse(
+                200,
+                """{"access_token": "env-federation-empty-workspace", "expires_in": 3600}""",
+            )
+        }
+
+        val resolver =
+            CredentialResolver.builder()
+                .envFederationRuleId("fdrl_env")
+                .envOrganizationId("org_env")
+                .envIdentityToken("inline-identity-token")
+                .envWorkspaceId("")
+                .configDir(tempDir)
+                .httpClient(mockClient)
+                .jsonMapper(jsonMapper())
+                .build()
+
+        val result = resolver.resolve()
+
+        assertThat(result).isNotNull
+        assertThat(result.workspaceId).isNull()
+        result.provider.get("https://api.anthropic.com", false)
+        assertThat(exchangeBody).isNotNull
+        assertThat(exchangeBody!!).doesNotContainKey("workspace_id")
     }
 
     @Test
@@ -399,6 +475,119 @@ internal class CredentialResolverTest {
         assertThat(result).isNotNull
         val token = result.provider.get("https://api.anthropic.com", false)
         assertThat(token.token).isEqualTo("filled-profile-token")
+    }
+
+    @Test
+    fun envWorkspaceIdFillsMissingInProfile(@TempDir tempDir: Path) {
+        val configDir = tempDir
+        val configsDir = configDir.resolve("configs")
+        Files.createDirectories(configsDir)
+
+        val tokenFile = tempDir.resolve("identity-token")
+        tokenFile.toFile().writeText("test-identity-token")
+
+        val profileConfig = configsDir.resolve("no-workspace-profile.json")
+        profileConfig
+            .toFile()
+            .writeText(
+                """
+                {
+                    "authentication": {
+                        "type": "oidc_federation",
+                        "federation_rule_id": "fdrl_file",
+                        "identity_token": {
+                            "source": "file",
+                            "path": "${tokenFile.toAbsolutePath()}"
+                        }
+                    },
+                    "organization_id": "org_file"
+                }
+                """
+                    .trimIndent()
+            )
+
+        var exchangeBody: Map<String, String>? = null
+        val mockClient = MockHttpClient { request ->
+            exchangeBody = parseJsonParams(extractBody(request))
+            createResponse(
+                200,
+                """{"access_token": "filled-workspace-token", "expires_in": 3600}""",
+            )
+        }
+
+        val resolver =
+            CredentialResolver.builder()
+                .envProfile("no-workspace-profile")
+                .envWorkspaceId("wrkspc_from_env")
+                .configDir(configDir)
+                .httpClient(mockClient)
+                .jsonMapper(jsonMapper())
+                .build()
+
+        val result = resolver.resolve()
+
+        assertThat(result).isNotNull
+        // For oidc_federation, workspace_id goes in the jwt-bearer exchange body, not the
+        // anthropic-workspace-id header, so CredentialResult.workspaceId must be null.
+        assertThat(result.workspaceId).isNull()
+        result.provider.get("https://api.anthropic.com", false)
+        assertThat(exchangeBody).isNotNull
+        assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrkspc_from_env")
+    }
+
+    @Test
+    fun configFileWorkspaceIdBeatsEnvVar(@TempDir tempDir: Path) {
+        // Profile config wins over ANTHROPIC_WORKSPACE_ID — same precedence model as
+        // organization_id and the rest of the env-fillable fields.
+        val configDir = tempDir
+        val configsDir = configDir.resolve("configs")
+        Files.createDirectories(configsDir)
+
+        val tokenFile = tempDir.resolve("identity-token")
+        tokenFile.toFile().writeText("test-identity-token")
+
+        val profileConfig = configsDir.resolve("with-workspace-profile.json")
+        profileConfig
+            .toFile()
+            .writeText(
+                """
+                {
+                    "authentication": {
+                        "type": "oidc_federation",
+                        "federation_rule_id": "fdrl_file",
+                        "identity_token": {
+                            "source": "file",
+                            "path": "${tokenFile.toAbsolutePath()}"
+                        }
+                    },
+                    "organization_id": "org_file",
+                    "workspace_id": "wrkspc_file"
+                }
+                """
+                    .trimIndent()
+            )
+
+        var exchangeBody: Map<String, String>? = null
+        val mockClient = MockHttpClient { request ->
+            exchangeBody = parseJsonParams(extractBody(request))
+            createResponse(200, """{"access_token": "tok", "expires_in": 3600}""")
+        }
+
+        val resolver =
+            CredentialResolver.builder()
+                .envProfile("with-workspace-profile")
+                .envWorkspaceId("wrkspc_env")
+                .configDir(configDir)
+                .httpClient(mockClient)
+                .jsonMapper(jsonMapper())
+                .build()
+
+        val result = resolver.resolve()
+
+        assertThat(result).isNotNull
+        result.provider.get("https://api.anthropic.com", false)
+        assertThat(exchangeBody).isNotNull
+        assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrkspc_file")
     }
 
     @Test
@@ -607,6 +796,80 @@ internal class CredentialResolverTest {
     }
 
     @Test
+    fun userOAuth_workspaceIdPropagatedToCredentialResult(@TempDir tempDir: Path) {
+        // Regression: workspace_id suppression on CredentialResult is scoped to oidc_federation
+        // only. Non-federation profiles (e.g. user_oauth) must still emit the
+        // anthropic-workspace-id header, so the resolved CredentialResult must carry workspaceId.
+        val configDir = tempDir.resolve("configs")
+        java.nio.file.Files.createDirectories(configDir)
+        configDir
+            .resolve("myprofile.json")
+            .toFile()
+            .writeText(
+                """{"authentication": {"type": "user_oauth"}, "workspace_id": "wrkspc_oauth"}"""
+            )
+        val credsDir = tempDir.resolve("credentials")
+        java.nio.file.Files.createDirectories(credsDir)
+        credsDir
+            .resolve("myprofile.json")
+            .toFile()
+            .writeText(
+                """{"type": "access_token", "access_token": "sidecar-at", "expires_at": ${Instant.now().plusSeconds(60).epochSecond}}"""
+            )
+        val client = MockHttpClient { _ -> error("should not be called") }
+
+        val resolver =
+            CredentialResolver.builder()
+                .envProfile("myprofile")
+                .configDir(tempDir)
+                .httpClient(client)
+                .jsonMapper(jsonMapper())
+                .build()
+
+        val result = resolver.resolve()
+
+        assertThat(result.workspaceId).isEqualTo("wrkspc_oauth")
+    }
+
+    @Test
+    fun userOAuth_envWorkspaceIdFillsMissingAndPropagatesToCredentialResult(
+        @TempDir tempDir: Path
+    ) {
+        // ANTHROPIC_WORKSPACE_ID fills workspace_id uniformly across profile types — not just
+        // federation. For user_oauth the filled value surfaces as the anthropic-workspace-id
+        // request header via CredentialResult.workspaceId (federation routes it into the exchange
+        // body instead and suppresses the header).
+        val configDir = tempDir.resolve("configs")
+        java.nio.file.Files.createDirectories(configDir)
+        configDir
+            .resolve("myprofile.json")
+            .toFile()
+            .writeText("""{"authentication": {"type": "user_oauth"}}""")
+        val credsDir = tempDir.resolve("credentials")
+        java.nio.file.Files.createDirectories(credsDir)
+        credsDir
+            .resolve("myprofile.json")
+            .toFile()
+            .writeText(
+                """{"type": "access_token", "access_token": "sidecar-at", "expires_at": ${Instant.now().plusSeconds(60).epochSecond}}"""
+            )
+        val client = MockHttpClient { _ -> error("should not be called") }
+
+        val resolver =
+            CredentialResolver.builder()
+                .envProfile("myprofile")
+                .envWorkspaceId("wrkspc_env")
+                .configDir(tempDir)
+                .httpClient(client)
+                .jsonMapper(jsonMapper())
+                .build()
+
+        val result = resolver.resolve()
+
+        assertThat(result.workspaceId).isEqualTo("wrkspc_env")
+    }
+
+    @Test
     fun userOAuth_expiredTokenStillResolvesWhenRefreshAvailable(@TempDir tempDir: Path) {
         val configDir = tempDir.resolve("configs")
         java.nio.file.Files.createDirectories(configDir)
@@ -680,6 +943,15 @@ internal class CredentialResolverTest {
             .isInstanceOf(com.anthropic.errors.CredentialResolutionException::class.java)
             .hasMessageContaining("HTTP client required for user_oauth refresh")
     }
+
+    private fun extractBody(request: HttpRequest): String {
+        val body = request.body ?: return ""
+        val outputStream = ByteArrayOutputStream()
+        body.writeTo(outputStream)
+        return outputStream.toString("UTF-8")
+    }
+
+    private fun parseJsonParams(body: String): Map<String, String> = jsonMapper().readValue(body)
 
     private fun createResponse(statusCode: Int, body: String): HttpResponse {
         return object : HttpResponse {

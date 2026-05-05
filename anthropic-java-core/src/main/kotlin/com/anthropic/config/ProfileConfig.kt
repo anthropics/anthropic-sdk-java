@@ -194,6 +194,7 @@ private constructor(
         envIdentityTokenFile: String?,
         envIdentityToken: String?,
         envServiceAccountId: String?,
+        envWorkspaceId: String?,
     ): ProfileConfig {
         val auth = authentication ?: return this
         val authIdentityToken = auth.identityToken().orElse(null)
@@ -222,6 +223,7 @@ private constructor(
         return toBuilder()
             .authentication(filledAuth)
             .organizationId(organizationId ?: envOrganizationId)
+            .workspaceId(workspaceId ?: envWorkspaceId)
             .build()
     }
 

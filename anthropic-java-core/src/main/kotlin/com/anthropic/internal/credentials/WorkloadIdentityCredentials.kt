@@ -30,13 +30,22 @@ internal data class TokenResponse(
  *
  * It obtains an identity token from the configured [IdentityTokenProvider] and exchanges it at the
  * token endpoint for an Anthropic access token, scoped by [federationRuleId], [organizationId], and
- * optionally [serviceAccountId].
+ * optionally [serviceAccountId] and [workspaceId].
+ *
+ * @param workspaceId Optional `wrkspc_*` tagged ID, or the literal `"default"` to scope the token
+ *   to the organization's default workspace. When omitted the server picks the rule's sole enabled
+ *   workspace, else the org default if the rule covers it. Required when the rule enables more than
+ *   one non-default workspace, or to target a specific workspace other than the one the server
+ *   would pick. The minted token is workspace-scoped: per-request workspace selection (the
+ *   `anthropic-workspace-id` header) is not supported for federation tokens — switching workspaces
+ *   requires a new token exchange with a different `workspaceId`.
  */
 internal class WorkloadIdentityCredentials(
     private val identityTokenProvider: IdentityTokenProvider,
     private val federationRuleId: String,
     private val organizationId: String,
     private val serviceAccountId: String?,
+    private val workspaceId: String?,
     private val httpClient: HttpClient,
     private val jsonMapper: JsonMapper,
 ) : AccessTokenProvider {
@@ -85,6 +94,7 @@ internal class WorkloadIdentityCredentials(
                 "organization_id" to organizationId,
             )
         serviceAccountId?.let { params["service_account_id"] = it }
+        workspaceId?.let { params["workspace_id"] = it }
         return params
     }
 
@@ -93,6 +103,7 @@ internal class WorkloadIdentityCredentials(
             val statusCode = res.statusCode()
             if (statusCode !in 200..299) {
                 val bodyText = res.body().bufferedReader().readText()
+                warnFederationDiagnostics(statusCode)
                 throw UnexpectedStatusCodeException.builder()
                     .statusCode(statusCode)
                     .headers(res.headers())
@@ -104,6 +115,40 @@ internal class WorkloadIdentityCredentials(
             val expiresAt = tokenResponse.expiresIn?.let { Instant.now().plusSeconds(it) }
             return AccessToken(tokenResponse.accessToken, expiresAt)
         }
+    }
+
+    /**
+     * Logs a diagnostic hint to stderr for a 401 token-exchange response. Other statuses get no
+     * hint: a 5xx or 400 is unlikely to be a federation-configuration problem.
+     *
+     * The hint always reminds the caller to check that the federation rule matches the identity
+     * token and points at the Workload identity page of Claude Console for the authentication event
+     * log. When no `workspaceId` is configured it additionally suggests setting one, since a rule
+     * scoped to multiple workspaces is a common cause the server cannot resolve on its own.
+     *
+     * The hint is delivered via stderr (matching the SDK's other diagnostic warnings) rather than
+     * the exception message: the [UnexpectedStatusCodeException] thrown for token-exchange failures
+     * is Stainless-generated, `final`, and has a private constructor, so it can't carry a custom
+     * message without changing the catchable type. Both the exception type and `body()` stay
+     * byte-identical to what the server returned.
+     */
+    private fun warnFederationDiagnostics(statusCode: Int) {
+        if (statusCode != 401) {
+            return
+        }
+        val parts = mutableListOf("Ensure your federation rule matches your identity token")
+        if (workspaceId == null) {
+            parts.add(
+                "If your federation rule is scoped to multiple workspaces, set the " +
+                    "ANTHROPIC_WORKSPACE_ID environment variable, the 'workspace_id' config " +
+                    "key, or ProfileConfig.Builder.workspaceId(...)"
+            )
+        }
+        parts.add(
+            "View your authentication events in the Workload identity page of Claude Console " +
+                "for more details"
+        )
+        System.err.println("WARNING: " + parts.joinToString(". ") + ".")
     }
 
     private fun tryParseJson(text: String): JsonValue =

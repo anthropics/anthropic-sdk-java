@@ -62,6 +62,7 @@ private constructor(
     private val envIdentityTokenFile: String?,
     private val envIdentityToken: String?,
     private val envServiceAccountId: String?,
+    private val envWorkspaceId: String?,
     private val configDir: Path?,
     private val httpClient: HttpClient?,
     private val jsonMapper: JsonMapper,
@@ -220,6 +221,7 @@ private constructor(
                         federationRuleId,
                         organizationId,
                         auth.serviceAccountId().orElse(null),
+                        config.workspaceId().orElse(null),
                         client,
                         jsonMapper,
                     )
@@ -240,7 +242,10 @@ private constructor(
                 CredentialResult(
                     cachingProvider,
                     config.baseUrl().orElse(null),
-                    config.workspaceId().orElse(null),
+                    // For federation profiles workspace_id is sent in the jwt-bearer exchange body,
+                    // not as a request header (the minted token is already workspace-scoped, so the
+                    // header would be ignored).
+                    null,
                 )
             }
             AuthenticationType.USER_OAUTH -> {
@@ -361,6 +366,7 @@ private constructor(
                 .envIdentityTokenFile(envIdentityTokenFile)
                 .envIdentityToken(envIdentityToken)
                 .envServiceAccountId(envServiceAccountId)
+                .envWorkspaceId(envWorkspaceId)
                 .build()
 
         val stepSources = mutableListOf<CredentialSource>()
@@ -437,6 +443,7 @@ private constructor(
                 federationRuleId,
                 organizationId,
                 envServiceAccountId,
+                envWorkspaceId,
                 client,
                 jsonMapper,
             )
@@ -482,6 +489,7 @@ private constructor(
                 .envIdentityTokenFile(envIdentityTokenFile)
                 .envIdentityToken(envIdentityToken)
                 .envServiceAccountId(envServiceAccountId)
+                .envWorkspaceId(envWorkspaceId)
                 .build()
 
         return resolveFromConfigurationProvider(
@@ -539,6 +547,12 @@ private constructor(
                 .envIdentityTokenFile(System.getenv("ANTHROPIC_IDENTITY_TOKEN_FILE"))
                 .envIdentityToken(System.getenv("ANTHROPIC_IDENTITY_TOKEN"))
                 .envServiceAccountId(System.getenv("ANTHROPIC_SERVICE_ACCOUNT_ID"))
+                // Coerce empty string to null so a defaulted-but-empty CI variable doesn't put
+                // "workspace_id": "" on the wire. The builder setter applies the same coercion so
+                // resolvers built directly (e.g. in tests) behave identically.
+                .envWorkspaceId(
+                    System.getenv("ANTHROPIC_WORKSPACE_ID")?.takeUnless { it.isEmpty() }
+                )
                 .configDir(ConfigDir.resolve()?.let { Paths.get(it) })
                 .httpClient(httpClient)
                 .build()
@@ -554,6 +568,7 @@ private constructor(
         private var envIdentityTokenFile: String? = null
         private var envIdentityToken: String? = null
         private var envServiceAccountId: String? = null
+        private var envWorkspaceId: String? = null
         private var configDir: Path? = null
         private var httpClient: HttpClient? = null
         private var jsonMapper: JsonMapper = jsonMapper()
@@ -589,6 +604,12 @@ private constructor(
             this.envServiceAccountId = envServiceAccountId
         }
 
+        fun envWorkspaceId(envWorkspaceId: String?) = apply {
+            // Coerce empty string to null so a defaulted-but-empty CI variable doesn't put
+            // "workspace_id": "" on the wire.
+            this.envWorkspaceId = envWorkspaceId?.takeUnless { it.isEmpty() }
+        }
+
         fun configDir(configDir: Path?) = apply { this.configDir = configDir }
 
         fun httpClient(httpClient: HttpClient?) = apply { this.httpClient = httpClient }
@@ -605,6 +626,7 @@ private constructor(
                 envIdentityTokenFile,
                 envIdentityToken,
                 envServiceAccountId,
+                envWorkspaceId,
                 configDir,
                 httpClient,
                 jsonMapper,

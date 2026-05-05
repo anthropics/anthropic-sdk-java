@@ -15,6 +15,7 @@ private constructor(
     private val envIdentityTokenFile: String? = null,
     private val envIdentityToken: String? = null,
     private val envServiceAccountId: String? = null,
+    private val envWorkspaceId: String? = null,
 ) : ProfileConfigProvider {
 
     init {
@@ -53,6 +54,7 @@ private constructor(
                 envIdentityTokenFile,
                 envIdentityToken,
                 envServiceAccountId,
+                envWorkspaceId,
             )
 
         cachedConfig = config
@@ -77,6 +79,7 @@ private constructor(
         private var envIdentityTokenFile: String? = null
         private var envIdentityToken: String? = null
         private var envServiceAccountId: String? = null
+        private var envWorkspaceId: String? = null
 
         fun profile(profile: String) = apply { this.profile = profile }
 
@@ -94,12 +97,15 @@ private constructor(
 
         fun envServiceAccountId(value: String?) = apply { this.envServiceAccountId = value }
 
+        fun envWorkspaceId(value: String?) = apply { this.envWorkspaceId = value }
+
         fun fromEnv() = apply {
             envFederationRuleId(System.getenv("ANTHROPIC_FEDERATION_RULE_ID"))
             envOrganizationId(System.getenv("ANTHROPIC_ORGANIZATION_ID"))
             envIdentityTokenFile(System.getenv("ANTHROPIC_IDENTITY_TOKEN_FILE"))
             envIdentityToken(System.getenv("ANTHROPIC_IDENTITY_TOKEN"))
             envServiceAccountId(System.getenv("ANTHROPIC_SERVICE_ACCOUNT_ID"))
+            envWorkspaceId(System.getenv("ANTHROPIC_WORKSPACE_ID"))
         }
 
         fun build(): ConfigurationFileProvider {
@@ -112,6 +118,7 @@ private constructor(
                 envIdentityTokenFile,
                 envIdentityToken,
                 envServiceAccountId,
+                envWorkspaceId,
             )
         }
     }

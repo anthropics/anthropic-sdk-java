@@ -4,10 +4,15 @@ import com.anthropic.config.ProfileConfig
 import com.anthropic.config.ProfileConfigProvider
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.auth.InMemoryIdentityTokenProvider
+import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import org.assertj.core.api.Assertions.assertThat
@@ -209,6 +214,60 @@ internal class AnthropicBackendTest {
         val credentials = backend.resolveCredentials(mockHttpClient)
         assertThat(credentials).isNotNull()
         assertThat(credentials!!.provider).isNotNull()
+    }
+
+    @Test
+    fun federationTokenProviderPassesWorkspaceIdInExchangeBody() {
+        val identityProvider = InMemoryIdentityTokenProvider("test-identity-token")
+        var exchangeBody: Map<String, String>? = null
+        val mockHttpClient =
+            object : HttpClient {
+                override fun execute(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse {
+                    val out = ByteArrayOutputStream()
+                    request.body?.writeTo(out)
+                    exchangeBody = jsonMapper().readValue(out.toString("UTF-8"))
+                    return object : HttpResponse {
+                        override fun statusCode() = 200
+
+                        override fun headers() = Headers.builder().build()
+
+                        override fun body() =
+                            ByteArrayInputStream(
+                                """{"access_token": "tok", "expires_in": 3600}""".toByteArray()
+                            )
+
+                        override fun close() {}
+                    }
+                }
+
+                override fun executeAsync(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): CompletableFuture<HttpResponse> =
+                    CompletableFuture.completedFuture(execute(request, requestOptions))
+
+                override fun close() {}
+            }
+
+        val backend =
+            AnthropicBackend.builder()
+                .federationTokenProvider(
+                    identityTokenProvider = identityProvider,
+                    federationRuleId = "fdrl_test",
+                    organizationId = "org_test",
+                    serviceAccountId = null,
+                    workspaceId = "wrkspc_x",
+                )
+                .build()
+
+        val credentials = backend.resolveCredentials(mockHttpClient)
+        assertThat(credentials).isNotNull()
+        credentials!!.provider.get("https://api.anthropic.com", false)
+        assertThat(exchangeBody).isNotNull
+        assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrkspc_x")
     }
 
     @Test
