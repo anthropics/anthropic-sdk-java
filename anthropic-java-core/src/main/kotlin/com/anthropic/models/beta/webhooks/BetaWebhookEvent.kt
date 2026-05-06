@@ -219,10 +219,10 @@ private constructor(
 
         /**
          * Alias for calling [data] with
-         * `BetaWebhookEventData.ofSessionStatusScheduled(sessionStatusScheduled)`.
+         * `BetaWebhookEventData.ofSessionStatusRescheduled(sessionStatusRescheduled)`.
          */
-        fun data(sessionStatusScheduled: BetaWebhookSessionStatusScheduledEventData) =
-            data(BetaWebhookEventData.ofSessionStatusScheduled(sessionStatusScheduled))
+        fun data(sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData) =
+            data(BetaWebhookEventData.ofSessionStatusRescheduled(sessionStatusRescheduled))
 
         /**
          * Alias for calling [data] with
