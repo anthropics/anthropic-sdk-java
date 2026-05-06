@@ -5,6 +5,7 @@ package com.anthropic.client.okhttp
 import com.anthropic.client.AnthropicClientAsync
 import com.anthropic.client.AnthropicClientAsyncImpl
 import com.anthropic.core.ClientOptions
+import com.anthropic.core.LogLevel
 import com.anthropic.core.Sleeper
 import com.anthropic.core.Timeout
 import com.anthropic.core.http.AsyncStreamResponse
@@ -289,6 +290,15 @@ class AnthropicOkHttpClientAsync private constructor() {
          * Defaults to 2.
          */
         fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
+
+        /**
+         * The level at which to log request and response information.
+         *
+         * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+         *
+         * Defaults to [LogLevel.fromEnv].
+         */
+        fun logLevel(logLevel: LogLevel) = apply { clientOptions.logLevel(logLevel) }
 
         fun apiKey(apiKey: String?) = apply { clientOptions.apiKey(apiKey) }
 

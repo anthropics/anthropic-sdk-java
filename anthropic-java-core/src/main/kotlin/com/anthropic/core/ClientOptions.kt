@@ -5,6 +5,7 @@ package com.anthropic.core
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
+import com.anthropic.core.http.LoggingHttpClient
 import com.anthropic.core.http.PhantomReachableClosingHttpClient
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
@@ -110,6 +111,14 @@ private constructor(
      * Defaults to 2.
      */
     @get:JvmName("maxRetries") val maxRetries: Int,
+    /**
+     * The level at which to log request and response information.
+     *
+     * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+     *
+     * Defaults to [LogLevel.fromEnv].
+     */
+    @get:JvmName("logLevel") val logLevel: LogLevel,
     private val apiKey: String?,
     private val authToken: String?,
     private val webhookKey: String?,
@@ -173,6 +182,7 @@ private constructor(
         private var responseValidation: Boolean = false
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
+        private var logLevel: LogLevel = LogLevel.fromEnv()
         private var apiKey: String? = null
         private var authToken: String? = null
         private var webhookKey: String? = null
@@ -191,6 +201,7 @@ private constructor(
             responseValidation = clientOptions.responseValidation
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
+            logLevel = clientOptions.logLevel
             apiKey = clientOptions.apiKey
             authToken = clientOptions.authToken
             webhookKey = clientOptions.webhookKey
@@ -317,6 +328,15 @@ private constructor(
          */
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
 
+        /**
+         * The level at which to log request and response information.
+         *
+         * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+         *
+         * Defaults to [LogLevel.fromEnv].
+         */
+        fun logLevel(logLevel: LogLevel) = apply { this.logLevel = logLevel }
+
         fun apiKey(apiKey: String?) = apply { this.apiKey = apiKey }
 
         /** Alias for calling [Builder.apiKey] with `apiKey.orElse(null)`. */
@@ -429,6 +449,7 @@ private constructor(
          * System properties take precedence over environment variables.
          */
         fun fromEnv() = apply {
+            logLevel(LogLevel.fromEnv())
             (System.getProperty("anthropic.baseUrl") ?: System.getenv("ANTHROPIC_BASE_URL"))?.let {
                 baseUrl(it)
             }
@@ -512,7 +533,13 @@ private constructor(
             return ClientOptions(
                 httpClient,
                 RetryingHttpClient.builder()
-                    .httpClient(httpClient)
+                    .httpClient(
+                        LoggingHttpClient.builder()
+                            .httpClient(httpClient)
+                            .clock(clock)
+                            .level(logLevel)
+                            .build()
+                    )
                     .sleeper(sleeper)
                     .clock(clock)
                     .maxRetries(maxRetries)
@@ -528,6 +555,7 @@ private constructor(
                 responseValidation,
                 timeout,
                 maxRetries,
+                logLevel,
                 apiKey,
                 authToken,
                 webhookKey,
