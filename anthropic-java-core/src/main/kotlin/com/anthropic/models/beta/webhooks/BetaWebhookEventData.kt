@@ -29,7 +29,7 @@ private constructor(
     private val sessionRequiresAction: BetaWebhookSessionRequiresActionEventData? = null,
     private val sessionArchived: BetaWebhookSessionArchivedEventData? = null,
     private val sessionDeleted: BetaWebhookSessionDeletedEventData? = null,
-    private val sessionStatusScheduled: BetaWebhookSessionStatusScheduledEventData? = null,
+    private val sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData? = null,
     private val sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData? = null,
     private val sessionStatusIdled: BetaWebhookSessionStatusIdledEventData? = null,
     private val sessionStatusTerminated: BetaWebhookSessionStatusTerminatedEventData? = null,
@@ -70,8 +70,8 @@ private constructor(
     fun sessionDeleted(): Optional<BetaWebhookSessionDeletedEventData> =
         Optional.ofNullable(sessionDeleted)
 
-    fun sessionStatusScheduled(): Optional<BetaWebhookSessionStatusScheduledEventData> =
-        Optional.ofNullable(sessionStatusScheduled)
+    fun sessionStatusRescheduled(): Optional<BetaWebhookSessionStatusRescheduledEventData> =
+        Optional.ofNullable(sessionStatusRescheduled)
 
     fun sessionStatusRunStarted(): Optional<BetaWebhookSessionStatusRunStartedEventData> =
         Optional.ofNullable(sessionStatusRunStarted)
@@ -130,7 +130,7 @@ private constructor(
 
     fun isSessionDeleted(): Boolean = sessionDeleted != null
 
-    fun isSessionStatusScheduled(): Boolean = sessionStatusScheduled != null
+    fun isSessionStatusRescheduled(): Boolean = sessionStatusRescheduled != null
 
     fun isSessionStatusRunStarted(): Boolean = sessionStatusRunStarted != null
 
@@ -180,8 +180,8 @@ private constructor(
     fun asSessionDeleted(): BetaWebhookSessionDeletedEventData =
         sessionDeleted.getOrThrow("sessionDeleted")
 
-    fun asSessionStatusScheduled(): BetaWebhookSessionStatusScheduledEventData =
-        sessionStatusScheduled.getOrThrow("sessionStatusScheduled")
+    fun asSessionStatusRescheduled(): BetaWebhookSessionStatusRescheduledEventData =
+        sessionStatusRescheduled.getOrThrow("sessionStatusRescheduled")
 
     fun asSessionStatusRunStarted(): BetaWebhookSessionStatusRunStartedEventData =
         sessionStatusRunStarted.getOrThrow("sessionStatusRunStarted")
@@ -264,8 +264,8 @@ private constructor(
                 visitor.visitSessionRequiresAction(sessionRequiresAction)
             sessionArchived != null -> visitor.visitSessionArchived(sessionArchived)
             sessionDeleted != null -> visitor.visitSessionDeleted(sessionDeleted)
-            sessionStatusScheduled != null ->
-                visitor.visitSessionStatusScheduled(sessionStatusScheduled)
+            sessionStatusRescheduled != null ->
+                visitor.visitSessionStatusRescheduled(sessionStatusRescheduled)
             sessionStatusRunStarted != null ->
                 visitor.visitSessionStatusRunStarted(sessionStatusRunStarted)
             sessionStatusIdled != null -> visitor.visitSessionStatusIdled(sessionStatusIdled)
@@ -348,10 +348,10 @@ private constructor(
                     sessionDeleted.validate()
                 }
 
-                override fun visitSessionStatusScheduled(
-                    sessionStatusScheduled: BetaWebhookSessionStatusScheduledEventData
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
                 ) {
-                    sessionStatusScheduled.validate()
+                    sessionStatusRescheduled.validate()
                 }
 
                 override fun visitSessionStatusRunStarted(
@@ -480,9 +480,9 @@ private constructor(
                     sessionDeleted: BetaWebhookSessionDeletedEventData
                 ) = sessionDeleted.validity()
 
-                override fun visitSessionStatusScheduled(
-                    sessionStatusScheduled: BetaWebhookSessionStatusScheduledEventData
-                ) = sessionStatusScheduled.validity()
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
+                ) = sessionStatusRescheduled.validity()
 
                 override fun visitSessionStatusRunStarted(
                     sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData
@@ -554,7 +554,7 @@ private constructor(
             sessionRequiresAction == other.sessionRequiresAction &&
             sessionArchived == other.sessionArchived &&
             sessionDeleted == other.sessionDeleted &&
-            sessionStatusScheduled == other.sessionStatusScheduled &&
+            sessionStatusRescheduled == other.sessionStatusRescheduled &&
             sessionStatusRunStarted == other.sessionStatusRunStarted &&
             sessionStatusIdled == other.sessionStatusIdled &&
             sessionStatusTerminated == other.sessionStatusTerminated &&
@@ -580,7 +580,7 @@ private constructor(
             sessionRequiresAction,
             sessionArchived,
             sessionDeleted,
-            sessionStatusScheduled,
+            sessionStatusRescheduled,
             sessionStatusRunStarted,
             sessionStatusIdled,
             sessionStatusTerminated,
@@ -607,8 +607,8 @@ private constructor(
                 "BetaWebhookEventData{sessionRequiresAction=$sessionRequiresAction}"
             sessionArchived != null -> "BetaWebhookEventData{sessionArchived=$sessionArchived}"
             sessionDeleted != null -> "BetaWebhookEventData{sessionDeleted=$sessionDeleted}"
-            sessionStatusScheduled != null ->
-                "BetaWebhookEventData{sessionStatusScheduled=$sessionStatusScheduled}"
+            sessionStatusRescheduled != null ->
+                "BetaWebhookEventData{sessionStatusRescheduled=$sessionStatusRescheduled}"
             sessionStatusRunStarted != null ->
                 "BetaWebhookEventData{sessionStatusRunStarted=$sessionStatusRunStarted}"
             sessionStatusIdled != null ->
@@ -670,9 +670,9 @@ private constructor(
             BetaWebhookEventData(sessionDeleted = sessionDeleted)
 
         @JvmStatic
-        fun ofSessionStatusScheduled(
-            sessionStatusScheduled: BetaWebhookSessionStatusScheduledEventData
-        ) = BetaWebhookEventData(sessionStatusScheduled = sessionStatusScheduled)
+        fun ofSessionStatusRescheduled(
+            sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
+        ) = BetaWebhookEventData(sessionStatusRescheduled = sessionStatusRescheduled)
 
         @JvmStatic
         fun ofSessionStatusRunStarted(
@@ -761,8 +761,8 @@ private constructor(
 
         fun visitSessionDeleted(sessionDeleted: BetaWebhookSessionDeletedEventData): T
 
-        fun visitSessionStatusScheduled(
-            sessionStatusScheduled: BetaWebhookSessionStatusScheduledEventData
+        fun visitSessionStatusRescheduled(
+            sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
         ): T
 
         fun visitSessionStatusRunStarted(
@@ -887,12 +887,12 @@ private constructor(
                         ?.let { BetaWebhookEventData(sessionDeleted = it, _json = json) }
                         ?: BetaWebhookEventData(_json = json)
                 }
-                "session.status_scheduled" -> {
+                "session.status_rescheduled" -> {
                     return tryDeserialize(
                             node,
-                            jacksonTypeRef<BetaWebhookSessionStatusScheduledEventData>(),
+                            jacksonTypeRef<BetaWebhookSessionStatusRescheduledEventData>(),
                         )
-                        ?.let { BetaWebhookEventData(sessionStatusScheduled = it, _json = json) }
+                        ?.let { BetaWebhookEventData(sessionStatusRescheduled = it, _json = json) }
                         ?: BetaWebhookEventData(_json = json)
                 }
                 "session.status_run_started" -> {
@@ -1022,8 +1022,8 @@ private constructor(
                     generator.writeObject(value.sessionRequiresAction)
                 value.sessionArchived != null -> generator.writeObject(value.sessionArchived)
                 value.sessionDeleted != null -> generator.writeObject(value.sessionDeleted)
-                value.sessionStatusScheduled != null ->
-                    generator.writeObject(value.sessionStatusScheduled)
+                value.sessionStatusRescheduled != null ->
+                    generator.writeObject(value.sessionStatusRescheduled)
                 value.sessionStatusRunStarted != null ->
                     generator.writeObject(value.sessionStatusRunStarted)
                 value.sessionStatusIdled != null -> generator.writeObject(value.sessionStatusIdled)

@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class BetaWebhookSessionStatusScheduledEventData
+class BetaWebhookSessionStatusRescheduledEventData
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
@@ -54,7 +54,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("session.status_scheduled")
+     * JsonValue.from("session.status_rescheduled")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -109,7 +109,7 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [BetaWebhookSessionStatusScheduledEventData].
+         * [BetaWebhookSessionStatusRescheduledEventData].
          *
          * The following fields are required:
          * ```java
@@ -121,25 +121,26 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaWebhookSessionStatusScheduledEventData]. */
+    /** A builder for [BetaWebhookSessionStatusRescheduledEventData]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
         private var organizationId: JsonField<String>? = null
-        private var type: JsonValue = JsonValue.from("session.status_scheduled")
+        private var type: JsonValue = JsonValue.from("session.status_rescheduled")
         private var workspaceId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(
-            betaWebhookSessionStatusScheduledEventData: BetaWebhookSessionStatusScheduledEventData
+            betaWebhookSessionStatusRescheduledEventData:
+                BetaWebhookSessionStatusRescheduledEventData
         ) = apply {
-            id = betaWebhookSessionStatusScheduledEventData.id
-            organizationId = betaWebhookSessionStatusScheduledEventData.organizationId
-            type = betaWebhookSessionStatusScheduledEventData.type
-            workspaceId = betaWebhookSessionStatusScheduledEventData.workspaceId
+            id = betaWebhookSessionStatusRescheduledEventData.id
+            organizationId = betaWebhookSessionStatusRescheduledEventData.organizationId
+            type = betaWebhookSessionStatusRescheduledEventData.type
+            workspaceId = betaWebhookSessionStatusRescheduledEventData.workspaceId
             additionalProperties =
-                betaWebhookSessionStatusScheduledEventData.additionalProperties.toMutableMap()
+                betaWebhookSessionStatusRescheduledEventData.additionalProperties.toMutableMap()
         }
 
         /** ID of the resource that triggered the event. */
@@ -172,7 +173,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("session.status_scheduled")
+         * JsonValue.from("session.status_rescheduled")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -211,7 +212,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaWebhookSessionStatusScheduledEventData].
+         * Returns an immutable instance of [BetaWebhookSessionStatusRescheduledEventData].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -224,8 +225,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BetaWebhookSessionStatusScheduledEventData =
-            BetaWebhookSessionStatusScheduledEventData(
+        fun build(): BetaWebhookSessionStatusRescheduledEventData =
+            BetaWebhookSessionStatusRescheduledEventData(
                 checkRequired("id", id),
                 checkRequired("organizationId", organizationId),
                 type,
@@ -244,7 +245,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BetaWebhookSessionStatusScheduledEventData = apply {
+    fun validate(): BetaWebhookSessionStatusRescheduledEventData = apply {
         if (validated) {
             return@apply
         }
@@ -252,7 +253,7 @@ private constructor(
         id()
         organizationId()
         _type().let {
-            if (it != JsonValue.from("session.status_scheduled")) {
+            if (it != JsonValue.from("session.status_rescheduled")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
@@ -277,7 +278,7 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (organizationId.asKnown().isPresent) 1 else 0) +
-            type.let { if (it == JsonValue.from("session.status_scheduled")) 1 else 0 } +
+            type.let { if (it == JsonValue.from("session.status_rescheduled")) 1 else 0 } +
             (if (workspaceId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
@@ -285,7 +286,7 @@ private constructor(
             return true
         }
 
-        return other is BetaWebhookSessionStatusScheduledEventData &&
+        return other is BetaWebhookSessionStatusRescheduledEventData &&
             id == other.id &&
             organizationId == other.organizationId &&
             type == other.type &&
@@ -300,5 +301,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaWebhookSessionStatusScheduledEventData{id=$id, organizationId=$organizationId, type=$type, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
+        "BetaWebhookSessionStatusRescheduledEventData{id=$id, organizationId=$organizationId, type=$type, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
 }

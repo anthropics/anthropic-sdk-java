@@ -32,7 +32,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -88,7 +88,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -144,7 +144,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -200,7 +200,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -257,7 +257,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).contains(sessionRequiresAction)
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -313,7 +313,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).contains(sessionArchived)
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -369,7 +369,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).contains(sessionDeleted)
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -408,16 +408,16 @@ internal class BetaWebhookEventDataTest {
     }
 
     @Test
-    fun ofSessionStatusScheduled() {
-        val sessionStatusScheduled =
-            BetaWebhookSessionStatusScheduledEventData.builder()
+    fun ofSessionStatusRescheduled() {
+        val sessionStatusRescheduled =
+            BetaWebhookSessionStatusRescheduledEventData.builder()
                 .id("id")
                 .organizationId("organization_id")
                 .workspaceId("workspace_id")
                 .build()
 
         val betaWebhookEventData =
-            BetaWebhookEventData.ofSessionStatusScheduled(sessionStatusScheduled)
+            BetaWebhookEventData.ofSessionStatusRescheduled(sessionStatusRescheduled)
 
         assertThat(betaWebhookEventData.sessionCreated()).isEmpty
         assertThat(betaWebhookEventData.sessionPending()).isEmpty
@@ -426,7 +426,8 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).contains(sessionStatusScheduled)
+        assertThat(betaWebhookEventData.sessionStatusRescheduled())
+            .contains(sessionStatusRescheduled)
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -444,11 +445,11 @@ internal class BetaWebhookEventDataTest {
     }
 
     @Test
-    fun ofSessionStatusScheduledRoundtrip() {
+    fun ofSessionStatusRescheduledRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaWebhookEventData =
-            BetaWebhookEventData.ofSessionStatusScheduled(
-                BetaWebhookSessionStatusScheduledEventData.builder()
+            BetaWebhookEventData.ofSessionStatusRescheduled(
+                BetaWebhookSessionStatusRescheduledEventData.builder()
                     .id("id")
                     .organizationId("organization_id")
                     .workspaceId("workspace_id")
@@ -483,7 +484,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).contains(sessionStatusRunStarted)
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -539,7 +540,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).contains(sessionStatusIdled)
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -596,7 +597,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).contains(sessionStatusTerminated)
@@ -652,7 +653,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -708,7 +709,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -765,7 +766,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -822,7 +823,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -879,7 +880,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -935,7 +936,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -991,7 +992,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -1049,7 +1050,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -1108,7 +1109,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -1167,7 +1168,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
@@ -1226,7 +1227,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
         assertThat(betaWebhookEventData.sessionArchived()).isEmpty
         assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
-        assertThat(betaWebhookEventData.sessionStatusScheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
         assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
