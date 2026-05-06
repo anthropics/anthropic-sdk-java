@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.30.0 (2026-05-06)
+
+Full Changelog: [v2.29.0...v2.30.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.29.0...v2.30.0)
+
+### Features
+
+* **api:** add support for Managed Agents multiagents and outcomes, webhooks, vault validation ([e641d5f](https://github.com/anthropics/anthropic-sdk-java/commit/e641d5fef03fb832064d933326be8b0294e4ab0c))
+* **api:** add support for Managed Agents multiagents and outcomes, webhooks, vault validation ([6067599](https://github.com/anthropics/anthropic-sdk-java/commit/60675993a7c520e7fb74d02dc797d64e854d58e8))
+* **client:** support proxy authentication ([d91fea2](https://github.com/anthropics/anthropic-sdk-java/commit/d91fea2762368d5b52296dddd36e1b9b67ff1bf5))
+
+
+### Bug Fixes
+
+* **api:** Adjust webhook configuration ([34ea5b4](https://github.com/anthropics/anthropic-sdk-java/commit/34ea5b41cb152df7abdc9d5e43949817c74d4375))
+
+
+### Chores
+
+* fix merge errors ([c390c20](https://github.com/anthropics/anthropic-sdk-java/commit/c390c200d0fb228caaebb7c14ae22fa72bec22b9))
+
 ## 2.29.0 (2026-05-05)
 
 Full Changelog: [v2.28.0...v2.29.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.28.0...v2.29.0)
