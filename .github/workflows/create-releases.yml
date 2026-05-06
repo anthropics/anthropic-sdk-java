@@ -34,7 +34,7 @@ jobs:
 
       - name: Set up Gradle
         if: ${{ steps.release.outputs.releases_created }}
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@a8f75513eafdebd8141bd1cd4e30fcd194af8dfa # v2.12.0 (sha-pinned)
 
       - name: Publish to Sonatype
         if: ${{ steps.release.outputs.releases_created }}
