@@ -395,8 +395,21 @@ private constructor(
 
         fun timeout(): Timeout = timeout
 
-        /** Updates configuration using environment variables. */
+        /**
+         * Updates configuration using system properties and environment variables.
+         *
+         * See this table for the available options:
+         *
+         * |Setter      |System property              |Environment variable           |Required|Default value|
+         * |------------|-----------------------------|-------------------------------|--------|-------------|
+         * |`webhookKey`|`anthropic.webhookSigningKey`|`ANTHROPIC_WEBHOOK_SIGNING_KEY`|false   |-            |
+         *
+         * System properties take precedence over environment variables.
+         */
         fun fromEnv() = apply {
+            (System.getProperty("anthropic.webhookSigningKey")
+                    ?: System.getenv("ANTHROPIC_WEBHOOK_SIGNING_KEY"))
+                ?.let { webhookKey(it) }
             System.getenv("ANTHROPIC_CUSTOM_HEADERS")?.let { customHeadersEnv ->
                 for (line in customHeadersEnv.split("\n")) {
                     val colon = line.indexOf(':')
