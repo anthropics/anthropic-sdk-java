@@ -38,6 +38,12 @@ tasks.withType<Test>().configureEach {
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
     forkEvery = 100
 
+    // Mockito's ByteBuddy agent emits a JVM warning when loaded dynamically. Tests that capture
+    // stderr (e.g. LoggingHttpClientTest) see this warning interleaved with their expected output
+    // when other concurrent tests trigger the agent load. Pre-authorizing dynamic agent loading
+    // suppresses the warning at the JVM level.
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
+
     testLogging {
         exceptionFormat = TestExceptionFormat.FULL
     }
