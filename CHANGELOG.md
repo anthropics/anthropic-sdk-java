@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.31.0 (2026-05-11)
+
+Full Changelog: [v2.30.0...v2.31.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.30.0...v2.31.0)
+
+### Features
+
+* **client:** improve logging ([bbd371e](https://github.com/anthropics/anthropic-sdk-java/commit/bbd371ef81059aca81f2ec6b62ae279e80b5ab3d))
+
+
+### Chores
+
+* fix concurrent tests with log output pollution ([80cf0cf](https://github.com/anthropics/anthropic-sdk-java/commit/80cf0cf05d6ee2cdae74406d475ce252880cf219))
+* re-applying logging change ([68e5c07](https://github.com/anthropics/anthropic-sdk-java/commit/68e5c071ca978743e9d45f28f3e564711c33165e))
+* redact api-key headers in debug logs ([3bca768](https://github.com/anthropics/anthropic-sdk-java/commit/3bca768637738a646ab1f06d44306ae23391fdd6))
+
 ## 2.30.0 (2026-05-06)
 
 Full Changelog: [v2.29.0...v2.30.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.29.0...v2.30.0)
