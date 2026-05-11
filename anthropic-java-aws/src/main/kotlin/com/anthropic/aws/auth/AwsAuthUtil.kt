@@ -33,6 +33,9 @@ object AwsAuthUtil {
      *
      * The `connection` header is excluded from signing because it may be stripped by proxies and
      * must not be part of the SigV4 signature.
+     *
+     * A `content-type` header is only required when the request has a body. Body-less requests
+     * (e.g. `GET`, `DELETE`) are signed without one, as SigV4 does not require it.
      */
     @JvmStatic
     fun signRequestWithSigV4(
@@ -50,11 +53,12 @@ object AwsAuthUtil {
                         val contentType = request.body?.contentType()
                         if (contentType != null) {
                             appendHeader(HEADER_CONTENT_TYPE, contentType)
-                        } else {
+                        } else if (request.body != null) {
                             throw AnthropicInvalidDataException(
-                                "No content type in request headers or body."
+                                "Request has a body but no content type."
                             )
                         }
+                        // Body-less request (e.g. GET, DELETE): no content type required.
                     }
                     request.headers.names().forEach { name ->
                         // The `connection` header may be stripped by proxies, so it must

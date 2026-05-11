@@ -413,6 +413,31 @@ internal class AwsBackendTest {
     }
 
     @Test
+    fun authorizeRequestWithCredentialsBodylessRequest() {
+        val backend =
+            AwsBackend.builder()
+                .awsAccessKey(AWS_ACCESS_KEY_ID)
+                .awsSecretAccessKey(AWS_SECRET_ACCESS_KEY)
+                .region(Region.US_EAST_1)
+                .workspaceId(WORKSPACE_ID)
+                .build()
+
+        // Body-less requests (e.g. GET, DELETE) have no body to derive a content type from, and
+        // SigV4 does not require one.
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.GET)
+                .baseUrl("https://aws-external-anthropic.us-east-1.api.aws/v1/agents")
+                .build()
+
+        val authorized = backend.authorizeRequest(request)
+
+        assertThat(authorized.headers.values("authorization")[0]).startsWith("AWS4-HMAC-SHA256")
+        assertThat(authorized.headers.values("x-amz-date")).isNotEmpty()
+        assertThat(authorized.headers.names()).doesNotContain("content-type")
+    }
+
+    @Test
     fun authorizeRequestWithCredentialsIncludesQueryParams() {
         val backend =
             AwsBackend.builder()
