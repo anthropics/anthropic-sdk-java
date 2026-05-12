@@ -101,6 +101,12 @@ internal class StructuredMessageCreateParamsTest {
         private val THINKING_CONFIG = BetaThinkingConfigParam.ofEnabled(THINKING_CONFIG_ENABLED)
 
         private val TOOL = toolFromClass(CLASS)
+        private val MCP_BETA_TOOL =
+            com.anthropic.helpers.McpBetaTool.builder()
+                .name(TOOL.name())
+                .definition(TOOL)
+                .runner { BetaToolResultBlockParam.Content.ofString(it) }
+                .build()
         private val TOOL_UNION = BetaToolUnion.ofBetaTool(TOOL)
         private val TOOL_CHOICE_TOOL = BetaToolChoiceTool.builder().name(STRING).build()
         private val TOOL_CHOICE = BetaToolChoice.ofTool(TOOL_CHOICE_TOOL)
@@ -245,6 +251,8 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addTool", TOOL_SEARCH_TOOL_REGEX_20251119),
                 DelegationWriteTestCase("addTool", BETA_MCP_TOOL_SET),
                 DelegationWriteTestCase("addTool", CLASS, VALIDATION),
+                DelegationWriteTestCase("addTool", MCP_BETA_TOOL),
+                DelegationWriteTestCase("addTools", listOf(MCP_BETA_TOOL)),
                 DelegationWriteTestCase("topK", LONG),
                 DelegationWriteTestCase("topK", JSON_FIELD),
                 DelegationWriteTestCase("topP", DOUBLE),

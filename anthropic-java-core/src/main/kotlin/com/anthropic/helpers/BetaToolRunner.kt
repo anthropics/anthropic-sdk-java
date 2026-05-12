@@ -4,12 +4,10 @@ import com.anthropic.core.*
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.outputTypeFromJson
 import com.anthropic.core.toJsonString
-import com.anthropic.core.toolFromClass
 import com.anthropic.models.beta.messages.*
 import com.anthropic.services.blocking.beta.MessageService
 import java.util.Optional
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.function.Supplier
 import java.util.stream.Stream
 import kotlin.jvm.optionals.asSequence
 import kotlin.jvm.optionals.getOrNull
@@ -140,12 +138,7 @@ internal constructor(
             return null
         }
 
-        val toolsByName =
-            currentParams
-                .toolParametersTypes()
-                .asSequence()
-                .map { RunnableTool(it) }
-                .groupBy { it.name() }
+        val toolsByName = currentParams.runnableTools().associateBy { it.name() }
         return BetaMessageParam.builder()
             .role(BetaMessageParam.Role.USER)
             .contentOfBetaContentBlockParams(
@@ -159,7 +152,7 @@ internal constructor(
 
     private fun generateToolUseResult(
         toolUse: BetaToolUseBlockParam,
-        toolsByName: Map<String, List<RunnableTool>>,
+        toolsByName: Map<String, RunnableTool>,
     ): BetaToolResultBlockParam =
         when (toolUse.name()) {
             // Memory tool commands have the same type (`"tool_use"`) as other tool use blocks, but
@@ -170,10 +163,10 @@ internal constructor(
 
     private fun generateGenericToolUseResult(
         toolUse: BetaToolUseBlockParam,
-        toolsByName: Map<String, List<RunnableTool>>,
+        toolsByName: Map<String, RunnableTool>,
     ): BetaToolResultBlockParam {
         val tool =
-            toolsByName[toolUse.name()]?.firstOrNull()
+            toolsByName[toolUse.name()]
                 ?: return BetaToolResultBlockParam.builder()
                     .toolUseId(toolUse.id())
                     .content("Error: Tool '${toolUse.name()}' not found")
@@ -254,28 +247,5 @@ internal constructor(
             .toolUseId(toolUse.id())
             .content(memoryToolOutput)
             .build()
-    }
-}
-
-private data class RunnableTool(private val parametersType: Class<*>) {
-
-    private val tool = toolFromClass(parametersType)
-
-    fun name() = tool.name()
-
-    fun run(input: JsonField<*>): BetaToolResultBlockParam.Content {
-        val parsed = outputTypeFromJson(toJsonString(input), parametersType)
-        if (parsed !is Supplier<*>) {
-            throw IllegalStateException("Cannot run non-`Supplier` tool")
-        }
-
-        return when (val output = parsed.get()) {
-            is String -> BetaToolResultBlockParam.Content.ofString(output)
-            is BetaToolResultBlockParam.Content -> output
-            else ->
-                throw IllegalStateException(
-                    "Expected tool to return `String` or `BetaToolResultBlockParam.Content`"
-                )
-        }
     }
 }

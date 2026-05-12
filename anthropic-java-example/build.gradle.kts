@@ -15,11 +15,14 @@ dependencies {
     implementation(project(":anthropic-java-vertex"))
     // Microsoft Entra ID library for Foundry examples.
     implementation("com.azure:azure-identity:1.18.1")
+    // MCP module for BetaMcpToolRunnerExample (requires JDK 17+ at runtime).
+    implementation(project(":anthropic-java-mcp"))
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    // Allow using more modern APIs, like `List.of` and `Map.of`, in examples.
-    options.release.set(11)
+    // Allow using more modern APIs in examples. Uses 17 (rather than 11) because the MCP SDK
+    // uses Java Records which require Java 16+.
+    options.release.set(17)
 }
 
 application {

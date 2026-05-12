@@ -551,6 +551,14 @@ internal constructor(
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
         ) = apply { paramsBuilder.addTool(toolParametersType, localValidation) }
 
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(tool: com.anthropic.helpers.McpBetaTool) = apply { paramsBuilder.addTool(tool) }
+
+        /** @see MessageCreateParams.Builder.addTools */
+        fun addTools(tools: List<com.anthropic.helpers.McpBetaTool>) = apply {
+            paramsBuilder.addTools(tools)
+        }
+
         /** @see MessageCreateParams.Builder.topK */
         fun topK(topK: Long) = apply { paramsBuilder.topK(topK) }
 
