@@ -101,9 +101,9 @@ private constructor(
     fun outcomeId(): String = outcomeId.getRequired("outcome_id")
 
     /**
-     * Current evaluation state. 'pending' before the agent begins work; 'running' while producing
-     * or revising; 'evaluating' while the grader scores;
-     * 'satisfied'/'max_iterations_reached'/'failed'/'interrupted' are terminal.
+     * Current evaluation state. `pending` before the agent begins work; `running` while producing
+     * or revising; `evaluating` while the grader scores;
+     * `satisfied`/`max_iterations_reached`/`failed`/`interrupted` are terminal.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -300,9 +300,9 @@ private constructor(
         fun outcomeId(outcomeId: JsonField<String>) = apply { this.outcomeId = outcomeId }
 
         /**
-         * Current evaluation state. 'pending' before the agent begins work; 'running' while
-         * producing or revising; 'evaluating' while the grader scores;
-         * 'satisfied'/'max_iterations_reached'/'failed'/'interrupted' are terminal.
+         * Current evaluation state. `pending` before the agent begins work; `running` while
+         * producing or revising; `evaluating` while the grader scores;
+         * `satisfied`/`max_iterations_reached`/`failed`/`interrupted` are terminal.
          */
         fun result(result: String) = result(JsonField.of(result))
 

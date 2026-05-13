@@ -458,6 +458,10 @@ private constructor(
                     .build()
             )
 
+        /** Alias for calling [addContent] with `Content.ofSearchResult(searchResult)`. */
+        fun addContent(searchResult: BetaManagedAgentsSearchResultBlock) =
+            addContent(Content.ofSearchResult(searchResult))
+
         /** Whether the tool execution resulted in an error. */
         fun isError(isError: Boolean?) = isError(JsonField.ofNullable(isError))
 
@@ -709,6 +713,7 @@ private constructor(
         private val text: BetaManagedAgentsTextBlock? = null,
         private val image: BetaManagedAgentsImageBlock? = null,
         private val document: BetaManagedAgentsDocumentBlock? = null,
+        private val searchResult: BetaManagedAgentsSearchResultBlock? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -724,11 +729,17 @@ private constructor(
          */
         fun document(): Optional<BetaManagedAgentsDocumentBlock> = Optional.ofNullable(document)
 
+        /** A block containing a web search result. */
+        fun searchResult(): Optional<BetaManagedAgentsSearchResultBlock> =
+            Optional.ofNullable(searchResult)
+
         fun isText(): Boolean = text != null
 
         fun isImage(): Boolean = image != null
 
         fun isDocument(): Boolean = document != null
+
+        fun isSearchResult(): Boolean = searchResult != null
 
         /** Regular text content. */
         fun asText(): BetaManagedAgentsTextBlock = text.getOrThrow("text")
@@ -741,6 +752,10 @@ private constructor(
          * via a URL.
          */
         fun asDocument(): BetaManagedAgentsDocumentBlock = document.getOrThrow("document")
+
+        /** A block containing a web search result. */
+        fun asSearchResult(): BetaManagedAgentsSearchResultBlock =
+            searchResult.getOrThrow("searchResult")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -778,6 +793,7 @@ private constructor(
                 text != null -> visitor.visitText(text)
                 image != null -> visitor.visitImage(image)
                 document != null -> visitor.visitDocument(document)
+                searchResult != null -> visitor.visitSearchResult(searchResult)
                 else -> visitor.unknown(_json)
             }
 
@@ -810,6 +826,12 @@ private constructor(
                     override fun visitDocument(document: BetaManagedAgentsDocumentBlock) {
                         document.validate()
                     }
+
+                    override fun visitSearchResult(
+                        searchResult: BetaManagedAgentsSearchResultBlock
+                    ) {
+                        searchResult.validate()
+                    }
                 }
             )
             validated = true
@@ -840,6 +862,10 @@ private constructor(
                     override fun visitDocument(document: BetaManagedAgentsDocumentBlock) =
                         document.validity()
 
+                    override fun visitSearchResult(
+                        searchResult: BetaManagedAgentsSearchResultBlock
+                    ) = searchResult.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -852,16 +878,18 @@ private constructor(
             return other is Content &&
                 text == other.text &&
                 image == other.image &&
-                document == other.document
+                document == other.document &&
+                searchResult == other.searchResult
         }
 
-        override fun hashCode(): Int = Objects.hash(text, image, document)
+        override fun hashCode(): Int = Objects.hash(text, image, document, searchResult)
 
         override fun toString(): String =
             when {
                 text != null -> "Content{text=$text}"
                 image != null -> "Content{image=$image}"
                 document != null -> "Content{document=$document}"
+                searchResult != null -> "Content{searchResult=$searchResult}"
                 _json != null -> "Content{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Content")
             }
@@ -880,6 +908,11 @@ private constructor(
              */
             @JvmStatic
             fun ofDocument(document: BetaManagedAgentsDocumentBlock) = Content(document = document)
+
+            /** A block containing a web search result. */
+            @JvmStatic
+            fun ofSearchResult(searchResult: BetaManagedAgentsSearchResultBlock) =
+                Content(searchResult = searchResult)
         }
 
         /**
@@ -898,6 +931,9 @@ private constructor(
              * reference via a URL.
              */
             fun visitDocument(document: BetaManagedAgentsDocumentBlock): T
+
+            /** A block containing a web search result. */
+            fun visitSearchResult(searchResult: BetaManagedAgentsSearchResultBlock): T
 
             /**
              * Maps an unknown variant of [Content] to a value of type [T].
@@ -936,6 +972,14 @@ private constructor(
                             )
                             ?.let { Content(document = it, _json = json) } ?: Content(_json = json)
                     }
+                    "search_result" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsSearchResultBlock>(),
+                            )
+                            ?.let { Content(searchResult = it, _json = json) }
+                            ?: Content(_json = json)
+                    }
                 }
 
                 return Content(_json = json)
@@ -953,6 +997,7 @@ private constructor(
                     value.text != null -> generator.writeObject(value.text)
                     value.image != null -> generator.writeObject(value.image)
                     value.document != null -> generator.writeObject(value.document)
+                    value.searchResult != null -> generator.writeObject(value.searchResult)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Content")
                 }
