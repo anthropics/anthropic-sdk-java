@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.32.0 (2026-05-13)
+
+Full Changelog: [v2.31.0...v2.32.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.31.0...v2.32.0)
+
+### Features
+
+* **api:** Add BetaManagedAgentsSearchResultBlock types ([253feaa](https://github.com/anthropics/anthropic-sdk-java/commit/253feaad3ecbf3693985ffa205baa1b51e8972e7))
+* **api:** Add support for cache diagnostics beta ([7a32231](https://github.com/anthropics/anthropic-sdk-java/commit/7a3223122c72898bcfbbd1385f2aaba1daa1824b))
+* **mcp:** add mcp tool helpers ([#1161](https://github.com/anthropics/anthropic-sdk-java/issues/1161)) ([5d58812](https://github.com/anthropics/anthropic-sdk-java/commit/5d58812cba85153534f9eabba9bc256d289295c7))
+
+
+### Chores
+
+* **api:** spec updates ([3cd6b5b](https://github.com/anthropics/anthropic-sdk-java/commit/3cd6b5b9b4948d7f80cc236a8ed360eac24b818c))
+
 ## 2.31.0 (2026-05-11)
 
 Full Changelog: [v2.30.0...v2.31.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.30.0...v2.31.0)
