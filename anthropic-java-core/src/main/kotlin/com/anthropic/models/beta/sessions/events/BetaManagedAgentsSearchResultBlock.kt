@@ -27,7 +27,6 @@ private constructor(
     private val content: JsonField<List<BetaManagedAgentsSearchResultContent>>,
     private val source: JsonField<String>,
     private val title: JsonField<String>,
-    private val toolUseId: JsonField<String>,
     private val type: JsonField<Type>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -42,11 +41,8 @@ private constructor(
         content: JsonField<List<BetaManagedAgentsSearchResultContent>> = JsonMissing.of(),
         @JsonProperty("source") @ExcludeMissing source: JsonField<String> = JsonMissing.of(),
         @JsonProperty("title") @ExcludeMissing title: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("tool_use_id")
-        @ExcludeMissing
-        toolUseId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-    ) : this(citations, content, source, title, toolUseId, type, mutableMapOf())
+    ) : this(citations, content, source, title, type, mutableMapOf())
 
     /**
      * Citation settings for a search result.
@@ -79,14 +75,6 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun title(): String = title.getRequired("title")
-
-    /**
-     * The ID of the tool use that produced this search result.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun toolUseId(): String = toolUseId.getRequired("tool_use_id")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -127,13 +115,6 @@ private constructor(
     @JsonProperty("title") @ExcludeMissing fun _title(): JsonField<String> = title
 
     /**
-     * Returns the raw JSON value of [toolUseId].
-     *
-     * Unlike [toolUseId], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("tool_use_id") @ExcludeMissing fun _toolUseId(): JsonField<String> = toolUseId
-
-    /**
      * Returns the raw JSON value of [type].
      *
      * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
@@ -164,7 +145,6 @@ private constructor(
          * .content()
          * .source()
          * .title()
-         * .toolUseId()
          * .type()
          * ```
          */
@@ -178,7 +158,6 @@ private constructor(
         private var content: JsonField<MutableList<BetaManagedAgentsSearchResultContent>>? = null
         private var source: JsonField<String>? = null
         private var title: JsonField<String>? = null
-        private var toolUseId: JsonField<String>? = null
         private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -189,7 +168,6 @@ private constructor(
                 content = betaManagedAgentsSearchResultBlock.content.map { it.toMutableList() }
                 source = betaManagedAgentsSearchResultBlock.source
                 title = betaManagedAgentsSearchResultBlock.title
-                toolUseId = betaManagedAgentsSearchResultBlock.toolUseId
                 type = betaManagedAgentsSearchResultBlock.type
                 additionalProperties =
                     betaManagedAgentsSearchResultBlock.additionalProperties.toMutableMap()
@@ -259,18 +237,6 @@ private constructor(
          */
         fun title(title: JsonField<String>) = apply { this.title = title }
 
-        /** The ID of the tool use that produced this search result. */
-        fun toolUseId(toolUseId: String) = toolUseId(JsonField.of(toolUseId))
-
-        /**
-         * Sets [Builder.toolUseId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.toolUseId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun toolUseId(toolUseId: JsonField<String>) = apply { this.toolUseId = toolUseId }
-
         fun type(type: Type) = type(JsonField.of(type))
 
         /**
@@ -311,7 +277,6 @@ private constructor(
          * .content()
          * .source()
          * .title()
-         * .toolUseId()
          * .type()
          * ```
          *
@@ -323,7 +288,6 @@ private constructor(
                 checkRequired("content", content).map { it.toImmutable() },
                 checkRequired("source", source),
                 checkRequired("title", title),
-                checkRequired("toolUseId", toolUseId),
                 checkRequired("type", type),
                 additionalProperties.toMutableMap(),
             )
@@ -348,7 +312,6 @@ private constructor(
         content().forEach { it.validate() }
         source()
         title()
-        toolUseId()
         type().validate()
         validated = true
     }
@@ -372,7 +335,6 @@ private constructor(
             (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (source.asKnown().isPresent) 1 else 0) +
             (if (title.asKnown().isPresent) 1 else 0) +
-            (if (toolUseId.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -515,17 +477,16 @@ private constructor(
             content == other.content &&
             source == other.source &&
             title == other.title &&
-            toolUseId == other.toolUseId &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(citations, content, source, title, toolUseId, type, additionalProperties)
+        Objects.hash(citations, content, source, title, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsSearchResultBlock{citations=$citations, content=$content, source=$source, title=$title, toolUseId=$toolUseId, type=$type, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsSearchResultBlock{citations=$citations, content=$content, source=$source, title=$title, type=$type, additionalProperties=$additionalProperties}"
 }
