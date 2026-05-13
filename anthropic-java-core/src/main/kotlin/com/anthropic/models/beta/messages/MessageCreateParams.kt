@@ -217,6 +217,15 @@ private constructor(
     fun contextManagement(): Optional<BetaContextManagementConfig> = body.contextManagement()
 
     /**
+     * Request-level diagnostics. Currently carries the previous response id for prompt-cache
+     * divergence reporting.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun diagnostics(): Optional<BetaDiagnosticsParam> = body.diagnostics()
+
+    /**
      * Specifies the geographic region for inference processing. If not specified, the workspace's
      * `default_inference_geo` is used.
      *
@@ -510,6 +519,13 @@ private constructor(
      * type.
      */
     fun _contextManagement(): JsonField<BetaContextManagementConfig> = body._contextManagement()
+
+    /**
+     * Returns the raw JSON value of [diagnostics].
+     *
+     * Unlike [diagnostics], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _diagnostics(): JsonField<BetaDiagnosticsParam> = body._diagnostics()
 
     /**
      * Returns the raw JSON value of [inferenceGeo].
@@ -963,6 +979,29 @@ private constructor(
          */
         fun contextManagement(contextManagement: JsonField<BetaContextManagementConfig>) = apply {
             body.contextManagement(contextManagement)
+        }
+
+        /**
+         * Request-level diagnostics. Currently carries the previous response id for prompt-cache
+         * divergence reporting.
+         */
+        fun diagnostics(diagnostics: BetaDiagnosticsParam?) = apply {
+            body.diagnostics(diagnostics)
+        }
+
+        /** Alias for calling [Builder.diagnostics] with `diagnostics.orElse(null)`. */
+        fun diagnostics(diagnostics: Optional<BetaDiagnosticsParam>) =
+            diagnostics(diagnostics.getOrNull())
+
+        /**
+         * Sets [Builder.diagnostics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.diagnostics] with a well-typed [BetaDiagnosticsParam]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun diagnostics(diagnostics: JsonField<BetaDiagnosticsParam>) = apply {
+            body.diagnostics(diagnostics)
         }
 
         /**
@@ -1845,6 +1884,7 @@ private constructor(
         private val cacheControl: JsonField<BetaCacheControlEphemeral>,
         private val container: JsonField<Container>,
         private val contextManagement: JsonField<BetaContextManagementConfig>,
+        private val diagnostics: JsonField<BetaDiagnosticsParam>,
         private val inferenceGeo: JsonField<String>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
         private val metadata: JsonField<BetaMetadata>,
@@ -1882,6 +1922,9 @@ private constructor(
             @JsonProperty("context_management")
             @ExcludeMissing
             contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of(),
+            @JsonProperty("diagnostics")
+            @ExcludeMissing
+            diagnostics: JsonField<BetaDiagnosticsParam> = JsonMissing.of(),
             @JsonProperty("inference_geo")
             @ExcludeMissing
             inferenceGeo: JsonField<String> = JsonMissing.of(),
@@ -1929,6 +1972,7 @@ private constructor(
             cacheControl,
             container,
             contextManagement,
+            diagnostics,
             inferenceGeo,
             mcpServers,
             metadata,
@@ -2068,6 +2112,15 @@ private constructor(
          */
         fun contextManagement(): Optional<BetaContextManagementConfig> =
             contextManagement.getOptional("context_management")
+
+        /**
+         * Request-level diagnostics. Currently carries the previous response id for prompt-cache
+         * divergence reporting.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun diagnostics(): Optional<BetaDiagnosticsParam> = diagnostics.getOptional("diagnostics")
 
         /**
          * Specifies the geographic region for inference processing. If not specified, the
@@ -2378,6 +2431,15 @@ private constructor(
         fun _contextManagement(): JsonField<BetaContextManagementConfig> = contextManagement
 
         /**
+         * Returns the raw JSON value of [diagnostics].
+         *
+         * Unlike [diagnostics], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("diagnostics")
+        @ExcludeMissing
+        fun _diagnostics(): JsonField<BetaDiagnosticsParam> = diagnostics
+
+        /**
          * Returns the raw JSON value of [inferenceGeo].
          *
          * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected
@@ -2566,6 +2628,7 @@ private constructor(
             private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
             private var container: JsonField<Container> = JsonMissing.of()
             private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
+            private var diagnostics: JsonField<BetaDiagnosticsParam> = JsonMissing.of()
             private var inferenceGeo: JsonField<String> = JsonMissing.of()
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
@@ -2593,6 +2656,7 @@ private constructor(
                 cacheControl = body.cacheControl
                 container = body.container
                 contextManagement = body.contextManagement
+                diagnostics = body.diagnostics
                 inferenceGeo = body.inferenceGeo
                 mcpServers = body.mcpServers.map { it.toMutableList() }
                 metadata = body.metadata
@@ -2890,6 +2954,28 @@ private constructor(
                 apply {
                     this.contextManagement = contextManagement
                 }
+
+            /**
+             * Request-level diagnostics. Currently carries the previous response id for
+             * prompt-cache divergence reporting.
+             */
+            fun diagnostics(diagnostics: BetaDiagnosticsParam?) =
+                diagnostics(JsonField.ofNullable(diagnostics))
+
+            /** Alias for calling [Builder.diagnostics] with `diagnostics.orElse(null)`. */
+            fun diagnostics(diagnostics: Optional<BetaDiagnosticsParam>) =
+                diagnostics(diagnostics.getOrNull())
+
+            /**
+             * Sets [Builder.diagnostics] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.diagnostics] with a well-typed
+             * [BetaDiagnosticsParam] value instead. This method is primarily for setting the field
+             * to an undocumented or not yet supported value.
+             */
+            fun diagnostics(diagnostics: JsonField<BetaDiagnosticsParam>) = apply {
+                this.diagnostics = diagnostics
+            }
 
             /**
              * Specifies the geographic region for inference processing. If not specified, the
@@ -3570,6 +3656,7 @@ private constructor(
                     cacheControl,
                     container,
                     contextManagement,
+                    diagnostics,
                     inferenceGeo,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
@@ -3612,6 +3699,7 @@ private constructor(
             cacheControl().ifPresent { it.validate() }
             container().ifPresent { it.validate() }
             contextManagement().ifPresent { it.validate() }
+            diagnostics().ifPresent { it.validate() }
             inferenceGeo()
             mcpServers().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
@@ -3653,6 +3741,7 @@ private constructor(
                 (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
                 (container.asKnown().getOrNull()?.validity() ?: 0) +
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
+                (diagnostics.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
@@ -3682,6 +3771,7 @@ private constructor(
                 cacheControl == other.cacheControl &&
                 container == other.container &&
                 contextManagement == other.contextManagement &&
+                diagnostics == other.diagnostics &&
                 inferenceGeo == other.inferenceGeo &&
                 mcpServers == other.mcpServers &&
                 metadata == other.metadata &&
@@ -3709,6 +3799,7 @@ private constructor(
                 cacheControl,
                 container,
                 contextManagement,
+                diagnostics,
                 inferenceGeo,
                 mcpServers,
                 metadata,
@@ -3732,7 +3823,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, contextManagement=$contextManagement, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
     }
 
     /** Container identifier for reuse across requests. */

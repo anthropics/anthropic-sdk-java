@@ -71,6 +71,7 @@ internal class StructuredMessageCreateParamsTest {
                         .build()
                 )
                 .contextManagement(null)
+                .diagnostics(null)
                 .build()
         private val MESSAGE_PARAM =
             BetaMessageParam.builder().content(STRING).role(BetaMessageParam.Role.USER).build()
@@ -86,6 +87,7 @@ internal class StructuredMessageCreateParamsTest {
         private val NULLABLE_CONTAINER = null
         private val CONTAINER_PARAMS = BetaContainerParams.builder().build()
         private val NULLABLE_CONTEXT_MAN_CONFIG = null
+        private val NULLABLE_DIAGNOSTICS = null
 
         private val MCP_SERVER =
             BetaRequestMcpServerUrlDefinition.builder().name(STRING).url(STRING).build()
@@ -186,6 +188,9 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("contextManagement", NULLABLE_CONTEXT_MAN_CONFIG),
                 DelegationWriteTestCase("contextManagement", OPTIONAL),
                 DelegationWriteTestCase("contextManagement", JSON_FIELD),
+                DelegationWriteTestCase("diagnostics", NULLABLE_DIAGNOSTICS),
+                DelegationWriteTestCase("diagnostics", OPTIONAL),
+                DelegationWriteTestCase("diagnostics", JSON_FIELD),
                 DelegationWriteTestCase("mcpServers", LIST),
                 DelegationWriteTestCase("mcpServers", JSON_FIELD),
                 DelegationWriteTestCase("addMcpServer", MCP_SERVER),

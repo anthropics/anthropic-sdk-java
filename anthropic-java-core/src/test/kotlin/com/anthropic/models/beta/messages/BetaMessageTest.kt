@@ -54,6 +54,7 @@ internal class BetaMessageTest {
                         )
                         .build()
                 )
+                .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
                 .model(Model.CLAUDE_OPUS_4_6)
                 .stopDetails(
                     BetaRefusalStopDetails.builder()
@@ -146,6 +147,8 @@ internal class BetaMessageTest {
                     )
                     .build()
             )
+        assertThat(betaMessage.diagnostics())
+            .contains(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
         assertThat(betaMessage.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
         assertThat(betaMessage.stopDetails())
             .contains(
@@ -240,6 +243,7 @@ internal class BetaMessageTest {
                         )
                         .build()
                 )
+                .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
                 .model(Model.CLAUDE_OPUS_4_6)
                 .stopDetails(
                     BetaRefusalStopDetails.builder()

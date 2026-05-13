@@ -61,6 +61,9 @@ internal class BetaRawMessageStreamEventTest {
                                 )
                                 .build()
                         )
+                        .diagnostics(
+                            BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build()
+                        )
                         .model(Model.CLAUDE_OPUS_4_6)
                         .stopDetails(
                             BetaRefusalStopDetails.builder()
@@ -167,6 +170,9 @@ internal class BetaRawMessageStreamEventTest {
                                             .build()
                                     )
                                     .build()
+                            )
+                            .diagnostics(
+                                BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build()
                             )
                             .model(Model.CLAUDE_OPUS_4_6)
                             .stopDetails(

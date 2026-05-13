@@ -8,6 +8,7 @@ import com.anthropic.models.beta.messages.BetaCitationCharLocation
 import com.anthropic.models.beta.messages.BetaClearToolUses20250919EditResponse
 import com.anthropic.models.beta.messages.BetaContainer
 import com.anthropic.models.beta.messages.BetaContextManagementResponse
+import com.anthropic.models.beta.messages.BetaDiagnostics
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageIterationUsage
 import com.anthropic.models.beta.messages.BetaRefusalStopDetails
@@ -68,6 +69,9 @@ internal class BetaMessageBatchSucceededResultTest {
                                         .build()
                                 )
                                 .build()
+                        )
+                        .diagnostics(
+                            BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build()
                         )
                         .model(Model.CLAUDE_OPUS_4_6)
                         .stopDetails(
@@ -161,6 +165,7 @@ internal class BetaMessageBatchSucceededResultTest {
                             )
                             .build()
                     )
+                    .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
                     .model(Model.CLAUDE_OPUS_4_6)
                     .stopDetails(
                         BetaRefusalStopDetails.builder()
@@ -256,6 +261,9 @@ internal class BetaMessageBatchSucceededResultTest {
                                         .build()
                                 )
                                 .build()
+                        )
+                        .diagnostics(
+                            BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build()
                         )
                         .model(Model.CLAUDE_OPUS_4_6)
                         .stopDetails(

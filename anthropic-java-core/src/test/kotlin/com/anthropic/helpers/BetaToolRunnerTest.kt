@@ -539,6 +539,7 @@ internal class BetaToolRunnerTest {
             .id("id")
             .model(Model.CLAUDE_SONNET_4_5)
             .container(null)
+            .diagnostics(null)
             .stopDetails(null)
             .stopReason(null)
             .stopSequence(null)

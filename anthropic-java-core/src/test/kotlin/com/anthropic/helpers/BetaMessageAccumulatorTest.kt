@@ -989,6 +989,7 @@ internal class BetaMessageAccumulatorTest {
                                 )
                                 .build()
                         )
+                        .diagnostics(null)
                         // The default non-null value for `role` suffices.
                         .build()
                 )

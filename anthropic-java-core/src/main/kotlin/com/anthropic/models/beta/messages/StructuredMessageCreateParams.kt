@@ -210,6 +210,21 @@ internal constructor(
             paramsBuilder.contextManagement(contextManagement)
         }
 
+        /** @see MessageCreateParams.Builder.diagnostics */
+        fun diagnostics(diagnostics: BetaDiagnosticsParam?) = apply {
+            paramsBuilder.diagnostics(diagnostics)
+        }
+
+        /** @see MessageCreateParams.Builder.diagnostics */
+        fun diagnostics(diagnostics: Optional<BetaDiagnosticsParam>) = apply {
+            paramsBuilder.diagnostics(diagnostics)
+        }
+
+        /** @see MessageCreateParams.Builder.diagnostics */
+        fun diagnostics(diagnostics: JsonField<BetaDiagnosticsParam>) = apply {
+            paramsBuilder.diagnostics(diagnostics)
+        }
+
         /** @see MessageCreateParams.Builder.mcpServers */
         fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) = apply {
             paramsBuilder.mcpServers(mcpServers)

@@ -39,6 +39,9 @@ internal constructor(
     fun contextManagement(): Optional<BetaContextManagementResponse> =
         rawMessage.contextManagement()
 
+    /** @see BetaMessage.diagnostics */
+    fun diagnostics(): Optional<BetaDiagnostics> = rawMessage.diagnostics()
+
     /** @see BetaMessage.model */
     fun model(): Model = rawMessage.model()
 
@@ -72,6 +75,9 @@ internal constructor(
     /** @see BetaMessage._contextManagement */
     fun _contextManagement(): JsonField<BetaContextManagementResponse> =
         rawMessage._contextManagement()
+
+    /** @see BetaMessage._diagnostics */
+    fun _diagnostics(): JsonField<BetaDiagnostics> = rawMessage._diagnostics()
 
     /** @see BetaMessage._model */
     fun _model(): JsonField<Model> = rawMessage._model()

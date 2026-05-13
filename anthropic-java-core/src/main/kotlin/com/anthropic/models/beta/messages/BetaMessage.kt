@@ -27,6 +27,7 @@ private constructor(
     private val container: JsonField<BetaContainer>,
     private val content: JsonField<List<BetaContentBlock>>,
     private val contextManagement: JsonField<BetaContextManagementResponse>,
+    private val diagnostics: JsonField<BetaDiagnostics>,
     private val model: JsonField<Model>,
     private val role: JsonValue,
     private val stopDetails: JsonField<BetaRefusalStopDetails>,
@@ -49,6 +50,9 @@ private constructor(
         @JsonProperty("context_management")
         @ExcludeMissing
         contextManagement: JsonField<BetaContextManagementResponse> = JsonMissing.of(),
+        @JsonProperty("diagnostics")
+        @ExcludeMissing
+        diagnostics: JsonField<BetaDiagnostics> = JsonMissing.of(),
         @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
         @JsonProperty("role") @ExcludeMissing role: JsonValue = JsonMissing.of(),
         @JsonProperty("stop_details")
@@ -67,6 +71,7 @@ private constructor(
         container,
         content,
         contextManagement,
+        diagnostics,
         model,
         role,
         stopDetails,
@@ -146,6 +151,15 @@ private constructor(
      */
     fun contextManagement(): Optional<BetaContextManagementResponse> =
         contextManagement.getOptional("context_management")
+
+    /**
+     * Response envelope for request-level diagnostics. Present (possibly null) whenever the caller
+     * supplied `diagnostics` on the request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun diagnostics(): Optional<BetaDiagnostics> = diagnostics.getOptional("diagnostics")
 
     /**
      * The model that will complete your prompt.\n\nSee
@@ -282,6 +296,15 @@ private constructor(
     fun _contextManagement(): JsonField<BetaContextManagementResponse> = contextManagement
 
     /**
+     * Returns the raw JSON value of [diagnostics].
+     *
+     * Unlike [diagnostics], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("diagnostics")
+    @ExcludeMissing
+    fun _diagnostics(): JsonField<BetaDiagnostics> = diagnostics
+
+    /**
      * Returns the raw JSON value of [model].
      *
      * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
@@ -345,6 +368,7 @@ private constructor(
          * .container()
          * .content()
          * .contextManagement()
+         * .diagnostics()
          * .model()
          * .stopDetails()
          * .stopReason()
@@ -362,6 +386,7 @@ private constructor(
         private var container: JsonField<BetaContainer>? = null
         private var content: JsonField<MutableList<BetaContentBlock>>? = null
         private var contextManagement: JsonField<BetaContextManagementResponse>? = null
+        private var diagnostics: JsonField<BetaDiagnostics>? = null
         private var model: JsonField<Model>? = null
         private var role: JsonValue = JsonValue.from("assistant")
         private var stopDetails: JsonField<BetaRefusalStopDetails>? = null
@@ -377,6 +402,7 @@ private constructor(
             container = betaMessage.container
             content = betaMessage.content.map { it.toMutableList() }
             contextManagement = betaMessage.contextManagement
+            diagnostics = betaMessage.diagnostics
             model = betaMessage.model
             role = betaMessage.role
             stopDetails = betaMessage.stopDetails
@@ -614,6 +640,28 @@ private constructor(
         }
 
         /**
+         * Response envelope for request-level diagnostics. Present (possibly null) whenever the
+         * caller supplied `diagnostics` on the request.
+         */
+        fun diagnostics(diagnostics: BetaDiagnostics?) =
+            diagnostics(JsonField.ofNullable(diagnostics))
+
+        /** Alias for calling [Builder.diagnostics] with `diagnostics.orElse(null)`. */
+        fun diagnostics(diagnostics: Optional<BetaDiagnostics>) =
+            diagnostics(diagnostics.getOrNull())
+
+        /**
+         * Sets [Builder.diagnostics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.diagnostics] with a well-typed [BetaDiagnostics] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun diagnostics(diagnostics: JsonField<BetaDiagnostics>) = apply {
+            this.diagnostics = diagnostics
+        }
+
+        /**
          * The model that will complete your prompt.\n\nSee
          * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
          * options.
@@ -792,6 +840,7 @@ private constructor(
          * .container()
          * .content()
          * .contextManagement()
+         * .diagnostics()
          * .model()
          * .stopDetails()
          * .stopReason()
@@ -807,6 +856,7 @@ private constructor(
                 checkRequired("container", container),
                 checkRequired("content", content).map { it.toImmutable() },
                 checkRequired("contextManagement", contextManagement),
+                checkRequired("diagnostics", diagnostics),
                 checkRequired("model", model),
                 role,
                 checkRequired("stopDetails", stopDetails),
@@ -837,6 +887,7 @@ private constructor(
         container().ifPresent { it.validate() }
         content().forEach { it.validate() }
         contextManagement().ifPresent { it.validate() }
+        diagnostics().ifPresent { it.validate() }
         model()
         _role().let {
             if (it != JsonValue.from("assistant")) {
@@ -874,6 +925,7 @@ private constructor(
             (container.asKnown().getOrNull()?.validity() ?: 0) +
             (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
+            (diagnostics.asKnown().getOrNull()?.validity() ?: 0) +
             (if (model.asKnown().isPresent) 1 else 0) +
             role.let { if (it == JsonValue.from("assistant")) 1 else 0 } +
             (stopDetails.asKnown().getOrNull()?.validity() ?: 0) +
@@ -892,6 +944,7 @@ private constructor(
             container == other.container &&
             content == other.content &&
             contextManagement == other.contextManagement &&
+            diagnostics == other.diagnostics &&
             model == other.model &&
             role == other.role &&
             stopDetails == other.stopDetails &&
@@ -908,6 +961,7 @@ private constructor(
             container,
             content,
             contextManagement,
+            diagnostics,
             model,
             role,
             stopDetails,
@@ -922,5 +976,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaMessage{id=$id, container=$container, content=$content, contextManagement=$contextManagement, model=$model, role=$role, stopDetails=$stopDetails, stopReason=$stopReason, stopSequence=$stopSequence, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
+        "BetaMessage{id=$id, container=$container, content=$content, contextManagement=$contextManagement, diagnostics=$diagnostics, model=$model, role=$role, stopDetails=$stopDetails, stopReason=$stopReason, stopSequence=$stopSequence, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
 }

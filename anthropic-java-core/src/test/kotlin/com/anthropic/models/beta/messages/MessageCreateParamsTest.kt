@@ -49,6 +49,9 @@ internal class MessageCreateParamsTest {
                     )
                     .build()
             )
+            .diagnostics(
+                BetaDiagnosticsParam.builder().previousMessageId("previous_message_id").build()
+            )
             .inferenceGeo("inference_geo")
             .addMcpServer(
                 BetaRequestMcpServerUrlDefinition.builder()
@@ -196,6 +199,9 @@ internal class MessageCreateParamsTest {
                                 .build()
                         )
                         .build()
+                )
+                .diagnostics(
+                    BetaDiagnosticsParam.builder().previousMessageId("previous_message_id").build()
                 )
                 .inferenceGeo("inference_geo")
                 .addMcpServer(
@@ -370,6 +376,9 @@ internal class MessageCreateParamsTest {
                         )
                         .build()
                 )
+                .diagnostics(
+                    BetaDiagnosticsParam.builder().previousMessageId("previous_message_id").build()
+                )
                 .inferenceGeo("inference_geo")
                 .addMcpServer(
                     BetaRequestMcpServerUrlDefinition.builder()
@@ -526,6 +535,10 @@ internal class MessageCreateParamsTest {
                             .build()
                     )
                     .build()
+            )
+        assertThat(body.diagnostics())
+            .contains(
+                BetaDiagnosticsParam.builder().previousMessageId("previous_message_id").build()
             )
         assertThat(body.inferenceGeo()).contains("inference_geo")
         assertThat(body.mcpServers().getOrNull())
