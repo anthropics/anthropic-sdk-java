@@ -8,16 +8,12 @@ import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.skills.SkillCreateParams
 import com.anthropic.models.beta.skills.SkillDeleteParams
 import com.anthropic.models.beta.skills.SkillRetrieveParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class SkillServiceTest {
 
-    @Disabled(
-        "multipartFormData does not handle List<InputStream>: AnthropicInvalidDataException: Unexpected JsonNode type in array: BINARY"
-    )
     @Test
     fun create() {
         val client =
