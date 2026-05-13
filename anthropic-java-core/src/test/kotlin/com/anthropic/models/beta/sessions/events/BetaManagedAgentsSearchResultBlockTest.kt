@@ -22,7 +22,6 @@ internal class BetaManagedAgentsSearchResultBlockTest {
                 )
                 .source("x")
                 .title("x")
-                .toolUseId("x")
                 .type(BetaManagedAgentsSearchResultBlock.Type.SEARCH_RESULT)
                 .build()
 
@@ -37,7 +36,6 @@ internal class BetaManagedAgentsSearchResultBlockTest {
             )
         assertThat(betaManagedAgentsSearchResultBlock.source()).isEqualTo("x")
         assertThat(betaManagedAgentsSearchResultBlock.title()).isEqualTo("x")
-        assertThat(betaManagedAgentsSearchResultBlock.toolUseId()).isEqualTo("x")
         assertThat(betaManagedAgentsSearchResultBlock.type())
             .isEqualTo(BetaManagedAgentsSearchResultBlock.Type.SEARCH_RESULT)
     }
@@ -56,7 +54,6 @@ internal class BetaManagedAgentsSearchResultBlockTest {
                 )
                 .source("x")
                 .title("x")
-                .toolUseId("x")
                 .type(BetaManagedAgentsSearchResultBlock.Type.SEARCH_RESULT)
                 .build()
 
