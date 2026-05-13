@@ -10,6 +10,7 @@ import com.anthropic.models.beta.messages.BetaCitationCharLocationParam
 import com.anthropic.models.beta.messages.BetaClearToolUses20250919Edit
 import com.anthropic.models.beta.messages.BetaContainerParams
 import com.anthropic.models.beta.messages.BetaContextManagementConfig
+import com.anthropic.models.beta.messages.BetaDiagnosticsParam
 import com.anthropic.models.beta.messages.BetaInputTokensClearAtLeast
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaMetadata
@@ -73,6 +74,11 @@ internal class BatchCreateParamsTest {
                                             .inputTokensTrigger(1L)
                                             .build()
                                     )
+                                    .build()
+                            )
+                            .diagnostics(
+                                BetaDiagnosticsParam.builder()
+                                    .previousMessageId("previous_message_id")
                                     .build()
                             )
                             .inferenceGeo("inference_geo")
@@ -253,6 +259,11 @@ internal class BatchCreateParamsTest {
                                                 .inputTokensTrigger(1L)
                                                 .build()
                                         )
+                                        .build()
+                                )
+                                .diagnostics(
+                                    BetaDiagnosticsParam.builder()
+                                        .previousMessageId("previous_message_id")
                                         .build()
                                 )
                                 .inferenceGeo("inference_geo")
@@ -467,6 +478,11 @@ internal class BatchCreateParamsTest {
                                         )
                                         .build()
                                 )
+                                .diagnostics(
+                                    BetaDiagnosticsParam.builder()
+                                        .previousMessageId("previous_message_id")
+                                        .build()
+                                )
                                 .inferenceGeo("inference_geo")
                                 .addMcpServer(
                                     BetaRequestMcpServerUrlDefinition.builder()
@@ -644,6 +660,11 @@ internal class BatchCreateParamsTest {
                                             .inputTokensTrigger(1L)
                                             .build()
                                     )
+                                    .build()
+                            )
+                            .diagnostics(
+                                BetaDiagnosticsParam.builder()
+                                    .previousMessageId("previous_message_id")
                                     .build()
                             )
                             .inferenceGeo("inference_geo")
