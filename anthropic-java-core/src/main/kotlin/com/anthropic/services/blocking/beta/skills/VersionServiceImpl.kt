@@ -22,6 +22,7 @@ import com.anthropic.models.beta.skills.versions.VersionCreateParams
 import com.anthropic.models.beta.skills.versions.VersionCreateResponse
 import com.anthropic.models.beta.skills.versions.VersionDeleteParams
 import com.anthropic.models.beta.skills.versions.VersionDeleteResponse
+import com.anthropic.models.beta.skills.versions.VersionDownloadParams
 import com.anthropic.models.beta.skills.versions.VersionListPage
 import com.anthropic.models.beta.skills.versions.VersionListPageResponse
 import com.anthropic.models.beta.skills.versions.VersionListParams
@@ -72,6 +73,13 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
     ): VersionDeleteResponse =
         // delete /v1/skills/{skill_id}/versions/{version}?beta=true
         withRawResponse().delete(params, requestOptions).parse()
+
+    override fun download(
+        params: VersionDownloadParams,
+        requestOptions: RequestOptions,
+    ): HttpResponse =
+        // get /v1/skills/{skill_id}/versions/{version}/content?beta=true
+        withRawResponse().download(params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         VersionService.WithRawResponse {
@@ -233,6 +241,35 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                         }
                     }
             }
+        }
+
+        override fun download(
+            params: VersionDownloadParams,
+            requestOptions: RequestOptions,
+        ): HttpResponse {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("version", params.version().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments(
+                        "v1",
+                        "skills",
+                        params._pathParam(0),
+                        "versions",
+                        params._pathParam(1),
+                        "content",
+                    )
+                    .putQueryParam("beta", "true")
+                    .putAllHeaders(DEFAULT_HEADERS)
+                    .putHeader("Accept", "application/binary")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response)
         }
     }
 }

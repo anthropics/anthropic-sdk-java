@@ -29,6 +29,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
     }
 
     @Test
@@ -67,6 +68,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
     }
 
     @Test
@@ -108,6 +110,7 @@ internal class BetaManagedAgentsEventParamsTest {
             .contains(userToolConfirmation)
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
     }
 
     @Test
@@ -153,6 +156,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userCustomToolResult())
             .contains(userCustomToolResult)
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
     }
 
     @Test
@@ -198,6 +202,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).contains(userDefineOutcome)
+        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
     }
 
     @Test
@@ -210,6 +215,49 @@ internal class BetaManagedAgentsEventParamsTest {
                     .textRubric("Must cover all five sections; cite sources inline.")
                     .type(BetaManagedAgentsUserDefineOutcomeEventParams.Type.USER_DEFINE_OUTCOME)
                     .maxIterations(3)
+                    .build()
+            )
+
+        val roundtrippedBetaManagedAgentsEventParams =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaManagedAgentsEventParams),
+                jacksonTypeRef<BetaManagedAgentsEventParams>(),
+            )
+
+        assertThat(roundtrippedBetaManagedAgentsEventParams).isEqualTo(betaManagedAgentsEventParams)
+    }
+
+    @Test
+    fun ofUserToolResult() {
+        val userToolResult =
+            BetaManagedAgentsUserToolResultEventParams.builder()
+                .toolUseId("x")
+                .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
+                .addTextContent("Where is my order #1234?")
+                .isError(true)
+                .build()
+
+        val betaManagedAgentsEventParams =
+            BetaManagedAgentsEventParams.ofUserToolResult(userToolResult)
+
+        assertThat(betaManagedAgentsEventParams.userMessage()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userInterrupt()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userToolResult()).contains(userToolResult)
+    }
+
+    @Test
+    fun ofUserToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaManagedAgentsEventParams =
+            BetaManagedAgentsEventParams.ofUserToolResult(
+                BetaManagedAgentsUserToolResultEventParams.builder()
+                    .toolUseId("x")
+                    .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
+                    .addTextContent("Where is my order #1234?")
+                    .isError(true)
                     .build()
             )
 

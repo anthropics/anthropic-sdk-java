@@ -5,6 +5,21 @@ package com.anthropic.models.beta.sessions.threads
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfig
+import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
+import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
+import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
+import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAskPolicy
+import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
+import com.anthropic.models.beta.agents.BetaManagedAgentsCustomSkill
+import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
+import com.anthropic.models.beta.agents.BetaManagedAgentsModel
+import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
+import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionAgent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionMultiagentCoordinator
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentCustomToolUseEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentMcpToolResultEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentMcpToolUseEvent
@@ -96,8 +111,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -169,8 +186,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -245,8 +264,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -324,8 +345,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -406,8 +429,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -489,8 +514,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -566,8 +593,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -648,8 +677,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -733,8 +764,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -814,8 +847,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -898,8 +933,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -980,8 +1017,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1062,8 +1101,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1143,8 +1184,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1227,8 +1270,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1313,8 +1358,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1387,8 +1434,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1463,8 +1512,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1541,8 +1592,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1616,8 +1669,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1696,8 +1751,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1790,8 +1847,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1880,8 +1939,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1962,8 +2023,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -2050,8 +2113,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -2130,8 +2195,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -2205,8 +2272,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -2283,8 +2352,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -2368,8 +2439,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             .contains(sessionThreadStatusIdle)
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -2455,8 +2528,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .contains(sessionThreadStatusTerminated)
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -2473,6 +2548,87 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                         BetaManagedAgentsSessionThreadStatusTerminatedEvent.Type
                             .SESSION_THREAD_STATUS_TERMINATED
                     )
+                    .build()
+            )
+
+        val roundtrippedBetaManagedAgentsStreamSessionThreadEvents =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaManagedAgentsStreamSessionThreadEvents),
+                jacksonTypeRef<BetaManagedAgentsStreamSessionThreadEvents>(),
+            )
+
+        assertThat(roundtrippedBetaManagedAgentsStreamSessionThreadEvents)
+            .isEqualTo(betaManagedAgentsStreamSessionThreadEvents)
+    }
+
+    @Test
+    fun ofUserToolResult() {
+        val userToolResult =
+            BetaManagedAgentsUserToolResultEvent.builder()
+                .id("id")
+                .toolUseId("tool_use_id")
+                .type(BetaManagedAgentsUserToolResultEvent.Type.USER_TOOL_RESULT)
+                .addTextContent("Where is my order #1234?")
+                .isError(true)
+                .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .sessionThreadId("session_thread_id")
+                .build()
+
+        val betaManagedAgentsStreamSessionThreadEvents =
+            BetaManagedAgentsStreamSessionThreadEvents.ofUserToolResult(userToolResult)
+
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userMessage()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userInterrupt()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolConfirmation()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userCustomToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentCustomToolUse()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentMessage()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentThinking()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentMcpToolUse()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentMcpToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentToolUse()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentThreadMessageReceived()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentThreadMessageSent()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentThreadContextCompacted()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionError()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionStatusRescheduled()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionStatusRunning()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionStatusIdle()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionStatusTerminated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadCreated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.spanOutcomeEvaluationStart()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.spanOutcomeEvaluationEnd()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.spanModelRequestStart()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.spanModelRequestEnd()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.spanOutcomeEvaluationOngoing())
+            .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userDefineOutcome()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionDeleted()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRunning()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
+            .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult())
+            .contains(userToolResult)
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
+            .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofUserToolResultRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaManagedAgentsStreamSessionThreadEvents =
+            BetaManagedAgentsStreamSessionThreadEvents.ofUserToolResult(
+                BetaManagedAgentsUserToolResultEvent.builder()
+                    .id("id")
+                    .toolUseId("tool_use_id")
+                    .type(BetaManagedAgentsUserToolResultEvent.Type.USER_TOOL_RESULT)
+                    .addTextContent("Where is my order #1234?")
+                    .isError(true)
+                    .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .sessionThreadId("session_thread_id")
                     .build()
             )
 
@@ -2537,8 +2693,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
             .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
             .contains(sessionThreadStatusRescheduled)
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -2555,6 +2713,420 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                         BetaManagedAgentsSessionThreadStatusRescheduledEvent.Type
                             .SESSION_THREAD_STATUS_RESCHEDULED
                     )
+                    .build()
+            )
+
+        val roundtrippedBetaManagedAgentsStreamSessionThreadEvents =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaManagedAgentsStreamSessionThreadEvents),
+                jacksonTypeRef<BetaManagedAgentsStreamSessionThreadEvents>(),
+            )
+
+        assertThat(roundtrippedBetaManagedAgentsStreamSessionThreadEvents)
+            .isEqualTo(betaManagedAgentsStreamSessionThreadEvents)
+    }
+
+    @Test
+    fun ofSessionUpdated() {
+        val sessionUpdated =
+            BetaManagedAgentsSessionUpdatedEvent.builder()
+                .id("id")
+                .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(BetaManagedAgentsSessionUpdatedEvent.Type.SESSION_UPDATED)
+                .agent(
+                    BetaManagedAgentsSessionAgent.builder()
+                        .id("agent_011CZkYpogX7uDKUyvBTophP")
+                        .description("A general-purpose starter agent.")
+                        .addMcpServer(
+                            BetaManagedAgentsMcpServerUrlDefinition.builder()
+                                .name("example-mcp")
+                                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
+                                .url("https://example-server.modelcontextprotocol.io/sse")
+                                .build()
+                        )
+                        .model(
+                            BetaManagedAgentsModelConfig.builder()
+                                .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
+                                .build()
+                        )
+                        .multiagent(
+                            BetaManagedAgentsSessionMultiagentCoordinator.builder()
+                                .addAgent(
+                                    BetaManagedAgentsSessionThreadAgent.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .description("A focused research subagent.")
+                                        .addMcpServer(
+                                            BetaManagedAgentsMcpServerUrlDefinition.builder()
+                                                .name("example-mcp")
+                                                .type(
+                                                    BetaManagedAgentsMcpServerUrlDefinition.Type.URL
+                                                )
+                                                .url(
+                                                    "https://example-server.modelcontextprotocol.io/sse"
+                                                )
+                                                .build()
+                                        )
+                                        .model(
+                                            BetaManagedAgentsModelConfig.builder()
+                                                .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                                .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
+                                                .build()
+                                        )
+                                        .name("Researcher")
+                                        .addSkill(
+                                            BetaManagedAgentsAnthropicSkill.builder()
+                                                .skillId("xlsx")
+                                                .type(
+                                                    BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC
+                                                )
+                                                .version("1")
+                                                .build()
+                                        )
+                                        .system(
+                                            "You are a research subagent that gathers and summarises sources for the coordinating agent."
+                                        )
+                                        .addTool(
+                                            BetaManagedAgentsAgentToolset20260401.builder()
+                                                .addConfig(
+                                                    BetaManagedAgentsAgentToolConfig.builder()
+                                                        .enabled(true)
+                                                        .name(
+                                                            BetaManagedAgentsAgentToolConfig.Name
+                                                                .BASH
+                                                        )
+                                                        .permissionPolicy(
+                                                            BetaManagedAgentsAlwaysAllowPolicy
+                                                                .builder()
+                                                                .type(
+                                                                    BetaManagedAgentsAlwaysAllowPolicy
+                                                                        .Type
+                                                                        .ALWAYS_ALLOW
+                                                                )
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .defaultConfig(
+                                                    BetaManagedAgentsAgentToolsetDefaultConfig
+                                                        .builder()
+                                                        .enabled(true)
+                                                        .permissionPolicy(
+                                                            BetaManagedAgentsAlwaysAskPolicy
+                                                                .builder()
+                                                                .type(
+                                                                    BetaManagedAgentsAlwaysAskPolicy
+                                                                        .Type
+                                                                        .ALWAYS_ASK
+                                                                )
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .type(
+                                                    BetaManagedAgentsAgentToolset20260401.Type
+                                                        .AGENT_TOOLSET_20260401
+                                                )
+                                                .build()
+                                        )
+                                        .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
+                                .type(
+                                    BetaManagedAgentsSessionMultiagentCoordinator.Type.COORDINATOR
+                                )
+                                .build()
+                        )
+                        .name("My First Agent")
+                        .addSkill(
+                            BetaManagedAgentsAnthropicSkill.builder()
+                                .skillId("xlsx")
+                                .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
+                                .version("1")
+                                .build()
+                        )
+                        .addSkill(
+                            BetaManagedAgentsCustomSkill.builder()
+                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                                .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
+                                .version("2")
+                                .build()
+                        )
+                        .system(
+                            "You are a general-purpose agent that can research, write code, run commands, and use connected tools to complete the user's task end to end."
+                        )
+                        .addTool(
+                            BetaManagedAgentsAgentToolset20260401.builder()
+                                .addConfig(
+                                    BetaManagedAgentsAgentToolConfig.builder()
+                                        .enabled(true)
+                                        .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
+                                        .permissionPolicy(
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                                .type(
+                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                        .ALWAYS_ALLOW
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .defaultConfig(
+                                    BetaManagedAgentsAgentToolsetDefaultConfig.builder()
+                                        .enabled(true)
+                                        .permissionPolicy(
+                                            BetaManagedAgentsAlwaysAskPolicy.builder()
+                                                .type(
+                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .type(
+                                    BetaManagedAgentsAgentToolset20260401.Type
+                                        .AGENT_TOOLSET_20260401
+                                )
+                                .build()
+                        )
+                        .type(BetaManagedAgentsSessionAgent.Type.AGENT)
+                        .version(1)
+                        .build()
+                )
+                .metadata(
+                    BetaManagedAgentsSessionUpdatedEvent.Metadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("string"))
+                        .build()
+                )
+                .title("title")
+                .build()
+
+        val betaManagedAgentsStreamSessionThreadEvents =
+            BetaManagedAgentsStreamSessionThreadEvents.ofSessionUpdated(sessionUpdated)
+
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userMessage()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userInterrupt()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolConfirmation()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userCustomToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentCustomToolUse()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentMessage()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentThinking()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentMcpToolUse()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentMcpToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentToolUse()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentThreadMessageReceived()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentThreadMessageSent()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentThreadContextCompacted()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionError()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionStatusRescheduled()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionStatusRunning()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionStatusIdle()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionStatusTerminated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadCreated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.spanOutcomeEvaluationStart()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.spanOutcomeEvaluationEnd()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.spanModelRequestStart()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.spanModelRequestEnd()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.spanOutcomeEvaluationOngoing())
+            .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userDefineOutcome()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionDeleted()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRunning()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusIdle()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusTerminated())
+            .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.userToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadStatusRescheduled())
+            .isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionUpdated())
+            .contains(sessionUpdated)
+    }
+
+    @Test
+    fun ofSessionUpdatedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaManagedAgentsStreamSessionThreadEvents =
+            BetaManagedAgentsStreamSessionThreadEvents.ofSessionUpdated(
+                BetaManagedAgentsSessionUpdatedEvent.builder()
+                    .id("id")
+                    .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(BetaManagedAgentsSessionUpdatedEvent.Type.SESSION_UPDATED)
+                    .agent(
+                        BetaManagedAgentsSessionAgent.builder()
+                            .id("agent_011CZkYpogX7uDKUyvBTophP")
+                            .description("A general-purpose starter agent.")
+                            .addMcpServer(
+                                BetaManagedAgentsMcpServerUrlDefinition.builder()
+                                    .name("example-mcp")
+                                    .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
+                                    .url("https://example-server.modelcontextprotocol.io/sse")
+                                    .build()
+                            )
+                            .model(
+                                BetaManagedAgentsModelConfig.builder()
+                                    .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                    .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
+                                    .build()
+                            )
+                            .multiagent(
+                                BetaManagedAgentsSessionMultiagentCoordinator.builder()
+                                    .addAgent(
+                                        BetaManagedAgentsSessionThreadAgent.builder()
+                                            .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                            .description("A focused research subagent.")
+                                            .addMcpServer(
+                                                BetaManagedAgentsMcpServerUrlDefinition.builder()
+                                                    .name("example-mcp")
+                                                    .type(
+                                                        BetaManagedAgentsMcpServerUrlDefinition.Type
+                                                            .URL
+                                                    )
+                                                    .url(
+                                                        "https://example-server.modelcontextprotocol.io/sse"
+                                                    )
+                                                    .build()
+                                            )
+                                            .model(
+                                                BetaManagedAgentsModelConfig.builder()
+                                                    .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                                    .speed(
+                                                        BetaManagedAgentsModelConfig.Speed.STANDARD
+                                                    )
+                                                    .build()
+                                            )
+                                            .name("Researcher")
+                                            .addSkill(
+                                                BetaManagedAgentsAnthropicSkill.builder()
+                                                    .skillId("xlsx")
+                                                    .type(
+                                                        BetaManagedAgentsAnthropicSkill.Type
+                                                            .ANTHROPIC
+                                                    )
+                                                    .version("1")
+                                                    .build()
+                                            )
+                                            .system(
+                                                "You are a research subagent that gathers and summarises sources for the coordinating agent."
+                                            )
+                                            .addTool(
+                                                BetaManagedAgentsAgentToolset20260401.builder()
+                                                    .addConfig(
+                                                        BetaManagedAgentsAgentToolConfig.builder()
+                                                            .enabled(true)
+                                                            .name(
+                                                                BetaManagedAgentsAgentToolConfig
+                                                                    .Name
+                                                                    .BASH
+                                                            )
+                                                            .permissionPolicy(
+                                                                BetaManagedAgentsAlwaysAllowPolicy
+                                                                    .builder()
+                                                                    .type(
+                                                                        BetaManagedAgentsAlwaysAllowPolicy
+                                                                            .Type
+                                                                            .ALWAYS_ALLOW
+                                                                    )
+                                                                    .build()
+                                                            )
+                                                            .build()
+                                                    )
+                                                    .defaultConfig(
+                                                        BetaManagedAgentsAgentToolsetDefaultConfig
+                                                            .builder()
+                                                            .enabled(true)
+                                                            .permissionPolicy(
+                                                                BetaManagedAgentsAlwaysAskPolicy
+                                                                    .builder()
+                                                                    .type(
+                                                                        BetaManagedAgentsAlwaysAskPolicy
+                                                                            .Type
+                                                                            .ALWAYS_ASK
+                                                                    )
+                                                                    .build()
+                                                            )
+                                                            .build()
+                                                    )
+                                                    .type(
+                                                        BetaManagedAgentsAgentToolset20260401.Type
+                                                            .AGENT_TOOLSET_20260401
+                                                    )
+                                                    .build()
+                                            )
+                                            .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
+                                            .version(1)
+                                            .build()
+                                    )
+                                    .type(
+                                        BetaManagedAgentsSessionMultiagentCoordinator.Type
+                                            .COORDINATOR
+                                    )
+                                    .build()
+                            )
+                            .name("My First Agent")
+                            .addSkill(
+                                BetaManagedAgentsAnthropicSkill.builder()
+                                    .skillId("xlsx")
+                                    .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
+                                    .version("1")
+                                    .build()
+                            )
+                            .addSkill(
+                                BetaManagedAgentsCustomSkill.builder()
+                                    .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                                    .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
+                                    .version("2")
+                                    .build()
+                            )
+                            .system(
+                                "You are a general-purpose agent that can research, write code, run commands, and use connected tools to complete the user's task end to end."
+                            )
+                            .addTool(
+                                BetaManagedAgentsAgentToolset20260401.builder()
+                                    .addConfig(
+                                        BetaManagedAgentsAgentToolConfig.builder()
+                                            .enabled(true)
+                                            .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
+                                            .permissionPolicy(
+                                                BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                                    .type(
+                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                            .ALWAYS_ALLOW
+                                                    )
+                                                    .build()
+                                            )
+                                            .build()
+                                    )
+                                    .defaultConfig(
+                                        BetaManagedAgentsAgentToolsetDefaultConfig.builder()
+                                            .enabled(true)
+                                            .permissionPolicy(
+                                                BetaManagedAgentsAlwaysAskPolicy.builder()
+                                                    .type(
+                                                        BetaManagedAgentsAlwaysAskPolicy.Type
+                                                            .ALWAYS_ASK
+                                                    )
+                                                    .build()
+                                            )
+                                            .build()
+                                    )
+                                    .type(
+                                        BetaManagedAgentsAgentToolset20260401.Type
+                                            .AGENT_TOOLSET_20260401
+                                    )
+                                    .build()
+                            )
+                            .type(BetaManagedAgentsSessionAgent.Type.AGENT)
+                            .version(1)
+                            .build()
+                    )
+                    .metadata(
+                        BetaManagedAgentsSessionUpdatedEvent.Metadata.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("string"))
+                            .build()
+                    )
+                    .title("title")
                     .build()
             )
 

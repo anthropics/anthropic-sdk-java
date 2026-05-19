@@ -13,22 +13,22 @@ internal class BetaCompactionBlockParamTest {
     fun create() {
         val betaCompactionBlockParam =
             BetaCompactionBlockParam.builder()
-                .content("content")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .content("content")
                 .encryptedContent("encrypted_content")
                 .build()
 
-        assertThat(betaCompactionBlockParam.content()).contains("content")
         assertThat(betaCompactionBlockParam.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+        assertThat(betaCompactionBlockParam.content()).contains("content")
         assertThat(betaCompactionBlockParam.encryptedContent()).contains("encrypted_content")
     }
 
@@ -37,12 +37,12 @@ internal class BetaCompactionBlockParamTest {
         val jsonMapper = jsonMapper()
         val betaCompactionBlockParam =
             BetaCompactionBlockParam.builder()
-                .content("content")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .content("content")
                 .encryptedContent("encrypted_content")
                 .build()
 

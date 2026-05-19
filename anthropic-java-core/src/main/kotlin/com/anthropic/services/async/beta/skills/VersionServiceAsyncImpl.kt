@@ -22,6 +22,7 @@ import com.anthropic.models.beta.skills.versions.VersionCreateParams
 import com.anthropic.models.beta.skills.versions.VersionCreateResponse
 import com.anthropic.models.beta.skills.versions.VersionDeleteParams
 import com.anthropic.models.beta.skills.versions.VersionDeleteResponse
+import com.anthropic.models.beta.skills.versions.VersionDownloadParams
 import com.anthropic.models.beta.skills.versions.VersionListPageAsync
 import com.anthropic.models.beta.skills.versions.VersionListPageResponse
 import com.anthropic.models.beta.skills.versions.VersionListParams
@@ -76,6 +77,13 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): CompletableFuture<VersionDeleteResponse> =
         // delete /v1/skills/{skill_id}/versions/{version}?beta=true
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+
+    override fun download(
+        params: VersionDownloadParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<HttpResponse> =
+        // get /v1/skills/{skill_id}/versions/{version}/content?beta=true
+        withRawResponse().download(params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         VersionServiceAsync.WithRawResponse {
@@ -250,6 +258,36 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                             }
                     }
                 }
+        }
+
+        override fun download(
+            params: VersionDownloadParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("version", params.version().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments(
+                        "v1",
+                        "skills",
+                        params._pathParam(0),
+                        "versions",
+                        params._pathParam(1),
+                        "content",
+                    )
+                    .putQueryParam("beta", "true")
+                    .putAllHeaders(DEFAULT_HEADERS)
+                    .putHeader("Accept", "application/binary")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response -> errorHandler.handle(response) }
         }
     }
 }

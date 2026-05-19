@@ -1,17 +1,8 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.models.beta.sessions.threads
+package com.anthropic.models.beta.agents
 
 import com.anthropic.core.jsonMapper
-import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfig
-import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
-import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
-import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
-import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAskPolicy
-import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
-import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
-import com.anthropic.models.beta.agents.BetaManagedAgentsModel
-import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

@@ -13,10 +13,10 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsCustomSkill
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
+import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsFileResource
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsGitHubRepositoryResource
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsSessionResource
-import com.anthropic.models.beta.sessions.threads.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
