@@ -180,6 +180,7 @@ internal constructor(
         private var sslSocketFactory: SSLSocketFactory? = null
         private var trustManager: X509TrustManager? = null
         private var hostnameVerifier: HostnameVerifier? = null
+        private val interceptors: MutableList<okhttp3.Interceptor> = mutableListOf()
 
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
@@ -229,6 +230,33 @@ internal constructor(
 
         fun hostnameVerifier(hostnameVerifier: HostnameVerifier?) = apply {
             this.hostnameVerifier = hostnameVerifier
+        }
+
+        /**
+         * Adds a custom OkHttp [okhttp3.Interceptor] that will be applied to every request.
+         *
+         * This is useful for cross-cutting concerns such as trace context propagation. For example,
+         * to forward an `X-Trace-Id` header from an incoming request using a [ThreadLocal]:
+         *
+         * ```kotlin
+         * val traceIdHolder = ThreadLocal<String>()
+         *
+         * val httpClient = OkHttpClient.builder()
+         *     .backend(backend)
+         *     .addInterceptor { chain ->
+         *         val traceId = traceIdHolder.get()
+         *         val request = if (traceId != null) {
+         *             chain.request().newBuilder().addHeader("X-Trace-Id", traceId).build()
+         *         } else {
+         *             chain.request()
+         *         }
+         *         chain.proceed(request)
+         *     }
+         *     .build()
+         * ```
+         */
+        fun addInterceptor(interceptor: okhttp3.Interceptor) = apply {
+            interceptors.add(interceptor)
         }
 
         fun build(): OkHttpClient =
@@ -285,6 +313,8 @@ internal constructor(
                         }
 
                         hostnameVerifier?.let(::hostnameVerifier)
+
+                        interceptors.forEach { addInterceptor(it) }
                     }
                     .build()
                     .apply {
