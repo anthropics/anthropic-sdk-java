@@ -14,6 +14,7 @@ import com.anthropic.models.beta.environments.EnvironmentListPage
 import com.anthropic.models.beta.environments.EnvironmentListParams
 import com.anthropic.models.beta.environments.EnvironmentRetrieveParams
 import com.anthropic.models.beta.environments.EnvironmentUpdateParams
+import com.anthropic.services.blocking.beta.environments.WorkService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -30,6 +31,8 @@ interface EnvironmentService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): EnvironmentService
+
+    fun work(): WorkService
 
     /** Create a new environment with the specified configuration. */
     fun create(params: EnvironmentCreateParams): BetaEnvironment =
@@ -204,6 +207,8 @@ interface EnvironmentService {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): EnvironmentService.WithRawResponse
+
+        fun work(): WorkService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/environments?beta=true`, but is otherwise the

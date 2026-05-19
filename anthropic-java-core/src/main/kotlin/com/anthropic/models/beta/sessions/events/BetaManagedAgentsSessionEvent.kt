@@ -7,6 +7,8 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -60,9 +62,11 @@ private constructor(
     private val sessionThreadStatusTerminated:
         BetaManagedAgentsSessionThreadStatusTerminatedEvent? =
         null,
+    private val userToolResult: BetaManagedAgentsUserToolResultEvent? = null,
     private val sessionThreadStatusRescheduled:
         BetaManagedAgentsSessionThreadStatusRescheduledEvent? =
         null,
+    private val sessionUpdated: BetaManagedAgentsSessionUpdatedEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -228,12 +232,28 @@ private constructor(
         Optional.ofNullable(sessionThreadStatusTerminated)
 
     /**
+     * Event sent by the client providing the result of an agent-toolset tool execution. Only valid
+     * on `self_hosted` environments, where sandbox-routed tools are executed by the client rather
+     * than the server.
+     */
+    fun userToolResult(): Optional<BetaManagedAgentsUserToolResultEvent> =
+        Optional.ofNullable(userToolResult)
+
+    /**
      * A session thread hit a transient error and is retrying automatically. Emitted on the thread's
      * own stream and cross-posted to the primary stream for child threads.
      */
     fun sessionThreadStatusRescheduled():
         Optional<BetaManagedAgentsSessionThreadStatusRescheduledEvent> =
         Optional.ofNullable(sessionThreadStatusRescheduled)
+
+    /**
+     * Emitted when an UpdateSession request changed at least one field. Carries only the fields
+     * that changed; absent fields were not part of the update. The new configuration applies from
+     * the next turn.
+     */
+    fun sessionUpdated(): Optional<BetaManagedAgentsSessionUpdatedEvent> =
+        Optional.ofNullable(sessionUpdated)
 
     fun isUserMessage(): Boolean = userMessage != null
 
@@ -295,7 +315,11 @@ private constructor(
 
     fun isSessionThreadStatusTerminated(): Boolean = sessionThreadStatusTerminated != null
 
+    fun isUserToolResult(): Boolean = userToolResult != null
+
     fun isSessionThreadStatusRescheduled(): Boolean = sessionThreadStatusRescheduled != null
+
+    fun isSessionUpdated(): Boolean = sessionUpdated != null
 
     /** A user message event in the session conversation. */
     fun asUserMessage(): BetaManagedAgentsUserMessageEvent = userMessage.getOrThrow("userMessage")
@@ -456,11 +480,27 @@ private constructor(
         sessionThreadStatusTerminated.getOrThrow("sessionThreadStatusTerminated")
 
     /**
+     * Event sent by the client providing the result of an agent-toolset tool execution. Only valid
+     * on `self_hosted` environments, where sandbox-routed tools are executed by the client rather
+     * than the server.
+     */
+    fun asUserToolResult(): BetaManagedAgentsUserToolResultEvent =
+        userToolResult.getOrThrow("userToolResult")
+
+    /**
      * A session thread hit a transient error and is retrying automatically. Emitted on the thread's
      * own stream and cross-posted to the primary stream for child threads.
      */
     fun asSessionThreadStatusRescheduled(): BetaManagedAgentsSessionThreadStatusRescheduledEvent =
         sessionThreadStatusRescheduled.getOrThrow("sessionThreadStatusRescheduled")
+
+    /**
+     * Emitted when an UpdateSession request changed at least one field. Carries only the fields
+     * that changed; absent fields were not part of the update. The new configuration applies from
+     * the next turn.
+     */
+    fun asSessionUpdated(): BetaManagedAgentsSessionUpdatedEvent =
+        sessionUpdated.getOrThrow("sessionUpdated")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -537,8 +577,10 @@ private constructor(
                 visitor.visitSessionThreadStatusIdle(sessionThreadStatusIdle)
             sessionThreadStatusTerminated != null ->
                 visitor.visitSessionThreadStatusTerminated(sessionThreadStatusTerminated)
+            userToolResult != null -> visitor.visitUserToolResult(userToolResult)
             sessionThreadStatusRescheduled != null ->
                 visitor.visitSessionThreadStatusRescheduled(sessionThreadStatusRescheduled)
+            sessionUpdated != null -> visitor.visitSessionUpdated(sessionUpdated)
             else -> visitor.unknown(_json)
         }
 
@@ -732,11 +774,23 @@ private constructor(
                     sessionThreadStatusTerminated.validate()
                 }
 
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ) {
+                    userToolResult.validate()
+                }
+
                 override fun visitSessionThreadStatusRescheduled(
                     sessionThreadStatusRescheduled:
                         BetaManagedAgentsSessionThreadStatusRescheduledEvent
                 ) {
                     sessionThreadStatusRescheduled.validate()
+                }
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ) {
+                    sessionUpdated.validate()
                 }
             }
         )
@@ -877,10 +931,18 @@ private constructor(
                         BetaManagedAgentsSessionThreadStatusTerminatedEvent
                 ) = sessionThreadStatusTerminated.validity()
 
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ) = userToolResult.validity()
+
                 override fun visitSessionThreadStatusRescheduled(
                     sessionThreadStatusRescheduled:
                         BetaManagedAgentsSessionThreadStatusRescheduledEvent
                 ) = sessionThreadStatusRescheduled.validity()
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ) = sessionUpdated.validity()
 
                 override fun unknown(json: JsonValue?) = 0
             }
@@ -922,7 +984,9 @@ private constructor(
             sessionThreadStatusRunning == other.sessionThreadStatusRunning &&
             sessionThreadStatusIdle == other.sessionThreadStatusIdle &&
             sessionThreadStatusTerminated == other.sessionThreadStatusTerminated &&
-            sessionThreadStatusRescheduled == other.sessionThreadStatusRescheduled
+            userToolResult == other.userToolResult &&
+            sessionThreadStatusRescheduled == other.sessionThreadStatusRescheduled &&
+            sessionUpdated == other.sessionUpdated
     }
 
     override fun hashCode(): Int =
@@ -957,7 +1021,9 @@ private constructor(
             sessionThreadStatusRunning,
             sessionThreadStatusIdle,
             sessionThreadStatusTerminated,
+            userToolResult,
             sessionThreadStatusRescheduled,
+            sessionUpdated,
         )
 
     override fun toString(): String =
@@ -1016,8 +1082,12 @@ private constructor(
                 "BetaManagedAgentsSessionEvent{sessionThreadStatusIdle=$sessionThreadStatusIdle}"
             sessionThreadStatusTerminated != null ->
                 "BetaManagedAgentsSessionEvent{sessionThreadStatusTerminated=$sessionThreadStatusTerminated}"
+            userToolResult != null ->
+                "BetaManagedAgentsSessionEvent{userToolResult=$userToolResult}"
             sessionThreadStatusRescheduled != null ->
                 "BetaManagedAgentsSessionEvent{sessionThreadStatusRescheduled=$sessionThreadStatusRescheduled}"
+            sessionUpdated != null ->
+                "BetaManagedAgentsSessionEvent{sessionUpdated=$sessionUpdated}"
             _json != null -> "BetaManagedAgentsSessionEvent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaManagedAgentsSessionEvent")
         }
@@ -1238,6 +1308,15 @@ private constructor(
             )
 
         /**
+         * Event sent by the client providing the result of an agent-toolset tool execution. Only
+         * valid on `self_hosted` environments, where sandbox-routed tools are executed by the
+         * client rather than the server.
+         */
+        @JvmStatic
+        fun ofUserToolResult(userToolResult: BetaManagedAgentsUserToolResultEvent) =
+            BetaManagedAgentsSessionEvent(userToolResult = userToolResult)
+
+        /**
          * A session thread hit a transient error and is retrying automatically. Emitted on the
          * thread's own stream and cross-posted to the primary stream for child threads.
          */
@@ -1248,6 +1327,15 @@ private constructor(
             BetaManagedAgentsSessionEvent(
                 sessionThreadStatusRescheduled = sessionThreadStatusRescheduled
             )
+
+        /**
+         * Emitted when an UpdateSession request changed at least one field. Carries only the fields
+         * that changed; absent fields were not part of the update. The new configuration applies
+         * from the next turn.
+         */
+        @JvmStatic
+        fun ofSessionUpdated(sessionUpdated: BetaManagedAgentsSessionUpdatedEvent) =
+            BetaManagedAgentsSessionEvent(sessionUpdated = sessionUpdated)
     }
 
     /**
@@ -1422,12 +1510,26 @@ private constructor(
         ): T
 
         /**
+         * Event sent by the client providing the result of an agent-toolset tool execution. Only
+         * valid on `self_hosted` environments, where sandbox-routed tools are executed by the
+         * client rather than the server.
+         */
+        fun visitUserToolResult(userToolResult: BetaManagedAgentsUserToolResultEvent): T
+
+        /**
          * A session thread hit a transient error and is retrying automatically. Emitted on the
          * thread's own stream and cross-posted to the primary stream for child threads.
          */
         fun visitSessionThreadStatusRescheduled(
             sessionThreadStatusRescheduled: BetaManagedAgentsSessionThreadStatusRescheduledEvent
         ): T
+
+        /**
+         * Emitted when an UpdateSession request changed at least one field. Carries only the fields
+         * that changed; absent fields were not part of the update. The new configuration applies
+         * from the next turn.
+         */
+        fun visitSessionUpdated(sessionUpdated: BetaManagedAgentsSessionUpdatedEvent): T
 
         /**
          * Maps an unknown variant of [BetaManagedAgentsSessionEvent] to a value of type [T].
@@ -1740,6 +1842,14 @@ private constructor(
                             )
                         } ?: BetaManagedAgentsSessionEvent(_json = json)
                 }
+                "user.tool_result" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsUserToolResultEvent>(),
+                        )
+                        ?.let { BetaManagedAgentsSessionEvent(userToolResult = it, _json = json) }
+                        ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
                 "session.thread_status_rescheduled" -> {
                     return tryDeserialize(
                             node,
@@ -1751,6 +1861,14 @@ private constructor(
                                 _json = json,
                             )
                         } ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
+                "session.updated" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSessionUpdatedEvent>(),
+                        )
+                        ?.let { BetaManagedAgentsSessionEvent(sessionUpdated = it, _json = json) }
+                        ?: BetaManagedAgentsSessionEvent(_json = json)
                 }
             }
 
@@ -1814,8 +1932,10 @@ private constructor(
                     generator.writeObject(value.sessionThreadStatusIdle)
                 value.sessionThreadStatusTerminated != null ->
                     generator.writeObject(value.sessionThreadStatusTerminated)
+                value.userToolResult != null -> generator.writeObject(value.userToolResult)
                 value.sessionThreadStatusRescheduled != null ->
                     generator.writeObject(value.sessionThreadStatusRescheduled)
+                value.sessionUpdated != null -> generator.writeObject(value.sessionUpdated)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsSessionEvent")
             }

@@ -12,6 +12,7 @@ import com.anthropic.core.checkKnown
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -153,6 +154,10 @@ private constructor(
         fun addData(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent) =
             addData(Data.ofUserDefineOutcome(userDefineOutcome))
 
+        /** Alias for calling [addData] with `Data.ofUserToolResult(userToolResult)`. */
+        fun addData(userToolResult: BetaManagedAgentsUserToolResultEvent) =
+            addData(Data.ofUserToolResult(userToolResult))
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -230,6 +235,7 @@ private constructor(
         private val userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent? = null,
         private val userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent? = null,
         private val userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent? = null,
+        private val userToolResult: BetaManagedAgentsUserToolResultEvent? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -256,6 +262,14 @@ private constructor(
         fun userDefineOutcome(): Optional<BetaManagedAgentsUserDefineOutcomeEvent> =
             Optional.ofNullable(userDefineOutcome)
 
+        /**
+         * Event sent by the client providing the result of an agent-toolset tool execution. Only
+         * valid on `self_hosted` environments, where sandbox-routed tools are executed by the
+         * client rather than the server.
+         */
+        fun userToolResult(): Optional<BetaManagedAgentsUserToolResultEvent> =
+            Optional.ofNullable(userToolResult)
+
         fun isUserMessage(): Boolean = userMessage != null
 
         fun isUserInterrupt(): Boolean = userInterrupt != null
@@ -265,6 +279,8 @@ private constructor(
         fun isUserCustomToolResult(): Boolean = userCustomToolResult != null
 
         fun isUserDefineOutcome(): Boolean = userDefineOutcome != null
+
+        fun isUserToolResult(): Boolean = userToolResult != null
 
         /** A user message event in the session conversation. */
         fun asUserMessage(): BetaManagedAgentsUserMessageEvent =
@@ -288,6 +304,14 @@ private constructor(
          */
         fun asUserDefineOutcome(): BetaManagedAgentsUserDefineOutcomeEvent =
             userDefineOutcome.getOrThrow("userDefineOutcome")
+
+        /**
+         * Event sent by the client providing the result of an agent-toolset tool execution. Only
+         * valid on `self_hosted` environments, where sandbox-routed tools are executed by the
+         * client rather than the server.
+         */
+        fun asUserToolResult(): BetaManagedAgentsUserToolResultEvent =
+            userToolResult.getOrThrow("userToolResult")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -329,6 +353,7 @@ private constructor(
                 userCustomToolResult != null ->
                     visitor.visitUserCustomToolResult(userCustomToolResult)
                 userDefineOutcome != null -> visitor.visitUserDefineOutcome(userDefineOutcome)
+                userToolResult != null -> visitor.visitUserToolResult(userToolResult)
                 else -> visitor.unknown(_json)
             }
 
@@ -377,6 +402,12 @@ private constructor(
                     ) {
                         userDefineOutcome.validate()
                     }
+
+                    override fun visitUserToolResult(
+                        userToolResult: BetaManagedAgentsUserToolResultEvent
+                    ) {
+                        userToolResult.validate()
+                    }
                 }
             )
             validated = true
@@ -419,6 +450,10 @@ private constructor(
                         userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
                     ) = userDefineOutcome.validity()
 
+                    override fun visitUserToolResult(
+                        userToolResult: BetaManagedAgentsUserToolResultEvent
+                    ) = userToolResult.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -433,7 +468,8 @@ private constructor(
                 userInterrupt == other.userInterrupt &&
                 userToolConfirmation == other.userToolConfirmation &&
                 userCustomToolResult == other.userCustomToolResult &&
-                userDefineOutcome == other.userDefineOutcome
+                userDefineOutcome == other.userDefineOutcome &&
+                userToolResult == other.userToolResult
         }
 
         override fun hashCode(): Int =
@@ -443,6 +479,7 @@ private constructor(
                 userToolConfirmation,
                 userCustomToolResult,
                 userDefineOutcome,
+                userToolResult,
             )
 
         override fun toString(): String =
@@ -452,6 +489,7 @@ private constructor(
                 userToolConfirmation != null -> "Data{userToolConfirmation=$userToolConfirmation}"
                 userCustomToolResult != null -> "Data{userCustomToolResult=$userCustomToolResult}"
                 userDefineOutcome != null -> "Data{userDefineOutcome=$userDefineOutcome}"
+                userToolResult != null -> "Data{userToolResult=$userToolResult}"
                 _json != null -> "Data{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Data")
             }
@@ -487,6 +525,15 @@ private constructor(
             @JvmStatic
             fun ofUserDefineOutcome(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent) =
                 Data(userDefineOutcome = userDefineOutcome)
+
+            /**
+             * Event sent by the client providing the result of an agent-toolset tool execution.
+             * Only valid on `self_hosted` environments, where sandbox-routed tools are executed by
+             * the client rather than the server.
+             */
+            @JvmStatic
+            fun ofUserToolResult(userToolResult: BetaManagedAgentsUserToolResultEvent) =
+                Data(userToolResult = userToolResult)
         }
 
         /** An interface that defines how to map each variant of [Data] to a value of type [T]. */
@@ -515,6 +562,13 @@ private constructor(
             fun visitUserDefineOutcome(
                 userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
             ): T
+
+            /**
+             * Event sent by the client providing the result of an agent-toolset tool execution.
+             * Only valid on `self_hosted` environments, where sandbox-routed tools are executed by
+             * the client rather than the server.
+             */
+            fun visitUserToolResult(userToolResult: BetaManagedAgentsUserToolResultEvent): T
 
             /**
              * Maps an unknown variant of [Data] to a value of type [T].
@@ -575,6 +629,13 @@ private constructor(
                             ?.let { Data(userDefineOutcome = it, _json = json) }
                             ?: Data(_json = json)
                     }
+                    "user.tool_result" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsUserToolResultEvent>(),
+                            )
+                            ?.let { Data(userToolResult = it, _json = json) } ?: Data(_json = json)
+                    }
                 }
 
                 return Data(_json = json)
@@ -597,6 +658,7 @@ private constructor(
                         generator.writeObject(value.userCustomToolResult)
                     value.userDefineOutcome != null ->
                         generator.writeObject(value.userDefineOutcome)
+                    value.userToolResult != null -> generator.writeObject(value.userToolResult)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Data")
                 }

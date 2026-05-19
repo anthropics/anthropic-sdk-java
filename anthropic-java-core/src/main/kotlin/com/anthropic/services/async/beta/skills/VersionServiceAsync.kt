@@ -4,11 +4,13 @@ package com.anthropic.services.async.beta.skills
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.skills.versions.VersionCreateParams
 import com.anthropic.models.beta.skills.versions.VersionCreateResponse
 import com.anthropic.models.beta.skills.versions.VersionDeleteParams
 import com.anthropic.models.beta.skills.versions.VersionDeleteResponse
+import com.anthropic.models.beta.skills.versions.VersionDownloadParams
 import com.anthropic.models.beta.skills.versions.VersionListPageAsync
 import com.anthropic.models.beta.skills.versions.VersionListParams
 import com.anthropic.models.beta.skills.versions.VersionRetrieveParams
@@ -147,6 +149,28 @@ interface VersionServiceAsync {
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<VersionDeleteResponse>
+
+    /** Download a skill version's content as a zip archive. */
+    fun download(version: String, params: VersionDownloadParams): CompletableFuture<HttpResponse> =
+        download(version, params, RequestOptions.none())
+
+    /** @see download */
+    fun download(
+        version: String,
+        params: VersionDownloadParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<HttpResponse> =
+        download(params.toBuilder().version(version).build(), requestOptions)
+
+    /** @see download */
+    fun download(params: VersionDownloadParams): CompletableFuture<HttpResponse> =
+        download(params, RequestOptions.none())
+
+    /** @see download */
+    fun download(
+        params: VersionDownloadParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<HttpResponse>
 
     /**
      * A view of [VersionServiceAsync] that provides access to raw HTTP responses for each method.
@@ -304,5 +328,33 @@ interface VersionServiceAsync {
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>>
+
+        /**
+         * Returns a raw HTTP response for `get
+         * /v1/skills/{skill_id}/versions/{version}/content?beta=true`, but is otherwise the same as
+         * [VersionServiceAsync.download].
+         */
+        fun download(
+            version: String,
+            params: VersionDownloadParams,
+        ): CompletableFuture<HttpResponse> = download(version, params, RequestOptions.none())
+
+        /** @see download */
+        fun download(
+            version: String,
+            params: VersionDownloadParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse> =
+            download(params.toBuilder().version(version).build(), requestOptions)
+
+        /** @see download */
+        fun download(params: VersionDownloadParams): CompletableFuture<HttpResponse> =
+            download(params, RequestOptions.none())
+
+        /** @see download */
+        fun download(
+            params: VersionDownloadParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
     }
 }

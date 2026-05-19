@@ -21,7 +21,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsCustomTool
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpToolset
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
-import com.anthropic.models.beta.sessions.threads.BetaManagedAgentsSessionThreadAgent
+import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator

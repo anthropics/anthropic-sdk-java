@@ -6,7 +6,6 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.checkRequired
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -29,32 +28,24 @@ import kotlin.jvm.optionals.getOrNull
 class BetaCompactionBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val content: JsonField<String>,
     private val type: JsonValue,
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+    private val content: JsonField<String>,
     private val encryptedContent: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("content") @ExcludeMissing content: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("cache_control")
         @ExcludeMissing
         cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+        @JsonProperty("content") @ExcludeMissing content: JsonField<String> = JsonMissing.of(),
         @JsonProperty("encrypted_content")
         @ExcludeMissing
         encryptedContent: JsonField<String> = JsonMissing.of(),
-    ) : this(content, type, cacheControl, encryptedContent, mutableMapOf())
-
-    /**
-     * Summary of previously compacted content, or null if compaction failed
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun content(): Optional<String> = content.getOptional("content")
+    ) : this(type, cacheControl, content, encryptedContent, mutableMapOf())
 
     /**
      * Expected to always return the following:
@@ -77,19 +68,20 @@ private constructor(
         cacheControl.getOptional("cache_control")
 
     /**
+     * Summary of previously compacted content, or null if compaction failed
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun content(): Optional<String> = content.getOptional("content")
+
+    /**
      * Opaque metadata from prior compaction, to be round-tripped verbatim
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun encryptedContent(): Optional<String> = encryptedContent.getOptional("encrypted_content")
-
-    /**
-     * Returns the raw JSON value of [content].
-     *
-     * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<String> = content
 
     /**
      * Returns the raw JSON value of [cacheControl].
@@ -99,6 +91,13 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
+
+    /**
+     * Returns the raw JSON value of [content].
+     *
+     * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<String> = content
 
     /**
      * Returns the raw JSON value of [encryptedContent].
@@ -124,48 +123,27 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [BetaCompactionBlockParam].
-         *
-         * The following fields are required:
-         * ```java
-         * .content()
-         * ```
-         */
+        /** Returns a mutable builder for constructing an instance of [BetaCompactionBlockParam]. */
         @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [BetaCompactionBlockParam]. */
     class Builder internal constructor() {
 
-        private var content: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("compaction")
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+        private var content: JsonField<String> = JsonMissing.of()
         private var encryptedContent: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaCompactionBlockParam: BetaCompactionBlockParam) = apply {
-            content = betaCompactionBlockParam.content
             type = betaCompactionBlockParam.type
             cacheControl = betaCompactionBlockParam.cacheControl
+            content = betaCompactionBlockParam.content
             encryptedContent = betaCompactionBlockParam.encryptedContent
             additionalProperties = betaCompactionBlockParam.additionalProperties.toMutableMap()
         }
-
-        /** Summary of previously compacted content, or null if compaction failed */
-        fun content(content: String?) = content(JsonField.ofNullable(content))
-
-        /** Alias for calling [Builder.content] with `content.orElse(null)`. */
-        fun content(content: Optional<String>) = content(content.getOrNull())
-
-        /**
-         * Sets [Builder.content] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.content] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun content(content: JsonField<String>) = apply { this.content = content }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -199,6 +177,20 @@ private constructor(
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
+
+        /** Summary of previously compacted content, or null if compaction failed */
+        fun content(content: String?) = content(JsonField.ofNullable(content))
+
+        /** Alias for calling [Builder.content] with `content.orElse(null)`. */
+        fun content(content: Optional<String>) = content(content.getOrNull())
+
+        /**
+         * Sets [Builder.content] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.content] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun content(content: JsonField<String>) = apply { this.content = content }
 
         /** Opaque metadata from prior compaction, to be round-tripped verbatim */
         fun encryptedContent(encryptedContent: String?) =
@@ -242,19 +234,12 @@ private constructor(
          * Returns an immutable instance of [BetaCompactionBlockParam].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .content()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): BetaCompactionBlockParam =
             BetaCompactionBlockParam(
-                checkRequired("content", content),
                 type,
                 cacheControl,
+                content,
                 encryptedContent,
                 additionalProperties.toMutableMap(),
             )
@@ -275,13 +260,13 @@ private constructor(
             return@apply
         }
 
-        content()
         _type().let {
             if (it != JsonValue.from("compaction")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
         cacheControl().ifPresent { it.validate() }
+        content()
         encryptedContent()
         validated = true
     }
@@ -301,9 +286,9 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (content.asKnown().isPresent) 1 else 0) +
-            type.let { if (it == JsonValue.from("compaction")) 1 else 0 } +
+        type.let { if (it == JsonValue.from("compaction")) 1 else 0 } +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (content.asKnown().isPresent) 1 else 0) +
             (if (encryptedContent.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
@@ -312,19 +297,19 @@ private constructor(
         }
 
         return other is BetaCompactionBlockParam &&
-            content == other.content &&
             type == other.type &&
             cacheControl == other.cacheControl &&
+            content == other.content &&
             encryptedContent == other.encryptedContent &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(content, type, cacheControl, encryptedContent, additionalProperties)
+        Objects.hash(type, cacheControl, content, encryptedContent, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaCompactionBlockParam{content=$content, type=$type, cacheControl=$cacheControl, encryptedContent=$encryptedContent, additionalProperties=$additionalProperties}"
+        "BetaCompactionBlockParam{type=$type, cacheControl=$cacheControl, content=$content, encryptedContent=$encryptedContent, additionalProperties=$additionalProperties}"
 }

@@ -63,6 +63,7 @@ internal class EnvironmentServiceTest {
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
+                    .scope(EnvironmentCreateParams.Scope.ORGANIZATION)
                     .build()
             )
 
@@ -133,6 +134,7 @@ internal class EnvironmentServiceTest {
                             .build()
                     )
                     .name("x")
+                    .scope(EnvironmentUpdateParams.Scope.ORGANIZATION)
                     .build()
             )
 

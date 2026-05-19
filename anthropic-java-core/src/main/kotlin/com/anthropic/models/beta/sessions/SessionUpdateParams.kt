@@ -38,6 +38,16 @@ private constructor(
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
+     * Mid-session agent configuration update. Only `tools` and `mcp_servers` are updatable. Full
+     * replacement: the provided array becomes the new value. To preserve existing entries, GET the
+     * session, modify the array, and POST it back.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun agent(): Optional<BetaManagedAgentsSessionAgentUpdate> = body.agent()
+
+    /**
      * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the field
      * to preserve.
      *
@@ -62,6 +72,13 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun vaultIds(): Optional<List<String>> = body.vaultIds()
+
+    /**
+     * Returns the raw JSON value of [agent].
+     *
+     * Unlike [agent], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _agent(): JsonField<BetaManagedAgentsSessionAgentUpdate> = body._agent()
 
     /**
      * Returns the raw JSON value of [metadata].
@@ -154,11 +171,30 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
+         * - [agent]
          * - [metadata]
          * - [title]
          * - [vaultIds]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
+
+        /**
+         * Mid-session agent configuration update. Only `tools` and `mcp_servers` are updatable.
+         * Full replacement: the provided array becomes the new value. To preserve existing entries,
+         * GET the session, modify the array, and POST it back.
+         */
+        fun agent(agent: BetaManagedAgentsSessionAgentUpdate) = apply { body.agent(agent) }
+
+        /**
+         * Sets [Builder.agent] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.agent] with a well-typed
+         * [BetaManagedAgentsSessionAgentUpdate] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun agent(agent: JsonField<BetaManagedAgentsSessionAgentUpdate>) = apply {
+            body.agent(agent)
+        }
 
         /**
          * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the
@@ -368,6 +404,7 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val agent: JsonField<BetaManagedAgentsSessionAgentUpdate>,
         private val metadata: JsonField<Metadata>,
         private val title: JsonField<String>,
         private val vaultIds: JsonField<List<String>>,
@@ -376,6 +413,9 @@ private constructor(
 
         @JsonCreator
         private constructor(
+            @JsonProperty("agent")
+            @ExcludeMissing
+            agent: JsonField<BetaManagedAgentsSessionAgentUpdate> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -383,7 +423,17 @@ private constructor(
             @JsonProperty("vault_ids")
             @ExcludeMissing
             vaultIds: JsonField<List<String>> = JsonMissing.of(),
-        ) : this(metadata, title, vaultIds, mutableMapOf())
+        ) : this(agent, metadata, title, vaultIds, mutableMapOf())
+
+        /**
+         * Mid-session agent configuration update. Only `tools` and `mcp_servers` are updatable.
+         * Full replacement: the provided array becomes the new value. To preserve existing entries,
+         * GET the session, modify the array, and POST it back.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun agent(): Optional<BetaManagedAgentsSessionAgentUpdate> = agent.getOptional("agent")
 
         /**
          * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the
@@ -410,6 +460,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun vaultIds(): Optional<List<String>> = vaultIds.getOptional("vault_ids")
+
+        /**
+         * Returns the raw JSON value of [agent].
+         *
+         * Unlike [agent], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("agent")
+        @ExcludeMissing
+        fun _agent(): JsonField<BetaManagedAgentsSessionAgentUpdate> = agent
 
         /**
          * Returns the raw JSON value of [metadata].
@@ -455,6 +514,7 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
+            private var agent: JsonField<BetaManagedAgentsSessionAgentUpdate> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var title: JsonField<String> = JsonMissing.of()
             private var vaultIds: JsonField<MutableList<String>>? = null
@@ -462,10 +522,29 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
+                agent = body.agent
                 metadata = body.metadata
                 title = body.title
                 vaultIds = body.vaultIds.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()
+            }
+
+            /**
+             * Mid-session agent configuration update. Only `tools` and `mcp_servers` are updatable.
+             * Full replacement: the provided array becomes the new value. To preserve existing
+             * entries, GET the session, modify the array, and POST it back.
+             */
+            fun agent(agent: BetaManagedAgentsSessionAgentUpdate) = agent(JsonField.of(agent))
+
+            /**
+             * Sets [Builder.agent] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.agent] with a well-typed
+             * [BetaManagedAgentsSessionAgentUpdate] value instead. This method is primarily for
+             * setting the field to an undocumented or not yet supported value.
+             */
+            fun agent(agent: JsonField<BetaManagedAgentsSessionAgentUpdate>) = apply {
+                this.agent = agent
             }
 
             /**
@@ -556,6 +635,7 @@ private constructor(
              */
             fun build(): Body =
                 Body(
+                    agent,
                     metadata,
                     title,
                     (vaultIds ?: JsonMissing.of()).map { it.toImmutable() },
@@ -579,6 +659,7 @@ private constructor(
                 return@apply
             }
 
+            agent().ifPresent { it.validate() }
             metadata().ifPresent { it.validate() }
             title()
             vaultIds()
@@ -601,7 +682,8 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+            (agent.asKnown().getOrNull()?.validity() ?: 0) +
+                (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (title.asKnown().isPresent) 1 else 0) +
                 (vaultIds.asKnown().getOrNull()?.size ?: 0)
 
@@ -611,6 +693,7 @@ private constructor(
             }
 
             return other is Body &&
+                agent == other.agent &&
                 metadata == other.metadata &&
                 title == other.title &&
                 vaultIds == other.vaultIds &&
@@ -618,13 +701,13 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(metadata, title, vaultIds, additionalProperties)
+            Objects.hash(agent, metadata, title, vaultIds, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{metadata=$metadata, title=$title, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
+            "Body{agent=$agent, metadata=$metadata, title=$title, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
     }
 
     /**

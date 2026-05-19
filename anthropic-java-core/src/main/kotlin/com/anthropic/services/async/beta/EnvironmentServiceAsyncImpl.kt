@@ -27,6 +27,8 @@ import com.anthropic.models.beta.environments.EnvironmentListPageResponse
 import com.anthropic.models.beta.environments.EnvironmentListParams
 import com.anthropic.models.beta.environments.EnvironmentRetrieveParams
 import com.anthropic.models.beta.environments.EnvironmentUpdateParams
+import com.anthropic.services.async.beta.environments.WorkServiceAsync
+import com.anthropic.services.async.beta.environments.WorkServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -44,10 +46,14 @@ class EnvironmentServiceAsyncImpl internal constructor(private val clientOptions
         WithRawResponseImpl(clientOptions)
     }
 
+    private val work: WorkServiceAsync by lazy { WorkServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): EnvironmentServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EnvironmentServiceAsync =
         EnvironmentServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun work(): WorkServiceAsync = work
 
     override fun create(
         params: EnvironmentCreateParams,
@@ -97,12 +103,18 @@ class EnvironmentServiceAsyncImpl internal constructor(private val clientOptions
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val work: WorkServiceAsync.WithRawResponse by lazy {
+            WorkServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): EnvironmentServiceAsync.WithRawResponse =
             EnvironmentServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        override fun work(): WorkServiceAsync.WithRawResponse = work
 
         private val createHandler: Handler<BetaEnvironment> =
             jsonHandler<BetaEnvironment>(clientOptions.jsonMapper)

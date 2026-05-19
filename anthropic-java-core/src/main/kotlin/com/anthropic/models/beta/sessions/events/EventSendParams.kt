@@ -222,6 +222,27 @@ private constructor(
             body.addEvent(userDefineOutcome)
         }
 
+        /**
+         * Alias for calling [addEvent] with
+         * `BetaManagedAgentsEventParams.ofUserToolResult(userToolResult)`.
+         */
+        fun addEvent(userToolResult: BetaManagedAgentsUserToolResultEventParams) = apply {
+            body.addEvent(userToolResult)
+        }
+
+        /**
+         * Alias for calling [addEvent] with the following:
+         * ```java
+         * BetaManagedAgentsUserToolResultEventParams.builder()
+         *     .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
+         *     .toolUseId(toolUseId)
+         *     .build()
+         * ```
+         */
+        fun addUserToolResultEvent(toolUseId: String) = apply {
+            body.addUserToolResultEvent(toolUseId)
+        }
+
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
         }
@@ -547,6 +568,30 @@ private constructor(
              */
             fun addEvent(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams) =
                 addEvent(BetaManagedAgentsEventParams.ofUserDefineOutcome(userDefineOutcome))
+
+            /**
+             * Alias for calling [addEvent] with
+             * `BetaManagedAgentsEventParams.ofUserToolResult(userToolResult)`.
+             */
+            fun addEvent(userToolResult: BetaManagedAgentsUserToolResultEventParams) =
+                addEvent(BetaManagedAgentsEventParams.ofUserToolResult(userToolResult))
+
+            /**
+             * Alias for calling [addEvent] with the following:
+             * ```java
+             * BetaManagedAgentsUserToolResultEventParams.builder()
+             *     .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
+             *     .toolUseId(toolUseId)
+             *     .build()
+             * ```
+             */
+            fun addUserToolResultEvent(toolUseId: String) =
+                addEvent(
+                    BetaManagedAgentsUserToolResultEventParams.builder()
+                        .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
+                        .toolUseId(toolUseId)
+                        .build()
+                )
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
