@@ -1363,12 +1363,12 @@ internal class BetaContentBlockParamTest {
     fun ofCompaction() {
         val compaction =
             BetaCompactionBlockParam.builder()
-                .content("content")
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .content("content")
                 .encryptedContent("encrypted_content")
                 .build()
 
@@ -1402,12 +1402,12 @@ internal class BetaContentBlockParamTest {
         val betaContentBlockParam =
             BetaContentBlockParam.ofCompaction(
                 BetaCompactionBlockParam.builder()
-                    .content("content")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .content("content")
                     .encryptedContent("encrypted_content")
                     .build()
             )

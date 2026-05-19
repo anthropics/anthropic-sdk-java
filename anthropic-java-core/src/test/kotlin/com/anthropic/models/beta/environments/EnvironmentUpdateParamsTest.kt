@@ -45,6 +45,7 @@ internal class EnvironmentUpdateParamsTest {
                     .build()
             )
             .name("x")
+            .scope(EnvironmentUpdateParams.Scope.ORGANIZATION)
             .build()
     }
 
@@ -94,6 +95,7 @@ internal class EnvironmentUpdateParamsTest {
                         .build()
                 )
                 .name("x")
+                .scope(EnvironmentUpdateParams.Scope.ORGANIZATION)
                 .build()
 
         val headers = params._headers()
@@ -150,33 +152,36 @@ internal class EnvironmentUpdateParamsTest {
                         .build()
                 )
                 .name("x")
+                .scope(EnvironmentUpdateParams.Scope.ORGANIZATION)
                 .build()
 
         val body = params._body()
 
         assertThat(body.config())
             .contains(
-                BetaCloudConfigParams.builder()
-                    .networking(
-                        BetaLimitedNetworkParams.builder()
-                            .allowMcpServers(true)
-                            .allowPackageManagers(true)
-                            .addAllowedHost("api.example.com")
-                            .build()
-                    )
-                    .packages(
-                        BetaPackagesParams.builder()
-                            .addApt("string")
-                            .addCargo("string")
-                            .addGem("string")
-                            .addGo("string")
-                            .addNpm("string")
-                            .addPip("pandas")
-                            .addPip("numpy")
-                            .type(BetaPackagesParams.Type.PACKAGES)
-                            .build()
-                    )
-                    .build()
+                EnvironmentUpdateParams.Config.ofCloud(
+                    BetaCloudConfigParams.builder()
+                        .networking(
+                            BetaLimitedNetworkParams.builder()
+                                .allowMcpServers(true)
+                                .allowPackageManagers(true)
+                                .addAllowedHost("api.example.com")
+                                .build()
+                        )
+                        .packages(
+                            BetaPackagesParams.builder()
+                                .addApt("string")
+                                .addCargo("string")
+                                .addGem("string")
+                                .addGo("string")
+                                .addNpm("string")
+                                .addPip("pandas")
+                                .addPip("numpy")
+                                .type(BetaPackagesParams.Type.PACKAGES)
+                                .build()
+                        )
+                        .build()
+                )
             )
         assertThat(body.description()).contains("Python environment with data-analysis packages.")
         assertThat(body.metadata())
@@ -186,6 +191,7 @@ internal class EnvironmentUpdateParamsTest {
                     .build()
             )
         assertThat(body.name()).contains("x")
+        assertThat(body.scope()).contains(EnvironmentUpdateParams.Scope.ORGANIZATION)
     }
 
     @Test

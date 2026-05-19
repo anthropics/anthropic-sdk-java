@@ -4,11 +4,13 @@ package com.anthropic.services.blocking.beta.skills
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.skills.versions.VersionCreateParams
 import com.anthropic.models.beta.skills.versions.VersionCreateResponse
 import com.anthropic.models.beta.skills.versions.VersionDeleteParams
 import com.anthropic.models.beta.skills.versions.VersionDeleteResponse
+import com.anthropic.models.beta.skills.versions.VersionDownloadParams
 import com.anthropic.models.beta.skills.versions.VersionListPage
 import com.anthropic.models.beta.skills.versions.VersionListParams
 import com.anthropic.models.beta.skills.versions.VersionRetrieveParams
@@ -131,6 +133,31 @@ interface VersionService {
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): VersionDeleteResponse
+
+    /** Download a skill version's content as a zip archive. */
+    @MustBeClosed
+    fun download(version: String, params: VersionDownloadParams): HttpResponse =
+        download(version, params, RequestOptions.none())
+
+    /** @see download */
+    @MustBeClosed
+    fun download(
+        version: String,
+        params: VersionDownloadParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): HttpResponse = download(params.toBuilder().version(version).build(), requestOptions)
+
+    /** @see download */
+    @MustBeClosed
+    fun download(params: VersionDownloadParams): HttpResponse =
+        download(params, RequestOptions.none())
+
+    /** @see download */
+    @MustBeClosed
+    fun download(
+        params: VersionDownloadParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): HttpResponse
 
     /** A view of [VersionService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -293,5 +320,34 @@ interface VersionService {
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<VersionDeleteResponse>
+
+        /**
+         * Returns a raw HTTP response for `get
+         * /v1/skills/{skill_id}/versions/{version}/content?beta=true`, but is otherwise the same as
+         * [VersionService.download].
+         */
+        @MustBeClosed
+        fun download(version: String, params: VersionDownloadParams): HttpResponse =
+            download(version, params, RequestOptions.none())
+
+        /** @see download */
+        @MustBeClosed
+        fun download(
+            version: String,
+            params: VersionDownloadParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse = download(params.toBuilder().version(version).build(), requestOptions)
+
+        /** @see download */
+        @MustBeClosed
+        fun download(params: VersionDownloadParams): HttpResponse =
+            download(params, RequestOptions.none())
+
+        /** @see download */
+        @MustBeClosed
+        fun download(
+            params: VersionDownloadParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse
     }
 }

@@ -44,6 +44,7 @@ internal class EnvironmentCreateParamsTest {
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
+            .scope(EnvironmentCreateParams.Scope.ORGANIZATION)
             .build()
     }
 
@@ -82,6 +83,7 @@ internal class EnvironmentCreateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .scope(EnvironmentCreateParams.Scope.ORGANIZATION)
                 .build()
 
         val headers = params._headers()
@@ -136,6 +138,7 @@ internal class EnvironmentCreateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .scope(EnvironmentCreateParams.Scope.ORGANIZATION)
                 .build()
 
         val body = params._body()
@@ -143,27 +146,29 @@ internal class EnvironmentCreateParamsTest {
         assertThat(body.name()).isEqualTo("python-data-analysis")
         assertThat(body.config())
             .contains(
-                BetaCloudConfigParams.builder()
-                    .networking(
-                        BetaLimitedNetworkParams.builder()
-                            .allowMcpServers(true)
-                            .allowPackageManagers(true)
-                            .addAllowedHost("api.example.com")
-                            .build()
-                    )
-                    .packages(
-                        BetaPackagesParams.builder()
-                            .addApt("string")
-                            .addCargo("string")
-                            .addGem("string")
-                            .addGo("string")
-                            .addNpm("string")
-                            .addPip("pandas")
-                            .addPip("numpy")
-                            .type(BetaPackagesParams.Type.PACKAGES)
-                            .build()
-                    )
-                    .build()
+                EnvironmentCreateParams.Config.ofCloud(
+                    BetaCloudConfigParams.builder()
+                        .networking(
+                            BetaLimitedNetworkParams.builder()
+                                .allowMcpServers(true)
+                                .allowPackageManagers(true)
+                                .addAllowedHost("api.example.com")
+                                .build()
+                        )
+                        .packages(
+                            BetaPackagesParams.builder()
+                                .addApt("string")
+                                .addCargo("string")
+                                .addGem("string")
+                                .addGo("string")
+                                .addNpm("string")
+                                .addPip("pandas")
+                                .addPip("numpy")
+                                .type(BetaPackagesParams.Type.PACKAGES)
+                                .build()
+                        )
+                        .build()
+                )
             )
         assertThat(body.description()).contains("Python environment with data-analysis packages.")
         assertThat(body.metadata())
@@ -172,6 +177,7 @@ internal class EnvironmentCreateParamsTest {
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
+        assertThat(body.scope()).contains(EnvironmentCreateParams.Scope.ORGANIZATION)
     }
 
     @Test

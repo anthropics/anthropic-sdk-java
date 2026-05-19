@@ -27,6 +27,8 @@ import com.anthropic.models.beta.environments.EnvironmentListPageResponse
 import com.anthropic.models.beta.environments.EnvironmentListParams
 import com.anthropic.models.beta.environments.EnvironmentRetrieveParams
 import com.anthropic.models.beta.environments.EnvironmentUpdateParams
+import com.anthropic.services.blocking.beta.environments.WorkService
+import com.anthropic.services.blocking.beta.environments.WorkServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -43,10 +45,14 @@ class EnvironmentServiceImpl internal constructor(private val clientOptions: Cli
         WithRawResponseImpl(clientOptions)
     }
 
+    private val work: WorkService by lazy { WorkServiceImpl(clientOptions) }
+
     override fun withRawResponse(): EnvironmentService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EnvironmentService =
         EnvironmentServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun work(): WorkService = work
 
     override fun create(
         params: EnvironmentCreateParams,
@@ -96,12 +102,18 @@ class EnvironmentServiceImpl internal constructor(private val clientOptions: Cli
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val work: WorkService.WithRawResponse by lazy {
+            WorkServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): EnvironmentService.WithRawResponse =
             EnvironmentServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        override fun work(): WorkService.WithRawResponse = work
 
         private val createHandler: Handler<BetaEnvironment> =
             jsonHandler<BetaEnvironment>(clientOptions.jsonMapper)

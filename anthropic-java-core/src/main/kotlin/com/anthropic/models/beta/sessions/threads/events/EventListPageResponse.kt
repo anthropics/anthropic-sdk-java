@@ -9,6 +9,8 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentCustomToolUseEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentMcpToolResultEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentMcpToolUseEvent
@@ -424,6 +426,13 @@ private constructor(
 
         /**
          * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofUserToolResult(userToolResult)`.
+         */
+        fun addData(userToolResult: BetaManagedAgentsUserToolResultEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofUserToolResult(userToolResult))
+
+        /**
+         * Alias for calling [addData] with
          * `BetaManagedAgentsSessionEvent.ofSessionThreadStatusRescheduled(sessionThreadStatusRescheduled)`.
          */
         fun addData(
@@ -434,6 +443,13 @@ private constructor(
                     sessionThreadStatusRescheduled
                 )
             )
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofSessionUpdated(sessionUpdated)`.
+         */
+        fun addData(sessionUpdated: BetaManagedAgentsSessionUpdatedEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofSessionUpdated(sessionUpdated))
 
         /** Opaque cursor for the next page. Null when no more results. */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))

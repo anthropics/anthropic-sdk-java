@@ -43,33 +43,36 @@ internal class BetaEnvironmentTest {
                 .metadata(BetaEnvironment.Metadata.builder().build())
                 .name("python-data-analysis")
                 .updatedAt("2026-03-15T10:00:00Z")
+                .scope(BetaEnvironment.Scope.ORGANIZATION)
                 .build()
 
         assertThat(betaEnvironment.id()).isEqualTo("env_011CZkZ9X2dpNyB7HsEFoRfW")
         assertThat(betaEnvironment.archivedAt()).isEmpty
         assertThat(betaEnvironment.config())
             .isEqualTo(
-                BetaCloudConfig.builder()
-                    .networking(
-                        BetaLimitedNetwork.builder()
-                            .allowMcpServers(false)
-                            .allowPackageManagers(true)
-                            .addAllowedHost("api.example.com")
-                            .build()
-                    )
-                    .packages(
-                        BetaPackages.builder()
-                            .addApt("string")
-                            .addCargo("string")
-                            .addGem("string")
-                            .addGo("string")
-                            .addNpm("string")
-                            .addPip("pandas")
-                            .addPip("numpy")
-                            .type(BetaPackages.Type.PACKAGES)
-                            .build()
-                    )
-                    .build()
+                BetaEnvironment.Config.ofCloud(
+                    BetaCloudConfig.builder()
+                        .networking(
+                            BetaLimitedNetwork.builder()
+                                .allowMcpServers(false)
+                                .allowPackageManagers(true)
+                                .addAllowedHost("api.example.com")
+                                .build()
+                        )
+                        .packages(
+                            BetaPackages.builder()
+                                .addApt("string")
+                                .addCargo("string")
+                                .addGem("string")
+                                .addGo("string")
+                                .addNpm("string")
+                                .addPip("pandas")
+                                .addPip("numpy")
+                                .type(BetaPackages.Type.PACKAGES)
+                                .build()
+                        )
+                        .build()
+                )
             )
         assertThat(betaEnvironment.createdAt()).isEqualTo("2026-03-15T10:00:00Z")
         assertThat(betaEnvironment.description())
@@ -77,6 +80,7 @@ internal class BetaEnvironmentTest {
         assertThat(betaEnvironment.metadata()).isEqualTo(BetaEnvironment.Metadata.builder().build())
         assertThat(betaEnvironment.name()).isEqualTo("python-data-analysis")
         assertThat(betaEnvironment.updatedAt()).isEqualTo("2026-03-15T10:00:00Z")
+        assertThat(betaEnvironment.scope()).contains(BetaEnvironment.Scope.ORGANIZATION)
     }
 
     @Test
@@ -114,6 +118,7 @@ internal class BetaEnvironmentTest {
                 .metadata(BetaEnvironment.Metadata.builder().build())
                 .name("python-data-analysis")
                 .updatedAt("2026-03-15T10:00:00Z")
+                .scope(BetaEnvironment.Scope.ORGANIZATION)
                 .build()
 
         val roundtrippedBetaEnvironment =

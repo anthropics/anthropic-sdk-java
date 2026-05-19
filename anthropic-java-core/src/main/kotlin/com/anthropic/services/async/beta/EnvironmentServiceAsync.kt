@@ -14,6 +14,7 @@ import com.anthropic.models.beta.environments.EnvironmentListPageAsync
 import com.anthropic.models.beta.environments.EnvironmentListParams
 import com.anthropic.models.beta.environments.EnvironmentRetrieveParams
 import com.anthropic.models.beta.environments.EnvironmentUpdateParams
+import com.anthropic.services.async.beta.environments.WorkServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -30,6 +31,8 @@ interface EnvironmentServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): EnvironmentServiceAsync
+
+    fun work(): WorkServiceAsync
 
     /** Create a new environment with the specified configuration. */
     fun create(params: EnvironmentCreateParams): CompletableFuture<BetaEnvironment> =
@@ -216,6 +219,8 @@ interface EnvironmentServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): EnvironmentServiceAsync.WithRawResponse
+
+        fun work(): WorkServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/environments?beta=true`, but is otherwise the

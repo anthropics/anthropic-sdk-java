@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.models.beta.sessions.threads
+package com.anthropic.models.beta.agents
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
@@ -14,13 +14,6 @@ import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
-import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
-import com.anthropic.models.beta.agents.BetaManagedAgentsCustomSkill
-import com.anthropic.models.beta.agents.BetaManagedAgentsCustomTool
-import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
-import com.anthropic.models.beta.agents.BetaManagedAgentsMcpToolset
-import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator

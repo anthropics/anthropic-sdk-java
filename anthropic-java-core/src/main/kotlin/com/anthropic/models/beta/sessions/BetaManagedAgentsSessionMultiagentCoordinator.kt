@@ -11,7 +11,7 @@ import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.beta.sessions.threads.BetaManagedAgentsSessionThreadAgent
+import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
