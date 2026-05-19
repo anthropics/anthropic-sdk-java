@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.33.0 (2026-05-19)
+
+Full Changelog: [v2.32.0...v2.33.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.32.0...v2.33.0)
+
+### Features
+
+* **client:** Add support for self-hosted sandboxes in CMA with sandbox helpers ([d519362](https://github.com/anthropics/anthropic-sdk-java/commit/d5193622daa045073af0244a1fec4ae78131c205))
+
 ## 2.32.0 (2026-05-13)
 
 Full Changelog: [v2.31.0...v2.32.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.31.0...v2.32.0)
