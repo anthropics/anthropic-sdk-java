@@ -209,17 +209,6 @@ private constructor(
         fun delta(thinking: BetaThinkingDelta) =
             delta(BetaRawContentBlockDelta.ofThinking(thinking))
 
-        /**
-         * Alias for calling [delta] with the following:
-         * ```java
-         * BetaThinkingDelta.builder()
-         *     .thinking(thinking)
-         *     .build()
-         * ```
-         */
-        fun thinkingDelta(thinking: String) =
-            delta(BetaThinkingDelta.builder().thinking(thinking).build())
-
         /** Alias for calling [delta] with `BetaRawContentBlockDelta.ofSignature(signature)`. */
         fun delta(signature: BetaSignatureDelta) =
             delta(BetaRawContentBlockDelta.ofSignature(signature))

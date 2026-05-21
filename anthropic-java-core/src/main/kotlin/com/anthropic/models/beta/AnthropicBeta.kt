@@ -72,6 +72,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val CACHE_DIAGNOSIS_2026_04_07 = of("cache-diagnosis-2026-04-07")
 
+        @JvmField val THINKING_TOKEN_COUNT_2026_05_13 = of("thinking-token-count-2026-05-13")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }
 
@@ -102,6 +104,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         ADVISOR_TOOL_2026_03_01,
         MANAGED_AGENTS_2026_04_01,
         CACHE_DIAGNOSIS_2026_04_07,
+        THINKING_TOKEN_COUNT_2026_05_13,
     }
 
     /**
@@ -139,6 +142,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         ADVISOR_TOOL_2026_03_01,
         MANAGED_AGENTS_2026_04_01,
         CACHE_DIAGNOSIS_2026_04_07,
+        THINKING_TOKEN_COUNT_2026_05_13,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -180,6 +184,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             ADVISOR_TOOL_2026_03_01 -> Value.ADVISOR_TOOL_2026_03_01
             MANAGED_AGENTS_2026_04_01 -> Value.MANAGED_AGENTS_2026_04_01
             CACHE_DIAGNOSIS_2026_04_07 -> Value.CACHE_DIAGNOSIS_2026_04_07
+            THINKING_TOKEN_COUNT_2026_05_13 -> Value.THINKING_TOKEN_COUNT_2026_05_13
             else -> Value._UNKNOWN
         }
 
@@ -219,6 +224,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             ADVISOR_TOOL_2026_03_01 -> Known.ADVISOR_TOOL_2026_03_01
             MANAGED_AGENTS_2026_04_01 -> Known.MANAGED_AGENTS_2026_04_01
             CACHE_DIAGNOSIS_2026_04_07 -> Known.CACHE_DIAGNOSIS_2026_04_07
+            THINKING_TOKEN_COUNT_2026_05_13 -> Known.THINKING_TOKEN_COUNT_2026_05_13
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 
