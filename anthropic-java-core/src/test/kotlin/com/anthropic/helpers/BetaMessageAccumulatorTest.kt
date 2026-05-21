@@ -1265,7 +1265,7 @@ internal class BetaMessageAccumulatorTest {
         BetaTextCitation.ofPageLocation(citationPageLocation(pageNumber))
 
     private fun thinkingDelta(thinking: String) =
-        BetaThinkingDelta.builder().thinking(thinking).build()
+        BetaThinkingDelta.builder().estimatedTokens(null).thinking(thinking).build()
 
     private fun signatureDelta(signature: String) =
         BetaSignatureDelta.builder().signature(signature).build()
