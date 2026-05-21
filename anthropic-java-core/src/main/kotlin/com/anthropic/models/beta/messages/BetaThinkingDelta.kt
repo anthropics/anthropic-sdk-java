@@ -14,10 +14,13 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class BetaThinkingDelta
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val estimatedTokens: JsonField<Long>,
     private val thinking: JsonField<String>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -25,9 +28,26 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("estimated_tokens")
+        @ExcludeMissing
+        estimatedTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("thinking") @ExcludeMissing thinking: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(thinking, type, mutableMapOf())
+    ) : this(estimatedTokens, thinking, type, mutableMapOf())
+
+    /**
+     * Per-frame increment of a coarse, running estimate of the tokens this thinking block has
+     * produced so far. Present whenever the `thinking-token-count-2026-05-13` beta is set; `null`
+     * unless `thinking.display` resolves to `"omitted"` and a count is due this frame. Sum the
+     * increments across `thinking_delta` frames on this block for a progress indicator. Each
+     * increment is a non-negative multiple of a fixed quantum and the cadence is rate-limited, so
+     * this is a deliberately lossy display hint, not a billable count; `usage.output_tokens`
+     * remains authoritative.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun estimatedTokens(): Optional<Long> = estimatedTokens.getOptional("estimated_tokens")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -45,6 +65,15 @@ private constructor(
      * with an unexpected value).
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+    /**
+     * Returns the raw JSON value of [estimatedTokens].
+     *
+     * Unlike [estimatedTokens], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("estimated_tokens")
+    @ExcludeMissing
+    fun _estimatedTokens(): JsonField<Long> = estimatedTokens
 
     /**
      * Returns the raw JSON value of [thinking].
@@ -72,6 +101,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .estimatedTokens()
          * .thinking()
          * ```
          */
@@ -81,15 +111,51 @@ private constructor(
     /** A builder for [BetaThinkingDelta]. */
     class Builder internal constructor() {
 
+        private var estimatedTokens: JsonField<Long>? = null
         private var thinking: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("thinking_delta")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaThinkingDelta: BetaThinkingDelta) = apply {
+            estimatedTokens = betaThinkingDelta.estimatedTokens
             thinking = betaThinkingDelta.thinking
             type = betaThinkingDelta.type
             additionalProperties = betaThinkingDelta.additionalProperties.toMutableMap()
+        }
+
+        /**
+         * Per-frame increment of a coarse, running estimate of the tokens this thinking block has
+         * produced so far. Present whenever the `thinking-token-count-2026-05-13` beta is set;
+         * `null` unless `thinking.display` resolves to `"omitted"` and a count is due this frame.
+         * Sum the increments across `thinking_delta` frames on this block for a progress indicator.
+         * Each increment is a non-negative multiple of a fixed quantum and the cadence is
+         * rate-limited, so this is a deliberately lossy display hint, not a billable count;
+         * `usage.output_tokens` remains authoritative.
+         */
+        fun estimatedTokens(estimatedTokens: Long?) =
+            estimatedTokens(JsonField.ofNullable(estimatedTokens))
+
+        /**
+         * Alias for [Builder.estimatedTokens].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun estimatedTokens(estimatedTokens: Long) = estimatedTokens(estimatedTokens as Long?)
+
+        /** Alias for calling [Builder.estimatedTokens] with `estimatedTokens.orElse(null)`. */
+        fun estimatedTokens(estimatedTokens: Optional<Long>) =
+            estimatedTokens(estimatedTokens.getOrNull())
+
+        /**
+         * Sets [Builder.estimatedTokens] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.estimatedTokens] with a well-typed [Long] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun estimatedTokens(estimatedTokens: JsonField<Long>) = apply {
+            this.estimatedTokens = estimatedTokens
         }
 
         fun thinking(thinking: String) = thinking(JsonField.of(thinking))
@@ -142,6 +208,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .estimatedTokens()
          * .thinking()
          * ```
          *
@@ -149,6 +216,7 @@ private constructor(
          */
         fun build(): BetaThinkingDelta =
             BetaThinkingDelta(
+                checkRequired("estimatedTokens", estimatedTokens),
                 checkRequired("thinking", thinking),
                 type,
                 additionalProperties.toMutableMap(),
@@ -170,6 +238,7 @@ private constructor(
             return@apply
         }
 
+        estimatedTokens()
         thinking()
         _type().let {
             if (it != JsonValue.from("thinking_delta")) {
@@ -194,7 +263,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (thinking.asKnown().isPresent) 1 else 0) +
+        (if (estimatedTokens.asKnown().isPresent) 1 else 0) +
+            (if (thinking.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("thinking_delta")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
@@ -203,15 +273,18 @@ private constructor(
         }
 
         return other is BetaThinkingDelta &&
+            estimatedTokens == other.estimatedTokens &&
             thinking == other.thinking &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(thinking, type, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(estimatedTokens, thinking, type, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaThinkingDelta{thinking=$thinking, type=$type, additionalProperties=$additionalProperties}"
+        "BetaThinkingDelta{estimatedTokens=$estimatedTokens, thinking=$thinking, type=$type, additionalProperties=$additionalProperties}"
 }

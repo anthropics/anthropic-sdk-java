@@ -11,15 +11,18 @@ internal class BetaThinkingDeltaTest {
 
     @Test
     fun create() {
-        val betaThinkingDelta = BetaThinkingDelta.builder().thinking("thinking").build()
+        val betaThinkingDelta =
+            BetaThinkingDelta.builder().estimatedTokens(0L).thinking("thinking").build()
 
+        assertThat(betaThinkingDelta.estimatedTokens()).contains(0L)
         assertThat(betaThinkingDelta.thinking()).isEqualTo("thinking")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaThinkingDelta = BetaThinkingDelta.builder().thinking("thinking").build()
+        val betaThinkingDelta =
+            BetaThinkingDelta.builder().estimatedTokens(0L).thinking("thinking").build()
 
         val roundtrippedBetaThinkingDelta =
             jsonMapper.readValue(
