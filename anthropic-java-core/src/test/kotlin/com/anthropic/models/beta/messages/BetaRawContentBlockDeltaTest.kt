@@ -130,7 +130,7 @@ internal class BetaRawContentBlockDeltaTest {
 
     @Test
     fun ofThinking() {
-        val thinking = BetaThinkingDelta.builder().thinking("thinking").build()
+        val thinking = BetaThinkingDelta.builder().estimatedTokens(0L).thinking("thinking").build()
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofThinking(thinking)
 
@@ -147,7 +147,7 @@ internal class BetaRawContentBlockDeltaTest {
         val jsonMapper = jsonMapper()
         val betaRawContentBlockDelta =
             BetaRawContentBlockDelta.ofThinking(
-                BetaThinkingDelta.builder().thinking("thinking").build()
+                BetaThinkingDelta.builder().estimatedTokens(0L).thinking("thinking").build()
             )
 
         val roundtrippedBetaRawContentBlockDelta =
