@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.34.0 (2026-05-21)
+
+Full Changelog: [v2.33.0...v2.34.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.33.0...v2.34.0)
+
+### Features
+
+* **api:** Add support for thinking-token-count beta for estimated tokens in thinking block deltas when streaming ([c814c7a](https://github.com/anthropics/anthropic-sdk-java/commit/c814c7a24808d8f82875e02d3cde914fae334321))
+
+
+### Bug Fixes
+
+* **test:** set required estimatedTokens on BetaThinkingDelta in BetaMessageAccumulatorTest ([04aedf3](https://github.com/anthropics/anthropic-sdk-java/commit/04aedf3c0b19b7c838c04f8fec09e82e4700c48a))
+
 ## 2.33.0 (2026-05-19)
 
 Full Changelog: [v2.32.0...v2.33.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.32.0...v2.33.0)
