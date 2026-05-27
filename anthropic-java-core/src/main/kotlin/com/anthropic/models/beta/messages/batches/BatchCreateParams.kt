@@ -974,9 +974,10 @@ private constructor(
             fun messages(): List<BetaMessageParam> = messages.getRequired("messages")
 
             /**
-             * The model that will complete your prompt.\n\nSee
-             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
-             * and options.
+             * The model that will complete your prompt.
+             *
+             * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+             * details and options.
              *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -1797,8 +1798,9 @@ private constructor(
                     )
 
                 /**
-                 * The model that will complete your prompt.\n\nSee
-                 * [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+                 * The model that will complete your prompt.
+                 *
+                 * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
                  * details and options.
                  */
                 fun model(model: Model) = model(JsonField.of(model))

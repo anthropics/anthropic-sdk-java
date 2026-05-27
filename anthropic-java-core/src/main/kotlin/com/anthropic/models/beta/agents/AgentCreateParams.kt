@@ -1364,9 +1364,10 @@ private constructor(
     ) {
 
         /**
-         * The model that will power your agent.\n\nSee
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-         * options.
+         * The model that will power your agent.
+         *
+         * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
+         * and options.
          */
         fun betaManagedAgents(): Optional<BetaManagedAgentsModel> =
             Optional.ofNullable(betaManagedAgents)
@@ -1381,9 +1382,10 @@ private constructor(
             betaManagedAgentsModelConfigParams != null
 
         /**
-         * The model that will power your agent.\n\nSee
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-         * options.
+         * The model that will power your agent.
+         *
+         * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
+         * and options.
          */
         fun asBetaManagedAgents(): BetaManagedAgentsModel =
             betaManagedAgents.getOrThrow("betaManagedAgents")
@@ -1519,9 +1521,10 @@ private constructor(
         companion object {
 
             /**
-             * The model that will power your agent.\n\nSee
-             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
-             * and options.
+             * The model that will power your agent.
+             *
+             * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+             * details and options.
              */
             @JvmStatic
             fun ofBetaManagedAgents(betaManagedAgents: BetaManagedAgentsModel) =
@@ -1538,9 +1541,10 @@ private constructor(
         interface Visitor<out T> {
 
             /**
-             * The model that will power your agent.\n\nSee
-             * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
-             * and options.
+             * The model that will power your agent.
+             *
+             * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional
+             * details and options.
              */
             fun visitBetaManagedAgents(betaManagedAgents: BetaManagedAgentsModel): T
 
