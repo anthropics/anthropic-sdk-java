@@ -283,7 +283,9 @@ internal class JsonSchemaValidator private constructor() {
      * set to an array that contains two text values: the name of the type and `"null"`. The
      * Anthropic API specification explains that this is how a property can be both required (i.e.,
      * it must appear in the JSON document), but its value can be optional (i.e., it can be set
-     * explicitly to `"null"`). If the schema has no `"type"` field, no action is taken.
+     * explicitly to `"null"`). The type name may also be `"null"` on its own, for a sub-schema that
+     * permits only `null` (generated as a branch of an `"anyOf"` for a nullable referenced or
+     * recursive type). If the schema has no `"type"` field, no action is taken.
      */
     private fun validateTypeSchema(schema: JsonNode, path: String, depth: Int) {
         val type = schema.get(TYPE)
@@ -310,7 +312,12 @@ internal class JsonSchemaValidator private constructor() {
             TYPE_BOOLEAN,
             TYPE_INTEGER,
             TYPE_NUMBER,
-            TYPE_STRING -> validateSimpleSchema(schema, typeName, path, depth)
+            TYPE_STRING,
+            // A standalone `"type" : "null"` schema (one that permits only `null`) is valid. It is
+            // generated as a branch of an `"anyOf"` to make a referenced or recursive type nullable
+            // (e.g., a nullable Kotlin `X?` field), where `"null"` cannot be added to a type array
+            // because the other branch is a `"$ref"` rather than a `"type"`.
+            TYPE_NULL -> validateSimpleSchema(schema, typeName, path, depth)
 
             // The type name could not be determined from a type name array. An error will already
             // have been logged by `getTypeNameFromTypeArray`, so no need to do anything more here.

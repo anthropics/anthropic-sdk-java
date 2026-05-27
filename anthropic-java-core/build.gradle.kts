@@ -3,6 +3,11 @@ plugins {
     id("anthropic.publish")
 }
 
+// This module has Java test sources, but no Java main sources. Compiling them to Java 8 makes javac
+// emit an "obsolete source/target 8" warning, which the project-wide `-Werror` would turn into an
+// error. Suppress only that warning here.
+tasks.named<JavaCompile>("compileTestJava") { options.compilerArgs.add("-Xlint:-options") }
+
 configurations.all {
     resolutionStrategy {
         // Compile and test against a lower Jackson version to ensure we're compatible with it. Note that
@@ -29,6 +34,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.2")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
+    implementation(kotlin("reflect"))
     implementation("org.apache.httpcomponents.core5:httpcore5:5.2.4")
     implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
     implementation("com.github.victools:jsonschema-generator:4.38.0")
@@ -37,6 +43,8 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(project(":anthropic-java-client-okhttp"))
+    testImplementation("org.checkerframework:checker-qual:3.43.0")
+    testImplementation("com.google.code.findbugs:jsr305:3.0.2")
     testImplementation("com.github.tomakehurst:wiremock-jre8:2.35.2")
     testImplementation("org.assertj:assertj-core:3.27.7")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")

@@ -12,12 +12,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.kotlinModule
+import com.github.victools.jsonschema.generator.FieldScope
 import com.github.victools.jsonschema.generator.Option
 import com.github.victools.jsonschema.generator.OptionPreset
 import com.github.victools.jsonschema.generator.SchemaGenerator
 import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder
 import com.github.victools.jsonschema.module.jackson.JacksonModule
 import com.github.victools.jsonschema.module.swagger2.Swagger2Module
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.reflect.full.memberProperties
 
 // The SDK `ObjectMappers.jsonMapper()` requires that all fields of classes be marked with
 // `@JsonProperty`, which is not desirable in this context, as it impedes usability. Therefore, a
@@ -209,9 +212,94 @@ internal fun extractSchema(type: Class<*>): ObjectNode {
         // assumed to be `true`, even if explicitly `false` and even if there is no `@JsonProperty`
         // annotation present.
         .withRequiredCheck { true }
+        // A field whose value may be `null` is represented by a nullable schema (e.g.,
+        // `"type" : [ "string", "null" ]`). This is independent of the "required" check above:
+        // A field is treated as nullable if it is marked with a `@Nullable` annotation or is a
+        // nullable Kotlin type. `java.util.Optional` fields are also nullable, but they are handled
+        // separately by `OptionPreset.PLAIN_JSON`, so they are not detected here. Return `null`
+        // (no opinion) for non-nullable fields, so the schema generator's default is left in place.
+        .withNullableCheck { field -> if (field.isMarkedNullable()) true else null }
 
     return SchemaGenerator(configBuilder.build()).generateSchema(type)
 }
+
+/**
+ * Determines whether a field should be represented by a nullable schema. A field is nullable if
+ * either:
+ * - It is marked with a `@Nullable` annotation (see [hasNullableAnnotation]), or
+ * - It is a nullable Kotlin property type, such as `String?` (see [isNullableKotlinProperty]).
+ */
+private fun FieldScope.isMarkedNullable(): Boolean =
+    hasNullableAnnotation() || isNullableKotlinProperty()
+
+/**
+ * Determines whether a `@Nullable` annotation is present on the field or its getter, or on the
+ * field's type or the getter's return type (the latter handles `TYPE_USE` annotations, such as the
+ * Checker Framework's `@Nullable`).
+ *
+ * Any annotation whose simple name is `Nullable` is recognized, regardless of its package, so the
+ * common nullability annotations (e.g., from JSR-305, Spring and the Checker Framework) are all
+ * supported without depending on any of them directly. Only annotations with `RUNTIME` retention
+ * can be detected; annotations with `CLASS` retention (such as JetBrains' and Android's
+ * `@Nullable`) are not visible via reflection and so are not recognized.
+ */
+private fun FieldScope.hasNullableAnnotation(): Boolean {
+    val field = rawMember
+    val getter = findGetter()?.rawMember
+
+    val annotations = sequence {
+        yieldAll(field.annotations.asSequence())
+        yieldAll(field.annotatedType.annotations.asSequence())
+        if (getter != null) {
+            yieldAll(getter.annotations.asSequence())
+            yieldAll(getter.annotatedReturnType.annotations.asSequence())
+        }
+    }
+
+    return annotations.any { it.annotationClass.simpleName == "Nullable" }
+}
+
+/**
+ * Caches, per declaring class, a map from Kotlin property name to whether that property's type is
+ * nullable. The schema generator invokes the nullable check once per field, so without this cache
+ * the (relatively expensive) reflection over all of a class's properties would be repeated for
+ * every field, making schema generation quadratic in the number of fields.
+ */
+private val kotlinPropertyNullabilityCache = ConcurrentHashMap<Class<*>, Map<String, Boolean>>()
+
+/**
+ * Determines whether the field corresponds to a nullable Kotlin property type, such as `String?`.
+ * Kotlin records type nullability in class metadata rather than as a reflectable annotation, so
+ * Kotlin reflection is used to inspect it. Plain Java classes carry no such metadata, so they are
+ * skipped to avoid unnecessary work.
+ */
+private fun FieldScope.isNullableKotlinProperty(): Boolean {
+    val declaringClass = rawMember.declaringClass
+    if (!declaringClass.isAnnotationPresent(Metadata::class.java)) return false
+
+    return kotlinPropertyNullabilityCache
+        .computeIfAbsent(declaringClass) { it.kotlinPropertyNullabilityByName() }[rawMember.name] ==
+        true
+}
+
+/**
+ * Maps each Kotlin property name of this class to whether its declared type is nullable. Computing
+ * this reflects over all of the class's properties, so callers should cache the result per class.
+ */
+private fun Class<*>.kotlinPropertyNullabilityByName(): Map<String, Boolean> =
+    try {
+        buildMap {
+            // If two properties share a name (e.g., via inheritance), keep the first one, matching
+            // the previous `firstOrNull` lookup behavior.
+            kotlin.memberProperties.forEach { putIfAbsent(it.name, it.returnType.isMarkedNullable) }
+        }
+    } catch (e: Throwable) {
+        // Nullability detection is best-effort and must never break schema generation. Kotlin
+        // reflection can fail for some classes (e.g., certain synthetic ones) and may throw an
+        // `Error` subtype, so all throwables are caught and the class's properties are treated as
+        // non-null.
+        emptyMap()
+    }
 
 /**
  * Creates an instance of a Java class using data from a JSON string. The JSON data should conform

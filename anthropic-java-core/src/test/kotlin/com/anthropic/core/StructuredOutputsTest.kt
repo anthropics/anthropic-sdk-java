@@ -19,6 +19,17 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.RegisterExtension
 
+// Custom annotations used by the nullability tests. `@Nullable` deliberately lives in this test
+// file (not a standard package) to verify that nullability is detected by matching the annotation's
+// simple name (`Nullable`), regardless of its package. `@NotNull` is a control: an annotation that
+// is not named `Nullable` must not make a field nullable. Both have the default (runtime)
+// retention,
+// so they are visible via reflection. Both are `private` so they do not pollute the package: since
+// detection matches by simple name, an unqualified `@Nullable` elsewhere could otherwise bind here.
+@Target(AnnotationTarget.FIELD, AnnotationTarget.PROPERTY_GETTER) private annotation class Nullable
+
+@Target(AnnotationTarget.FIELD, AnnotationTarget.PROPERTY_GETTER) private annotation class NotNull
+
 /** Tests for the `StructuredOutputs` functions and the [JsonSchemaValidator]. */
 internal class StructuredOutputsTest {
     companion object {
@@ -74,6 +85,16 @@ internal class StructuredOutputsTest {
 
     // NOTE: In most of these tests, it is assumed that the schema is generated as expected; it is
     // not examined in fine detail if the validator succeeds or fails with the expected errors.
+
+    /**
+     * Returns the set of JSON schema type names declared for the named property. A property's
+     * `"type"` may be a single name (e.g., `"string"`) or an array of names for a nullable type
+     * (e.g., `[ "string", "null" ]`).
+     */
+    private fun JsonNode.propertyTypeNames(propertyName: String): Set<String> {
+        val type = get("properties").get(propertyName).get("type")
+        return if (type.isArray) type.map { it.asText() }.toSet() else setOf(type.asText())
+    }
 
     @Test
     fun schemaTest_minimalSchema() {
@@ -225,11 +246,10 @@ internal class StructuredOutputsTest {
 
     @Test
     fun schemaTest_tinySchemaFromOptionalString() {
-        // TODO: Review if this really applies to Anthropic JSON schemas.
-        // Using an `Optional<String>` will result in this JSON: `"type" : [ "string", "null" ]`.
-        // That is supported by the Anthropic Structured Outputs API spec, as long as the field is
-        // also marked as required. Though required, it is still allowed for the field to be
-        // explicitly set to `"null"`.
+        // Using an `Optional<String>` results in this JSON: `"type" : [ "string", "null" ]`. That
+        // is supported by the Anthropic Structured Outputs API spec, as long as the field is also
+        // marked as required. Though required, it is still allowed for the field to be explicitly
+        // set to `"null"`.
         @Suppress("unused") class X(val s: Optional<String>)
 
         schema = extractSchema(X::class.java)
@@ -339,6 +359,146 @@ internal class StructuredOutputsTest {
         validator.validate(schema)
 
         assertThat(validator.isValid()).isTrue
+    }
+
+    @Test
+    fun schemaTest_optionalFieldGeneratesNullableType() {
+        @Suppress("unused") class X(val s: Optional<String>)
+
+        schema = extractSchema(X::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        assertThat(schema.propertyTypeNames("s")).containsExactlyInAnyOrder("string", "null")
+        // A nullable field is still required to be present.
+        assertThat(schema.get("required").map { it.asText() }).contains("s")
+    }
+
+    @Test
+    fun schemaTest_kotlinNullableTypeGeneratesNullableType() {
+        @Suppress("unused") class X(val s: String?)
+
+        schema = extractSchema(X::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        assertThat(schema.propertyTypeNames("s")).containsExactlyInAnyOrder("string", "null")
+    }
+
+    @Test
+    fun schemaTest_jsr305NullableAnnotationGeneratesNullableType() {
+        @Suppress("unused") class X(@get:javax.annotation.Nullable val s: String)
+
+        schema = extractSchema(X::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        assertThat(schema.propertyTypeNames("s")).containsExactlyInAnyOrder("string", "null")
+    }
+
+    @Test
+    fun schemaTest_customPackageNullableAnnotationGeneratesNullableType() {
+        // The `@Nullable` here is defined in this test's own package, proving that detection
+        // matches
+        // by simple name regardless of the annotation's package.
+        @Suppress("unused") class X(@get:Nullable val s: String)
+
+        schema = extractSchema(X::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        assertThat(schema.propertyTypeNames("s")).containsExactlyInAnyOrder("string", "null")
+    }
+
+    @Test
+    fun schemaTest_nullableObjectFieldGeneratesNullableType() {
+        @Suppress("unused") class Inner(val v: String)
+        @Suppress("unused") class X(val inner: Inner?)
+
+        schema = extractSchema(X::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        assertThat(schema.propertyTypeNames("inner")).containsExactlyInAnyOrder("object", "null")
+        // The nullable object's own properties are still described.
+        assertThat(schema.get("properties").get("inner").get("properties").get("v")).isNotNull
+    }
+
+    @Test
+    fun schemaTest_nullableFieldRetainsDescription() {
+        @Suppress("unused")
+        class X(@get:JsonPropertyDescription("A nullable value.") val s: String?)
+
+        schema = extractSchema(X::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        assertThat(schema.propertyTypeNames("s")).containsExactlyInAnyOrder("string", "null")
+        assertThat(schema.get("properties").get("s").get("description").asText())
+            .isEqualTo("A nullable value.")
+    }
+
+    @Test
+    fun schemaTest_nonNullableAnnotationGeneratesNonNullableType() {
+        // Only annotations named `Nullable` make a field nullable; other annotations must not.
+        @Suppress("unused") class X(@get:NotNull val s: String)
+
+        schema = extractSchema(X::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        assertThat(schema.propertyTypeNames("s")).containsExactly("string")
+    }
+
+    @Test
+    fun schemaTest_checkerTypeUseNullableAnnotationGeneratesNullableType() {
+        // The Checker Framework's `@Nullable` is `TYPE_USE`-targeted. A Java fixture is used
+        // because
+        // the Kotlin compiler does not surface `TYPE_USE` annotations via reflection.
+        schema = extractSchema(NullableJavaFixtures.CheckerTypeUseNullable::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        assertThat(schema.propertyTypeNames("s")).containsExactlyInAnyOrder("string", "null")
+    }
+
+    @Test
+    fun schemaTest_javaNullableAnnotationGeneratesNullableType() {
+        // A declaration-site, runtime-retained `@Nullable` (JSR-305) on a Java field.
+        schema = extractSchema(NullableJavaFixtures.Jsr305Nullable::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        assertThat(schema.propertyTypeNames("s")).containsExactlyInAnyOrder("string", "null")
+    }
+
+    @Test
+    fun schemaTest_classRetentionNullableAnnotationIsNotDetected() {
+        // JetBrains' `@Nullable` has `CLASS` retention, so it is not visible via reflection and
+        // cannot be detected; the field is treated as non-nullable. Users who need nullability
+        // should use `Optional`, a nullable Kotlin type, or a runtime-retained `@Nullable`.
+        schema = extractSchema(NullableJavaFixtures.JetBrainsNullable::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        assertThat(schema.propertyTypeNames("s")).containsExactly("string")
+    }
+
+    @Test
+    fun schemaTest_nullableRecursiveFieldGeneratesAnyOfWithNull() {
+        // A nullable referenced or recursive type cannot use a `[ "type", "null" ]` array (the
+        // reference has no `"type"`), so it is represented as an `"anyOf"` with a `{ "type": "null"
+        // }`
+        // branch and a `"$ref"` branch.
+        @Suppress("unused") class Node(val next: Node?)
+
+        schema = extractSchema(Node::class.java)
+        validator.validate(schema)
+
+        assertThat(validator.isValid()).isTrue
+        val branches = schema.get("properties").get("next").get("anyOf").toList()
+        assertThat(branches.mapNotNull { it.get("type")?.asText() }).contains("null")
+        assertThat(branches.any { it.has("\$ref") }).isTrue
     }
 
     @Test
@@ -574,8 +734,8 @@ internal class StructuredOutputsTest {
                     "$SCHEMA" : "$SCHEMA_VER",
                     "type" : "object",
                     "properties" : {
-                        "name" : { "type" : "string" }, 
-                        "address" : { "type" : "string" } 
+                        "name" : { "type" : "string" },
+                        "address" : { "type" : "string" }
                     },
                     "additionalProperties" : false,
                     "required" : [ "name" ]
