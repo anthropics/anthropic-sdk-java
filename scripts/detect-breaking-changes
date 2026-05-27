@@ -17,6 +17,6 @@ for PATHSPEC in "${TEST_PATHS[@]}"; do
     git checkout "$1" -- "${PATHSPEC}" 2>/dev/null || true
 done
 
-# Instead of running the tests, use the linter to check if an
-# older test is no longer compatible with the latest SDK.
-./scripts/lint
+# Run the build so that the Kotlin compiler typechecks the restored
+# old test files against the current SDK.
+./scripts/build
