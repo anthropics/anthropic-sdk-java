@@ -96,8 +96,9 @@ private constructor(
     fun inputTokens(): Long = inputTokens.getRequired("input_tokens")
 
     /**
-     * The model that will complete your prompt.\n\nSee
-     * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+     * The model that will complete your prompt.
+     *
+     * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
      * options.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -297,9 +298,10 @@ private constructor(
         fun inputTokens(inputTokens: JsonField<Long>) = apply { this.inputTokens = inputTokens }
 
         /**
-         * The model that will complete your prompt.\n\nSee
-         * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
-         * options.
+         * The model that will complete your prompt.
+         *
+         * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
+         * and options.
          */
         fun model(model: Model) = model(JsonField.of(model))
 
