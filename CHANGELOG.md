@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.34.1 (2026-05-27)
+
+Full Changelog: [v2.34.0...v2.34.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.34.0...v2.34.1)
+
+### Bug Fixes
+
+* **structured-outputs:** support all nullability annotations ([#1254](https://github.com/anthropics/anthropic-sdk-java/issues/1254)) ([95e4391](https://github.com/anthropics/anthropic-sdk-java/commit/95e439144341b1668b52773f46ce664f25f20ab5))
+
+
+### Documentation
+
+* replace literal newlines ([c5573d9](https://github.com/anthropics/anthropic-sdk-java/commit/c5573d98efba6a0c36890b6675cfecdc8fe8d808))
+
 ## 2.34.0 (2026-05-21)
 
 Full Changelog: [v2.33.0...v2.34.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.33.0...v2.34.0)
