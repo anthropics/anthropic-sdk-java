@@ -8,8 +8,10 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
 /**
- * The model that will complete your prompt.\n\nSee
- * [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and options.
+ * The model that will complete your prompt.
+ *
+ * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+ * options.
  */
 class Model @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
