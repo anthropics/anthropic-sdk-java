@@ -40,6 +40,7 @@ internal class BetaUsageTest {
                         .build()
                 )
                 .outputTokens(503L)
+                .outputTokensDetails(BetaOutputTokensDetails.builder().thinkingTokens(0L).build())
                 .serverToolUse(
                     BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )
@@ -76,6 +77,8 @@ internal class BetaUsageTest {
                 )
             )
         assertThat(betaUsage.outputTokens()).isEqualTo(503L)
+        assertThat(betaUsage.outputTokensDetails())
+            .contains(BetaOutputTokensDetails.builder().thinkingTokens(0L).build())
         assertThat(betaUsage.serverToolUse())
             .contains(
                 BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
@@ -114,6 +117,7 @@ internal class BetaUsageTest {
                         .build()
                 )
                 .outputTokens(503L)
+                .outputTokensDetails(BetaOutputTokensDetails.builder().thinkingTokens(0L).build())
                 .serverToolUse(
                     BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )

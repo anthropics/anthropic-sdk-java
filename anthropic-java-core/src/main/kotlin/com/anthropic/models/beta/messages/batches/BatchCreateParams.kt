@@ -1798,6 +1798,41 @@ private constructor(
                     )
 
                 /**
+                 * Alias for calling [addMessage] with the following:
+                 * ```java
+                 * BetaMessageParam.builder()
+                 *     .role(BetaMessageParam.Role.SYSTEM)
+                 *     .content(content)
+                 *     .build()
+                 * ```
+                 */
+                fun addSystemMessage(content: BetaMessageParam.Content) =
+                    addMessage(
+                        BetaMessageParam.builder()
+                            .role(BetaMessageParam.Role.SYSTEM)
+                            .content(content)
+                            .build()
+                    )
+
+                /**
+                 * Alias for calling [addSystemMessage] with
+                 * `BetaMessageParam.Content.ofString(string)`.
+                 */
+                fun addSystemMessage(string: String) =
+                    addSystemMessage(BetaMessageParam.Content.ofString(string))
+
+                /**
+                 * Alias for calling [addSystemMessage] with
+                 * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
+                 */
+                fun addSystemMessageOfBetaContentBlockParams(
+                    betaContentBlockParams: List<BetaContentBlockParam>
+                ) =
+                    addSystemMessage(
+                        BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)
+                    )
+
+                /**
                  * The model that will complete your prompt.
                  *
                  * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional

@@ -840,6 +840,32 @@ private constructor(
         ) = apply { body.addAssistantMessageOfBetaContentBlockParams(betaContentBlockParams) }
 
         /**
+         * Alias for calling [addMessage] with the following:
+         * ```java
+         * BetaMessageParam.builder()
+         *     .role(BetaMessageParam.Role.SYSTEM)
+         *     .content(content)
+         *     .build()
+         * ```
+         */
+        fun addSystemMessage(content: BetaMessageParam.Content) = apply {
+            body.addSystemMessage(content)
+        }
+
+        /**
+         * Alias for calling [addSystemMessage] with `BetaMessageParam.Content.ofString(string)`.
+         */
+        fun addSystemMessage(string: String) = apply { body.addSystemMessage(string) }
+
+        /**
+         * Alias for calling [addSystemMessage] with
+         * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
+         */
+        fun addSystemMessageOfBetaContentBlockParams(
+            betaContentBlockParams: List<BetaContentBlockParam>
+        ) = apply { body.addSystemMessageOfBetaContentBlockParams(betaContentBlockParams) }
+
+        /**
          * The model that will complete your prompt.
          *
          * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
@@ -2714,6 +2740,41 @@ private constructor(
                 betaContentBlockParams: List<BetaContentBlockParam>
             ) =
                 addAssistantMessage(
+                    BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)
+                )
+
+            /**
+             * Alias for calling [addMessage] with the following:
+             * ```java
+             * BetaMessageParam.builder()
+             *     .role(BetaMessageParam.Role.SYSTEM)
+             *     .content(content)
+             *     .build()
+             * ```
+             */
+            fun addSystemMessage(content: BetaMessageParam.Content) =
+                addMessage(
+                    BetaMessageParam.builder()
+                        .role(BetaMessageParam.Role.SYSTEM)
+                        .content(content)
+                        .build()
+                )
+
+            /**
+             * Alias for calling [addSystemMessage] with
+             * `BetaMessageParam.Content.ofString(string)`.
+             */
+            fun addSystemMessage(string: String) =
+                addSystemMessage(BetaMessageParam.Content.ofString(string))
+
+            /**
+             * Alias for calling [addSystemMessage] with
+             * `BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)`.
+             */
+            fun addSystemMessageOfBetaContentBlockParams(
+                betaContentBlockParams: List<BetaContentBlockParam>
+            ) =
+                addSystemMessage(
                     BetaMessageParam.Content.ofBetaContentBlockParams(betaContentBlockParams)
                 )
 

@@ -95,6 +95,9 @@ internal class BetaRawMessageStartEventTest {
                                         .build()
                                 )
                                 .outputTokens(503L)
+                                .outputTokensDetails(
+                                    BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                                )
                                 .serverToolUse(
                                     BetaServerToolUsage.builder()
                                         .webFetchRequests(2L)
@@ -188,6 +191,9 @@ internal class BetaRawMessageStartEventTest {
                                     .build()
                             )
                             .outputTokens(503L)
+                            .outputTokensDetails(
+                                BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                            )
                             .serverToolUse(
                                 BetaServerToolUsage.builder()
                                     .webFetchRequests(2L)
@@ -287,6 +293,9 @@ internal class BetaRawMessageStartEventTest {
                                         .build()
                                 )
                                 .outputTokens(503L)
+                                .outputTokensDetails(
+                                    BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                                )
                                 .serverToolUse(
                                     BetaServerToolUsage.builder()
                                         .webFetchRequests(2L)

@@ -29,6 +29,9 @@ private constructor(private val value: JsonField<String>) : Enum {
     companion object {
 
         /** Frontier intelligence for long-running agents and coding */
+        @JvmField val CLAUDE_OPUS_4_8 = of("claude-opus-4-8")
+
+        /** Frontier intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_7 = of("claude-opus-4-7")
 
         /** Most intelligent model for building agents and coding */
@@ -61,6 +64,8 @@ private constructor(private val value: JsonField<String>) : Enum {
     /** An enum containing [BetaManagedAgentsModel]'s known values. */
     enum class Known {
         /** Frontier intelligence for long-running agents and coding */
+        CLAUDE_OPUS_4_8,
+        /** Frontier intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_7,
         /** Most intelligent model for building agents and coding */
         CLAUDE_OPUS_4_6,
@@ -90,6 +95,8 @@ private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Frontier intelligence for long-running agents and coding */
+        CLAUDE_OPUS_4_8,
         /** Frontier intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_7,
         /** Most intelligent model for building agents and coding */
@@ -124,6 +131,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_OPUS_4_8 -> Value.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Value.CLAUDE_OPUS_4_7
             CLAUDE_OPUS_4_6 -> Value.CLAUDE_OPUS_4_6
             CLAUDE_SONNET_4_6 -> Value.CLAUDE_SONNET_4_6
@@ -146,6 +154,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_OPUS_4_8 -> Known.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Known.CLAUDE_OPUS_4_7
             CLAUDE_OPUS_4_6 -> Known.CLAUDE_OPUS_4_6
             CLAUDE_SONNET_4_6 -> Known.CLAUDE_SONNET_4_6

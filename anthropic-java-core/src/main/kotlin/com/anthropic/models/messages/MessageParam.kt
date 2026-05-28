@@ -445,6 +445,8 @@ private constructor(
 
             @JvmField val ASSISTANT = of("assistant")
 
+            @JvmField val SYSTEM = of("system")
+
             @JvmStatic fun of(value: String) = Role(JsonField.of(value))
         }
 
@@ -452,6 +454,7 @@ private constructor(
         enum class Known {
             USER,
             ASSISTANT,
+            SYSTEM,
         }
 
         /**
@@ -466,6 +469,7 @@ private constructor(
         enum class Value {
             USER,
             ASSISTANT,
+            SYSTEM,
             /** An enum member indicating that [Role] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -481,6 +485,7 @@ private constructor(
             when (this) {
                 USER -> Value.USER
                 ASSISTANT -> Value.ASSISTANT
+                SYSTEM -> Value.SYSTEM
                 else -> Value._UNKNOWN
             }
 
@@ -497,6 +502,7 @@ private constructor(
             when (this) {
                 USER -> Known.USER
                 ASSISTANT -> Known.ASSISTANT
+                SYSTEM -> Known.SYSTEM
                 else -> throw AnthropicInvalidDataException("Unknown Role: $value")
             }
 

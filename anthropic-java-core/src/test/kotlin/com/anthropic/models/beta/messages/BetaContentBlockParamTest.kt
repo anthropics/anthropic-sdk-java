@@ -57,6 +57,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -131,6 +132,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -199,6 +201,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -283,6 +286,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -357,6 +361,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -402,6 +407,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -462,6 +468,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -531,6 +538,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -600,6 +608,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -678,6 +687,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -755,6 +765,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -826,6 +837,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -898,6 +910,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -972,6 +985,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -1053,6 +1067,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -1128,6 +1143,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -1202,6 +1218,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -1271,6 +1288,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).contains(mcpToolResult)
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -1333,6 +1351,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).contains(containerUpload)
         assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -1394,6 +1413,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).contains(compaction)
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -1409,6 +1429,103 @@ internal class BetaContentBlockParamTest {
                     )
                     .content("content")
                     .encryptedContent("encrypted_content")
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlockParam),
+                jacksonTypeRef<BetaContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlockParam).isEqualTo(betaContentBlockParam)
+    }
+
+    @Test
+    fun ofMidConvSystem() {
+        val midConvSystem =
+            BetaMidConversationSystemBlockParam.builder()
+                .addContent(
+                    BetaTextBlockParam.builder()
+                        .text("x")
+                        .cacheControl(
+                            BetaCacheControlEphemeral.builder()
+                                .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .addCitation(
+                            BetaCitationCharLocationParam.builder()
+                                .citedText("cited_text")
+                                .documentIndex(0L)
+                                .documentTitle("x")
+                                .endCharIndex(0L)
+                                .startCharIndex(0L)
+                                .build()
+                        )
+                        .build()
+                )
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .build()
+
+        val betaContentBlockParam = BetaContentBlockParam.ofMidConvSystem(midConvSystem)
+
+        assertThat(betaContentBlockParam.text()).isEmpty
+        assertThat(betaContentBlockParam.image()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
+        assertThat(betaContentBlockParam.searchResult()).isEmpty
+        assertThat(betaContentBlockParam.thinking()).isEmpty
+        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
+        assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.toolResult()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
+        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
+        assertThat(betaContentBlockParam.containerUpload()).isEmpty
+        assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).contains(midConvSystem)
+    }
+
+    @Test
+    fun ofMidConvSystemRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlockParam =
+            BetaContentBlockParam.ofMidConvSystem(
+                BetaMidConversationSystemBlockParam.builder()
+                    .addContent(
+                        BetaTextBlockParam.builder()
+                            .text("x")
+                            .cacheControl(
+                                BetaCacheControlEphemeral.builder()
+                                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                    .build()
+                            )
+                            .addCitation(
+                                BetaCitationCharLocationParam.builder()
+                                    .citedText("cited_text")
+                                    .documentIndex(0L)
+                                    .documentTitle("x")
+                                    .endCharIndex(0L)
+                                    .startCharIndex(0L)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
                     .build()
             )
 
