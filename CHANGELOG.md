@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.35.0 (2026-05-28)
+
+Full Changelog: [v2.34.1...v2.35.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.34.1...v2.35.0)
+
+### Features
+
+* **api:** Add support for claude-opus-4-8, mid-conversation system blocks, and usage.output_tokens_details ([3e4621e](https://github.com/anthropics/anthropic-sdk-java/commit/3e4621e6766fc5f78eaa33f6789f0f801c9a32e8))
+
 ## 2.34.1 (2026-05-27)
 
 Full Changelog: [v2.34.0...v2.34.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.34.0...v2.34.1)
