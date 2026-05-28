@@ -40,6 +40,7 @@ private constructor(
         null,
     private val toolSearchToolResult: ToolSearchToolResultBlockParam? = null,
     private val containerUpload: ContainerUploadBlockParam? = null,
+    private val midConvSystem: MidConversationSystemBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -98,6 +99,15 @@ private constructor(
     fun containerUpload(): Optional<ContainerUploadBlockParam> =
         Optional.ofNullable(containerUpload)
 
+    /**
+     * System instructions that appear mid-conversation.
+     *
+     * Use this block to provide or update system-level instructions at a specific point in the
+     * conversation, rather than only via the top-level `system` parameter.
+     */
+    fun midConvSystem(): Optional<MidConversationSystemBlockParam> =
+        Optional.ofNullable(midConvSystem)
+
     fun isText(): Boolean = text != null
 
     fun isImage(): Boolean = image != null
@@ -129,6 +139,8 @@ private constructor(
     fun isToolSearchToolResult(): Boolean = toolSearchToolResult != null
 
     fun isContainerUpload(): Boolean = containerUpload != null
+
+    fun isMidConvSystem(): Boolean = midConvSystem != null
 
     /** Regular text content. */
     fun asText(): TextBlockParam = text.getOrThrow("text")
@@ -185,6 +197,15 @@ private constructor(
     fun asContainerUpload(): ContainerUploadBlockParam =
         containerUpload.getOrThrow("containerUpload")
 
+    /**
+     * System instructions that appear mid-conversation.
+     *
+     * Use this block to provide or update system-level instructions at a specific point in the
+     * conversation, rather than only via the top-level `system` parameter.
+     */
+    fun asMidConvSystem(): MidConversationSystemBlockParam =
+        midConvSystem.getOrThrow("midConvSystem")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -237,6 +258,7 @@ private constructor(
                 visitor.visitTextEditorCodeExecutionToolResult(textEditorCodeExecutionToolResult)
             toolSearchToolResult != null -> visitor.visitToolSearchToolResult(toolSearchToolResult)
             containerUpload != null -> visitor.visitContainerUpload(containerUpload)
+            midConvSystem != null -> visitor.visitMidConvSystem(midConvSystem)
             else -> visitor.unknown(_json)
         }
 
@@ -332,6 +354,10 @@ private constructor(
                 override fun visitContainerUpload(containerUpload: ContainerUploadBlockParam) {
                     containerUpload.validate()
                 }
+
+                override fun visitMidConvSystem(midConvSystem: MidConversationSystemBlockParam) {
+                    midConvSystem.validate()
+                }
             }
         )
         validated = true
@@ -403,6 +429,9 @@ private constructor(
                 override fun visitContainerUpload(containerUpload: ContainerUploadBlockParam) =
                     containerUpload.validity()
 
+                override fun visitMidConvSystem(midConvSystem: MidConversationSystemBlockParam) =
+                    midConvSystem.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -428,7 +457,8 @@ private constructor(
             bashCodeExecutionToolResult == other.bashCodeExecutionToolResult &&
             textEditorCodeExecutionToolResult == other.textEditorCodeExecutionToolResult &&
             toolSearchToolResult == other.toolSearchToolResult &&
-            containerUpload == other.containerUpload
+            containerUpload == other.containerUpload &&
+            midConvSystem == other.midConvSystem
     }
 
     override fun hashCode(): Int =
@@ -449,6 +479,7 @@ private constructor(
             textEditorCodeExecutionToolResult,
             toolSearchToolResult,
             containerUpload,
+            midConvSystem,
         )
 
     override fun toString(): String =
@@ -475,6 +506,7 @@ private constructor(
             toolSearchToolResult != null ->
                 "ContentBlockParam{toolSearchToolResult=$toolSearchToolResult}"
             containerUpload != null -> "ContentBlockParam{containerUpload=$containerUpload}"
+            midConvSystem != null -> "ContentBlockParam{midConvSystem=$midConvSystem}"
             _json != null -> "ContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ContentBlockParam")
         }
@@ -553,6 +585,16 @@ private constructor(
         @JvmStatic
         fun ofContainerUpload(containerUpload: ContainerUploadBlockParam) =
             ContentBlockParam(containerUpload = containerUpload)
+
+        /**
+         * System instructions that appear mid-conversation.
+         *
+         * Use this block to provide or update system-level instructions at a specific point in the
+         * conversation, rather than only via the top-level `system` parameter.
+         */
+        @JvmStatic
+        fun ofMidConvSystem(midConvSystem: MidConversationSystemBlockParam) =
+            ContentBlockParam(midConvSystem = midConvSystem)
     }
 
     /**
@@ -613,6 +655,14 @@ private constructor(
          * this block will be available in the container's input directory.
          */
         fun visitContainerUpload(containerUpload: ContainerUploadBlockParam): T
+
+        /**
+         * System instructions that appear mid-conversation.
+         *
+         * Use this block to provide or update system-level instructions at a specific point in the
+         * conversation, rather than only via the top-level `system` parameter.
+         */
+        fun visitMidConvSystem(midConvSystem: MidConversationSystemBlockParam): T
 
         /**
          * Maps an unknown variant of [ContentBlockParam] to a value of type [T].
@@ -723,6 +773,11 @@ private constructor(
                         ContentBlockParam(containerUpload = it, _json = json)
                     } ?: ContentBlockParam(_json = json)
                 }
+                "mid_conv_system" -> {
+                    return tryDeserialize(node, jacksonTypeRef<MidConversationSystemBlockParam>())
+                        ?.let { ContentBlockParam(midConvSystem = it, _json = json) }
+                        ?: ContentBlockParam(_json = json)
+                }
             }
 
             return ContentBlockParam(_json = json)
@@ -758,6 +813,7 @@ private constructor(
                 value.toolSearchToolResult != null ->
                     generator.writeObject(value.toolSearchToolResult)
                 value.containerUpload != null -> generator.writeObject(value.containerUpload)
+                value.midConvSystem != null -> generator.writeObject(value.midConvSystem)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ContentBlockParam")
             }

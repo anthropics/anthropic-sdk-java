@@ -557,6 +557,7 @@ internal class BetaToolRunnerTest {
             .cacheReadInputTokens(2051L)
             .inputTokens(2095L)
             .outputTokens(503L)
+            .outputTokensDetails(BetaOutputTokensDetails.builder().thinkingTokens(0L).build())
             .serverToolUse(
                 BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
             )

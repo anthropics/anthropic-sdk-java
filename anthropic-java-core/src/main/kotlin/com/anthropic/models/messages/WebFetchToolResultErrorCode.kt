@@ -28,6 +28,8 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         @JvmField val URL_NOT_ALLOWED = of("url_not_allowed")
 
+        @JvmField val URL_NOT_IN_PRIOR_CONTEXT = of("url_not_in_prior_context")
+
         @JvmField val URL_NOT_ACCESSIBLE = of("url_not_accessible")
 
         @JvmField val UNSUPPORTED_CONTENT_TYPE = of("unsupported_content_type")
@@ -46,6 +48,7 @@ private constructor(private val value: JsonField<String>) : Enum {
         INVALID_TOOL_INPUT,
         URL_TOO_LONG,
         URL_NOT_ALLOWED,
+        URL_NOT_IN_PRIOR_CONTEXT,
         URL_NOT_ACCESSIBLE,
         UNSUPPORTED_CONTENT_TYPE,
         TOO_MANY_REQUESTS,
@@ -68,6 +71,7 @@ private constructor(private val value: JsonField<String>) : Enum {
         INVALID_TOOL_INPUT,
         URL_TOO_LONG,
         URL_NOT_ALLOWED,
+        URL_NOT_IN_PRIOR_CONTEXT,
         URL_NOT_ACCESSIBLE,
         UNSUPPORTED_CONTENT_TYPE,
         TOO_MANY_REQUESTS,
@@ -92,6 +96,7 @@ private constructor(private val value: JsonField<String>) : Enum {
             INVALID_TOOL_INPUT -> Value.INVALID_TOOL_INPUT
             URL_TOO_LONG -> Value.URL_TOO_LONG
             URL_NOT_ALLOWED -> Value.URL_NOT_ALLOWED
+            URL_NOT_IN_PRIOR_CONTEXT -> Value.URL_NOT_IN_PRIOR_CONTEXT
             URL_NOT_ACCESSIBLE -> Value.URL_NOT_ACCESSIBLE
             UNSUPPORTED_CONTENT_TYPE -> Value.UNSUPPORTED_CONTENT_TYPE
             TOO_MANY_REQUESTS -> Value.TOO_MANY_REQUESTS
@@ -113,6 +118,7 @@ private constructor(private val value: JsonField<String>) : Enum {
             INVALID_TOOL_INPUT -> Known.INVALID_TOOL_INPUT
             URL_TOO_LONG -> Known.URL_TOO_LONG
             URL_NOT_ALLOWED -> Known.URL_NOT_ALLOWED
+            URL_NOT_IN_PRIOR_CONTEXT -> Known.URL_NOT_IN_PRIOR_CONTEXT
             URL_NOT_ACCESSIBLE -> Known.URL_NOT_ACCESSIBLE
             UNSUPPORTED_CONTENT_TYPE -> Known.UNSUPPORTED_CONTENT_TYPE
             TOO_MANY_REQUESTS -> Known.TOO_MANY_REQUESTS

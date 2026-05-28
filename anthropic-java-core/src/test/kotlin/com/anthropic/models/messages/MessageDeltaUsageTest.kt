@@ -17,6 +17,7 @@ internal class MessageDeltaUsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
+                .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(0L).build())
                 .serverToolUse(
                     ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )
@@ -26,6 +27,8 @@ internal class MessageDeltaUsageTest {
         assertThat(messageDeltaUsage.cacheReadInputTokens()).contains(2051L)
         assertThat(messageDeltaUsage.inputTokens()).contains(2095L)
         assertThat(messageDeltaUsage.outputTokens()).isEqualTo(503L)
+        assertThat(messageDeltaUsage.outputTokensDetails())
+            .contains(OutputTokensDetails.builder().thinkingTokens(0L).build())
         assertThat(messageDeltaUsage.serverToolUse())
             .contains(ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build())
     }
@@ -39,6 +42,7 @@ internal class MessageDeltaUsageTest {
                 .cacheReadInputTokens(2051L)
                 .inputTokens(2095L)
                 .outputTokens(503L)
+                .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(0L).build())
                 .serverToolUse(
                     ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )

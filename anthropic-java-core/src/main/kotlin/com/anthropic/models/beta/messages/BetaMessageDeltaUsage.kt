@@ -37,6 +37,7 @@ private constructor(
     private val inputTokens: JsonField<Long>,
     private val iterations: JsonField<List<BetaIterationsUsageItems>>,
     private val outputTokens: JsonField<Long>,
+    private val outputTokensDetails: JsonField<BetaOutputTokensDetails>,
     private val serverToolUse: JsonField<BetaServerToolUsage>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -58,6 +59,9 @@ private constructor(
         @JsonProperty("output_tokens")
         @ExcludeMissing
         outputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("output_tokens_details")
+        @ExcludeMissing
+        outputTokensDetails: JsonField<BetaOutputTokensDetails> = JsonMissing.of(),
         @JsonProperty("server_tool_use")
         @ExcludeMissing
         serverToolUse: JsonField<BetaServerToolUsage> = JsonMissing.of(),
@@ -67,6 +71,7 @@ private constructor(
         inputTokens,
         iterations,
         outputTokens,
+        outputTokensDetails,
         serverToolUse,
         mutableMapOf(),
     )
@@ -119,6 +124,20 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun outputTokens(): Long = outputTokens.getRequired("output_tokens")
+
+    /**
+     * Breakdown of output tokens by category.
+     *
+     * `output_tokens` remains the inclusive, authoritative total used for billing. This object
+     * provides a read-only decomposition for observability — for example, how many of the billed
+     * output tokens were spent on internal reasoning that may have been summarized before being
+     * returned to you.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun outputTokensDetails(): Optional<BetaOutputTokensDetails> =
+        outputTokensDetails.getOptional("output_tokens_details")
 
     /**
      * The number of server tool requests.
@@ -175,6 +194,16 @@ private constructor(
     fun _outputTokens(): JsonField<Long> = outputTokens
 
     /**
+     * Returns the raw JSON value of [outputTokensDetails].
+     *
+     * Unlike [outputTokensDetails], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("output_tokens_details")
+    @ExcludeMissing
+    fun _outputTokensDetails(): JsonField<BetaOutputTokensDetails> = outputTokensDetails
+
+    /**
      * Returns the raw JSON value of [serverToolUse].
      *
      * Unlike [serverToolUse], this method doesn't throw if the JSON field has an unexpected type.
@@ -207,6 +236,7 @@ private constructor(
          * .inputTokens()
          * .iterations()
          * .outputTokens()
+         * .outputTokensDetails()
          * .serverToolUse()
          * ```
          */
@@ -221,6 +251,7 @@ private constructor(
         private var inputTokens: JsonField<Long>? = null
         private var iterations: JsonField<MutableList<BetaIterationsUsageItems>>? = null
         private var outputTokens: JsonField<Long>? = null
+        private var outputTokensDetails: JsonField<BetaOutputTokensDetails>? = null
         private var serverToolUse: JsonField<BetaServerToolUsage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -231,6 +262,7 @@ private constructor(
             inputTokens = betaMessageDeltaUsage.inputTokens
             iterations = betaMessageDeltaUsage.iterations.map { it.toMutableList() }
             outputTokens = betaMessageDeltaUsage.outputTokens
+            outputTokensDetails = betaMessageDeltaUsage.outputTokensDetails
             serverToolUse = betaMessageDeltaUsage.serverToolUse
             additionalProperties = betaMessageDeltaUsage.additionalProperties.toMutableMap()
         }
@@ -386,6 +418,34 @@ private constructor(
          */
         fun outputTokens(outputTokens: JsonField<Long>) = apply { this.outputTokens = outputTokens }
 
+        /**
+         * Breakdown of output tokens by category.
+         *
+         * `output_tokens` remains the inclusive, authoritative total used for billing. This object
+         * provides a read-only decomposition for observability — for example, how many of the
+         * billed output tokens were spent on internal reasoning that may have been summarized
+         * before being returned to you.
+         */
+        fun outputTokensDetails(outputTokensDetails: BetaOutputTokensDetails?) =
+            outputTokensDetails(JsonField.ofNullable(outputTokensDetails))
+
+        /**
+         * Alias for calling [Builder.outputTokensDetails] with `outputTokensDetails.orElse(null)`.
+         */
+        fun outputTokensDetails(outputTokensDetails: Optional<BetaOutputTokensDetails>) =
+            outputTokensDetails(outputTokensDetails.getOrNull())
+
+        /**
+         * Sets [Builder.outputTokensDetails] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outputTokensDetails] with a well-typed
+         * [BetaOutputTokensDetails] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun outputTokensDetails(outputTokensDetails: JsonField<BetaOutputTokensDetails>) = apply {
+            this.outputTokensDetails = outputTokensDetails
+        }
+
         /** The number of server tool requests. */
         fun serverToolUse(serverToolUse: BetaServerToolUsage?) =
             serverToolUse(JsonField.ofNullable(serverToolUse))
@@ -436,6 +496,7 @@ private constructor(
          * .inputTokens()
          * .iterations()
          * .outputTokens()
+         * .outputTokensDetails()
          * .serverToolUse()
          * ```
          *
@@ -448,6 +509,7 @@ private constructor(
                 checkRequired("inputTokens", inputTokens),
                 checkRequired("iterations", iterations).map { it.toImmutable() },
                 checkRequired("outputTokens", outputTokens),
+                checkRequired("outputTokensDetails", outputTokensDetails),
                 checkRequired("serverToolUse", serverToolUse),
                 additionalProperties.toMutableMap(),
             )
@@ -473,6 +535,7 @@ private constructor(
         inputTokens()
         iterations().ifPresent { it.forEach { it.validate() } }
         outputTokens()
+        outputTokensDetails().ifPresent { it.validate() }
         serverToolUse().ifPresent { it.validate() }
         validated = true
     }
@@ -497,6 +560,7 @@ private constructor(
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
             (iterations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (outputTokens.asKnown().isPresent) 1 else 0) +
+            (outputTokensDetails.asKnown().getOrNull()?.validity() ?: 0) +
             (serverToolUse.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Token usage for a sampling iteration. */
@@ -775,6 +839,7 @@ private constructor(
             inputTokens == other.inputTokens &&
             iterations == other.iterations &&
             outputTokens == other.outputTokens &&
+            outputTokensDetails == other.outputTokensDetails &&
             serverToolUse == other.serverToolUse &&
             additionalProperties == other.additionalProperties
     }
@@ -786,6 +851,7 @@ private constructor(
             inputTokens,
             iterations,
             outputTokens,
+            outputTokensDetails,
             serverToolUse,
             additionalProperties,
         )
@@ -794,5 +860,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaMessageDeltaUsage{cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, iterations=$iterations, outputTokens=$outputTokens, serverToolUse=$serverToolUse, additionalProperties=$additionalProperties}"
+        "BetaMessageDeltaUsage{cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, iterations=$iterations, outputTokens=$outputTokens, outputTokensDetails=$outputTokensDetails, serverToolUse=$serverToolUse, additionalProperties=$additionalProperties}"
 }

@@ -65,6 +65,9 @@ internal class StructuredMessageCreateParamsTest {
                         .inputTokens(LONG)
                         .iterations(null)
                         .outputTokens(LONG)
+                        .outputTokensDetails(
+                            BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                        )
                         .serverToolUse(null)
                         .serviceTier(null)
                         .speed(null)
@@ -171,6 +174,9 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addUserMessage", MESSAGE_PARAM_CONTENT),
                 DelegationWriteTestCase("addUserMessage", STRING),
                 DelegationWriteTestCase("addUserMessageOfBetaContentBlockParams", LIST),
+                DelegationWriteTestCase("addSystemMessage", MESSAGE_PARAM_CONTENT),
+                DelegationWriteTestCase("addSystemMessage", STRING),
+                DelegationWriteTestCase("addSystemMessageOfBetaContentBlockParams", LIST),
                 DelegationWriteTestCase("addAssistantMessage", MESSAGE_PARAM_CONTENT),
                 DelegationWriteTestCase("addAssistantMessage", STRING),
                 DelegationWriteTestCase("addAssistantMessageOfBetaContentBlockParams", LIST),

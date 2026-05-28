@@ -131,6 +131,19 @@ internal constructor(
             betaContentBlockParams: List<BetaContentBlockParam>
         ) = apply { paramsBuilder.addUserMessageOfBetaContentBlockParams(betaContentBlockParams) }
 
+        /** @see MessageCreateParams.Builder.addSystemMessage */
+        fun addSystemMessage(content: BetaMessageParam.Content) = apply {
+            paramsBuilder.addSystemMessage(content)
+        }
+
+        /** @see MessageCreateParams.Builder.addSystemMessage */
+        fun addSystemMessage(string: String) = apply { paramsBuilder.addSystemMessage(string) }
+
+        /** @see MessageCreateParams.Builder.addSystemMessageOfBetaContentBlockParams */
+        fun addSystemMessageOfBetaContentBlockParams(
+            betaContentBlockParams: List<BetaContentBlockParam>
+        ) = apply { paramsBuilder.addSystemMessageOfBetaContentBlockParams(betaContentBlockParams) }
+
         /** @see MessageCreateParams.Builder.addAssistantMessage */
         fun addAssistantMessage(content: BetaMessageParam.Content) = apply {
             paramsBuilder.addAssistantMessage(content)

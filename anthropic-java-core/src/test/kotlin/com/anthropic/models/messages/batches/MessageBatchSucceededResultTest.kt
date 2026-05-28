@@ -8,6 +8,7 @@ import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.Container
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.Model
+import com.anthropic.models.messages.OutputTokensDetails
 import com.anthropic.models.messages.RefusalStopDetails
 import com.anthropic.models.messages.ServerToolUsage
 import com.anthropic.models.messages.StopReason
@@ -70,6 +71,9 @@ internal class MessageBatchSucceededResultTest {
                                 .inferenceGeo("inference_geo")
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
+                                .outputTokensDetails(
+                                    OutputTokensDetails.builder().thinkingTokens(0L).build()
+                                )
                                 .serverToolUse(
                                     ServerToolUsage.builder()
                                         .webFetchRequests(2L)
@@ -130,6 +134,9 @@ internal class MessageBatchSucceededResultTest {
                             .inferenceGeo("inference_geo")
                             .inputTokens(2095L)
                             .outputTokens(503L)
+                            .outputTokensDetails(
+                                OutputTokensDetails.builder().thinkingTokens(0L).build()
+                            )
                             .serverToolUse(
                                 ServerToolUsage.builder()
                                     .webFetchRequests(2L)
@@ -194,6 +201,9 @@ internal class MessageBatchSucceededResultTest {
                                 .inferenceGeo("inference_geo")
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
+                                .outputTokensDetails(
+                                    OutputTokensDetails.builder().thinkingTokens(0L).build()
+                                )
                                 .serverToolUse(
                                     ServerToolUsage.builder()
                                         .webFetchRequests(2L)

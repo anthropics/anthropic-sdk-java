@@ -58,6 +58,9 @@ internal class MessageTest {
                         .inferenceGeo("inference_geo")
                         .inputTokens(2095L)
                         .outputTokens(503L)
+                        .outputTokensDetails(
+                            OutputTokensDetails.builder().thinkingTokens(0L).build()
+                        )
                         .serverToolUse(
                             ServerToolUsage.builder()
                                 .webFetchRequests(2L)
@@ -119,6 +122,7 @@ internal class MessageTest {
                     .inferenceGeo("inference_geo")
                     .inputTokens(2095L)
                     .outputTokens(503L)
+                    .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(0L).build())
                     .serverToolUse(
                         ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                     )
@@ -176,6 +180,9 @@ internal class MessageTest {
                         .inferenceGeo("inference_geo")
                         .inputTokens(2095L)
                         .outputTokens(503L)
+                        .outputTokensDetails(
+                            OutputTokensDetails.builder().thinkingTokens(0L).build()
+                        )
                         .serverToolUse(
                             ServerToolUsage.builder()
                                 .webFetchRequests(2L)

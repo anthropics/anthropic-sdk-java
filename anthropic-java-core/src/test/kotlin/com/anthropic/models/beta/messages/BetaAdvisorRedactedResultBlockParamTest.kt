@@ -14,10 +14,12 @@ internal class BetaAdvisorRedactedResultBlockParamTest {
         val betaAdvisorRedactedResultBlockParam =
             BetaAdvisorRedactedResultBlockParam.builder()
                 .encryptedContent("encrypted_content")
+                .stopReason("stop_reason")
                 .build()
 
         assertThat(betaAdvisorRedactedResultBlockParam.encryptedContent())
             .isEqualTo("encrypted_content")
+        assertThat(betaAdvisorRedactedResultBlockParam.stopReason()).contains("stop_reason")
     }
 
     @Test
@@ -26,6 +28,7 @@ internal class BetaAdvisorRedactedResultBlockParamTest {
         val betaAdvisorRedactedResultBlockParam =
             BetaAdvisorRedactedResultBlockParam.builder()
                 .encryptedContent("encrypted_content")
+                .stopReason("stop_reason")
                 .build()
 
         val roundtrippedBetaAdvisorRedactedResultBlockParam =
