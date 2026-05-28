@@ -185,7 +185,11 @@ class BetaMessageAccumulator private constructor() {
             require(contentBlock.isCompaction()) { "Content block is not a compaction block." }
             val oldCompactionBlock = contentBlock.asCompaction()
             val newCompactionBlock =
-                oldCompactionBlock.toBuilder().content(compactionDelta.content()).build()
+                oldCompactionBlock
+                    .toBuilder()
+                    .content(compactionDelta.content())
+                    .encryptedContent(compactionDelta.encryptedContent())
+                    .build()
 
             return BetaContentBlock.ofCompaction(newCompactionBlock)
         }

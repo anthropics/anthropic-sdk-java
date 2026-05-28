@@ -855,6 +855,39 @@ internal class BetaMessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateCompactionContentBlockWithEncryptedContent() {
+        val accumulator = BetaMessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+
+        accumulator.accumulate(compactionContentBlockStartEvent(0L, ""))
+        accumulator.accumulate(
+            compactionContentBlockDeltaEvent(
+                0L,
+                "Summary of the conversation so far.",
+                "encrypted-content",
+            )
+        )
+        accumulator.accumulate(contentBlockStopEvent(0L))
+
+        accumulator.accumulate(
+            messageDeltaEvent(
+                stopReason = JsonField.of(BetaStopReason.END_TURN),
+                outputTokens = 50L,
+            )
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val message = accumulator.message()
+        val content = message.content()
+
+        assertThat(content.size).isEqualTo(1)
+        assertThat(content[0].asCompaction().content())
+            .hasValue("Summary of the conversation so far.")
+        assertThat(content[0].asCompaction().encryptedContent()).hasValue("encrypted-content")
+    }
+
+    @Test
     fun accumulateRedactedThinkingAndTextContentBlocks() {
         val accumulator = BetaMessageAccumulator.create()
 
@@ -1170,8 +1203,11 @@ internal class BetaMessageAccumulatorTest {
             ),
         )
 
-    private fun compactionContentBlockDeltaEvent(index: Long, content: String) =
-        contentBlockDeltaEvent(index, compactionDelta(content))
+    private fun compactionContentBlockDeltaEvent(
+        index: Long,
+        content: String,
+        encryptedContent: String = "",
+    ) = contentBlockDeltaEvent(index, compactionDelta(content, encryptedContent))
 
     /**
      * Creates a signature content block delta event. This can be used to add a signature to a
@@ -1280,8 +1316,11 @@ internal class BetaMessageAccumulatorTest {
     private fun signatureDelta(signature: String) =
         BetaSignatureDelta.builder().signature(signature).build()
 
-    private fun compactionDelta(content: String) =
-        BetaCompactionContentBlockDelta.builder().content(content).encryptedContent("").build()
+    private fun compactionDelta(content: String, encryptedContent: String = "") =
+        BetaCompactionContentBlockDelta.builder()
+            .content(content)
+            .encryptedContent(encryptedContent)
+            .build()
 
     private fun textBlock(text: String) =
         BetaTextBlock.builder().text(text).citations(listOf()).build()
