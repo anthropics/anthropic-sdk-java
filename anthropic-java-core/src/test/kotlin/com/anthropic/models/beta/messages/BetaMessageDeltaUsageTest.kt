@@ -32,6 +32,7 @@ internal class BetaMessageDeltaUsageTest {
                         .build()
                 )
                 .outputTokens(503L)
+                .outputTokensDetails(BetaOutputTokensDetails.builder().thinkingTokens(0L).build())
                 .serverToolUse(
                     BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )
@@ -58,6 +59,8 @@ internal class BetaMessageDeltaUsageTest {
                 )
             )
         assertThat(betaMessageDeltaUsage.outputTokens()).isEqualTo(503L)
+        assertThat(betaMessageDeltaUsage.outputTokensDetails())
+            .contains(BetaOutputTokensDetails.builder().thinkingTokens(0L).build())
         assertThat(betaMessageDeltaUsage.serverToolUse())
             .contains(
                 BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
@@ -87,6 +90,7 @@ internal class BetaMessageDeltaUsageTest {
                         .build()
                 )
                 .outputTokens(503L)
+                .outputTokensDetails(BetaOutputTokensDetails.builder().thinkingTokens(0L).build())
                 .serverToolUse(
                     BetaServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )

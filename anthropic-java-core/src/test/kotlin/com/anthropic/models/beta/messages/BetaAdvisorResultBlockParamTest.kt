@@ -11,15 +11,18 @@ internal class BetaAdvisorResultBlockParamTest {
 
     @Test
     fun create() {
-        val betaAdvisorResultBlockParam = BetaAdvisorResultBlockParam.builder().text("text").build()
+        val betaAdvisorResultBlockParam =
+            BetaAdvisorResultBlockParam.builder().text("text").stopReason("stop_reason").build()
 
         assertThat(betaAdvisorResultBlockParam.text()).isEqualTo("text")
+        assertThat(betaAdvisorResultBlockParam.stopReason()).contains("stop_reason")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaAdvisorResultBlockParam = BetaAdvisorResultBlockParam.builder().text("text").build()
+        val betaAdvisorResultBlockParam =
+            BetaAdvisorResultBlockParam.builder().text("text").stopReason("stop_reason").build()
 
         val roundtrippedBetaAdvisorResultBlockParam =
             jsonMapper.readValue(

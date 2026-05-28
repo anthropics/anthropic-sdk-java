@@ -11,6 +11,7 @@ import com.anthropic.models.beta.messages.BetaContextManagementResponse
 import com.anthropic.models.beta.messages.BetaDiagnostics
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageIterationUsage
+import com.anthropic.models.beta.messages.BetaOutputTokensDetails
 import com.anthropic.models.beta.messages.BetaRefusalStopDetails
 import com.anthropic.models.beta.messages.BetaServerToolUsage
 import com.anthropic.models.beta.messages.BetaSkill
@@ -109,6 +110,9 @@ internal class BetaMessageBatchSucceededResultTest {
                                         .build()
                                 )
                                 .outputTokens(503L)
+                                .outputTokensDetails(
+                                    BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                                )
                                 .serverToolUse(
                                     BetaServerToolUsage.builder()
                                         .webFetchRequests(2L)
@@ -202,6 +206,9 @@ internal class BetaMessageBatchSucceededResultTest {
                                     .build()
                             )
                             .outputTokens(503L)
+                            .outputTokensDetails(
+                                BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                            )
                             .serverToolUse(
                                 BetaServerToolUsage.builder()
                                     .webFetchRequests(2L)
@@ -301,6 +308,9 @@ internal class BetaMessageBatchSucceededResultTest {
                                         .build()
                                 )
                                 .outputTokens(503L)
+                                .outputTokensDetails(
+                                    BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                                )
                                 .serverToolUse(
                                     BetaServerToolUsage.builder()
                                         .webFetchRequests(2L)

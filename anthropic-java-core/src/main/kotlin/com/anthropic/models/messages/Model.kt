@@ -27,6 +27,9 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     companion object {
 
         /** Frontier intelligence for long-running agents and coding */
+        @JvmField val CLAUDE_OPUS_4_8 = of("claude-opus-4-8")
+
+        /** Frontier intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_7 = of("claude-opus-4-7")
 
         /** New class of intelligence, strongest in coding and cybersecurity */
@@ -103,6 +106,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     /** An enum containing [Model]'s known values. */
     enum class Known {
         /** Frontier intelligence for long-running agents and coding */
+        CLAUDE_OPUS_4_8,
+        /** Frontier intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_7,
         /** New class of intelligence, strongest in coding and cybersecurity */
         CLAUDE_MYTHOS_PREVIEW,
@@ -163,6 +168,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Frontier intelligence for long-running agents and coding */
+        CLAUDE_OPUS_4_8,
         /** Frontier intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_7,
         /** New class of intelligence, strongest in coding and cybersecurity */
@@ -225,6 +232,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_OPUS_4_8 -> Value.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Value.CLAUDE_OPUS_4_7
             CLAUDE_MYTHOS_PREVIEW -> Value.CLAUDE_MYTHOS_PREVIEW
             CLAUDE_OPUS_4_6 -> Value.CLAUDE_OPUS_4_6
@@ -255,6 +263,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_OPUS_4_8 -> Known.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Known.CLAUDE_OPUS_4_7
             CLAUDE_MYTHOS_PREVIEW -> Known.CLAUDE_MYTHOS_PREVIEW
             CLAUDE_OPUS_4_6 -> Known.CLAUDE_OPUS_4_6

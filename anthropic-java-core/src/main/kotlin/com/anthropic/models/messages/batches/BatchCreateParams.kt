@@ -1570,6 +1570,37 @@ private constructor(
                     addAssistantMessage(MessageParam.Content.ofBlockParams(blockParams))
 
                 /**
+                 * Alias for calling [addMessage] with the following:
+                 * ```java
+                 * MessageParam.builder()
+                 *     .role(MessageParam.Role.SYSTEM)
+                 *     .content(content)
+                 *     .build()
+                 * ```
+                 */
+                fun addSystemMessage(content: MessageParam.Content) =
+                    addMessage(
+                        MessageParam.builder()
+                            .role(MessageParam.Role.SYSTEM)
+                            .content(content)
+                            .build()
+                    )
+
+                /**
+                 * Alias for calling [addSystemMessage] with
+                 * `MessageParam.Content.ofString(string)`.
+                 */
+                fun addSystemMessage(string: String) =
+                    addSystemMessage(MessageParam.Content.ofString(string))
+
+                /**
+                 * Alias for calling [addSystemMessage] with
+                 * `MessageParam.Content.ofBlockParams(blockParams)`.
+                 */
+                fun addSystemMessageOfBlockParams(blockParams: List<ContentBlockParam>) =
+                    addSystemMessage(MessageParam.Content.ofBlockParams(blockParams))
+
+                /**
                  * The model that will complete your prompt.
                  *
                  * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional

@@ -30,6 +30,7 @@ internal class MessageAccumulatorTest {
                 usage(INPUT_TOKENS),
                 MessageDeltaUsage.builder()
                     .outputTokens(44L)
+                    .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(0L).build())
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
                     .inputTokens(INPUT_TOKENS) // Use test constant
@@ -43,6 +44,7 @@ internal class MessageAccumulatorTest {
                 usage1,
                 MessageDeltaUsage.builder()
                     .outputTokens(11L)
+                    .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(0L).build())
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
                     .inputTokens(INPUT_TOKENS) // Use test constant
@@ -868,6 +870,9 @@ internal class MessageAccumulatorTest {
                 .usage(
                     MessageDeltaUsage.builder()
                         .outputTokens(outputTokens)
+                        .outputTokensDetails(
+                            OutputTokensDetails.builder().thinkingTokens(0L).build()
+                        )
                         .cacheCreationInputTokens(cacheCreationInputTokens)
                         .cacheReadInputTokens(cacheReadInputTokens)
                         .inputTokens(inputTokens)
@@ -1023,6 +1028,7 @@ internal class MessageAccumulatorTest {
             .cacheReadInputTokens(0L)
             .inferenceGeo("inference_geo")
             .outputTokens(0L)
+            .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(0L).build())
             .serverToolUse(
                 ServerToolUsage.builder().webFetchRequests(0L).webSearchRequests(0L).build()
             )

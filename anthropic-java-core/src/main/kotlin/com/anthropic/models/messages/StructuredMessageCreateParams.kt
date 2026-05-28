@@ -103,6 +103,19 @@ internal constructor(
             paramsBuilder.addUserMessageOfBlockParams(blockParams)
         }
 
+        /** @see MessageCreateParams.Builder.addSystemMessage */
+        fun addSystemMessage(content: MessageParam.Content) = apply {
+            paramsBuilder.addSystemMessage(content)
+        }
+
+        /** @see MessageCreateParams.Builder.addSystemMessage */
+        fun addSystemMessage(string: String) = apply { paramsBuilder.addSystemMessage(string) }
+
+        /** @see MessageCreateParams.Builder.addSystemMessageOfBlockParams */
+        fun addSystemMessageOfBlockParams(blockParams: List<ContentBlockParam>) = apply {
+            paramsBuilder.addSystemMessageOfBlockParams(blockParams)
+        }
+
         /** @see MessageCreateParams.Builder.addAssistantMessage */
         fun addAssistantMessage(content: MessageParam.Content) = apply {
             paramsBuilder.addAssistantMessage(content)

@@ -16,6 +16,7 @@ import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaImageBlockParam
 import com.anthropic.models.beta.messages.BetaMcpToolUseBlockParam
 import com.anthropic.models.beta.messages.BetaMessageParam
+import com.anthropic.models.beta.messages.BetaMidConversationSystemBlockParam
 import com.anthropic.models.beta.messages.BetaPlainTextSource
 import com.anthropic.models.beta.messages.BetaRedactedThinkingBlockParam
 import com.anthropic.models.beta.messages.BetaRequestDocumentBlock
@@ -366,6 +367,10 @@ object BetaMcp {
 
                 override fun visitCompaction(compaction: BetaCompactionBlockParam) =
                     unsupported("compaction")
+
+                override fun visitMidConvSystem(
+                    midConvSystem: BetaMidConversationSystemBlockParam
+                ) = unsupported("mid_conv_system")
 
                 private fun unsupported(type: String): BetaToolResultBlockParam.Content.Block =
                     throw AnthropicInvalidDataException(

@@ -59,6 +59,9 @@ internal class StructuredMessageCreateParamsTest {
                             Usage.builder()
                                 .inputTokens(100)
                                 .outputTokens(200)
+                                .outputTokensDetails(
+                                    OutputTokensDetails.builder().thinkingTokens(0L).build()
+                                )
                                 .cacheCreation(null)
                                 .cacheCreationInputTokens(null)
                                 .cacheReadInputTokens(null)
@@ -73,6 +76,12 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addUserMessage", "Hello"),
                 DelegationWriteTestCase(
                     "addUserMessageOfBlockParams",
+                    emptyList<ContentBlockParam>(),
+                ),
+                DelegationWriteTestCase("addSystemMessage", MessageParam.Content.ofString("Hello")),
+                DelegationWriteTestCase("addSystemMessage", "Hello"),
+                DelegationWriteTestCase(
+                    "addSystemMessageOfBlockParams",
                     emptyList<ContentBlockParam>(),
                 ),
                 DelegationWriteTestCase("addAssistantMessage", MessageParam.Content.ofString("Hi")),

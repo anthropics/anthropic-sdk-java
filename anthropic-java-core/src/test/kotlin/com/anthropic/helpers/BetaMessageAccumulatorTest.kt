@@ -31,6 +31,9 @@ internal class BetaMessageAccumulatorTest {
                 usage(INPUT_TOKENS),
                 BetaMessageDeltaUsage.builder()
                     .outputTokens(44L)
+                    .outputTokensDetails(
+                        BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                    )
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
                     .inputTokens(INPUT_TOKENS) // Use test constant
@@ -48,6 +51,9 @@ internal class BetaMessageAccumulatorTest {
                 usage1,
                 BetaMessageDeltaUsage.builder()
                     .outputTokens(11L)
+                    .outputTokensDetails(
+                        BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                    )
                     .cacheCreationInputTokens(0L)
                     .cacheReadInputTokens(0L)
                     .inputTokens(INPUT_TOKENS) // Use test constant
@@ -1055,6 +1061,9 @@ internal class BetaMessageAccumulatorTest {
                 .usage(
                     BetaMessageDeltaUsage.builder()
                         .outputTokens(outputTokens)
+                        .outputTokensDetails(
+                            BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                        )
                         .cacheCreationInputTokens(cacheCreationInputTokens)
                         .cacheReadInputTokens(cacheReadInputTokens)
                         .inputTokens(inputTokens)
@@ -1219,6 +1228,7 @@ internal class BetaMessageAccumulatorTest {
             .inferenceGeo("us")
             .iterations(listOf())
             .outputTokens(0L)
+            .outputTokensDetails(BetaOutputTokensDetails.builder().thinkingTokens(0L).build())
             .serverToolUse(
                 BetaServerToolUsage.builder().webSearchRequests(0L).webFetchRequests(0L).build()
             )

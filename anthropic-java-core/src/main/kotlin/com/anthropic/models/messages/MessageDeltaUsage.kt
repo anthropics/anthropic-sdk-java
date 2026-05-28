@@ -24,6 +24,7 @@ private constructor(
     private val cacheReadInputTokens: JsonField<Long>,
     private val inputTokens: JsonField<Long>,
     private val outputTokens: JsonField<Long>,
+    private val outputTokensDetails: JsonField<OutputTokensDetails>,
     private val serverToolUse: JsonField<ServerToolUsage>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -42,6 +43,9 @@ private constructor(
         @JsonProperty("output_tokens")
         @ExcludeMissing
         outputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("output_tokens_details")
+        @ExcludeMissing
+        outputTokensDetails: JsonField<OutputTokensDetails> = JsonMissing.of(),
         @JsonProperty("server_tool_use")
         @ExcludeMissing
         serverToolUse: JsonField<ServerToolUsage> = JsonMissing.of(),
@@ -50,6 +54,7 @@ private constructor(
         cacheReadInputTokens,
         inputTokens,
         outputTokens,
+        outputTokensDetails,
         serverToolUse,
         mutableMapOf(),
     )
@@ -87,6 +92,20 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun outputTokens(): Long = outputTokens.getRequired("output_tokens")
+
+    /**
+     * Breakdown of output tokens by category.
+     *
+     * `output_tokens` remains the inclusive, authoritative total used for billing. This object
+     * provides a read-only decomposition for observability — for example, how many of the billed
+     * output tokens were spent on internal reasoning that may have been summarized before being
+     * returned to you.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun outputTokensDetails(): Optional<OutputTokensDetails> =
+        outputTokensDetails.getOptional("output_tokens_details")
 
     /**
      * The number of server tool requests.
@@ -133,6 +152,16 @@ private constructor(
     fun _outputTokens(): JsonField<Long> = outputTokens
 
     /**
+     * Returns the raw JSON value of [outputTokensDetails].
+     *
+     * Unlike [outputTokensDetails], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("output_tokens_details")
+    @ExcludeMissing
+    fun _outputTokensDetails(): JsonField<OutputTokensDetails> = outputTokensDetails
+
+    /**
      * Returns the raw JSON value of [serverToolUse].
      *
      * Unlike [serverToolUse], this method doesn't throw if the JSON field has an unexpected type.
@@ -164,6 +193,7 @@ private constructor(
          * .cacheReadInputTokens()
          * .inputTokens()
          * .outputTokens()
+         * .outputTokensDetails()
          * .serverToolUse()
          * ```
          */
@@ -177,6 +207,7 @@ private constructor(
         private var cacheReadInputTokens: JsonField<Long>? = null
         private var inputTokens: JsonField<Long>? = null
         private var outputTokens: JsonField<Long>? = null
+        private var outputTokensDetails: JsonField<OutputTokensDetails>? = null
         private var serverToolUse: JsonField<ServerToolUsage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -186,6 +217,7 @@ private constructor(
             cacheReadInputTokens = messageDeltaUsage.cacheReadInputTokens
             inputTokens = messageDeltaUsage.inputTokens
             outputTokens = messageDeltaUsage.outputTokens
+            outputTokensDetails = messageDeltaUsage.outputTokensDetails
             serverToolUse = messageDeltaUsage.serverToolUse
             additionalProperties = messageDeltaUsage.additionalProperties.toMutableMap()
         }
@@ -284,6 +316,34 @@ private constructor(
          */
         fun outputTokens(outputTokens: JsonField<Long>) = apply { this.outputTokens = outputTokens }
 
+        /**
+         * Breakdown of output tokens by category.
+         *
+         * `output_tokens` remains the inclusive, authoritative total used for billing. This object
+         * provides a read-only decomposition for observability — for example, how many of the
+         * billed output tokens were spent on internal reasoning that may have been summarized
+         * before being returned to you.
+         */
+        fun outputTokensDetails(outputTokensDetails: OutputTokensDetails?) =
+            outputTokensDetails(JsonField.ofNullable(outputTokensDetails))
+
+        /**
+         * Alias for calling [Builder.outputTokensDetails] with `outputTokensDetails.orElse(null)`.
+         */
+        fun outputTokensDetails(outputTokensDetails: Optional<OutputTokensDetails>) =
+            outputTokensDetails(outputTokensDetails.getOrNull())
+
+        /**
+         * Sets [Builder.outputTokensDetails] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.outputTokensDetails] with a well-typed
+         * [OutputTokensDetails] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun outputTokensDetails(outputTokensDetails: JsonField<OutputTokensDetails>) = apply {
+            this.outputTokensDetails = outputTokensDetails
+        }
+
         /** The number of server tool requests. */
         fun serverToolUse(serverToolUse: ServerToolUsage?) =
             serverToolUse(JsonField.ofNullable(serverToolUse))
@@ -333,6 +393,7 @@ private constructor(
          * .cacheReadInputTokens()
          * .inputTokens()
          * .outputTokens()
+         * .outputTokensDetails()
          * .serverToolUse()
          * ```
          *
@@ -344,6 +405,7 @@ private constructor(
                 checkRequired("cacheReadInputTokens", cacheReadInputTokens),
                 checkRequired("inputTokens", inputTokens),
                 checkRequired("outputTokens", outputTokens),
+                checkRequired("outputTokensDetails", outputTokensDetails),
                 checkRequired("serverToolUse", serverToolUse),
                 additionalProperties.toMutableMap(),
             )
@@ -368,6 +430,7 @@ private constructor(
         cacheReadInputTokens()
         inputTokens()
         outputTokens()
+        outputTokensDetails().ifPresent { it.validate() }
         serverToolUse().ifPresent { it.validate() }
         validated = true
     }
@@ -391,6 +454,7 @@ private constructor(
             (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
             (if (outputTokens.asKnown().isPresent) 1 else 0) +
+            (outputTokensDetails.asKnown().getOrNull()?.validity() ?: 0) +
             (serverToolUse.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
@@ -403,6 +467,7 @@ private constructor(
             cacheReadInputTokens == other.cacheReadInputTokens &&
             inputTokens == other.inputTokens &&
             outputTokens == other.outputTokens &&
+            outputTokensDetails == other.outputTokensDetails &&
             serverToolUse == other.serverToolUse &&
             additionalProperties == other.additionalProperties
     }
@@ -413,6 +478,7 @@ private constructor(
             cacheReadInputTokens,
             inputTokens,
             outputTokens,
+            outputTokensDetails,
             serverToolUse,
             additionalProperties,
         )
@@ -421,5 +487,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MessageDeltaUsage{cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, serverToolUse=$serverToolUse, additionalProperties=$additionalProperties}"
+        "MessageDeltaUsage{cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, outputTokensDetails=$outputTokensDetails, serverToolUse=$serverToolUse, additionalProperties=$additionalProperties}"
 }

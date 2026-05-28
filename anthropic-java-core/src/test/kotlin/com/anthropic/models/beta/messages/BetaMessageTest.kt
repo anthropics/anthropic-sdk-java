@@ -91,6 +91,9 @@ internal class BetaMessageTest {
                                 .build()
                         )
                         .outputTokens(503L)
+                        .outputTokensDetails(
+                            BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                        )
                         .serverToolUse(
                             BetaServerToolUsage.builder()
                                 .webFetchRequests(2L)
@@ -187,6 +190,9 @@ internal class BetaMessageTest {
                             .build()
                     )
                     .outputTokens(503L)
+                    .outputTokensDetails(
+                        BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                    )
                     .serverToolUse(
                         BetaServerToolUsage.builder()
                             .webFetchRequests(2L)
@@ -280,6 +286,9 @@ internal class BetaMessageTest {
                                 .build()
                         )
                         .outputTokens(503L)
+                        .outputTokensDetails(
+                            BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                        )
                         .serverToolUse(
                             BetaServerToolUsage.builder()
                                 .webFetchRequests(2L)
