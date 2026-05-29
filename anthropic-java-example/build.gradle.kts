@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
     implementation(project(":anthropic-java"))
+    implementation(project(":anthropic-java-client-okhttp"))
     implementation(project(":anthropic-java-aws"))
     implementation(project(":anthropic-java-bedrock"))
     implementation(project(":anthropic-java-foundry"))
