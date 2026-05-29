@@ -8,7 +8,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":anthropic-java"))
+    implementation(project(":anthropic-java-core"))
+    implementation(project(":anthropic-java-client-okhttp"))
 }
 
 tasks.withType<JavaCompile>().configureEach {
