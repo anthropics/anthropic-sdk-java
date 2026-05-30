@@ -24,6 +24,7 @@ internal class VertexBackendTest {
         private const val GC_PROJECT = "vertex-project-12345-b6"
         private const val MODEL_ID = "claude-3-sonnet"
         private const val GC_REGION = "us-central1"
+        private const val CUSTOM_BASE_URL = "https://vertex.example.com"
         private const val ANTHROPIC_VERSION = "vertex-2023-10-16"
     }
 
@@ -104,6 +105,19 @@ internal class VertexBackendTest {
 
         assertThat(GC_REGION).isNotEqualTo(otherRegion)
         assertThat(backend2.baseUrl()).isEqualTo("https://$otherRegion-aiplatform.googleapis.com")
+    }
+
+    @Test
+    fun baseUrlOverride() {
+        val backend =
+            VertexBackend.builder()
+                .googleCredentials(createCredentials())
+                .region(GC_REGION)
+                .project(GC_PROJECT)
+                .baseUrl(CUSTOM_BASE_URL)
+                .build()
+
+        assertThat(backend.baseUrl()).isEqualTo(CUSTOM_BASE_URL)
     }
 
     @Test
