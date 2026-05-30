@@ -91,15 +91,15 @@ private constructor(
                             override fun visitCodeExecution20250825(
                                 codeExecution20250825: ServerToolCaller
                             ): WebFetchToolResultBlockParam.Caller =
-                                WebFetchToolResultBlockParam.Caller.ofDirect(
-                                    DirectCaller.builder().build()
+                                WebFetchToolResultBlockParam.Caller.ofCodeExecution20250825(
+                                    codeExecution20250825
                                 )
 
                             override fun visitCodeExecution20260120(
                                 codeExecution20260120: ServerToolCaller20260120
                             ): WebFetchToolResultBlockParam.Caller =
-                                WebFetchToolResultBlockParam.Caller.ofDirect(
-                                    DirectCaller.builder().build()
+                                WebFetchToolResultBlockParam.Caller.ofCodeExecution20260120(
+                                    codeExecution20260120
                                 )
                         }
                     )

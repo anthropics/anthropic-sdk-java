@@ -67,15 +67,15 @@ private constructor(
                             override fun visitCodeExecution20250825(
                                 codeExecution20250825: BetaServerToolCaller
                             ): BetaToolUseBlockParam.Caller =
-                                BetaToolUseBlockParam.Caller.ofDirect(
-                                    BetaDirectCaller.builder().build()
+                                BetaToolUseBlockParam.Caller.ofCodeExecution20250825(
+                                    codeExecution20250825
                                 )
 
                             override fun visitCodeExecution20260120(
                                 codeExecution20260120: BetaServerToolCaller20260120
                             ): BetaToolUseBlockParam.Caller =
-                                BetaToolUseBlockParam.Caller.ofDirect(
-                                    BetaDirectCaller.builder().build()
+                                BetaToolUseBlockParam.Caller.ofCodeExecution20260120(
+                                    codeExecution20260120
                                 )
                         }
                     )
