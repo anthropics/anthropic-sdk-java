@@ -144,10 +144,17 @@ class MessageAccumulator private constructor() {
         ): ContentBlock {
             require(contentBlock.isText()) { "Content block is not a text block." }
             val oldTextBlock = contentBlock.asText()
+            // Set the full citations list rather than calling `addCitation`: a streamed text block
+            // starts with no `citations` field (the `content_block_start` payload omits it), so its
+            // `citations` is `JsonMissing`, and `addCitation` rejects appending to a non-list
+            // value.
             val newTextBlock =
                 oldTextBlock
                     .toBuilder()
-                    .addCitation(citationsDeltaToTextCitation(citationsDelta))
+                    .citations(
+                        oldTextBlock.citations().orElse(emptyList()) +
+                            citationsDeltaToTextCitation(citationsDelta)
+                    )
                     .build()
 
             return ContentBlock.ofText(newTextBlock)
