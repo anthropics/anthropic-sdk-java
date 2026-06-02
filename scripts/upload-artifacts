@@ -180,10 +180,6 @@ EOF
 
 cd "$(dirname "$0")/.."
 
-echo "::group::Creating local Maven content"
-./gradlew publishMavenPublicationToLocalFileSystemRepository -PpublishLocal
-echo "::endgroup::"
-
 echo "::group::Uploading to pkg.stainless.com"
 walk_tree "$MAVEN_REPO_PATH"
 echo "::endgroup::"
