@@ -66,6 +66,12 @@ jobs:
       - name: Build SDK
         run: ./scripts/build
 
+      - name: Build local Maven repo
+        if: |-
+          github.repository == 'anthropics/anthropic-sdk-java-private' &&
+          !startsWith(github.ref, 'refs/heads/stl/')
+        run: ./gradlew publishMavenPublicationToLocalFileSystemRepository -PpublishLocal
+
       - name: Get GitHub OIDC Token
         if: |-
           github.repository == 'anthropics/anthropic-sdk-java-private' &&
@@ -75,7 +81,7 @@ jobs:
         with:
           script: core.setOutput('github_token', await core.getIDToken());
 
-      - name: Build and upload Maven artifacts
+      - name: Upload Maven artifacts
         if: |-
           github.repository == 'anthropics/anthropic-sdk-java-private' &&
           !startsWith(github.ref, 'refs/heads/stl/')
