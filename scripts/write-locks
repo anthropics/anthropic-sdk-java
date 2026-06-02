@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# The root project's `dependencies` task only resolves root configurations, so
+# the task must run per-project to write every project's lockfile. Projects are
+# discovered the same way as in `settings.gradle.kts`.
+tasks=(:dependencies :buildSrc:dependencies)
+for dir in anthropic-java*/; do
+    if [ -f "$dir/build.gradle.kts" ]; then
+        tasks+=(":${dir%/}:dependencies")
+    fi
+done
+
+# The `dependencies` task prints a report we don't need, so discard stdout.
+# Failures still surface on stderr and through the exit code.
+echo "==> Writing dependency lockfiles"
+./gradlew "${tasks[@]}" --write-locks --quiet "$@" > /dev/null
+
+git status --short -- '*.lockfile' | sed 's/^/    /'
