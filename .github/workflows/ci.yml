@@ -89,7 +89,7 @@ jobs:
           URL: https://pkg.stainless.com/s
           AUTH: ${{ steps.github-oidc.outputs.github_token }}
           SHA: ${{ github.sha }}
-          PROJECT: anthropic-sdk-java-private
+          PROJECT: anthropic-java
         run: ./scripts/upload-artifacts
   test:
     timeout-minutes: 15
