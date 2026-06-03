@@ -25,6 +25,16 @@ internal class BetaLimitedNetworkParamsTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaLimitedNetworkParams = BetaLimitedNetworkParams.builder().build()
+
+        val betaLimitedNetworkParams =
+            baseBetaLimitedNetworkParams.toBuilder().addAllowedHost("string").build()
+
+        assertThat(betaLimitedNetworkParams.allowedHosts().getOrNull()).containsExactly("string")
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaLimitedNetworkParams =

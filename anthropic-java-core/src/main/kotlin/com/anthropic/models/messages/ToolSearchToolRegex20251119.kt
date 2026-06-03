@@ -182,7 +182,10 @@ private constructor(
         internal fun from(toolSearchToolRegex20251119: ToolSearchToolRegex20251119) = apply {
             name = toolSearchToolRegex20251119.name
             type = toolSearchToolRegex20251119.type
-            allowedCallers = toolSearchToolRegex20251119.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                toolSearchToolRegex20251119.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = toolSearchToolRegex20251119.cacheControl
             deferLoading = toolSearchToolRegex20251119.deferLoading
             strict = toolSearchToolRegex20251119.strict

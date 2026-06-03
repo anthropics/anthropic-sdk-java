@@ -182,7 +182,10 @@ private constructor(
         internal fun from(toolSearchToolBm25_20251119: ToolSearchToolBm25_20251119) = apply {
             name = toolSearchToolBm25_20251119.name
             type = toolSearchToolBm25_20251119.type
-            allowedCallers = toolSearchToolBm25_20251119.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                toolSearchToolBm25_20251119.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = toolSearchToolBm25_20251119.cacheControl
             deferLoading = toolSearchToolBm25_20251119.deferLoading
             strict = toolSearchToolBm25_20251119.strict

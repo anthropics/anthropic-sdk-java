@@ -355,7 +355,8 @@ private constructor(
             cacheReadInputTokens = betaUsage.cacheReadInputTokens
             inferenceGeo = betaUsage.inferenceGeo
             inputTokens = betaUsage.inputTokens
-            iterations = betaUsage.iterations.map { it.toMutableList() }
+            iterations =
+                betaUsage.iterations.map { it.toMutableList() }.takeUnless { it.isMissing() }
             outputTokens = betaUsage.outputTokens
             outputTokensDetails = betaUsage.outputTokensDetails
             serverToolUse = betaUsage.serverToolUse

@@ -87,7 +87,10 @@ private constructor(
         @JvmSynthetic
         internal fun from(betaManagedAgentsSendSessionEvents: BetaManagedAgentsSendSessionEvents) =
             apply {
-                data = betaManagedAgentsSendSessionEvents.data.map { it.toMutableList() }
+                data =
+                    betaManagedAgentsSendSessionEvents.data
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 additionalProperties =
                     betaManagedAgentsSendSessionEvents.additionalProperties.toMutableMap()
             }

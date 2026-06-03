@@ -127,7 +127,10 @@ private constructor(
         @JvmSynthetic
         internal fun from(midConversationSystemBlockParam: MidConversationSystemBlockParam) =
             apply {
-                content = midConversationSystemBlockParam.content.map { it.toMutableList() }
+                content =
+                    midConversationSystemBlockParam.content
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 type = midConversationSystemBlockParam.type
                 cacheControl = midConversationSystemBlockParam.cacheControl
                 additionalProperties =

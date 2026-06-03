@@ -34,6 +34,23 @@ internal class ToolSearchToolBm25_20251119Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseToolSearchToolBm25_20251119 =
+            ToolSearchToolBm25_20251119.builder()
+                .type(ToolSearchToolBm25_20251119.Type.TOOL_SEARCH_TOOL_BM25_20251119)
+                .build()
+
+        val toolSearchToolBm25_20251119 =
+            baseToolSearchToolBm25_20251119
+                .toBuilder()
+                .addAllowedCaller(ToolSearchToolBm25_20251119.AllowedCaller.DIRECT)
+                .build()
+
+        assertThat(toolSearchToolBm25_20251119.allowedCallers().getOrNull())
+            .containsExactly(ToolSearchToolBm25_20251119.AllowedCaller.DIRECT)
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val toolSearchToolBm25_20251119 =

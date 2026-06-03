@@ -124,7 +124,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(skillListPageResponse: SkillListPageResponse) = apply {
-            data = skillListPageResponse.data.map { it.toMutableList() }
+            data =
+                skillListPageResponse.data.map { it.toMutableList() }.takeUnless { it.isMissing() }
             hasMore = skillListPageResponse.hasMore
             nextPage = skillListPageResponse.nextPage
             additionalProperties = skillListPageResponse.additionalProperties.toMutableMap()

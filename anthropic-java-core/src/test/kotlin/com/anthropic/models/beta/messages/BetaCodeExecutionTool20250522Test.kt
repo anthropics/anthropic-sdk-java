@@ -37,6 +37,20 @@ internal class BetaCodeExecutionTool20250522Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaCodeExecutionTool20250522 = BetaCodeExecutionTool20250522.builder().build()
+
+        val betaCodeExecutionTool20250522 =
+            baseBetaCodeExecutionTool20250522
+                .toBuilder()
+                .addAllowedCaller(BetaCodeExecutionTool20250522.AllowedCaller.DIRECT)
+                .build()
+
+        assertThat(betaCodeExecutionTool20250522.allowedCallers().getOrNull())
+            .containsExactly(BetaCodeExecutionTool20250522.AllowedCaller.DIRECT)
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaCodeExecutionTool20250522 =

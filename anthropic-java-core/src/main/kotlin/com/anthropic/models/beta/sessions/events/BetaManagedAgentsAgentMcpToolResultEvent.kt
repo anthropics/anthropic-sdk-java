@@ -200,7 +200,10 @@ private constructor(
             mcpToolUseId = betaManagedAgentsAgentMcpToolResultEvent.mcpToolUseId
             processedAt = betaManagedAgentsAgentMcpToolResultEvent.processedAt
             type = betaManagedAgentsAgentMcpToolResultEvent.type
-            content = betaManagedAgentsAgentMcpToolResultEvent.content.map { it.toMutableList() }
+            content =
+                betaManagedAgentsAgentMcpToolResultEvent.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             isError = betaManagedAgentsAgentMcpToolResultEvent.isError
             additionalProperties =
                 betaManagedAgentsAgentMcpToolResultEvent.additionalProperties.toMutableMap()

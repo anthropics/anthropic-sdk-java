@@ -282,11 +282,17 @@ private constructor(
             displayWidthPx = betaToolComputerUse20250124.displayWidthPx
             name = betaToolComputerUse20250124.name
             type = betaToolComputerUse20250124.type
-            allowedCallers = betaToolComputerUse20250124.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                betaToolComputerUse20250124.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = betaToolComputerUse20250124.cacheControl
             deferLoading = betaToolComputerUse20250124.deferLoading
             displayNumber = betaToolComputerUse20250124.displayNumber
-            inputExamples = betaToolComputerUse20250124.inputExamples.map { it.toMutableList() }
+            inputExamples =
+                betaToolComputerUse20250124.inputExamples
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             strict = betaToolComputerUse20250124.strict
             additionalProperties = betaToolComputerUse20250124.additionalProperties.toMutableMap()
         }

@@ -156,7 +156,9 @@ private constructor(
         ) = apply {
             type = textEditorCodeExecutionStrReplaceResultBlockParam.type
             lines =
-                textEditorCodeExecutionStrReplaceResultBlockParam.lines.map { it.toMutableList() }
+                textEditorCodeExecutionStrReplaceResultBlockParam.lines
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             newLines = textEditorCodeExecutionStrReplaceResultBlockParam.newLines
             newStart = textEditorCodeExecutionStrReplaceResultBlockParam.newStart
             oldLines = textEditorCodeExecutionStrReplaceResultBlockParam.oldLines

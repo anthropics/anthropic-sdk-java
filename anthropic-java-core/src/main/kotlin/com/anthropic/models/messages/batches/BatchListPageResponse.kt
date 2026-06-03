@@ -136,7 +136,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(batchListPageResponse: BatchListPageResponse) = apply {
-            data = batchListPageResponse.data.map { it.toMutableList() }
+            data =
+                batchListPageResponse.data.map { it.toMutableList() }.takeUnless { it.isMissing() }
             firstId = batchListPageResponse.firstId
             hasMore = batchListPageResponse.hasMore
             lastId = batchListPageResponse.lastId

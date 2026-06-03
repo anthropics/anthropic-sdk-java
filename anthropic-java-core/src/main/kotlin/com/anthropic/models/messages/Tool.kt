@@ -293,12 +293,14 @@ private constructor(
         internal fun from(tool: Tool) = apply {
             inputSchema = tool.inputSchema
             name = tool.name
-            allowedCallers = tool.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                tool.allowedCallers.map { it.toMutableList() }.takeUnless { it.isMissing() }
             cacheControl = tool.cacheControl
             deferLoading = tool.deferLoading
             description = tool.description
             eagerInputStreaming = tool.eagerInputStreaming
-            inputExamples = tool.inputExamples.map { it.toMutableList() }
+            inputExamples =
+                tool.inputExamples.map { it.toMutableList() }.takeUnless { it.isMissing() }
             strict = tool.strict
             type = tool.type
             additionalProperties = tool.additionalProperties.toMutableMap()
@@ -702,7 +704,8 @@ private constructor(
             internal fun from(inputSchema: InputSchema) = apply {
                 type = inputSchema.type
                 properties = inputSchema.properties
-                required = inputSchema.required.map { it.toMutableList() }
+                required =
+                    inputSchema.required.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 additionalProperties = inputSchema.additionalProperties.toMutableMap()
             }
 

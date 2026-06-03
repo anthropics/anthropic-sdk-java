@@ -30,6 +30,21 @@ internal class BetaTextEditorCodeExecutionStrReplaceResultBlockParamTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaTextEditorCodeExecutionStrReplaceResultBlockParam =
+            BetaTextEditorCodeExecutionStrReplaceResultBlockParam.builder().build()
+
+        val betaTextEditorCodeExecutionStrReplaceResultBlockParam =
+            baseBetaTextEditorCodeExecutionStrReplaceResultBlockParam
+                .toBuilder()
+                .addLine("string")
+                .build()
+
+        assertThat(betaTextEditorCodeExecutionStrReplaceResultBlockParam.lines().getOrNull())
+            .containsExactly("string")
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaTextEditorCodeExecutionStrReplaceResultBlockParam =

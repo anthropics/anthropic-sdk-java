@@ -128,7 +128,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(eventListPageResponse: EventListPageResponse) = apply {
-            data = eventListPageResponse.data.map { it.toMutableList() }
+            data =
+                eventListPageResponse.data.map { it.toMutableList() }.takeUnless { it.isMissing() }
             nextPage = eventListPageResponse.nextPage
             additionalProperties = eventListPageResponse.additionalProperties.toMutableMap()
         }

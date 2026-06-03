@@ -39,6 +39,38 @@ internal class BetaManagedAgentsUserCustomToolResultEventParamsTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaManagedAgentsUserCustomToolResultEventParams =
+            BetaManagedAgentsUserCustomToolResultEventParams.builder()
+                .customToolUseId("x")
+                .type(BetaManagedAgentsUserCustomToolResultEventParams.Type.USER_CUSTOM_TOOL_RESULT)
+                .build()
+
+        val betaManagedAgentsUserCustomToolResultEventParams =
+            baseBetaManagedAgentsUserCustomToolResultEventParams
+                .toBuilder()
+                .addContent(
+                    BetaManagedAgentsUserCustomToolResultEventParams.Content.ofText(
+                        BetaManagedAgentsTextBlock.builder()
+                            .text("Where is my order #1234?")
+                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                            .build()
+                    )
+                )
+                .build()
+
+        assertThat(betaManagedAgentsUserCustomToolResultEventParams.content().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsUserCustomToolResultEventParams.Content.ofText(
+                    BetaManagedAgentsTextBlock.builder()
+                        .text("Where is my order #1234?")
+                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                        .build()
+                )
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsUserCustomToolResultEventParams =

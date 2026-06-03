@@ -163,7 +163,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(textBlock: TextBlock) = apply {
-            citations = textBlock.citations.map { it.toMutableList() }
+            citations = textBlock.citations.map { it.toMutableList() }.takeUnless { it.isMissing() }
             text = textBlock.text
             type = textBlock.type
             additionalProperties = textBlock.additionalProperties.toMutableMap()

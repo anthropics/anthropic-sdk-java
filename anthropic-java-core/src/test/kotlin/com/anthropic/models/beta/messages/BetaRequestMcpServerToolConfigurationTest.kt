@@ -24,6 +24,18 @@ internal class BetaRequestMcpServerToolConfigurationTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaRequestMcpServerToolConfiguration =
+            BetaRequestMcpServerToolConfiguration.builder().build()
+
+        val betaRequestMcpServerToolConfiguration =
+            baseBetaRequestMcpServerToolConfiguration.toBuilder().addAllowedTool("string").build()
+
+        assertThat(betaRequestMcpServerToolConfiguration.allowedTools().getOrNull())
+            .containsExactly("string")
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaRequestMcpServerToolConfiguration =

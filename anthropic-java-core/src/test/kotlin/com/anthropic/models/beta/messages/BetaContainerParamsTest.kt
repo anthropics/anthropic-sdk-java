@@ -36,6 +36,32 @@ internal class BetaContainerParamsTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaContainerParams = BetaContainerParams.builder().build()
+
+        val betaContainerParams =
+            baseBetaContainerParams
+                .toBuilder()
+                .addSkill(
+                    BetaSkillParams.builder()
+                        .skillId("pdf")
+                        .type(BetaSkillParams.Type.ANTHROPIC)
+                        .version("latest")
+                        .build()
+                )
+                .build()
+
+        assertThat(betaContainerParams.skills().getOrNull())
+            .containsExactly(
+                BetaSkillParams.builder()
+                    .skillId("pdf")
+                    .type(BetaSkillParams.Type.ANTHROPIC)
+                    .version("latest")
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaContainerParams =

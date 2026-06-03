@@ -120,8 +120,14 @@ private constructor(
         internal fun from(
             betaManagedAgentsSessionAgentUpdate: BetaManagedAgentsSessionAgentUpdate
         ) = apply {
-            mcpServers = betaManagedAgentsSessionAgentUpdate.mcpServers.map { it.toMutableList() }
-            tools = betaManagedAgentsSessionAgentUpdate.tools.map { it.toMutableList() }
+            mcpServers =
+                betaManagedAgentsSessionAgentUpdate.mcpServers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            tools =
+                betaManagedAgentsSessionAgentUpdate.tools
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             additionalProperties =
                 betaManagedAgentsSessionAgentUpdate.additionalProperties.toMutableMap()
         }

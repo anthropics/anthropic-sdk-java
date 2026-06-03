@@ -172,7 +172,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaSearchResultBlockParam: BetaSearchResultBlockParam) = apply {
-            content = betaSearchResultBlockParam.content.map { it.toMutableList() }
+            content =
+                betaSearchResultBlockParam.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             source = betaSearchResultBlockParam.source
             title = betaSearchResultBlockParam.title
             type = betaSearchResultBlockParam.type

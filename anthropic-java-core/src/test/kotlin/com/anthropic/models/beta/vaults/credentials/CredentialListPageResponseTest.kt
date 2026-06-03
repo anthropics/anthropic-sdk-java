@@ -59,6 +59,52 @@ internal class CredentialListPageResponseTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseCredentialListPageResponse = CredentialListPageResponse.builder().build()
+
+        val credentialListPageResponse =
+            baseCredentialListPageResponse
+                .toBuilder()
+                .addData(
+                    BetaManagedAgentsCredential.builder()
+                        .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                        .archivedAt(null)
+                        .staticBearerAuth("https://example-server.modelcontextprotocol.io/sse")
+                        .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .metadata(
+                            BetaManagedAgentsCredential.Metadata.builder()
+                                .putAdditionalProperty("environment", JsonValue.from("production"))
+                                .build()
+                        )
+                        .type(BetaManagedAgentsCredential.Type.VAULT_CREDENTIAL)
+                        .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+                        .displayName("Example credential")
+                        .build()
+                )
+                .build()
+
+        assertThat(credentialListPageResponse.data().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsCredential.builder()
+                    .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .archivedAt(null)
+                    .staticBearerAuth("https://example-server.modelcontextprotocol.io/sse")
+                    .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                    .metadata(
+                        BetaManagedAgentsCredential.Metadata.builder()
+                            .putAdditionalProperty("environment", JsonValue.from("production"))
+                            .build()
+                    )
+                    .type(BetaManagedAgentsCredential.Type.VAULT_CREDENTIAL)
+                    .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                    .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+                    .displayName("Example credential")
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val credentialListPageResponse =

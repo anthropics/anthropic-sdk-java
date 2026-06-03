@@ -43,6 +43,31 @@ internal class ToolBash20250124Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseToolBash20250124 = ToolBash20250124.builder().build()
+
+        val toolBash20250124 =
+            baseToolBash20250124
+                .toBuilder()
+                .addAllowedCaller(ToolBash20250124.AllowedCaller.DIRECT)
+                .addInputExample(
+                    ToolBash20250124.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
+                .build()
+
+        assertThat(toolBash20250124.allowedCallers().getOrNull())
+            .containsExactly(ToolBash20250124.AllowedCaller.DIRECT)
+        assertThat(toolBash20250124.inputExamples().getOrNull())
+            .containsExactly(
+                ToolBash20250124.InputExample.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val toolBash20250124 =

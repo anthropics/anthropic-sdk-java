@@ -43,6 +43,31 @@ internal class MemoryTool20250818Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseMemoryTool20250818 = MemoryTool20250818.builder().build()
+
+        val memoryTool20250818 =
+            baseMemoryTool20250818
+                .toBuilder()
+                .addAllowedCaller(MemoryTool20250818.AllowedCaller.DIRECT)
+                .addInputExample(
+                    MemoryTool20250818.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
+                .build()
+
+        assertThat(memoryTool20250818.allowedCallers().getOrNull())
+            .containsExactly(MemoryTool20250818.AllowedCaller.DIRECT)
+        assertThat(memoryTool20250818.inputExamples().getOrNull())
+            .containsExactly(
+                MemoryTool20250818.InputExample.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val memoryTool20250818 =

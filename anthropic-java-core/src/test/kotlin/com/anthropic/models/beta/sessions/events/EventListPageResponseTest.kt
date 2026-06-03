@@ -67,6 +67,66 @@ internal class EventListPageResponseTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseEventListPageResponse = EventListPageResponse.builder().build()
+
+        val eventListPageResponse =
+            baseEventListPageResponse
+                .toBuilder()
+                .addData(
+                    BetaManagedAgentsSessionEvent.ofUserMessage(
+                        BetaManagedAgentsUserMessageEvent.builder()
+                            .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                            .addTextContent("Where is my order #1234?")
+                            .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
+                            .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                            .build()
+                    )
+                )
+                .addData(
+                    BetaManagedAgentsSessionEvent.ofAgentMessage(
+                        BetaManagedAgentsAgentMessageEvent.builder()
+                            .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                            .addContent(
+                                BetaManagedAgentsTextBlock.builder()
+                                    .text("Let me look up order #1234 for you.")
+                                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                                    .build()
+                            )
+                            .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                            .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
+                            .build()
+                    )
+                )
+                .build()
+
+        assertThat(eventListPageResponse.data().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsSessionEvent.ofUserMessage(
+                    BetaManagedAgentsUserMessageEvent.builder()
+                        .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                        .addTextContent("Where is my order #1234?")
+                        .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
+                        .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .build()
+                ),
+                BetaManagedAgentsSessionEvent.ofAgentMessage(
+                    BetaManagedAgentsAgentMessageEvent.builder()
+                        .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                        .addContent(
+                            BetaManagedAgentsTextBlock.builder()
+                                .text("Let me look up order #1234 for you.")
+                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                                .build()
+                        )
+                        .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
+                        .build()
+                ),
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val eventListPageResponse =

@@ -233,7 +233,10 @@ private constructor(
             id = betaManagedAgentsUserCustomToolResultEvent.id
             customToolUseId = betaManagedAgentsUserCustomToolResultEvent.customToolUseId
             type = betaManagedAgentsUserCustomToolResultEvent.type
-            content = betaManagedAgentsUserCustomToolResultEvent.content.map { it.toMutableList() }
+            content =
+                betaManagedAgentsUserCustomToolResultEvent.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             isError = betaManagedAgentsUserCustomToolResultEvent.isError
             processedAt = betaManagedAgentsUserCustomToolResultEvent.processedAt
             sessionThreadId = betaManagedAgentsUserCustomToolResultEvent.sessionThreadId

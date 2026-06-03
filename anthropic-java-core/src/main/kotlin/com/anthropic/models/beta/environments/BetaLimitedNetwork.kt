@@ -150,7 +150,10 @@ private constructor(
         internal fun from(betaLimitedNetwork: BetaLimitedNetwork) = apply {
             allowMcpServers = betaLimitedNetwork.allowMcpServers
             allowPackageManagers = betaLimitedNetwork.allowPackageManagers
-            allowedHosts = betaLimitedNetwork.allowedHosts.map { it.toMutableList() }
+            allowedHosts =
+                betaLimitedNetwork.allowedHosts
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaLimitedNetwork.type
             additionalProperties = betaLimitedNetwork.additionalProperties.toMutableMap()
         }

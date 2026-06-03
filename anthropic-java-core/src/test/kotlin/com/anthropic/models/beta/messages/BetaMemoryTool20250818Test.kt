@@ -49,6 +49,31 @@ internal class BetaMemoryTool20250818Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaMemoryTool20250818 = BetaMemoryTool20250818.builder().build()
+
+        val betaMemoryTool20250818 =
+            baseBetaMemoryTool20250818
+                .toBuilder()
+                .addAllowedCaller(BetaMemoryTool20250818.AllowedCaller.DIRECT)
+                .addInputExample(
+                    BetaMemoryTool20250818.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
+                .build()
+
+        assertThat(betaMemoryTool20250818.allowedCallers().getOrNull())
+            .containsExactly(BetaMemoryTool20250818.AllowedCaller.DIRECT)
+        assertThat(betaMemoryTool20250818.inputExamples().getOrNull())
+            .containsExactly(
+                BetaMemoryTool20250818.InputExample.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaMemoryTool20250818 =

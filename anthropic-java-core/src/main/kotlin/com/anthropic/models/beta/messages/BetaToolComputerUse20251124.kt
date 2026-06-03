@@ -303,12 +303,18 @@ private constructor(
             displayWidthPx = betaToolComputerUse20251124.displayWidthPx
             name = betaToolComputerUse20251124.name
             type = betaToolComputerUse20251124.type
-            allowedCallers = betaToolComputerUse20251124.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                betaToolComputerUse20251124.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = betaToolComputerUse20251124.cacheControl
             deferLoading = betaToolComputerUse20251124.deferLoading
             displayNumber = betaToolComputerUse20251124.displayNumber
             enableZoom = betaToolComputerUse20251124.enableZoom
-            inputExamples = betaToolComputerUse20251124.inputExamples.map { it.toMutableList() }
+            inputExamples =
+                betaToolComputerUse20251124.inputExamples
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             strict = betaToolComputerUse20251124.strict
             additionalProperties = betaToolComputerUse20251124.additionalProperties.toMutableMap()
         }

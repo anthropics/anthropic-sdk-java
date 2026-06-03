@@ -83,7 +83,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaContextManagementConfig: BetaContextManagementConfig) = apply {
-            edits = betaContextManagementConfig.edits.map { it.toMutableList() }
+            edits =
+                betaContextManagementConfig.edits
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             additionalProperties = betaContextManagementConfig.additionalProperties.toMutableMap()
         }
 

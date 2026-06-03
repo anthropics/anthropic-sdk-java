@@ -160,7 +160,10 @@ private constructor(
         @JvmSynthetic
         internal fun from(encryptedCodeExecutionResultBlock: EncryptedCodeExecutionResultBlock) =
             apply {
-                content = encryptedCodeExecutionResultBlock.content.map { it.toMutableList() }
+                content =
+                    encryptedCodeExecutionResultBlock.content
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 encryptedStdout = encryptedCodeExecutionResultBlock.encryptedStdout
                 returnCode = encryptedCodeExecutionResultBlock.returnCode
                 stderr = encryptedCodeExecutionResultBlock.stderr

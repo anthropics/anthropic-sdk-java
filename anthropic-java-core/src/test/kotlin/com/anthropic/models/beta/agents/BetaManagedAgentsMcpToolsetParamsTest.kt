@@ -68,6 +68,44 @@ internal class BetaManagedAgentsMcpToolsetParamsTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaManagedAgentsMcpToolsetParams =
+            BetaManagedAgentsMcpToolsetParams.builder()
+                .mcpServerName("x")
+                .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
+                .build()
+
+        val betaManagedAgentsMcpToolsetParams =
+            baseBetaManagedAgentsMcpToolsetParams
+                .toBuilder()
+                .addConfig(
+                    BetaManagedAgentsMcpToolConfigParams.builder()
+                        .name("x")
+                        .enabled(true)
+                        .permissionPolicy(
+                            BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
+                                .build()
+                        )
+                        .build()
+                )
+                .build()
+
+        assertThat(betaManagedAgentsMcpToolsetParams.configs().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsMcpToolConfigParams.builder()
+                    .name("x")
+                    .enabled(true)
+                    .permissionPolicy(
+                        BetaManagedAgentsAlwaysAllowPolicy.builder()
+                            .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
+                            .build()
+                    )
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMcpToolsetParams =

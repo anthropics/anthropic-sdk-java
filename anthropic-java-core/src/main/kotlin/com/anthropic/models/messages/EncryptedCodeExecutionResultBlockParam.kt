@@ -153,7 +153,10 @@ private constructor(
         internal fun from(
             encryptedCodeExecutionResultBlockParam: EncryptedCodeExecutionResultBlockParam
         ) = apply {
-            content = encryptedCodeExecutionResultBlockParam.content.map { it.toMutableList() }
+            content =
+                encryptedCodeExecutionResultBlockParam.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             encryptedStdout = encryptedCodeExecutionResultBlockParam.encryptedStdout
             returnCode = encryptedCodeExecutionResultBlockParam.returnCode
             stderr = encryptedCodeExecutionResultBlockParam.stderr

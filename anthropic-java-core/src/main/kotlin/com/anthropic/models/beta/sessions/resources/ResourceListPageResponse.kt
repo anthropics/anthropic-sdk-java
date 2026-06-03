@@ -102,7 +102,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(resourceListPageResponse: ResourceListPageResponse) = apply {
-            data = resourceListPageResponse.data.map { it.toMutableList() }
+            data =
+                resourceListPageResponse.data
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             nextPage = resourceListPageResponse.nextPage
             additionalProperties = resourceListPageResponse.additionalProperties.toMutableMap()
         }

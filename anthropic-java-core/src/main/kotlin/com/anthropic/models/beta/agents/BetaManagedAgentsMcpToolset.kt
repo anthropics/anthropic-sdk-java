@@ -143,7 +143,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaManagedAgentsMcpToolset: BetaManagedAgentsMcpToolset) = apply {
-            configs = betaManagedAgentsMcpToolset.configs.map { it.toMutableList() }
+            configs =
+                betaManagedAgentsMcpToolset.configs
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             defaultConfig = betaManagedAgentsMcpToolset.defaultConfig
             mcpServerName = betaManagedAgentsMcpToolset.mcpServerName
             type = betaManagedAgentsMcpToolset.type

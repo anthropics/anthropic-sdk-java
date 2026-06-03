@@ -409,15 +409,23 @@ private constructor(
             environmentId = betaManagedAgentsSession.environmentId
             metadata = betaManagedAgentsSession.metadata
             outcomeEvaluations =
-                betaManagedAgentsSession.outcomeEvaluations.map { it.toMutableList() }
-            resources = betaManagedAgentsSession.resources.map { it.toMutableList() }
+                betaManagedAgentsSession.outcomeEvaluations
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            resources =
+                betaManagedAgentsSession.resources
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             stats = betaManagedAgentsSession.stats
             status = betaManagedAgentsSession.status
             title = betaManagedAgentsSession.title
             type = betaManagedAgentsSession.type
             updatedAt = betaManagedAgentsSession.updatedAt
             usage = betaManagedAgentsSession.usage
-            vaultIds = betaManagedAgentsSession.vaultIds.map { it.toMutableList() }
+            vaultIds =
+                betaManagedAgentsSession.vaultIds
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             additionalProperties = betaManagedAgentsSession.additionalProperties.toMutableMap()
         }
 

@@ -112,7 +112,10 @@ private constructor(
         @JvmSynthetic
         internal fun from(betaManagedAgentsMultiagentParams: BetaManagedAgentsMultiagentParams) =
             apply {
-                agents = betaManagedAgentsMultiagentParams.agents.map { it.toMutableList() }
+                agents =
+                    betaManagedAgentsMultiagentParams.agents
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 type = betaManagedAgentsMultiagentParams.type
                 additionalProperties =
                     betaManagedAgentsMultiagentParams.additionalProperties.toMutableMap()

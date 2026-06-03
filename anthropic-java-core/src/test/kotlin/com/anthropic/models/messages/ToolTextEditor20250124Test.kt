@@ -43,6 +43,31 @@ internal class ToolTextEditor20250124Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseToolTextEditor20250124 = ToolTextEditor20250124.builder().build()
+
+        val toolTextEditor20250124 =
+            baseToolTextEditor20250124
+                .toBuilder()
+                .addAllowedCaller(ToolTextEditor20250124.AllowedCaller.DIRECT)
+                .addInputExample(
+                    ToolTextEditor20250124.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
+                .build()
+
+        assertThat(toolTextEditor20250124.allowedCallers().getOrNull())
+            .containsExactly(ToolTextEditor20250124.AllowedCaller.DIRECT)
+        assertThat(toolTextEditor20250124.inputExamples().getOrNull())
+            .containsExactly(
+                ToolTextEditor20250124.InputExample.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val toolTextEditor20250124 =

@@ -177,7 +177,10 @@ private constructor(
         internal fun from(betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120) = apply {
             name = betaCodeExecutionTool20260120.name
             type = betaCodeExecutionTool20260120.type
-            allowedCallers = betaCodeExecutionTool20260120.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                betaCodeExecutionTool20260120.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = betaCodeExecutionTool20260120.cacheControl
             deferLoading = betaCodeExecutionTool20260120.deferLoading
             strict = betaCodeExecutionTool20260120.strict

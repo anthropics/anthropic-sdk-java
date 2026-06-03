@@ -153,7 +153,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(bashCodeExecutionResultBlock: BashCodeExecutionResultBlock) = apply {
-            content = bashCodeExecutionResultBlock.content.map { it.toMutableList() }
+            content =
+                bashCodeExecutionResultBlock.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             returnCode = bashCodeExecutionResultBlock.returnCode
             stderr = bashCodeExecutionResultBlock.stderr
             stdout = bashCodeExecutionResultBlock.stdout

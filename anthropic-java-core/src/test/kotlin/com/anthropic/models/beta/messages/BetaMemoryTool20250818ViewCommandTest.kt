@@ -25,6 +25,22 @@ internal class BetaMemoryTool20250818ViewCommandTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaMemoryTool20250818ViewCommand =
+            BetaMemoryTool20250818ViewCommand.builder().path("/memories").build()
+
+        val betaMemoryTool20250818ViewCommand =
+            baseBetaMemoryTool20250818ViewCommand
+                .toBuilder()
+                .addViewRange(1L)
+                .addViewRange(10L)
+                .build()
+
+        assertThat(betaMemoryTool20250818ViewCommand.viewRange().getOrNull())
+            .containsExactly(1L, 10L)
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaMemoryTool20250818ViewCommand =

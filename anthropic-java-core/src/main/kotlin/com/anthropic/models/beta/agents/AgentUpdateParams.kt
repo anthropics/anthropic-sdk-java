@@ -1011,14 +1011,15 @@ private constructor(
             internal fun from(body: Body) = apply {
                 version = body.version
                 description = body.description
-                mcpServers = body.mcpServers.map { it.toMutableList() }
+                mcpServers =
+                    body.mcpServers.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 metadata = body.metadata
                 model = body.model
                 multiagent = body.multiagent
                 name = body.name
-                skills = body.skills.map { it.toMutableList() }
+                skills = body.skills.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 system = body.system
-                tools = body.tools.map { it.toMutableList() }
+                tools = body.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 

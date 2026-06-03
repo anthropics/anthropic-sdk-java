@@ -174,7 +174,10 @@ private constructor(
         internal fun from(codeExecutionTool20250522: CodeExecutionTool20250522) = apply {
             name = codeExecutionTool20250522.name
             type = codeExecutionTool20250522.type
-            allowedCallers = codeExecutionTool20250522.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                codeExecutionTool20250522.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = codeExecutionTool20250522.cacheControl
             deferLoading = codeExecutionTool20250522.deferLoading
             strict = codeExecutionTool20250522.strict

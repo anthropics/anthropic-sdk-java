@@ -225,10 +225,16 @@ private constructor(
         internal fun from(toolTextEditor20250728: ToolTextEditor20250728) = apply {
             name = toolTextEditor20250728.name
             type = toolTextEditor20250728.type
-            allowedCallers = toolTextEditor20250728.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                toolTextEditor20250728.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = toolTextEditor20250728.cacheControl
             deferLoading = toolTextEditor20250728.deferLoading
-            inputExamples = toolTextEditor20250728.inputExamples.map { it.toMutableList() }
+            inputExamples =
+                toolTextEditor20250728.inputExamples
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             maxCharacters = toolTextEditor20250728.maxCharacters
             strict = toolTextEditor20250728.strict
             additionalProperties = toolTextEditor20250728.additionalProperties.toMutableMap()

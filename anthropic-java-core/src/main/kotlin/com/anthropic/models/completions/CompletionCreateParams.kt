@@ -906,7 +906,8 @@ private constructor(
                 model = body.model
                 prompt = body.prompt
                 metadata = body.metadata
-                stopSequences = body.stopSequences.map { it.toMutableList() }
+                stopSequences =
+                    body.stopSequences.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 temperature = body.temperature
                 topK = body.topK
                 topP = body.topP

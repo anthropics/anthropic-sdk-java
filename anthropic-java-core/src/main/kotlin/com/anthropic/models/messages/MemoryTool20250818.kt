@@ -201,10 +201,16 @@ private constructor(
         internal fun from(memoryTool20250818: MemoryTool20250818) = apply {
             name = memoryTool20250818.name
             type = memoryTool20250818.type
-            allowedCallers = memoryTool20250818.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                memoryTool20250818.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = memoryTool20250818.cacheControl
             deferLoading = memoryTool20250818.deferLoading
-            inputExamples = memoryTool20250818.inputExamples.map { it.toMutableList() }
+            inputExamples =
+                memoryTool20250818.inputExamples
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             strict = memoryTool20250818.strict
             additionalProperties = memoryTool20250818.additionalProperties.toMutableMap()
         }

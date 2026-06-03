@@ -125,7 +125,10 @@ private constructor(
         internal fun from(
             betaManagedAgentsAgentToolset20260401: BetaManagedAgentsAgentToolset20260401
         ) = apply {
-            configs = betaManagedAgentsAgentToolset20260401.configs.map { it.toMutableList() }
+            configs =
+                betaManagedAgentsAgentToolset20260401.configs
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             defaultConfig = betaManagedAgentsAgentToolset20260401.defaultConfig
             type = betaManagedAgentsAgentToolset20260401.type
             additionalProperties =

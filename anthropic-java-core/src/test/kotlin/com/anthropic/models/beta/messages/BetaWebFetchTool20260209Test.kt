@@ -48,6 +48,24 @@ internal class BetaWebFetchTool20260209Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaWebFetchTool20260209 = BetaWebFetchTool20260209.builder().build()
+
+        val betaWebFetchTool20260209 =
+            baseBetaWebFetchTool20260209
+                .toBuilder()
+                .addAllowedCaller(BetaWebFetchTool20260209.AllowedCaller.DIRECT)
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .build()
+
+        assertThat(betaWebFetchTool20260209.allowedCallers().getOrNull())
+            .containsExactly(BetaWebFetchTool20260209.AllowedCaller.DIRECT)
+        assertThat(betaWebFetchTool20260209.allowedDomains().getOrNull()).containsExactly("string")
+        assertThat(betaWebFetchTool20260209.blockedDomains().getOrNull()).containsExactly("string")
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaWebFetchTool20260209 =

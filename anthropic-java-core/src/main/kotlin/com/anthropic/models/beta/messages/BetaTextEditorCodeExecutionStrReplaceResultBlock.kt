@@ -174,7 +174,9 @@ private constructor(
                 BetaTextEditorCodeExecutionStrReplaceResultBlock
         ) = apply {
             lines =
-                betaTextEditorCodeExecutionStrReplaceResultBlock.lines.map { it.toMutableList() }
+                betaTextEditorCodeExecutionStrReplaceResultBlock.lines
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             newLines = betaTextEditorCodeExecutionStrReplaceResultBlock.newLines
             newStart = betaTextEditorCodeExecutionStrReplaceResultBlock.newStart
             oldLines = betaTextEditorCodeExecutionStrReplaceResultBlock.oldLines

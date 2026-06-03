@@ -186,7 +186,9 @@ private constructor(
                 name = betaToolSearchToolRegex20251119.name
                 type = betaToolSearchToolRegex20251119.type
                 allowedCallers =
-                    betaToolSearchToolRegex20251119.allowedCallers.map { it.toMutableList() }
+                    betaToolSearchToolRegex20251119.allowedCallers
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 cacheControl = betaToolSearchToolRegex20251119.cacheControl
                 deferLoading = betaToolSearchToolRegex20251119.deferLoading
                 strict = betaToolSearchToolRegex20251119.strict

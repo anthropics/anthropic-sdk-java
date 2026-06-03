@@ -49,6 +49,31 @@ internal class BetaToolBash20241022Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaToolBash20241022 = BetaToolBash20241022.builder().build()
+
+        val betaToolBash20241022 =
+            baseBetaToolBash20241022
+                .toBuilder()
+                .addAllowedCaller(BetaToolBash20241022.AllowedCaller.DIRECT)
+                .addInputExample(
+                    BetaToolBash20241022.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
+                .build()
+
+        assertThat(betaToolBash20241022.allowedCallers().getOrNull())
+            .containsExactly(BetaToolBash20241022.AllowedCaller.DIRECT)
+        assertThat(betaToolBash20241022.inputExamples().getOrNull())
+            .containsExactly(
+                BetaToolBash20241022.InputExample.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaToolBash20241022 =
