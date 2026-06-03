@@ -66,6 +66,43 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaManagedAgentsAgentToolset20260401Params =
+            BetaManagedAgentsAgentToolset20260401Params.builder()
+                .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
+                .build()
+
+        val betaManagedAgentsAgentToolset20260401Params =
+            baseBetaManagedAgentsAgentToolset20260401Params
+                .toBuilder()
+                .addConfig(
+                    BetaManagedAgentsAgentToolConfigParams.builder()
+                        .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                        .enabled(true)
+                        .permissionPolicy(
+                            BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
+                                .build()
+                        )
+                        .build()
+                )
+                .build()
+
+        assertThat(betaManagedAgentsAgentToolset20260401Params.configs().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsAgentToolConfigParams.builder()
+                    .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                    .enabled(true)
+                    .permissionPolicy(
+                        BetaManagedAgentsAlwaysAllowPolicy.builder()
+                            .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
+                            .build()
+                    )
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsAgentToolset20260401Params =

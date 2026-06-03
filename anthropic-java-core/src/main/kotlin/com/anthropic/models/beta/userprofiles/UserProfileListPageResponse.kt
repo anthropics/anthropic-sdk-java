@@ -100,7 +100,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(userProfileListPageResponse: UserProfileListPageResponse) = apply {
-            data = userProfileListPageResponse.data.map { it.toMutableList() }
+            data =
+                userProfileListPageResponse.data
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             nextPage = userProfileListPageResponse.nextPage
             additionalProperties = userProfileListPageResponse.additionalProperties.toMutableMap()
         }

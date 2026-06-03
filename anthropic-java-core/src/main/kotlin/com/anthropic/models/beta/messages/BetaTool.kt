@@ -294,12 +294,14 @@ private constructor(
         internal fun from(betaTool: BetaTool) = apply {
             inputSchema = betaTool.inputSchema
             name = betaTool.name
-            allowedCallers = betaTool.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                betaTool.allowedCallers.map { it.toMutableList() }.takeUnless { it.isMissing() }
             cacheControl = betaTool.cacheControl
             deferLoading = betaTool.deferLoading
             description = betaTool.description
             eagerInputStreaming = betaTool.eagerInputStreaming
-            inputExamples = betaTool.inputExamples.map { it.toMutableList() }
+            inputExamples =
+                betaTool.inputExamples.map { it.toMutableList() }.takeUnless { it.isMissing() }
             strict = betaTool.strict
             type = betaTool.type
             additionalProperties = betaTool.additionalProperties.toMutableMap()
@@ -703,7 +705,8 @@ private constructor(
             internal fun from(inputSchema: InputSchema) = apply {
                 type = inputSchema.type
                 properties = inputSchema.properties
-                required = inputSchema.required.map { it.toMutableList() }
+                required =
+                    inputSchema.required.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 additionalProperties = inputSchema.additionalProperties.toMutableMap()
             }
 

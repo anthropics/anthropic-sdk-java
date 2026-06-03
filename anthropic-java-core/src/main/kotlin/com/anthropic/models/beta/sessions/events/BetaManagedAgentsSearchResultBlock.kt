@@ -165,7 +165,10 @@ private constructor(
         internal fun from(betaManagedAgentsSearchResultBlock: BetaManagedAgentsSearchResultBlock) =
             apply {
                 citations = betaManagedAgentsSearchResultBlock.citations
-                content = betaManagedAgentsSearchResultBlock.content.map { it.toMutableList() }
+                content =
+                    betaManagedAgentsSearchResultBlock.content
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 source = betaManagedAgentsSearchResultBlock.source
                 title = betaManagedAgentsSearchResultBlock.title
                 type = betaManagedAgentsSearchResultBlock.type

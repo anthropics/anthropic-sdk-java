@@ -31,6 +31,20 @@ internal class CodeExecutionTool20260120Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseCodeExecutionTool20260120 = CodeExecutionTool20260120.builder().build()
+
+        val codeExecutionTool20260120 =
+            baseCodeExecutionTool20260120
+                .toBuilder()
+                .addAllowedCaller(CodeExecutionTool20260120.AllowedCaller.DIRECT)
+                .build()
+
+        assertThat(codeExecutionTool20260120.allowedCallers().getOrNull())
+            .containsExactly(CodeExecutionTool20260120.AllowedCaller.DIRECT)
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val codeExecutionTool20260120 =

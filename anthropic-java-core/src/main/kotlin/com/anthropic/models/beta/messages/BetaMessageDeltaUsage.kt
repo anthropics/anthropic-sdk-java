@@ -261,7 +261,10 @@ private constructor(
             cacheCreationInputTokens = betaMessageDeltaUsage.cacheCreationInputTokens
             cacheReadInputTokens = betaMessageDeltaUsage.cacheReadInputTokens
             inputTokens = betaMessageDeltaUsage.inputTokens
-            iterations = betaMessageDeltaUsage.iterations.map { it.toMutableList() }
+            iterations =
+                betaMessageDeltaUsage.iterations
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             outputTokens = betaMessageDeltaUsage.outputTokens
             outputTokensDetails = betaMessageDeltaUsage.outputTokensDetails
             serverToolUse = betaMessageDeltaUsage.serverToolUse

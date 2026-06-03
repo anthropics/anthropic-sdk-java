@@ -30,6 +30,21 @@ internal class TextEditorCodeExecutionStrReplaceResultBlockParamTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseTextEditorCodeExecutionStrReplaceResultBlockParam =
+            TextEditorCodeExecutionStrReplaceResultBlockParam.builder().build()
+
+        val textEditorCodeExecutionStrReplaceResultBlockParam =
+            baseTextEditorCodeExecutionStrReplaceResultBlockParam
+                .toBuilder()
+                .addLine("string")
+                .build()
+
+        assertThat(textEditorCodeExecutionStrReplaceResultBlockParam.lines().getOrNull())
+            .containsExactly("string")
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val textEditorCodeExecutionStrReplaceResultBlockParam =

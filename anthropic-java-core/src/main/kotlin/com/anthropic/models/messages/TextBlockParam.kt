@@ -136,7 +136,8 @@ private constructor(
             text = textBlockParam.text
             type = textBlockParam.type
             cacheControl = textBlockParam.cacheControl
-            citations = textBlockParam.citations.map { it.toMutableList() }
+            citations =
+                textBlockParam.citations.map { it.toMutableList() }.takeUnless { it.isMissing() }
             additionalProperties = textBlockParam.additionalProperties.toMutableMap()
         }
 

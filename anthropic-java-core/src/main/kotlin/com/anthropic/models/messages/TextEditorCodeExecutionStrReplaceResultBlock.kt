@@ -173,7 +173,10 @@ private constructor(
             textEditorCodeExecutionStrReplaceResultBlock:
                 TextEditorCodeExecutionStrReplaceResultBlock
         ) = apply {
-            lines = textEditorCodeExecutionStrReplaceResultBlock.lines.map { it.toMutableList() }
+            lines =
+                textEditorCodeExecutionStrReplaceResultBlock.lines
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             newLines = textEditorCodeExecutionStrReplaceResultBlock.newLines
             newStart = textEditorCodeExecutionStrReplaceResultBlock.newStart
             oldLines = textEditorCodeExecutionStrReplaceResultBlock.oldLines

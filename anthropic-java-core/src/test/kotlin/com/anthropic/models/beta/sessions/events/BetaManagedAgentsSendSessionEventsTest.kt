@@ -39,6 +39,39 @@ internal class BetaManagedAgentsSendSessionEventsTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaManagedAgentsSendSessionEvents =
+            BetaManagedAgentsSendSessionEvents.builder().build()
+
+        val betaManagedAgentsSendSessionEvents =
+            baseBetaManagedAgentsSendSessionEvents
+                .toBuilder()
+                .addData(
+                    BetaManagedAgentsSendSessionEvents.Data.ofUserMessage(
+                        BetaManagedAgentsUserMessageEvent.builder()
+                            .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                            .addTextContent("Where is my order #1234?")
+                            .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
+                            .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                            .build()
+                    )
+                )
+                .build()
+
+        assertThat(betaManagedAgentsSendSessionEvents.data().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsSendSessionEvents.Data.ofUserMessage(
+                    BetaManagedAgentsUserMessageEvent.builder()
+                        .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                        .addTextContent("Where is my order #1234?")
+                        .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
+                        .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .build()
+                )
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSendSessionEvents =

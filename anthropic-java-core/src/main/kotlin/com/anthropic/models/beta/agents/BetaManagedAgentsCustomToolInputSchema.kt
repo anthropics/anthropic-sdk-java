@@ -121,7 +121,10 @@ private constructor(
             betaManagedAgentsCustomToolInputSchema: BetaManagedAgentsCustomToolInputSchema
         ) = apply {
             properties = betaManagedAgentsCustomToolInputSchema.properties
-            required = betaManagedAgentsCustomToolInputSchema.required.map { it.toMutableList() }
+            required =
+                betaManagedAgentsCustomToolInputSchema.required
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaManagedAgentsCustomToolInputSchema.type
             additionalProperties =
                 betaManagedAgentsCustomToolInputSchema.additionalProperties.toMutableMap()

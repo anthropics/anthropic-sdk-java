@@ -34,6 +34,23 @@ internal class ToolSearchToolRegex20251119Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseToolSearchToolRegex20251119 =
+            ToolSearchToolRegex20251119.builder()
+                .type(ToolSearchToolRegex20251119.Type.TOOL_SEARCH_TOOL_REGEX_20251119)
+                .build()
+
+        val toolSearchToolRegex20251119 =
+            baseToolSearchToolRegex20251119
+                .toBuilder()
+                .addAllowedCaller(ToolSearchToolRegex20251119.AllowedCaller.DIRECT)
+                .build()
+
+        assertThat(toolSearchToolRegex20251119.allowedCallers().getOrNull())
+            .containsExactly(ToolSearchToolRegex20251119.AllowedCaller.DIRECT)
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val toolSearchToolRegex20251119 =

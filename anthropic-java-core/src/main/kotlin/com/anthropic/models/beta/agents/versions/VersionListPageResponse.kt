@@ -95,7 +95,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(versionListPageResponse: VersionListPageResponse) = apply {
-            data = versionListPageResponse.data.map { it.toMutableList() }
+            data =
+                versionListPageResponse.data
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             nextPage = versionListPageResponse.nextPage
             additionalProperties = versionListPageResponse.additionalProperties.toMutableMap()
         }

@@ -129,7 +129,10 @@ private constructor(
         internal fun from(
             betaMidConversationSystemBlockParam: BetaMidConversationSystemBlockParam
         ) = apply {
-            content = betaMidConversationSystemBlockParam.content.map { it.toMutableList() }
+            content =
+                betaMidConversationSystemBlockParam.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaMidConversationSystemBlockParam.type
             cacheControl = betaMidConversationSystemBlockParam.cacheControl
             additionalProperties =

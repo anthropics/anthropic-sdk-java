@@ -107,7 +107,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(environmentListPageResponse: EnvironmentListPageResponse) = apply {
-            data = environmentListPageResponse.data.map { it.toMutableList() }
+            data =
+                environmentListPageResponse.data
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             nextPage = environmentListPageResponse.nextPage
             additionalProperties = environmentListPageResponse.additionalProperties.toMutableMap()
         }

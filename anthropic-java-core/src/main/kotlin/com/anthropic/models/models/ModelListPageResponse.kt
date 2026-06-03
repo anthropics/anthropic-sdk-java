@@ -134,7 +134,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(modelListPageResponse: ModelListPageResponse) = apply {
-            data = modelListPageResponse.data.map { it.toMutableList() }
+            data =
+                modelListPageResponse.data.map { it.toMutableList() }.takeUnless { it.isMissing() }
             firstId = modelListPageResponse.firstId
             hasMore = modelListPageResponse.hasMore
             lastId = modelListPageResponse.lastId

@@ -37,6 +37,18 @@ internal class BetaManagedAgentsCustomToolInputSchemaTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaManagedAgentsCustomToolInputSchema =
+            BetaManagedAgentsCustomToolInputSchema.builder().build()
+
+        val betaManagedAgentsCustomToolInputSchema =
+            baseBetaManagedAgentsCustomToolInputSchema.toBuilder().addRequired("string").build()
+
+        assertThat(betaManagedAgentsCustomToolInputSchema.required().getOrNull())
+            .containsExactly("string")
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsCustomToolInputSchema =

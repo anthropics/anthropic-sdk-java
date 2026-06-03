@@ -160,7 +160,10 @@ private constructor(
         ) = apply {
             toolUseId = betaManagedAgentsUserToolResultEventParams.toolUseId
             type = betaManagedAgentsUserToolResultEventParams.type
-            content = betaManagedAgentsUserToolResultEventParams.content.map { it.toMutableList() }
+            content =
+                betaManagedAgentsUserToolResultEventParams.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             isError = betaManagedAgentsUserToolResultEventParams.isError
             additionalProperties =
                 betaManagedAgentsUserToolResultEventParams.additionalProperties.toMutableMap()

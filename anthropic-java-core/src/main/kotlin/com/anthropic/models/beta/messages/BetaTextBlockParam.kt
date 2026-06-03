@@ -137,7 +137,10 @@ private constructor(
             text = betaTextBlockParam.text
             type = betaTextBlockParam.type
             cacheControl = betaTextBlockParam.cacheControl
-            citations = betaTextBlockParam.citations.map { it.toMutableList() }
+            citations =
+                betaTextBlockParam.citations
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             additionalProperties = betaTextBlockParam.additionalProperties.toMutableMap()
         }
 

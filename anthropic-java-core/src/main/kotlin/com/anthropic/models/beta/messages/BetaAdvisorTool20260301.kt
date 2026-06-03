@@ -257,7 +257,10 @@ private constructor(
             model = betaAdvisorTool20260301.model
             name = betaAdvisorTool20260301.name
             type = betaAdvisorTool20260301.type
-            allowedCallers = betaAdvisorTool20260301.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                betaAdvisorTool20260301.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = betaAdvisorTool20260301.cacheControl
             caching = betaAdvisorTool20260301.caching
             deferLoading = betaAdvisorTool20260301.deferLoading

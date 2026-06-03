@@ -102,7 +102,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaSelfHostedWorkListResponse: BetaSelfHostedWorkListResponse) = apply {
-            data = betaSelfHostedWorkListResponse.data.map { it.toMutableList() }
+            data =
+                betaSelfHostedWorkListResponse.data
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             nextPage = betaSelfHostedWorkListResponse.nextPage
             additionalProperties =
                 betaSelfHostedWorkListResponse.additionalProperties.toMutableMap()

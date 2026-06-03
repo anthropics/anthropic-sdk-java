@@ -194,12 +194,12 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaPackages: BetaPackages) = apply {
-            apt = betaPackages.apt.map { it.toMutableList() }
-            cargo = betaPackages.cargo.map { it.toMutableList() }
-            gem = betaPackages.gem.map { it.toMutableList() }
-            go = betaPackages.go.map { it.toMutableList() }
-            npm = betaPackages.npm.map { it.toMutableList() }
-            pip = betaPackages.pip.map { it.toMutableList() }
+            apt = betaPackages.apt.map { it.toMutableList() }.takeUnless { it.isMissing() }
+            cargo = betaPackages.cargo.map { it.toMutableList() }.takeUnless { it.isMissing() }
+            gem = betaPackages.gem.map { it.toMutableList() }.takeUnless { it.isMissing() }
+            go = betaPackages.go.map { it.toMutableList() }.takeUnless { it.isMissing() }
+            npm = betaPackages.npm.map { it.toMutableList() }.takeUnless { it.isMissing() }
+            pip = betaPackages.pip.map { it.toMutableList() }.takeUnless { it.isMissing() }
             type = betaPackages.type
             additionalProperties = betaPackages.additionalProperties.toMutableMap()
         }

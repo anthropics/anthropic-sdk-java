@@ -276,12 +276,21 @@ private constructor(
         ) = apply {
             id = betaManagedAgentsSessionThreadAgent.id
             description = betaManagedAgentsSessionThreadAgent.description
-            mcpServers = betaManagedAgentsSessionThreadAgent.mcpServers.map { it.toMutableList() }
+            mcpServers =
+                betaManagedAgentsSessionThreadAgent.mcpServers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             model = betaManagedAgentsSessionThreadAgent.model
             name = betaManagedAgentsSessionThreadAgent.name
-            skills = betaManagedAgentsSessionThreadAgent.skills.map { it.toMutableList() }
+            skills =
+                betaManagedAgentsSessionThreadAgent.skills
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             system = betaManagedAgentsSessionThreadAgent.system
-            tools = betaManagedAgentsSessionThreadAgent.tools.map { it.toMutableList() }
+            tools =
+                betaManagedAgentsSessionThreadAgent.tools
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaManagedAgentsSessionThreadAgent.type
             version = betaManagedAgentsSessionThreadAgent.version
             additionalProperties =

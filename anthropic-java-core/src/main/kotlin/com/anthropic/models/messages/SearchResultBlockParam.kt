@@ -171,7 +171,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(searchResultBlockParam: SearchResultBlockParam) = apply {
-            content = searchResultBlockParam.content.map { it.toMutableList() }
+            content =
+                searchResultBlockParam.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             source = searchResultBlockParam.source
             title = searchResultBlockParam.title
             type = searchResultBlockParam.type

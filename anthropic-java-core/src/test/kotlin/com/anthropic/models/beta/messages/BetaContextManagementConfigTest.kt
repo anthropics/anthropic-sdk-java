@@ -40,6 +40,40 @@ internal class BetaContextManagementConfigTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaContextManagementConfig = BetaContextManagementConfig.builder().build()
+
+        val betaContextManagementConfig =
+            baseBetaContextManagementConfig
+                .toBuilder()
+                .addEdit(
+                    BetaContextManagementConfig.Edit.ofClearToolUses20250919(
+                        BetaClearToolUses20250919Edit.builder()
+                            .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                            .clearToolInputs(true)
+                            .addExcludeTool("string")
+                            .keep(BetaToolUsesKeep.builder().value(0L).build())
+                            .inputTokensTrigger(1L)
+                            .build()
+                    )
+                )
+                .build()
+
+        assertThat(betaContextManagementConfig.edits().getOrNull())
+            .containsExactly(
+                BetaContextManagementConfig.Edit.ofClearToolUses20250919(
+                    BetaClearToolUses20250919Edit.builder()
+                        .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                        .clearToolInputs(true)
+                        .addExcludeTool("string")
+                        .keep(BetaToolUsesKeep.builder().value(0L).build())
+                        .inputTokensTrigger(1L)
+                        .build()
+                )
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaContextManagementConfig =

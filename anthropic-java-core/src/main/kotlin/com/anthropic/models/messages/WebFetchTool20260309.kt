@@ -315,9 +315,18 @@ private constructor(
         internal fun from(webFetchTool20260309: WebFetchTool20260309) = apply {
             name = webFetchTool20260309.name
             type = webFetchTool20260309.type
-            allowedCallers = webFetchTool20260309.allowedCallers.map { it.toMutableList() }
-            allowedDomains = webFetchTool20260309.allowedDomains.map { it.toMutableList() }
-            blockedDomains = webFetchTool20260309.blockedDomains.map { it.toMutableList() }
+            allowedCallers =
+                webFetchTool20260309.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            allowedDomains =
+                webFetchTool20260309.allowedDomains
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            blockedDomains =
+                webFetchTool20260309.blockedDomains
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = webFetchTool20260309.cacheControl
             citations = webFetchTool20260309.citations
             deferLoading = webFetchTool20260309.deferLoading

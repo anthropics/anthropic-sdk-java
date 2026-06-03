@@ -202,10 +202,16 @@ private constructor(
         internal fun from(betaMemoryTool20250818: BetaMemoryTool20250818) = apply {
             name = betaMemoryTool20250818.name
             type = betaMemoryTool20250818.type
-            allowedCallers = betaMemoryTool20250818.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                betaMemoryTool20250818.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = betaMemoryTool20250818.cacheControl
             deferLoading = betaMemoryTool20250818.deferLoading
-            inputExamples = betaMemoryTool20250818.inputExamples.map { it.toMutableList() }
+            inputExamples =
+                betaMemoryTool20250818.inputExamples
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             strict = betaMemoryTool20250818.strict
             additionalProperties = betaMemoryTool20250818.additionalProperties.toMutableMap()
         }

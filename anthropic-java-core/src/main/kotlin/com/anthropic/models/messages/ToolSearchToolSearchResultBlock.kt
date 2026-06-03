@@ -102,7 +102,9 @@ private constructor(
         internal fun from(toolSearchToolSearchResultBlock: ToolSearchToolSearchResultBlock) =
             apply {
                 toolReferences =
-                    toolSearchToolSearchResultBlock.toolReferences.map { it.toMutableList() }
+                    toolSearchToolSearchResultBlock.toolReferences
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 type = toolSearchToolSearchResultBlock.type
                 additionalProperties =
                     toolSearchToolSearchResultBlock.additionalProperties.toMutableMap()

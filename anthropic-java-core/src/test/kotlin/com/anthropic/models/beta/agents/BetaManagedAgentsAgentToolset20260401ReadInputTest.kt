@@ -25,6 +25,22 @@ internal class BetaManagedAgentsAgentToolset20260401ReadInputTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaManagedAgentsAgentToolset20260401ReadInput =
+            BetaManagedAgentsAgentToolset20260401ReadInput.builder().filePath("file_path").build()
+
+        val betaManagedAgentsAgentToolset20260401ReadInput =
+            baseBetaManagedAgentsAgentToolset20260401ReadInput
+                .toBuilder()
+                .addViewRange(0L)
+                .addViewRange(0L)
+                .build()
+
+        assertThat(betaManagedAgentsAgentToolset20260401ReadInput.viewRange().getOrNull())
+            .containsExactly(0L, 0L)
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsAgentToolset20260401ReadInput =

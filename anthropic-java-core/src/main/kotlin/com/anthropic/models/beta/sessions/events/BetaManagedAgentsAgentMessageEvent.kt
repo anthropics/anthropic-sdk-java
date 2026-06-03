@@ -147,7 +147,10 @@ private constructor(
         internal fun from(betaManagedAgentsAgentMessageEvent: BetaManagedAgentsAgentMessageEvent) =
             apply {
                 id = betaManagedAgentsAgentMessageEvent.id
-                content = betaManagedAgentsAgentMessageEvent.content.map { it.toMutableList() }
+                content =
+                    betaManagedAgentsAgentMessageEvent.content
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 processedAt = betaManagedAgentsAgentMessageEvent.processedAt
                 type = betaManagedAgentsAgentMessageEvent.type
                 additionalProperties =

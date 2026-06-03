@@ -390,14 +390,23 @@ private constructor(
             archivedAt = betaManagedAgentsAgent.archivedAt
             createdAt = betaManagedAgentsAgent.createdAt
             description = betaManagedAgentsAgent.description
-            mcpServers = betaManagedAgentsAgent.mcpServers.map { it.toMutableList() }
+            mcpServers =
+                betaManagedAgentsAgent.mcpServers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             metadata = betaManagedAgentsAgent.metadata
             model = betaManagedAgentsAgent.model
             multiagent = betaManagedAgentsAgent.multiagent
             name = betaManagedAgentsAgent.name
-            skills = betaManagedAgentsAgent.skills.map { it.toMutableList() }
+            skills =
+                betaManagedAgentsAgent.skills
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             system = betaManagedAgentsAgent.system
-            tools = betaManagedAgentsAgent.tools.map { it.toMutableList() }
+            tools =
+                betaManagedAgentsAgent.tools
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaManagedAgentsAgent.type
             updatedAt = betaManagedAgentsAgent.updatedAt
             version = betaManagedAgentsAgent.version

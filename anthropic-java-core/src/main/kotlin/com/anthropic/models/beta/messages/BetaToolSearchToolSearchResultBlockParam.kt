@@ -99,7 +99,9 @@ private constructor(
             betaToolSearchToolSearchResultBlockParam: BetaToolSearchToolSearchResultBlockParam
         ) = apply {
             toolReferences =
-                betaToolSearchToolSearchResultBlockParam.toolReferences.map { it.toMutableList() }
+                betaToolSearchToolSearchResultBlockParam.toolReferences
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaToolSearchToolSearchResultBlockParam.type
             additionalProperties =
                 betaToolSearchToolSearchResultBlockParam.additionalProperties.toMutableMap()

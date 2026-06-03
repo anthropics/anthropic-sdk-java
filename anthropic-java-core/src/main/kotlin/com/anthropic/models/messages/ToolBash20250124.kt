@@ -201,10 +201,16 @@ private constructor(
         internal fun from(toolBash20250124: ToolBash20250124) = apply {
             name = toolBash20250124.name
             type = toolBash20250124.type
-            allowedCallers = toolBash20250124.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                toolBash20250124.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = toolBash20250124.cacheControl
             deferLoading = toolBash20250124.deferLoading
-            inputExamples = toolBash20250124.inputExamples.map { it.toMutableList() }
+            inputExamples =
+                toolBash20250124.inputExamples
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             strict = toolBash20250124.strict
             additionalProperties = toolBash20250124.additionalProperties.toMutableMap()
         }

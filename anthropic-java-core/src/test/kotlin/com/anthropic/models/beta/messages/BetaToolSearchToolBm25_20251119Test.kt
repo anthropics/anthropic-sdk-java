@@ -40,6 +40,23 @@ internal class BetaToolSearchToolBm25_20251119Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaToolSearchToolBm25_20251119 =
+            BetaToolSearchToolBm25_20251119.builder()
+                .type(BetaToolSearchToolBm25_20251119.Type.TOOL_SEARCH_TOOL_BM25_20251119)
+                .build()
+
+        val betaToolSearchToolBm25_20251119 =
+            baseBetaToolSearchToolBm25_20251119
+                .toBuilder()
+                .addAllowedCaller(BetaToolSearchToolBm25_20251119.AllowedCaller.DIRECT)
+                .build()
+
+        assertThat(betaToolSearchToolBm25_20251119.allowedCallers().getOrNull())
+            .containsExactly(BetaToolSearchToolBm25_20251119.AllowedCaller.DIRECT)
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaToolSearchToolBm25_20251119 =

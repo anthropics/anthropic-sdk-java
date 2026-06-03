@@ -96,7 +96,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(credentialListPageResponse: CredentialListPageResponse) = apply {
-            data = credentialListPageResponse.data.map { it.toMutableList() }
+            data =
+                credentialListPageResponse.data
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             nextPage = credentialListPageResponse.nextPage
             additionalProperties = credentialListPageResponse.additionalProperties.toMutableMap()
         }

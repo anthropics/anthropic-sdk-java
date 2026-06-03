@@ -401,7 +401,7 @@ private constructor(
         internal fun from(betaMessage: BetaMessage) = apply {
             id = betaMessage.id
             container = betaMessage.container
-            content = betaMessage.content.map { it.toMutableList() }
+            content = betaMessage.content.map { it.toMutableList() }.takeUnless { it.isMissing() }
             contextManagement = betaMessage.contextManagement
             diagnostics = betaMessage.diagnostics
             model = betaMessage.model

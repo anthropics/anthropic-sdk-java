@@ -38,6 +38,17 @@ internal class BetaClearToolUses20250919EditTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaClearToolUses20250919Edit = BetaClearToolUses20250919Edit.builder().build()
+
+        val betaClearToolUses20250919Edit =
+            baseBetaClearToolUses20250919Edit.toBuilder().addExcludeTool("string").build()
+
+        assertThat(betaClearToolUses20250919Edit.excludeTools().getOrNull())
+            .containsExactly("string")
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaClearToolUses20250919Edit =

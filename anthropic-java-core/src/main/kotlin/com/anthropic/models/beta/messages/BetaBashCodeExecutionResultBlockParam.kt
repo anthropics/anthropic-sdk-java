@@ -148,7 +148,10 @@ private constructor(
         internal fun from(
             betaBashCodeExecutionResultBlockParam: BetaBashCodeExecutionResultBlockParam
         ) = apply {
-            content = betaBashCodeExecutionResultBlockParam.content.map { it.toMutableList() }
+            content =
+                betaBashCodeExecutionResultBlockParam.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             returnCode = betaBashCodeExecutionResultBlockParam.returnCode
             stderr = betaBashCodeExecutionResultBlockParam.stderr
             stdout = betaBashCodeExecutionResultBlockParam.stdout

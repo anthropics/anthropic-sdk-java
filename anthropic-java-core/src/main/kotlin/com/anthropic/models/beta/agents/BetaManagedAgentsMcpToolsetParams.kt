@@ -154,7 +154,10 @@ private constructor(
             apply {
                 mcpServerName = betaManagedAgentsMcpToolsetParams.mcpServerName
                 type = betaManagedAgentsMcpToolsetParams.type
-                configs = betaManagedAgentsMcpToolsetParams.configs.map { it.toMutableList() }
+                configs =
+                    betaManagedAgentsMcpToolsetParams.configs
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 defaultConfig = betaManagedAgentsMcpToolsetParams.defaultConfig
                 additionalProperties =
                     betaManagedAgentsMcpToolsetParams.additionalProperties.toMutableMap()

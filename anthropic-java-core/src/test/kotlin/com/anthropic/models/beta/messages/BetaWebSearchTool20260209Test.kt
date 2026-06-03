@@ -60,6 +60,24 @@ internal class BetaWebSearchTool20260209Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaWebSearchTool20260209 = BetaWebSearchTool20260209.builder().build()
+
+        val betaWebSearchTool20260209 =
+            baseBetaWebSearchTool20260209
+                .toBuilder()
+                .addAllowedCaller(BetaWebSearchTool20260209.AllowedCaller.DIRECT)
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .build()
+
+        assertThat(betaWebSearchTool20260209.allowedCallers().getOrNull())
+            .containsExactly(BetaWebSearchTool20260209.AllowedCaller.DIRECT)
+        assertThat(betaWebSearchTool20260209.allowedDomains().getOrNull()).containsExactly("string")
+        assertThat(betaWebSearchTool20260209.blockedDomains().getOrNull()).containsExactly("string")
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaWebSearchTool20260209 =

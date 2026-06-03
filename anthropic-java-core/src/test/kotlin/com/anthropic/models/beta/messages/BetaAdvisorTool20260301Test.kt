@@ -53,6 +53,21 @@ internal class BetaAdvisorTool20260301Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaAdvisorTool20260301 =
+            BetaAdvisorTool20260301.builder().model(Model.CLAUDE_OPUS_4_8).build()
+
+        val betaAdvisorTool20260301 =
+            baseBetaAdvisorTool20260301
+                .toBuilder()
+                .addAllowedCaller(BetaAdvisorTool20260301.AllowedCaller.DIRECT)
+                .build()
+
+        assertThat(betaAdvisorTool20260301.allowedCallers().getOrNull())
+            .containsExactly(BetaAdvisorTool20260301.AllowedCaller.DIRECT)
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaAdvisorTool20260301 =
