@@ -161,7 +161,10 @@ private constructor(
         internal fun from(
             betaEncryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
         ) = apply {
-            content = betaEncryptedCodeExecutionResultBlock.content.map { it.toMutableList() }
+            content =
+                betaEncryptedCodeExecutionResultBlock.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             encryptedStdout = betaEncryptedCodeExecutionResultBlock.encryptedStdout
             returnCode = betaEncryptedCodeExecutionResultBlock.returnCode
             stderr = betaEncryptedCodeExecutionResultBlock.stderr

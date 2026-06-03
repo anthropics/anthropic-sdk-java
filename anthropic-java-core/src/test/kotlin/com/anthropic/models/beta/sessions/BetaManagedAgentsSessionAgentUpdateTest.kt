@@ -98,6 +98,99 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaManagedAgentsSessionAgentUpdate =
+            BetaManagedAgentsSessionAgentUpdate.builder().build()
+
+        val betaManagedAgentsSessionAgentUpdate =
+            baseBetaManagedAgentsSessionAgentUpdate
+                .toBuilder()
+                .addMcpServer(
+                    BetaManagedAgentsUrlMcpServerParams.builder()
+                        .name("example-mcp")
+                        .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
+                        .url("https://example-server.modelcontextprotocol.io/sse")
+                        .build()
+                )
+                .addTool(
+                    BetaManagedAgentsSessionAgentUpdate.Tool.ofAgentToolset20260401(
+                        BetaManagedAgentsAgentToolset20260401Params.builder()
+                            .type(
+                                BetaManagedAgentsAgentToolset20260401Params.Type
+                                    .AGENT_TOOLSET_20260401
+                            )
+                            .addConfig(
+                                BetaManagedAgentsAgentToolConfigParams.builder()
+                                    .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                                    .enabled(true)
+                                    .permissionPolicy(
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                            .type(
+                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                            )
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .defaultConfig(
+                                BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
+                                    .enabled(true)
+                                    .permissionPolicy(
+                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                            .type(
+                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                            )
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
+                    )
+                )
+                .build()
+
+        assertThat(betaManagedAgentsSessionAgentUpdate.mcpServers().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsUrlMcpServerParams.builder()
+                    .name("example-mcp")
+                    .type(BetaManagedAgentsUrlMcpServerParams.Type.URL)
+                    .url("https://example-server.modelcontextprotocol.io/sse")
+                    .build()
+            )
+        assertThat(betaManagedAgentsSessionAgentUpdate.tools().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsSessionAgentUpdate.Tool.ofAgentToolset20260401(
+                    BetaManagedAgentsAgentToolset20260401Params.builder()
+                        .type(
+                            BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
+                        )
+                        .addConfig(
+                            BetaManagedAgentsAgentToolConfigParams.builder()
+                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                                .enabled(true)
+                                .permissionPolicy(
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .defaultConfig(
+                            BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
+                                .enabled(true)
+                                .permissionPolicy(
+                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
+                )
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionAgentUpdate =

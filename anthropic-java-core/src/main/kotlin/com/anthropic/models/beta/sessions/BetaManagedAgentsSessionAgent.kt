@@ -306,13 +306,22 @@ private constructor(
         internal fun from(betaManagedAgentsSessionAgent: BetaManagedAgentsSessionAgent) = apply {
             id = betaManagedAgentsSessionAgent.id
             description = betaManagedAgentsSessionAgent.description
-            mcpServers = betaManagedAgentsSessionAgent.mcpServers.map { it.toMutableList() }
+            mcpServers =
+                betaManagedAgentsSessionAgent.mcpServers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             model = betaManagedAgentsSessionAgent.model
             multiagent = betaManagedAgentsSessionAgent.multiagent
             name = betaManagedAgentsSessionAgent.name
-            skills = betaManagedAgentsSessionAgent.skills.map { it.toMutableList() }
+            skills =
+                betaManagedAgentsSessionAgent.skills
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             system = betaManagedAgentsSessionAgent.system
-            tools = betaManagedAgentsSessionAgent.tools.map { it.toMutableList() }
+            tools =
+                betaManagedAgentsSessionAgent.tools
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaManagedAgentsSessionAgent.type
             version = betaManagedAgentsSessionAgent.version
             additionalProperties = betaManagedAgentsSessionAgent.additionalProperties.toMutableMap()

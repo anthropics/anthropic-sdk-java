@@ -43,6 +43,40 @@ internal class BetaManagedAgentsAgentMcpToolResultEventTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaManagedAgentsAgentMcpToolResultEvent =
+            BetaManagedAgentsAgentMcpToolResultEvent.builder()
+                .id("id")
+                .mcpToolUseId("mcp_tool_use_id")
+                .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(BetaManagedAgentsAgentMcpToolResultEvent.Type.AGENT_MCP_TOOL_RESULT)
+                .build()
+
+        val betaManagedAgentsAgentMcpToolResultEvent =
+            baseBetaManagedAgentsAgentMcpToolResultEvent
+                .toBuilder()
+                .addContent(
+                    BetaManagedAgentsAgentMcpToolResultEvent.Content.ofText(
+                        BetaManagedAgentsTextBlock.builder()
+                            .text("Where is my order #1234?")
+                            .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                            .build()
+                    )
+                )
+                .build()
+
+        assertThat(betaManagedAgentsAgentMcpToolResultEvent.content().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsAgentMcpToolResultEvent.Content.ofText(
+                    BetaManagedAgentsTextBlock.builder()
+                        .text("Where is my order #1234?")
+                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                        .build()
+                )
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsAgentMcpToolResultEvent =

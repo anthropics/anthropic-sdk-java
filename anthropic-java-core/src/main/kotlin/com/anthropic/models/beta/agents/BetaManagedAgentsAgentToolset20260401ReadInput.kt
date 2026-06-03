@@ -110,7 +110,9 @@ private constructor(
         ) = apply {
             filePath = betaManagedAgentsAgentToolset20260401ReadInput.filePath
             viewRange =
-                betaManagedAgentsAgentToolset20260401ReadInput.viewRange.map { it.toMutableList() }
+                betaManagedAgentsAgentToolset20260401ReadInput.viewRange
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             additionalProperties =
                 betaManagedAgentsAgentToolset20260401ReadInput.additionalProperties.toMutableMap()
         }

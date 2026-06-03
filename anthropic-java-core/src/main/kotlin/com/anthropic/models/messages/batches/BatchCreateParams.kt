@@ -376,7 +376,7 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
-                requests = body.requests.map { it.toMutableList() }
+                requests = body.requests.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -1380,7 +1380,8 @@ private constructor(
                 @JvmSynthetic
                 internal fun from(params: Params) = apply {
                     maxTokens = params.maxTokens
-                    messages = params.messages.map { it.toMutableList() }
+                    messages =
+                        params.messages.map { it.toMutableList() }.takeUnless { it.isMissing() }
                     model = params.model
                     cacheControl = params.cacheControl
                     container = params.container
@@ -1388,13 +1389,16 @@ private constructor(
                     metadata = params.metadata
                     outputConfig = params.outputConfig
                     serviceTier = params.serviceTier
-                    stopSequences = params.stopSequences.map { it.toMutableList() }
+                    stopSequences =
+                        params.stopSequences
+                            .map { it.toMutableList() }
+                            .takeUnless { it.isMissing() }
                     stream = params.stream
                     system = params.system
                     temperature = params.temperature
                     thinking = params.thinking
                     toolChoice = params.toolChoice
-                    tools = params.tools.map { it.toMutableList() }
+                    tools = params.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
                     topK = params.topK
                     topP = params.topP
                     additionalProperties = params.additionalProperties.toMutableMap()

@@ -135,7 +135,10 @@ private constructor(
             betaManagedAgentsAgentToolset20260401Params: BetaManagedAgentsAgentToolset20260401Params
         ) = apply {
             type = betaManagedAgentsAgentToolset20260401Params.type
-            configs = betaManagedAgentsAgentToolset20260401Params.configs.map { it.toMutableList() }
+            configs =
+                betaManagedAgentsAgentToolset20260401Params.configs
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             defaultConfig = betaManagedAgentsAgentToolset20260401Params.defaultConfig
             additionalProperties =
                 betaManagedAgentsAgentToolset20260401Params.additionalProperties.toMutableMap()

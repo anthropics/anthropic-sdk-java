@@ -270,9 +270,18 @@ private constructor(
         internal fun from(webSearchTool20260209: WebSearchTool20260209) = apply {
             name = webSearchTool20260209.name
             type = webSearchTool20260209.type
-            allowedCallers = webSearchTool20260209.allowedCallers.map { it.toMutableList() }
-            allowedDomains = webSearchTool20260209.allowedDomains.map { it.toMutableList() }
-            blockedDomains = webSearchTool20260209.blockedDomains.map { it.toMutableList() }
+            allowedCallers =
+                webSearchTool20260209.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            allowedDomains =
+                webSearchTool20260209.allowedDomains
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            blockedDomains =
+                webSearchTool20260209.blockedDomains
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = webSearchTool20260209.cacheControl
             deferLoading = webSearchTool20260209.deferLoading
             maxUses = webSearchTool20260209.maxUses

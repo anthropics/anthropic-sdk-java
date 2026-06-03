@@ -465,7 +465,7 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
-                events = body.events.map { it.toMutableList() }
+                events = body.events.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 

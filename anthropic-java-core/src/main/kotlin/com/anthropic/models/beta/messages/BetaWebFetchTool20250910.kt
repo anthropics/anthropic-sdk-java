@@ -294,9 +294,18 @@ private constructor(
         internal fun from(betaWebFetchTool20250910: BetaWebFetchTool20250910) = apply {
             name = betaWebFetchTool20250910.name
             type = betaWebFetchTool20250910.type
-            allowedCallers = betaWebFetchTool20250910.allowedCallers.map { it.toMutableList() }
-            allowedDomains = betaWebFetchTool20250910.allowedDomains.map { it.toMutableList() }
-            blockedDomains = betaWebFetchTool20250910.blockedDomains.map { it.toMutableList() }
+            allowedCallers =
+                betaWebFetchTool20250910.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            allowedDomains =
+                betaWebFetchTool20250910.allowedDomains
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            blockedDomains =
+                betaWebFetchTool20250910.blockedDomains
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = betaWebFetchTool20250910.cacheControl
             citations = betaWebFetchTool20250910.citations
             deferLoading = betaWebFetchTool20250910.deferLoading

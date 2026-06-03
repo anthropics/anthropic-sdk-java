@@ -93,7 +93,8 @@ private constructor(
         @JvmSynthetic
         internal fun from(betaContainerParams: BetaContainerParams) = apply {
             id = betaContainerParams.id
-            skills = betaContainerParams.skills.map { it.toMutableList() }
+            skills =
+                betaContainerParams.skills.map { it.toMutableList() }.takeUnless { it.isMissing() }
             additionalProperties = betaContainerParams.additionalProperties.toMutableMap()
         }
 

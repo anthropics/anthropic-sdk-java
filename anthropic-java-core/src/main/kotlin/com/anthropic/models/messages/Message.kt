@@ -339,7 +339,7 @@ private constructor(
         internal fun from(message: Message) = apply {
             id = message.id
             container = message.container
-            content = message.content.map { it.toMutableList() }
+            content = message.content.map { it.toMutableList() }.takeUnless { it.isMissing() }
             model = message.model
             role = message.role
             stopDetails = message.stopDetails

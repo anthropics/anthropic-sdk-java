@@ -53,6 +53,40 @@ internal class BetaTextBlockParamTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaTextBlockParam = BetaTextBlockParam.builder().text("x").build()
+
+        val betaTextBlockParam =
+            baseBetaTextBlockParam
+                .toBuilder()
+                .addCitation(
+                    BetaTextCitationParam.ofCharLocation(
+                        BetaCitationCharLocationParam.builder()
+                            .citedText("cited_text")
+                            .documentIndex(0L)
+                            .documentTitle("x")
+                            .endCharIndex(0L)
+                            .startCharIndex(0L)
+                            .build()
+                    )
+                )
+                .build()
+
+        assertThat(betaTextBlockParam.citations().getOrNull())
+            .containsExactly(
+                BetaTextCitationParam.ofCharLocation(
+                    BetaCitationCharLocationParam.builder()
+                        .citedText("cited_text")
+                        .documentIndex(0L)
+                        .documentTitle("x")
+                        .endCharIndex(0L)
+                        .startCharIndex(0L)
+                        .build()
+                )
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaTextBlockParam =

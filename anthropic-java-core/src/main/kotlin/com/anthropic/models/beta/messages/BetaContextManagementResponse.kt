@@ -94,7 +94,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaContextManagementResponse: BetaContextManagementResponse) = apply {
-            appliedEdits = betaContextManagementResponse.appliedEdits.map { it.toMutableList() }
+            appliedEdits =
+                betaContextManagementResponse.appliedEdits
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             additionalProperties = betaContextManagementResponse.additionalProperties.toMutableMap()
         }
 

@@ -198,7 +198,10 @@ private constructor(
             processedAt = betaManagedAgentsAgentToolResultEvent.processedAt
             toolUseId = betaManagedAgentsAgentToolResultEvent.toolUseId
             type = betaManagedAgentsAgentToolResultEvent.type
-            content = betaManagedAgentsAgentToolResultEvent.content.map { it.toMutableList() }
+            content =
+                betaManagedAgentsAgentToolResultEvent.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             isError = betaManagedAgentsAgentToolResultEvent.isError
             additionalProperties =
                 betaManagedAgentsAgentToolResultEvent.additionalProperties.toMutableMap()

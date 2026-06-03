@@ -119,7 +119,10 @@ private constructor(
             apply {
                 command = betaMemoryTool20250818ViewCommand.command
                 path = betaMemoryTool20250818ViewCommand.path
-                viewRange = betaMemoryTool20250818ViewCommand.viewRange.map { it.toMutableList() }
+                viewRange =
+                    betaMemoryTool20250818ViewCommand.viewRange
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 additionalProperties =
                     betaMemoryTool20250818ViewCommand.additionalProperties.toMutableMap()
             }

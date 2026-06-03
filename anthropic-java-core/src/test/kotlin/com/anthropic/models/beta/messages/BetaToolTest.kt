@@ -80,6 +80,35 @@ internal class BetaToolTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaTool =
+            BetaTool.builder()
+                .inputSchema(BetaTool.InputSchema.builder().build())
+                .name("name")
+                .build()
+
+        val betaTool =
+            baseBetaTool
+                .toBuilder()
+                .addAllowedCaller(BetaTool.AllowedCaller.DIRECT)
+                .addInputExample(
+                    BetaTool.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
+                .build()
+
+        assertThat(betaTool.allowedCallers().getOrNull())
+            .containsExactly(BetaTool.AllowedCaller.DIRECT)
+        assertThat(betaTool.inputExamples().getOrNull())
+            .containsExactly(
+                BetaTool.InputExample.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaTool =

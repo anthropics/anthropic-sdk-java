@@ -155,7 +155,10 @@ private constructor(
         @JvmSynthetic
         internal fun from(betaBashCodeExecutionResultBlock: BetaBashCodeExecutionResultBlock) =
             apply {
-                content = betaBashCodeExecutionResultBlock.content.map { it.toMutableList() }
+                content =
+                    betaBashCodeExecutionResultBlock.content
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 returnCode = betaBashCodeExecutionResultBlock.returnCode
                 stderr = betaBashCodeExecutionResultBlock.stderr
                 stdout = betaBashCodeExecutionResultBlock.stdout

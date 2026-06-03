@@ -40,6 +40,23 @@ internal class BetaToolSearchToolRegex20251119Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaToolSearchToolRegex20251119 =
+            BetaToolSearchToolRegex20251119.builder()
+                .type(BetaToolSearchToolRegex20251119.Type.TOOL_SEARCH_TOOL_REGEX_20251119)
+                .build()
+
+        val betaToolSearchToolRegex20251119 =
+            baseBetaToolSearchToolRegex20251119
+                .toBuilder()
+                .addAllowedCaller(BetaToolSearchToolRegex20251119.AllowedCaller.DIRECT)
+                .build()
+
+        assertThat(betaToolSearchToolRegex20251119.allowedCallers().getOrNull())
+            .containsExactly(BetaToolSearchToolRegex20251119.AllowedCaller.DIRECT)
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaToolSearchToolRegex20251119 =

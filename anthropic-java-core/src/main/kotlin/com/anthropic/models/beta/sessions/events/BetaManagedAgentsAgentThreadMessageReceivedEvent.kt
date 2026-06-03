@@ -209,7 +209,9 @@ private constructor(
         ) = apply {
             id = betaManagedAgentsAgentThreadMessageReceivedEvent.id
             content =
-                betaManagedAgentsAgentThreadMessageReceivedEvent.content.map { it.toMutableList() }
+                betaManagedAgentsAgentThreadMessageReceivedEvent.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             fromSessionThreadId =
                 betaManagedAgentsAgentThreadMessageReceivedEvent.fromSessionThreadId
             processedAt = betaManagedAgentsAgentThreadMessageReceivedEvent.processedAt

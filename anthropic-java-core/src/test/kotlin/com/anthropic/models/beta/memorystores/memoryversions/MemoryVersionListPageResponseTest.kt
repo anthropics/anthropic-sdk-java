@@ -57,6 +57,52 @@ internal class MemoryVersionListPageResponseTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseMemoryVersionListPageResponse = MemoryVersionListPageResponse.builder().build()
+
+        val memoryVersionListPageResponse =
+            baseMemoryVersionListPageResponse
+                .toBuilder()
+                .addData(
+                    BetaManagedAgentsMemoryVersion.builder()
+                        .id("id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .memoryId("memory_id")
+                        .memoryStoreId("memory_store_id")
+                        .operation(BetaManagedAgentsMemoryVersionOperation.CREATED)
+                        .type(BetaManagedAgentsMemoryVersion.Type.MEMORY_VERSION)
+                        .content("content")
+                        .contentSha256("content_sha256")
+                        .contentSizeBytes(0)
+                        .sessionCreatedBy("x")
+                        .path("path")
+                        .redactedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .sessionRedactedBy("x")
+                        .build()
+                )
+                .build()
+
+        assertThat(memoryVersionListPageResponse.data().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsMemoryVersion.builder()
+                    .id("id")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .memoryId("memory_id")
+                    .memoryStoreId("memory_store_id")
+                    .operation(BetaManagedAgentsMemoryVersionOperation.CREATED)
+                    .type(BetaManagedAgentsMemoryVersion.Type.MEMORY_VERSION)
+                    .content("content")
+                    .contentSha256("content_sha256")
+                    .contentSizeBytes(0)
+                    .sessionCreatedBy("x")
+                    .path("path")
+                    .redactedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .sessionRedactedBy("x")
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val memoryVersionListPageResponse =

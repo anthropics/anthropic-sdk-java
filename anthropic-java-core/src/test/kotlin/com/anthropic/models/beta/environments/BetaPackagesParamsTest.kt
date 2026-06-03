@@ -33,6 +33,29 @@ internal class BetaPackagesParamsTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaPackagesParams = BetaPackagesParams.builder().build()
+
+        val betaPackagesParams =
+            baseBetaPackagesParams
+                .toBuilder()
+                .addApt("string")
+                .addCargo("string")
+                .addGem("string")
+                .addGo("string")
+                .addNpm("string")
+                .addPip("string")
+                .build()
+
+        assertThat(betaPackagesParams.apt().getOrNull()).containsExactly("string")
+        assertThat(betaPackagesParams.cargo().getOrNull()).containsExactly("string")
+        assertThat(betaPackagesParams.gem().getOrNull()).containsExactly("string")
+        assertThat(betaPackagesParams.go().getOrNull()).containsExactly("string")
+        assertThat(betaPackagesParams.npm().getOrNull()).containsExactly("string")
+        assertThat(betaPackagesParams.pip().getOrNull()).containsExactly("string")
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaPackagesParams =

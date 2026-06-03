@@ -94,7 +94,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(vaultListPageResponse: VaultListPageResponse) = apply {
-            data = vaultListPageResponse.data.map { it.toMutableList() }
+            data =
+                vaultListPageResponse.data.map { it.toMutableList() }.takeUnless { it.isMissing() }
             nextPage = vaultListPageResponse.nextPage
             additionalProperties = vaultListPageResponse.additionalProperties.toMutableMap()
         }

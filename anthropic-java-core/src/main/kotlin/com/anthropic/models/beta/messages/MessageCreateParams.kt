@@ -2680,20 +2680,22 @@ private constructor(
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 maxTokens = body.maxTokens
-                messages = body.messages.map { it.toMutableList() }
+                messages = body.messages.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 model = body.model
                 cacheControl = body.cacheControl
                 container = body.container
                 contextManagement = body.contextManagement
                 diagnostics = body.diagnostics
                 inferenceGeo = body.inferenceGeo
-                mcpServers = body.mcpServers.map { it.toMutableList() }
+                mcpServers =
+                    body.mcpServers.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 metadata = body.metadata
                 outputConfig = body.outputConfig
                 outputFormat = body.outputFormat
                 serviceTier = body.serviceTier
                 speed = body.speed
-                stopSequences = body.stopSequences.map { it.toMutableList() }
+                stopSequences =
+                    body.stopSequences.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 system = body.system
                 temperature = body.temperature
                 thinking = body.thinking

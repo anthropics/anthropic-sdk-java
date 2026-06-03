@@ -1752,18 +1752,19 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
-                messages = body.messages.map { it.toMutableList() }
+                messages = body.messages.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 model = body.model
                 cacheControl = body.cacheControl
                 contextManagement = body.contextManagement
-                mcpServers = body.mcpServers.map { it.toMutableList() }
+                mcpServers =
+                    body.mcpServers.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 outputConfig = body.outputConfig
                 outputFormat = body.outputFormat
                 speed = body.speed
                 system = body.system
                 thinking = body.thinking
                 toolChoice = body.toolChoice
-                tools = body.tools.map { it.toMutableList() }
+                tools = body.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 

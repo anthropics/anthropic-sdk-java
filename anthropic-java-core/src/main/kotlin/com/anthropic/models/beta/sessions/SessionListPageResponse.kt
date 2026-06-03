@@ -94,7 +94,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(sessionListPageResponse: SessionListPageResponse) = apply {
-            data = sessionListPageResponse.data.map { it.toMutableList() }
+            data =
+                sessionListPageResponse.data
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             nextPage = sessionListPageResponse.nextPage
             additionalProperties = sessionListPageResponse.additionalProperties.toMutableMap()
         }

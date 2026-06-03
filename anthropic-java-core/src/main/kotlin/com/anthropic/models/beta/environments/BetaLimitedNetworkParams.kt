@@ -147,7 +147,10 @@ private constructor(
             type = betaLimitedNetworkParams.type
             allowMcpServers = betaLimitedNetworkParams.allowMcpServers
             allowPackageManagers = betaLimitedNetworkParams.allowPackageManagers
-            allowedHosts = betaLimitedNetworkParams.allowedHosts.map { it.toMutableList() }
+            allowedHosts =
+                betaLimitedNetworkParams.allowedHosts
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             additionalProperties = betaLimitedNetworkParams.additionalProperties.toMutableMap()
         }
 

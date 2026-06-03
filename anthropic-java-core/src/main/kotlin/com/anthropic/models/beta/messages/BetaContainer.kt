@@ -127,7 +127,7 @@ private constructor(
         internal fun from(betaContainer: BetaContainer) = apply {
             id = betaContainer.id
             expiresAt = betaContainer.expiresAt
-            skills = betaContainer.skills.map { it.toMutableList() }
+            skills = betaContainer.skills.map { it.toMutableList() }.takeUnless { it.isMissing() }
             additionalProperties = betaContainer.additionalProperties.toMutableMap()
         }
 

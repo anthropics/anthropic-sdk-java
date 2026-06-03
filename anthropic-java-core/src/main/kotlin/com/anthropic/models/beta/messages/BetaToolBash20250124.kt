@@ -202,10 +202,16 @@ private constructor(
         internal fun from(betaToolBash20250124: BetaToolBash20250124) = apply {
             name = betaToolBash20250124.name
             type = betaToolBash20250124.type
-            allowedCallers = betaToolBash20250124.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                betaToolBash20250124.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = betaToolBash20250124.cacheControl
             deferLoading = betaToolBash20250124.deferLoading
-            inputExamples = betaToolBash20250124.inputExamples.map { it.toMutableList() }
+            inputExamples =
+                betaToolBash20250124.inputExamples
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             strict = betaToolBash20250124.strict
             additionalProperties = betaToolBash20250124.additionalProperties.toMutableMap()
         }

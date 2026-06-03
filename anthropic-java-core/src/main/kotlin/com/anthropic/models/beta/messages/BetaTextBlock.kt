@@ -124,7 +124,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(betaTextBlock: BetaTextBlock) = apply {
-            citations = betaTextBlock.citations.map { it.toMutableList() }
+            citations =
+                betaTextBlock.citations.map { it.toMutableList() }.takeUnless { it.isMissing() }
             text = betaTextBlock.text
             type = betaTextBlock.type
             additionalProperties = betaTextBlock.additionalProperties.toMutableMap()

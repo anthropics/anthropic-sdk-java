@@ -115,7 +115,10 @@ private constructor(
             betaManagedAgentsMultiagentCoordinatorParams:
                 BetaManagedAgentsMultiagentCoordinatorParams
         ) = apply {
-            agents = betaManagedAgentsMultiagentCoordinatorParams.agents.map { it.toMutableList() }
+            agents =
+                betaManagedAgentsMultiagentCoordinatorParams.agents
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaManagedAgentsMultiagentCoordinatorParams.type
             additionalProperties =
                 betaManagedAgentsMultiagentCoordinatorParams.additionalProperties.toMutableMap()

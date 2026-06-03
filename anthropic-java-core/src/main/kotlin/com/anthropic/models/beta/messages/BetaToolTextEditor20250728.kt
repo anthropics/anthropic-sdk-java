@@ -228,10 +228,16 @@ private constructor(
         internal fun from(betaToolTextEditor20250728: BetaToolTextEditor20250728) = apply {
             name = betaToolTextEditor20250728.name
             type = betaToolTextEditor20250728.type
-            allowedCallers = betaToolTextEditor20250728.allowedCallers.map { it.toMutableList() }
+            allowedCallers =
+                betaToolTextEditor20250728.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = betaToolTextEditor20250728.cacheControl
             deferLoading = betaToolTextEditor20250728.deferLoading
-            inputExamples = betaToolTextEditor20250728.inputExamples.map { it.toMutableList() }
+            inputExamples =
+                betaToolTextEditor20250728.inputExamples
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             maxCharacters = betaToolTextEditor20250728.maxCharacters
             strict = betaToolTextEditor20250728.strict
             additionalProperties = betaToolTextEditor20250728.additionalProperties.toMutableMap()

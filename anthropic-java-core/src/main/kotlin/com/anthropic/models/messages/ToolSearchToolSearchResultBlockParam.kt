@@ -99,7 +99,9 @@ private constructor(
             toolSearchToolSearchResultBlockParam: ToolSearchToolSearchResultBlockParam
         ) = apply {
             toolReferences =
-                toolSearchToolSearchResultBlockParam.toolReferences.map { it.toMutableList() }
+                toolSearchToolSearchResultBlockParam.toolReferences
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = toolSearchToolSearchResultBlockParam.type
             additionalProperties =
                 toolSearchToolSearchResultBlockParam.additionalProperties.toMutableMap()

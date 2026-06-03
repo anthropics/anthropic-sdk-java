@@ -94,7 +94,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(agentListPageResponse: AgentListPageResponse) = apply {
-            data = agentListPageResponse.data.map { it.toMutableList() }
+            data =
+                agentListPageResponse.data.map { it.toMutableList() }.takeUnless { it.isMissing() }
             nextPage = agentListPageResponse.nextPage
             additionalProperties = agentListPageResponse.additionalProperties.toMutableMap()
         }

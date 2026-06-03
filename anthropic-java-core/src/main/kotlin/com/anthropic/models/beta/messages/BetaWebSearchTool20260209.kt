@@ -273,9 +273,18 @@ private constructor(
         internal fun from(betaWebSearchTool20260209: BetaWebSearchTool20260209) = apply {
             name = betaWebSearchTool20260209.name
             type = betaWebSearchTool20260209.type
-            allowedCallers = betaWebSearchTool20260209.allowedCallers.map { it.toMutableList() }
-            allowedDomains = betaWebSearchTool20260209.allowedDomains.map { it.toMutableList() }
-            blockedDomains = betaWebSearchTool20260209.blockedDomains.map { it.toMutableList() }
+            allowedCallers =
+                betaWebSearchTool20260209.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            allowedDomains =
+                betaWebSearchTool20260209.allowedDomains
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            blockedDomains =
+                betaWebSearchTool20260209.blockedDomains
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             cacheControl = betaWebSearchTool20260209.cacheControl
             deferLoading = betaWebSearchTool20260209.deferLoading
             maxUses = betaWebSearchTool20260209.maxUses

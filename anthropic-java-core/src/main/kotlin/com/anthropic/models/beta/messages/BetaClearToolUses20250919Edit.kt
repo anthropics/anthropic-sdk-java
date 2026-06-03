@@ -189,7 +189,10 @@ private constructor(
             type = betaClearToolUses20250919Edit.type
             clearAtLeast = betaClearToolUses20250919Edit.clearAtLeast
             clearToolInputs = betaClearToolUses20250919Edit.clearToolInputs
-            excludeTools = betaClearToolUses20250919Edit.excludeTools.map { it.toMutableList() }
+            excludeTools =
+                betaClearToolUses20250919Edit.excludeTools
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             keep = betaClearToolUses20250919Edit.keep
             trigger = betaClearToolUses20250919Edit.trigger
             additionalProperties = betaClearToolUses20250919Edit.additionalProperties.toMutableMap()

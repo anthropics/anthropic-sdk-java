@@ -113,7 +113,10 @@ private constructor(
         internal fun from(
             betaManagedAgentsUserMessageEventParams: BetaManagedAgentsUserMessageEventParams
         ) = apply {
-            content = betaManagedAgentsUserMessageEventParams.content.map { it.toMutableList() }
+            content =
+                betaManagedAgentsUserMessageEventParams.content
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaManagedAgentsUserMessageEventParams.type
             additionalProperties =
                 betaManagedAgentsUserMessageEventParams.additionalProperties.toMutableMap()

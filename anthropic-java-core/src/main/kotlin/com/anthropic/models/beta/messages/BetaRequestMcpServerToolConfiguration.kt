@@ -95,7 +95,9 @@ private constructor(
             betaRequestMcpServerToolConfiguration: BetaRequestMcpServerToolConfiguration
         ) = apply {
             allowedTools =
-                betaRequestMcpServerToolConfiguration.allowedTools.map { it.toMutableList() }
+                betaRequestMcpServerToolConfiguration.allowedTools
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             enabled = betaRequestMcpServerToolConfiguration.enabled
             additionalProperties =
                 betaRequestMcpServerToolConfiguration.additionalProperties.toMutableMap()

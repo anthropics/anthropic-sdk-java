@@ -44,6 +44,24 @@ internal class WebFetchTool20260309Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseWebFetchTool20260309 = WebFetchTool20260309.builder().build()
+
+        val webFetchTool20260309 =
+            baseWebFetchTool20260309
+                .toBuilder()
+                .addAllowedCaller(WebFetchTool20260309.AllowedCaller.DIRECT)
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .build()
+
+        assertThat(webFetchTool20260309.allowedCallers().getOrNull())
+            .containsExactly(WebFetchTool20260309.AllowedCaller.DIRECT)
+        assertThat(webFetchTool20260309.allowedDomains().getOrNull()).containsExactly("string")
+        assertThat(webFetchTool20260309.blockedDomains().getOrNull()).containsExactly("string")
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val webFetchTool20260309 =

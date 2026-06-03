@@ -525,7 +525,7 @@ private constructor(
                 agent = body.agent
                 metadata = body.metadata
                 title = body.title
-                vaultIds = body.vaultIds.map { it.toMutableList() }
+                vaultIds = body.vaultIds.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 

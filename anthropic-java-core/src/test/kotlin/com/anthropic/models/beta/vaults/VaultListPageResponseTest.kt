@@ -54,6 +54,48 @@ internal class VaultListPageResponseTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseVaultListPageResponse = VaultListPageResponse.builder().build()
+
+        val vaultListPageResponse =
+            baseVaultListPageResponse
+                .toBuilder()
+                .addData(
+                    BetaManagedAgentsVault.builder()
+                        .id("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+                        .archivedAt(null)
+                        .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .displayName("Example vault")
+                        .metadata(
+                            BetaManagedAgentsVault.Metadata.builder()
+                                .putAdditionalProperty("environment", JsonValue.from("production"))
+                                .build()
+                        )
+                        .type(BetaManagedAgentsVault.Type.VAULT)
+                        .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .build()
+                )
+                .build()
+
+        assertThat(vaultListPageResponse.data().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsVault.builder()
+                    .id("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+                    .archivedAt(null)
+                    .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                    .displayName("Example vault")
+                    .metadata(
+                        BetaManagedAgentsVault.Metadata.builder()
+                            .putAdditionalProperty("environment", JsonValue.from("production"))
+                            .build()
+                    )
+                    .type(BetaManagedAgentsVault.Type.VAULT)
+                    .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val vaultListPageResponse =

@@ -53,6 +53,50 @@ internal class MemoryListPageResponseTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseMemoryListPageResponse = MemoryListPageResponse.builder().build()
+
+        val memoryListPageResponse =
+            baseMemoryListPageResponse
+                .toBuilder()
+                .addData(
+                    BetaManagedAgentsMemoryListItem.ofMemory(
+                        BetaManagedAgentsMemory.builder()
+                            .id("id")
+                            .contentSha256("content_sha256")
+                            .contentSizeBytes(0)
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .memoryStoreId("memory_store_id")
+                            .memoryVersionId("memory_version_id")
+                            .path("path")
+                            .type(BetaManagedAgentsMemory.Type.MEMORY)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .content("content")
+                            .build()
+                    )
+                )
+                .build()
+
+        assertThat(memoryListPageResponse.data().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsMemoryListItem.ofMemory(
+                    BetaManagedAgentsMemory.builder()
+                        .id("id")
+                        .contentSha256("content_sha256")
+                        .contentSizeBytes(0)
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .memoryStoreId("memory_store_id")
+                        .memoryVersionId("memory_version_id")
+                        .path("path")
+                        .type(BetaManagedAgentsMemory.Type.MEMORY)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .content("content")
+                        .build()
+                )
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val memoryListPageResponse =

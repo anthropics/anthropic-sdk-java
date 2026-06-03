@@ -98,7 +98,10 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(memoryStoreListPageResponse: MemoryStoreListPageResponse) = apply {
-            data = memoryStoreListPageResponse.data.map { it.toMutableList() }
+            data =
+                memoryStoreListPageResponse.data
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             nextPage = memoryStoreListPageResponse.nextPage
             additionalProperties = memoryStoreListPageResponse.additionalProperties.toMutableMap()
         }

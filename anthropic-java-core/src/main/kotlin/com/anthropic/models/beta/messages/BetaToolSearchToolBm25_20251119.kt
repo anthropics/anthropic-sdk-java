@@ -186,7 +186,9 @@ private constructor(
                 name = betaToolSearchToolBm25_20251119.name
                 type = betaToolSearchToolBm25_20251119.type
                 allowedCallers =
-                    betaToolSearchToolBm25_20251119.allowedCallers.map { it.toMutableList() }
+                    betaToolSearchToolBm25_20251119.allowedCallers
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 cacheControl = betaToolSearchToolBm25_20251119.cacheControl
                 deferLoading = betaToolSearchToolBm25_20251119.deferLoading
                 strict = betaToolSearchToolBm25_20251119.strict

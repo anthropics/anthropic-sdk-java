@@ -73,6 +73,31 @@ internal class ToolTest {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseTool =
+            Tool.builder().inputSchema(Tool.InputSchema.builder().build()).name("name").build()
+
+        val tool =
+            baseTool
+                .toBuilder()
+                .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                .addInputExample(
+                    Tool.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
+                .build()
+
+        assertThat(tool.allowedCallers().getOrNull()).containsExactly(Tool.AllowedCaller.DIRECT)
+        assertThat(tool.inputExamples().getOrNull())
+            .containsExactly(
+                Tool.InputExample.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val tool =

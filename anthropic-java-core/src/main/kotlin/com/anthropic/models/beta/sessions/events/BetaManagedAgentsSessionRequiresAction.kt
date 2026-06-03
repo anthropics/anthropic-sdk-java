@@ -106,7 +106,10 @@ private constructor(
         internal fun from(
             betaManagedAgentsSessionRequiresAction: BetaManagedAgentsSessionRequiresAction
         ) = apply {
-            eventIds = betaManagedAgentsSessionRequiresAction.eventIds.map { it.toMutableList() }
+            eventIds =
+                betaManagedAgentsSessionRequiresAction.eventIds
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaManagedAgentsSessionRequiresAction.type
             additionalProperties =
                 betaManagedAgentsSessionRequiresAction.additionalProperties.toMutableMap()

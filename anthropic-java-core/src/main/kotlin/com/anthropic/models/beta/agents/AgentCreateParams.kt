@@ -909,12 +909,13 @@ private constructor(
                 model = body.model
                 name = body.name
                 description = body.description
-                mcpServers = body.mcpServers.map { it.toMutableList() }
+                mcpServers =
+                    body.mcpServers.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 metadata = body.metadata
                 multiagent = body.multiagent
-                skills = body.skills.map { it.toMutableList() }
+                skills = body.skills.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 system = body.system
-                tools = body.tools.map { it.toMutableList() }
+                tools = body.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 

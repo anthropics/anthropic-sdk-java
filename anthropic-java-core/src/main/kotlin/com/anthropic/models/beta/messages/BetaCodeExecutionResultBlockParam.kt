@@ -147,7 +147,10 @@ private constructor(
         @JvmSynthetic
         internal fun from(betaCodeExecutionResultBlockParam: BetaCodeExecutionResultBlockParam) =
             apply {
-                content = betaCodeExecutionResultBlockParam.content.map { it.toMutableList() }
+                content =
+                    betaCodeExecutionResultBlockParam.content
+                        .map { it.toMutableList() }
+                        .takeUnless { it.isMissing() }
                 returnCode = betaCodeExecutionResultBlockParam.returnCode
                 stderr = betaCodeExecutionResultBlockParam.stderr
                 stdout = betaCodeExecutionResultBlockParam.stdout

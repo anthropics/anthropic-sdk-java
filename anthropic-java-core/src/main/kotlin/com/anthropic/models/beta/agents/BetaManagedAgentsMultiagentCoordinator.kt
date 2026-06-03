@@ -104,7 +104,10 @@ private constructor(
         internal fun from(
             betaManagedAgentsMultiagentCoordinator: BetaManagedAgentsMultiagentCoordinator
         ) = apply {
-            agents = betaManagedAgentsMultiagentCoordinator.agents.map { it.toMutableList() }
+            agents =
+                betaManagedAgentsMultiagentCoordinator.agents
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             type = betaManagedAgentsMultiagentCoordinator.type
             additionalProperties =
                 betaManagedAgentsMultiagentCoordinator.additionalProperties.toMutableMap()

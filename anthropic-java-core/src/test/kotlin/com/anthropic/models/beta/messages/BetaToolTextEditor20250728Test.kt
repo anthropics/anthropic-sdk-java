@@ -51,6 +51,31 @@ internal class BetaToolTextEditor20250728Test {
     }
 
     @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaToolTextEditor20250728 = BetaToolTextEditor20250728.builder().build()
+
+        val betaToolTextEditor20250728 =
+            baseBetaToolTextEditor20250728
+                .toBuilder()
+                .addAllowedCaller(BetaToolTextEditor20250728.AllowedCaller.DIRECT)
+                .addInputExample(
+                    BetaToolTextEditor20250728.InputExample.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
+                .build()
+
+        assertThat(betaToolTextEditor20250728.allowedCallers().getOrNull())
+            .containsExactly(BetaToolTextEditor20250728.AllowedCaller.DIRECT)
+        assertThat(betaToolTextEditor20250728.inputExamples().getOrNull())
+            .containsExactly(
+                BetaToolTextEditor20250728.InputExample.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
+    }
+
+    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaToolTextEditor20250728 =
