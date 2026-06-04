@@ -11,9 +11,8 @@ import com.anthropic.core.http.LoggingHttpClient
 import com.anthropic.core.http.PhantomReachableClosingHttpClient
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
-import com.anthropic.internal.core.http.AuthorizingHttpClient
-
 import com.anthropic.core.http.intercept
+import com.anthropic.internal.core.http.AuthorizingHttpClient
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
 import java.time.Duration

@@ -38,7 +38,6 @@ internal class ClientOptionsTest {
                 .httpClient(httpClient)
                 .addInterceptor(first)
                 .addInterceptor(second)
-                .apiKey("my-anthropic-api-key")
                 .build()
 
         assertThat(clientOptions.interceptors).containsExactly(first, second)
@@ -48,11 +47,7 @@ internal class ClientOptionsTest {
     fun toBuilder_interceptorsArePreserved() {
         val interceptor = Interceptor { it }
         var clientOptions =
-            ClientOptions.builder()
-                .httpClient(httpClient)
-                .addInterceptor(interceptor)
-                .apiKey("my-anthropic-api-key")
-                .build()
+            ClientOptions.builder().httpClient(httpClient).addInterceptor(interceptor).build()
 
         clientOptions = clientOptions.toBuilder().build()
 
