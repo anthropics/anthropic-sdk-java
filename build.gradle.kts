@@ -8,7 +8,7 @@ repositories {
 
 allprojects {
     group = "com.anthropic"
-    version = "2.35.0" // x-release-please-version
+    version = "2.36.0" // x-release-please-version
 }
 
 subprojects {
