@@ -3,6 +3,7 @@
 package com.anthropic.core
 
 import com.anthropic.core.http.HttpClient
+import com.anthropic.core.http.Interceptor
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -25,6 +26,37 @@ internal class ClientOptionsTest {
                 .build()
 
         assertThat(clientOptions.headers.values("User-Agent")).containsExactly("My User Agent")
+    }
+
+    @Test
+    fun addInterceptor_appendsToInterceptors() {
+        val first = Interceptor { it }
+        val second = Interceptor { it }
+
+        val clientOptions =
+            ClientOptions.builder()
+                .httpClient(httpClient)
+                .addInterceptor(first)
+                .addInterceptor(second)
+                .apiKey("my-anthropic-api-key")
+                .build()
+
+        assertThat(clientOptions.interceptors).containsExactly(first, second)
+    }
+
+    @Test
+    fun toBuilder_interceptorsArePreserved() {
+        val interceptor = Interceptor { it }
+        var clientOptions =
+            ClientOptions.builder()
+                .httpClient(httpClient)
+                .addInterceptor(interceptor)
+                .apiKey("my-anthropic-api-key")
+                .build()
+
+        clientOptions = clientOptions.toBuilder().build()
+
+        assertThat(clientOptions.interceptors).containsExactly(interceptor)
     }
 
     @Test

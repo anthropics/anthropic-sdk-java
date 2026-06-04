@@ -6,11 +6,14 @@ import com.anthropic.core.auth.CredentialResult
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
+import com.anthropic.core.http.Interceptor
 import com.anthropic.core.http.LoggingHttpClient
 import com.anthropic.core.http.PhantomReachableClosingHttpClient
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
 import com.anthropic.internal.core.http.AuthorizingHttpClient
+
+import com.anthropic.core.http.intercept
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
 import java.time.Duration
@@ -34,6 +37,15 @@ private constructor(
      * This class takes ownership of the client and closes it when closed.
      */
     @get:JvmName("httpClient") val httpClient: HttpClient,
+    /**
+     * Wraps the HTTP client using the given [interceptors].
+     *
+     * The interceptors are applied to every request, including retries, in order.
+     *
+     * Each interceptor receives an HTTP client that delegates to the next interceptor, and the last
+     * interceptor receives the underlying HTTP client.
+     */
+    @get:JvmName("interceptors") val interceptors: List<Interceptor>,
     /**
      * Whether to throw an exception if any of the Jackson versions detected at runtime are
      * incompatible with the SDK's minimum supported Jackson version (2.13.4).
@@ -159,6 +171,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var httpClient: HttpClient? = null
+        private var interceptors: MutableList<Interceptor> = mutableListOf()
         private var checkJacksonVersionCompatibility: Boolean = true
         private var jsonMapper: JsonMapper = jsonMapper()
         private var streamHandlerExecutor: Executor? = null
@@ -177,6 +190,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
             httpClient = clientOptions.originalHttpClient
+            interceptors = clientOptions.interceptors.toMutableList()
             checkJacksonVersionCompatibility = clientOptions.checkJacksonVersionCompatibility
             jsonMapper = clientOptions.jsonMapper
             streamHandlerExecutor = clientOptions.streamHandlerExecutor
@@ -203,6 +217,21 @@ private constructor(
         fun httpClient(httpClient: HttpClient) = apply {
             this.httpClient = PhantomReachableClosingHttpClient(httpClient)
         }
+
+        /**
+         * Wraps the HTTP client using the given [interceptors].
+         *
+         * The interceptors are applied to every request, including retries, in order.
+         *
+         * Each interceptor receives an HTTP client that delegates to the next interceptor, and the
+         * last interceptor receives the underlying HTTP client.
+         */
+        fun interceptors(interceptors: List<Interceptor>) = apply {
+            this.interceptors = interceptors.toMutableList()
+        }
+
+        /** Adds a single [Interceptor] to [interceptors]. */
+        fun addInterceptor(interceptor: Interceptor) = apply { interceptors.add(interceptor) }
 
         /**
          * Whether to throw an exception if any of the Jackson versions detected at runtime are
@@ -503,16 +532,19 @@ private constructor(
                 rawHttpClient,
                 RetryingHttpClient.builder()
                     .httpClient(
-                        LoggingHttpClient.builder()
-                            .httpClient(authorizedHttpClient)
-                            .clock(clock)
-                            .level(logLevel)
-                            .build()
+                        interceptors.intercept(
+                            LoggingHttpClient.builder()
+                                .httpClient(authorizedHttpClient)
+                                .clock(clock)
+                                .level(logLevel)
+                                .build()
+                        )
                     )
                     .sleeper(sleeper)
                     .clock(clock)
                     .maxRetries(maxRetries)
                     .build(),
+                interceptors.toImmutable(),
                 checkJacksonVersionCompatibility,
                 jsonMapper,
                 streamHandlerExecutor,
