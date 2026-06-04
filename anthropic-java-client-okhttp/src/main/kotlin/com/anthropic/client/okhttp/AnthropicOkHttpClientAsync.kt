@@ -11,6 +11,7 @@ import com.anthropic.core.Timeout
 import com.anthropic.core.http.AsyncStreamResponse
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpClient
+import com.anthropic.core.http.Interceptor
 import com.anthropic.core.http.ProxyAuthenticator
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.jsonMapper
@@ -183,6 +184,23 @@ class AnthropicOkHttpClientAsync private constructor() {
         /** Alias for calling [Builder.hostnameVerifier] with `hostnameVerifier.orElse(null)`. */
         fun hostnameVerifier(hostnameVerifier: Optional<HostnameVerifier>) =
             hostnameVerifier(hostnameVerifier.getOrNull())
+
+        /**
+         * Wraps the HTTP client using the given [interceptors].
+         *
+         * The interceptors are applied to every request, including retries, in order.
+         *
+         * Each interceptor receives an HTTP client that delegates to the next interceptor, and the
+         * last interceptor receives the underlying HTTP client.
+         */
+        fun interceptors(interceptors: List<Interceptor>) = apply {
+            clientOptions.interceptors(interceptors)
+        }
+
+        /** Adds a single [Interceptor] to [interceptors]. */
+        fun addInterceptor(interceptor: Interceptor) = apply {
+            clientOptions.addInterceptor(interceptor)
+        }
 
         /**
          * Whether to throw an exception if any of the Jackson versions detected at runtime are
