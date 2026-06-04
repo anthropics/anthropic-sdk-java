@@ -120,7 +120,14 @@ class BetaMessageAccumulator private constructor() {
             require(contentBlock.isText()) { "Content block is not a text block." }
             val oldTextBlock = contentBlock.asText()
             val newTextBlock =
-                oldTextBlock.toBuilder().text(oldTextBlock.text() + textDelta.text()).build()
+                oldTextBlock
+                    .toBuilder()
+                    .text(oldTextBlock.text() + textDelta.text())
+                    // A streamed `content_block_start` payload omits the `citations` field, but
+                    // `toBuilder()` drops a missing `citations` while `build()` requires it to be
+                    // set — carry the raw field through so the rebuild does not throw.
+                    .citations(oldTextBlock._citations())
+                    .build()
 
             return BetaContentBlock.ofText(newTextBlock)
         }

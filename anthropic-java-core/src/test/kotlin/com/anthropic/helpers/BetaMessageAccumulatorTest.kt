@@ -624,6 +624,40 @@ internal class BetaMessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateTextContentBlockWithCitationsDeltasWithoutInitialCitations() {
+        val accumulator = BetaMessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+
+        // A real streamed `content_block_start` payload omits the `citations` field entirely, so
+        // the text block starts with `citations` missing rather than set to an empty list.
+        accumulator.accumulate(
+            contentBlockStartEvent(
+                0L,
+                ContentBlock.ofText(
+                    BetaTextBlock.builder().text("").citations(JsonMissing.of()).build()
+                ),
+            )
+        )
+        accumulator.accumulate(textContentBlockDeltaEvent(0L, "The grass is green."))
+        accumulator.accumulate(citationContentBlockDeltaEvent(0L, 123L))
+        accumulator.accumulate(citationContentBlockDeltaEvent(0L, 456L))
+        accumulator.accumulate(contentBlockStopEvent(0L))
+
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(BetaStopReason.END_TURN), outputTokens = 9L)
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val content = accumulator.message().content()
+
+        assertThat(content.size).isEqualTo(1)
+        assertThat(content[0].asText().text()).isEqualTo("The grass is green.")
+        assertThat(content[0].asText().citations())
+            .hasValue(listOf(textCitation(123L), textCitation(456L)))
+    }
+
+    @Test
     fun accumulateToolUseContentBlockWithoutAnyDelta() {
         val accumulator = BetaMessageAccumulator.create()
 
