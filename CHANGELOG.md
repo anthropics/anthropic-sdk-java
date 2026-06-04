@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.36.0 (2026-06-04)
+
+Full Changelog: [v2.35.0...v2.36.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.35.0...v2.36.0)
+
+### Features
+
+* **client:** add interceptors support ([565ab77](https://github.com/anthropics/anthropic-sdk-java/commit/565ab77c6feaddfcbe3979bca733e40cbede66ca))
+
+
+### Bug Fixes
+
+* **client:** allow `.addX` methods on `.toBuilder()` ([5255700](https://github.com/anthropics/anthropic-sdk-java/commit/5255700755c2f1c92ef43141f0279952ac944ebd))
+* **streaming:** accumulate citations_delta without crashing on absent citations ([#8](https://github.com/anthropics/anthropic-sdk-java/issues/8)) ([ea1647e](https://github.com/anthropics/anthropic-sdk-java/commit/ea1647e6836a1a587fadf1d2c1dab13844431d4e))
+* **streaming:** carry encrypted_content through beta compaction accumulator ([#1248](https://github.com/anthropics/anthropic-sdk-java/issues/1248)) ([ec42069](https://github.com/anthropics/anthropic-sdk-java/commit/ec4206959b107ecd791a74b28132f48384bf2676))
+* **streaming:** keep missing citations when accumulating text deltas ([#20](https://github.com/anthropics/anthropic-sdk-java/issues/20)) ([e912eba](https://github.com/anthropics/anthropic-sdk-java/commit/e912ebafac7295e84bc9b6d696287320f291792c))
+
+
+### Chores
+
+* fix build error in test ([#23](https://github.com/anthropics/anthropic-sdk-java/issues/23)) ([fa53392](https://github.com/anthropics/anthropic-sdk-java/commit/fa53392796f6b0ec930a21a672c90425c2583c72))
+* **internal:** build local repo before minting jwt in workflow ([226c529](https://github.com/anthropics/anthropic-sdk-java/commit/226c529668fceb97c8da12fc218659150a312838))
+* **internal:** fix branch names ([b66a5d2](https://github.com/anthropics/anthropic-sdk-java/commit/b66a5d2327723cc14b7249359ad3e9aa141f841c))
+* **internal:** fix printed pkg url ([c738596](https://github.com/anthropics/anthropic-sdk-java/commit/c738596a58d0d1e2d1154bff3569bcf9794d4b80))
+* **internal:** update private repo name ([fc11324](https://github.com/anthropics/anthropic-sdk-java/commit/fc11324b945e5668b4a6a41923c3354bede4f8a0))
+
+
+### Documentation
+
+* point security reports to Anthropic's HackerOne program ([#10](https://github.com/anthropics/anthropic-sdk-java/issues/10)) ([57040fd](https://github.com/anthropics/anthropic-sdk-java/commit/57040fd103ead1afc3e653ff997138898f0e6b0b))
+
 ## 2.35.0 (2026-05-28)
 
 Full Changelog: [v2.34.1...v2.35.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.34.1...v2.35.0)
