@@ -9,6 +9,10 @@ repositories {
 allprojects {
     group = "com.anthropic"
     version = "2.35.0" // x-release-please-version
+
+    dependencyLocking {
+        lockAllConfigurations()
+    }
 }
 
 subprojects {
