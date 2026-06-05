@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.37.0 (2026-06-05)
+
+Full Changelog: [v2.36.0...v2.37.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.36.0...v2.37.0)
+
+### Features
+
+* **api:** mark Claude Opus 4.1 as deprecated ([693cbb4](https://github.com/anthropics/anthropic-sdk-java/commit/693cbb4cf1fc7649799cf7181dec8ecbf70c8cb8))
+
 ## 2.36.0 (2026-06-04)
 
 Full Changelog: [v2.35.0...v2.36.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.35.0...v2.36.0)
