@@ -92,7 +92,7 @@ jobs:
           PROJECT: anthropic-java
         run: ./scripts/upload-artifacts
   test:
-    timeout-minutes: 15
+    timeout-minutes: 30
     name: test
     runs-on: 'ubuntu-latest'
     if: github.event_name == 'push' || github.event.pull_request.head.repo.fork
