@@ -14,10 +14,12 @@ internal class BetaToolSearchToolResultErrorParamTest {
         val betaToolSearchToolResultErrorParam =
             BetaToolSearchToolResultErrorParam.builder()
                 .errorCode(BetaToolSearchToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT)
+                .errorMessage("error_message")
                 .build()
 
         assertThat(betaToolSearchToolResultErrorParam.errorCode())
             .isEqualTo(BetaToolSearchToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT)
+        assertThat(betaToolSearchToolResultErrorParam.errorMessage()).contains("error_message")
     }
 
     @Test
@@ -26,6 +28,7 @@ internal class BetaToolSearchToolResultErrorParamTest {
         val betaToolSearchToolResultErrorParam =
             BetaToolSearchToolResultErrorParam.builder()
                 .errorCode(BetaToolSearchToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT)
+                .errorMessage("error_message")
                 .build()
 
         val roundtrippedBetaToolSearchToolResultErrorParam =

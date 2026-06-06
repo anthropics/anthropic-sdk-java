@@ -272,7 +272,7 @@ private constructor(
      *
      * There are two types of tools: **client tools** and **server tools**. The behavior described
      * below applies to client tools. For
-     * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+     * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
      * see their individual documentation as each has its own behavior (e.g., the
      * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
      *
@@ -1043,7 +1043,7 @@ private constructor(
          *
          * There are two types of tools: **client tools** and **server tools**. The behavior
          * described below applies to client tools. For
-         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
          * see their individual documentation as each has its own behavior (e.g., the
          * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
          *
@@ -1745,7 +1745,7 @@ private constructor(
          *
          * There are two types of tools: **client tools** and **server tools**. The behavior
          * described below applies to client tools. For
-         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
          * see their individual documentation as each has its own behavior (e.g., the
          * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
          *
@@ -2581,7 +2581,7 @@ private constructor(
              *
              * There are two types of tools: **client tools** and **server tools**. The behavior
              * described below applies to client tools. For
-             * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview\#server-tools),
+             * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
              * see their individual documentation as each has its own behavior (e.g., the
              * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
              *

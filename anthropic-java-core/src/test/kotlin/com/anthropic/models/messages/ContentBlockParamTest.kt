@@ -946,6 +946,7 @@ internal class ContentBlockParamTest {
                 .content(
                     ToolSearchToolResultErrorParam.builder()
                         .errorCode(ToolSearchToolResultErrorCode.INVALID_TOOL_INPUT)
+                        .errorMessage("error_message")
                         .build()
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
@@ -984,6 +985,7 @@ internal class ContentBlockParamTest {
                     .content(
                         ToolSearchToolResultErrorParam.builder()
                             .errorCode(ToolSearchToolResultErrorCode.INVALID_TOOL_INPUT)
+                            .errorMessage("error_message")
                             .build()
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")

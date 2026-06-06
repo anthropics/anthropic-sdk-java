@@ -43,6 +43,7 @@ private constructor(
             .errorCode(
                 _errorCode().map { BetaToolSearchToolResultErrorParam.ErrorCode.of(it.toString()) }
             )
+            .errorMessage(_errorMessage())
             .build()
 
     /**

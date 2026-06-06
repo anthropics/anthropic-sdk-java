@@ -1110,6 +1110,7 @@ internal class BetaContentBlockParamTest {
                 .content(
                     BetaToolSearchToolResultErrorParam.builder()
                         .errorCode(BetaToolSearchToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT)
+                        .errorMessage("error_message")
                         .build()
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
@@ -1157,6 +1158,7 @@ internal class BetaContentBlockParamTest {
                             .errorCode(
                                 BetaToolSearchToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
                             )
+                            .errorMessage("error_message")
                             .build()
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")

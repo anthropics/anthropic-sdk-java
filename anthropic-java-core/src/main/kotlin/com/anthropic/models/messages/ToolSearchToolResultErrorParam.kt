@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class ToolSearchToolResultErrorParam
@@ -21,6 +22,7 @@ class ToolSearchToolResultErrorParam
 private constructor(
     private val errorCode: JsonField<ToolSearchToolResultErrorCode>,
     private val type: JsonValue,
+    private val errorMessage: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -30,7 +32,10 @@ private constructor(
         @ExcludeMissing
         errorCode: JsonField<ToolSearchToolResultErrorCode> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(errorCode, type, mutableMapOf())
+        @JsonProperty("error_message")
+        @ExcludeMissing
+        errorMessage: JsonField<String> = JsonMissing.of(),
+    ) : this(errorCode, type, errorMessage, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -50,6 +55,12 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun errorMessage(): Optional<String> = errorMessage.getOptional("error_message")
+
+    /**
      * Returns the raw JSON value of [errorCode].
      *
      * Unlike [errorCode], this method doesn't throw if the JSON field has an unexpected type.
@@ -57,6 +68,15 @@ private constructor(
     @JsonProperty("error_code")
     @ExcludeMissing
     fun _errorCode(): JsonField<ToolSearchToolResultErrorCode> = errorCode
+
+    /**
+     * Returns the raw JSON value of [errorMessage].
+     *
+     * Unlike [errorMessage], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("error_message")
+    @ExcludeMissing
+    fun _errorMessage(): JsonField<String> = errorMessage
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -89,12 +109,14 @@ private constructor(
 
         private var errorCode: JsonField<ToolSearchToolResultErrorCode>? = null
         private var type: JsonValue = JsonValue.from("tool_search_tool_result_error")
+        private var errorMessage: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(toolSearchToolResultErrorParam: ToolSearchToolResultErrorParam) = apply {
             errorCode = toolSearchToolResultErrorParam.errorCode
             type = toolSearchToolResultErrorParam.type
+            errorMessage = toolSearchToolResultErrorParam.errorMessage
             additionalProperties =
                 toolSearchToolResultErrorParam.additionalProperties.toMutableMap()
         }
@@ -125,6 +147,22 @@ private constructor(
          * value.
          */
         fun type(type: JsonValue) = apply { this.type = type }
+
+        fun errorMessage(errorMessage: String?) = errorMessage(JsonField.ofNullable(errorMessage))
+
+        /** Alias for calling [Builder.errorMessage] with `errorMessage.orElse(null)`. */
+        fun errorMessage(errorMessage: Optional<String>) = errorMessage(errorMessage.getOrNull())
+
+        /**
+         * Sets [Builder.errorMessage] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.errorMessage] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun errorMessage(errorMessage: JsonField<String>) = apply {
+            this.errorMessage = errorMessage
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -161,6 +199,7 @@ private constructor(
             ToolSearchToolResultErrorParam(
                 checkRequired("errorCode", errorCode),
                 type,
+                errorMessage,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -186,6 +225,7 @@ private constructor(
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
+        errorMessage()
         validated = true
     }
 
@@ -205,7 +245,8 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (errorCode.asKnown().getOrNull()?.validity() ?: 0) +
-            type.let { if (it == JsonValue.from("tool_search_tool_result_error")) 1 else 0 }
+            type.let { if (it == JsonValue.from("tool_search_tool_result_error")) 1 else 0 } +
+            (if (errorMessage.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -215,13 +256,16 @@ private constructor(
         return other is ToolSearchToolResultErrorParam &&
             errorCode == other.errorCode &&
             type == other.type &&
+            errorMessage == other.errorMessage &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(errorCode, type, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(errorCode, type, errorMessage, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ToolSearchToolResultErrorParam{errorCode=$errorCode, type=$type, additionalProperties=$additionalProperties}"
+        "ToolSearchToolResultErrorParam{errorCode=$errorCode, type=$type, errorMessage=$errorMessage, additionalProperties=$additionalProperties}"
 }

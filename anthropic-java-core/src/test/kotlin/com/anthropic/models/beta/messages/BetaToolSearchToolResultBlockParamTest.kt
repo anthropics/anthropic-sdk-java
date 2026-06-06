@@ -16,6 +16,7 @@ internal class BetaToolSearchToolResultBlockParamTest {
                 .content(
                     BetaToolSearchToolResultErrorParam.builder()
                         .errorCode(BetaToolSearchToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT)
+                        .errorMessage("error_message")
                         .build()
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
@@ -31,6 +32,7 @@ internal class BetaToolSearchToolResultBlockParamTest {
                 BetaToolSearchToolResultBlockParam.Content.ofBetaToolSearchToolResultErrorParam(
                     BetaToolSearchToolResultErrorParam.builder()
                         .errorCode(BetaToolSearchToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT)
+                        .errorMessage("error_message")
                         .build()
                 )
             )
@@ -52,6 +54,7 @@ internal class BetaToolSearchToolResultBlockParamTest {
                 .content(
                     BetaToolSearchToolResultErrorParam.builder()
                         .errorCode(BetaToolSearchToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT)
+                        .errorMessage("error_message")
                         .build()
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
