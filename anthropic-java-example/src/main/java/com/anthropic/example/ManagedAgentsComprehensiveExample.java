@@ -112,7 +112,6 @@ public final class ManagedAgentsComprehensiveExample {
                                 .name("get_weather")
                                 .description("Look up the current weather for a city.")
                                 .inputSchema(BetaManagedAgentsCustomToolInputSchema.builder()
-                                        .type(BetaManagedAgentsCustomToolInputSchema.Type.OBJECT)
                                         .properties(BetaManagedAgentsCustomToolInputSchema.Properties.builder()
                                                 .putAdditionalProperty("city", JsonValue.from(Map.of("type", "string")))
                                                 .build())

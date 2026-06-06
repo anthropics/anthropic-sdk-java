@@ -38,7 +38,10 @@ private constructor(
     ) : this(errorCode, errorMessage, type, mutableMapOf())
 
     fun toParam(): ToolSearchToolResultErrorParam =
-        ToolSearchToolResultErrorParam.builder().errorCode(_errorCode()).build()
+        ToolSearchToolResultErrorParam.builder()
+            .errorCode(_errorCode())
+            .errorMessage(_errorMessage())
+            .build()
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is

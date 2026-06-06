@@ -14,10 +14,12 @@ internal class ToolSearchToolResultErrorParamTest {
         val toolSearchToolResultErrorParam =
             ToolSearchToolResultErrorParam.builder()
                 .errorCode(ToolSearchToolResultErrorCode.INVALID_TOOL_INPUT)
+                .errorMessage("error_message")
                 .build()
 
         assertThat(toolSearchToolResultErrorParam.errorCode())
             .isEqualTo(ToolSearchToolResultErrorCode.INVALID_TOOL_INPUT)
+        assertThat(toolSearchToolResultErrorParam.errorMessage()).contains("error_message")
     }
 
     @Test
@@ -26,6 +28,7 @@ internal class ToolSearchToolResultErrorParamTest {
         val toolSearchToolResultErrorParam =
             ToolSearchToolResultErrorParam.builder()
                 .errorCode(ToolSearchToolResultErrorCode.INVALID_TOOL_INPUT)
+                .errorMessage("error_message")
                 .build()
 
         val roundtrippedToolSearchToolResultErrorParam =
