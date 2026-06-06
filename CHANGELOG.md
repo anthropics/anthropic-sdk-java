@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.38.0 (2026-06-06)
+
+Full Changelog: [v2.37.0...v2.38.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.37.0...v2.38.0)
+
+### Features
+
+* **api:** small updates to Managed Agents types ([c7b08d8](https://github.com/anthropics/anthropic-sdk-java/commit/c7b08d808e9edc7a9aa6867b3e7e785c5907c05e))
+
 ## 2.37.0 (2026-06-05)
 
 Full Changelog: [v2.36.0...v2.37.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.36.0...v2.37.0)
