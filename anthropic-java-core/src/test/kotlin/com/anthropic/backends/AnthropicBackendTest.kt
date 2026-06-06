@@ -17,7 +17,6 @@ import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 internal class AnthropicBackendTest {
@@ -57,13 +56,28 @@ internal class AnthropicBackendTest {
     }
 
     @Test
-    fun prepareRequestAlreadyPrepared() {
+    fun prepareRequestPreservesExistingVersionHeader() {
+        // A user-supplied "anthropic-version" (e.g. set by an interceptor) must win over the
+        // default instead of throwing.
+        val backend = createBackend()
+        val request =
+            createRequest().toBuilder().putHeader("anthropic-version", "2024-01-01").build()
+
+        val preparedRequest = backend.prepareRequest(request)
+
+        assertThat(preparedRequest.headers.values("anthropic-version"))
+            .containsExactly("2024-01-01")
+    }
+
+    @Test
+    fun prepareRequestIsIdempotent() {
         val backend = createBackend()
         val preparedRequest = backend.prepareRequest(createRequest())
 
-        assertThatThrownBy { backend.prepareRequest(preparedRequest) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageStartingWith("Request already prepared")
+        val repreparedRequest = backend.prepareRequest(preparedRequest)
+
+        assertThat(repreparedRequest.headers.values("anthropic-version"))
+            .containsExactly("2023-06-01")
     }
 
     @Test
@@ -265,7 +279,7 @@ internal class AnthropicBackendTest {
 
         val credentials = backend.resolveCredentials(mockHttpClient)
         assertThat(credentials).isNotNull()
-        credentials!!.provider.get("https://api.anthropic.com", false)
+        credentials!!.provider!!.get("https://api.anthropic.com", false)
         assertThat(exchangeBody).isNotNull
         assertThat(exchangeBody!!["workspace_id"]).isEqualTo("wrkspc_x")
     }

@@ -366,9 +366,9 @@ internal class AwsBackendTest {
                 .putHeader("authorization", "Bearer already")
                 .build()
 
-        assertThatThrownBy { backend.authorizeRequest(request) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageStartingWith("Request already authorized for AWS")
+        // A request that already carries an authorization header (e.g. added by an interceptor)
+        // is passed through unchanged instead of being signed again.
+        assertThat(backend.authorizeRequest(request)).isSameAs(request)
     }
 
     @Test
@@ -493,19 +493,26 @@ internal class AwsBackendTest {
     }
 
     @Test
-    fun prepareRequestAlreadyPrepared() {
+    fun prepareRequestKeepsUserSuppliedHeaders() {
         val backend =
             AwsBackend.builder()
                 .apiKey(API_KEY)
                 .region(Region.US_EAST_1)
                 .workspaceId(WORKSPACE_ID)
                 .build()
-        val request = createRequest()
+        val request =
+            createRequest()
+                .toBuilder()
+                .putHeader("anthropic-version", "2024-01-01")
+                .putHeader("anthropic-workspace-id", "user-workspace")
+                .build()
+
+        // User-supplied headers (e.g. set by an interceptor) win over the backend's defaults.
         val prepared = backend.prepareRequest(request)
 
-        assertThatThrownBy { backend.prepareRequest(prepared) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageStartingWith("Request already prepared for AWS")
+        assertThat(prepared.headers.values("anthropic-version")).containsExactly("2024-01-01")
+        assertThat(prepared.headers.values("anthropic-workspace-id"))
+            .containsExactly("user-workspace")
     }
 
     @Test

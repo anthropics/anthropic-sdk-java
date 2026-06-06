@@ -684,9 +684,9 @@ internal class BedrockBackendTest {
                 .build()
         val authorizedRequest = backend.authorizeRequest(request)
 
-        assertThatThrownBy { backend.authorizeRequest(authorizedRequest) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageStartingWith("Request already authorized for Bedrock")
+        // A request that already carries an authorization header (e.g. added by an interceptor)
+        // is passed through unchanged instead of being signed again.
+        assertThat(backend.authorizeRequest(authorizedRequest)).isSameAs(authorizedRequest)
     }
 
     @Test

@@ -90,17 +90,24 @@ private constructor(
         return request
             .toBuilder()
             .replaceAllPathSegments("anthropic")
-            .apply { pathSegments.forEach { pathSegment -> addPathSegment(pathSegment) } }
-            .putHeader(HEADER_VERSION, ANTHROPIC_VERSION)
+            .apply {
+                pathSegments.forEach { pathSegment -> addPathSegment(pathSegment) }
+                // A user-supplied "anthropic-version" (e.g. set by an interceptor) wins over the
+                // default.
+                if (!request.headers.names().contains(HEADER_VERSION)) {
+                    putHeader(HEADER_VERSION, ANTHROPIC_VERSION)
+                }
+            }
             .build()
     }
 
     override fun authorizeRequest(request: HttpRequest): HttpRequest {
-        require(
-            !request.headers.names().contains(HEADER_AUTHORIZATION) &&
-                !request.headers.names().contains(HEADER_API_KEY)
+        // Authorization already provided (e.g. by an interceptor) wins over backend credentials.
+        if (
+            request.headers.names().contains(HEADER_AUTHORIZATION) ||
+                request.headers.names().contains(HEADER_API_KEY)
         ) {
-            "Request already authorized for Foundry."
+            return request
         }
 
         // `Builder.build()` ensures that at exactly one of `apiKey` and `bearerTokenSupplier` will

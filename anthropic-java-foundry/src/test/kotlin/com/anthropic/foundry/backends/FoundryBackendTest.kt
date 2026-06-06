@@ -237,6 +237,23 @@ internal class FoundryBackendTest {
     }
 
     @Test
+    fun prepareRequestPreservesExistingVersionHeader() {
+        // A user-supplied "anthropic-version" (e.g. set by an interceptor) must win over the
+        // default instead of being duplicated.
+        val backend = createBackendWithApiKeyAndResource()
+        val request =
+            createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
+                .toBuilder()
+                .putHeader("anthropic-version", "2024-01-01")
+                .build()
+
+        val preparedRequest = backend.prepareRequest(request)
+
+        assertThat(preparedRequest.headers.values("anthropic-version"))
+            .containsExactly("2024-01-01")
+    }
+
+    @Test
     fun prepareRequestMessagesCountTokens() {
         val backend = createBackendWithApiKeyAndResource()
         // Model and streaming option should be ignored.
@@ -318,9 +335,9 @@ internal class FoundryBackendTest {
                 .build()
         val authorizedRequest = backend.authorizeRequest(request)
 
-        assertThatThrownBy { backend.authorizeRequest(authorizedRequest) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessage("Request already authorized for Foundry.")
+        // A request that already carries an auth header (e.g. added by an interceptor) is passed
+        // through unchanged instead of being authorized again.
+        assertThat(backend.authorizeRequest(authorizedRequest)).isSameAs(authorizedRequest)
     }
 
     @Test
@@ -337,9 +354,9 @@ internal class FoundryBackendTest {
                 .build()
         val authorizedRequest = backend.authorizeRequest(request)
 
-        assertThatThrownBy { backend.authorizeRequest(authorizedRequest) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessage("Request already authorized for Foundry.")
+        // A request that already carries an auth header (e.g. added by an interceptor) is passed
+        // through unchanged instead of being authorized again.
+        assertThat(backend.authorizeRequest(authorizedRequest)).isSameAs(authorizedRequest)
     }
 
     @Test

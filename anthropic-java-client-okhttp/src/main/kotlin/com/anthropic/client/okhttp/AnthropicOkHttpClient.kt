@@ -196,6 +196,18 @@ class AnthropicOkHttpClient private constructor() {
          *
          * Each interceptor receives an HTTP client that delegates to the next interceptor, and the
          * last interceptor receives the underlying HTTP client.
+         *
+         * Interceptors observe requests in the canonical Anthropic API shape, with the client's
+         * default headers and first-party credentials (`X-Api-Key` or `Authorization`) already
+         * applied, and they observe responses normalized to the Anthropic shape (e.g. Bedrock's
+         * binary event stream is decoded to SSE). Backend-specific adaptation — URL rewriting,
+         * request signing (e.g. AWS SigV4), and backend credentials — happens below the
+         * interceptors and is not visible to them.
+         *
+         * Because credentials are applied above the interceptors, an interceptor that wants to
+         * replace them must use `replaceHeaders`, not `putHeader` (which would append a duplicate
+         * header). Interceptors that forward request data to external systems must redact these
+         * headers.
          */
         fun interceptors(interceptors: List<Interceptor>) = apply {
             clientOptions.interceptors(interceptors)

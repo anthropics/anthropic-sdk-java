@@ -385,9 +385,9 @@ internal class VertexBackendTest {
                 .build()
         val authorizedRequest = backend.authorizeRequest(request)
 
-        assertThatThrownBy { backend.authorizeRequest(authorizedRequest) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessage("Request already authorized for Vertex.")
+        // A request that already carries an authorization header (e.g. added by an interceptor)
+        // is passed through unchanged instead of being authorized again.
+        assertThat(backend.authorizeRequest(authorizedRequest)).isSameAs(authorizedRequest)
     }
 
     @Test

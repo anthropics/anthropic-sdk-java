@@ -46,6 +46,10 @@ interface Backend {
      * Changes will typically include the addition of authorization headers or signature headers.
      * Other changes not directly related to authorization should be performed by [prepareRequest].
      *
+     * If the request already carries authorization headers (e.g., added by an interceptor or set at
+     * the request level), implementations must return the request unchanged rather than fail, so
+     * that interceptors and per-request options can manage credentials themselves.
+     *
      * Where a backend does not require request authorization or other related changes to the
      * request, the given [HttpRequest] may be returned unchanged. This is the behavior of the
      * default implementation.

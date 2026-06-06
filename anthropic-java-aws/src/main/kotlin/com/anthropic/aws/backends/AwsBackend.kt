@@ -110,13 +110,17 @@ private constructor(
     }
 
     override fun prepareRequest(request: HttpRequest): HttpRequest {
-        require(!request.headers.names().contains(HEADER_VERSION)) {
-            "Request already prepared for AWS."
+        val builder = request.toBuilder()
+
+        // User-supplied headers (e.g. set by an interceptor) win over the defaults.
+        if (!request.headers.names().contains(HEADER_VERSION)) {
+            builder.putHeader(HEADER_VERSION, ANTHROPIC_VERSION)
         }
-
-        val builder = request.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION)
-
-        if (!skipAuth && workspaceId != null) {
+        if (
+            !skipAuth &&
+                workspaceId != null &&
+                !request.headers.names().contains(HEADER_WORKSPACE_ID)
+        ) {
             builder.putHeader(HEADER_WORKSPACE_ID, workspaceId)
         }
 
@@ -128,8 +132,9 @@ private constructor(
             return request
         }
 
-        require(!request.headers.names().contains(HEADER_AUTHORIZATION)) {
-            "Request already authorized for AWS."
+        // Authorization already provided (e.g. by an interceptor) wins over backend credentials.
+        if (request.headers.names().contains(HEADER_AUTHORIZATION)) {
+            return request
         }
 
         if (awsCredentialsProvider != null) {

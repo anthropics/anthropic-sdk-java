@@ -13,6 +13,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
 import com.anthropic.core.http.intercept
 import com.anthropic.internal.core.http.AuthorizingHttpClient
+import com.anthropic.internal.core.http.HeaderAuthHttpClient
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
 import java.time.Duration
@@ -43,6 +44,16 @@ private constructor(
      *
      * Each interceptor receives an HTTP client that delegates to the next interceptor, and the last
      * interceptor receives the underlying HTTP client.
+     *
+     * Interceptors observe requests in the canonical Anthropic API shape, with the client's default
+     * headers and first-party credentials (`X-Api-Key` or `Authorization`) already applied, and
+     * they observe responses normalized to the Anthropic shape (e.g. Bedrock's binary event stream
+     * is decoded to SSE). Backend-specific adaptation — URL rewriting, request signing (e.g. AWS
+     * SigV4), and backend credentials — happens below the interceptors and is not visible to them.
+     *
+     * Because credentials are applied above the interceptors, an interceptor that wants to replace
+     * them must use `replaceHeaders`, not `putHeader` (which would append a duplicate header).
+     * Interceptors that forward request data to external systems must redact these headers.
      */
     @get:JvmName("interceptors") val interceptors: List<Interceptor>,
     /**
@@ -224,6 +235,18 @@ private constructor(
          *
          * Each interceptor receives an HTTP client that delegates to the next interceptor, and the
          * last interceptor receives the underlying HTTP client.
+         *
+         * Interceptors observe requests in the canonical Anthropic API shape, with the client's
+         * default headers and first-party credentials (`X-Api-Key` or `Authorization`) already
+         * applied, and they observe responses normalized to the Anthropic shape (e.g. Bedrock's
+         * binary event stream is decoded to SSE). Backend-specific adaptation — URL rewriting,
+         * request signing (e.g. AWS SigV4), and backend credentials — happens below the
+         * interceptors and is not visible to them.
+         *
+         * Because credentials are applied above the interceptors, an interceptor that wants to
+         * replace them must use `replaceHeaders`, not `putHeader` (which would append a duplicate
+         * header). Interceptors that forward request data to external systems must redact these
+         * headers.
          */
         fun interceptors(interceptors: List<Interceptor>) = apply {
             this.interceptors = interceptors.toMutableList()
@@ -517,28 +540,40 @@ private constructor(
             headers.replaceAll(this.headers.build())
             queryParams.replaceAll(this.queryParams.build())
 
-            val authorizedHttpClient =
-                credentialResult?.let { result ->
-                    AuthorizingHttpClient.builder()
+            // The 1p auth layer wraps the interceptors so that they observe the logical
+            // credentials, while 3p backend adaptation (URL rewriting, request signing, response
+            // normalization) stays below them in the transport.
+            val interceptedHttpClient =
+                interceptors.intercept(
+                    LoggingHttpClient.builder()
                         .httpClient(rawHttpClient)
-                        .tokenProvider(result.provider)
-                        .defaultBaseUrl(baseUrl ?: "https://api.anthropic.com")
-                        .workspaceId(result.workspaceId)
+                        .clock(clock)
+                        .level(logLevel)
                         .build()
-                } ?: rawHttpClient
+                )
+            val credentialResult = credentialResult
+            val authorizedHttpClient =
+                when {
+                    credentialResult == null -> interceptedHttpClient
+                    credentialResult.provider != null ->
+                        AuthorizingHttpClient.builder()
+                            .httpClient(interceptedHttpClient)
+                            .tokenProvider(credentialResult.provider)
+                            .defaultBaseUrl(baseUrl ?: "https://api.anthropic.com")
+                            .workspaceId(credentialResult.workspaceId)
+                            .build()
+                    else ->
+                        HeaderAuthHttpClient(
+                            interceptedHttpClient,
+                            credentialResult.apiKey,
+                            credentialResult.authToken,
+                        )
+                }
 
             return ClientOptions(
                 rawHttpClient,
                 RetryingHttpClient.builder()
-                    .httpClient(
-                        interceptors.intercept(
-                            LoggingHttpClient.builder()
-                                .httpClient(authorizedHttpClient)
-                                .clock(clock)
-                                .level(logLevel)
-                                .build()
-                        )
-                    )
+                    .httpClient(authorizedHttpClient)
                     .sleeper(sleeper)
                     .clock(clock)
                     .maxRetries(maxRetries)

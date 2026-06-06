@@ -84,21 +84,19 @@ private constructor(
         return "https://bedrock-mantle.${region.id()}.api.aws/anthropic"
     }
 
-    override fun prepareRequest(request: HttpRequest): HttpRequest {
-        require(!request.headers.names().contains(HEADER_VERSION)) {
-            "Request already prepared for Bedrock Mantle."
-        }
-
-        return request.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION).build()
-    }
+    override fun prepareRequest(request: HttpRequest): HttpRequest =
+        // A user-supplied "anthropic-version" (e.g. set by an interceptor) wins over the default.
+        if (request.headers.names().contains(HEADER_VERSION)) request
+        else request.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION).build()
 
     override fun authorizeRequest(request: HttpRequest): HttpRequest {
         if (skipAuth) {
             return request
         }
 
-        require(!request.headers.names().contains(HEADER_AUTHORIZATION)) {
-            "Request already authorized for Bedrock Mantle."
+        // Authorization already provided (e.g. by an interceptor) wins over backend credentials.
+        if (request.headers.names().contains(HEADER_AUTHORIZATION)) {
+            return request
         }
 
         if (awsCredentialsProvider != null) {
