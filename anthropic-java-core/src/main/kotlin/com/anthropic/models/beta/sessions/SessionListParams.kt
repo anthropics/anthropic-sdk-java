@@ -67,7 +67,7 @@ private constructor(
     /** Sort direction for results, ordered by created_at. Defaults to desc (newest first). */
     fun order(): Optional<Order> = Optional.ofNullable(order)
 
-    /** Opaque pagination cursor from a previous response's next_page. */
+    /** Opaque pagination cursor from a previous response. */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /** Filter by session status. Repeat the parameter to match any of multiple statuses. */
@@ -219,7 +219,7 @@ private constructor(
         /** Alias for calling [Builder.order] with `order.orElse(null)`. */
         fun order(order: Optional<Order>) = order(order.getOrNull())
 
-        /** Opaque pagination cursor from a previous response's next_page. */
+        /** Opaque pagination cursor from a previous response. */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */

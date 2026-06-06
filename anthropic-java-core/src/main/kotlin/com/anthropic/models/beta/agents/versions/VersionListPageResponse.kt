@@ -7,6 +7,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
+import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgent
@@ -39,10 +40,10 @@ private constructor(
     /**
      * Agent versions.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun data(): Optional<List<BetaManagedAgentsAgent>> = data.getOptional("data")
+    fun data(): List<BetaManagedAgentsAgent> = data.getRequired("data")
 
     /**
      * Opaque cursor for the next page. Null when no more results.
@@ -82,7 +83,14 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [VersionListPageResponse]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [VersionListPageResponse].
+         *
+         * The following fields are required:
+         * ```java
+         * .data()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -166,10 +174,17 @@ private constructor(
          * Returns an immutable instance of [VersionListPageResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .data()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): VersionListPageResponse =
             VersionListPageResponse(
-                (data ?: JsonMissing.of()).map { it.toImmutable() },
+                checkRequired("data", data).map { it.toImmutable() },
                 nextPage,
                 additionalProperties.toMutableMap(),
             )
@@ -190,7 +205,7 @@ private constructor(
             return@apply
         }
 
-        data().ifPresent { it.forEach { it.validate() } }
+        data().forEach { it.validate() }
         nextPage()
         validated = true
     }

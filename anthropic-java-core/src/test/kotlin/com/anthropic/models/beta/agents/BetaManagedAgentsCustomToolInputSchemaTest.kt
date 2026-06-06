@@ -21,7 +21,6 @@ internal class BetaManagedAgentsCustomToolInputSchemaTest {
                         .build()
                 )
                 .addRequired("string")
-                .type(BetaManagedAgentsCustomToolInputSchema.Type.OBJECT)
                 .build()
 
         assertThat(betaManagedAgentsCustomToolInputSchema.properties())
@@ -32,8 +31,6 @@ internal class BetaManagedAgentsCustomToolInputSchemaTest {
             )
         assertThat(betaManagedAgentsCustomToolInputSchema.required().getOrNull())
             .containsExactly("string")
-        assertThat(betaManagedAgentsCustomToolInputSchema.type())
-            .contains(BetaManagedAgentsCustomToolInputSchema.Type.OBJECT)
     }
 
     @Test
@@ -59,7 +56,6 @@ internal class BetaManagedAgentsCustomToolInputSchemaTest {
                         .build()
                 )
                 .addRequired("string")
-                .type(BetaManagedAgentsCustomToolInputSchema.Type.OBJECT)
                 .build()
 
         val roundtrippedBetaManagedAgentsCustomToolInputSchema =

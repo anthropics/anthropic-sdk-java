@@ -31,6 +31,7 @@ private constructor(
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
     private val caching: JsonField<BetaCacheControlEphemeral>,
     private val deferLoading: JsonField<Boolean>,
+    private val maxTokens: JsonField<Long>,
     private val maxUses: JsonField<Long>,
     private val strict: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -53,6 +54,7 @@ private constructor(
         @JsonProperty("defer_loading")
         @ExcludeMissing
         deferLoading: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("max_tokens") @ExcludeMissing maxTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("max_uses") @ExcludeMissing maxUses: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
     ) : this(
@@ -63,6 +65,7 @@ private constructor(
         cacheControl,
         caching,
         deferLoading,
+        maxTokens,
         maxUses,
         strict,
         mutableMapOf(),
@@ -141,6 +144,20 @@ private constructor(
     fun deferLoading(): Optional<Boolean> = deferLoading.getOptional("defer_loading")
 
     /**
+     * Bounds the advisor's total output (thinking + text) per call. When the advisor hits this cap,
+     * the returned advisor_result or advisor_redacted_result block carries
+     * stop_reason='max_tokens', and a truncation note is appended to the advice text the worker
+     * model sees (inside the encrypted blob in redacted mode). When set, the server also emits a
+     * remaining-tokens budget block in the advisor's prompt so the advisor self-shapes toward the
+     * cap. When omitted, the advisor model's default output cap applies and no budget block is
+     * emitted.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun maxTokens(): Optional<Long> = maxTokens.getOptional("max_tokens")
+
+    /**
      * Maximum number of times the tool can be used in the API request.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -200,6 +217,13 @@ private constructor(
     fun _deferLoading(): JsonField<Boolean> = deferLoading
 
     /**
+     * Returns the raw JSON value of [maxTokens].
+     *
+     * Unlike [maxTokens], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("max_tokens") @ExcludeMissing fun _maxTokens(): JsonField<Long> = maxTokens
+
+    /**
      * Returns the raw JSON value of [maxUses].
      *
      * Unlike [maxUses], this method doesn't throw if the JSON field has an unexpected type.
@@ -248,6 +272,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var caching: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var deferLoading: JsonField<Boolean> = JsonMissing.of()
+        private var maxTokens: JsonField<Long> = JsonMissing.of()
         private var maxUses: JsonField<Long> = JsonMissing.of()
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -264,6 +289,7 @@ private constructor(
             cacheControl = betaAdvisorTool20260301.cacheControl
             caching = betaAdvisorTool20260301.caching
             deferLoading = betaAdvisorTool20260301.deferLoading
+            maxTokens = betaAdvisorTool20260301.maxTokens
             maxUses = betaAdvisorTool20260301.maxUses
             strict = betaAdvisorTool20260301.strict
             additionalProperties = betaAdvisorTool20260301.additionalProperties.toMutableMap()
@@ -404,6 +430,35 @@ private constructor(
             this.deferLoading = deferLoading
         }
 
+        /**
+         * Bounds the advisor's total output (thinking + text) per call. When the advisor hits this
+         * cap, the returned advisor_result or advisor_redacted_result block carries
+         * stop_reason='max_tokens', and a truncation note is appended to the advice text the worker
+         * model sees (inside the encrypted blob in redacted mode). When set, the server also emits
+         * a remaining-tokens budget block in the advisor's prompt so the advisor self-shapes toward
+         * the cap. When omitted, the advisor model's default output cap applies and no budget block
+         * is emitted.
+         */
+        fun maxTokens(maxTokens: Long?) = maxTokens(JsonField.ofNullable(maxTokens))
+
+        /**
+         * Alias for [Builder.maxTokens].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun maxTokens(maxTokens: Long) = maxTokens(maxTokens as Long?)
+
+        /** Alias for calling [Builder.maxTokens] with `maxTokens.orElse(null)`. */
+        fun maxTokens(maxTokens: Optional<Long>) = maxTokens(maxTokens.getOrNull())
+
+        /**
+         * Sets [Builder.maxTokens] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.maxTokens] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun maxTokens(maxTokens: JsonField<Long>) = apply { this.maxTokens = maxTokens }
+
         /** Maximum number of times the tool can be used in the API request. */
         fun maxUses(maxUses: Long?) = maxUses(JsonField.ofNullable(maxUses))
 
@@ -476,6 +531,7 @@ private constructor(
                 cacheControl,
                 caching,
                 deferLoading,
+                maxTokens,
                 maxUses,
                 strict,
                 additionalProperties.toMutableMap(),
@@ -512,6 +568,7 @@ private constructor(
         cacheControl().ifPresent { it.validate() }
         caching().ifPresent { it.validate() }
         deferLoading()
+        maxTokens()
         maxUses()
         strict()
         validated = true
@@ -539,6 +596,7 @@ private constructor(
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (caching.asKnown().getOrNull()?.validity() ?: 0) +
             (if (deferLoading.asKnown().isPresent) 1 else 0) +
+            (if (maxTokens.asKnown().isPresent) 1 else 0) +
             (if (maxUses.asKnown().isPresent) 1 else 0) +
             (if (strict.asKnown().isPresent) 1 else 0)
 
@@ -708,6 +766,7 @@ private constructor(
             cacheControl == other.cacheControl &&
             caching == other.caching &&
             deferLoading == other.deferLoading &&
+            maxTokens == other.maxTokens &&
             maxUses == other.maxUses &&
             strict == other.strict &&
             additionalProperties == other.additionalProperties
@@ -722,6 +781,7 @@ private constructor(
             cacheControl,
             caching,
             deferLoading,
+            maxTokens,
             maxUses,
             strict,
             additionalProperties,
@@ -731,5 +791,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAdvisorTool20260301{model=$model, name=$name, type=$type, allowedCallers=$allowedCallers, cacheControl=$cacheControl, caching=$caching, deferLoading=$deferLoading, maxUses=$maxUses, strict=$strict, additionalProperties=$additionalProperties}"
+        "BetaAdvisorTool20260301{model=$model, name=$name, type=$type, allowedCallers=$allowedCallers, cacheControl=$cacheControl, caching=$caching, deferLoading=$deferLoading, maxTokens=$maxTokens, maxUses=$maxUses, strict=$strict, additionalProperties=$additionalProperties}"
 }

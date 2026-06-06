@@ -62,7 +62,7 @@ private constructor(
     fun version(): Int = body.version()
 
     /**
-     * Description. Up to 2048 characters. Omit to preserve; send empty string or null to clear.
+     * Description. Omit to preserve; send empty string or null to clear.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -109,7 +109,7 @@ private constructor(
     fun multiagent(): Optional<BetaManagedAgentsMultiagentParams> = body.multiagent()
 
     /**
-     * Human-readable name. 1-256 characters. Omit to preserve. Cannot be cleared.
+     * Human-readable name. Must be non-empty. Omit to preserve. Cannot be cleared.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -117,7 +117,7 @@ private constructor(
     fun name(): Optional<String> = body.name()
 
     /**
-     * Skills. Full replacement. Omit to preserve; send empty array or null to clear. Maximum 20.
+     * Skills. Full replacement. Omit to preserve; send empty array or null to clear.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -125,8 +125,7 @@ private constructor(
     fun skills(): Optional<List<BetaManagedAgentsSkillParams>> = body.skills()
 
     /**
-     * System prompt. Up to 100,000 characters. Omit to preserve; send empty string or null to
-     * clear.
+     * System prompt. Omit to preserve; send empty string or null to clear.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -311,9 +310,7 @@ private constructor(
          */
         fun version(version: JsonField<Int>) = apply { body.version(version) }
 
-        /**
-         * Description. Up to 2048 characters. Omit to preserve; send empty string or null to clear.
-         */
+        /** Description. Omit to preserve; send empty string or null to clear. */
         fun description(description: String?) = apply { body.description(description) }
 
         /** Alias for calling [Builder.description] with `description.orElse(null)`. */
@@ -445,7 +442,7 @@ private constructor(
                 body.coordinatorMultiagent(agents)
             }
 
-        /** Human-readable name. 1-256 characters. Omit to preserve. Cannot be cleared. */
+        /** Human-readable name. Must be non-empty. Omit to preserve. Cannot be cleared. */
         fun name(name: String) = apply { body.name(name) }
 
         /**
@@ -456,10 +453,7 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
-        /**
-         * Skills. Full replacement. Omit to preserve; send empty array or null to clear.
-         * Maximum 20.
-         */
+        /** Skills. Full replacement. Omit to preserve; send empty array or null to clear. */
         fun skills(skills: List<BetaManagedAgentsSkillParams>?) = apply { body.skills(skills) }
 
         /** Alias for calling [Builder.skills] with `skills.orElse(null)`. */
@@ -516,10 +510,7 @@ private constructor(
          */
         fun addCustomSkill(skillId: String) = apply { body.addCustomSkill(skillId) }
 
-        /**
-         * System prompt. Up to 100,000 characters. Omit to preserve; send empty string or null to
-         * clear.
-         */
+        /** System prompt. Omit to preserve; send empty string or null to clear. */
         fun system(system: String?) = apply { body.system(system) }
 
         /** Alias for calling [Builder.system] with `system.orElse(null)`. */
@@ -805,7 +796,7 @@ private constructor(
         fun version(): Int = version.getRequired("version")
 
         /**
-         * Description. Up to 2048 characters. Omit to preserve; send empty string or null to clear.
+         * Description. Omit to preserve; send empty string or null to clear.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -854,7 +845,7 @@ private constructor(
             multiagent.getOptional("multiagent")
 
         /**
-         * Human-readable name. 1-256 characters. Omit to preserve. Cannot be cleared.
+         * Human-readable name. Must be non-empty. Omit to preserve. Cannot be cleared.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -863,7 +854,6 @@ private constructor(
 
         /**
          * Skills. Full replacement. Omit to preserve; send empty array or null to clear.
-         * Maximum 20.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -871,8 +861,7 @@ private constructor(
         fun skills(): Optional<List<BetaManagedAgentsSkillParams>> = skills.getOptional("skills")
 
         /**
-         * System prompt. Up to 100,000 characters. Omit to preserve; send empty string or null to
-         * clear.
+         * System prompt. Omit to preserve; send empty string or null to clear.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1039,10 +1028,7 @@ private constructor(
              */
             fun version(version: JsonField<Int>) = apply { this.version = version }
 
-            /**
-             * Description. Up to 2048 characters. Omit to preserve; send empty string or null to
-             * clear.
-             */
+            /** Description. Omit to preserve; send empty string or null to clear. */
             fun description(description: String?) = description(JsonField.ofNullable(description))
 
             /** Alias for calling [Builder.description] with `description.orElse(null)`. */
@@ -1182,7 +1168,7 @@ private constructor(
                         .build()
                 )
 
-            /** Human-readable name. 1-256 characters. Omit to preserve. Cannot be cleared. */
+            /** Human-readable name. Must be non-empty. Omit to preserve. Cannot be cleared. */
             fun name(name: String) = name(JsonField.of(name))
 
             /**
@@ -1194,10 +1180,7 @@ private constructor(
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
-            /**
-             * Skills. Full replacement. Omit to preserve; send empty array or null to clear.
-             * Maximum 20.
-             */
+            /** Skills. Full replacement. Omit to preserve; send empty array or null to clear. */
             fun skills(skills: List<BetaManagedAgentsSkillParams>?) =
                 skills(JsonField.ofNullable(skills))
 
@@ -1275,10 +1258,7 @@ private constructor(
                         .build()
                 )
 
-            /**
-             * System prompt. Up to 100,000 characters. Omit to preserve; send empty string or null
-             * to clear.
-             */
+            /** System prompt. Omit to preserve; send empty string or null to clear. */
             fun system(system: String?) = system(JsonField.ofNullable(system))
 
             /** Alias for calling [Builder.system] with `system.orElse(null)`. */

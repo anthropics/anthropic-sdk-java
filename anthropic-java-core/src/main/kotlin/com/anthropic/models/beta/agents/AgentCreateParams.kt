@@ -59,7 +59,7 @@ private constructor(
     fun model(): Model = body.model()
 
     /**
-     * Human-readable name for the agent. 1-256 characters.
+     * Human-readable name for the agent.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -67,7 +67,7 @@ private constructor(
     fun name(): String = body.name()
 
     /**
-     * Description of what the agent does. Up to 2048 characters.
+     * Description of what the agent does.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -100,7 +100,7 @@ private constructor(
     fun multiagent(): Optional<BetaManagedAgentsMultiagentParams> = body.multiagent()
 
     /**
-     * Skills available to the agent. Maximum 20.
+     * Skills available to the agent.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -108,7 +108,7 @@ private constructor(
     fun skills(): Optional<List<BetaManagedAgentsSkillParams>> = body.skills()
 
     /**
-     * System prompt for the agent. Up to 100,000 characters.
+     * System prompt for the agent.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -292,7 +292,7 @@ private constructor(
             body.model(betaManagedAgentsModelConfigParams)
         }
 
-        /** Human-readable name for the agent. 1-256 characters. */
+        /** Human-readable name for the agent. */
         fun name(name: String) = apply { body.name(name) }
 
         /**
@@ -303,7 +303,7 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
-        /** Description of what the agent does. Up to 2048 characters. */
+        /** Description of what the agent does. */
         fun description(description: String?) = apply { body.description(description) }
 
         /** Alias for calling [Builder.description] with `description.orElse(null)`. */
@@ -397,7 +397,7 @@ private constructor(
                 body.coordinatorMultiagent(agents)
             }
 
-        /** Skills available to the agent. Maximum 20. */
+        /** Skills available to the agent. */
         fun skills(skills: List<BetaManagedAgentsSkillParams>) = apply { body.skills(skills) }
 
         /**
@@ -450,7 +450,7 @@ private constructor(
          */
         fun addCustomSkill(skillId: String) = apply { body.addCustomSkill(skillId) }
 
-        /** System prompt for the agent. Up to 100,000 characters. */
+        /** System prompt for the agent. */
         fun system(system: String?) = apply { body.system(system) }
 
         /** Alias for calling [Builder.system] with `system.orElse(null)`. */
@@ -724,7 +724,7 @@ private constructor(
         fun model(): Model = model.getRequired("model")
 
         /**
-         * Human-readable name for the agent. 1-256 characters.
+         * Human-readable name for the agent.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -732,7 +732,7 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
-         * Description of what the agent does. Up to 2048 characters.
+         * Description of what the agent does.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -768,7 +768,7 @@ private constructor(
             multiagent.getOptional("multiagent")
 
         /**
-         * Skills available to the agent. Maximum 20.
+         * Skills available to the agent.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -776,7 +776,7 @@ private constructor(
         fun skills(): Optional<List<BetaManagedAgentsSkillParams>> = skills.getOptional("skills")
 
         /**
-         * System prompt for the agent. Up to 100,000 characters.
+         * System prompt for the agent.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -949,7 +949,7 @@ private constructor(
                     Model.ofBetaManagedAgentsModelConfigParams(betaManagedAgentsModelConfigParams)
                 )
 
-            /** Human-readable name for the agent. 1-256 characters. */
+            /** Human-readable name for the agent. */
             fun name(name: String) = name(JsonField.of(name))
 
             /**
@@ -961,7 +961,7 @@ private constructor(
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
-            /** Description of what the agent does. Up to 2048 characters. */
+            /** Description of what the agent does. */
             fun description(description: String?) = description(JsonField.ofNullable(description))
 
             /** Alias for calling [Builder.description] with `description.orElse(null)`. */
@@ -1063,7 +1063,7 @@ private constructor(
                         .build()
                 )
 
-            /** Skills available to the agent. Maximum 20. */
+            /** Skills available to the agent. */
             fun skills(skills: List<BetaManagedAgentsSkillParams>) = skills(JsonField.of(skills))
 
             /**
@@ -1136,7 +1136,7 @@ private constructor(
                         .build()
                 )
 
-            /** System prompt for the agent. Up to 100,000 characters. */
+            /** System prompt for the agent. */
             fun system(system: String?) = system(JsonField.ofNullable(system))
 
             /** Alias for calling [Builder.system] with `system.orElse(null)`. */

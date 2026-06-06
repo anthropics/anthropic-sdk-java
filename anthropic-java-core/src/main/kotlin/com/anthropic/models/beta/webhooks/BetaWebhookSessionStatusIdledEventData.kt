@@ -38,7 +38,7 @@ private constructor(
     ) : this(id, organizationId, type, workspaceId, mutableMapOf())
 
     /**
-     * ID of the resource that triggered the event.
+     * ID of the session that triggered the event.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -142,7 +142,7 @@ private constructor(
                 betaWebhookSessionStatusIdledEventData.additionalProperties.toMutableMap()
         }
 
-        /** ID of the resource that triggered the event. */
+        /** ID of the session that triggered the event. */
         fun id(id: String) = id(JsonField.of(id))
 
         /**

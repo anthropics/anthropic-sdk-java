@@ -28,6 +28,7 @@ internal class BetaAdvisorTool20260301Test {
                         .build()
                 )
                 .deferLoading(true)
+                .maxTokens(1024L)
                 .maxUses(1L)
                 .strict(true)
                 .build()
@@ -48,6 +49,7 @@ internal class BetaAdvisorTool20260301Test {
                     .build()
             )
         assertThat(betaAdvisorTool20260301.deferLoading()).contains(true)
+        assertThat(betaAdvisorTool20260301.maxTokens()).contains(1024L)
         assertThat(betaAdvisorTool20260301.maxUses()).contains(1L)
         assertThat(betaAdvisorTool20260301.strict()).contains(true)
     }
@@ -85,6 +87,7 @@ internal class BetaAdvisorTool20260301Test {
                         .build()
                 )
                 .deferLoading(true)
+                .maxTokens(1024L)
                 .maxUses(1L)
                 .strict(true)
                 .build()

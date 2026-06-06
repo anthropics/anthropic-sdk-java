@@ -235,6 +235,8 @@ private constructor(
 
             @JvmField val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
 
+            @JvmField val MODEL_NOT_FOUND = of("model_not_found")
+
             @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
         }
 
@@ -246,6 +248,7 @@ private constructor(
             OVERLOADED,
             UNAVAILABLE,
             EXECUTION_TIME_EXCEEDED,
+            MODEL_NOT_FOUND,
         }
 
         /**
@@ -264,6 +267,7 @@ private constructor(
             OVERLOADED,
             UNAVAILABLE,
             EXECUTION_TIME_EXCEEDED,
+            MODEL_NOT_FOUND,
             /**
              * An enum member indicating that [ErrorCode] was instantiated with an unknown value.
              */
@@ -285,6 +289,7 @@ private constructor(
                 OVERLOADED -> Value.OVERLOADED
                 UNAVAILABLE -> Value.UNAVAILABLE
                 EXECUTION_TIME_EXCEEDED -> Value.EXECUTION_TIME_EXCEEDED
+                MODEL_NOT_FOUND -> Value.MODEL_NOT_FOUND
                 else -> Value._UNKNOWN
             }
 
@@ -305,6 +310,7 @@ private constructor(
                 OVERLOADED -> Known.OVERLOADED
                 UNAVAILABLE -> Known.UNAVAILABLE
                 EXECUTION_TIME_EXCEEDED -> Known.EXECUTION_TIME_EXCEEDED
+                MODEL_NOT_FOUND -> Known.MODEL_NOT_FOUND
                 else -> throw AnthropicInvalidDataException("Unknown ErrorCode: $value")
             }
 
