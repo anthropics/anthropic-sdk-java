@@ -130,11 +130,12 @@ private constructor(
     }
 
     override fun authorizeRequest(request: HttpRequest): HttpRequest {
-        googleCredentials.refreshIfExpired()
-
-        require(!request.headers.names().contains(HEADER_AUTHORIZATION)) {
-            "Request already authorized for Vertex."
+        // Authorization already provided (e.g. by an interceptor) wins over backend credentials.
+        if (request.headers.names().contains(HEADER_AUTHORIZATION)) {
+            return request
         }
+
+        googleCredentials.refreshIfExpired()
 
         return request
             .toBuilder()

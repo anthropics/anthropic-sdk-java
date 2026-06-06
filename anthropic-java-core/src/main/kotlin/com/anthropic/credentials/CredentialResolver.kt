@@ -239,7 +239,7 @@ private constructor(
 
                 val cachingProvider = CachingAccessTokenProvider(tokenProvider)
 
-                CredentialResult(
+                CredentialResult.token(
                     cachingProvider,
                     config.baseUrl().orElse(null),
                     // For federation profiles workspace_id is sent in the jwt-bearer exchange body,
@@ -318,7 +318,7 @@ private constructor(
                     )
                 val cachingProvider = CachingAccessTokenProvider(tokenProvider)
 
-                CredentialResult(
+                CredentialResult.token(
                     cachingProvider,
                     config.baseUrl().orElse(null),
                     config.workspaceId().orElse(null),
@@ -449,7 +449,7 @@ private constructor(
             )
 
         val cachingProvider = CachingAccessTokenProvider(workloadCredentials)
-        return CredentialResult(cachingProvider)
+        return CredentialResult.token(cachingProvider)
     }
 
     private fun step4FallbackProfile(sources: MutableList<CredentialSource>): CredentialResult? {

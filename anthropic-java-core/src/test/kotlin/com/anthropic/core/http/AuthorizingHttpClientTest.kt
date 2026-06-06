@@ -240,6 +240,63 @@ internal class AuthorizingHttpClientTest {
         assertNoResponseLeaks()
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun on401ResponseRetriesThroughInterceptors(async: Boolean) {
+        // The auth layer wraps the interceptors, so its 401-refresh retry re-runs them and they
+        // observe the refreshed token.
+        val tokenProvider = createCountingTokenProvider(listOf("expired-token", "fresh-token"))
+        val executedRequests = mutableListOf<HttpRequest>()
+        val httpClient = create401ThenOkHttpClient(executedRequests)
+
+        val interceptedRequests = mutableListOf<HttpRequest>()
+        val interceptor = Interceptor { client ->
+            object : HttpClient {
+                override fun execute(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse {
+                    interceptedRequests.add(request)
+                    return client.execute(request, requestOptions)
+                }
+
+                override fun executeAsync(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): CompletableFuture<HttpResponse> {
+                    interceptedRequests.add(request)
+                    return client.executeAsync(request, requestOptions)
+                }
+
+                override fun close() = client.close()
+            }
+        }
+
+        val authorizingClient =
+            AuthorizingHttpClient.builder()
+                .httpClient(listOf(interceptor).intercept(httpClient))
+                .tokenProvider(tokenProvider)
+                .build()
+
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl("https://api.anthropic.com")
+                .addPathSegment("messages")
+                .build()
+
+        val response = authorizingClient.execute(request, async)
+
+        assertThat(response.statusCode()).isEqualTo(200)
+        assertThat(interceptedRequests).hasSize(2)
+        assertThat(interceptedRequests[0].headers.values("Authorization"))
+            .containsExactly("Bearer expired-token")
+        assertThat(interceptedRequests[1].headers.values("Authorization"))
+            .containsExactly("Bearer fresh-token")
+        response.close()
+        assertNoResponseLeaks()
+    }
+
     @Test
     fun closeDelegatesToUnderlyingClient() {
         val closed = AtomicBoolean(false)

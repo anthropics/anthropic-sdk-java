@@ -312,9 +312,9 @@ internal class BedrockMantleBackendTest {
                 .putHeader("authorization", "Bearer already")
                 .build()
 
-        assertThatThrownBy { backend.authorizeRequest(request) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageStartingWith("Request already authorized for Bedrock Mantle")
+        // A request that already carries an authorization header (e.g. added by an interceptor)
+        // is passed through unchanged instead of being signed again.
+        assertThat(backend.authorizeRequest(request)).isSameAs(request)
     }
 
     // --- Prepare request tests ---
@@ -330,15 +330,28 @@ internal class BedrockMantleBackendTest {
     }
 
     @Test
-    fun prepareRequestAlreadyPrepared() {
+    fun prepareRequestPreservesExistingVersionHeader() {
+        // A user-supplied "anthropic-version" (e.g. set by an interceptor) must win over the
+        // default instead of throwing.
         val backend =
             BedrockMantleBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
-        val request = createRequest()
+        val request =
+            createRequest().toBuilder().putHeader("anthropic-version", "2024-01-01").build()
+
         val prepared = backend.prepareRequest(request)
 
-        assertThatThrownBy { backend.prepareRequest(prepared) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageStartingWith("Request already prepared for Bedrock Mantle")
+        assertThat(prepared.headers.values("anthropic-version")).containsExactly("2024-01-01")
+    }
+
+    @Test
+    fun prepareRequestIsIdempotent() {
+        val backend =
+            BedrockMantleBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
+        val prepared = backend.prepareRequest(createRequest())
+
+        val reprepared = backend.prepareRequest(prepared)
+
+        assertThat(reprepared.headers.values("anthropic-version")).containsExactly("2023-06-01")
     }
 
     // --- Skip auth tests ---

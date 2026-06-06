@@ -212,8 +212,9 @@ private constructor(
     }
 
     override fun authorizeRequest(request: HttpRequest): HttpRequest {
-        require(!request.headers.names().contains(HEADER_AUTHORIZATION)) {
-            "Request already authorized for Bedrock."
+        // Authorization already provided (e.g. by an interceptor) wins over backend credentials.
+        if (request.headers.names().contains(HEADER_AUTHORIZATION)) {
+            return request
         }
 
         if (awsCredentialsProvider != null) {

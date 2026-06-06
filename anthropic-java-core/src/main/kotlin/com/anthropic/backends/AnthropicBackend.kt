@@ -11,6 +11,7 @@ import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.jsonMapper
 import com.anthropic.credentials.CredentialResolver
 import com.anthropic.errors.NoCredentialsException
+import com.anthropic.internal.core.http.withStaticAuthHeaders
 import com.anthropic.internal.credentials.WorkloadIdentityCredentials
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.util.Optional
@@ -56,6 +57,13 @@ private constructor(
     )
 
     fun applyCredentials(httpClient: HttpClient, clientOptionsBuilder: ClientOptions.Builder) {
+        if (apiKey != null || authToken != null) {
+            // Static credentials are applied by a client-level auth layer that wraps the user's
+            // interceptors, so interceptors observe the logical 1p credentials.
+            clientOptionsBuilder.credentials(CredentialResult.staticHeaders(apiKey, authToken))
+            return
+        }
+
         resolveCredentials(httpClient)?.let { result ->
             clientOptionsBuilder.credentials(result)
             result.baseUrl?.let { clientOptionsBuilder.baseUrl(it) }
@@ -80,7 +88,7 @@ private constructor(
                     httpClient,
                     jsonMapper,
                 )
-            return CredentialResult(CachingAccessTokenProvider(workloadCredentials))
+            return CredentialResult.token(CachingAccessTokenProvider(workloadCredentials))
         }
 
         val provider = configurationProvider
@@ -112,8 +120,6 @@ private constructor(
         private const val ANTHROPIC_VERSION = "2023-06-01"
         private const val ENV_API_KEY = "ANTHROPIC_API_KEY"
         private const val ENV_AUTH_TOKEN = "ANTHROPIC_AUTH_TOKEN"
-        private const val HEADER_API_KEY = "X-Api-Key"
-        private const val HEADER_AUTHORIZATION = "Authorization"
         private const val HEADER_VERSION = "anthropic-version"
 
         @JvmStatic fun builder() = Builder()
@@ -123,30 +129,21 @@ private constructor(
 
     override fun baseUrl(): String = baseUrl
 
-    override fun prepareRequest(request: HttpRequest): HttpRequest {
-        require(!request.headers.names().contains(HEADER_VERSION)) {
-            "Request already prepared for Anthropic."
-        }
+    override fun prepareRequest(request: HttpRequest): HttpRequest =
+        // A user-supplied "anthropic-version" (e.g. set by an interceptor) wins over the default.
+        if (request.headers.names().contains(HEADER_VERSION)) request
+        else request.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION).build()
 
-        return request.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION).build()
-    }
-
-    override fun authorizeRequest(request: HttpRequest): HttpRequest {
-        val hasApiKey = request.headers.names().contains(HEADER_API_KEY)
-        val hasAuthorization = request.headers.names().contains(HEADER_AUTHORIZATION)
-
-        if (hasApiKey || hasAuthorization) {
-            return request
-        }
-
-        return request
-            .toBuilder()
-            .apply {
-                apiKey?.let { putHeader(HEADER_API_KEY, it) }
-                authToken?.let { putHeader(HEADER_AUTHORIZATION, "Bearer $it") }
-            }
-            .build()
-    }
+    /**
+     * Adds the static credential headers if no auth headers are present.
+     *
+     * When the client is built via `AnthropicOkHttpClient`/`AnthropicOkHttpClientAsync`, the
+     * credentials are already applied by a client-level auth layer that wraps the user's
+     * interceptors (see [applyCredentials]), making this a no-op. It remains as a fallback for
+     * hand-assembled clients where that layer was never installed.
+     */
+    override fun authorizeRequest(request: HttpRequest): HttpRequest =
+        request.withStaticAuthHeaders(apiKey, authToken)
 
     override fun close() {}
 
