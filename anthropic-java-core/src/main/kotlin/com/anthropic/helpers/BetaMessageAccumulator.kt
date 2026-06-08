@@ -71,6 +71,11 @@ class BetaMessageAccumulator private constructor() {
         ): BetaUsage {
             val builder = usage.toBuilder()
 
+            // A `message_start` usage omits `iterations` (the server sends it only under its
+            // gating betas), but `toBuilder()` drops a missing `iterations` while `build()`
+            // requires it to be set — carry the raw field through so the rebuild does not throw.
+            builder.iterations(usage._iterations())
+
             if (!deltaUsage._outputTokens().isMissing()) {
                 builder.outputTokens(deltaUsage.outputTokens())
             }
@@ -91,20 +96,20 @@ class BetaMessageAccumulator private constructor() {
                 builder.serverToolUse(deltaUsage.serverToolUse())
             }
 
+            if (!deltaUsage._outputTokensDetails().isMissing()) {
+                builder.outputTokensDetails(deltaUsage.outputTokensDetails().getOrNull())
+            }
+
             if (!deltaUsage._iterations().isMissing()) {
                 builder.iterations(
                     deltaUsage.iterations().getOrNull()?.map { deltaIteration ->
-                        when {
-                            deltaIteration.isMessage() ->
-                                BetaUsage.BetaIterationsUsageItems.ofMessage(
-                                    deltaIteration.asMessage()
-                                )
-                            deltaIteration.isCompaction() ->
-                                BetaUsage.BetaIterationsUsageItems.ofCompaction(
-                                    deltaIteration.asCompaction()
-                                )
-                            else -> throw AnthropicInvalidDataException("Unknown iteration type")
-                        }
+                        // Convert between the structurally identical per-type unions via JSON so
+                        // every variant survives — including variants unknown to the union (e.g.
+                        // fallback iteration types), which both unions carry as raw values.
+                        JSON_MAPPER.convertValue(
+                            deltaIteration,
+                            BetaUsage.BetaIterationsUsageItems::class.java,
+                        )
                     }
                 )
             }

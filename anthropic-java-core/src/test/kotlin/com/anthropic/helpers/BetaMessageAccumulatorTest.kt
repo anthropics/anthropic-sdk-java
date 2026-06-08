@@ -4,10 +4,12 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonNull
 import com.anthropic.core.JsonString
+import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.*
 import com.anthropic.models.beta.messages.BetaRawContentBlockStartEvent.ContentBlock
 import com.anthropic.models.messages.Model
+import com.fasterxml.jackson.databind.JsonNode
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -72,6 +74,89 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(usage2.inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(usage2.outputTokens()).isEqualTo(11L)
+    }
+
+    @Test
+    fun mergeMessageUsageWhenParsedUsageOmitsIterations() {
+        // A live `message_start` usage carries no `iterations` key (the server sends it only
+        // under its gating betas). The merge must not throw on the rebuild.
+        val startUsage =
+            jsonMapper()
+                .readValue(
+                    """{"input_tokens":10,"output_tokens":1,"cache_creation_input_tokens":0,"cache_read_input_tokens":0}""",
+                    BetaUsage::class.java,
+                )
+
+        val merged =
+            BetaMessageAccumulator.mergeMessageUsage(
+                startUsage,
+                BetaMessageDeltaUsage.builder()
+                    .outputTokens(3L)
+                    .outputTokensDetails(null)
+                    .cacheCreationInputTokens(0L)
+                    .cacheReadInputTokens(0L)
+                    .inputTokens(10L)
+                    .serverToolUse(null)
+                    .iterations(JsonMissing.of())
+                    .build(),
+            )
+
+        assertThat(merged.outputTokens()).isEqualTo(3L)
+        assertThat(merged._iterations().isMissing()).isTrue()
+    }
+
+    @Test
+    fun mergeMessageUsageKeepsAllIterationVariants() {
+        // `iterations` must survive the merge with every variant intact — including variants
+        // unknown to the union (e.g. fallback iteration types), which ride through as raw values.
+        val deltaUsage =
+            jsonMapper()
+                .readValue(
+                    """
+                    {
+                      "input_tokens": 10,
+                      "output_tokens": 7,
+                      "iterations": [
+                        {"type": "message", "input_tokens": 10, "output_tokens": 3},
+                        {"type": "advisor_message", "input_tokens": 4, "output_tokens": 2},
+                        {"type": "fallback_message", "model": "model-b", "input_tokens": 10, "output_tokens": 4}
+                      ]
+                    }
+                    """,
+                    BetaMessageDeltaUsage::class.java,
+                )
+
+        val merged = BetaMessageAccumulator.mergeMessageUsage(usage(INPUT_TOKENS), deltaUsage)
+
+        val iterations = merged.iterations().get()
+        assertThat(iterations).hasSize(3)
+        assertThat(iterations[0].isMessage()).isTrue()
+        assertThat(iterations[1].isAdvisorMessage()).isTrue()
+
+        val serialized = jsonMapper().valueToTree<JsonNode>(merged)
+        assertThat(serialized.at("/iterations/2/type").asText()).isEqualTo("fallback_message")
+        assertThat(serialized.at("/iterations/2/model").asText()).isEqualTo("model-b")
+    }
+
+    @Test
+    fun mergeMessageUsageMergesOutputTokensDetails() {
+        val merged =
+            BetaMessageAccumulator.mergeMessageUsage(
+                usage(INPUT_TOKENS),
+                BetaMessageDeltaUsage.builder()
+                    .outputTokens(7L)
+                    .outputTokensDetails(
+                        BetaOutputTokensDetails.builder().thinkingTokens(89L).build()
+                    )
+                    .cacheCreationInputTokens(0L)
+                    .cacheReadInputTokens(0L)
+                    .inputTokens(INPUT_TOKENS)
+                    .serverToolUse(null)
+                    .iterations(null)
+                    .build(),
+            )
+
+        assertThat(merged.outputTokensDetails().get().thinkingTokens()).isEqualTo(89L)
     }
 
     @Test
