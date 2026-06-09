@@ -28,6 +28,7 @@ import com.anthropic.models.beta.messages.BetaContainerParams
 import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaContextManagementConfig
 import com.anthropic.models.beta.messages.BetaDiagnosticsParam
+import com.anthropic.models.beta.messages.BetaFallbackParam
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaMcpToolset
 import com.anthropic.models.beta.messages.BetaMemoryTool20250818
@@ -775,6 +776,8 @@ private constructor(
             private val container: JsonField<Container>,
             private val contextManagement: JsonField<BetaContextManagementConfig>,
             private val diagnostics: JsonField<BetaDiagnosticsParam>,
+            private val fallbackCreditToken: JsonField<String>,
+            private val fallbacks: JsonField<List<BetaFallbackParam>>,
             private val inferenceGeo: JsonField<String>,
             private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
             private val metadata: JsonField<BetaMetadata>,
@@ -816,6 +819,12 @@ private constructor(
                 @JsonProperty("diagnostics")
                 @ExcludeMissing
                 diagnostics: JsonField<BetaDiagnosticsParam> = JsonMissing.of(),
+                @JsonProperty("fallback_credit_token")
+                @ExcludeMissing
+                fallbackCreditToken: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("fallbacks")
+                @ExcludeMissing
+                fallbacks: JsonField<List<BetaFallbackParam>> = JsonMissing.of(),
                 @JsonProperty("inference_geo")
                 @ExcludeMissing
                 inferenceGeo: JsonField<String> = JsonMissing.of(),
@@ -869,6 +878,8 @@ private constructor(
                 container,
                 contextManagement,
                 diagnostics,
+                fallbackCreditToken,
+                fallbacks,
                 inferenceGeo,
                 mcpServers,
                 metadata,
@@ -1024,6 +1035,42 @@ private constructor(
              */
             fun diagnostics(): Optional<BetaDiagnosticsParam> =
                 diagnostics.getOptional("diagnostics")
+
+            /**
+             * The `fallback_credit_token` from a prior refusal's `stop_details`.
+             *
+             * When a preceding request was refused and returned a `fallback_credit_token`, pass
+             * that code here on the retry to have the retry's cache-creation tokens for the prefix
+             * that was warm on the refused model billed at the cache-read rate. Must be redeemed by
+             * the same organization and workspace, with the same request body (optionally extended
+             * by one appended `assistant` message whose content is the partial text — with any
+             * trailing whitespace stripped from the final text block — and paired server-tool
+             * blocks streamed before the refusal; the appended-assistant form is not available for
+             * requests with `output_format` set or forced `tool_choice`), on an eligible fallback
+             * model, on the same platform, and within 5 minutes of the refusal; a mismatch is
+             * a 400. A token minted mid-server-tool-loop whose partial content was continuable may
+             * only be redeemed with the appended-assistant form — if an exact-body retry is
+             * rejected with a 400 saying the token must be redeemed by continuing the partial
+             * response, retry with the appended-assistant form instead.
+             *
+             * When the appended-assistant form is used on a model that otherwise disallows
+             * assistant-turn prefill, this token also authorizes that one prefill.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun fallbackCreditToken(): Optional<String> =
+                fallbackCreditToken.getOptional("fallback_credit_token")
+
+            /**
+             * Opt-in server-side retry on one or more substitute models when the requested model
+             * declines for policy reasons. Tried in order: if the first entry also declines, the
+             * second is tried, and so on.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun fallbacks(): Optional<List<BetaFallbackParam>> = fallbacks.getOptional("fallbacks")
 
             /**
              * Specifies the geographic region for inference processing. If not specified, the
@@ -1362,6 +1409,26 @@ private constructor(
             fun _diagnostics(): JsonField<BetaDiagnosticsParam> = diagnostics
 
             /**
+             * Returns the raw JSON value of [fallbackCreditToken].
+             *
+             * Unlike [fallbackCreditToken], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("fallback_credit_token")
+            @ExcludeMissing
+            fun _fallbackCreditToken(): JsonField<String> = fallbackCreditToken
+
+            /**
+             * Returns the raw JSON value of [fallbacks].
+             *
+             * Unlike [fallbacks], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("fallbacks")
+            @ExcludeMissing
+            fun _fallbacks(): JsonField<List<BetaFallbackParam>> = fallbacks
+
+            /**
              * Returns the raw JSON value of [inferenceGeo].
              *
              * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected
@@ -1567,6 +1634,8 @@ private constructor(
                 private var contextManagement: JsonField<BetaContextManagementConfig> =
                     JsonMissing.of()
                 private var diagnostics: JsonField<BetaDiagnosticsParam> = JsonMissing.of()
+                private var fallbackCreditToken: JsonField<String> = JsonMissing.of()
+                private var fallbacks: JsonField<MutableList<BetaFallbackParam>>? = null
                 private var inferenceGeo: JsonField<String> = JsonMissing.of()
                 private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                     null
@@ -1597,6 +1666,9 @@ private constructor(
                     container = params.container
                     contextManagement = params.contextManagement
                     diagnostics = params.diagnostics
+                    fallbackCreditToken = params.fallbackCreditToken
+                    fallbacks =
+                        params.fallbacks.map { it.toMutableList() }.takeUnless { it.isMissing() }
                     inferenceGeo = params.inferenceGeo
                     mcpServers =
                         params.mcpServers.map { it.toMutableList() }.takeUnless { it.isMissing() }
@@ -1960,6 +2032,83 @@ private constructor(
                  */
                 fun diagnostics(diagnostics: JsonField<BetaDiagnosticsParam>) = apply {
                     this.diagnostics = diagnostics
+                }
+
+                /**
+                 * The `fallback_credit_token` from a prior refusal's `stop_details`.
+                 *
+                 * When a preceding request was refused and returned a `fallback_credit_token`, pass
+                 * that code here on the retry to have the retry's cache-creation tokens for the
+                 * prefix that was warm on the refused model billed at the cache-read rate. Must be
+                 * redeemed by the same organization and workspace, with the same request body
+                 * (optionally extended by one appended `assistant` message whose content is the
+                 * partial text — with any trailing whitespace stripped from the final text block —
+                 * and paired server-tool blocks streamed before the refusal; the appended-assistant
+                 * form is not available for requests with `output_format` set or forced
+                 * `tool_choice`), on an eligible fallback model, on the same platform, and within 5
+                 * minutes of the refusal; a mismatch is a 400. A token minted mid-server-tool-loop
+                 * whose partial content was continuable may only be redeemed with the
+                 * appended-assistant form — if an exact-body retry is rejected with a 400 saying
+                 * the token must be redeemed by continuing the partial response, retry with the
+                 * appended-assistant form instead.
+                 *
+                 * When the appended-assistant form is used on a model that otherwise disallows
+                 * assistant-turn prefill, this token also authorizes that one prefill.
+                 */
+                fun fallbackCreditToken(fallbackCreditToken: String?) =
+                    fallbackCreditToken(JsonField.ofNullable(fallbackCreditToken))
+
+                /**
+                 * Alias for calling [Builder.fallbackCreditToken] with
+                 * `fallbackCreditToken.orElse(null)`.
+                 */
+                fun fallbackCreditToken(fallbackCreditToken: Optional<String>) =
+                    fallbackCreditToken(fallbackCreditToken.getOrNull())
+
+                /**
+                 * Sets [Builder.fallbackCreditToken] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.fallbackCreditToken] with a well-typed [String]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun fallbackCreditToken(fallbackCreditToken: JsonField<String>) = apply {
+                    this.fallbackCreditToken = fallbackCreditToken
+                }
+
+                /**
+                 * Opt-in server-side retry on one or more substitute models when the requested
+                 * model declines for policy reasons. Tried in order: if the first entry also
+                 * declines, the second is tried, and so on.
+                 */
+                fun fallbacks(fallbacks: List<BetaFallbackParam>?) =
+                    fallbacks(JsonField.ofNullable(fallbacks))
+
+                /** Alias for calling [Builder.fallbacks] with `fallbacks.orElse(null)`. */
+                fun fallbacks(fallbacks: Optional<List<BetaFallbackParam>>) =
+                    fallbacks(fallbacks.getOrNull())
+
+                /**
+                 * Sets [Builder.fallbacks] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.fallbacks] with a well-typed
+                 * `List<BetaFallbackParam>` value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
+                 */
+                fun fallbacks(fallbacks: JsonField<List<BetaFallbackParam>>) = apply {
+                    this.fallbacks = fallbacks.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [BetaFallbackParam] to [fallbacks].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addFallback(fallback: BetaFallbackParam) = apply {
+                    fallbacks =
+                        (fallbacks ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("fallbacks", it).add(fallback)
+                        }
                 }
 
                 /**
@@ -2675,6 +2824,8 @@ private constructor(
                         container,
                         contextManagement,
                         diagnostics,
+                        fallbackCreditToken,
+                        (fallbacks ?: JsonMissing.of()).map { it.toImmutable() },
                         inferenceGeo,
                         (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                         metadata,
@@ -2720,6 +2871,8 @@ private constructor(
                 container().ifPresent { it.validate() }
                 contextManagement().ifPresent { it.validate() }
                 diagnostics().ifPresent { it.validate() }
+                fallbackCreditToken()
+                fallbacks().ifPresent { it.forEach { it.validate() } }
                 inferenceGeo()
                 mcpServers().ifPresent { it.forEach { it.validate() } }
                 metadata().ifPresent { it.validate() }
@@ -2763,6 +2916,8 @@ private constructor(
                     (container.asKnown().getOrNull()?.validity() ?: 0) +
                     (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                     (diagnostics.asKnown().getOrNull()?.validity() ?: 0) +
+                    (if (fallbackCreditToken.asKnown().isPresent) 1 else 0) +
+                    (fallbacks.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
                     (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (metadata.asKnown().getOrNull()?.validity() ?: 0) +
@@ -3550,6 +3705,8 @@ private constructor(
                     container == other.container &&
                     contextManagement == other.contextManagement &&
                     diagnostics == other.diagnostics &&
+                    fallbackCreditToken == other.fallbackCreditToken &&
+                    fallbacks == other.fallbacks &&
                     inferenceGeo == other.inferenceGeo &&
                     mcpServers == other.mcpServers &&
                     metadata == other.metadata &&
@@ -3579,6 +3736,8 @@ private constructor(
                     container,
                     contextManagement,
                     diagnostics,
+                    fallbackCreditToken,
+                    fallbacks,
                     inferenceGeo,
                     mcpServers,
                     metadata,
@@ -3603,7 +3762,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
+                "Params{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, fallbackCreditToken=$fallbackCreditToken, fallbacks=$fallbacks, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, stream=$stream, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

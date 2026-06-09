@@ -531,6 +531,13 @@ private constructor(
         fun addIteration(advisorMessage: BetaAdvisorMessageIterationUsage) =
             addIteration(BetaIterationsUsageItems.ofAdvisorMessage(advisorMessage))
 
+        /**
+         * Alias for calling [addIteration] with
+         * `BetaIterationsUsageItems.ofFallbackMessage(fallbackMessage)`.
+         */
+        fun addIteration(fallbackMessage: BetaFallbackMessageIterationUsage) =
+            addIteration(BetaIterationsUsageItems.ofFallbackMessage(fallbackMessage))
+
         /** The number of output tokens which were used. */
         fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
 
@@ -743,6 +750,7 @@ private constructor(
         private val message: BetaMessageIterationUsage? = null,
         private val compaction: BetaCompactionIterationUsage? = null,
         private val advisorMessage: BetaAdvisorMessageIterationUsage? = null,
+        private val fallbackMessage: BetaFallbackMessageIterationUsage? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -756,11 +764,23 @@ private constructor(
         fun advisorMessage(): Optional<BetaAdvisorMessageIterationUsage> =
             Optional.ofNullable(advisorMessage)
 
+        /**
+         * Token usage for the fallback-model attempt of a server-side fallback request.
+         *
+         * Produced in place of a `message` entry for whichever hop served the response. A declined
+         * hop produces the existing `message` entry. Whether a fallback model served the response
+         * is signalled by the presence of this entry in `usage.iterations`.
+         */
+        fun fallbackMessage(): Optional<BetaFallbackMessageIterationUsage> =
+            Optional.ofNullable(fallbackMessage)
+
         fun isMessage(): Boolean = message != null
 
         fun isCompaction(): Boolean = compaction != null
 
         fun isAdvisorMessage(): Boolean = advisorMessage != null
+
+        fun isFallbackMessage(): Boolean = fallbackMessage != null
 
         /** Token usage for a sampling iteration. */
         fun asMessage(): BetaMessageIterationUsage = message.getOrThrow("message")
@@ -771,6 +791,16 @@ private constructor(
         /** Token usage for an advisor sub-inference iteration. */
         fun asAdvisorMessage(): BetaAdvisorMessageIterationUsage =
             advisorMessage.getOrThrow("advisorMessage")
+
+        /**
+         * Token usage for the fallback-model attempt of a server-side fallback request.
+         *
+         * Produced in place of a `message` entry for whichever hop served the response. A declined
+         * hop produces the existing `message` entry. Whether a fallback model served the response
+         * is signalled by the presence of this entry in `usage.iterations`.
+         */
+        fun asFallbackMessage(): BetaFallbackMessageIterationUsage =
+            fallbackMessage.getOrThrow("fallbackMessage")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -808,6 +838,7 @@ private constructor(
                 message != null -> visitor.visitMessage(message)
                 compaction != null -> visitor.visitCompaction(compaction)
                 advisorMessage != null -> visitor.visitAdvisorMessage(advisorMessage)
+                fallbackMessage != null -> visitor.visitFallbackMessage(fallbackMessage)
                 else -> visitor.unknown(_json)
             }
 
@@ -842,6 +873,12 @@ private constructor(
                     ) {
                         advisorMessage.validate()
                     }
+
+                    override fun visitFallbackMessage(
+                        fallbackMessage: BetaFallbackMessageIterationUsage
+                    ) {
+                        fallbackMessage.validate()
+                    }
                 }
             )
             validated = true
@@ -875,6 +912,10 @@ private constructor(
                         advisorMessage: BetaAdvisorMessageIterationUsage
                     ) = advisorMessage.validity()
 
+                    override fun visitFallbackMessage(
+                        fallbackMessage: BetaFallbackMessageIterationUsage
+                    ) = fallbackMessage.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -887,16 +928,20 @@ private constructor(
             return other is BetaIterationsUsageItems &&
                 message == other.message &&
                 compaction == other.compaction &&
-                advisorMessage == other.advisorMessage
+                advisorMessage == other.advisorMessage &&
+                fallbackMessage == other.fallbackMessage
         }
 
-        override fun hashCode(): Int = Objects.hash(message, compaction, advisorMessage)
+        override fun hashCode(): Int =
+            Objects.hash(message, compaction, advisorMessage, fallbackMessage)
 
         override fun toString(): String =
             when {
                 message != null -> "BetaIterationsUsageItems{message=$message}"
                 compaction != null -> "BetaIterationsUsageItems{compaction=$compaction}"
                 advisorMessage != null -> "BetaIterationsUsageItems{advisorMessage=$advisorMessage}"
+                fallbackMessage != null ->
+                    "BetaIterationsUsageItems{fallbackMessage=$fallbackMessage}"
                 _json != null -> "BetaIterationsUsageItems{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid BetaIterationsUsageItems")
             }
@@ -917,6 +962,17 @@ private constructor(
             @JvmStatic
             fun ofAdvisorMessage(advisorMessage: BetaAdvisorMessageIterationUsage) =
                 BetaIterationsUsageItems(advisorMessage = advisorMessage)
+
+            /**
+             * Token usage for the fallback-model attempt of a server-side fallback request.
+             *
+             * Produced in place of a `message` entry for whichever hop served the response. A
+             * declined hop produces the existing `message` entry. Whether a fallback model served
+             * the response is signalled by the presence of this entry in `usage.iterations`.
+             */
+            @JvmStatic
+            fun ofFallbackMessage(fallbackMessage: BetaFallbackMessageIterationUsage) =
+                BetaIterationsUsageItems(fallbackMessage = fallbackMessage)
         }
 
         /**
@@ -933,6 +989,15 @@ private constructor(
 
             /** Token usage for an advisor sub-inference iteration. */
             fun visitAdvisorMessage(advisorMessage: BetaAdvisorMessageIterationUsage): T
+
+            /**
+             * Token usage for the fallback-model attempt of a server-side fallback request.
+             *
+             * Produced in place of a `message` entry for whichever hop served the response. A
+             * declined hop produces the existing `message` entry. Whether a fallback model served
+             * the response is signalled by the presence of this entry in `usage.iterations`.
+             */
+            fun visitFallbackMessage(fallbackMessage: BetaFallbackMessageIterationUsage): T
 
             /**
              * Maps an unknown variant of [BetaIterationsUsageItems] to a value of type [T].
@@ -975,6 +1040,14 @@ private constructor(
                             ?.let { BetaIterationsUsageItems(advisorMessage = it, _json = json) }
                             ?: BetaIterationsUsageItems(_json = json)
                     }
+                    "fallback_message" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaFallbackMessageIterationUsage>(),
+                            )
+                            ?.let { BetaIterationsUsageItems(fallbackMessage = it, _json = json) }
+                            ?: BetaIterationsUsageItems(_json = json)
+                    }
                 }
 
                 return BetaIterationsUsageItems(_json = json)
@@ -993,6 +1066,7 @@ private constructor(
                     value.message != null -> generator.writeObject(value.message)
                     value.compaction != null -> generator.writeObject(value.compaction)
                     value.advisorMessage != null -> generator.writeObject(value.advisorMessage)
+                    value.fallbackMessage != null -> generator.writeObject(value.fallbackMessage)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid BetaIterationsUsageItems")
                 }

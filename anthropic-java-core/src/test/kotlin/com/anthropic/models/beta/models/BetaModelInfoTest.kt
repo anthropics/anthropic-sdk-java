@@ -5,6 +5,7 @@ package com.anthropic.models.beta.models
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -15,6 +16,7 @@ internal class BetaModelInfoTest {
         val betaModelInfo =
             BetaModelInfo.builder()
                 .id("claude-opus-4-6")
+                .addAllowedFallbackModel("string")
                 .capabilities(
                     BetaModelCapabilities.builder()
                         .batch(BetaCapabilitySupport.builder().supported(true).build())
@@ -71,6 +73,7 @@ internal class BetaModelInfoTest {
                 .build()
 
         assertThat(betaModelInfo.id()).isEqualTo("claude-opus-4-6")
+        assertThat(betaModelInfo.allowedFallbackModels().getOrNull()).containsExactly("string")
         assertThat(betaModelInfo.capabilities())
             .contains(
                 BetaModelCapabilities.builder()
@@ -134,6 +137,7 @@ internal class BetaModelInfoTest {
         val betaModelInfo =
             BetaModelInfo.builder()
                 .id("claude-opus-4-6")
+                .addAllowedFallbackModel("string")
                 .capabilities(
                     BetaModelCapabilities.builder()
                         .batch(BetaCapabilitySupport.builder().supported(true).build())

@@ -3,6 +3,7 @@
 package com.anthropic.models.beta.messages
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -43,6 +44,9 @@ internal class BetaRawMessageDeltaEventTest {
                             BetaRefusalStopDetails.builder()
                                 .category(BetaRefusalStopDetails.Category.CYBER)
                                 .explanation("explanation")
+                                .fallbackCreditToken("fallback_credit_token")
+                                .fallbackHasPrefillClaim(true)
+                                .recommendedModel("recommended_model")
                                 .build()
                         )
                         .stopReason(BetaStopReason.END_TURN)
@@ -65,6 +69,7 @@ internal class BetaRawMessageDeltaEventTest {
                                 .cacheCreationInputTokens(0L)
                                 .cacheReadInputTokens(0L)
                                 .inputTokens(0L)
+                                .model(Model.CLAUDE_FABLE_5)
                                 .outputTokens(0L)
                                 .build()
                         )
@@ -113,6 +118,9 @@ internal class BetaRawMessageDeltaEventTest {
                         BetaRefusalStopDetails.builder()
                             .category(BetaRefusalStopDetails.Category.CYBER)
                             .explanation("explanation")
+                            .fallbackCreditToken("fallback_credit_token")
+                            .fallbackHasPrefillClaim(true)
+                            .recommendedModel("recommended_model")
                             .build()
                     )
                     .stopReason(BetaStopReason.END_TURN)
@@ -136,6 +144,7 @@ internal class BetaRawMessageDeltaEventTest {
                             .cacheCreationInputTokens(0L)
                             .cacheReadInputTokens(0L)
                             .inputTokens(0L)
+                            .model(Model.CLAUDE_FABLE_5)
                             .outputTokens(0L)
                             .build()
                     )
@@ -187,6 +196,9 @@ internal class BetaRawMessageDeltaEventTest {
                             BetaRefusalStopDetails.builder()
                                 .category(BetaRefusalStopDetails.Category.CYBER)
                                 .explanation("explanation")
+                                .fallbackCreditToken("fallback_credit_token")
+                                .fallbackHasPrefillClaim(true)
+                                .recommendedModel("recommended_model")
                                 .build()
                         )
                         .stopReason(BetaStopReason.END_TURN)
@@ -209,6 +221,7 @@ internal class BetaRawMessageDeltaEventTest {
                                 .cacheCreationInputTokens(0L)
                                 .cacheReadInputTokens(0L)
                                 .inputTokens(0L)
+                                .model(Model.CLAUDE_FABLE_5)
                                 .outputTokens(0L)
                                 .build()
                         )

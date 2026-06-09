@@ -18,8 +18,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Token usage for a sampling iteration. */
-class BetaMessageIterationUsage
+/**
+ * Token usage for the fallback-model attempt of a server-side fallback request.
+ *
+ * Produced in place of a `message` entry for whichever hop served the response. A declined hop
+ * produces the existing `message` entry. Whether a fallback model served the response is signalled
+ * by the presence of this entry in `usage.iterations`.
+ */
+class BetaFallbackMessageIterationUsage
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val cacheCreation: JsonField<BetaCacheCreation>,
@@ -115,11 +121,11 @@ private constructor(
     fun outputTokens(): Long = outputTokens.getRequired("output_tokens")
 
     /**
-     * Usage for a sampling iteration
+     * Usage for the fallback-model attempt that served the response
      *
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("message")
+     * JsonValue.from("fallback_message")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -194,7 +200,8 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [BetaMessageIterationUsage].
+         * Returns a mutable builder for constructing an instance of
+         * [BetaFallbackMessageIterationUsage].
          *
          * The following fields are required:
          * ```java
@@ -209,7 +216,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BetaMessageIterationUsage]. */
+    /** A builder for [BetaFallbackMessageIterationUsage]. */
     class Builder internal constructor() {
 
         private var cacheCreation: JsonField<BetaCacheCreation>? = null
@@ -218,20 +225,23 @@ private constructor(
         private var inputTokens: JsonField<Long>? = null
         private var model: JsonField<Model>? = null
         private var outputTokens: JsonField<Long>? = null
-        private var type: JsonValue = JsonValue.from("message")
+        private var type: JsonValue = JsonValue.from("fallback_message")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaMessageIterationUsage: BetaMessageIterationUsage) = apply {
-            cacheCreation = betaMessageIterationUsage.cacheCreation
-            cacheCreationInputTokens = betaMessageIterationUsage.cacheCreationInputTokens
-            cacheReadInputTokens = betaMessageIterationUsage.cacheReadInputTokens
-            inputTokens = betaMessageIterationUsage.inputTokens
-            model = betaMessageIterationUsage.model
-            outputTokens = betaMessageIterationUsage.outputTokens
-            type = betaMessageIterationUsage.type
-            additionalProperties = betaMessageIterationUsage.additionalProperties.toMutableMap()
-        }
+        internal fun from(betaFallbackMessageIterationUsage: BetaFallbackMessageIterationUsage) =
+            apply {
+                cacheCreation = betaFallbackMessageIterationUsage.cacheCreation
+                cacheCreationInputTokens =
+                    betaFallbackMessageIterationUsage.cacheCreationInputTokens
+                cacheReadInputTokens = betaFallbackMessageIterationUsage.cacheReadInputTokens
+                inputTokens = betaFallbackMessageIterationUsage.inputTokens
+                model = betaFallbackMessageIterationUsage.model
+                outputTokens = betaFallbackMessageIterationUsage.outputTokens
+                type = betaFallbackMessageIterationUsage.type
+                additionalProperties =
+                    betaFallbackMessageIterationUsage.additionalProperties.toMutableMap()
+            }
 
         /** Breakdown of cached tokens by TTL */
         fun cacheCreation(cacheCreation: BetaCacheCreation?) =
@@ -336,7 +346,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("message")
+         * JsonValue.from("fallback_message")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -364,7 +374,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaMessageIterationUsage].
+         * Returns an immutable instance of [BetaFallbackMessageIterationUsage].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -380,8 +390,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BetaMessageIterationUsage =
-            BetaMessageIterationUsage(
+        fun build(): BetaFallbackMessageIterationUsage =
+            BetaFallbackMessageIterationUsage(
                 checkRequired("cacheCreation", cacheCreation),
                 checkRequired("cacheCreationInputTokens", cacheCreationInputTokens),
                 checkRequired("cacheReadInputTokens", cacheReadInputTokens),
@@ -403,7 +413,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BetaMessageIterationUsage = apply {
+    fun validate(): BetaFallbackMessageIterationUsage = apply {
         if (validated) {
             return@apply
         }
@@ -415,7 +425,7 @@ private constructor(
         model()
         outputTokens()
         _type().let {
-            if (it != JsonValue.from("message")) {
+            if (it != JsonValue.from("fallback_message")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
@@ -443,14 +453,14 @@ private constructor(
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
             (if (model.asKnown().isPresent) 1 else 0) +
             (if (outputTokens.asKnown().isPresent) 1 else 0) +
-            type.let { if (it == JsonValue.from("message")) 1 else 0 }
+            type.let { if (it == JsonValue.from("fallback_message")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is BetaMessageIterationUsage &&
+        return other is BetaFallbackMessageIterationUsage &&
             cacheCreation == other.cacheCreation &&
             cacheCreationInputTokens == other.cacheCreationInputTokens &&
             cacheReadInputTokens == other.cacheReadInputTokens &&
@@ -477,5 +487,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaMessageIterationUsage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, model=$model, outputTokens=$outputTokens, type=$type, additionalProperties=$additionalProperties}"
+        "BetaFallbackMessageIterationUsage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, model=$model, outputTokens=$outputTokens, type=$type, additionalProperties=$additionalProperties}"
 }

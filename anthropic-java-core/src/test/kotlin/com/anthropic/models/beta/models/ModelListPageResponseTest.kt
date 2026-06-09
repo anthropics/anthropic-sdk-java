@@ -17,6 +17,7 @@ internal class ModelListPageResponseTest {
                 .addData(
                     BetaModelInfo.builder()
                         .id("claude-opus-4-6")
+                        .addAllowedFallbackModel("string")
                         .capabilities(
                             BetaModelCapabilities.builder()
                                 .batch(BetaCapabilitySupport.builder().supported(true).build())
@@ -99,6 +100,7 @@ internal class ModelListPageResponseTest {
             .containsExactly(
                 BetaModelInfo.builder()
                     .id("claude-opus-4-6")
+                    .addAllowedFallbackModel("string")
                     .capabilities(
                         BetaModelCapabilities.builder()
                             .batch(BetaCapabilitySupport.builder().supported(true).build())
@@ -173,6 +175,7 @@ internal class ModelListPageResponseTest {
                 .addData(
                     BetaModelInfo.builder()
                         .id("claude-opus-4-6")
+                        .addAllowedFallbackModel("string")
                         .capabilities(
                             BetaModelCapabilities.builder()
                                 .batch(BetaCapabilitySupport.builder().supported(true).build())

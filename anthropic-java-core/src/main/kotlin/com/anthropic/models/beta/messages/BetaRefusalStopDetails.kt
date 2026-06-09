@@ -24,6 +24,9 @@ class BetaRefusalStopDetails
 private constructor(
     private val category: JsonField<Category>,
     private val explanation: JsonField<String>,
+    private val fallbackCreditToken: JsonField<String>,
+    private val fallbackHasPrefillClaim: JsonField<Boolean>,
+    private val recommendedModel: JsonField<String>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -34,8 +37,25 @@ private constructor(
         @JsonProperty("explanation")
         @ExcludeMissing
         explanation: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("fallback_credit_token")
+        @ExcludeMissing
+        fallbackCreditToken: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("fallback_has_prefill_claim")
+        @ExcludeMissing
+        fallbackHasPrefillClaim: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("recommended_model")
+        @ExcludeMissing
+        recommendedModel: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(category, explanation, type, mutableMapOf())
+    ) : this(
+        category,
+        explanation,
+        fallbackCreditToken,
+        fallbackHasPrefillClaim,
+        recommendedModel,
+        type,
+        mutableMapOf(),
+    )
 
     /**
      * The policy category that triggered the refusal.
@@ -57,6 +77,65 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun explanation(): Optional<String> = explanation.getOptional("explanation")
+
+    /**
+     * Opaque code that refunds the cache-miss cost when retrying this refused request on the
+     * fallback model. Pass it as `fallback_credit_token` on the retry request. Expires 5 minutes
+     * after the refusal.
+     *
+     * The retry is sent either with the same request body (`system`, `messages`, `tools`, and other
+     * render-shaping fields), or with the same body plus one appended `assistant` message whose
+     * content is the partial text (with any trailing whitespace stripped from the final text block)
+     * and paired server-tool blocks from this refusal — which also authorizes that appended turn as
+     * an assistant-prefill continuation on models that otherwise disallow prefill. A token minted
+     * mid-server-tool-loop whose partial content was continuable may only be redeemed the second
+     * way — if a same-body retry is rejected with a 400 saying the token must be redeemed by
+     * continuing the partial response, retry the second way instead. Either way: same workspace,
+     * same platform; a mismatch is a 400. Resending a token for an already-warm prefix is permitted
+     * but yields no additional credit.
+     *
+     * `null` when the refused model isn't eligible for a fallback credit.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun fallbackCreditToken(): Optional<String> =
+        fallbackCreditToken.getOptional("fallback_credit_token")
+
+    /**
+     * Whether the accompanying `fallback_credit_token` may be redeemed with the appended-assistant
+     * retry form. Only set when `fallback_credit_token` is present.
+     *
+     * `true`: retry by resending the same request body plus one appended `assistant` message whose
+     * content is this response's `content` with any trailing whitespace stripped from the final
+     * text block and unpaired `tool_use` blocks omitted (the same appended-turn shape described on
+     * `fallback_credit_token`), with the token attached. `false`: retry by resending the original
+     * request body unchanged, with the token attached — the appended-assistant form is not
+     * available for this refusal (no continuable partial content, or the request uses
+     * `output_format` or a `tool_choice` that forces tool use). One exception: when the request
+     * used `output_format` or a forced `tool_choice` and the refusal arrived after server tools
+     * (including MCP connector tools) had already executed, the token may not be redeemable by
+     * either retry form; if the exact-body retry is then rejected with a 400 saying the token must
+     * be redeemed by continuing the partial response, discard the token and retry without it.
+     *
+     * Advisory: if an appended-assistant retry is rejected with a 400 despite `true`, fall back to
+     * resending the original request body with the token.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun fallbackHasPrefillClaim(): Optional<Boolean> =
+        fallbackHasPrefillClaim.getOptional("fallback_has_prefill_claim")
+
+    /**
+     * The server's suggested retry target for this refusal. Populated when a fallback attempt could
+     * not be made (the fallback model's rate limit was exhausted, or it was overloaded); names the
+     * fallback model the caller can retry directly. Null otherwise.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun recommendedModel(): Optional<String> = recommendedModel.getOptional("recommended_model")
 
     /**
      * Expected to always return the following:
@@ -83,6 +162,36 @@ private constructor(
      */
     @JsonProperty("explanation") @ExcludeMissing fun _explanation(): JsonField<String> = explanation
 
+    /**
+     * Returns the raw JSON value of [fallbackCreditToken].
+     *
+     * Unlike [fallbackCreditToken], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("fallback_credit_token")
+    @ExcludeMissing
+    fun _fallbackCreditToken(): JsonField<String> = fallbackCreditToken
+
+    /**
+     * Returns the raw JSON value of [fallbackHasPrefillClaim].
+     *
+     * Unlike [fallbackHasPrefillClaim], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("fallback_has_prefill_claim")
+    @ExcludeMissing
+    fun _fallbackHasPrefillClaim(): JsonField<Boolean> = fallbackHasPrefillClaim
+
+    /**
+     * Returns the raw JSON value of [recommendedModel].
+     *
+     * Unlike [recommendedModel], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("recommended_model")
+    @ExcludeMissing
+    fun _recommendedModel(): JsonField<String> = recommendedModel
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -104,6 +213,9 @@ private constructor(
          * ```java
          * .category()
          * .explanation()
+         * .fallbackCreditToken()
+         * .fallbackHasPrefillClaim()
+         * .recommendedModel()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -114,6 +226,9 @@ private constructor(
 
         private var category: JsonField<Category>? = null
         private var explanation: JsonField<String>? = null
+        private var fallbackCreditToken: JsonField<String>? = null
+        private var fallbackHasPrefillClaim: JsonField<Boolean>? = null
+        private var recommendedModel: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("refusal")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -121,6 +236,9 @@ private constructor(
         internal fun from(betaRefusalStopDetails: BetaRefusalStopDetails) = apply {
             category = betaRefusalStopDetails.category
             explanation = betaRefusalStopDetails.explanation
+            fallbackCreditToken = betaRefusalStopDetails.fallbackCreditToken
+            fallbackHasPrefillClaim = betaRefusalStopDetails.fallbackHasPrefillClaim
+            recommendedModel = betaRefusalStopDetails.recommendedModel
             type = betaRefusalStopDetails.type
             additionalProperties = betaRefusalStopDetails.additionalProperties.toMutableMap()
         }
@@ -165,6 +283,116 @@ private constructor(
         fun explanation(explanation: JsonField<String>) = apply { this.explanation = explanation }
 
         /**
+         * Opaque code that refunds the cache-miss cost when retrying this refused request on the
+         * fallback model. Pass it as `fallback_credit_token` on the retry request. Expires 5
+         * minutes after the refusal.
+         *
+         * The retry is sent either with the same request body (`system`, `messages`, `tools`, and
+         * other render-shaping fields), or with the same body plus one appended `assistant` message
+         * whose content is the partial text (with any trailing whitespace stripped from the final
+         * text block) and paired server-tool blocks from this refusal — which also authorizes that
+         * appended turn as an assistant-prefill continuation on models that otherwise disallow
+         * prefill. A token minted mid-server-tool-loop whose partial content was continuable may
+         * only be redeemed the second way — if a same-body retry is rejected with a 400 saying the
+         * token must be redeemed by continuing the partial response, retry the second way instead.
+         * Either way: same workspace, same platform; a mismatch is a 400. Resending a token for an
+         * already-warm prefix is permitted but yields no additional credit.
+         *
+         * `null` when the refused model isn't eligible for a fallback credit.
+         */
+        fun fallbackCreditToken(fallbackCreditToken: String?) =
+            fallbackCreditToken(JsonField.ofNullable(fallbackCreditToken))
+
+        /**
+         * Alias for calling [Builder.fallbackCreditToken] with `fallbackCreditToken.orElse(null)`.
+         */
+        fun fallbackCreditToken(fallbackCreditToken: Optional<String>) =
+            fallbackCreditToken(fallbackCreditToken.getOrNull())
+
+        /**
+         * Sets [Builder.fallbackCreditToken] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.fallbackCreditToken] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun fallbackCreditToken(fallbackCreditToken: JsonField<String>) = apply {
+            this.fallbackCreditToken = fallbackCreditToken
+        }
+
+        /**
+         * Whether the accompanying `fallback_credit_token` may be redeemed with the
+         * appended-assistant retry form. Only set when `fallback_credit_token` is present.
+         *
+         * `true`: retry by resending the same request body plus one appended `assistant` message
+         * whose content is this response's `content` with any trailing whitespace stripped from the
+         * final text block and unpaired `tool_use` blocks omitted (the same appended-turn shape
+         * described on `fallback_credit_token`), with the token attached. `false`: retry by
+         * resending the original request body unchanged, with the token attached — the
+         * appended-assistant form is not available for this refusal (no continuable partial
+         * content, or the request uses `output_format` or a `tool_choice` that forces tool use).
+         * One exception: when the request used `output_format` or a forced `tool_choice` and the
+         * refusal arrived after server tools (including MCP connector tools) had already executed,
+         * the token may not be redeemable by either retry form; if the exact-body retry is then
+         * rejected with a 400 saying the token must be redeemed by continuing the partial response,
+         * discard the token and retry without it.
+         *
+         * Advisory: if an appended-assistant retry is rejected with a 400 despite `true`, fall back
+         * to resending the original request body with the token.
+         */
+        fun fallbackHasPrefillClaim(fallbackHasPrefillClaim: Boolean?) =
+            fallbackHasPrefillClaim(JsonField.ofNullable(fallbackHasPrefillClaim))
+
+        /**
+         * Alias for [Builder.fallbackHasPrefillClaim].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun fallbackHasPrefillClaim(fallbackHasPrefillClaim: Boolean) =
+            fallbackHasPrefillClaim(fallbackHasPrefillClaim as Boolean?)
+
+        /**
+         * Alias for calling [Builder.fallbackHasPrefillClaim] with
+         * `fallbackHasPrefillClaim.orElse(null)`.
+         */
+        fun fallbackHasPrefillClaim(fallbackHasPrefillClaim: Optional<Boolean>) =
+            fallbackHasPrefillClaim(fallbackHasPrefillClaim.getOrNull())
+
+        /**
+         * Sets [Builder.fallbackHasPrefillClaim] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.fallbackHasPrefillClaim] with a well-typed [Boolean]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun fallbackHasPrefillClaim(fallbackHasPrefillClaim: JsonField<Boolean>) = apply {
+            this.fallbackHasPrefillClaim = fallbackHasPrefillClaim
+        }
+
+        /**
+         * The server's suggested retry target for this refusal. Populated when a fallback attempt
+         * could not be made (the fallback model's rate limit was exhausted, or it was overloaded);
+         * names the fallback model the caller can retry directly. Null otherwise.
+         */
+        fun recommendedModel(recommendedModel: String?) =
+            recommendedModel(JsonField.ofNullable(recommendedModel))
+
+        /** Alias for calling [Builder.recommendedModel] with `recommendedModel.orElse(null)`. */
+        fun recommendedModel(recommendedModel: Optional<String>) =
+            recommendedModel(recommendedModel.getOrNull())
+
+        /**
+         * Sets [Builder.recommendedModel] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.recommendedModel] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun recommendedModel(recommendedModel: JsonField<String>) = apply {
+            this.recommendedModel = recommendedModel
+        }
+
+        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the
@@ -206,6 +434,9 @@ private constructor(
          * ```java
          * .category()
          * .explanation()
+         * .fallbackCreditToken()
+         * .fallbackHasPrefillClaim()
+         * .recommendedModel()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -214,6 +445,9 @@ private constructor(
             BetaRefusalStopDetails(
                 checkRequired("category", category),
                 checkRequired("explanation", explanation),
+                checkRequired("fallbackCreditToken", fallbackCreditToken),
+                checkRequired("fallbackHasPrefillClaim", fallbackHasPrefillClaim),
+                checkRequired("recommendedModel", recommendedModel),
                 type,
                 additionalProperties.toMutableMap(),
             )
@@ -236,6 +470,9 @@ private constructor(
 
         category().ifPresent { it.validate() }
         explanation()
+        fallbackCreditToken()
+        fallbackHasPrefillClaim()
+        recommendedModel()
         _type().let {
             if (it != JsonValue.from("refusal")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -261,6 +498,9 @@ private constructor(
     internal fun validity(): Int =
         (category.asKnown().getOrNull()?.validity() ?: 0) +
             (if (explanation.asKnown().isPresent) 1 else 0) +
+            (if (fallbackCreditToken.asKnown().isPresent) 1 else 0) +
+            (if (fallbackHasPrefillClaim.asKnown().isPresent) 1 else 0) +
+            (if (recommendedModel.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("refusal")) 1 else 0 }
 
     /**
@@ -286,6 +526,8 @@ private constructor(
 
             @JvmField val BIO = of("bio")
 
+            @JvmField val REASONING_EXTRACTION = of("reasoning_extraction")
+
             @JvmStatic fun of(value: String) = Category(JsonField.of(value))
         }
 
@@ -293,6 +535,7 @@ private constructor(
         enum class Known {
             CYBER,
             BIO,
+            REASONING_EXTRACTION,
         }
 
         /**
@@ -307,6 +550,7 @@ private constructor(
         enum class Value {
             CYBER,
             BIO,
+            REASONING_EXTRACTION,
             /** An enum member indicating that [Category] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -322,6 +566,7 @@ private constructor(
             when (this) {
                 CYBER -> Value.CYBER
                 BIO -> Value.BIO
+                REASONING_EXTRACTION -> Value.REASONING_EXTRACTION
                 else -> Value._UNKNOWN
             }
 
@@ -338,6 +583,7 @@ private constructor(
             when (this) {
                 CYBER -> Known.CYBER
                 BIO -> Known.BIO
+                REASONING_EXTRACTION -> Known.REASONING_EXTRACTION
                 else -> throw AnthropicInvalidDataException("Unknown Category: $value")
             }
 
@@ -412,16 +658,27 @@ private constructor(
         return other is BetaRefusalStopDetails &&
             category == other.category &&
             explanation == other.explanation &&
+            fallbackCreditToken == other.fallbackCreditToken &&
+            fallbackHasPrefillClaim == other.fallbackHasPrefillClaim &&
+            recommendedModel == other.recommendedModel &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(category, explanation, type, additionalProperties)
+        Objects.hash(
+            category,
+            explanation,
+            fallbackCreditToken,
+            fallbackHasPrefillClaim,
+            recommendedModel,
+            type,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaRefusalStopDetails{category=$category, explanation=$explanation, type=$type, additionalProperties=$additionalProperties}"
+        "BetaRefusalStopDetails{category=$category, explanation=$explanation, fallbackCreditToken=$fallbackCreditToken, fallbackHasPrefillClaim=$fallbackHasPrefillClaim, recommendedModel=$recommendedModel, type=$type, additionalProperties=$additionalProperties}"
 }

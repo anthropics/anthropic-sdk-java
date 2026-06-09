@@ -8,12 +8,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class BetaMessageIterationUsageTest {
+internal class BetaFallbackMessageIterationUsageTest {
 
     @Test
     fun create() {
-        val betaMessageIterationUsage =
-            BetaMessageIterationUsage.builder()
+        val betaFallbackMessageIterationUsage =
+            BetaFallbackMessageIterationUsage.builder()
                 .cacheCreation(
                     BetaCacheCreation.builder()
                         .ephemeral1hInputTokens(0L)
@@ -27,25 +27,25 @@ internal class BetaMessageIterationUsageTest {
                 .outputTokens(0L)
                 .build()
 
-        assertThat(betaMessageIterationUsage.cacheCreation())
+        assertThat(betaFallbackMessageIterationUsage.cacheCreation())
             .contains(
                 BetaCacheCreation.builder()
                     .ephemeral1hInputTokens(0L)
                     .ephemeral5mInputTokens(0L)
                     .build()
             )
-        assertThat(betaMessageIterationUsage.cacheCreationInputTokens()).isEqualTo(0L)
-        assertThat(betaMessageIterationUsage.cacheReadInputTokens()).isEqualTo(0L)
-        assertThat(betaMessageIterationUsage.inputTokens()).isEqualTo(0L)
-        assertThat(betaMessageIterationUsage.model()).isEqualTo(Model.CLAUDE_FABLE_5)
-        assertThat(betaMessageIterationUsage.outputTokens()).isEqualTo(0L)
+        assertThat(betaFallbackMessageIterationUsage.cacheCreationInputTokens()).isEqualTo(0L)
+        assertThat(betaFallbackMessageIterationUsage.cacheReadInputTokens()).isEqualTo(0L)
+        assertThat(betaFallbackMessageIterationUsage.inputTokens()).isEqualTo(0L)
+        assertThat(betaFallbackMessageIterationUsage.model()).isEqualTo(Model.CLAUDE_FABLE_5)
+        assertThat(betaFallbackMessageIterationUsage.outputTokens()).isEqualTo(0L)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaMessageIterationUsage =
-            BetaMessageIterationUsage.builder()
+        val betaFallbackMessageIterationUsage =
+            BetaFallbackMessageIterationUsage.builder()
                 .cacheCreation(
                     BetaCacheCreation.builder()
                         .ephemeral1hInputTokens(0L)
@@ -59,12 +59,13 @@ internal class BetaMessageIterationUsageTest {
                 .outputTokens(0L)
                 .build()
 
-        val roundtrippedBetaMessageIterationUsage =
+        val roundtrippedBetaFallbackMessageIterationUsage =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(betaMessageIterationUsage),
-                jacksonTypeRef<BetaMessageIterationUsage>(),
+                jsonMapper.writeValueAsString(betaFallbackMessageIterationUsage),
+                jacksonTypeRef<BetaFallbackMessageIterationUsage>(),
             )
 
-        assertThat(roundtrippedBetaMessageIterationUsage).isEqualTo(betaMessageIterationUsage)
+        assertThat(roundtrippedBetaFallbackMessageIterationUsage)
+            .isEqualTo(betaFallbackMessageIterationUsage)
     }
 }

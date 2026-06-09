@@ -28,6 +28,9 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
+        /** Next generation of intelligence for the hardest knowledge work and coding problems */
+        @JvmField val CLAUDE_FABLE_5 = of("claude-fable-5")
+
         /** Frontier intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_8 = of("claude-opus-4-8")
 
@@ -63,6 +66,8 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [BetaManagedAgentsModel]'s known values. */
     enum class Known {
+        /** Next generation of intelligence for the hardest knowledge work and coding problems */
+        CLAUDE_FABLE_5,
         /** Frontier intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_8,
         /** Frontier intelligence for long-running agents and coding */
@@ -95,6 +100,8 @@ private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Next generation of intelligence for the hardest knowledge work and coding problems */
+        CLAUDE_FABLE_5,
         /** Frontier intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_8,
         /** Frontier intelligence for long-running agents and coding */
@@ -131,6 +138,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_FABLE_5 -> Value.CLAUDE_FABLE_5
             CLAUDE_OPUS_4_8 -> Value.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Value.CLAUDE_OPUS_4_7
             CLAUDE_OPUS_4_6 -> Value.CLAUDE_OPUS_4_6
@@ -154,6 +162,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_FABLE_5 -> Known.CLAUDE_FABLE_5
             CLAUDE_OPUS_4_8 -> Known.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Known.CLAUDE_OPUS_4_7
             CLAUDE_OPUS_4_6 -> Known.CLAUDE_OPUS_4_6
