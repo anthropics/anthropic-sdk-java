@@ -12,6 +12,7 @@ import com.anthropic.core.checkKnown
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -161,6 +162,10 @@ private constructor(
         fun addData(userToolResult: BetaManagedAgentsUserToolResultEvent) =
             addData(Data.ofUserToolResult(userToolResult))
 
+        /** Alias for calling [addData] with `Data.ofSystemMessage(systemMessage)`. */
+        fun addData(systemMessage: BetaManagedAgentsSystemMessageEvent) =
+            addData(Data.ofSystemMessage(systemMessage))
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -239,6 +244,7 @@ private constructor(
         private val userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent? = null,
         private val userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent? = null,
         private val userToolResult: BetaManagedAgentsUserToolResultEvent? = null,
+        private val systemMessage: BetaManagedAgentsSystemMessageEvent? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -273,6 +279,13 @@ private constructor(
         fun userToolResult(): Optional<BetaManagedAgentsUserToolResultEvent> =
             Optional.ofNullable(userToolResult)
 
+        /**
+         * A mid-conversation system message event. Carries system-role content that is appended to
+         * the session as a `role: "system"` turn.
+         */
+        fun systemMessage(): Optional<BetaManagedAgentsSystemMessageEvent> =
+            Optional.ofNullable(systemMessage)
+
         fun isUserMessage(): Boolean = userMessage != null
 
         fun isUserInterrupt(): Boolean = userInterrupt != null
@@ -284,6 +297,8 @@ private constructor(
         fun isUserDefineOutcome(): Boolean = userDefineOutcome != null
 
         fun isUserToolResult(): Boolean = userToolResult != null
+
+        fun isSystemMessage(): Boolean = systemMessage != null
 
         /** A user message event in the session conversation. */
         fun asUserMessage(): BetaManagedAgentsUserMessageEvent =
@@ -315,6 +330,13 @@ private constructor(
          */
         fun asUserToolResult(): BetaManagedAgentsUserToolResultEvent =
             userToolResult.getOrThrow("userToolResult")
+
+        /**
+         * A mid-conversation system message event. Carries system-role content that is appended to
+         * the session as a `role: "system"` turn.
+         */
+        fun asSystemMessage(): BetaManagedAgentsSystemMessageEvent =
+            systemMessage.getOrThrow("systemMessage")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -357,6 +379,7 @@ private constructor(
                     visitor.visitUserCustomToolResult(userCustomToolResult)
                 userDefineOutcome != null -> visitor.visitUserDefineOutcome(userDefineOutcome)
                 userToolResult != null -> visitor.visitUserToolResult(userToolResult)
+                systemMessage != null -> visitor.visitSystemMessage(systemMessage)
                 else -> visitor.unknown(_json)
             }
 
@@ -411,6 +434,12 @@ private constructor(
                     ) {
                         userToolResult.validate()
                     }
+
+                    override fun visitSystemMessage(
+                        systemMessage: BetaManagedAgentsSystemMessageEvent
+                    ) {
+                        systemMessage.validate()
+                    }
                 }
             )
             validated = true
@@ -457,6 +486,10 @@ private constructor(
                         userToolResult: BetaManagedAgentsUserToolResultEvent
                     ) = userToolResult.validity()
 
+                    override fun visitSystemMessage(
+                        systemMessage: BetaManagedAgentsSystemMessageEvent
+                    ) = systemMessage.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -472,7 +505,8 @@ private constructor(
                 userToolConfirmation == other.userToolConfirmation &&
                 userCustomToolResult == other.userCustomToolResult &&
                 userDefineOutcome == other.userDefineOutcome &&
-                userToolResult == other.userToolResult
+                userToolResult == other.userToolResult &&
+                systemMessage == other.systemMessage
         }
 
         override fun hashCode(): Int =
@@ -483,6 +517,7 @@ private constructor(
                 userCustomToolResult,
                 userDefineOutcome,
                 userToolResult,
+                systemMessage,
             )
 
         override fun toString(): String =
@@ -493,6 +528,7 @@ private constructor(
                 userCustomToolResult != null -> "Data{userCustomToolResult=$userCustomToolResult}"
                 userDefineOutcome != null -> "Data{userDefineOutcome=$userDefineOutcome}"
                 userToolResult != null -> "Data{userToolResult=$userToolResult}"
+                systemMessage != null -> "Data{systemMessage=$systemMessage}"
                 _json != null -> "Data{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Data")
             }
@@ -537,6 +573,14 @@ private constructor(
             @JvmStatic
             fun ofUserToolResult(userToolResult: BetaManagedAgentsUserToolResultEvent) =
                 Data(userToolResult = userToolResult)
+
+            /**
+             * A mid-conversation system message event. Carries system-role content that is appended
+             * to the session as a `role: "system"` turn.
+             */
+            @JvmStatic
+            fun ofSystemMessage(systemMessage: BetaManagedAgentsSystemMessageEvent) =
+                Data(systemMessage = systemMessage)
         }
 
         /** An interface that defines how to map each variant of [Data] to a value of type [T]. */
@@ -572,6 +616,12 @@ private constructor(
              * the client rather than the server.
              */
             fun visitUserToolResult(userToolResult: BetaManagedAgentsUserToolResultEvent): T
+
+            /**
+             * A mid-conversation system message event. Carries system-role content that is appended
+             * to the session as a `role: "system"` turn.
+             */
+            fun visitSystemMessage(systemMessage: BetaManagedAgentsSystemMessageEvent): T
 
             /**
              * Maps an unknown variant of [Data] to a value of type [T].
@@ -639,6 +689,13 @@ private constructor(
                             )
                             ?.let { Data(userToolResult = it, _json = json) } ?: Data(_json = json)
                     }
+                    "system.message" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsSystemMessageEvent>(),
+                            )
+                            ?.let { Data(systemMessage = it, _json = json) } ?: Data(_json = json)
+                    }
                 }
 
                 return Data(_json = json)
@@ -662,6 +719,7 @@ private constructor(
                     value.userDefineOutcome != null ->
                         generator.writeObject(value.userDefineOutcome)
                     value.userToolResult != null -> generator.writeObject(value.userToolResult)
+                    value.systemMessage != null -> generator.writeObject(value.systemMessage)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Data")
                 }

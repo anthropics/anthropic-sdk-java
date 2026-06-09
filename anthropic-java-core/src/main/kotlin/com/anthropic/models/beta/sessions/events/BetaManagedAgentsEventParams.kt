@@ -29,6 +29,7 @@ private constructor(
     private val userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams? = null,
     private val userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams? = null,
     private val userToolResult: BetaManagedAgentsUserToolResultEventParams? = null,
+    private val systemMessage: BetaManagedAgentsSystemMessageEventParams? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -63,6 +64,16 @@ private constructor(
     fun userToolResult(): Optional<BetaManagedAgentsUserToolResultEventParams> =
         Optional.ofNullable(userToolResult)
 
+    /**
+     * Privileged context for the accompanying turn and all subsequent turns, appended to the
+     * session's system context as a `role: "system"` turn rather than replacing the top-level
+     * system prompt. At most one per request: it must be the final event and immediately follow the
+     * `user.message`, `user.tool_result`, or `user.custom_tool_result` it accompanies. Only
+     * supported on models that accept mid-conversation system messages.
+     */
+    fun systemMessage(): Optional<BetaManagedAgentsSystemMessageEventParams> =
+        Optional.ofNullable(systemMessage)
+
     fun isUserMessage(): Boolean = userMessage != null
 
     fun isUserInterrupt(): Boolean = userInterrupt != null
@@ -74,6 +85,8 @@ private constructor(
     fun isUserDefineOutcome(): Boolean = userDefineOutcome != null
 
     fun isUserToolResult(): Boolean = userToolResult != null
+
+    fun isSystemMessage(): Boolean = systemMessage != null
 
     /** Parameters for sending a user message to the session. */
     fun asUserMessage(): BetaManagedAgentsUserMessageEventParams =
@@ -105,6 +118,16 @@ private constructor(
      */
     fun asUserToolResult(): BetaManagedAgentsUserToolResultEventParams =
         userToolResult.getOrThrow("userToolResult")
+
+    /**
+     * Privileged context for the accompanying turn and all subsequent turns, appended to the
+     * session's system context as a `role: "system"` turn rather than replacing the top-level
+     * system prompt. At most one per request: it must be the final event and immediately follow the
+     * `user.message`, `user.tool_result`, or `user.custom_tool_result` it accompanies. Only
+     * supported on models that accept mid-conversation system messages.
+     */
+    fun asSystemMessage(): BetaManagedAgentsSystemMessageEventParams =
+        systemMessage.getOrThrow("systemMessage")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -145,6 +168,7 @@ private constructor(
             userCustomToolResult != null -> visitor.visitUserCustomToolResult(userCustomToolResult)
             userDefineOutcome != null -> visitor.visitUserDefineOutcome(userDefineOutcome)
             userToolResult != null -> visitor.visitUserToolResult(userToolResult)
+            systemMessage != null -> visitor.visitSystemMessage(systemMessage)
             else -> visitor.unknown(_json)
         }
 
@@ -200,6 +224,12 @@ private constructor(
                 ) {
                     userToolResult.validate()
                 }
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEventParams
+                ) {
+                    systemMessage.validate()
+                }
             }
         )
         validated = true
@@ -246,6 +276,10 @@ private constructor(
                     userToolResult: BetaManagedAgentsUserToolResultEventParams
                 ) = userToolResult.validity()
 
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEventParams
+                ) = systemMessage.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -261,7 +295,8 @@ private constructor(
             userToolConfirmation == other.userToolConfirmation &&
             userCustomToolResult == other.userCustomToolResult &&
             userDefineOutcome == other.userDefineOutcome &&
-            userToolResult == other.userToolResult
+            userToolResult == other.userToolResult &&
+            systemMessage == other.systemMessage
     }
 
     override fun hashCode(): Int =
@@ -272,6 +307,7 @@ private constructor(
             userCustomToolResult,
             userDefineOutcome,
             userToolResult,
+            systemMessage,
         )
 
     override fun toString(): String =
@@ -285,6 +321,7 @@ private constructor(
             userDefineOutcome != null ->
                 "BetaManagedAgentsEventParams{userDefineOutcome=$userDefineOutcome}"
             userToolResult != null -> "BetaManagedAgentsEventParams{userToolResult=$userToolResult}"
+            systemMessage != null -> "BetaManagedAgentsEventParams{systemMessage=$systemMessage}"
             _json != null -> "BetaManagedAgentsEventParams{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaManagedAgentsEventParams")
         }
@@ -329,6 +366,17 @@ private constructor(
         @JvmStatic
         fun ofUserToolResult(userToolResult: BetaManagedAgentsUserToolResultEventParams) =
             BetaManagedAgentsEventParams(userToolResult = userToolResult)
+
+        /**
+         * Privileged context for the accompanying turn and all subsequent turns, appended to the
+         * session's system context as a `role: "system"` turn rather than replacing the top-level
+         * system prompt. At most one per request: it must be the final event and immediately follow
+         * the `user.message`, `user.tool_result`, or `user.custom_tool_result` it accompanies. Only
+         * supported on models that accept mid-conversation system messages.
+         */
+        @JvmStatic
+        fun ofSystemMessage(systemMessage: BetaManagedAgentsSystemMessageEventParams) =
+            BetaManagedAgentsEventParams(systemMessage = systemMessage)
     }
 
     /**
@@ -367,6 +415,15 @@ private constructor(
          * than the server.
          */
         fun visitUserToolResult(userToolResult: BetaManagedAgentsUserToolResultEventParams): T
+
+        /**
+         * Privileged context for the accompanying turn and all subsequent turns, appended to the
+         * session's system context as a `role: "system"` turn rather than replacing the top-level
+         * system prompt. At most one per request: it must be the final event and immediately follow
+         * the `user.message`, `user.tool_result`, or `user.custom_tool_result` it accompanies. Only
+         * supported on models that accept mid-conversation system messages.
+         */
+        fun visitSystemMessage(systemMessage: BetaManagedAgentsSystemMessageEventParams): T
 
         /**
          * Maps an unknown variant of [BetaManagedAgentsEventParams] to a value of type [T].
@@ -441,6 +498,14 @@ private constructor(
                         ?.let { BetaManagedAgentsEventParams(userToolResult = it, _json = json) }
                         ?: BetaManagedAgentsEventParams(_json = json)
                 }
+                "system.message" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSystemMessageEventParams>(),
+                        )
+                        ?.let { BetaManagedAgentsEventParams(systemMessage = it, _json = json) }
+                        ?: BetaManagedAgentsEventParams(_json = json)
+                }
             }
 
             return BetaManagedAgentsEventParams(_json = json)
@@ -464,6 +529,7 @@ private constructor(
                     generator.writeObject(value.userCustomToolResult)
                 value.userDefineOutcome != null -> generator.writeObject(value.userDefineOutcome)
                 value.userToolResult != null -> generator.writeObject(value.userToolResult)
+                value.systemMessage != null -> generator.writeObject(value.systemMessage)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsEventParams")
             }

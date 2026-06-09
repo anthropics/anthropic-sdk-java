@@ -10,6 +10,7 @@ import com.anthropic.core.checkKnown
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -419,6 +420,13 @@ private constructor(
          */
         fun addData(sessionUpdated: BetaManagedAgentsSessionUpdatedEvent) =
             addData(BetaManagedAgentsSessionEvent.ofSessionUpdated(sessionUpdated))
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofSystemMessage(systemMessage)`.
+         */
+        fun addData(systemMessage: BetaManagedAgentsSystemMessageEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofSystemMessage(systemMessage))
 
         /** Opaque cursor for the next page. Null when no more results. */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))

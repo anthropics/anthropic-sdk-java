@@ -30,6 +30,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
         assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
     }
 
     @Test
@@ -69,6 +70,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
         assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
     }
 
     @Test
@@ -111,6 +113,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
         assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
     }
 
     @Test
@@ -157,6 +160,7 @@ internal class BetaManagedAgentsEventParamsTest {
             .contains(userCustomToolResult)
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
         assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
     }
 
     @Test
@@ -203,6 +207,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).contains(userDefineOutcome)
         assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
     }
 
     @Test
@@ -246,6 +251,7 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
         assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
         assertThat(betaManagedAgentsEventParams.userToolResult()).contains(userToolResult)
+        assertThat(betaManagedAgentsEventParams.systemMessage()).isEmpty
     }
 
     @Test
@@ -258,6 +264,46 @@ internal class BetaManagedAgentsEventParamsTest {
                     .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
                     .addTextContent("Where is my order #1234?")
                     .isError(true)
+                    .build()
+            )
+
+        val roundtrippedBetaManagedAgentsEventParams =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaManagedAgentsEventParams),
+                jacksonTypeRef<BetaManagedAgentsEventParams>(),
+            )
+
+        assertThat(roundtrippedBetaManagedAgentsEventParams).isEqualTo(betaManagedAgentsEventParams)
+    }
+
+    @Test
+    fun ofSystemMessage() {
+        val systemMessage =
+            BetaManagedAgentsSystemMessageEventParams.builder()
+                .addTextContent("Where is my order #1234?")
+                .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+                .build()
+
+        val betaManagedAgentsEventParams =
+            BetaManagedAgentsEventParams.ofSystemMessage(systemMessage)
+
+        assertThat(betaManagedAgentsEventParams.userMessage()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userInterrupt()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userToolConfirmation()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userCustomToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userDefineOutcome()).isEmpty
+        assertThat(betaManagedAgentsEventParams.userToolResult()).isEmpty
+        assertThat(betaManagedAgentsEventParams.systemMessage()).contains(systemMessage)
+    }
+
+    @Test
+    fun ofSystemMessageRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaManagedAgentsEventParams =
+            BetaManagedAgentsEventParams.ofSystemMessage(
+                BetaManagedAgentsSystemMessageEventParams.builder()
+                    .addTextContent("Where is my order #1234?")
+                    .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
                     .build()
             )
 

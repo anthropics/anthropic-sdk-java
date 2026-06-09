@@ -641,6 +641,7 @@ internal class BetaWebhookEventDataTest {
             BetaWebhookSessionThreadCreatedEventData.builder()
                 .id("id")
                 .organizationId("organization_id")
+                .sessionThreadId("session_thread_id")
                 .workspaceId("workspace_id")
                 .build()
 
@@ -678,6 +679,7 @@ internal class BetaWebhookEventDataTest {
                 BetaWebhookSessionThreadCreatedEventData.builder()
                     .id("id")
                     .organizationId("organization_id")
+                    .sessionThreadId("session_thread_id")
                     .workspaceId("workspace_id")
                     .build()
             )
@@ -697,6 +699,7 @@ internal class BetaWebhookEventDataTest {
             BetaWebhookSessionThreadIdledEventData.builder()
                 .id("id")
                 .organizationId("organization_id")
+                .sessionThreadId("session_thread_id")
                 .workspaceId("workspace_id")
                 .build()
 
@@ -734,6 +737,7 @@ internal class BetaWebhookEventDataTest {
                 BetaWebhookSessionThreadIdledEventData.builder()
                     .id("id")
                     .organizationId("organization_id")
+                    .sessionThreadId("session_thread_id")
                     .workspaceId("workspace_id")
                     .build()
             )
@@ -753,6 +757,7 @@ internal class BetaWebhookEventDataTest {
             BetaWebhookSessionThreadTerminatedEventData.builder()
                 .id("id")
                 .organizationId("organization_id")
+                .sessionThreadId("session_thread_id")
                 .workspaceId("workspace_id")
                 .build()
 
@@ -791,6 +796,7 @@ internal class BetaWebhookEventDataTest {
                 BetaWebhookSessionThreadTerminatedEventData.builder()
                     .id("id")
                     .organizationId("organization_id")
+                    .sessionThreadId("session_thread_id")
                     .workspaceId("workspace_id")
                     .build()
             )

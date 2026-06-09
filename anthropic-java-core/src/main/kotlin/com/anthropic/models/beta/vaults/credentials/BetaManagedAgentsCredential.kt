@@ -359,6 +359,10 @@ private constructor(
                     .build()
             )
 
+        /** Alias for calling [auth] with `Auth.ofEnvironmentVariable(environmentVariable)`. */
+        fun auth(environmentVariable: BetaManagedAgentsEnvironmentVariableAuthResponse) =
+            auth(Auth.ofEnvironmentVariable(environmentVariable))
+
         /** A timestamp in RFC 3339 format */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
@@ -543,6 +547,7 @@ private constructor(
     private constructor(
         private val mcpOAuth: BetaManagedAgentsMcpOAuthAuthResponse? = null,
         private val staticBearer: BetaManagedAgentsStaticBearerAuthResponse? = null,
+        private val environmentVariable: BetaManagedAgentsEnvironmentVariableAuthResponse? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -554,9 +559,15 @@ private constructor(
         fun staticBearer(): Optional<BetaManagedAgentsStaticBearerAuthResponse> =
             Optional.ofNullable(staticBearer)
 
+        /** Environment variable credential details. The secret value is never returned. */
+        fun environmentVariable(): Optional<BetaManagedAgentsEnvironmentVariableAuthResponse> =
+            Optional.ofNullable(environmentVariable)
+
         fun isMcpOAuth(): Boolean = mcpOAuth != null
 
         fun isStaticBearer(): Boolean = staticBearer != null
+
+        fun isEnvironmentVariable(): Boolean = environmentVariable != null
 
         /** OAuth credential details for an MCP server. */
         fun asMcpOAuth(): BetaManagedAgentsMcpOAuthAuthResponse = mcpOAuth.getOrThrow("mcpOAuth")
@@ -564,6 +575,10 @@ private constructor(
         /** Static bearer token credential details for an MCP server. */
         fun asStaticBearer(): BetaManagedAgentsStaticBearerAuthResponse =
             staticBearer.getOrThrow("staticBearer")
+
+        /** Environment variable credential details. The secret value is never returned. */
+        fun asEnvironmentVariable(): BetaManagedAgentsEnvironmentVariableAuthResponse =
+            environmentVariable.getOrThrow("environmentVariable")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -600,6 +615,7 @@ private constructor(
             when {
                 mcpOAuth != null -> visitor.visitMcpOAuth(mcpOAuth)
                 staticBearer != null -> visitor.visitStaticBearer(staticBearer)
+                environmentVariable != null -> visitor.visitEnvironmentVariable(environmentVariable)
                 else -> visitor.unknown(_json)
             }
 
@@ -629,6 +645,12 @@ private constructor(
                         staticBearer: BetaManagedAgentsStaticBearerAuthResponse
                     ) {
                         staticBearer.validate()
+                    }
+
+                    override fun visitEnvironmentVariable(
+                        environmentVariable: BetaManagedAgentsEnvironmentVariableAuthResponse
+                    ) {
+                        environmentVariable.validate()
                     }
                 }
             )
@@ -660,6 +682,10 @@ private constructor(
                         staticBearer: BetaManagedAgentsStaticBearerAuthResponse
                     ) = staticBearer.validity()
 
+                    override fun visitEnvironmentVariable(
+                        environmentVariable: BetaManagedAgentsEnvironmentVariableAuthResponse
+                    ) = environmentVariable.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -669,15 +695,19 @@ private constructor(
                 return true
             }
 
-            return other is Auth && mcpOAuth == other.mcpOAuth && staticBearer == other.staticBearer
+            return other is Auth &&
+                mcpOAuth == other.mcpOAuth &&
+                staticBearer == other.staticBearer &&
+                environmentVariable == other.environmentVariable
         }
 
-        override fun hashCode(): Int = Objects.hash(mcpOAuth, staticBearer)
+        override fun hashCode(): Int = Objects.hash(mcpOAuth, staticBearer, environmentVariable)
 
         override fun toString(): String =
             when {
                 mcpOAuth != null -> "Auth{mcpOAuth=$mcpOAuth}"
                 staticBearer != null -> "Auth{staticBearer=$staticBearer}"
+                environmentVariable != null -> "Auth{environmentVariable=$environmentVariable}"
                 _json != null -> "Auth{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Auth")
             }
@@ -693,6 +723,12 @@ private constructor(
             @JvmStatic
             fun ofStaticBearer(staticBearer: BetaManagedAgentsStaticBearerAuthResponse) =
                 Auth(staticBearer = staticBearer)
+
+            /** Environment variable credential details. The secret value is never returned. */
+            @JvmStatic
+            fun ofEnvironmentVariable(
+                environmentVariable: BetaManagedAgentsEnvironmentVariableAuthResponse
+            ) = Auth(environmentVariable = environmentVariable)
         }
 
         /** An interface that defines how to map each variant of [Auth] to a value of type [T]. */
@@ -703,6 +739,11 @@ private constructor(
 
             /** Static bearer token credential details for an MCP server. */
             fun visitStaticBearer(staticBearer: BetaManagedAgentsStaticBearerAuthResponse): T
+
+            /** Environment variable credential details. The secret value is never returned. */
+            fun visitEnvironmentVariable(
+                environmentVariable: BetaManagedAgentsEnvironmentVariableAuthResponse
+            ): T
 
             /**
              * Maps an unknown variant of [Auth] to a value of type [T].
@@ -739,6 +780,14 @@ private constructor(
                             )
                             ?.let { Auth(staticBearer = it, _json = json) } ?: Auth(_json = json)
                     }
+                    "environment_variable" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsEnvironmentVariableAuthResponse>(),
+                            )
+                            ?.let { Auth(environmentVariable = it, _json = json) }
+                            ?: Auth(_json = json)
+                    }
                 }
 
                 return Auth(_json = json)
@@ -755,6 +804,8 @@ private constructor(
                 when {
                     value.mcpOAuth != null -> generator.writeObject(value.mcpOAuth)
                     value.staticBearer != null -> generator.writeObject(value.staticBearer)
+                    value.environmentVariable != null ->
+                        generator.writeObject(value.environmentVariable)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Auth")
                 }

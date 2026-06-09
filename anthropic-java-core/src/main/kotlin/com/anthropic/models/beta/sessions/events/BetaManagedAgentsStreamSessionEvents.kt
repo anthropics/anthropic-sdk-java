@@ -8,6 +8,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -67,6 +68,7 @@ private constructor(
         BetaManagedAgentsSessionThreadStatusRescheduledEvent? =
         null,
     private val sessionUpdated: BetaManagedAgentsSessionUpdatedEvent? = null,
+    private val systemMessage: BetaManagedAgentsSystemMessageEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -255,6 +257,13 @@ private constructor(
     fun sessionUpdated(): Optional<BetaManagedAgentsSessionUpdatedEvent> =
         Optional.ofNullable(sessionUpdated)
 
+    /**
+     * A mid-conversation system message event. Carries system-role content that is appended to the
+     * session as a `role: "system"` turn.
+     */
+    fun systemMessage(): Optional<BetaManagedAgentsSystemMessageEvent> =
+        Optional.ofNullable(systemMessage)
+
     fun isUserMessage(): Boolean = userMessage != null
 
     fun isUserInterrupt(): Boolean = userInterrupt != null
@@ -320,6 +329,8 @@ private constructor(
     fun isSessionThreadStatusRescheduled(): Boolean = sessionThreadStatusRescheduled != null
 
     fun isSessionUpdated(): Boolean = sessionUpdated != null
+
+    fun isSystemMessage(): Boolean = systemMessage != null
 
     /** A user message event in the session conversation. */
     fun asUserMessage(): BetaManagedAgentsUserMessageEvent = userMessage.getOrThrow("userMessage")
@@ -502,6 +513,13 @@ private constructor(
     fun asSessionUpdated(): BetaManagedAgentsSessionUpdatedEvent =
         sessionUpdated.getOrThrow("sessionUpdated")
 
+    /**
+     * A mid-conversation system message event. Carries system-role content that is appended to the
+     * session as a `role: "system"` turn.
+     */
+    fun asSystemMessage(): BetaManagedAgentsSystemMessageEvent =
+        systemMessage.getOrThrow("systemMessage")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -581,6 +599,7 @@ private constructor(
             sessionThreadStatusRescheduled != null ->
                 visitor.visitSessionThreadStatusRescheduled(sessionThreadStatusRescheduled)
             sessionUpdated != null -> visitor.visitSessionUpdated(sessionUpdated)
+            systemMessage != null -> visitor.visitSystemMessage(systemMessage)
             else -> visitor.unknown(_json)
         }
 
@@ -792,6 +811,12 @@ private constructor(
                 ) {
                     sessionUpdated.validate()
                 }
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ) {
+                    systemMessage.validate()
+                }
             }
         )
         validated = true
@@ -944,6 +969,10 @@ private constructor(
                     sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
                 ) = sessionUpdated.validity()
 
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ) = systemMessage.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -986,7 +1015,8 @@ private constructor(
             sessionThreadStatusTerminated == other.sessionThreadStatusTerminated &&
             userToolResult == other.userToolResult &&
             sessionThreadStatusRescheduled == other.sessionThreadStatusRescheduled &&
-            sessionUpdated == other.sessionUpdated
+            sessionUpdated == other.sessionUpdated &&
+            systemMessage == other.systemMessage
     }
 
     override fun hashCode(): Int =
@@ -1024,6 +1054,7 @@ private constructor(
             userToolResult,
             sessionThreadStatusRescheduled,
             sessionUpdated,
+            systemMessage,
         )
 
     override fun toString(): String =
@@ -1093,6 +1124,8 @@ private constructor(
                 "BetaManagedAgentsStreamSessionEvents{sessionThreadStatusRescheduled=$sessionThreadStatusRescheduled}"
             sessionUpdated != null ->
                 "BetaManagedAgentsStreamSessionEvents{sessionUpdated=$sessionUpdated}"
+            systemMessage != null ->
+                "BetaManagedAgentsStreamSessionEvents{systemMessage=$systemMessage}"
             _json != null -> "BetaManagedAgentsStreamSessionEvents{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaManagedAgentsStreamSessionEvents")
         }
@@ -1359,6 +1392,14 @@ private constructor(
         @JvmStatic
         fun ofSessionUpdated(sessionUpdated: BetaManagedAgentsSessionUpdatedEvent) =
             BetaManagedAgentsStreamSessionEvents(sessionUpdated = sessionUpdated)
+
+        /**
+         * A mid-conversation system message event. Carries system-role content that is appended to
+         * the session as a `role: "system"` turn.
+         */
+        @JvmStatic
+        fun ofSystemMessage(systemMessage: BetaManagedAgentsSystemMessageEvent) =
+            BetaManagedAgentsStreamSessionEvents(systemMessage = systemMessage)
     }
 
     /**
@@ -1553,6 +1594,12 @@ private constructor(
          * from the next turn.
          */
         fun visitSessionUpdated(sessionUpdated: BetaManagedAgentsSessionUpdatedEvent): T
+
+        /**
+         * A mid-conversation system message event. Carries system-role content that is appended to
+         * the session as a `role: "system"` turn.
+         */
+        fun visitSystemMessage(systemMessage: BetaManagedAgentsSystemMessageEvent): T
 
         /**
          * Maps an unknown variant of [BetaManagedAgentsStreamSessionEvents] to a value of type [T].
@@ -1941,6 +1988,15 @@ private constructor(
                             BetaManagedAgentsStreamSessionEvents(sessionUpdated = it, _json = json)
                         } ?: BetaManagedAgentsStreamSessionEvents(_json = json)
                 }
+                "system.message" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSystemMessageEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsStreamSessionEvents(systemMessage = it, _json = json)
+                        } ?: BetaManagedAgentsStreamSessionEvents(_json = json)
+                }
             }
 
             return BetaManagedAgentsStreamSessionEvents(_json = json)
@@ -2009,6 +2065,7 @@ private constructor(
                 value.sessionThreadStatusRescheduled != null ->
                     generator.writeObject(value.sessionThreadStatusRescheduled)
                 value.sessionUpdated != null -> generator.writeObject(value.sessionUpdated)
+                value.systemMessage != null -> generator.writeObject(value.systemMessage)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsStreamSessionEvents")
             }

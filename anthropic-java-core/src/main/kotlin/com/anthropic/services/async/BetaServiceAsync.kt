@@ -4,6 +4,8 @@ package com.anthropic.services.async
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.async.beta.AgentServiceAsync
+import com.anthropic.services.async.beta.DeploymentRunServiceAsync
+import com.anthropic.services.async.beta.DeploymentServiceAsync
 import com.anthropic.services.async.beta.EnvironmentServiceAsync
 import com.anthropic.services.async.beta.FileServiceAsync
 import com.anthropic.services.async.beta.MemoryStoreServiceAsync
@@ -40,6 +42,10 @@ interface BetaServiceAsync {
 
     fun sessions(): SessionServiceAsync
 
+    fun deployments(): DeploymentServiceAsync
+
+    fun deploymentRuns(): DeploymentRunServiceAsync
+
     fun vaults(): VaultServiceAsync
 
     fun memoryStores(): MemoryStoreServiceAsync
@@ -71,6 +77,10 @@ interface BetaServiceAsync {
         fun environments(): EnvironmentServiceAsync.WithRawResponse
 
         fun sessions(): SessionServiceAsync.WithRawResponse
+
+        fun deployments(): DeploymentServiceAsync.WithRawResponse
+
+        fun deploymentRuns(): DeploymentRunServiceAsync.WithRawResponse
 
         fun vaults(): VaultServiceAsync.WithRawResponse
 

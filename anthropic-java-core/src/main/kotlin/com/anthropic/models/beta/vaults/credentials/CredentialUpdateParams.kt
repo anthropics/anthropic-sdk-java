@@ -200,6 +200,11 @@ private constructor(
             body.auth(staticBearer)
         }
 
+        /** Alias for calling [auth] with `Auth.ofEnvironmentVariable(environmentVariable)`. */
+        fun auth(environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams) = apply {
+            body.auth(environmentVariable)
+        }
+
         /** Updated human-readable name for the credential. 1-255 characters. */
         fun displayName(displayName: String?) = apply { body.displayName(displayName) }
 
@@ -514,6 +519,10 @@ private constructor(
             fun auth(staticBearer: BetaManagedAgentsStaticBearerUpdateParams) =
                 auth(Auth.ofStaticBearer(staticBearer))
 
+            /** Alias for calling [auth] with `Auth.ofEnvironmentVariable(environmentVariable)`. */
+            fun auth(environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams) =
+                auth(Auth.ofEnvironmentVariable(environmentVariable))
+
             /** Updated human-readable name for the credential. 1-255 characters. */
             fun displayName(displayName: String?) = displayName(JsonField.ofNullable(displayName))
 
@@ -648,6 +657,7 @@ private constructor(
     private constructor(
         private val mcpOAuth: BetaManagedAgentsMcpOAuthUpdateParams? = null,
         private val staticBearer: BetaManagedAgentsStaticBearerUpdateParams? = null,
+        private val environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -662,9 +672,17 @@ private constructor(
         fun staticBearer(): Optional<BetaManagedAgentsStaticBearerUpdateParams> =
             Optional.ofNullable(staticBearer)
 
+        /**
+         * Parameters for updating an environment variable credential. `secret_name` is immutable.
+         */
+        fun environmentVariable(): Optional<BetaManagedAgentsEnvironmentVariableUpdateParams> =
+            Optional.ofNullable(environmentVariable)
+
         fun isMcpOAuth(): Boolean = mcpOAuth != null
 
         fun isStaticBearer(): Boolean = staticBearer != null
+
+        fun isEnvironmentVariable(): Boolean = environmentVariable != null
 
         /** Parameters for updating an MCP OAuth credential. The `mcp_server_url` is immutable. */
         fun asMcpOAuth(): BetaManagedAgentsMcpOAuthUpdateParams = mcpOAuth.getOrThrow("mcpOAuth")
@@ -675,6 +693,12 @@ private constructor(
          */
         fun asStaticBearer(): BetaManagedAgentsStaticBearerUpdateParams =
             staticBearer.getOrThrow("staticBearer")
+
+        /**
+         * Parameters for updating an environment variable credential. `secret_name` is immutable.
+         */
+        fun asEnvironmentVariable(): BetaManagedAgentsEnvironmentVariableUpdateParams =
+            environmentVariable.getOrThrow("environmentVariable")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -711,6 +735,7 @@ private constructor(
             when {
                 mcpOAuth != null -> visitor.visitMcpOAuth(mcpOAuth)
                 staticBearer != null -> visitor.visitStaticBearer(staticBearer)
+                environmentVariable != null -> visitor.visitEnvironmentVariable(environmentVariable)
                 else -> visitor.unknown(_json)
             }
 
@@ -740,6 +765,12 @@ private constructor(
                         staticBearer: BetaManagedAgentsStaticBearerUpdateParams
                     ) {
                         staticBearer.validate()
+                    }
+
+                    override fun visitEnvironmentVariable(
+                        environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams
+                    ) {
+                        environmentVariable.validate()
                     }
                 }
             )
@@ -771,6 +802,10 @@ private constructor(
                         staticBearer: BetaManagedAgentsStaticBearerUpdateParams
                     ) = staticBearer.validity()
 
+                    override fun visitEnvironmentVariable(
+                        environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams
+                    ) = environmentVariable.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -780,15 +815,19 @@ private constructor(
                 return true
             }
 
-            return other is Auth && mcpOAuth == other.mcpOAuth && staticBearer == other.staticBearer
+            return other is Auth &&
+                mcpOAuth == other.mcpOAuth &&
+                staticBearer == other.staticBearer &&
+                environmentVariable == other.environmentVariable
         }
 
-        override fun hashCode(): Int = Objects.hash(mcpOAuth, staticBearer)
+        override fun hashCode(): Int = Objects.hash(mcpOAuth, staticBearer, environmentVariable)
 
         override fun toString(): String =
             when {
                 mcpOAuth != null -> "Auth{mcpOAuth=$mcpOAuth}"
                 staticBearer != null -> "Auth{staticBearer=$staticBearer}"
+                environmentVariable != null -> "Auth{environmentVariable=$environmentVariable}"
                 _json != null -> "Auth{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Auth")
             }
@@ -809,6 +848,15 @@ private constructor(
             @JvmStatic
             fun ofStaticBearer(staticBearer: BetaManagedAgentsStaticBearerUpdateParams) =
                 Auth(staticBearer = staticBearer)
+
+            /**
+             * Parameters for updating an environment variable credential. `secret_name` is
+             * immutable.
+             */
+            @JvmStatic
+            fun ofEnvironmentVariable(
+                environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams
+            ) = Auth(environmentVariable = environmentVariable)
         }
 
         /** An interface that defines how to map each variant of [Auth] to a value of type [T]. */
@@ -824,6 +872,14 @@ private constructor(
              * immutable.
              */
             fun visitStaticBearer(staticBearer: BetaManagedAgentsStaticBearerUpdateParams): T
+
+            /**
+             * Parameters for updating an environment variable credential. `secret_name` is
+             * immutable.
+             */
+            fun visitEnvironmentVariable(
+                environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams
+            ): T
 
             /**
              * Maps an unknown variant of [Auth] to a value of type [T].
@@ -860,6 +916,14 @@ private constructor(
                             )
                             ?.let { Auth(staticBearer = it, _json = json) } ?: Auth(_json = json)
                     }
+                    "environment_variable" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsEnvironmentVariableUpdateParams>(),
+                            )
+                            ?.let { Auth(environmentVariable = it, _json = json) }
+                            ?: Auth(_json = json)
+                    }
                 }
 
                 return Auth(_json = json)
@@ -876,6 +940,8 @@ private constructor(
                 when {
                     value.mcpOAuth != null -> generator.writeObject(value.mcpOAuth)
                     value.staticBearer != null -> generator.writeObject(value.staticBearer)
+                    value.environmentVariable != null ->
+                        generator.writeObject(value.environmentVariable)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Auth")
                 }
