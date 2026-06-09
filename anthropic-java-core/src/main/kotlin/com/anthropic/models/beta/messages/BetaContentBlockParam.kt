@@ -46,6 +46,7 @@ private constructor(
     private val containerUpload: BetaContainerUploadBlockParam? = null,
     private val compaction: BetaCompactionBlockParam? = null,
     private val midConvSystem: BetaMidConversationSystemBlockParam? = null,
+    private val fallback: BetaFallbackBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -133,6 +134,24 @@ private constructor(
     fun midConvSystem(): Optional<BetaMidConversationSystemBlockParam> =
         Optional.ofNullable(midConvSystem)
 
+    /**
+     * A `fallback` block echoed back from a prior response.
+     *
+     * Accepted in `messages[].content` and never rendered into the prompt, not validated against
+     * the request's `fallbacks` chain or top-level `model`, and stripped before the sticky-routing
+     * cache key is computed.
+     *
+     * Callers should echo the assistant turn verbatim — block included. The block's position is
+     * load-bearing for thinking verification: the thinking runs on either side of a fallback hop
+     * carry independently-rooted verification hash chains, and this block is the only record of
+     * where one chain ends and the next begins. When thinking runs flank the boundary, omitting the
+     * block merges the runs into one contiguous span whose hashes cannot verify (the request is
+     * rejected), and moving it into the middle of a single run splits that run's chain and is
+     * likewise rejected; between non-thinking blocks the block's placement has no verification
+     * effect.
+     */
+    fun fallback(): Optional<BetaFallbackBlockParam> = Optional.ofNullable(fallback)
+
     fun isText(): Boolean = text != null
 
     fun isImage(): Boolean = image != null
@@ -174,6 +193,8 @@ private constructor(
     fun isCompaction(): Boolean = compaction != null
 
     fun isMidConvSystem(): Boolean = midConvSystem != null
+
+    fun isFallback(): Boolean = fallback != null
 
     /** Regular text content. */
     fun asText(): BetaTextBlockParam = text.getOrThrow("text")
@@ -258,6 +279,24 @@ private constructor(
     fun asMidConvSystem(): BetaMidConversationSystemBlockParam =
         midConvSystem.getOrThrow("midConvSystem")
 
+    /**
+     * A `fallback` block echoed back from a prior response.
+     *
+     * Accepted in `messages[].content` and never rendered into the prompt, not validated against
+     * the request's `fallbacks` chain or top-level `model`, and stripped before the sticky-routing
+     * cache key is computed.
+     *
+     * Callers should echo the assistant turn verbatim — block included. The block's position is
+     * load-bearing for thinking verification: the thinking runs on either side of a fallback hop
+     * carry independently-rooted verification hash chains, and this block is the only record of
+     * where one chain ends and the next begins. When thinking runs flank the boundary, omitting the
+     * block merges the runs into one contiguous span whose hashes cannot verify (the request is
+     * rejected), and moving it into the middle of a single run splits that run's chain and is
+     * likewise rejected; between non-thinking blocks the block's placement has no verification
+     * effect.
+     */
+    fun asFallback(): BetaFallbackBlockParam = fallback.getOrThrow("fallback")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -315,6 +354,7 @@ private constructor(
             containerUpload != null -> visitor.visitContainerUpload(containerUpload)
             compaction != null -> visitor.visitCompaction(compaction)
             midConvSystem != null -> visitor.visitMidConvSystem(midConvSystem)
+            fallback != null -> visitor.visitFallback(fallback)
             else -> visitor.unknown(_json)
         }
 
@@ -437,6 +477,10 @@ private constructor(
                 ) {
                     midConvSystem.validate()
                 }
+
+                override fun visitFallback(fallback: BetaFallbackBlockParam) {
+                    fallback.validate()
+                }
             }
         )
         validated = true
@@ -527,6 +571,8 @@ private constructor(
                     midConvSystem: BetaMidConversationSystemBlockParam
                 ) = midConvSystem.validity()
 
+                override fun visitFallback(fallback: BetaFallbackBlockParam) = fallback.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -557,7 +603,8 @@ private constructor(
             mcpToolResult == other.mcpToolResult &&
             containerUpload == other.containerUpload &&
             compaction == other.compaction &&
-            midConvSystem == other.midConvSystem
+            midConvSystem == other.midConvSystem &&
+            fallback == other.fallback
     }
 
     override fun hashCode(): Int =
@@ -583,6 +630,7 @@ private constructor(
             containerUpload,
             compaction,
             midConvSystem,
+            fallback,
         )
 
     override fun toString(): String =
@@ -615,6 +663,7 @@ private constructor(
             containerUpload != null -> "BetaContentBlockParam{containerUpload=$containerUpload}"
             compaction != null -> "BetaContentBlockParam{compaction=$compaction}"
             midConvSystem != null -> "BetaContentBlockParam{midConvSystem=$midConvSystem}"
+            fallback != null -> "BetaContentBlockParam{fallback=$fallback}"
             _json != null -> "BetaContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaContentBlockParam")
         }
@@ -735,6 +784,26 @@ private constructor(
         @JvmStatic
         fun ofMidConvSystem(midConvSystem: BetaMidConversationSystemBlockParam) =
             BetaContentBlockParam(midConvSystem = midConvSystem)
+
+        /**
+         * A `fallback` block echoed back from a prior response.
+         *
+         * Accepted in `messages[].content` and never rendered into the prompt, not validated
+         * against the request's `fallbacks` chain or top-level `model`, and stripped before the
+         * sticky-routing cache key is computed.
+         *
+         * Callers should echo the assistant turn verbatim — block included. The block's position is
+         * load-bearing for thinking verification: the thinking runs on either side of a fallback
+         * hop carry independently-rooted verification hash chains, and this block is the only
+         * record of where one chain ends and the next begins. When thinking runs flank the
+         * boundary, omitting the block merges the runs into one contiguous span whose hashes cannot
+         * verify (the request is rejected), and moving it into the middle of a single run splits
+         * that run's chain and is likewise rejected; between non-thinking blocks the block's
+         * placement has no verification effect.
+         */
+        @JvmStatic
+        fun ofFallback(fallback: BetaFallbackBlockParam) =
+            BetaContentBlockParam(fallback = fallback)
     }
 
     /**
@@ -820,6 +889,24 @@ private constructor(
          * conversation, rather than only via the top-level `system` parameter.
          */
         fun visitMidConvSystem(midConvSystem: BetaMidConversationSystemBlockParam): T
+
+        /**
+         * A `fallback` block echoed back from a prior response.
+         *
+         * Accepted in `messages[].content` and never rendered into the prompt, not validated
+         * against the request's `fallbacks` chain or top-level `model`, and stripped before the
+         * sticky-routing cache key is computed.
+         *
+         * Callers should echo the assistant turn verbatim — block included. The block's position is
+         * load-bearing for thinking verification: the thinking runs on either side of a fallback
+         * hop carry independently-rooted verification hash chains, and this block is the only
+         * record of where one chain ends and the next begins. When thinking runs flank the
+         * boundary, omitting the block merges the runs into one contiguous span whose hashes cannot
+         * verify (the request is rejected), and moving it into the middle of a single run splits
+         * that run's chain and is likewise rejected; between non-thinking blocks the block's
+         * placement has no verification effect.
+         */
+        fun visitFallback(fallback: BetaFallbackBlockParam): T
 
         /**
          * Maps an unknown variant of [BetaContentBlockParam] to a value of type [T].
@@ -972,6 +1059,11 @@ private constructor(
                         ?.let { BetaContentBlockParam(midConvSystem = it, _json = json) }
                         ?: BetaContentBlockParam(_json = json)
                 }
+                "fallback" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaFallbackBlockParam>())?.let {
+                        BetaContentBlockParam(fallback = it, _json = json)
+                    } ?: BetaContentBlockParam(_json = json)
+                }
             }
 
             return BetaContentBlockParam(_json = json)
@@ -1013,6 +1105,7 @@ private constructor(
                 value.containerUpload != null -> generator.writeObject(value.containerUpload)
                 value.compaction != null -> generator.writeObject(value.compaction)
                 value.midConvSystem != null -> generator.writeObject(value.midConvSystem)
+                value.fallback != null -> generator.writeObject(value.fallback)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaContentBlockParam")
             }

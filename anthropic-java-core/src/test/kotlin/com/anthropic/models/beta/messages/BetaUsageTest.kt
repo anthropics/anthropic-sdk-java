@@ -3,6 +3,7 @@
 package com.anthropic.models.beta.messages
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -35,6 +36,7 @@ internal class BetaUsageTest {
                         .cacheCreationInputTokens(0L)
                         .cacheReadInputTokens(0L)
                         .inputTokens(0L)
+                        .model(Model.CLAUDE_FABLE_5)
                         .outputTokens(0L)
                         .build()
                 )
@@ -71,6 +73,7 @@ internal class BetaUsageTest {
                         .cacheCreationInputTokens(0L)
                         .cacheReadInputTokens(0L)
                         .inputTokens(0L)
+                        .model(Model.CLAUDE_FABLE_5)
                         .outputTokens(0L)
                         .build()
                 )
@@ -112,6 +115,7 @@ internal class BetaUsageTest {
                         .cacheCreationInputTokens(0L)
                         .cacheReadInputTokens(0L)
                         .inputTokens(0L)
+                        .model(Model.CLAUDE_FABLE_5)
                         .outputTokens(0L)
                         .build()
                 )

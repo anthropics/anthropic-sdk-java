@@ -52,6 +52,37 @@ internal class MessageCreateParamsTest {
             .diagnostics(
                 BetaDiagnosticsParam.builder().previousMessageId("previous_message_id").build()
             )
+            .fallbackCreditToken("x")
+            .addFallback(
+                BetaFallbackParam.builder()
+                    .model(Model.CLAUDE_FABLE_5)
+                    .maxTokens(0L)
+                    .outputConfig(
+                        BetaOutputConfig.builder()
+                            .effort(BetaOutputConfig.Effort.LOW)
+                            .format(
+                                BetaJsonOutputFormat.builder()
+                                    .schema(
+                                        BetaJsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .taskBudget(
+                                BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
+                            )
+                            .build()
+                    )
+                    .speed(BetaFallbackParam.Speed.STANDARD)
+                    .thinking(
+                        BetaThinkingConfigEnabled.builder()
+                            .budgetTokens(1024L)
+                            .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
+                            .build()
+                    )
+                    .build()
+            )
             .inferenceGeo("inference_geo")
             .addMcpServer(
                 BetaRequestMcpServerUrlDefinition.builder()
@@ -202,6 +233,37 @@ internal class MessageCreateParamsTest {
                 )
                 .diagnostics(
                     BetaDiagnosticsParam.builder().previousMessageId("previous_message_id").build()
+                )
+                .fallbackCreditToken("x")
+                .addFallback(
+                    BetaFallbackParam.builder()
+                        .model(Model.CLAUDE_FABLE_5)
+                        .maxTokens(0L)
+                        .outputConfig(
+                            BetaOutputConfig.builder()
+                                .effort(BetaOutputConfig.Effort.LOW)
+                                .format(
+                                    BetaJsonOutputFormat.builder()
+                                        .schema(
+                                            BetaJsonOutputFormat.Schema.builder()
+                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .taskBudget(
+                                    BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
+                                )
+                                .build()
+                        )
+                        .speed(BetaFallbackParam.Speed.STANDARD)
+                        .thinking(
+                            BetaThinkingConfigEnabled.builder()
+                                .budgetTokens(1024L)
+                                .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .build()
                 )
                 .inferenceGeo("inference_geo")
                 .addMcpServer(
@@ -379,6 +441,37 @@ internal class MessageCreateParamsTest {
                 .diagnostics(
                     BetaDiagnosticsParam.builder().previousMessageId("previous_message_id").build()
                 )
+                .fallbackCreditToken("x")
+                .addFallback(
+                    BetaFallbackParam.builder()
+                        .model(Model.CLAUDE_FABLE_5)
+                        .maxTokens(0L)
+                        .outputConfig(
+                            BetaOutputConfig.builder()
+                                .effort(BetaOutputConfig.Effort.LOW)
+                                .format(
+                                    BetaJsonOutputFormat.builder()
+                                        .schema(
+                                            BetaJsonOutputFormat.Schema.builder()
+                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .taskBudget(
+                                    BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
+                                )
+                                .build()
+                        )
+                        .speed(BetaFallbackParam.Speed.STANDARD)
+                        .thinking(
+                            BetaThinkingConfigEnabled.builder()
+                                .budgetTokens(1024L)
+                                .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
+                                .build()
+                        )
+                        .build()
+                )
                 .inferenceGeo("inference_geo")
                 .addMcpServer(
                     BetaRequestMcpServerUrlDefinition.builder()
@@ -539,6 +632,38 @@ internal class MessageCreateParamsTest {
         assertThat(body.diagnostics())
             .contains(
                 BetaDiagnosticsParam.builder().previousMessageId("previous_message_id").build()
+            )
+        assertThat(body.fallbackCreditToken()).contains("x")
+        assertThat(body.fallbacks().getOrNull())
+            .containsExactly(
+                BetaFallbackParam.builder()
+                    .model(Model.CLAUDE_FABLE_5)
+                    .maxTokens(0L)
+                    .outputConfig(
+                        BetaOutputConfig.builder()
+                            .effort(BetaOutputConfig.Effort.LOW)
+                            .format(
+                                BetaJsonOutputFormat.builder()
+                                    .schema(
+                                        BetaJsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .taskBudget(
+                                BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
+                            )
+                            .build()
+                    )
+                    .speed(BetaFallbackParam.Speed.STANDARD)
+                    .thinking(
+                        BetaThinkingConfigEnabled.builder()
+                            .budgetTokens(1024L)
+                            .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
+                            .build()
+                    )
+                    .build()
             )
         assertThat(body.inferenceGeo()).contains("inference_geo")
         assertThat(body.mcpServers().getOrNull())

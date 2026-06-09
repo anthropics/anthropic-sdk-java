@@ -77,6 +77,9 @@ internal constructor(
     /** @see BetaContentBlock.compaction */
     fun compaction(): Optional<BetaCompactionBlock> = rawContentBlock.compaction()
 
+    /** @see BetaContentBlock.fallback */
+    fun fallback(): Optional<BetaFallbackBlock> = rawContentBlock.fallback()
+
     /** @see BetaContentBlock.isText */
     fun isText(): Boolean = text().isPresent
 
@@ -125,6 +128,9 @@ internal constructor(
 
     /** @see BetaContentBlock.isCompaction */
     fun isCompaction(): Boolean = rawContentBlock.isCompaction()
+
+    /** @see BetaContentBlock.isFallback */
+    fun isFallback(): Boolean = rawContentBlock.isFallback()
 
     /** @see BetaContentBlock.asText */
     fun asText(): StructuredTextBlock<T> =
@@ -182,6 +188,9 @@ internal constructor(
 
     /** @see BetaContentBlock.asCompaction */
     fun asCompaction(): BetaCompactionBlock = rawContentBlock.asCompaction()
+
+    /** @see BetaContentBlock.asFallback */
+    fun asFallback(): BetaFallbackBlock = rawContentBlock.asFallback()
 
     /** @see BetaContentBlock._json */
     fun _json(): Optional<JsonValue> = rawContentBlock._json()

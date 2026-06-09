@@ -45,6 +45,12 @@ internal constructor(
 
                 val nextParams = nextParams
                 if (nextParams == null) {
+                    // A refusal-terminated turn is terminal: its tool calls belong to a dead
+                    // conversation, so executing them would fire side effects the caller never
+                    // confirmed and produce tool_results that cannot be coherently replayed.
+                    if (message.stopReason().getOrNull() == BetaStopReason.REFUSAL) {
+                        break
+                    }
                     paramsBuilder
                         .addMessage(message)
                         .addMessage(generateToolResponse(message.toParam()) ?: break)
@@ -88,6 +94,13 @@ internal constructor(
                         val message = accumulator.message()
                         val nextParams = nextParams
                         if (nextParams == null) {
+                            // A refusal-terminated turn is terminal: its tool calls belong to a
+                            // dead conversation, so executing them would fire side effects the
+                            // caller never confirmed and produce tool_results that cannot be
+                            // coherently replayed.
+                            if (message.stopReason().getOrNull() == BetaStopReason.REFUSAL) {
+                                break
+                            }
                             paramsBuilder
                                 .addMessage(message)
                                 .addMessage(generateToolResponse(message.toParam()) ?: break)
@@ -133,7 +146,12 @@ internal constructor(
 
         val contentBlockParams =
             lastMessage.content().betaContentBlockParams().getOrNull() ?: return null
-        val toolUseBlockParams = contentBlockParams.flatMap { it.toolUse().asSequence() }
+        // Tool calls before the last fallback block belong to the attempt that refused; the
+        // fallback interceptor strips them from replayed history, so answering them would orphan
+        // the tool_result.
+        val lastSeam = contentBlockParams.indexOfLast { it.isFallback() }
+        val toolUseBlockParams =
+            contentBlockParams.drop(lastSeam + 1).flatMap { it.toolUse().asSequence() }
         if (toolUseBlockParams.isEmpty()) {
             return null
         }

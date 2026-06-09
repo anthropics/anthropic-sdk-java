@@ -91,6 +91,8 @@ internal class StructuredMessageCreateParamsTest {
         private val CONTAINER_PARAMS = BetaContainerParams.builder().build()
         private val NULLABLE_CONTEXT_MAN_CONFIG = null
         private val NULLABLE_DIAGNOSTICS = null
+        private val FALLBACK_PARAM =
+            BetaFallbackParam.builder().model(Model.CLAUDE_OPUS_4_8).build()
 
         private val MCP_SERVER =
             BetaRequestMcpServerUrlDefinition.builder().name(STRING).url(STRING).build()
@@ -197,6 +199,13 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("diagnostics", NULLABLE_DIAGNOSTICS),
                 DelegationWriteTestCase("diagnostics", OPTIONAL),
                 DelegationWriteTestCase("diagnostics", JSON_FIELD),
+                DelegationWriteTestCase("fallbackCreditToken", STRING),
+                DelegationWriteTestCase("fallbackCreditToken", OPTIONAL),
+                DelegationWriteTestCase("fallbackCreditToken", JSON_FIELD),
+                DelegationWriteTestCase("fallbacks", LIST),
+                DelegationWriteTestCase("fallbacks", OPTIONAL),
+                DelegationWriteTestCase("fallbacks", JSON_FIELD),
+                DelegationWriteTestCase("addFallback", FALLBACK_PARAM),
                 DelegationWriteTestCase("mcpServers", LIST),
                 DelegationWriteTestCase("mcpServers", JSON_FIELD),
                 DelegationWriteTestCase("addMcpServer", MCP_SERVER),

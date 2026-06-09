@@ -15,11 +15,17 @@ internal class BetaRefusalStopDetailsTest {
             BetaRefusalStopDetails.builder()
                 .category(BetaRefusalStopDetails.Category.CYBER)
                 .explanation("explanation")
+                .fallbackCreditToken("fallback_credit_token")
+                .fallbackHasPrefillClaim(true)
+                .recommendedModel("recommended_model")
                 .build()
 
         assertThat(betaRefusalStopDetails.category())
             .contains(BetaRefusalStopDetails.Category.CYBER)
         assertThat(betaRefusalStopDetails.explanation()).contains("explanation")
+        assertThat(betaRefusalStopDetails.fallbackCreditToken()).contains("fallback_credit_token")
+        assertThat(betaRefusalStopDetails.fallbackHasPrefillClaim()).contains(true)
+        assertThat(betaRefusalStopDetails.recommendedModel()).contains("recommended_model")
     }
 
     @Test
@@ -29,6 +35,9 @@ internal class BetaRefusalStopDetailsTest {
             BetaRefusalStopDetails.builder()
                 .category(BetaRefusalStopDetails.Category.CYBER)
                 .explanation("explanation")
+                .fallbackCreditToken("fallback_credit_token")
+                .fallbackHasPrefillClaim(true)
+                .recommendedModel("recommended_model")
                 .build()
 
         val roundtrippedBetaRefusalStopDetails =

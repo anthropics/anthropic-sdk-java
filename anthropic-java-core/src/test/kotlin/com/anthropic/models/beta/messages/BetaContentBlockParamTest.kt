@@ -5,6 +5,7 @@ package com.anthropic.models.beta.messages
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -58,6 +59,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -133,6 +135,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -202,6 +205,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -287,6 +291,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -362,6 +367,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -408,6 +414,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -469,6 +476,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -539,6 +547,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -609,6 +618,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -688,6 +698,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -766,6 +777,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -838,6 +850,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -911,6 +924,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -986,6 +1000,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -1068,6 +1083,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -1145,6 +1161,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -1221,6 +1238,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -1291,6 +1309,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -1354,6 +1373,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).contains(containerUpload)
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -1416,6 +1436,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).contains(compaction)
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -1496,6 +1517,7 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).contains(midConvSystem)
+        assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
     @Test
@@ -1528,6 +1550,60 @@ internal class BetaContentBlockParamTest {
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                             .build()
                     )
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlockParam),
+                jacksonTypeRef<BetaContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlockParam).isEqualTo(betaContentBlockParam)
+    }
+
+    @Test
+    fun ofFallback() {
+        val fallback =
+            BetaFallbackBlockParam.builder()
+                .from(BetaFallbackInfoParam.builder().model(Model.CLAUDE_FABLE_5).build())
+                .to(BetaFallbackInfoParam.builder().model(Model.CLAUDE_FABLE_5).build())
+                .build()
+
+        val betaContentBlockParam = BetaContentBlockParam.ofFallback(fallback)
+
+        assertThat(betaContentBlockParam.text()).isEmpty
+        assertThat(betaContentBlockParam.image()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
+        assertThat(betaContentBlockParam.searchResult()).isEmpty
+        assertThat(betaContentBlockParam.thinking()).isEmpty
+        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
+        assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.toolResult()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
+        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
+        assertThat(betaContentBlockParam.containerUpload()).isEmpty
+        assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).contains(fallback)
+    }
+
+    @Test
+    fun ofFallbackRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlockParam =
+            BetaContentBlockParam.ofFallback(
+                BetaFallbackBlockParam.builder()
+                    .from(BetaFallbackInfoParam.builder().model(Model.CLAUDE_FABLE_5).build())
+                    .to(BetaFallbackInfoParam.builder().model(Model.CLAUDE_FABLE_5).build())
                     .build()
             )
 

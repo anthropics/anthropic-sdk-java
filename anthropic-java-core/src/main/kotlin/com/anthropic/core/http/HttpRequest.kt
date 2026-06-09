@@ -45,6 +45,17 @@ private constructor(
         }
     }
 
+    /**
+     * Returns a request equivalent to this request, but whose [body], if any, is buffered
+     * ([HttpRequestBody.buffered]), so it's repeatable.
+     *
+     * Returns this request unchanged if it has no [body] or its [body] is already repeatable.
+     */
+    fun buffered(): HttpRequest {
+        val bufferedBody = body?.buffered()
+        return if (bufferedBody === body) this else toBuilder().body(bufferedBody!!).build()
+    }
+
     fun toBuilder(): Builder = Builder().from(this)
 
     override fun toString(): String =

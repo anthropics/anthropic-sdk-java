@@ -5,6 +5,7 @@ package com.anthropic.models.beta.messages
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -49,6 +50,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -103,6 +105,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -144,6 +147,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -191,6 +195,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -243,6 +248,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -298,6 +304,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -356,6 +363,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -413,6 +421,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -469,6 +478,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -529,6 +539,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -592,6 +603,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -653,6 +665,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -708,6 +721,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -759,6 +773,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).contains(mcpToolResult)
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -804,6 +819,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).contains(containerUpload)
         assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -849,6 +865,7 @@ internal class BetaContentBlockTest {
         assertThat(betaContentBlock.mcpToolResult()).isEmpty
         assertThat(betaContentBlock.containerUpload()).isEmpty
         assertThat(betaContentBlock.compaction()).contains(compaction)
+        assertThat(betaContentBlock.fallback()).isEmpty
     }
 
     @Test
@@ -859,6 +876,55 @@ internal class BetaContentBlockTest {
                 BetaCompactionBlock.builder()
                     .content("content")
                     .encryptedContent("encrypted_content")
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlock =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlock),
+                jacksonTypeRef<BetaContentBlock>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlock).isEqualTo(betaContentBlock)
+    }
+
+    @Test
+    fun ofFallback() {
+        val fallback =
+            BetaFallbackBlock.builder()
+                .from(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
+                .to(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
+                .build()
+
+        val betaContentBlock = BetaContentBlock.ofFallback(fallback)
+
+        assertThat(betaContentBlock.text()).isEmpty
+        assertThat(betaContentBlock.thinking()).isEmpty
+        assertThat(betaContentBlock.redactedThinking()).isEmpty
+        assertThat(betaContentBlock.toolUse()).isEmpty
+        assertThat(betaContentBlock.serverToolUse()).isEmpty
+        assertThat(betaContentBlock.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.webFetchToolResult()).isEmpty
+        assertThat(betaContentBlock.advisorToolResult()).isEmpty
+        assertThat(betaContentBlock.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlock.toolSearchToolResult()).isEmpty
+        assertThat(betaContentBlock.mcpToolUse()).isEmpty
+        assertThat(betaContentBlock.mcpToolResult()).isEmpty
+        assertThat(betaContentBlock.containerUpload()).isEmpty
+        assertThat(betaContentBlock.compaction()).isEmpty
+        assertThat(betaContentBlock.fallback()).contains(fallback)
+    }
+
+    @Test
+    fun ofFallbackRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlock =
+            BetaContentBlock.ofFallback(
+                BetaFallbackBlock.builder()
+                    .from(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
+                    .to(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
                     .build()
             )
 

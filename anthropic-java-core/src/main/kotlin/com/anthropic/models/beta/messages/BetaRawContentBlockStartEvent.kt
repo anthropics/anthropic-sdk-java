@@ -257,6 +257,10 @@ private constructor(
         fun contentBlock(compaction: BetaCompactionBlock) =
             contentBlock(ContentBlock.ofCompaction(compaction))
 
+        /** Alias for calling [contentBlock] with `ContentBlock.ofFallback(fallback)`. */
+        fun contentBlock(fallback: BetaFallbackBlock) =
+            contentBlock(ContentBlock.ofFallback(fallback))
+
         fun index(index: Long) = index(JsonField.of(index))
 
         /**
@@ -388,6 +392,7 @@ private constructor(
         private val mcpToolResult: BetaMcpToolResultBlock? = null,
         private val containerUpload: BetaContainerUploadBlock? = null,
         private val compaction: BetaCompactionBlock? = null,
+        private val fallback: BetaFallbackBlock? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -441,6 +446,19 @@ private constructor(
          */
         fun compaction(): Optional<BetaCompactionBlock> = Optional.ofNullable(compaction)
 
+        /**
+         * Marks the point in `content` where one model's output gives way to the next.
+         *
+         * One block appears per hop where a preceding model actually ran this turn and declined. A
+         * turn routed directly by the sticky decision has no such boundary and carries no block —
+         * the signal for whether a fallback model served the response is the presence of a
+         * `fallback_message` entry in `usage.iterations`, not this block.
+         *
+         * The block is treated like a server-tool content block for streaming: it arrives via the
+         * standard `content_block_start` / `content_block_stop` pair and carries no deltas.
+         */
+        fun fallback(): Optional<BetaFallbackBlock> = Optional.ofNullable(fallback)
+
         fun isText(): Boolean = text != null
 
         fun isThinking(): Boolean = thinking != null
@@ -473,6 +491,8 @@ private constructor(
         fun isContainerUpload(): Boolean = containerUpload != null
 
         fun isCompaction(): Boolean = compaction != null
+
+        fun isFallback(): Boolean = fallback != null
 
         fun asText(): BetaTextBlock = text.getOrThrow("text")
 
@@ -522,6 +542,19 @@ private constructor(
          * null content; the server treats them as no-ops.
          */
         fun asCompaction(): BetaCompactionBlock = compaction.getOrThrow("compaction")
+
+        /**
+         * Marks the point in `content` where one model's output gives way to the next.
+         *
+         * One block appears per hop where a preceding model actually ran this turn and declined. A
+         * turn routed directly by the sticky decision has no such boundary and carries no block —
+         * the signal for whether a fallback model served the response is the presence of a
+         * `fallback_message` entry in `usage.iterations`, not this block.
+         *
+         * The block is treated like a server-tool content block for streaming: it arrives via the
+         * standard `content_block_start` / `content_block_stop` pair and carries no deltas.
+         */
+        fun asFallback(): BetaFallbackBlock = fallback.getOrThrow("fallback")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -578,6 +611,7 @@ private constructor(
                 mcpToolResult != null -> visitor.visitMcpToolResult(mcpToolResult)
                 containerUpload != null -> visitor.visitContainerUpload(containerUpload)
                 compaction != null -> visitor.visitCompaction(compaction)
+                fallback != null -> visitor.visitFallback(fallback)
                 else -> visitor.unknown(_json)
             }
 
@@ -679,6 +713,10 @@ private constructor(
                     override fun visitCompaction(compaction: BetaCompactionBlock) {
                         compaction.validate()
                     }
+
+                    override fun visitFallback(fallback: BetaFallbackBlock) {
+                        fallback.validate()
+                    }
                 }
             )
             validated = true
@@ -756,6 +794,8 @@ private constructor(
                     override fun visitCompaction(compaction: BetaCompactionBlock) =
                         compaction.validity()
 
+                    override fun visitFallback(fallback: BetaFallbackBlock) = fallback.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -781,7 +821,8 @@ private constructor(
                 mcpToolUse == other.mcpToolUse &&
                 mcpToolResult == other.mcpToolResult &&
                 containerUpload == other.containerUpload &&
-                compaction == other.compaction
+                compaction == other.compaction &&
+                fallback == other.fallback
         }
 
         override fun hashCode(): Int =
@@ -802,6 +843,7 @@ private constructor(
                 mcpToolResult,
                 containerUpload,
                 compaction,
+                fallback,
             )
 
         override fun toString(): String =
@@ -827,6 +869,7 @@ private constructor(
                 mcpToolResult != null -> "ContentBlock{mcpToolResult=$mcpToolResult}"
                 containerUpload != null -> "ContentBlock{containerUpload=$containerUpload}"
                 compaction != null -> "ContentBlock{compaction=$compaction}"
+                fallback != null -> "ContentBlock{fallback=$fallback}"
                 _json != null -> "ContentBlock{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid ContentBlock")
             }
@@ -902,6 +945,20 @@ private constructor(
             @JvmStatic
             fun ofCompaction(compaction: BetaCompactionBlock) =
                 ContentBlock(compaction = compaction)
+
+            /**
+             * Marks the point in `content` where one model's output gives way to the next.
+             *
+             * One block appears per hop where a preceding model actually ran this turn and
+             * declined. A turn routed directly by the sticky decision has no such boundary and
+             * carries no block — the signal for whether a fallback model served the response is the
+             * presence of a `fallback_message` entry in `usage.iterations`, not this block.
+             *
+             * The block is treated like a server-tool content block for streaming: it arrives via
+             * the standard `content_block_start` / `content_block_stop` pair and carries no deltas.
+             */
+            @JvmStatic
+            fun ofFallback(fallback: BetaFallbackBlock) = ContentBlock(fallback = fallback)
         }
 
         /**
@@ -955,6 +1012,19 @@ private constructor(
              * with null content; the server treats them as no-ops.
              */
             fun visitCompaction(compaction: BetaCompactionBlock): T
+
+            /**
+             * Marks the point in `content` where one model's output gives way to the next.
+             *
+             * One block appears per hop where a preceding model actually ran this turn and
+             * declined. A turn routed directly by the sticky decision has no such boundary and
+             * carries no block — the signal for whether a fallback model served the response is the
+             * presence of a `fallback_message` entry in `usage.iterations`, not this block.
+             *
+             * The block is treated like a server-tool content block for streaming: it arrives via
+             * the standard `content_block_start` / `content_block_stop` pair and carries no deltas.
+             */
+            fun visitFallback(fallback: BetaFallbackBlock): T
 
             /**
              * Maps an unknown variant of [ContentBlock] to a value of type [T].
@@ -1068,6 +1138,11 @@ private constructor(
                             ContentBlock(compaction = it, _json = json)
                         } ?: ContentBlock(_json = json)
                     }
+                    "fallback" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaFallbackBlock>())?.let {
+                            ContentBlock(fallback = it, _json = json)
+                        } ?: ContentBlock(_json = json)
+                    }
                 }
 
                 return ContentBlock(_json = json)
@@ -1105,6 +1180,7 @@ private constructor(
                     value.mcpToolResult != null -> generator.writeObject(value.mcpToolResult)
                     value.containerUpload != null -> generator.writeObject(value.containerUpload)
                     value.compaction != null -> generator.writeObject(value.compaction)
+                    value.fallback != null -> generator.writeObject(value.fallback)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid ContentBlock")
                 }

@@ -1,19 +1,26 @@
 package com.anthropic.helpers
 
+import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonNull
 import com.anthropic.core.JsonValue
 import com.anthropic.core.RequestOptions
+import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.beta.messages.*
 import com.anthropic.models.messages.Model
 import com.anthropic.services.blocking.beta.MessageService
 import com.fasterxml.jackson.annotation.JsonClassDescription
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
 import java.time.Duration
+import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Supplier
+import java.util.stream.Stream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -275,6 +282,192 @@ internal class BetaToolRunnerTest {
         val messages = toolRunner.toList()
 
         assertThat(messages).containsExactly(assistantMessage1, assistantMessage2)
+        assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
+    }
+
+    @Test
+    fun iteration_whenRefusal_stopsWithoutExecutingTools() {
+        val refusalMessage =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("toolUseId")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "Refusal City (sync)")))
+                        .build()
+                )
+                .contextManagement(null)
+                .stopReason(BetaStopReason.REFUSAL)
+                .build()
+        whenever(messageService.create(initialMessageParams, requestOptions))
+            .thenReturn(refusalMessage)
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).containsExactly(refusalMessage)
+        assertThat(GetWeather.executions).doesNotContainKey("Refusal City (sync)")
+        verify(messageService, times(1)).create(any<MessageCreateParams>(), any())
+    }
+
+    @Test
+    fun streamingIteration_whenRefusal_stopsWithoutExecutingTools() {
+        val events =
+            listOf(
+                BetaRawMessageStreamEvent.ofMessageStart(
+                    BetaRawMessageStartEvent.builder()
+                        .message(
+                            betaMessageBuilder()
+                                .content(listOf())
+                                .stopDetails(JsonMissing.of())
+                                .stopReason(JsonMissing.of())
+                                .stopSequence(JsonMissing.of())
+                                .contextManagement(null)
+                                .build()
+                        )
+                        .build()
+                ),
+                BetaRawMessageStreamEvent.ofContentBlockStart(
+                    BetaRawContentBlockStartEvent.builder()
+                        .index(0L)
+                        .contentBlock(
+                            BetaRawContentBlockStartEvent.ContentBlock.ofToolUse(
+                                BetaToolUseBlock.builder()
+                                    .id("toolUseId")
+                                    .name("get_weather")
+                                    .input(JsonNull.of())
+                                    .build()
+                            )
+                        )
+                        .build()
+                ),
+                BetaRawMessageStreamEvent.ofContentBlockDelta(
+                    BetaRawContentBlockDeltaEvent.builder()
+                        .index(0L)
+                        .delta(
+                            BetaInputJsonDelta.builder()
+                                .partialJson("""{"location":"Refusal City (streaming)"}""")
+                                .build()
+                        )
+                        .build()
+                ),
+                BetaRawMessageStreamEvent.ofContentBlockStop(
+                    BetaRawContentBlockStopEvent.builder().index(0L).build()
+                ),
+                BetaRawMessageStreamEvent.ofMessageDelta(
+                    BetaRawMessageDeltaEvent.builder()
+                        .contextManagement(null)
+                        .delta(
+                            BetaRawMessageDeltaEvent.Delta.builder()
+                                .container(null)
+                                .stopDetails(null)
+                                .stopReason(BetaStopReason.REFUSAL)
+                                .stopSequence(null)
+                                .build()
+                        )
+                        .usage(
+                            BetaMessageDeltaUsage.builder()
+                                .outputTokens(1L)
+                                .outputTokensDetails(null)
+                                .cacheCreationInputTokens(0L)
+                                .cacheReadInputTokens(0L)
+                                .inputTokens(1L)
+                                .serverToolUse(null)
+                                .iterations(null)
+                                .build()
+                        )
+                        .build()
+                ),
+                BetaRawMessageStreamEvent.ofMessageStop(BetaRawMessageStopEvent.builder().build()),
+            )
+        whenever(messageService.createStreaming(initialMessageParams, requestOptions))
+            .thenReturn(
+                object : StreamResponse<BetaRawMessageStreamEvent> {
+                    override fun stream(): Stream<BetaRawMessageStreamEvent> = events.stream()
+
+                    override fun close() {}
+                }
+            )
+
+        var responses = 0
+        for (response in toolRunner.streaming()) {
+            response.stream().forEach { _ -> }
+            responses++
+        }
+
+        assertThat(responses).isEqualTo(1)
+        assertThat(GetWeather.executions).doesNotContainKey("Refusal City (streaming)")
+        verify(messageService, times(1)).createStreaming(any<MessageCreateParams>(), any())
+    }
+
+    @Test
+    fun iteration_whenFallbackSeam_executesOnlyPostSeamToolUse() {
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("preSeamToolUseId")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "Pre-seam City")))
+                        .build()
+                )
+                .addContent(
+                    BetaFallbackBlock.builder()
+                        .from(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_4_5).build())
+                        .to(BetaFallbackInfo.builder().model(Model.CLAUDE_HAIKU_4_5).build())
+                        .build()
+                )
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("postSeamToolUseId")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "Post-seam City")))
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        val expectedToolResponseMessageParam =
+            BetaMessageParam.builder()
+                .role(BetaMessageParam.Role.USER)
+                .contentOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolResult(
+                            BetaToolResultBlockParam.builder()
+                                .toolUseId("postSeamToolUseId")
+                                .content("The weather in Post-seam City is foggy and 60°F")
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaTextBlock.builder()
+                        .citations(null)
+                        .text("The weather in San Francisco is foggy and 60°F")
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(initialMessageParams, requestOptions))
+            .thenReturn(assistantMessage1)
+        whenever(
+                messageService.create(
+                    initialMessageParams
+                        .toBuilder()
+                        .addMessage(assistantMessage1)
+                        .addMessage(expectedToolResponseMessageParam)
+                        .build(),
+                    requestOptions,
+                )
+            )
+            .thenReturn(assistantMessage2)
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).containsExactly(assistantMessage1, assistantMessage2)
+        assertThat(GetWeather.executions).doesNotContainKey("Pre-seam City")
+        assertThat(GetWeather.executions).containsEntry("Post-seam City", 1)
         assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
     }
 
@@ -573,7 +766,18 @@ private class GetWeather : Supplier<String> {
     @JsonPropertyDescription("The city and state, e.g. San Francisco, CA")
     lateinit var location: String
 
-    override fun get(): String = "The weather in $location is foggy and 60°F"
+    override fun get(): String {
+        executions.merge(location, 1, Int::plus)
+        return "The weather in $location is foggy and 60°F"
+    }
+
+    companion object {
+        /**
+         * Execution counts per location so tests can assert a tool call never ran. Tests execute in
+         * parallel, so each test that asserts on this must use a location unique to it.
+         */
+        val executions = ConcurrentHashMap<String, Int>()
+    }
 }
 
 @JsonClassDescription("Get the weather in a given location")
