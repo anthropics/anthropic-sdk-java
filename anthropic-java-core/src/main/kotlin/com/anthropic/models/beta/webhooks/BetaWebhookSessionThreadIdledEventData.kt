@@ -20,6 +20,7 @@ class BetaWebhookSessionThreadIdledEventData
 private constructor(
     private val id: JsonField<String>,
     private val organizationId: JsonField<String>,
+    private val sessionThreadId: JsonField<String>,
     private val type: JsonValue,
     private val workspaceId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -31,11 +32,14 @@ private constructor(
         @JsonProperty("organization_id")
         @ExcludeMissing
         organizationId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("session_thread_id")
+        @ExcludeMissing
+        sessionThreadId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("workspace_id")
         @ExcludeMissing
         workspaceId: JsonField<String> = JsonMissing.of(),
-    ) : this(id, organizationId, type, workspaceId, mutableMapOf())
+    ) : this(id, organizationId, sessionThreadId, type, workspaceId, mutableMapOf())
 
     /**
      * ID of the session that triggered the event.
@@ -50,6 +54,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun organizationId(): String = organizationId.getRequired("organization_id")
+
+    /**
+     * ID of the session thread this event refers to.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun sessionThreadId(): String = sessionThreadId.getRequired("session_thread_id")
 
     /**
      * Expected to always return the following:
@@ -85,6 +97,15 @@ private constructor(
     fun _organizationId(): JsonField<String> = organizationId
 
     /**
+     * Returns the raw JSON value of [sessionThreadId].
+     *
+     * Unlike [sessionThreadId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("session_thread_id")
+    @ExcludeMissing
+    fun _sessionThreadId(): JsonField<String> = sessionThreadId
+
+    /**
      * Returns the raw JSON value of [workspaceId].
      *
      * Unlike [workspaceId], this method doesn't throw if the JSON field has an unexpected type.
@@ -115,6 +136,7 @@ private constructor(
          * ```java
          * .id()
          * .organizationId()
+         * .sessionThreadId()
          * .workspaceId()
          * ```
          */
@@ -126,6 +148,7 @@ private constructor(
 
         private var id: JsonField<String>? = null
         private var organizationId: JsonField<String>? = null
+        private var sessionThreadId: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("session.thread_idled")
         private var workspaceId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -136,6 +159,7 @@ private constructor(
         ) = apply {
             id = betaWebhookSessionThreadIdledEventData.id
             organizationId = betaWebhookSessionThreadIdledEventData.organizationId
+            sessionThreadId = betaWebhookSessionThreadIdledEventData.sessionThreadId
             type = betaWebhookSessionThreadIdledEventData.type
             workspaceId = betaWebhookSessionThreadIdledEventData.workspaceId
             additionalProperties =
@@ -164,6 +188,21 @@ private constructor(
          */
         fun organizationId(organizationId: JsonField<String>) = apply {
             this.organizationId = organizationId
+        }
+
+        /** ID of the session thread this event refers to. */
+        fun sessionThreadId(sessionThreadId: String) =
+            sessionThreadId(JsonField.of(sessionThreadId))
+
+        /**
+         * Sets [Builder.sessionThreadId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.sessionThreadId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun sessionThreadId(sessionThreadId: JsonField<String>) = apply {
+            this.sessionThreadId = sessionThreadId
         }
 
         /**
@@ -219,6 +258,7 @@ private constructor(
          * ```java
          * .id()
          * .organizationId()
+         * .sessionThreadId()
          * .workspaceId()
          * ```
          *
@@ -228,6 +268,7 @@ private constructor(
             BetaWebhookSessionThreadIdledEventData(
                 checkRequired("id", id),
                 checkRequired("organizationId", organizationId),
+                checkRequired("sessionThreadId", sessionThreadId),
                 type,
                 checkRequired("workspaceId", workspaceId),
                 additionalProperties.toMutableMap(),
@@ -251,6 +292,7 @@ private constructor(
 
         id()
         organizationId()
+        sessionThreadId()
         _type().let {
             if (it != JsonValue.from("session.thread_idled")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -277,6 +319,7 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (organizationId.asKnown().isPresent) 1 else 0) +
+            (if (sessionThreadId.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("session.thread_idled")) 1 else 0 } +
             (if (workspaceId.asKnown().isPresent) 1 else 0)
 
@@ -288,17 +331,18 @@ private constructor(
         return other is BetaWebhookSessionThreadIdledEventData &&
             id == other.id &&
             organizationId == other.organizationId &&
+            sessionThreadId == other.sessionThreadId &&
             type == other.type &&
             workspaceId == other.workspaceId &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, organizationId, type, workspaceId, additionalProperties)
+        Objects.hash(id, organizationId, sessionThreadId, type, workspaceId, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaWebhookSessionThreadIdledEventData{id=$id, organizationId=$organizationId, type=$type, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
+        "BetaWebhookSessionThreadIdledEventData{id=$id, organizationId=$organizationId, sessionThreadId=$sessionThreadId, type=$type, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
 }

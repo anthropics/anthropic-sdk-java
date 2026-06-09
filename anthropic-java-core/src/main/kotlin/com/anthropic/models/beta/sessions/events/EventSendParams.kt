@@ -14,6 +14,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -241,6 +242,27 @@ private constructor(
          */
         fun addUserToolResultEvent(toolUseId: String) = apply {
             body.addUserToolResultEvent(toolUseId)
+        }
+
+        /**
+         * Alias for calling [addEvent] with
+         * `BetaManagedAgentsEventParams.ofSystemMessage(systemMessage)`.
+         */
+        fun addEvent(systemMessage: BetaManagedAgentsSystemMessageEventParams) = apply {
+            body.addEvent(systemMessage)
+        }
+
+        /**
+         * Alias for calling [addEvent] with the following:
+         * ```java
+         * BetaManagedAgentsSystemMessageEventParams.builder()
+         *     .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+         *     .content(content)
+         *     .build()
+         * ```
+         */
+        fun addSystemMessageEvent(content: List<BetaManagedAgentsSystemContentBlock>) = apply {
+            body.addSystemMessageEvent(content)
         }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -590,6 +612,30 @@ private constructor(
                     BetaManagedAgentsUserToolResultEventParams.builder()
                         .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
                         .toolUseId(toolUseId)
+                        .build()
+                )
+
+            /**
+             * Alias for calling [addEvent] with
+             * `BetaManagedAgentsEventParams.ofSystemMessage(systemMessage)`.
+             */
+            fun addEvent(systemMessage: BetaManagedAgentsSystemMessageEventParams) =
+                addEvent(BetaManagedAgentsEventParams.ofSystemMessage(systemMessage))
+
+            /**
+             * Alias for calling [addEvent] with the following:
+             * ```java
+             * BetaManagedAgentsSystemMessageEventParams.builder()
+             *     .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+             *     .content(content)
+             *     .build()
+             * ```
+             */
+            fun addSystemMessageEvent(content: List<BetaManagedAgentsSystemContentBlock>) =
+                addEvent(
+                    BetaManagedAgentsSystemMessageEventParams.builder()
+                        .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+                        .content(content)
                         .build()
                 )
 

@@ -44,6 +44,7 @@ private constructor(
     private val updatedAt: JsonField<OffsetDateTime>,
     private val usage: JsonField<BetaManagedAgentsSessionUsage>,
     private val vaultIds: JsonField<List<String>>,
+    private val deploymentId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -85,6 +86,9 @@ private constructor(
         @JsonProperty("vault_ids")
         @ExcludeMissing
         vaultIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("deployment_id")
+        @ExcludeMissing
+        deploymentId: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
         agent,
@@ -101,6 +105,7 @@ private constructor(
         updatedAt,
         usage,
         vaultIds,
+        deploymentId,
         mutableMapOf(),
     )
 
@@ -213,6 +218,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun vaultIds(): List<String> = vaultIds.getRequired("vault_ids")
+
+    /**
+     * Deployment ID when the session was created from a deployment reference. Null otherwise.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun deploymentId(): Optional<String> = deploymentId.getOptional("deployment_id")
 
     /**
      * Returns the raw JSON value of [id].
@@ -339,6 +352,15 @@ private constructor(
      */
     @JsonProperty("vault_ids") @ExcludeMissing fun _vaultIds(): JsonField<List<String>> = vaultIds
 
+    /**
+     * Returns the raw JSON value of [deploymentId].
+     *
+     * Unlike [deploymentId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("deployment_id")
+    @ExcludeMissing
+    fun _deploymentId(): JsonField<String> = deploymentId
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -398,6 +420,7 @@ private constructor(
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var usage: JsonField<BetaManagedAgentsSessionUsage>? = null
         private var vaultIds: JsonField<MutableList<String>>? = null
+        private var deploymentId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -426,6 +449,7 @@ private constructor(
                 betaManagedAgentsSession.vaultIds
                     .map { it.toMutableList() }
                     .takeUnless { it.isMissing() }
+            deploymentId = betaManagedAgentsSession.deploymentId
             additionalProperties = betaManagedAgentsSession.additionalProperties.toMutableMap()
         }
 
@@ -693,6 +717,25 @@ private constructor(
                 }
         }
 
+        /**
+         * Deployment ID when the session was created from a deployment reference. Null otherwise.
+         */
+        fun deploymentId(deploymentId: String?) = deploymentId(JsonField.ofNullable(deploymentId))
+
+        /** Alias for calling [Builder.deploymentId] with `deploymentId.orElse(null)`. */
+        fun deploymentId(deploymentId: Optional<String>) = deploymentId(deploymentId.getOrNull())
+
+        /**
+         * Sets [Builder.deploymentId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.deploymentId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun deploymentId(deploymentId: JsonField<String>) = apply {
+            this.deploymentId = deploymentId
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -755,6 +798,7 @@ private constructor(
                 checkRequired("updatedAt", updatedAt),
                 checkRequired("usage", usage),
                 checkRequired("vaultIds", vaultIds).map { it.toImmutable() },
+                deploymentId,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -789,6 +833,7 @@ private constructor(
         updatedAt()
         usage().validate()
         vaultIds()
+        deploymentId()
         validated = true
     }
 
@@ -821,7 +866,8 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (usage.asKnown().getOrNull()?.validity() ?: 0) +
-            (vaultIds.asKnown().getOrNull()?.size ?: 0)
+            (vaultIds.asKnown().getOrNull()?.size ?: 0) +
+            (if (deploymentId.asKnown().isPresent) 1 else 0)
 
     class Metadata
     @JsonCreator
@@ -1231,6 +1277,7 @@ private constructor(
             updatedAt == other.updatedAt &&
             usage == other.usage &&
             vaultIds == other.vaultIds &&
+            deploymentId == other.deploymentId &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1251,6 +1298,7 @@ private constructor(
             updatedAt,
             usage,
             vaultIds,
+            deploymentId,
             additionalProperties,
         )
     }
@@ -1258,5 +1306,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsSession{id=$id, agent=$agent, archivedAt=$archivedAt, createdAt=$createdAt, environmentId=$environmentId, metadata=$metadata, outcomeEvaluations=$outcomeEvaluations, resources=$resources, stats=$stats, status=$status, title=$title, type=$type, updatedAt=$updatedAt, usage=$usage, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsSession{id=$id, agent=$agent, archivedAt=$archivedAt, createdAt=$createdAt, environmentId=$environmentId, metadata=$metadata, outcomeEvaluations=$outcomeEvaluations, resources=$resources, stats=$stats, status=$status, title=$title, type=$type, updatedAt=$updatedAt, usage=$usage, vaultIds=$vaultIds, deploymentId=$deploymentId, additionalProperties=$additionalProperties}"
 }

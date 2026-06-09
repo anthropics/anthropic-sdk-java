@@ -5,6 +5,10 @@ package com.anthropic.services.async
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.async.beta.AgentServiceAsync
 import com.anthropic.services.async.beta.AgentServiceAsyncImpl
+import com.anthropic.services.async.beta.DeploymentRunServiceAsync
+import com.anthropic.services.async.beta.DeploymentRunServiceAsyncImpl
+import com.anthropic.services.async.beta.DeploymentServiceAsync
+import com.anthropic.services.async.beta.DeploymentServiceAsyncImpl
 import com.anthropic.services.async.beta.EnvironmentServiceAsync
 import com.anthropic.services.async.beta.EnvironmentServiceAsyncImpl
 import com.anthropic.services.async.beta.FileServiceAsync
@@ -46,6 +50,14 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     private val sessions: SessionServiceAsync by lazy { SessionServiceAsyncImpl(clientOptions) }
 
+    private val deployments: DeploymentServiceAsync by lazy {
+        DeploymentServiceAsyncImpl(clientOptions)
+    }
+
+    private val deploymentRuns: DeploymentRunServiceAsync by lazy {
+        DeploymentRunServiceAsyncImpl(clientOptions)
+    }
+
     private val vaults: VaultServiceAsync by lazy { VaultServiceAsyncImpl(clientOptions) }
 
     private val memoryStores: MemoryStoreServiceAsync by lazy {
@@ -76,6 +88,10 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun environments(): EnvironmentServiceAsync = environments
 
     override fun sessions(): SessionServiceAsync = sessions
+
+    override fun deployments(): DeploymentServiceAsync = deployments
+
+    override fun deploymentRuns(): DeploymentRunServiceAsync = deploymentRuns
 
     override fun vaults(): VaultServiceAsync = vaults
 
@@ -110,6 +126,14 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
         private val sessions: SessionServiceAsync.WithRawResponse by lazy {
             SessionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val deployments: DeploymentServiceAsync.WithRawResponse by lazy {
+            DeploymentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val deploymentRuns: DeploymentRunServiceAsync.WithRawResponse by lazy {
+            DeploymentRunServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val vaults: VaultServiceAsync.WithRawResponse by lazy {
@@ -152,6 +176,10 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         override fun environments(): EnvironmentServiceAsync.WithRawResponse = environments
 
         override fun sessions(): SessionServiceAsync.WithRawResponse = sessions
+
+        override fun deployments(): DeploymentServiceAsync.WithRawResponse = deployments
+
+        override fun deploymentRuns(): DeploymentRunServiceAsync.WithRawResponse = deploymentRuns
 
         override fun vaults(): VaultServiceAsync.WithRawResponse = vaults
 

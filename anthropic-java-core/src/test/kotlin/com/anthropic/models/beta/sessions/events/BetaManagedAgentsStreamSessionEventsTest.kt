@@ -19,6 +19,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionAgent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionMultiagentCoordinator
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
@@ -76,6 +77,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -147,6 +149,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -222,6 +225,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -300,6 +304,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -381,6 +386,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -463,6 +469,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -538,6 +545,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -618,6 +626,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -702,6 +711,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -782,6 +792,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -864,6 +875,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -945,6 +957,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1024,6 +1037,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1104,6 +1118,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1187,6 +1202,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1272,6 +1288,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1345,6 +1362,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1420,6 +1438,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1495,6 +1514,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1569,6 +1589,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1648,6 +1669,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1741,6 +1763,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1828,6 +1851,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1909,6 +1933,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -1997,6 +2022,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -2076,6 +2102,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -2149,6 +2176,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -2226,6 +2254,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -2308,6 +2337,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -2395,6 +2425,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -2473,6 +2504,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).contains(userToolResult)
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -2554,6 +2586,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled())
             .contains(sessionThreadStatusRescheduled)
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -2795,6 +2828,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).contains(sessionUpdated)
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).isEmpty
     }
 
     @Test
@@ -2980,6 +3014,78 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                             .build()
                     )
                     .title("title")
+                    .build()
+            )
+
+        val roundtrippedBetaManagedAgentsStreamSessionEvents =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaManagedAgentsStreamSessionEvents),
+                jacksonTypeRef<BetaManagedAgentsStreamSessionEvents>(),
+            )
+
+        assertThat(roundtrippedBetaManagedAgentsStreamSessionEvents)
+            .isEqualTo(betaManagedAgentsStreamSessionEvents)
+    }
+
+    @Test
+    fun ofSystemMessage() {
+        val systemMessage =
+            BetaManagedAgentsSystemMessageEvent.builder()
+                .id("id")
+                .addTextContent("Where is my order #1234?")
+                .type(BetaManagedAgentsSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val betaManagedAgentsStreamSessionEvents =
+            BetaManagedAgentsStreamSessionEvents.ofSystemMessage(systemMessage)
+
+        assertThat(betaManagedAgentsStreamSessionEvents.userMessage()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.userInterrupt()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.userToolConfirmation()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.userCustomToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentCustomToolUse()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentMessage()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentThinking()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolUse()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentMcpToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentToolUse()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageReceived()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadMessageSent()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentThreadContextCompacted()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionError()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRescheduled()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusRunning()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusIdle()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionStatusTerminated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadCreated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationStart()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationEnd()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestStart()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.spanModelRequestEnd()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.spanOutcomeEvaluationOngoing()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.userDefineOutcome()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionDeleted()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRunning()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusIdle()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusTerminated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.userToolResult()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadStatusRescheduled()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionUpdated()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.systemMessage()).contains(systemMessage)
+    }
+
+    @Test
+    fun ofSystemMessageRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaManagedAgentsStreamSessionEvents =
+            BetaManagedAgentsStreamSessionEvents.ofSystemMessage(
+                BetaManagedAgentsSystemMessageEvent.builder()
+                    .id("id")
+                    .addTextContent("Where is my order #1234?")
+                    .type(BetaManagedAgentsSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                    .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
 

@@ -250,6 +250,7 @@ internal class BetaManagedAgentsSessionTest {
                         .build()
                 )
                 .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+                .deploymentId("deployment_id")
                 .build()
 
         assertThat(betaManagedAgentsSession.id()).isEqualTo("sesn_011CZkZAtmR3yMPDzynEDxu7")
@@ -471,6 +472,7 @@ internal class BetaManagedAgentsSessionTest {
             )
         assertThat(betaManagedAgentsSession.vaultIds())
             .containsExactly("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+        assertThat(betaManagedAgentsSession.deploymentId()).contains("deployment_id")
     }
 
     @Test
@@ -700,6 +702,7 @@ internal class BetaManagedAgentsSessionTest {
                         .build()
                 )
                 .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+                .deploymentId("deployment_id")
                 .build()
 
         val roundtrippedBetaManagedAgentsSession =

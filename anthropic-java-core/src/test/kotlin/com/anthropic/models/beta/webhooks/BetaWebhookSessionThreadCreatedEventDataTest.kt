@@ -15,12 +15,15 @@ internal class BetaWebhookSessionThreadCreatedEventDataTest {
             BetaWebhookSessionThreadCreatedEventData.builder()
                 .id("id")
                 .organizationId("organization_id")
+                .sessionThreadId("session_thread_id")
                 .workspaceId("workspace_id")
                 .build()
 
         assertThat(betaWebhookSessionThreadCreatedEventData.id()).isEqualTo("id")
         assertThat(betaWebhookSessionThreadCreatedEventData.organizationId())
             .isEqualTo("organization_id")
+        assertThat(betaWebhookSessionThreadCreatedEventData.sessionThreadId())
+            .isEqualTo("session_thread_id")
         assertThat(betaWebhookSessionThreadCreatedEventData.workspaceId()).isEqualTo("workspace_id")
     }
 
@@ -31,6 +34,7 @@ internal class BetaWebhookSessionThreadCreatedEventDataTest {
             BetaWebhookSessionThreadCreatedEventData.builder()
                 .id("id")
                 .organizationId("organization_id")
+                .sessionThreadId("session_thread_id")
                 .workspaceId("workspace_id")
                 .build()
 

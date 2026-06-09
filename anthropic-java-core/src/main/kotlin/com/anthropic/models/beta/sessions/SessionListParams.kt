@@ -26,6 +26,7 @@ private constructor(
     private val createdAtGte: OffsetDateTime?,
     private val createdAtLt: OffsetDateTime?,
     private val createdAtLte: OffsetDateTime?,
+    private val deploymentId: String?,
     private val includeArchived: Boolean?,
     private val limit: Int?,
     private val memoryStoreId: String?,
@@ -54,6 +55,9 @@ private constructor(
 
     /** Return sessions created at or before this time (inclusive). */
     fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
+
+    /** Filter sessions created by this deployment ID. */
+    fun deploymentId(): Optional<String> = Optional.ofNullable(deploymentId)
 
     /** When true, includes archived sessions. Default: false (exclude archived). */
     fun includeArchived(): Optional<Boolean> = Optional.ofNullable(includeArchived)
@@ -101,6 +105,7 @@ private constructor(
         private var createdAtGte: OffsetDateTime? = null
         private var createdAtLt: OffsetDateTime? = null
         private var createdAtLte: OffsetDateTime? = null
+        private var deploymentId: String? = null
         private var includeArchived: Boolean? = null
         private var limit: Int? = null
         private var memoryStoreId: String? = null
@@ -119,6 +124,7 @@ private constructor(
             createdAtGte = sessionListParams.createdAtGte
             createdAtLt = sessionListParams.createdAtLt
             createdAtLte = sessionListParams.createdAtLte
+            deploymentId = sessionListParams.deploymentId
             includeArchived = sessionListParams.includeArchived
             limit = sessionListParams.limit
             memoryStoreId = sessionListParams.memoryStoreId
@@ -176,6 +182,12 @@ private constructor(
         /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
         fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
             createdAtLte(createdAtLte.getOrNull())
+
+        /** Filter sessions created by this deployment ID. */
+        fun deploymentId(deploymentId: String?) = apply { this.deploymentId = deploymentId }
+
+        /** Alias for calling [Builder.deploymentId] with `deploymentId.orElse(null)`. */
+        fun deploymentId(deploymentId: Optional<String>) = deploymentId(deploymentId.getOrNull())
 
         /** When true, includes archived sessions. Default: false (exclude archived). */
         fun includeArchived(includeArchived: Boolean?) = apply {
@@ -375,6 +387,7 @@ private constructor(
                 createdAtGte,
                 createdAtLt,
                 createdAtLte,
+                deploymentId,
                 includeArchived,
                 limit,
                 memoryStoreId,
@@ -412,6 +425,7 @@ private constructor(
                 createdAtLte?.let {
                     put("created_at[lte]", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
                 }
+                deploymentId?.let { put("deployment_id", it) }
                 includeArchived?.let { put("include_archived", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
                 memoryStoreId?.let { put("memory_store_id", it) }
@@ -720,6 +734,7 @@ private constructor(
             createdAtGte == other.createdAtGte &&
             createdAtLt == other.createdAtLt &&
             createdAtLte == other.createdAtLte &&
+            deploymentId == other.deploymentId &&
             includeArchived == other.includeArchived &&
             limit == other.limit &&
             memoryStoreId == other.memoryStoreId &&
@@ -739,6 +754,7 @@ private constructor(
             createdAtGte,
             createdAtLt,
             createdAtLte,
+            deploymentId,
             includeArchived,
             limit,
             memoryStoreId,
@@ -751,5 +767,5 @@ private constructor(
         )
 
     override fun toString() =
-        "SessionListParams{agentId=$agentId, agentVersion=$agentVersion, createdAtGt=$createdAtGt, createdAtGte=$createdAtGte, createdAtLt=$createdAtLt, createdAtLte=$createdAtLte, includeArchived=$includeArchived, limit=$limit, memoryStoreId=$memoryStoreId, order=$order, page=$page, statuses=$statuses, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SessionListParams{agentId=$agentId, agentVersion=$agentVersion, createdAtGt=$createdAtGt, createdAtGte=$createdAtGte, createdAtLt=$createdAtLt, createdAtLte=$createdAtLte, deploymentId=$deploymentId, includeArchived=$includeArchived, limit=$limit, memoryStoreId=$memoryStoreId, order=$order, page=$page, statuses=$statuses, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
