@@ -4,6 +4,8 @@ package com.anthropic.services.blocking
 
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.blocking.beta.AgentService
+import com.anthropic.services.blocking.beta.DeploymentRunService
+import com.anthropic.services.blocking.beta.DeploymentService
 import com.anthropic.services.blocking.beta.EnvironmentService
 import com.anthropic.services.blocking.beta.FileService
 import com.anthropic.services.blocking.beta.MemoryStoreService
@@ -40,6 +42,10 @@ interface BetaService {
 
     fun sessions(): SessionService
 
+    fun deployments(): DeploymentService
+
+    fun deploymentRuns(): DeploymentRunService
+
     fun vaults(): VaultService
 
     fun memoryStores(): MemoryStoreService
@@ -71,6 +77,10 @@ interface BetaService {
         fun environments(): EnvironmentService.WithRawResponse
 
         fun sessions(): SessionService.WithRawResponse
+
+        fun deployments(): DeploymentService.WithRawResponse
+
+        fun deploymentRuns(): DeploymentRunService.WithRawResponse
 
         fun vaults(): VaultService.WithRawResponse
 

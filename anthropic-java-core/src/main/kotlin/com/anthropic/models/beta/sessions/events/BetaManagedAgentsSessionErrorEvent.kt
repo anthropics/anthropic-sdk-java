@@ -215,6 +215,13 @@ private constructor(
         /** Alias for calling [error] with `Error.ofBilling(billing)`. */
         fun error(billing: BetaManagedAgentsBillingError) = error(Error.ofBilling(billing))
 
+        /**
+         * Alias for calling [error] with
+         * `Error.ofCredentialHostUnreachable(credentialHostUnreachable)`.
+         */
+        fun error(credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError) =
+            error(Error.ofCredentialHostUnreachable(credentialHostUnreachable))
+
         /** A timestamp in RFC 3339 format */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
@@ -340,6 +347,8 @@ private constructor(
         private val mcpConnectionFailed: BetaManagedAgentsMcpConnectionFailedError? = null,
         private val mcpAuthenticationFailed: BetaManagedAgentsMcpAuthenticationFailedError? = null,
         private val billing: BetaManagedAgentsBillingError? = null,
+        private val credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError? =
+            null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -377,6 +386,13 @@ private constructor(
          */
         fun billing(): Optional<BetaManagedAgentsBillingError> = Optional.ofNullable(billing)
 
+        /**
+         * An `environment_variable` credential's `auth.networking.allowed_hosts` includes a host
+         * the environment's network policy does not permit.
+         */
+        fun credentialHostUnreachable(): Optional<BetaManagedAgentsCredentialHostUnreachableError> =
+            Optional.ofNullable(credentialHostUnreachable)
+
         fun isUnknown(): Boolean = unknown != null
 
         fun isModelOverloaded(): Boolean = modelOverloaded != null
@@ -390,6 +406,8 @@ private constructor(
         fun isMcpAuthenticationFailed(): Boolean = mcpAuthenticationFailed != null
 
         fun isBilling(): Boolean = billing != null
+
+        fun isCredentialHostUnreachable(): Boolean = credentialHostUnreachable != null
 
         /**
          * An unknown or unexpected error occurred during session execution. A fallback variant;
@@ -424,6 +442,13 @@ private constructor(
          * resolve the billing state.
          */
         fun asBilling(): BetaManagedAgentsBillingError = billing.getOrThrow("billing")
+
+        /**
+         * An `environment_variable` credential's `auth.networking.allowed_hosts` includes a host
+         * the environment's network policy does not permit.
+         */
+        fun asCredentialHostUnreachable(): BetaManagedAgentsCredentialHostUnreachableError =
+            credentialHostUnreachable.getOrThrow("credentialHostUnreachable")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -466,6 +491,8 @@ private constructor(
                 mcpAuthenticationFailed != null ->
                     visitor.visitMcpAuthenticationFailed(mcpAuthenticationFailed)
                 billing != null -> visitor.visitBilling(billing)
+                credentialHostUnreachable != null ->
+                    visitor.visitCredentialHostUnreachable(credentialHostUnreachable)
                 else -> visitor.unknown(_json)
             }
 
@@ -524,6 +551,12 @@ private constructor(
                     override fun visitBilling(billing: BetaManagedAgentsBillingError) {
                         billing.validate()
                     }
+
+                    override fun visitCredentialHostUnreachable(
+                        credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
+                    ) {
+                        credentialHostUnreachable.validate()
+                    }
                 }
             )
             validated = true
@@ -573,6 +606,10 @@ private constructor(
                     override fun visitBilling(billing: BetaManagedAgentsBillingError) =
                         billing.validity()
 
+                    override fun visitCredentialHostUnreachable(
+                        credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
+                    ) = credentialHostUnreachable.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -589,7 +626,8 @@ private constructor(
                 modelRequestFailed == other.modelRequestFailed &&
                 mcpConnectionFailed == other.mcpConnectionFailed &&
                 mcpAuthenticationFailed == other.mcpAuthenticationFailed &&
-                billing == other.billing
+                billing == other.billing &&
+                credentialHostUnreachable == other.credentialHostUnreachable
         }
 
         override fun hashCode(): Int =
@@ -601,6 +639,7 @@ private constructor(
                 mcpConnectionFailed,
                 mcpAuthenticationFailed,
                 billing,
+                credentialHostUnreachable,
             )
 
         override fun toString(): String =
@@ -613,6 +652,8 @@ private constructor(
                 mcpAuthenticationFailed != null ->
                     "Error{mcpAuthenticationFailed=$mcpAuthenticationFailed}"
                 billing != null -> "Error{billing=$billing}"
+                credentialHostUnreachable != null ->
+                    "Error{credentialHostUnreachable=$credentialHostUnreachable}"
                 _json != null -> "Error{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Error")
             }
@@ -661,6 +702,15 @@ private constructor(
              */
             @JvmStatic
             fun ofBilling(billing: BetaManagedAgentsBillingError) = Error(billing = billing)
+
+            /**
+             * An `environment_variable` credential's `auth.networking.allowed_hosts` includes a
+             * host the environment's network policy does not permit.
+             */
+            @JvmStatic
+            fun ofCredentialHostUnreachable(
+                credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
+            ) = Error(credentialHostUnreachable = credentialHostUnreachable)
         }
 
         /** An interface that defines how to map each variant of [Error] to a value of type [T]. */
@@ -700,6 +750,14 @@ private constructor(
              * must resolve the billing state.
              */
             fun visitBilling(billing: BetaManagedAgentsBillingError): T
+
+            /**
+             * An `environment_variable` credential's `auth.networking.allowed_hosts` includes a
+             * host the environment's network policy does not permit.
+             */
+            fun visitCredentialHostUnreachable(
+                credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
+            ): T
 
             /**
              * Maps an unknown variant of [Error] to a value of type [T].
@@ -771,6 +829,14 @@ private constructor(
                         return tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsBillingError>())
                             ?.let { Error(billing = it, _json = json) } ?: Error(_json = json)
                     }
+                    "credential_host_unreachable_error" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsCredentialHostUnreachableError>(),
+                            )
+                            ?.let { Error(credentialHostUnreachable = it, _json = json) }
+                            ?: Error(_json = json)
+                    }
                 }
 
                 return Error(_json = json)
@@ -795,6 +861,8 @@ private constructor(
                     value.mcpAuthenticationFailed != null ->
                         generator.writeObject(value.mcpAuthenticationFailed)
                     value.billing != null -> generator.writeObject(value.billing)
+                    value.credentialHostUnreachable != null ->
+                        generator.writeObject(value.credentialHostUnreachable)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Error")
                 }

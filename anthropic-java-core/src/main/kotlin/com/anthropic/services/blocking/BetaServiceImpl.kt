@@ -5,6 +5,10 @@ package com.anthropic.services.blocking
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.blocking.beta.AgentService
 import com.anthropic.services.blocking.beta.AgentServiceImpl
+import com.anthropic.services.blocking.beta.DeploymentRunService
+import com.anthropic.services.blocking.beta.DeploymentRunServiceImpl
+import com.anthropic.services.blocking.beta.DeploymentService
+import com.anthropic.services.blocking.beta.DeploymentServiceImpl
 import com.anthropic.services.blocking.beta.EnvironmentService
 import com.anthropic.services.blocking.beta.EnvironmentServiceImpl
 import com.anthropic.services.blocking.beta.FileService
@@ -43,6 +47,12 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     private val sessions: SessionService by lazy { SessionServiceImpl(clientOptions) }
 
+    private val deployments: DeploymentService by lazy { DeploymentServiceImpl(clientOptions) }
+
+    private val deploymentRuns: DeploymentRunService by lazy {
+        DeploymentRunServiceImpl(clientOptions)
+    }
+
     private val vaults: VaultService by lazy { VaultServiceImpl(clientOptions) }
 
     private val memoryStores: MemoryStoreService by lazy { MemoryStoreServiceImpl(clientOptions) }
@@ -69,6 +79,10 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun environments(): EnvironmentService = environments
 
     override fun sessions(): SessionService = sessions
+
+    override fun deployments(): DeploymentService = deployments
+
+    override fun deploymentRuns(): DeploymentRunService = deploymentRuns
 
     override fun vaults(): VaultService = vaults
 
@@ -103,6 +117,14 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
         private val sessions: SessionService.WithRawResponse by lazy {
             SessionServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val deployments: DeploymentService.WithRawResponse by lazy {
+            DeploymentServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val deploymentRuns: DeploymentRunService.WithRawResponse by lazy {
+            DeploymentRunServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val vaults: VaultService.WithRawResponse by lazy {
@@ -145,6 +167,10 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
         override fun environments(): EnvironmentService.WithRawResponse = environments
 
         override fun sessions(): SessionService.WithRawResponse = sessions
+
+        override fun deployments(): DeploymentService.WithRawResponse = deployments
+
+        override fun deploymentRuns(): DeploymentRunService.WithRawResponse = deploymentRuns
 
         override fun vaults(): VaultService.WithRawResponse = vaults
 

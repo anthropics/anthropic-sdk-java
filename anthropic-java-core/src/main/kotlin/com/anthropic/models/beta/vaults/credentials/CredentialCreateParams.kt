@@ -193,6 +193,11 @@ private constructor(
             body.auth(staticBearer)
         }
 
+        /** Alias for calling [auth] with `Auth.ofEnvironmentVariable(environmentVariable)`. */
+        fun auth(environmentVariable: BetaManagedAgentsEnvironmentVariableCreateParams) = apply {
+            body.auth(environmentVariable)
+        }
+
         /** Human-readable name for the credential. Up to 255 characters. */
         fun displayName(displayName: String?) = apply { body.displayName(displayName) }
 
@@ -509,6 +514,10 @@ private constructor(
             fun auth(staticBearer: BetaManagedAgentsStaticBearerCreateParams) =
                 auth(Auth.ofStaticBearer(staticBearer))
 
+            /** Alias for calling [auth] with `Auth.ofEnvironmentVariable(environmentVariable)`. */
+            fun auth(environmentVariable: BetaManagedAgentsEnvironmentVariableCreateParams) =
+                auth(Auth.ofEnvironmentVariable(environmentVariable))
+
             /** Human-readable name for the credential. Up to 255 characters. */
             fun displayName(displayName: String?) = displayName(JsonField.ofNullable(displayName))
 
@@ -652,6 +661,7 @@ private constructor(
     private constructor(
         private val mcpOAuth: BetaManagedAgentsMcpOAuthCreateParams? = null,
         private val staticBearer: BetaManagedAgentsStaticBearerCreateParams? = null,
+        private val environmentVariable: BetaManagedAgentsEnvironmentVariableCreateParams? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -663,9 +673,15 @@ private constructor(
         fun staticBearer(): Optional<BetaManagedAgentsStaticBearerCreateParams> =
             Optional.ofNullable(staticBearer)
 
+        /** Parameters for creating an environment variable credential. */
+        fun environmentVariable(): Optional<BetaManagedAgentsEnvironmentVariableCreateParams> =
+            Optional.ofNullable(environmentVariable)
+
         fun isMcpOAuth(): Boolean = mcpOAuth != null
 
         fun isStaticBearer(): Boolean = staticBearer != null
+
+        fun isEnvironmentVariable(): Boolean = environmentVariable != null
 
         /** Parameters for creating an MCP OAuth credential. */
         fun asMcpOAuth(): BetaManagedAgentsMcpOAuthCreateParams = mcpOAuth.getOrThrow("mcpOAuth")
@@ -673,6 +689,10 @@ private constructor(
         /** Parameters for creating a static bearer token credential. */
         fun asStaticBearer(): BetaManagedAgentsStaticBearerCreateParams =
             staticBearer.getOrThrow("staticBearer")
+
+        /** Parameters for creating an environment variable credential. */
+        fun asEnvironmentVariable(): BetaManagedAgentsEnvironmentVariableCreateParams =
+            environmentVariable.getOrThrow("environmentVariable")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -709,6 +729,7 @@ private constructor(
             when {
                 mcpOAuth != null -> visitor.visitMcpOAuth(mcpOAuth)
                 staticBearer != null -> visitor.visitStaticBearer(staticBearer)
+                environmentVariable != null -> visitor.visitEnvironmentVariable(environmentVariable)
                 else -> visitor.unknown(_json)
             }
 
@@ -738,6 +759,12 @@ private constructor(
                         staticBearer: BetaManagedAgentsStaticBearerCreateParams
                     ) {
                         staticBearer.validate()
+                    }
+
+                    override fun visitEnvironmentVariable(
+                        environmentVariable: BetaManagedAgentsEnvironmentVariableCreateParams
+                    ) {
+                        environmentVariable.validate()
                     }
                 }
             )
@@ -769,6 +796,10 @@ private constructor(
                         staticBearer: BetaManagedAgentsStaticBearerCreateParams
                     ) = staticBearer.validity()
 
+                    override fun visitEnvironmentVariable(
+                        environmentVariable: BetaManagedAgentsEnvironmentVariableCreateParams
+                    ) = environmentVariable.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -778,15 +809,19 @@ private constructor(
                 return true
             }
 
-            return other is Auth && mcpOAuth == other.mcpOAuth && staticBearer == other.staticBearer
+            return other is Auth &&
+                mcpOAuth == other.mcpOAuth &&
+                staticBearer == other.staticBearer &&
+                environmentVariable == other.environmentVariable
         }
 
-        override fun hashCode(): Int = Objects.hash(mcpOAuth, staticBearer)
+        override fun hashCode(): Int = Objects.hash(mcpOAuth, staticBearer, environmentVariable)
 
         override fun toString(): String =
             when {
                 mcpOAuth != null -> "Auth{mcpOAuth=$mcpOAuth}"
                 staticBearer != null -> "Auth{staticBearer=$staticBearer}"
+                environmentVariable != null -> "Auth{environmentVariable=$environmentVariable}"
                 _json != null -> "Auth{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Auth")
             }
@@ -802,6 +837,12 @@ private constructor(
             @JvmStatic
             fun ofStaticBearer(staticBearer: BetaManagedAgentsStaticBearerCreateParams) =
                 Auth(staticBearer = staticBearer)
+
+            /** Parameters for creating an environment variable credential. */
+            @JvmStatic
+            fun ofEnvironmentVariable(
+                environmentVariable: BetaManagedAgentsEnvironmentVariableCreateParams
+            ) = Auth(environmentVariable = environmentVariable)
         }
 
         /** An interface that defines how to map each variant of [Auth] to a value of type [T]. */
@@ -812,6 +853,11 @@ private constructor(
 
             /** Parameters for creating a static bearer token credential. */
             fun visitStaticBearer(staticBearer: BetaManagedAgentsStaticBearerCreateParams): T
+
+            /** Parameters for creating an environment variable credential. */
+            fun visitEnvironmentVariable(
+                environmentVariable: BetaManagedAgentsEnvironmentVariableCreateParams
+            ): T
 
             /**
              * Maps an unknown variant of [Auth] to a value of type [T].
@@ -848,6 +894,14 @@ private constructor(
                             )
                             ?.let { Auth(staticBearer = it, _json = json) } ?: Auth(_json = json)
                     }
+                    "environment_variable" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsEnvironmentVariableCreateParams>(),
+                            )
+                            ?.let { Auth(environmentVariable = it, _json = json) }
+                            ?: Auth(_json = json)
+                    }
                 }
 
                 return Auth(_json = json)
@@ -864,6 +918,8 @@ private constructor(
                 when {
                     value.mcpOAuth != null -> generator.writeObject(value.mcpOAuth)
                     value.staticBearer != null -> generator.writeObject(value.staticBearer)
+                    value.environmentVariable != null ->
+                        generator.writeObject(value.environmentVariable)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Auth")
                 }
