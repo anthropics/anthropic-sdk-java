@@ -1,5 +1,6 @@
 package com.anthropic.core.http
 
+import java.io.OutputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -60,12 +61,49 @@ internal class HttpRequestTest {
         assertThat(request.pathSegments[3]).isEqualTo("s6")
     }
 
+    @Test
+    fun buffered_withoutBody_returnsSameRequest() {
+        val request = createRequest()
+
+        assertThat(request.buffered()).isSameAs(request)
+    }
+
+    @Test
+    fun buffered_withRepeatableBody_returnsSameRequest() {
+        val request = createRequest().toBuilder().body(createBody(repeatable = true)).build()
+
+        assertThat(request.buffered()).isSameAs(request)
+    }
+
+    @Test
+    fun buffered_withUnrepeatableBody_buffersBody() {
+        val request = createRequest().toBuilder().body(createBody(repeatable = false)).build()
+
+        val bufferedRequest = request.buffered()
+
+        assertThat(bufferedRequest).isNotSameAs(request)
+        assertThat(bufferedRequest.body!!.repeatable()).isTrue()
+    }
+
     private fun createRequest(vararg pathSegments: String): HttpRequest {
         return HttpRequest.builder()
             .method(HttpMethod.POST) // A method is required.
             .addPathSegments(*pathSegments)
             .build()
     }
+
+    private fun createBody(repeatable: Boolean): HttpRequestBody =
+        object : HttpRequestBody {
+            override fun writeTo(outputStream: OutputStream) {}
+
+            override fun contentType(): String? = null
+
+            override fun contentLength(): Long = 0
+
+            override fun repeatable(): Boolean = repeatable
+
+            override fun close() {}
+        }
 
     enum class UrlTestCase(val request: HttpRequest, val expectedUrl: String) {
         BASE_URL_ONLY(

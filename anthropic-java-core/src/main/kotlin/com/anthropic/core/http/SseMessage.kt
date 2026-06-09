@@ -14,6 +14,11 @@ private constructor(
     val data: String,
     val id: String?,
     val retry: Int?,
+    /**
+     * The message's original wire lines (fields the decoder doesn't model included, like comment
+     * lines), for byte-exact pass-through.
+     */
+    val rawLines: List<String>,
 ) {
 
     companion object {
@@ -27,6 +32,7 @@ private constructor(
         private var data: String = ""
         private var id: String? = null
         private var retry: Int? = null
+        private var rawLines: List<String> = emptyList()
 
         fun jsonMapper(jsonMapper: JsonMapper) = apply { this.jsonMapper = jsonMapper }
 
@@ -38,7 +44,9 @@ private constructor(
 
         fun retry(retry: Int?) = apply { this.retry = retry }
 
-        fun build(): SseMessage = SseMessage(jsonMapper!!, event, data, id, retry)
+        fun rawLines(rawLines: List<String>) = apply { this.rawLines = rawLines }
+
+        fun build(): SseMessage = SseMessage(jsonMapper!!, event, data, id, retry, rawLines)
     }
 
     inline fun <reified T> json(): T =
@@ -56,6 +64,8 @@ private constructor(
         }
     }
 
+    // `rawLines` is deliberately excluded from equality: the wire framing (comments, padding,
+    // field order) is incidental to which message was received.
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true

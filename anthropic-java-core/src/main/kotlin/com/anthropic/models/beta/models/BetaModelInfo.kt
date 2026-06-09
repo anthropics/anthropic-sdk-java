@@ -6,7 +6,9 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
+import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
+import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -22,6 +24,7 @@ class BetaModelInfo
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
+    private val allowedFallbackModels: JsonField<List<String>>,
     private val capabilities: JsonField<BetaModelCapabilities>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val displayName: JsonField<String>,
@@ -34,6 +37,9 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("allowed_fallback_models")
+        @ExcludeMissing
+        allowedFallbackModels: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("capabilities")
         @ExcludeMissing
         capabilities: JsonField<BetaModelCapabilities> = JsonMissing.of(),
@@ -50,6 +56,7 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
     ) : this(
         id,
+        allowedFallbackModels,
         capabilities,
         createdAt,
         displayName,
@@ -66,6 +73,16 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
+
+    /**
+     * Model IDs this model accepts as `fallbacks[i].model` on the Messages API. An empty list means
+     * the `fallbacks` parameter is not supported for this model as primary.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun allowedFallbackModels(): Optional<List<String>> =
+        allowedFallbackModels.getOptional("allowed_fallback_models")
 
     /**
      * Model capability information.
@@ -131,6 +148,16 @@ private constructor(
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /**
+     * Returns the raw JSON value of [allowedFallbackModels].
+     *
+     * Unlike [allowedFallbackModels], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("allowed_fallback_models")
+    @ExcludeMissing
+    fun _allowedFallbackModels(): JsonField<List<String>> = allowedFallbackModels
+
+    /**
      * Returns the raw JSON value of [capabilities].
      *
      * Unlike [capabilities], this method doesn't throw if the JSON field has an unexpected type.
@@ -193,6 +220,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .allowedFallbackModels()
          * .capabilities()
          * .createdAt()
          * .displayName()
@@ -207,6 +235,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
+        private var allowedFallbackModels: JsonField<MutableList<String>>? = null
         private var capabilities: JsonField<BetaModelCapabilities>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var displayName: JsonField<String>? = null
@@ -218,6 +247,10 @@ private constructor(
         @JvmSynthetic
         internal fun from(betaModelInfo: BetaModelInfo) = apply {
             id = betaModelInfo.id
+            allowedFallbackModels =
+                betaModelInfo.allowedFallbackModels
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             capabilities = betaModelInfo.capabilities
             createdAt = betaModelInfo.createdAt
             displayName = betaModelInfo.displayName
@@ -237,6 +270,43 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
+
+        /**
+         * Model IDs this model accepts as `fallbacks[i].model` on the Messages API. An empty list
+         * means the `fallbacks` parameter is not supported for this model as primary.
+         */
+        fun allowedFallbackModels(allowedFallbackModels: List<String>?) =
+            allowedFallbackModels(JsonField.ofNullable(allowedFallbackModels))
+
+        /**
+         * Alias for calling [Builder.allowedFallbackModels] with
+         * `allowedFallbackModels.orElse(null)`.
+         */
+        fun allowedFallbackModels(allowedFallbackModels: Optional<List<String>>) =
+            allowedFallbackModels(allowedFallbackModels.getOrNull())
+
+        /**
+         * Sets [Builder.allowedFallbackModels] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.allowedFallbackModels] with a well-typed `List<String>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun allowedFallbackModels(allowedFallbackModels: JsonField<List<String>>) = apply {
+            this.allowedFallbackModels = allowedFallbackModels.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [allowedFallbackModels].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addAllowedFallbackModel(allowedFallbackModel: String) = apply {
+            allowedFallbackModels =
+                (allowedFallbackModels ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("allowedFallbackModels", it).add(allowedFallbackModel)
+                }
+        }
 
         /** Model capability information. */
         fun capabilities(capabilities: BetaModelCapabilities?) =
@@ -372,6 +442,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .allowedFallbackModels()
          * .capabilities()
          * .createdAt()
          * .displayName()
@@ -384,6 +455,9 @@ private constructor(
         fun build(): BetaModelInfo =
             BetaModelInfo(
                 checkRequired("id", id),
+                checkRequired("allowedFallbackModels", allowedFallbackModels).map {
+                    it.toImmutable()
+                },
                 checkRequired("capabilities", capabilities),
                 checkRequired("createdAt", createdAt),
                 checkRequired("displayName", displayName),
@@ -410,6 +484,7 @@ private constructor(
         }
 
         id()
+        allowedFallbackModels()
         capabilities().ifPresent { it.validate() }
         createdAt()
         displayName()
@@ -439,6 +514,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
+            (allowedFallbackModels.asKnown().getOrNull()?.size ?: 0) +
             (capabilities.asKnown().getOrNull()?.validity() ?: 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (displayName.asKnown().isPresent) 1 else 0) +
@@ -453,6 +529,7 @@ private constructor(
 
         return other is BetaModelInfo &&
             id == other.id &&
+            allowedFallbackModels == other.allowedFallbackModels &&
             capabilities == other.capabilities &&
             createdAt == other.createdAt &&
             displayName == other.displayName &&
@@ -465,6 +542,7 @@ private constructor(
     private val hashCode: Int by lazy {
         Objects.hash(
             id,
+            allowedFallbackModels,
             capabilities,
             createdAt,
             displayName,
@@ -478,5 +556,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaModelInfo{id=$id, capabilities=$capabilities, createdAt=$createdAt, displayName=$displayName, maxInputTokens=$maxInputTokens, maxTokens=$maxTokens, type=$type, additionalProperties=$additionalProperties}"
+        "BetaModelInfo{id=$id, allowedFallbackModels=$allowedFallbackModels, capabilities=$capabilities, createdAt=$createdAt, displayName=$displayName, maxInputTokens=$maxInputTokens, maxTokens=$maxTokens, type=$type, additionalProperties=$additionalProperties}"
 }

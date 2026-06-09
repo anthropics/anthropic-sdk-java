@@ -74,6 +74,10 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val THINKING_TOKEN_COUNT_2026_05_13 = of("thinking-token-count-2026-05-13")
 
+        @JvmField val SERVER_SIDE_FALLBACK_2026_06_01 = of("server-side-fallback-2026-06-01")
+
+        @JvmField val FALLBACK_CREDIT_2026_06_01 = of("fallback-credit-2026-06-01")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }
 
@@ -105,6 +109,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         MANAGED_AGENTS_2026_04_01,
         CACHE_DIAGNOSIS_2026_04_07,
         THINKING_TOKEN_COUNT_2026_05_13,
+        SERVER_SIDE_FALLBACK_2026_06_01,
+        FALLBACK_CREDIT_2026_06_01,
     }
 
     /**
@@ -143,6 +149,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         MANAGED_AGENTS_2026_04_01,
         CACHE_DIAGNOSIS_2026_04_07,
         THINKING_TOKEN_COUNT_2026_05_13,
+        SERVER_SIDE_FALLBACK_2026_06_01,
+        FALLBACK_CREDIT_2026_06_01,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -185,6 +193,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             MANAGED_AGENTS_2026_04_01 -> Value.MANAGED_AGENTS_2026_04_01
             CACHE_DIAGNOSIS_2026_04_07 -> Value.CACHE_DIAGNOSIS_2026_04_07
             THINKING_TOKEN_COUNT_2026_05_13 -> Value.THINKING_TOKEN_COUNT_2026_05_13
+            SERVER_SIDE_FALLBACK_2026_06_01 -> Value.SERVER_SIDE_FALLBACK_2026_06_01
+            FALLBACK_CREDIT_2026_06_01 -> Value.FALLBACK_CREDIT_2026_06_01
             else -> Value._UNKNOWN
         }
 
@@ -225,6 +235,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             MANAGED_AGENTS_2026_04_01 -> Known.MANAGED_AGENTS_2026_04_01
             CACHE_DIAGNOSIS_2026_04_07 -> Known.CACHE_DIAGNOSIS_2026_04_07
             THINKING_TOKEN_COUNT_2026_05_13 -> Known.THINKING_TOKEN_COUNT_2026_05_13
+            SERVER_SIDE_FALLBACK_2026_06_01 -> Known.SERVER_SIDE_FALLBACK_2026_06_01
+            FALLBACK_CREDIT_2026_06_01 -> Known.FALLBACK_CREDIT_2026_06_01
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

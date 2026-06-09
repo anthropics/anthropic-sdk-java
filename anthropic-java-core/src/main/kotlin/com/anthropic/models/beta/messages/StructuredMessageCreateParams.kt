@@ -238,6 +238,39 @@ internal constructor(
             paramsBuilder.diagnostics(diagnostics)
         }
 
+        /** @see MessageCreateParams.Builder.fallbackCreditToken */
+        fun fallbackCreditToken(fallbackCreditToken: String?) = apply {
+            paramsBuilder.fallbackCreditToken(fallbackCreditToken)
+        }
+
+        /** @see MessageCreateParams.Builder.fallbackCreditToken */
+        fun fallbackCreditToken(fallbackCreditToken: Optional<String>) = apply {
+            paramsBuilder.fallbackCreditToken(fallbackCreditToken)
+        }
+
+        /** @see MessageCreateParams.Builder.fallbackCreditToken */
+        fun fallbackCreditToken(fallbackCreditToken: JsonField<String>) = apply {
+            paramsBuilder.fallbackCreditToken(fallbackCreditToken)
+        }
+
+        /** @see MessageCreateParams.Builder.fallbacks */
+        fun fallbacks(fallbacks: List<BetaFallbackParam>?) = apply {
+            paramsBuilder.fallbacks(fallbacks)
+        }
+
+        /** @see MessageCreateParams.Builder.fallbacks */
+        fun fallbacks(fallbacks: Optional<List<BetaFallbackParam>>) = apply {
+            paramsBuilder.fallbacks(fallbacks)
+        }
+
+        /** @see MessageCreateParams.Builder.fallbacks */
+        fun fallbacks(fallbacks: JsonField<List<BetaFallbackParam>>) = apply {
+            paramsBuilder.fallbacks(fallbacks)
+        }
+
+        /** @see MessageCreateParams.Builder.addFallback */
+        fun addFallback(fallback: BetaFallbackParam) = apply { paramsBuilder.addFallback(fallback) }
+
         /** @see MessageCreateParams.Builder.mcpServers */
         fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) = apply {
             paramsBuilder.mcpServers(mcpServers)

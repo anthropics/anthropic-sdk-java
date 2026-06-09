@@ -355,7 +355,7 @@ class BetaMessageAccumulator private constructor() {
                         )
                     }
 
-                    messageContent[index] =
+                    val contentBlock =
                         contentBlockStart
                             .contentBlock()
                             .accept(
@@ -388,6 +388,10 @@ class BetaMessageAccumulator private constructor() {
                                         advisorToolResult: BetaAdvisorToolResultBlock
                                     ): BetaContentBlock =
                                         BetaContentBlock.ofAdvisorToolResult(advisorToolResult)
+
+                                    override fun visitFallback(
+                                        fallback: BetaFallbackBlock
+                                    ): BetaContentBlock = BetaContentBlock.ofFallback(fallback)
 
                                     override fun visitToolSearchToolResult(
                                         toolSearchToolResult: BetaToolSearchToolResultBlock
@@ -447,6 +451,15 @@ class BetaMessageAccumulator private constructor() {
                                         BetaContentBlock.ofCompaction(compaction)
                                 }
                             )
+
+                    messageContent[index] = contentBlock
+
+                    // The final hop's fallback block names the model that served the response —
+                    // keeps the accumulated message consistent with the relabeled non-streaming
+                    // message.
+                    if (contentBlock.isFallback()) {
+                        requireMessageBuilder().model(contentBlock.asFallback().to().model())
+                    }
                 }
 
                 override fun visitContentBlockDelta(

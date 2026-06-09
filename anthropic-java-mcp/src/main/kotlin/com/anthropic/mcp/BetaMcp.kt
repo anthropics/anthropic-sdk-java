@@ -13,6 +13,7 @@ import com.anthropic.models.beta.messages.BetaCodeExecutionToolResultBlockParam
 import com.anthropic.models.beta.messages.BetaCompactionBlockParam
 import com.anthropic.models.beta.messages.BetaContainerUploadBlockParam
 import com.anthropic.models.beta.messages.BetaContentBlockParam
+import com.anthropic.models.beta.messages.BetaFallbackBlockParam
 import com.anthropic.models.beta.messages.BetaImageBlockParam
 import com.anthropic.models.beta.messages.BetaMcpToolUseBlockParam
 import com.anthropic.models.beta.messages.BetaMessageParam
@@ -367,6 +368,9 @@ object BetaMcp {
 
                 override fun visitCompaction(compaction: BetaCompactionBlockParam) =
                     unsupported("compaction")
+
+                override fun visitFallback(fallback: BetaFallbackBlockParam) =
+                    unsupported("fallback")
 
                 override fun visitMidConvSystem(
                     midConvSystem: BetaMidConversationSystemBlockParam

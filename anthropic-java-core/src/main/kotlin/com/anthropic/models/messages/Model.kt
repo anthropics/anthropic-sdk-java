@@ -26,6 +26,12 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     companion object {
 
+        /** Next generation of intelligence for the hardest knowledge work and coding problems */
+        @JvmField val CLAUDE_FABLE_5 = of("claude-fable-5")
+
+        /** Most capable model for cybersecurity and biology research */
+        @JvmField val CLAUDE_MYTHOS_5 = of("claude-mythos-5")
+
         /** Frontier intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_8 = of("claude-opus-4-8")
 
@@ -33,7 +39,11 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @JvmField val CLAUDE_OPUS_4_7 = of("claude-opus-4-7")
 
         /** New class of intelligence, strongest in coding and cybersecurity */
-        @JvmField val CLAUDE_MYTHOS_PREVIEW = of("claude-mythos-preview")
+        @Deprecated(
+            "Will reach end-of-life on June 30, 2026. Please migrate to claude-mythos-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
+        @JvmField
+        val CLAUDE_MYTHOS_PREVIEW = of("claude-mythos-preview")
 
         /** Frontier intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_6 = of("claude-opus-4-6")
@@ -113,10 +123,17 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     /** An enum containing [Model]'s known values. */
     enum class Known {
+        /** Next generation of intelligence for the hardest knowledge work and coding problems */
+        CLAUDE_FABLE_5,
+        /** Most capable model for cybersecurity and biology research */
+        CLAUDE_MYTHOS_5,
         /** Frontier intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_8,
         /** Frontier intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_7,
+        @Deprecated(
+            "Will reach end-of-life on June 30, 2026. Please migrate to claude-mythos-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** New class of intelligence, strongest in coding and cybersecurity */
         CLAUDE_MYTHOS_PREVIEW,
         /** Frontier intelligence for long-running agents and coding */
@@ -182,10 +199,17 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Next generation of intelligence for the hardest knowledge work and coding problems */
+        CLAUDE_FABLE_5,
+        /** Most capable model for cybersecurity and biology research */
+        CLAUDE_MYTHOS_5,
         /** Frontier intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_8,
         /** Frontier intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_7,
+        @Deprecated(
+            "Will reach end-of-life on June 30, 2026. Please migrate to claude-mythos-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
+        )
         /** New class of intelligence, strongest in coding and cybersecurity */
         CLAUDE_MYTHOS_PREVIEW,
         /** Frontier intelligence for long-running agents and coding */
@@ -252,6 +276,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_FABLE_5 -> Value.CLAUDE_FABLE_5
+            CLAUDE_MYTHOS_5 -> Value.CLAUDE_MYTHOS_5
             CLAUDE_OPUS_4_8 -> Value.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Value.CLAUDE_OPUS_4_7
             CLAUDE_MYTHOS_PREVIEW -> Value.CLAUDE_MYTHOS_PREVIEW
@@ -283,6 +309,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_FABLE_5 -> Known.CLAUDE_FABLE_5
+            CLAUDE_MYTHOS_5 -> Known.CLAUDE_MYTHOS_5
             CLAUDE_OPUS_4_8 -> Known.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Known.CLAUDE_OPUS_4_7
             CLAUDE_MYTHOS_PREVIEW -> Known.CLAUDE_MYTHOS_PREVIEW

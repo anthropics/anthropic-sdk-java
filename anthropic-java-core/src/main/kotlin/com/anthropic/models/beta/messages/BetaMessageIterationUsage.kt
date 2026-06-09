@@ -8,6 +8,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -25,6 +26,7 @@ private constructor(
     private val cacheCreationInputTokens: JsonField<Long>,
     private val cacheReadInputTokens: JsonField<Long>,
     private val inputTokens: JsonField<Long>,
+    private val model: JsonField<Model>,
     private val outputTokens: JsonField<Long>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -44,6 +46,7 @@ private constructor(
         @JsonProperty("input_tokens")
         @ExcludeMissing
         inputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
         @JsonProperty("output_tokens")
         @ExcludeMissing
         outputTokens: JsonField<Long> = JsonMissing.of(),
@@ -53,6 +56,7 @@ private constructor(
         cacheCreationInputTokens,
         cacheReadInputTokens,
         inputTokens,
+        model,
         outputTokens,
         type,
         mutableMapOf(),
@@ -90,6 +94,17 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun inputTokens(): Long = inputTokens.getRequired("input_tokens")
+
+    /**
+     * The model that will complete your prompt.
+     *
+     * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
+     * options.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun model(): Model = model.getRequired("model")
 
     /**
      * The number of output tokens which were used.
@@ -149,6 +164,13 @@ private constructor(
     @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens(): JsonField<Long> = inputTokens
 
     /**
+     * Returns the raw JSON value of [model].
+     *
+     * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
+
+    /**
      * Returns the raw JSON value of [outputTokens].
      *
      * Unlike [outputTokens], this method doesn't throw if the JSON field has an unexpected type.
@@ -180,6 +202,7 @@ private constructor(
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
          * .inputTokens()
+         * .model()
          * .outputTokens()
          * ```
          */
@@ -193,6 +216,7 @@ private constructor(
         private var cacheCreationInputTokens: JsonField<Long>? = null
         private var cacheReadInputTokens: JsonField<Long>? = null
         private var inputTokens: JsonField<Long>? = null
+        private var model: JsonField<Model>? = null
         private var outputTokens: JsonField<Long>? = null
         private var type: JsonValue = JsonValue.from("message")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -203,6 +227,7 @@ private constructor(
             cacheCreationInputTokens = betaMessageIterationUsage.cacheCreationInputTokens
             cacheReadInputTokens = betaMessageIterationUsage.cacheReadInputTokens
             inputTokens = betaMessageIterationUsage.inputTokens
+            model = betaMessageIterationUsage.model
             outputTokens = betaMessageIterationUsage.outputTokens
             type = betaMessageIterationUsage.type
             additionalProperties = betaMessageIterationUsage.additionalProperties.toMutableMap()
@@ -269,6 +294,30 @@ private constructor(
          */
         fun inputTokens(inputTokens: JsonField<Long>) = apply { this.inputTokens = inputTokens }
 
+        /**
+         * The model that will complete your prompt.
+         *
+         * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
+         * and options.
+         */
+        fun model(model: Model) = model(JsonField.of(model))
+
+        /**
+         * Sets [Builder.model] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.model] with a well-typed [Model] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun model(model: JsonField<Model>) = apply { this.model = model }
+
+        /**
+         * Sets [model] to an arbitrary [String].
+         *
+         * You should usually call [model] with a well-typed [Model] constant instead. This method
+         * is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun model(value: String) = model(Model.of(value))
+
         /** The number of output tokens which were used. */
         fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
 
@@ -325,6 +374,7 @@ private constructor(
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
          * .inputTokens()
+         * .model()
          * .outputTokens()
          * ```
          *
@@ -336,6 +386,7 @@ private constructor(
                 checkRequired("cacheCreationInputTokens", cacheCreationInputTokens),
                 checkRequired("cacheReadInputTokens", cacheReadInputTokens),
                 checkRequired("inputTokens", inputTokens),
+                checkRequired("model", model),
                 checkRequired("outputTokens", outputTokens),
                 type,
                 additionalProperties.toMutableMap(),
@@ -361,6 +412,7 @@ private constructor(
         cacheCreationInputTokens()
         cacheReadInputTokens()
         inputTokens()
+        model()
         outputTokens()
         _type().let {
             if (it != JsonValue.from("message")) {
@@ -389,6 +441,7 @@ private constructor(
             (if (cacheCreationInputTokens.asKnown().isPresent) 1 else 0) +
             (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
+            (if (model.asKnown().isPresent) 1 else 0) +
             (if (outputTokens.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("message")) 1 else 0 }
 
@@ -402,6 +455,7 @@ private constructor(
             cacheCreationInputTokens == other.cacheCreationInputTokens &&
             cacheReadInputTokens == other.cacheReadInputTokens &&
             inputTokens == other.inputTokens &&
+            model == other.model &&
             outputTokens == other.outputTokens &&
             type == other.type &&
             additionalProperties == other.additionalProperties
@@ -413,6 +467,7 @@ private constructor(
             cacheCreationInputTokens,
             cacheReadInputTokens,
             inputTokens,
+            model,
             outputTokens,
             type,
             additionalProperties,
@@ -422,5 +477,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaMessageIterationUsage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, type=$type, additionalProperties=$additionalProperties}"
+        "BetaMessageIterationUsage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, model=$model, outputTokens=$outputTokens, type=$type, additionalProperties=$additionalProperties}"
 }

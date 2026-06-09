@@ -76,6 +76,53 @@ internal class BetaMessageAccumulatorTest {
         assertThat(usage2.outputTokens()).isEqualTo(11L)
     }
 
+    // The chain shape `BetaRefusalFallbackInterceptor` (and server-side `fallbacks`) writes into
+    // the terminal message_delta's usage labels the serving hop `fallback_message`.
+    @Test
+    fun mergeMessageUsageMapsFallbackMessageIterations() {
+        val fallbackIteration =
+            BetaFallbackMessageIterationUsage.builder()
+                .model(Model.of("fallback-model"))
+                .inputTokens(28L)
+                .outputTokens(106L)
+                .cacheReadInputTokens(0L)
+                .cacheCreationInputTokens(0L)
+                .cacheCreation(null as BetaCacheCreation?)
+                .build()
+
+        val usage =
+            BetaMessageAccumulator.mergeMessageUsage(
+                usage(INPUT_TOKENS),
+                BetaMessageDeltaUsage.builder()
+                    .outputTokens(106L)
+                    .outputTokensDetails(
+                        BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
+                    )
+                    .cacheCreationInputTokens(0L)
+                    .cacheReadInputTokens(0L)
+                    .inputTokens(INPUT_TOKENS)
+                    .serverToolUse(
+                        BetaServerToolUsage.builder()
+                            .webSearchRequests(0L)
+                            .webFetchRequests(0L)
+                            .build()
+                    )
+                    .iterations(
+                        listOf(
+                            BetaMessageDeltaUsage.BetaIterationsUsageItems.ofFallbackMessage(
+                                fallbackIteration
+                            )
+                        )
+                    )
+                    .build(),
+            )
+
+        assertThat(usage.iterations())
+            .hasValue(
+                listOf(BetaUsage.BetaIterationsUsageItems.ofFallbackMessage(fallbackIteration))
+            )
+    }
+
     @Test
     fun mergeMessageUsageWhenParsedUsageOmitsIterations() {
         // A live `message_start` usage carries no `iterations` key (the server sends it only
@@ -1048,6 +1095,33 @@ internal class BetaMessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateFallbackContentBlockRelabelsModel() {
+        val accumulator = BetaMessageAccumulator.create()
+
+        // `messageStartEvent()` names the requested model; the fallback content block then
+        // declares that a different model served the response. The accumulated message's `model`
+        // should reflect the serving model, matching the relabeled non-streaming message.
+        accumulator.accumulate(messageStartEvent())
+        accumulator.accumulate(
+            fallbackContentBlockStartEvent(0L, Model.CLAUDE_SONNET_4_5, Model.CLAUDE_HAIKU_4_5)
+        )
+        accumulator.accumulate(contentBlockStopEvent(0L))
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(BetaStopReason.END_TURN), outputTokens = 9L)
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val message = accumulator.message()
+        val content = message.content()
+
+        assertThat(message.model()).isEqualTo(Model.CLAUDE_HAIKU_4_5)
+
+        assertThat(content.size).isEqualTo(1)
+        assertThat(content[0].asFallback().from().model()).isEqualTo(Model.CLAUDE_SONNET_4_5)
+        assertThat(content[0].asFallback().to().model()).isEqualTo(Model.CLAUDE_HAIKU_4_5)
+    }
+
+    @Test
     fun fixtureCreation() {
         // A quick smoke test to ensure that all the test fixture factory functions work without
         // throwing any exceptions unless expected to do so.
@@ -1105,6 +1179,11 @@ internal class BetaMessageAccumulatorTest {
         // COMPACTION CONTENT BLOCK EVENTS
         assertThatNoException().isThrownBy { compactionContentBlockStartEvent(1L) }
         assertThatNoException().isThrownBy { compactionContentBlockDeltaEvent(1L, "summary") }
+
+        // FALLBACK CONTENT BLOCK EVENTS
+        assertThatNoException().isThrownBy {
+            fallbackContentBlockStartEvent(1L, Model.CLAUDE_SONNET_4_5, Model.CLAUDE_HAIKU_4_5)
+        }
 
         // COMMON CONTENT BLOCK STOP EVENT
         assertThatNoException().isThrownBy { contentBlockStopEvent(1L) }
@@ -1327,6 +1406,21 @@ internal class BetaMessageAccumulatorTest {
         content: String,
         encryptedContent: String = "",
     ) = contentBlockDeltaEvent(index, compactionDelta(content, encryptedContent))
+
+    /**
+     * Creates a `fallback` content block start event. This type of content block will never have
+     * any associated content block delta events.
+     */
+    private fun fallbackContentBlockStartEvent(index: Long, fromModel: Model, toModel: Model) =
+        contentBlockStartEvent(
+            index,
+            ContentBlock.ofFallback(
+                BetaFallbackBlock.builder()
+                    .from(BetaFallbackInfo.builder().model(fromModel).build())
+                    .to(BetaFallbackInfo.builder().model(toModel).build())
+                    .build()
+            ),
+        )
 
     /**
      * Creates a signature content block delta event. This can be used to add a signature to a

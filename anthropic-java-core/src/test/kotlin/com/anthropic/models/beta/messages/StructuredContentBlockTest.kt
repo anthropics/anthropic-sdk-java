@@ -8,6 +8,7 @@ import com.anthropic.core.X
 import com.anthropic.core.checkAllDelegation
 import com.anthropic.core.checkAllDelegatorReadFunctionsAreTested
 import com.anthropic.core.checkOneDelegationRead
+import com.anthropic.models.messages.Model
 import java.util.Optional
 import kotlin.jvm.java
 import org.assertj.core.api.Assertions.assertThat
@@ -135,6 +136,11 @@ internal class StructuredContentBlockTest {
         private val CONTAINER_UPLOAD = BetaContainerUploadBlock.builder().fileId(STRING).build()
         private val COMPACTION =
             BetaCompactionBlock.builder().content(STRING).encryptedContent(STRING).build()
+        private val FALLBACK =
+            BetaFallbackBlock.builder()
+                .from(BetaFallbackInfo.builder().model(Model.CLAUDE_OPUS_4_8).build())
+                .to(BetaFallbackInfo.builder().model(Model.CLAUDE_HAIKU_4_5).build())
+                .build()
 
         // The list order follows the declaration order in `BetaContentBlock` for easier
         // maintenance.
@@ -157,6 +163,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("mcpToolResult", OPTIONAL),
                 DelegationReadTestCase("containerUpload", OPTIONAL),
                 DelegationReadTestCase("compaction", OPTIONAL),
+                DelegationReadTestCase("fallback", OPTIONAL),
                 // `isText()` is a special case and has its own test function.
                 // For the Boolean functions, call each in turn with both `true` and `false` to
                 // ensure that a return value is not hard-coded.
@@ -192,6 +199,8 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("isContainerUpload", false),
                 DelegationReadTestCase("isCompaction", true),
                 DelegationReadTestCase("isCompaction", false),
+                DelegationReadTestCase("isFallback", true),
+                DelegationReadTestCase("isFallback", false),
                 // `asText()` is a special case and has its own test function.
                 DelegationReadTestCase("asThinking", THINKING),
                 DelegationReadTestCase("asRedactedThinking", REDACTED_THINKING),
@@ -214,6 +223,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("asMcpToolResult", MCP_TOOL_RESULT),
                 DelegationReadTestCase("asContainerUpload", CONTAINER_UPLOAD),
                 DelegationReadTestCase("asCompaction", COMPACTION),
+                DelegationReadTestCase("asFallback", FALLBACK),
                 DelegationReadTestCase("_json", OPTIONAL),
             )
     }

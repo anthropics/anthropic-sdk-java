@@ -1,8 +1,14 @@
 package com.anthropic.core
 
+import com.anthropic.helpers.BetaFallbackState
 import java.time.Duration
 
-class RequestOptions private constructor(val responseValidation: Boolean?, val timeout: Timeout?) {
+class RequestOptions
+private constructor(
+    val responseValidation: Boolean?,
+    val timeout: Timeout?,
+    val fallbackState: BetaFallbackState?,
+) {
 
     companion object {
 
@@ -79,12 +85,14 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
             timeout =
                 if (options.timeout != null && timeout != null) timeout.assign(options.timeout)
                 else timeout ?: options.timeout,
+            fallbackState = fallbackState ?: options.fallbackState,
         )
 
     class Builder internal constructor() {
 
         private var responseValidation: Boolean? = null
         private var timeout: Timeout? = null
+        private var fallbackState: BetaFallbackState? = null
 
         /**
          * Whether to call `validate` on the response before returning it.
@@ -102,6 +110,17 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
         fun timeout(timeout: Duration) = timeout(Timeout.builder().request(timeout).build())
+
+        /**
+         * Sticky state for [com.anthropic.helpers.BetaRefusalFallbackInterceptor].
+         *
+         * The interceptor records which fallback it settled on, so requests sharing the state skip
+         * models that already refused. Pass the same object across whatever scope the pin should
+         * apply to — typically a conversation.
+         */
+        fun fallbackState(fallbackState: BetaFallbackState) = apply {
+            this.fallbackState = fallbackState
+        }
 
         @JvmSynthetic
         internal fun timeoutFromMaxTokensStreaming(maxTokens: Long) = apply {
@@ -137,6 +156,6 @@ class RequestOptions private constructor(val responseValidation: Boolean?, val t
             timeout(Timeout.builder().read(timeout).request(timeout).build())
         }
 
-        fun build(): RequestOptions = RequestOptions(responseValidation, timeout)
+        fun build(): RequestOptions = RequestOptions(responseValidation, timeout, fallbackState)
     }
 }

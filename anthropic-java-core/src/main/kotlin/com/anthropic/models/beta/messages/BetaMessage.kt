@@ -617,6 +617,10 @@ private constructor(
         fun addContent(compaction: BetaCompactionBlock) =
             addContent(BetaContentBlock.ofCompaction(compaction))
 
+        /** Alias for calling [addContent] with `BetaContentBlock.ofFallback(fallback)`. */
+        fun addContent(fallback: BetaFallbackBlock) =
+            addContent(BetaContentBlock.ofFallback(fallback))
+
         /**
          * Context management response.
          *

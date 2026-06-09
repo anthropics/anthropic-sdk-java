@@ -21,10 +21,11 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.junit.jupiter.api.parallel.Resources
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
-@ResourceLock("stderr")
+@ResourceLock(Resources.SYSTEM_ERR)
 internal class LoggingHttpClientTest {
 
     private lateinit var originalErr: PrintStream

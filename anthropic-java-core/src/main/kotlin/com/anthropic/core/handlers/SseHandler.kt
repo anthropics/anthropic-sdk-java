@@ -84,17 +84,41 @@ internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessa
         }
     }
 
+/**
+ * Like [sseHandler], but yields every decoded [SseMessage] — no event-name filtering, no `ping`
+ * dropping, no `error` throwing — with each message's original wire lines retained
+ * ([SseMessage.rawLines]). For consumers that fully replace a stream's body and must forward events
+ * they don't model verbatim, like an interceptor splicing streams.
+ */
+@JvmSynthetic
+internal fun rawSseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessage>> =
+    streamHandler { _, lines ->
+        val state = SseState(jsonMapper, collectRawLines = true)
+        for (line in lines) {
+            state.decode(line)?.let { yield(it) }
+        }
+        // A stream ending without a trailing blank line still flushes its final message.
+        state.decode("")?.let { yield(it) }
+    }
+
 private class SseState(
     val jsonMapper: JsonMapper,
+    /** Only [rawSseHandler] reads [SseMessage.rawLines]; skip the per-event copies otherwise. */
+    val collectRawLines: Boolean = false,
     var event: String? = null,
     val data: MutableList<String> = mutableListOf(),
     var lastId: String? = null,
     var retry: Int? = null,
+    val rawLines: MutableList<String> = mutableListOf(),
 ) {
     // https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation
     fun decode(line: String): SseMessage? {
         if (line.isEmpty()) {
             return flush()
+        }
+
+        if (collectRawLines) {
+            rawLines.add(line)
         }
 
         if (line.startsWith(':')) {
@@ -133,6 +157,7 @@ private class SseState(
 
     private fun flush(): SseMessage? {
         if (isEmpty()) {
+            // Keep any raw lines (e.g. a comment-only block): they attach to the next message.
             return null
         }
 
@@ -143,12 +168,14 @@ private class SseState(
                 .data(data.joinToString("\n"))
                 .id(lastId)
                 .retry(retry)
+                .rawLines(rawLines.toList())
                 .build()
 
         // NOTE: Per the SSE spec, do not reset lastId.
         event = null
         data.clear()
         retry = null
+        rawLines.clear()
 
         return message
     }
