@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.40.0 (2026-06-09)
+
+Full Changelog: [v2.39.0...v2.40.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.39.0...v2.40.0)
+
+### Features
+
+* **api:** add support for Managed Agents deployments and environment variable credentials ([628720b](https://github.com/anthropics/anthropic-sdk-java/commit/628720bcd5dcc0b34ecf0cbf334cae528e8f0fb3))
+
 ## 2.39.0 (2026-06-09)
 
 Full Changelog: [v2.38.0...v2.39.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.38.0...v2.39.0)
