@@ -52,7 +52,13 @@ private constructor(
     fun toParam(): ServerToolUseBlockParam =
         ServerToolUseBlockParam.builder()
             .id(_id())
-            .input(_input())
+            .input(
+                _input().map {
+                    ServerToolUseBlockParam.Input.builder()
+                        .additionalProperties(it._additionalProperties())
+                        .build()
+                }
+            )
             .name(_name().map { ServerToolUseBlockParam.Name.of(it.toString()) })
             .caller(
                 _caller().map {
