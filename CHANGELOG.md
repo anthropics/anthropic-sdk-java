@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.39.0 (2026-06-09)
+
+Full Changelog: [v2.38.0...v2.39.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.38.0...v2.39.0)
+
+### Features
+
+* **api:** add support for claude-mythos-5 and claude-fable-5, with support for server-side fallbacks on refusal ([835fb42](https://github.com/anthropics/anthropic-sdk-java/commit/835fb424738130b382ea12adf8927c2f861eff35))
+* **client:** adds client-side fallbacks middleware for API providers that do not support server-side fallbacks ([835fb42](https://github.com/anthropics/anthropic-sdk-java/commit/835fb424738130b382ea12adf8927c2f861eff35))
+
+
+### Bug Fixes
+
+* 3p middleware ordering ([#34](https://github.com/anthropics/anthropic-sdk-java/issues/34)) ([d01da3a](https://github.com/anthropics/anthropic-sdk-java/commit/d01da3a680148d2531b01e5197642fa87648ef7f))
+* **streaming:** merge message_delta usage without dropping or rejecting iterations ([#39](https://github.com/anthropics/anthropic-sdk-java/issues/39)) ([e3af118](https://github.com/anthropics/anthropic-sdk-java/commit/e3af1188f3c0da69b107e312a0c1700167e835dc))
+
 ## 2.38.0 (2026-06-06)
 
 Full Changelog: [v2.37.0...v2.38.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.37.0...v2.38.0)
