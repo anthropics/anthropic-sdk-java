@@ -526,6 +526,8 @@ private constructor(
 
             @JvmField val BIO = of("bio")
 
+            @JvmField val FRONTIER_LLM = of("frontier_llm")
+
             @JvmField val REASONING_EXTRACTION = of("reasoning_extraction")
 
             @JvmStatic fun of(value: String) = Category(JsonField.of(value))
@@ -535,6 +537,7 @@ private constructor(
         enum class Known {
             CYBER,
             BIO,
+            FRONTIER_LLM,
             REASONING_EXTRACTION,
         }
 
@@ -550,6 +553,7 @@ private constructor(
         enum class Value {
             CYBER,
             BIO,
+            FRONTIER_LLM,
             REASONING_EXTRACTION,
             /** An enum member indicating that [Category] was instantiated with an unknown value. */
             _UNKNOWN,
@@ -566,6 +570,7 @@ private constructor(
             when (this) {
                 CYBER -> Value.CYBER
                 BIO -> Value.BIO
+                FRONTIER_LLM -> Value.FRONTIER_LLM
                 REASONING_EXTRACTION -> Value.REASONING_EXTRACTION
                 else -> Value._UNKNOWN
             }
@@ -583,6 +588,7 @@ private constructor(
             when (this) {
                 CYBER -> Known.CYBER
                 BIO -> Known.BIO
+                FRONTIER_LLM -> Known.FRONTIER_LLM
                 REASONING_EXTRACTION -> Known.REASONING_EXTRACTION
                 else -> throw AnthropicInvalidDataException("Unknown Category: $value")
             }

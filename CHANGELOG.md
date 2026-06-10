@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.40.1 (2026-06-09)
+
+Full Changelog: [v2.40.0...v2.40.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.40.0...v2.40.1)
+
+### Bug Fixes
+
+* **api:** add `frontier_llm` refusal category ([1627fd3](https://github.com/anthropics/anthropic-sdk-java/commit/1627fd3561cb8594d81e9e384e1191faf27d53d3))
+
 ## 2.40.0 (2026-06-09)
 
 Full Changelog: [v2.39.0...v2.40.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.39.0...v2.40.0)
