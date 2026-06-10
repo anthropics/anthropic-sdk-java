@@ -52,13 +52,7 @@ private constructor(
     fun toParam(): BetaServerToolUseBlockParam =
         BetaServerToolUseBlockParam.builder()
             .id(_id())
-            .input(
-                _input().map {
-                    BetaServerToolUseBlockParam.Input.builder()
-                        .additionalProperties(it._additionalProperties())
-                        .build()
-                }
-            )
+            .input(_input())
             .name(_name().map { BetaServerToolUseBlockParam.Name.of(it.toString()) })
             .caller(
                 _caller().map {

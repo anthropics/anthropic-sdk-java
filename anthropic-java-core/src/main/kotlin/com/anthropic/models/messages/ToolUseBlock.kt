@@ -51,13 +51,7 @@ private constructor(
     fun toParam(): ToolUseBlockParam =
         ToolUseBlockParam.builder()
             .id(_id())
-            .input(
-                _input().map {
-                    ToolUseBlockParam.Input.builder()
-                        .additionalProperties(it._additionalProperties())
-                        .build()
-                }
-            )
+            .input(_input())
             .name(_name())
             .caller(
                 _caller().map {

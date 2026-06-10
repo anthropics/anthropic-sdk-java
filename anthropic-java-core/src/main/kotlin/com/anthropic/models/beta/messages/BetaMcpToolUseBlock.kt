@@ -41,13 +41,7 @@ private constructor(
     fun toParam(): BetaMcpToolUseBlockParam =
         BetaMcpToolUseBlockParam.builder()
             .id(_id())
-            .input(
-                _input().map {
-                    BetaMcpToolUseBlockParam.Input.builder()
-                        .additionalProperties(it._additionalProperties())
-                        .build()
-                }
-            )
+            .input(_input())
             .name(_name())
             .serverName(_serverName())
             .build()
