@@ -53,13 +53,7 @@ private constructor(
     fun toParam(): BetaToolUseBlockParam =
         BetaToolUseBlockParam.builder()
             .id(_id())
-            .input(
-                _input().map {
-                    BetaToolUseBlockParam.Input.builder()
-                        .additionalProperties(it._additionalProperties())
-                        .build()
-                }
-            )
+            .input(_input())
             .name(_name())
             .caller(
                 _caller().map {
