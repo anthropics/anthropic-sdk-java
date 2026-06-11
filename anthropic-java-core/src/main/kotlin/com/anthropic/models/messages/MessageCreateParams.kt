@@ -2174,7 +2174,13 @@ private constructor(
             fun addMessage(message: MessageParam) = apply {
                 messages =
                     (messages ?: JsonField.of(mutableListOf())).also {
-                        checkKnown("messages", it).add(message)
+                        checkKnown("messages", it).apply {
+                            // Empty assistant content is only valid as the final message.
+                            if (lastOrNull()?.isEmptyAssistant() == true) {
+                                removeLast()
+                            }
+                            add(message)
+                        }
                     }
             }
 
