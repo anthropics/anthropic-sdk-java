@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.41.0 (2026-06-11)
+
+Full Changelog: [v2.40.1...v2.41.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.40.1...v2.41.0)
+
+### Build System
+
+* fix runners ([#66](https://github.com/anthropics/anthropic-sdk-java/issues/66)) ([19882bb](https://github.com/anthropics/anthropic-sdk-java/commit/19882bbada3e1ccbd1cb4fc10b011801cd0865fa))
+* speed up local and CI builds ([#62](https://github.com/anthropics/anthropic-sdk-java/issues/62)) ([78de617](https://github.com/anthropics/anthropic-sdk-java/commit/78de617c06dc8fb31327ec4682649a613860b348))
+
 ## 2.40.1 (2026-06-09)
 
 Full Changelog: [v2.40.0...v2.40.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.40.0...v2.40.1)
