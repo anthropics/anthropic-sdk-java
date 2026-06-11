@@ -10,7 +10,7 @@ jobs:
   release:
     name: release
     if: github.ref == 'refs/heads/main' && github.repository == 'anthropics/anthropic-sdk-java'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16-core
     environment: production-release
 
     steps:
@@ -30,11 +30,10 @@ jobs:
           java-version: |
             8
             21
-          cache: gradle
 
       - name: Set up Gradle
         if: ${{ steps.release.outputs.releases_created }}
-        uses: gradle/gradle-build-action@a8f75513eafdebd8141bd1cd4e30fcd194af8dfa # v2.12.0
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
 
       - name: Publish to Sonatype
         if: ${{ steps.release.outputs.releases_created }}

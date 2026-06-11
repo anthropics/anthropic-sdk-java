@@ -26,10 +26,3 @@ subprojects {
 subprojects {
     apply(plugin = "org.jetbrains.dokka")
 }
-
-// Avoid race conditions between `dokkaJavadocCollector` and `dokkaJavadocJar` tasks
-tasks.named("dokkaJavadocCollector").configure {
-    subprojects.flatMap { it.tasks }
-        .filter { it.project.name != "anthropic-java" && it.name == "dokkaJavadocJar" }
-        .forEach { mustRunAfter(it) }
-}
