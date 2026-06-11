@@ -7,7 +7,7 @@ on:
 jobs:
   publish:
     name: publish
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16-core
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -19,10 +19,9 @@ jobs:
           java-version: |
             8
             21
-          cache: gradle
 
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@a8f75513eafdebd8141bd1cd4e30fcd194af8dfa # v2.12.0
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
 
       - name: Publish to Sonatype
         run: |-

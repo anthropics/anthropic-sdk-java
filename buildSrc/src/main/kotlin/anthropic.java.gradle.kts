@@ -36,7 +36,6 @@ tasks.withType<Test>().configureEach {
 
     // Run tests in parallel to some degree.
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
-    forkEvery = 100
 
     // Mockito's ByteBuddy agent emits a JVM warning when loaded dynamically. Tests that capture
     // stderr (e.g. LoggingHttpClientTest) see this warning interleaved with their expected output
@@ -47,6 +46,15 @@ tasks.withType<Test>().configureEach {
     testLogging {
         exceptionFormat = TestExceptionFormat.FULL
     }
+}
+
+dependencies {
+    // SLF4J lazily initializes on the first `LoggerFactory.getLogger` call in
+    // the JVM and, without a provider, prints a warning to stderr. That warning
+    // corrupts tests that capture and assert on exact stderr contents when
+    // another test races the initialization. Binding a no-op provider keeps
+    // SLF4J silent.
+    "testRuntimeOnly"("org.slf4j:slf4j-nop:2.0.16")
 }
 
 val palantir by configurations.creating

@@ -8,7 +8,7 @@ repositories {
 
 allprojects {
     group = "com.anthropic"
-    version = "2.40.1" // x-release-please-version
+    version = "2.41.0" // x-release-please-version
 }
 
 subprojects {
@@ -25,11 +25,4 @@ subprojects {
 
 subprojects {
     apply(plugin = "org.jetbrains.dokka")
-}
-
-// Avoid race conditions between `dokkaJavadocCollector` and `dokkaJavadocJar` tasks
-tasks.named("dokkaJavadocCollector").configure {
-    subprojects.flatMap { it.tasks }
-        .filter { it.project.name != "anthropic-java" && it.name == "dokkaJavadocJar" }
-        .forEach { mustRunAfter(it) }
 }

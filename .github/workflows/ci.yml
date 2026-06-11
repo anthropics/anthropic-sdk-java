@@ -18,7 +18,7 @@ jobs:
   lint:
     timeout-minutes: 15
     name: lint
-    runs-on: 'ubuntu-latest'
+    runs-on: ${{ github.repository == 'anthropics/anthropic-sdk-java' && 'ubuntu-latest-16core' || 'ubuntu-latest-16-core' }}
     if: (github.event_name == 'push' || github.event.pull_request.head.repo.fork)
 
     steps:
@@ -31,21 +31,25 @@ jobs:
           java-version: |
             8
             21
-          cache: gradle
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        with:
+          # Required for configuration-cache data to be saved/restored across CI runs.
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Run lints
         run: ./scripts/lint
 
   build:
-    timeout-minutes: 15
+    # The first run on a fresh cache compiles everything and generates all documentation, which
+    # does not fit in 15 minutes; cached runs are much faster.
+    timeout-minutes: 30
     name: build
     permissions:
       contents: read
       id-token: write
-    runs-on: 'ubuntu-latest'
+    runs-on: ${{ github.repository == 'anthropics/anthropic-sdk-java' && 'ubuntu-latest-16core' || 'ubuntu-latest-16-core' }}
     if: (github.event_name == 'push' || github.event.pull_request.head.repo.fork)
 
     steps:
@@ -58,10 +62,12 @@ jobs:
           java-version: |
             8
             21
-          cache: gradle
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        with:
+          # Required for configuration-cache data to be saved/restored across CI runs.
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Build SDK
         run: ./scripts/build
@@ -94,7 +100,7 @@ jobs:
   test:
     timeout-minutes: 30
     name: test
-    runs-on: 'ubuntu-latest'
+    runs-on: ${{ github.repository == 'anthropics/anthropic-sdk-java' && 'ubuntu-latest-16core' || 'ubuntu-latest-16-core' }}
     if: github.event_name == 'push' || github.event.pull_request.head.repo.fork
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -106,10 +112,12 @@ jobs:
           java-version: |
             8
             21
-          cache: gradle
 
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@a8f75513eafdebd8141bd1cd4e30fcd194af8dfa # v2.12.0
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        with:
+          # Required for configuration-cache data to be saved/restored across CI runs.
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Run tests
         run: ./scripts/test
@@ -117,7 +125,7 @@ jobs:
   detect_breaking_changes_vs_main:
     timeout-minutes: 15
     name: detect-breaking-changes-vs-main
-    runs-on: ${{ github.repository == 'stainless-sdks/anthropic-java' && 'depot-ubuntu-24.04' || 'ubuntu-latest' }}
+    runs-on: ${{ github.repository == 'anthropics/anthropic-sdk-java' && 'ubuntu-latest-16core' || 'ubuntu-latest-16-core' }}
     if: |-
       (github.event_name == 'push' &&
        !startsWith(github.ref, 'refs/heads/release-please--')) ||
@@ -140,10 +148,12 @@ jobs:
           java-version: |
             8
             21
-          cache: gradle
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        with:
+          # Required for configuration-cache data to be saved/restored across CI runs.
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Determine base SHA
         run: |
