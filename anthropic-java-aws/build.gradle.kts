@@ -13,14 +13,14 @@ dependencies {
     // Declared as "api" dependencies to make them transitive and available for use in code (where
     // necessary) that depends on this Anthropic SDK library module. The BOM must be declared as an
     // "api" dependency if any of its modules are declared as "api" dependencies.
-    api(platform("software.amazon.awssdk:bom:2.33.1"))
-    api("software.amazon.awssdk:auth")
-    implementation("software.amazon.awssdk:http-client-spi")
+    api(platform(libs.awssdk.bom))
+    api(libs.awssdk.auth)
+    implementation(libs.awssdk.http.client.spi)
 
     testImplementation(project(":anthropic-java-client-okhttp"))
     testImplementation(kotlin("test"))
-    testImplementation("org.assertj:assertj-core:3.25.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
-    testImplementation("org.mockito:mockito-core:5.14.2")
+    testImplementation(libs.assertj)
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.mockito.core)
 }

@@ -1,6 +1,16 @@
 rootProject.name = "anthropic-java-root"
 
-val projectNames = rootDir.listFiles()
+// Declare dependency repositories once for every project; per-project `repositories` blocks are
+// rejected so they can't silently diverge from this list.
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+rootDir.listFiles()
     ?.asSequence()
     .orEmpty()
     .filter { file ->
@@ -9,6 +19,5 @@ val projectNames = rootDir.listFiles()
         file.listFiles()?.asSequence().orEmpty().any { it.name == "build.gradle.kts" }
     }
     .map { it.name }
-    .toList()
-println("projects: $projectNames")
-projectNames.forEach { include(it) }
+    .sorted()
+    .forEach { include(it) }

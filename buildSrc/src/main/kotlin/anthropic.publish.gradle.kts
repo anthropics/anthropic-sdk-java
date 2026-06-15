@@ -18,11 +18,6 @@ publishing {
   }
 }
 
-repositories {
-    gradlePluginPortal()
-    mavenCentral()
-}
-
 extra["signingInMemoryKey"] = System.getenv("GPG_SIGNING_KEY")
 extra["signingInMemoryKeyId"] = System.getenv("GPG_SIGNING_KEY_ID")
 extra["signingInMemoryKeyPassword"] = System.getenv("GPG_SIGNING_PASSWORD")

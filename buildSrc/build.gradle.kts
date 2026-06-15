@@ -1,7 +1,8 @@
 plugins {
+    // Note: don't also apply `kotlin("jvm")` here. `kotlin-dsl` compiles this project with
+    // Gradle's embedded Kotlin; applying the standalone Kotlin plugin overrides that pairing with
+    // whatever version is on this classpath, which the Kotlin DSL does not support.
     `kotlin-dsl`
-    kotlin("jvm") version "2.3.21"
-    id("com.vanniktech.maven.publish") version "0.28.0"
 }
 
 repositories {
@@ -9,7 +10,9 @@ repositories {
     mavenCentral()
 }
 
+// Plugins used by the precompiled convention scripts in `src/main/kotlin` must be declared as
+// regular dependencies here (the scripts' `plugins {}` blocks can't carry versions).
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.21")
-    implementation("com.vanniktech:gradle-maven-publish-plugin:0.28.0")
+    implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.maven.publish.gradle.plugin)
 }

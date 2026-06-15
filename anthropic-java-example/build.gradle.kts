@@ -3,10 +3,6 @@ plugins {
     application
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation(project(":anthropic-java"))
     implementation(project(":anthropic-java-client-okhttp"))
@@ -15,7 +11,7 @@ dependencies {
     implementation(project(":anthropic-java-foundry"))
     implementation(project(":anthropic-java-vertex"))
     // Microsoft Entra ID library for Foundry examples.
-    implementation("com.azure:azure-identity:1.18.1")
+    implementation(libs.azure.identity)
     // MCP module for BetaMcpToolRunnerExample (requires JDK 17+ at runtime).
     implementation(project(":anthropic-java-mcp"))
 }

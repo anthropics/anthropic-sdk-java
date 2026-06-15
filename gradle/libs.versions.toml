@@ -1,0 +1,68 @@
+## Single source of truth for plugin and dependency versions. Modules reference entries via the
+## type-safe `libs.*` accessors; `buildSrc` shares this catalog through its `settings.gradle.kts`,
+## and convention scripts look entries up via `VersionCatalogsExtension`.
+
+[versions]
+kotlin = "2.3.21"
+dokka = "2.2.0"
+maven-publish = "0.28.0"
+shadow = "8.3.8"
+
+jackson = "2.18.2"
+# The oldest Jackson we support. We compile and test against it to stay compatible (see the
+# resolution strategy in `anthropic-java-core`), but publish with the newer version above so users
+# depend on a secure version by default.
+jackson-compat = "2.14.0"
+junit = "5.9.3"
+# Must stay in lockstep with the JUnit Jupiter version above: platform 1.x.y pairs with Jupiter
+# 5.x.y.
+junit-platform = "1.9.3"
+
+[libraries]
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+maven-publish-gradle-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "maven-publish" }
+
+assertj = { module = "org.assertj:assertj-core", version = "3.27.7" }
+awssdk-auth = { module = "software.amazon.awssdk:auth" }
+awssdk-bom = { module = "software.amazon.awssdk:bom", version = "2.33.1" }
+awssdk-http-client-spi = { module = "software.amazon.awssdk:http-client-spi" }
+azure-identity = { module = "com.azure:azure-identity", version = "1.18.1" }
+checker-qual = { module = "org.checkerframework:checker-qual", version = "3.43.0" }
+errorprone-annotations = { module = "com.google.errorprone:error_prone_annotations", version = "2.33.0" }
+eventstream = { module = "software.amazon.eventstream:eventstream", version = "1.0.1" }
+google-auth-bom = { module = "com.google.auth:google-auth-library-bom", version = "1.32.1" }
+google-auth-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http" }
+httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version = "5.3.1" }
+httpcore5 = { module = "org.apache.httpcomponents.core5:httpcore5", version = "5.2.4" }
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
+jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+jackson-datatype-jdk8 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jdk8", version.ref = "jackson" }
+jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
+jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+jackson-module-kotlin-compat = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson-compat" }
+jsonschema-generator = { module = "com.github.victools:jsonschema-generator", version = "4.38.0" }
+jsonschema-module-jackson = { module = "com.github.victools:jsonschema-module-jackson", version = "4.38.0" }
+jsonschema-module-swagger2 = { module = "com.github.victools:jsonschema-module-swagger-2", version = "4.38.0" }
+jsr305 = { module = "com.google.code.findbugs:jsr305", version = "3.0.2" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
+junit-pioneer = { module = "org.junit-pioneer:junit-pioneer", version = "1.9.1" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
+ktfmt = { module = "com.facebook:ktfmt", version = "0.61" }
+mcp = { module = "io.modelcontextprotocol.sdk:mcp", version = "1.1.1" }
+mockito-core = { module = "org.mockito:mockito-core", version = "5.14.2" }
+mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version = "5.14.2" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "4.1.0" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version = "4.12.0" }
+palantir-java-format = { module = "com.palantir.javaformat:palantir-java-format", version = "2.89.0" }
+slf4j-nop = { module = "org.slf4j:slf4j-nop", version = "2.0.16" }
+standardwebhooks = { module = "com.standardwebhooks:standardwebhooks", version = "1.1.0" }
+swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version = "2.2.31" }
+wiremock = { module = "com.github.tomakehurst:wiremock-jre8", version = "2.35.2" }
+
+[plugins]
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

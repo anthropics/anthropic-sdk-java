@@ -4,9 +4,10 @@ plugins {
     `java-library`
 }
 
-repositories {
-    mavenCentral()
-}
+// Precompiled script plugins can't use the generated type-safe `libs` accessors; look the catalog
+// up through its extension instead.
+val libs = the<VersionCatalogsExtension>().named("libs")
+fun lib(alias: String) = libs.findLibrary(alias).get()
 
 java {
     toolchain {
@@ -61,7 +62,7 @@ dependencies {
 
 val palantir by configurations.creating
 dependencies {
-    palantir("com.palantir.javaformat:palantir-java-format:2.89.0")
+    palantir(lib("palantir-java-format"))
 }
 
 fun registerPalantir(
