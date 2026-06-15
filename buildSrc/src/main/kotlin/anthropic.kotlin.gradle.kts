@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
@@ -17,16 +18,29 @@ kotlin {
 
     compilerOptions {
         freeCompilerArgs = listOf(
-            "-Xjvm-default=all",
             "-Xjdk-release=1.8",
-            // Suppress deprecation warnings because we may still reference and test deprecated members.
-            // TODO: Replace with `-Xsuppress-warning=DEPRECATION` once we use Kotlin compiler 2.1.0+.
+            // Suppress all warnings: generated code may reference and test deprecated members and
+            // trigger style lints that we can't act on.
             "-nowarn",
         )
+        // Emit default interface methods for the JVM.
+        jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
+        // Emit Java 8 bytecode: the SDK supports consumers running Java 8+.
         jvmTarget.set(JvmTarget.JVM_1_8)
-        languageVersion.set(KotlinVersion.KOTLIN_1_8)
-        apiVersion.set(KotlinVersion.KOTLIN_1_8)
-        coreLibrariesVersion = "1.8.0"
+        // Compile with Kotlin 2.0 semantics, which stamps classes with `@Metadata(mv=[2,0,0])`.
+        // Kotlin special-cases 2.0.0 metadata as the K2 transition bridge (the module file is
+        // written as version 1.9.9999), so any consumer compiler >= 1.8.20 can read our classes.
+        languageVersion.set(KotlinVersion.KOTLIN_2_0)
+        // Only allow calling stdlib APIs that exist in 1.9: consumers' dependency management often
+        // forces an older stdlib onto the runtime classpath than the one we compile against (e.g.
+        // Spring Boot 3.x's BOM pins kotlin-stdlib 1.9.25). Calling a 2.0-only API would compile
+        // here but throw `NoSuchMethodError` at runtime for those users; this makes the compiler
+        // reject such calls at build time.
+        apiVersion.set(KotlinVersion.KOTLIN_1_9)
+        // Compile against and publish a POM dependency on kotlin-stdlib 1.9.0 (instead of
+        // defaulting to the compiler's own version). Pure-Java Maven consumers inherit exactly
+        // this version (nearest-wins), so it sets the stdlib floor our jar must run on.
+        coreLibrariesVersion = "1.9.0"
     }
 }
 

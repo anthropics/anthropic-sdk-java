@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     id("anthropic.kotlin")
@@ -32,9 +31,7 @@ kotlin {
     compilerOptions {
         // Override the Java 8 settings inherited from `anthropic.kotlin` so we can reference MCP
         // SDK types that extend `java.lang.Record` (introduced in Java 16).
-        freeCompilerArgs = listOf("-Xjvm-default=all", "-Xjdk-release=17", "-nowarn")
+        freeCompilerArgs = listOf("-Xjdk-release=17", "-nowarn")
         jvmTarget.set(JvmTarget.JVM_17)
-        languageVersion.set(KotlinVersion.KOTLIN_1_8)
-        apiVersion.set(KotlinVersion.KOTLIN_1_8)
     }
 }

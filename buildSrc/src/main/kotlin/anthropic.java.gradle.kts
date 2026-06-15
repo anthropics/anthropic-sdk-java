@@ -55,6 +55,8 @@ dependencies {
     // another test races the initialization. Binding a no-op provider keeps
     // SLF4J silent.
     "testRuntimeOnly"("org.slf4j:slf4j-nop:2.0.16")
+
+    "testRuntimeOnly"("org.junit.platform:junit-platform-launcher:1.9.3")
 }
 
 val palantir by configurations.creating
