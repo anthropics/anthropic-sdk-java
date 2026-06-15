@@ -19,6 +19,23 @@ log_error() {
     exit 1
 }
 
+# Mint a fresh GitHub Actions OIDC token, matching actions/github-script's
+# core.getIDToken(). The token initially passed in via $AUTH is only valid for a
+# few minutes, which a full artifact upload can outlast, so it must be refreshed
+# mid-run. Returns non-zero (leaving $AUTH unchanged) when refresh isn't possible.
+refresh_auth() {
+    [[ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" && -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]] || return 1
+
+    local response token
+    response=$(curl --fail -sS --retry 5 \
+        -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+        "$ACTIONS_ID_TOKEN_REQUEST_URL") || return 1
+    token=$(echo "$response" | jq -e -r '.value' 2>/dev/null) || return 1
+    [[ -n "$token" && "$token" != "null" ]] || return 1
+
+    AUTH="$token"
+}
+
 upload_file() {
     local file_name="$1"
     local tmp_headers
@@ -28,13 +45,31 @@ upload_file() {
         echo -e "${GREEN}Processing file: $file_name${NC}"
         pkg_file_name="mvn${file_name#"${MAVEN_REPO_PATH}"}"
 
-        # Get signed URL for uploading artifact file
-        signed_url_response=$(curl -X POST -G "$URL" \
-            -sS --retry 5 \
-            -D "$tmp_headers" \
-            --data-urlencode "filename=$pkg_file_name" \
-            -H "Authorization: Bearer $AUTH" \
-            -H "Content-Type: application/json")
+        # Get a signed URL for uploading the artifact file. --fail makes curl
+        # treat HTTP errors as failures and drop their response bodies, so a
+        # retried transient error (e.g. 503) can't prepend its body to the
+        # successful response and break the jq parse below. A 401 means the OIDC
+        # token expired mid-upload; refresh it once and retry rather than failing.
+        local response http_code attempt
+        for attempt in 1 2; do
+            response=$(curl -X POST -G "$URL" \
+                --fail -sS --retry 5 \
+                -w $'\n%{http_code}' \
+                -D "$tmp_headers" \
+                --data-urlencode "filename=$pkg_file_name" \
+                -H "Authorization: Bearer $AUTH" \
+                -H "Content-Type: application/json") || true
+            http_code="${response##*$'\n'}"
+            signed_url_response="${response%$'\n'*}"
+            if [[ "$http_code" == "401" && "$attempt" -eq 1 ]] && refresh_auth; then
+                continue
+            fi
+            break
+        done
+
+        if [[ "$http_code" != "200" ]]; then
+            log_error "Failed to get signed URL (HTTP $http_code)" "$tmp_headers" "$signed_url_response"
+        fi
 
         # Validate JSON and extract URL
         if ! signed_url=$(echo "$signed_url_response" | jq -e -r '.url' 2>/dev/null) || [[ "$signed_url" == "null" ]]; then
