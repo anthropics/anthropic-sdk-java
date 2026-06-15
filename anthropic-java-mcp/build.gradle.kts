@@ -11,15 +11,15 @@ dependencies {
     // The MCP Java SDK is exposed in this module's public API (e.g. `BetaMcp.mcpTool` accepts
     // `McpSchema.Tool` and `McpSyncClient`), so it must be an `api` dependency to be transitively
     // visible to consumers.
-    api("io.modelcontextprotocol.sdk:mcp:1.1.1")
+    api(libs.mcp)
 
     testImplementation(project(":anthropic-java-client-okhttp"))
     testImplementation(kotlin("test"))
-    testImplementation("org.assertj:assertj-core:3.27.7")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
-    testImplementation("org.mockito:mockito-core:5.14.2")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation(libs.assertj)
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
 }
 
 // The MCP Java SDK uses Java Records (Java 16+), so this module requires Java 17+ at compile and

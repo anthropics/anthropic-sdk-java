@@ -7,9 +7,9 @@ plugins {
     kotlin("jvm")
 }
 
-repositories {
-    mavenCentral()
-}
+// Precompiled script plugins can't use the generated type-safe `libs` accessors; look the catalog
+// up through its extension instead.
+val libs = the<VersionCatalogsExtension>().named("libs")
 
 kotlin {
     jvmToolchain {
@@ -54,7 +54,7 @@ tasks.withType<Test>().configureEach {
 
 val ktfmt by configurations.creating
 dependencies {
-    ktfmt("com.facebook:ktfmt:0.61")
+    ktfmt(libs.findLibrary("ktfmt").get())
 }
 
 fun registerKtfmt(
