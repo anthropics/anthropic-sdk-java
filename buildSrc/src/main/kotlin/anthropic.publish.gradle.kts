@@ -36,7 +36,7 @@ configure<MavenPublishBaseExtension> {
     coordinates(project.group.toString(), project.name, project.version.toString())
     configure(
         KotlinJvm(
-            javadocJar = JavadocJar.Dokka("dokkaJavadoc"),
+            javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationJavadoc"),
             sourcesJar = true,
         )
     )
