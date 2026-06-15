@@ -3,15 +3,12 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-buildscript {
-    repositories {
-        google()
-    }
+// R8 ships no Gradle plugin, so resolve its jar into a dedicated configuration for the `JavaExec`
+// tasks below.
+val r8: Configuration by configurations.creating
 
-    dependencies {
-        classpath("com.guardsquare:proguard-gradle:7.9.1")
-        classpath("com.android.tools:r8:8.3.37")
-    }
+dependencies {
+    r8(libs.r8)
 }
 
 dependencies {
@@ -73,7 +70,7 @@ val r8Jar by tasks.registering(JavaExec::class) {
     dependsOn(tasks.shadowJar)
 
     mainClass.set("com.android.tools.r8.R8")
-    classpath = buildscript.configurations["classpath"]
+    classpath = r8
 
     val proguardConfigs = listOf(
         "./test.pro",
