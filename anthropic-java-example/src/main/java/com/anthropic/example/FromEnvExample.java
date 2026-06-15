@@ -30,7 +30,7 @@ public class FromEnvExample {
 
         Message message = client.messages()
                 .create(MessageCreateParams.builder()
-                        .model(Model.CLAUDE_SONNET_4_20250514)
+                        .model(Model.CLAUDE_SONNET_4_5)
                         .maxTokens(100)
                         .addUserMessage("Say hello in one sentence.")
                         .build());
