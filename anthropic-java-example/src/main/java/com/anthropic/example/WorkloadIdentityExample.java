@@ -32,7 +32,7 @@ public class WorkloadIdentityExample {
 
         Message message = client.messages()
                 .create(MessageCreateParams.builder()
-                        .model(Model.CLAUDE_OPUS_4_20250514)
+                        .model(Model.CLAUDE_OPUS_4_6)
                         .maxTokens(1024)
                         .addUserMessage("Hello")
                         .build());
