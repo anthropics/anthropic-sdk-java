@@ -3,6 +3,8 @@
 ## and convention scripts look entries up via `VersionCatalogsExtension`.
 
 [versions]
+# Pinned: 2.4.0 removed support for `apiVersion = 1.9`, which we need to keep the published
+# kotlin-stdlib dependency at 1.9 (see `anthropic.kotlin.gradle.kts`).
 kotlin = "2.3.21"
 # Oldest Kotlin compiler whose reading of the SDK's published @Metadata we verify in
 # `anthropic-java-ecosystem-test`. The SDK's K2-bridge metadata (see `anthropic.kotlin`) must stay
@@ -12,19 +14,21 @@ kotlin-compat-compiler = "1.8.20"
 # version the ecosystem consumer compiles and runs against.
 kotlin-compat-stdlib = "1.9.0"
 dokka = "2.2.0"
-maven-publish = "0.28.0"
+maven-publish = "0.36.0"
 proguard = "7.9.1"
 shadow = "8.3.8"
 
-jackson = "2.18.2"
+# Pinned to the 2.19.x line: starting with 2.20, `jackson-module-kotlin` declares a Kotlin 2.x
+# stdlib, which would drag consumers above our published 1.9 stdlib floor.
+jackson = "2.19.4"
 # The oldest Jackson we support. We compile and test against it to stay compatible (see the
 # resolution strategy in `anthropic-java-core`), but publish with the newer version above so users
 # depend on a secure version by default.
 jackson-compat = "2.14.0"
-junit = "5.9.3"
+junit = "5.14.4"
 # Must stay in lockstep with the JUnit Jupiter version above: platform 1.x.y pairs with Jupiter
 # 5.x.y.
-junit-platform = "1.9.3"
+junit-platform = "1.14.4"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -33,16 +37,16 @@ proguard-gradle-plugin = { module = "com.guardsquare:proguard-gradle", version.r
 
 assertj = { module = "org.assertj:assertj-core", version = "3.27.7" }
 awssdk-auth = { module = "software.amazon.awssdk:auth" }
-awssdk-bom = { module = "software.amazon.awssdk:bom", version = "2.33.1" }
+awssdk-bom = { module = "software.amazon.awssdk:bom", version = "2.46.8" }
 awssdk-http-client-spi = { module = "software.amazon.awssdk:http-client-spi" }
-azure-identity = { module = "com.azure:azure-identity", version = "1.18.1" }
-checker-qual = { module = "org.checkerframework:checker-qual", version = "3.43.0" }
-errorprone-annotations = { module = "com.google.errorprone:error_prone_annotations", version = "2.33.0" }
+azure-identity = { module = "com.azure:azure-identity", version = "1.18.3" }
+# Pinned to 3.x: checker-qual 4.x declares Java 11+ in its Gradle metadata, which conflicts with
+# our Java 8 test compile classpath.
+checker-qual = { module = "org.checkerframework:checker-qual", version = "3.55.1" }
+errorprone-annotations = { module = "com.google.errorprone:error_prone_annotations", version = "2.50.0" }
 eventstream = { module = "software.amazon.eventstream:eventstream", version = "1.0.1" }
-google-auth-bom = { module = "com.google.auth:google-auth-library-bom", version = "1.32.1" }
+google-auth-bom = { module = "com.google.auth:google-auth-library-bom", version = "1.48.0" }
 google-auth-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http" }
-httpclient5 = { module = "org.apache.httpcomponents.client5:httpclient5", version = "5.3.1" }
-httpcore5 = { module = "org.apache.httpcomponents.core5:httpcore5", version = "5.2.4" }
 jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
 jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
@@ -57,6 +61,8 @@ jsr305 = { module = "com.google.code.findbugs:jsr305", version = "3.0.2" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
+# Pinned to 1.x: junit-pioneer 2.x declares Java 11+ in its Gradle metadata, which conflicts with
+# our Java 8 test compile classpath.
 junit-pioneer = { module = "org.junit-pioneer:junit-pioneer", version = "1.9.1" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
 # Used only by `anthropic-java-ecosystem-test` to compile and run a consumer with an old Kotlin
@@ -66,15 +72,20 @@ kotlin-reflect-compat = { module = "org.jetbrains.kotlin:kotlin-reflect", versio
 kotlin-stdlib-compat = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin-compat-stdlib" }
 ktfmt = { module = "com.facebook:ktfmt", version = "0.61" }
 mcp = { module = "io.modelcontextprotocol.sdk:mcp", version = "1.1.1" }
-mockito-core = { module = "org.mockito:mockito-core", version = "5.14.2" }
+mockito-core = { module = "org.mockito:mockito-core", version = "5.23.0" }
 r8 = { module = "com.android.tools:r8", version = "9.1.31" }
-mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version = "5.14.2" }
+mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version = "5.23.0" }
+# Pinned to 4.x: newer versions ship inline functions compiled for JVM 11, which can't be inlined
+# into our JVM 8 test bytecode.
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "4.1.0" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version = "4.12.0" }
 palantir-java-format = { module = "com.palantir.javaformat:palantir-java-format", version = "2.89.0" }
-slf4j-nop = { module = "org.slf4j:slf4j-nop", version = "2.0.16" }
-standardwebhooks = { module = "com.standardwebhooks:standardwebhooks", version = "1.1.0" }
-swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version = "2.2.31" }
+slf4j-nop = { module = "org.slf4j:slf4j-nop", version = "2.0.18" }
+standardwebhooks = { module = "com.standardwebhooks:standardwebhooks", version = "1.1.1" }
+swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version = "2.2.50" }
+# Pinned to the legacy `wiremock-jre8` 2.x line: every WireMock 3.x release (republished as
+# `org.wiremock:wiremock`) is Java 11 and declares Java 11+ in its Gradle metadata, which conflicts
+# with our Java 8 test compile classpath.
 wiremock = { module = "com.github.tomakehurst:wiremock-jre8", version = "2.35.2" }
 
 [plugins]

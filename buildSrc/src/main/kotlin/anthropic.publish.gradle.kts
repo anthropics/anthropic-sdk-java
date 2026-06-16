@@ -1,7 +1,7 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinJvm
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
-import com.vanniktech.maven.publish.SonatypeHost
+import com.vanniktech.maven.publish.SourcesJar
 
 plugins {
     id("com.vanniktech.maven.publish")
@@ -25,14 +25,14 @@ extra["signingInMemoryKeyPassword"] = System.getenv("GPG_SIGNING_PASSWORD")
 configure<MavenPublishBaseExtension> {
     if (!project.hasProperty("publishLocal")) {
         signAllPublications()
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        publishToMavenCentral()
     }
 
     coordinates(project.group.toString(), project.name, project.version.toString())
     configure(
         KotlinJvm(
             javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationJavadoc"),
-            sourcesJar = true,
+            sourcesJar = SourcesJar.Sources(),
         )
     )
 

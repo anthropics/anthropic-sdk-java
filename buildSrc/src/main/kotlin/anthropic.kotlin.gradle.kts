@@ -22,6 +22,9 @@ kotlin {
             // Suppress all warnings: generated code may reference and test deprecated members and
             // trigger style lints that we can't act on.
             "-nowarn",
+            // `-nowarn` doesn't cover the "language version 2.0 is deprecated" notice. That comes
+            // from the version-validation pass. We pin 2.0 deliberately (see `languageVersion`).
+            "-Xsuppress-version-warnings",
         )
         // Emit default interface methods for the JVM.
         jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
