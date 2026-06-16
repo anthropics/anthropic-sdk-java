@@ -59,6 +59,9 @@ dependencies {
     api(libs.jackson.databind)
     api(libs.errorprone.annotations)
     api(libs.standardwebhooks)
+    // No references in this module's main sources, but NOT unused: consumers annotate their
+    // structured-output classes with Swagger annotations (e.g. `@Schema`), which
+    // `jsonschema-module-swagger2` below reads when generating tool JSON schemas.
     api(libs.swagger.annotations)
 
     implementation(libs.jackson.annotations)
@@ -66,8 +69,6 @@ dependencies {
     implementation(libs.jackson.datatype.jsr310)
     implementation(libs.jackson.module.kotlin)
     implementation(kotlin("reflect"))
-    implementation(libs.httpcore5)
-    implementation(libs.httpclient5)
     implementation(libs.jsonschema.generator)
     implementation(libs.jsonschema.module.jackson)
     implementation(libs.jsonschema.module.swagger2)
