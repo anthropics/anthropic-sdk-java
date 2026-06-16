@@ -33,6 +33,9 @@ junit-platform = "1.14.4"
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 maven-publish-gradle-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "maven-publish" }
+# Carries both the `org.jetbrains.dokka` and `org.jetbrains.dokka-javadoc` plugins applied by the
+# `anthropic.dokka` convention script.
+dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 proguard-gradle-plugin = { module = "com.guardsquare:proguard-gradle", version.ref = "proguard" }
 
 assertj = { module = "org.assertj:assertj-core", version = "3.27.7" }
@@ -89,6 +92,4 @@ swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", versi
 wiremock = { module = "com.github.tomakehurst:wiremock-jre8", version = "2.35.2" }
 
 [plugins]
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

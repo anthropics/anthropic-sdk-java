@@ -15,6 +15,7 @@ repositories {
 dependencies {
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.maven.publish.gradle.plugin)
+    implementation(libs.dokka.gradle.plugin)
     // Not a real Gradle plugin (it publishes no plugin marker): just a library carrying
     // `proguard.gradle.ProGuardTask` for `anthropic-java-ecosystem-test`.
     implementation(libs.proguard.gradle.plugin)

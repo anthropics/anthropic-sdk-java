@@ -18,6 +18,18 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+// Lifecycle tasks that aggregate the per-language format/lint tasks registered below (and the
+// Kotlin ones from `anthropic.kotlin`). Registered here because every module applies this plugin
+// directly or transitively through `anthropic.kotlin`.
+tasks.register("format") {
+    group = "Verification"
+    description = "Formats all source files."
+}
+tasks.register("lint") {
+    group = "Verification"
+    description = "Verifies all source files are formatted."
+}
+
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-Werror")
     options.release.set(8)
@@ -55,9 +67,9 @@ dependencies {
     // corrupts tests that capture and assert on exact stderr contents when
     // another test races the initialization. Binding a no-op provider keeps
     // SLF4J silent.
-    "testRuntimeOnly"("org.slf4j:slf4j-nop:2.0.16")
+    testRuntimeOnly(lib("slf4j-nop"))
 
-    "testRuntimeOnly"("org.junit.platform:junit-platform-launcher:1.9.3")
+    testRuntimeOnly(lib("junit-platform-launcher"))
 }
 
 val palantir by configurations.creating
