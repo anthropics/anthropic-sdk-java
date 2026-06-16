@@ -4,6 +4,9 @@ import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import com.vanniktech.maven.publish.SourcesJar
 
 plugins {
+    // Publishing needs the Dokka javadoc JAR (see `JavadocJar.Dokka` below), so every publishable
+    // module gets Dokka configured here.
+    id("anthropic.dokka")
     id("com.vanniktech.maven.publish")
 }
 

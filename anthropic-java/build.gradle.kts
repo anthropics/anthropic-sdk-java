@@ -3,10 +3,6 @@ plugins {
     id("anthropic.publish")
 }
 
-dependencies {
-    api(project(":anthropic-java-client-okhttp"))
-}
-
 // Resolves every documented module's jar and dependencies so Dokka can link the types referenced
 // in their signatures. Reaching into the sibling projects' own `compileClasspath` configurations
 // instead would break the configuration cache: resolving another project's configuration is
@@ -24,6 +20,8 @@ val dokkaAggregationClasspath by configurations.creating {
 }
 
 dependencies {
+    api(project(":anthropic-java-client-okhttp"))
+
     rootProject.subprojects
         .filter { it.file("src/main/kotlin").exists() && it.name != project.name }
         .forEach { add(dokkaAggregationClasspath.name, project(it.path)) }

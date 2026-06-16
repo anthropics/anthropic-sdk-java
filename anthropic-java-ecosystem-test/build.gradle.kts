@@ -97,16 +97,17 @@ tasks.shadowJar {
 
 // ProGuard + R8 shrinking compatibility
 
-val proguardJarPath = "${layout.buildDirectory.get()}/libs/${project.name}-${project.version}-proguard.jar"
+val shadowJarFile = tasks.shadowJar.flatMap { it.archiveFile }
+val proguardJarFile = layout.buildDirectory.file("libs/${project.name}-${project.version}-proguard.jar")
 val proguardJar by tasks.registering(proguard.gradle.ProGuardTask::class) {
     group = "verification"
     dependsOn(tasks.shadowJar)
 
-    // Pass the archive path rather than the task itself: `Task` objects cannot
-    // be serialized to the configuration cache.
-    injars(tasks.shadowJar.get().archiveFile.get().asFile.absolutePath)
-    outjars(proguardJarPath)
-    printmapping("${layout.buildDirectory.get()}/proguard-mapping.txt")
+    // `ProGuardTask` takes plain paths (and `Task` objects can't be serialized to the configuration
+    // cache anyway), so resolve the file providers to paths here.
+    injars(shadowJarFile.get().asFile.absolutePath)
+    outjars(proguardJarFile.get().asFile.absolutePath)
+    printmapping(layout.buildDirectory.file("proguard-mapping.txt").get().asFile.absolutePath)
 
     val javaHome = System.getProperty("java.home")
     if (System.getProperty("java.version").startsWith("1.")) {
@@ -130,14 +131,14 @@ val testProGuard by tasks.registering(JavaExec::class) {
     dependsOn(proguardJar)
 
     mainClass.set("com.anthropic.ecosystem.EcosystemCompatibilityTest")
-    classpath = files(proguardJarPath)
+    classpath = files(proguardJarFile)
 
     // This is a verification task with no file outputs, so rerun it only when
     // the JAR changes.
     outputs.upToDateWhen { true }
 }
 
-val r8JarPath = "${layout.buildDirectory.get()}/libs/${project.name}-${project.version}-r8.jar"
+val r8JarFile = layout.buildDirectory.file("libs/${project.name}-${project.version}-r8.jar")
 val r8Jar by tasks.registering(JavaExec::class) {
     group = "verification"
     dependsOn(tasks.shadowJar)
@@ -153,19 +154,19 @@ val r8Jar by tasks.registering(JavaExec::class) {
     args = listOf(
         "--release",
         "--classfile",
-        "--output", r8JarPath,
+        "--output", r8JarFile.get().asFile.absolutePath,
         "--lib", System.getProperty("java.home"),
         "--pg-conf", proguardConfigs[0],
         "--pg-conf", proguardConfigs[1],
-        "--pg-map-output", "${layout.buildDirectory.get()}/r8-mapping.txt",
-        tasks.shadowJar.get().archiveFile.get().asFile.absolutePath,
+        "--pg-map-output", layout.buildDirectory.file("r8-mapping.txt").get().asFile.absolutePath,
+        shadowJarFile.get().asFile.absolutePath,
     )
 
     // `args` are not tracked as task inputs, so declare them explicitly for
     // up-to-date checking.
-    inputs.files(tasks.shadowJar.map { it.archiveFile })
+    inputs.files(shadowJarFile)
     inputs.files(proguardConfigs)
-    outputs.file(r8JarPath)
+    outputs.file(r8JarFile)
 }
 
 val testR8 by tasks.registering(JavaExec::class) {
@@ -173,7 +174,7 @@ val testR8 by tasks.registering(JavaExec::class) {
     dependsOn(r8Jar)
 
     mainClass.set("com.anthropic.ecosystem.EcosystemCompatibilityTest")
-    classpath = files(r8JarPath)
+    classpath = files(r8JarFile)
 
     // This is a verification task with no file outputs, so rerun it only when
     // the JAR changes.
