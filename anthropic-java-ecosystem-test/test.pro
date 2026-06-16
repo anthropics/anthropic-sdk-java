@@ -1,5 +1,5 @@
 # Specify the entrypoint where ProGuard starts to determine what's reachable.
--keep class com.anthropic.proguard.** { *; }
+-keep class com.anthropic.ecosystem.** { *; }
 
 # For the testing framework.
 -keep class org.junit.** { *; }

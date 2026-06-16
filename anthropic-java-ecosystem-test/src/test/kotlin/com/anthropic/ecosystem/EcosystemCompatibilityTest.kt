@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.proguard
+package com.anthropic.ecosystem
 
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.jsonMapper
@@ -15,7 +15,7 @@ import kotlin.reflect.jvm.javaMethod
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class ProGuardCompatibilityTest {
+internal class EcosystemCompatibilityTest {
 
     companion object {
 
@@ -27,7 +27,7 @@ internal class ProGuardCompatibilityTest {
 
             // We have to manually run the test methods instead of using the JUnit runner because it
             // seems impossible to get working with R8.
-            val test = ProGuardCompatibilityTest()
+            val test = EcosystemCompatibilityTest()
             test::class
                 .memberFunctions
                 .asSequence()

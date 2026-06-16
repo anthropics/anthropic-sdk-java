@@ -41,6 +41,14 @@ $ npx prism mock path/to/your/openapi.yml
 $ ./scripts/test
 ```
 
+The `anthropic-java-ecosystem-test` module verifies that the SDK still works for downstream
+consumers: it runs ProGuard/R8 shrinking checks, executes a Java consumer on a real Java 8 runtime,
+and compiles and runs a Kotlin consumer with the Kotlin 1.8.20 compiler. The Java 8 and Kotlin
+checks select a JDK 8 via Gradle toolchains. Locally these checks are skipped if no JDK 8 is
+installed, so `./gradlew test` still works without one; install any JDK 8 (for example, Temurin 8)
+to run them locally. CI always provisions a JDK 8 and fails if it is missing, so the checks can
+never be silently skipped there.
+
 ## Linting and formatting
 
 This repository uses [ktfmt](https://github.com/facebook/ktfmt) for Kotlin and [palantir-java-format](https://github.com/palantir/palantir-java-format) for Java.
