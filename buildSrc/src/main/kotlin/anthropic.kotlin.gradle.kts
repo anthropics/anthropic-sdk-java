@@ -40,7 +40,7 @@ kotlin {
         // Compile against and publish a POM dependency on kotlin-stdlib 1.9.0 (instead of
         // defaulting to the compiler's own version). Pure-Java Maven consumers inherit exactly
         // this version (nearest-wins), so it sets the stdlib floor our jar must run on.
-        coreLibrariesVersion = "1.9.0"
+        coreLibrariesVersion = libs.findVersion("kotlin-compat-stdlib").get().requiredVersion
     }
 }
 

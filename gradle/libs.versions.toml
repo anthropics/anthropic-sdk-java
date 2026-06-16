@@ -4,6 +4,13 @@
 
 [versions]
 kotlin = "2.3.21"
+# Oldest Kotlin compiler whose reading of the SDK's published @Metadata we verify in
+# `anthropic-java-ecosystem-test`. The SDK's K2-bridge metadata (see `anthropic.kotlin`) must stay
+# readable by consumer compilers this old.
+kotlin-compat-compiler = "1.8.20"
+# The SDK's documented kotlin-stdlib floor (see `coreLibrariesVersion` in `anthropic.kotlin`); the
+# version the ecosystem consumer compiles and runs against.
+kotlin-compat-stdlib = "1.9.0"
 dokka = "2.2.0"
 maven-publish = "0.28.0"
 proguard = "7.9.1"
@@ -52,6 +59,11 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", vers
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
 junit-pioneer = { module = "org.junit-pioneer:junit-pioneer", version = "1.9.1" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
+# Used only by `anthropic-java-ecosystem-test` to compile and run a consumer with an old Kotlin
+# toolchain, proving the SDK stays consumable by Kotlin >= 1.8.20.
+kotlin-compiler-embeddable-compat = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin-compat-compiler" }
+kotlin-reflect-compat = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin-compat-stdlib" }
+kotlin-stdlib-compat = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin-compat-stdlib" }
 ktfmt = { module = "com.facebook:ktfmt", version = "0.61" }
 mcp = { module = "io.modelcontextprotocol.sdk:mcp", version = "1.1.1" }
 mockito-core = { module = "org.mockito:mockito-core", version = "5.14.2" }
