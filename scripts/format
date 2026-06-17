@@ -4,18 +4,26 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+# Build the list of Gradle format tasks not covered by a locally installed
+# formatter, then run them in a single invocation so we pay buildSrc
+# compilation and project configuration once instead of per language.
+gradle_tasks=()
+
 if command -v ktfmt &> /dev/null; then
     echo "==> Running ktfmt"
     ./scripts/kotlin-format
 else
-    echo "==> Running gradlew formatKotlin"
-    ./gradlew formatKotlin
+    gradle_tasks+=(formatKotlin)
 fi
 
 if command -v palantir-java-format &> /dev/null; then
     echo "==> Running palantir-java-format"
     ./scripts/java-format
 else
-    echo "==> Running gradlew formatJava"
-    ./gradlew formatJava
+    gradle_tasks+=(formatJava)
+fi
+
+if [[ "${#gradle_tasks[@]}" -gt 0 ]]; then
+    echo "==> Running gradlew ${gradle_tasks[*]}"
+    ./gradlew "${gradle_tasks[@]}"
 fi

@@ -6,18 +6,26 @@ cd "$(dirname "$0")/.."
 
 echo "==> Running lints"
 
+# Build the list of Gradle lint tasks not covered by a locally installed
+# formatter, then run them in a single invocation so we pay buildSrc
+# compilation and project configuration once instead of per language.
+gradle_tasks=()
+
 if command -v ktfmt &> /dev/null; then
     echo "==> Checking ktfmt"
     ./scripts/kotlin-format --dry-run --set-exit-if-changed
 else
-    echo "==> Running gradlew lintKotlin"
-    ./gradlew lintKotlin
+    gradle_tasks+=(lintKotlin)
 fi
 
 if command -v palantir-java-format &> /dev/null; then
     echo "==> Checking palantir-java-format"
     ./scripts/java-format --dry-run --set-exit-if-changed
 else
-    echo "==> Running gradlew lintJava"
-    ./gradlew lintJava
+    gradle_tasks+=(lintJava)
+fi
+
+if [[ "${#gradle_tasks[@]}" -gt 0 ]]; then
+    echo "==> Running gradlew ${gradle_tasks[*]}"
+    ./gradlew "${gradle_tasks[@]}"
 fi
