@@ -37,6 +37,7 @@ maven-publish-gradle-plugin = { module = "com.vanniktech:gradle-maven-publish-pl
 # `anthropic.dokka` convention script.
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 proguard-gradle-plugin = { module = "com.guardsquare:proguard-gradle", version.ref = "proguard" }
+shadow-gradle-plugin = { module = "com.gradleup.shadow:shadow-gradle-plugin", version.ref = "shadow" }
 
 assertj = { module = "org.assertj:assertj-core", version = "3.27.7" }
 awssdk-auth = { module = "software.amazon.awssdk:auth" }
@@ -90,6 +91,3 @@ swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", versi
 # `org.wiremock:wiremock`) is Java 11 and declares Java 11+ in its Gradle metadata, which conflicts
 # with our Java 8 test compile classpath.
 wiremock = { module = "com.github.tomakehurst:wiremock-jre8", version = "2.35.2" }
-
-[plugins]
-shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

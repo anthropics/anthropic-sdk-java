@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "==> Updating dependency lockfiles"
+# `resolveAndLockAll` (registered by the `anthropic.java` convention plugin)
+# resolves every configuration in every module so `--write-locks` captures
+# the full lock state in one pass; the flag also propagates to `buildSrc`.
+./gradlew resolveAndLockAll --write-locks "$@"
