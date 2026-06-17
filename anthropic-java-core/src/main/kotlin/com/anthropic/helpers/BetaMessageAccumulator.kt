@@ -106,10 +106,7 @@ class BetaMessageAccumulator private constructor() {
                         // Convert between the structurally identical per-type unions via JSON so
                         // every variant survives — including variants unknown to the union (e.g.
                         // fallback iteration types), which both unions carry as raw values.
-                        JSON_MAPPER.convertValue(
-                            deltaIteration,
-                            BetaUsage.Iteration::class.java,
-                        )
+                        JSON_MAPPER.convertValue(deltaIteration, BetaUsage.Iteration::class.java)
                     }
                 )
             }
