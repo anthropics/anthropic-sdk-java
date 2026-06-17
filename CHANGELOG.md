@@ -1,5 +1,42 @@
 # Changelog
 
+## 2.41.0 (2026-06-17)
+
+Full Changelog: [v2.40.1...v2.41.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.40.1...v2.41.0)
+
+### Bug Fixes
+
+* **client:** bad model definitions ([96787c6](https://github.com/anthropics/anthropic-sdk-java/commit/96787c65df5a3c5525eb03deded6f2b6de073ae9))
+* **foundry:** align baseUrl contract with the other SDKs (/anthropic in baseUrl, no path rewrite) ([#84](https://github.com/anthropics/anthropic-sdk-java/issues/84)) ([e651d93](https://github.com/anthropics/anthropic-sdk-java/commit/e651d930be6c768c509bda3346c32d3cc99ee099))
+
+
+### Chores
+
+* **api:** remove retired models from API and SDKs ([da1c93d](https://github.com/anthropics/anthropic-sdk-java/commit/da1c93df63141c15199797685008f03e11486d34))
+* upgrade all deps ([#73](https://github.com/anthropics/anthropic-sdk-java/issues/73)) ([e57f1b5](https://github.com/anthropics/anthropic-sdk-java/commit/e57f1b5c8e65dc6ca35a597e8480b6f522617b96))
+
+
+### Styles
+
+* apply formatting ([#88](https://github.com/anthropics/anthropic-sdk-java/issues/88)) ([9c929f7](https://github.com/anthropics/anthropic-sdk-java/commit/9c929f752b43ca54ae2af650a5ea6f7f2c2a5abd))
+
+
+### Build System
+
+* enabling dependency locking ([#83](https://github.com/anthropics/anthropic-sdk-java/issues/83)) ([7d87ed6](https://github.com/anthropics/anthropic-sdk-java/commit/7d87ed6c9742a63b87f5a2df2b92ff72e79fc341))
+* fix runners ([#66](https://github.com/anthropics/anthropic-sdk-java/issues/66)) ([19882bb](https://github.com/anthropics/anthropic-sdk-java/commit/19882bbada3e1ccbd1cb4fc10b011801cd0865fa))
+* further cleanups + reorganization ([#78](https://github.com/anthropics/anthropic-sdk-java/issues/78)) ([568600d](https://github.com/anthropics/anthropic-sdk-java/commit/568600df595429c5e40eaf133128ea1b5a2e2ea1))
+* make JavaExec tasks build-cacheable + speed up scripts ([#80](https://github.com/anthropics/anthropic-sdk-java/issues/80)) ([218bd30](https://github.com/anthropics/anthropic-sdk-java/commit/218bd301a654825f82fbdd3247627665cfca2117))
+* migrate to Kotlin 2.0 metadata and Gradle 9 ([#65](https://github.com/anthropics/anthropic-sdk-java/issues/65)) ([32cc293](https://github.com/anthropics/anthropic-sdk-java/commit/32cc293c8d8950af0bc70126013eae3e546a2401))
+* modernize proguard setup ([#71](https://github.com/anthropics/anthropic-sdk-java/issues/71)) ([177b637](https://github.com/anthropics/anthropic-sdk-java/commit/177b6376770a2846c8752584a5b8df4c870a4e15))
+* parallelize jackson test passes + trim shrinker input ([#81](https://github.com/anthropics/anthropic-sdk-java/issues/81)) ([d4209ce](https://github.com/anthropics/anthropic-sdk-java/commit/d4209ce850742f4da9d944d6359e6d250a945ac0))
+* restructure gradle configs ([#69](https://github.com/anthropics/anthropic-sdk-java/issues/69)) ([c34733e](https://github.com/anthropics/anthropic-sdk-java/commit/c34733e5976b7940356a7fafd3b995530c634322))
+* speed up local and CI builds ([#62](https://github.com/anthropics/anthropic-sdk-java/issues/62)) ([78de617](https://github.com/anthropics/anthropic-sdk-java/commit/78de617c06dc8fb31327ec4682649a613860b348))
+* update runners ([6481804](https://github.com/anthropics/anthropic-sdk-java/commit/648180482eb5ba489068b157e7d019d1a9c3387d))
+* update runners ([#67](https://github.com/anthropics/anthropic-sdk-java/issues/67)) ([59ff3b9](https://github.com/anthropics/anthropic-sdk-java/commit/59ff3b9ba3c9f943d4c32a1e797bfdc1cedcfe82))
+* upgrade dokka ([#68](https://github.com/anthropics/anthropic-sdk-java/issues/68)) ([39ae660](https://github.com/anthropics/anthropic-sdk-java/commit/39ae6603ae94179cda46199decc9d88c69c49734))
+* use config cache for publishing ([#70](https://github.com/anthropics/anthropic-sdk-java/issues/70)) ([4545c27](https://github.com/anthropics/anthropic-sdk-java/commit/4545c27f1bc25188db227a944583a6941468f966))
+
 ## 2.40.1 (2026-06-09)
 
 Full Changelog: [v2.40.0...v2.40.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.40.0...v2.40.1)
