@@ -93,6 +93,12 @@ fun JavaExec.useJdk8() {
 tasks.shadowJar {
     from(sourceSets.test.get().output)
     configurations = listOf(project.configurations.testRuntimeClasspath.get())
+    // assertj-core pulls in ByteBuddy (~6,000 classes including MRJAR copies)
+    // for soft assertions and assumptions, neither of which the ecosystem
+    // test uses. Excluding it shrinks the input ProGuard/R8 must analyze on
+    // the critical path.
+    exclude("net/bytebuddy/**")
+    exclude("META-INF/versions/*/net/bytebuddy/**")
 }
 
 // ProGuard + R8 shrinking compatibility

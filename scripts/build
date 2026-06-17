@@ -5,4 +5,7 @@ set -e
 cd "$(dirname "$0")/.."
 
 echo "==> Building classes"
-./gradlew build testClasses "$@" -x test
+# `assemble` is `build` minus `check`: it produces every jar without running
+# any verification (tests run in the separate `test` CI job). `testClasses`
+# is added so a test that no longer compiles still fails this job.
+./gradlew assemble testClasses "$@"
