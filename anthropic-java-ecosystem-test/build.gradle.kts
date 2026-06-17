@@ -2,7 +2,7 @@ import org.gradle.process.CommandLineArgumentProvider
 
 plugins {
     id("anthropic.kotlin")
-    alias(libs.plugins.shadow)
+    id("com.gradleup.shadow")
 }
 
 // This module has a Java test source (the Java 8 consumer) but no Java main source. On JDK 21,

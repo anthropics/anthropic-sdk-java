@@ -1,7 +1,34 @@
+import org.gradle.api.artifacts.dsl.LockMode
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     `java-library`
+}
+
+// Pin every resolved configuration to the versions recorded in this module's `gradle.lockfile`.
+// STRICT fails the build if a locked configuration is resolved without lock state, so a missing
+// lockfile can't silently fall back to dynamic resolution. Regenerate with `./scripts/lock`.
+dependencyLocking {
+    lockAllConfigurations()
+    lockMode.set(LockMode.STRICT)
+}
+
+// Resolves every resolvable configuration so `--write-locks` captures all of them in one pass.
+// Without this, lock state would only be written for whatever the requested task graph happened
+// to resolve.
+tasks.register("resolveAndLockAll") {
+    group = "Help"
+    description = "Resolves all configurations to write dependency lock state."
+    notCompatibleWithConfigurationCache("Resolves configurations at execution time")
+    val startParameter = project.gradle.startParameter
+    doFirst {
+        require(startParameter.isWriteDependencyLocks) {
+            "Run with --write-locks to update lock state"
+        }
+    }
+    doLast {
+        configurations.filter { it.isCanBeResolved }.forEach { it.resolve() }
+    }
 }
 
 // Precompiled script plugins can't use the generated type-safe `libs` accessors; look the catalog

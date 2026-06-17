@@ -49,6 +49,21 @@ installed, so `./gradlew test` still works without one; install any JDK 8 (for e
 to run them locally. CI always provisions a JDK 8 and fails if it is missing, so the checks can
 never be silently skipped there.
 
+## Dependency lockfiles
+
+Every module (and `buildSrc`) pins its resolved dependency graph to a checked-in `gradle.lockfile`.
+Locking runs in strict mode, so the build fails if a configuration is resolved without matching
+lock state — for example, after adding a dependency or bumping a version in
+`gradle/libs.versions.toml`.
+
+To regenerate the lockfiles after changing dependencies:
+
+```sh
+$ ./scripts/lock
+```
+
+Commit the updated `gradle.lockfile`s alongside the dependency change.
+
 ## Linting and formatting
 
 This repository uses [ktfmt](https://github.com/facebook/ktfmt) for Kotlin and [palantir-java-format](https://github.com/palantir/palantir-java-format) for Java.
