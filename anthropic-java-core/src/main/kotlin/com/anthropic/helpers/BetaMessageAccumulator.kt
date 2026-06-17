@@ -108,7 +108,7 @@ class BetaMessageAccumulator private constructor() {
                         // fallback iteration types), which both unions carry as raw values.
                         JSON_MAPPER.convertValue(
                             deltaIteration,
-                            BetaUsage.BetaIterationsUsageItems::class.java,
+                            BetaUsage.Iteration::class.java,
                         )
                     }
                 )
