@@ -50,9 +50,12 @@ val testJacksonPublished by tasks.registering(Test::class) {
 }
 
 tasks.test {
-    dependsOn(testJacksonPublished)
     systemProperty("expected.jackson.version", libs.versions.jackson.compat.get())
 }
+
+// Wired into `check` (rather than `test.dependsOn`) so Gradle can schedule it concurrently with
+// `test` instead of forcing the two passes to run sequentially.
+tasks.check { dependsOn(testJacksonPublished) }
 
 dependencies {
     api(libs.jackson.core)
