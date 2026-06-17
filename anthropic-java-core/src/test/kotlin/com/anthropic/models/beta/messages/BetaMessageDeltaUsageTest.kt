@@ -45,7 +45,7 @@ internal class BetaMessageDeltaUsageTest {
         assertThat(betaMessageDeltaUsage.inputTokens()).contains(2095L)
         assertThat(betaMessageDeltaUsage.iterations().getOrNull())
             .containsExactly(
-                BetaMessageDeltaUsage.BetaIterationsUsageItems.ofMessage(
+                BetaMessageDeltaUsage.Iteration.ofMessage(
                     BetaMessageIterationUsage.builder()
                         .cacheCreation(
                             BetaCacheCreation.builder()

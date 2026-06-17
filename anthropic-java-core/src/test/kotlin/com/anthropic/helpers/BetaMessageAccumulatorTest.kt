@@ -109,9 +109,7 @@ internal class BetaMessageAccumulatorTest {
                     )
                     .iterations(
                         listOf(
-                            BetaMessageDeltaUsage.BetaIterationsUsageItems.ofFallbackMessage(
-                                fallbackIteration
-                            )
+                            BetaMessageDeltaUsage.Iteration.ofFallbackMessage(fallbackIteration)
                         )
                     )
                     .build(),
@@ -119,7 +117,7 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(usage.iterations())
             .hasValue(
-                listOf(BetaUsage.BetaIterationsUsageItems.ofFallbackMessage(fallbackIteration))
+                listOf(BetaUsage.Iteration.ofFallbackMessage(fallbackIteration))
             )
     }
 
