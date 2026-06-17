@@ -97,14 +97,34 @@ internal class FoundryBackendTest {
     fun resourceInBaseUrl() {
         val backend = createBackendWithTokenSupplierAndResource()
 
-        assertThat(backend.baseUrl()).isEqualTo("https://$RESOURCE.services.ai.azure.com")
+        assertThat(backend.baseUrl()).isEqualTo("https://$RESOURCE.services.ai.azure.com/anthropic")
     }
 
     @Test
-    fun baseUrlCustom() {
+    fun baseUrlCustomHostOnly() {
+        // Host-only base URLs (the form Java callers used before this contract was aligned with
+        // the other SDKs) get the `/anthropic` prefix appended.
         val backend = createBackendWithApiKeyAndBaseUrl()
 
-        assertThat(backend.baseUrl()).isEqualTo(CUSTOM_BASE_URL)
+        assertThat(backend.baseUrl()).isEqualTo("$CUSTOM_BASE_URL/anthropic")
+    }
+
+    @Test
+    fun baseUrlCustomWithAnthropicSuffix() {
+        // The cross-SDK ANTHROPIC_FOUNDRY_BASE_URL form already carries `/anthropic` and is used
+        // verbatim (no doubling).
+        val backend =
+            FoundryBackend.builder().apiKey(API_KEY).baseUrl("$CUSTOM_BASE_URL/anthropic").build()
+
+        assertThat(backend.baseUrl()).isEqualTo("$CUSTOM_BASE_URL/anthropic")
+    }
+
+    @Test
+    fun baseUrlCustomWithAnthropicSuffixAndTrailingSlash() {
+        val backend =
+            FoundryBackend.builder().apiKey(API_KEY).baseUrl("$CUSTOM_BASE_URL/anthropic/").build()
+
+        assertThat(backend.baseUrl()).isEqualTo("$CUSTOM_BASE_URL/anthropic")
     }
 
     @Test
@@ -226,14 +246,17 @@ internal class FoundryBackendTest {
     }
 
     @Test
-    fun prepareRequestAlreadyPrepared() {
+    fun prepareRequestIsIdempotent() {
+        // `prepareRequest` no longer rewrites path segments — only the version header is added —
+        // so a second call leaves the request unchanged.
         val backend = createBackendWithApiKeyAndResource()
         val request = createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
-        val preparedRequest = backend.prepareRequest(request)
+        val once = backend.prepareRequest(request)
+        val twice = backend.prepareRequest(once)
 
-        assertThatThrownBy { backend.prepareRequest(preparedRequest) }
-            .isExactlyInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageStartingWith("Request already prepared for Foundry")
+        assertThat(twice.pathSegments).isEqualTo(once.pathSegments)
+        assertThat(twice.headers.values("anthropic-version"))
+            .isEqualTo(once.headers.values("anthropic-version"))
     }
 
     @Test
@@ -265,14 +288,8 @@ internal class FoundryBackendTest {
                 "count_tokens",
             )
         val preparedRequest = backend.prepareRequest(request)
-        val pathSegments = preparedRequest.pathSegments
 
-        assertThat(pathSegments.size).isEqualTo(4)
-        assertThat(pathSegments[0]).isEqualTo("anthropic")
-        assertThat(pathSegments[1]).isEqualTo("v1")
-        assertThat(pathSegments[2]).isEqualTo("messages")
-        assertThat(pathSegments[3]).isEqualTo("count_tokens")
-
+        assertThat(preparedRequest.pathSegments).containsExactly("v1", "messages", "count_tokens")
         assertThat(preparedRequest.headers.names()).contains("anthropic-version")
         assertThat(preparedRequest.headers.values("anthropic-version")[0])
             .isEqualTo(ANTHROPIC_VERSION)
@@ -283,13 +300,8 @@ internal class FoundryBackendTest {
         val backend = createBackendWithApiKeyAndResource()
         val request = createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
         val preparedRequest = backend.prepareRequest(request)
-        val pathSegments = preparedRequest.pathSegments
 
-        assertThat(pathSegments.size).isEqualTo(3)
-        assertThat(pathSegments[0]).isEqualTo("anthropic")
-        assertThat(pathSegments[1]).isEqualTo("v1")
-        assertThat(pathSegments[2]).isEqualTo("messages")
-
+        assertThat(preparedRequest.pathSegments).containsExactly("v1", "messages")
         assertThat(preparedRequest.headers.names()).contains("anthropic-version")
         assertThat(preparedRequest.headers.values("anthropic-version")[0])
             .isEqualTo(ANTHROPIC_VERSION)
@@ -300,12 +312,8 @@ internal class FoundryBackendTest {
         val backend = createBackendWithApiKeyAndResource()
         val request = createRequest("""{"model":"$MODEL_ID"}""", "v1", "skills")
         val preparedRequest = backend.prepareRequest(request)
-        val pathSegments = preparedRequest.pathSegments
 
-        assertThat(pathSegments.size).isEqualTo(3)
-        assertThat(pathSegments[0]).isEqualTo("anthropic")
-        assertThat(pathSegments[1]).isEqualTo("v1")
-        assertThat(pathSegments[2]).isEqualTo("skills")
+        assertThat(preparedRequest.pathSegments).containsExactly("v1", "skills")
     }
 
     @Test
@@ -313,12 +321,8 @@ internal class FoundryBackendTest {
         val backend = createBackendWithApiKeyAndResource()
         val request = createRequest("""{"model":"$MODEL_ID"}""", "v1", "files")
         val preparedRequest = backend.prepareRequest(request)
-        val pathSegments = preparedRequest.pathSegments
 
-        assertThat(pathSegments.size).isEqualTo(3)
-        assertThat(pathSegments[0]).isEqualTo("anthropic")
-        assertThat(pathSegments[1]).isEqualTo("v1")
-        assertThat(pathSegments[2]).isEqualTo("files")
+        assertThat(preparedRequest.pathSegments).containsExactly("v1", "files")
     }
 
     @Test

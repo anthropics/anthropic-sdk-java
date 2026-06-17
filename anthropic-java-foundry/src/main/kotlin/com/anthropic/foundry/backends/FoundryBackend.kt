@@ -41,7 +41,14 @@ private constructor(
         @JvmStatic fun fromEnv(): FoundryBackend = builder().fromEnv().build()
     }
 
-    override fun baseUrl(): String = baseUrl ?: "https://$resource.services.ai.azure.com"
+    override fun baseUrl(): String {
+        // The cross-SDK contract for `ANTHROPIC_FOUNDRY_BASE_URL` is that it includes the
+        // `/anthropic` prefix and the client appends `/v1/messages` directly — there is no
+        // request-time path rewrite. Ensure the prefix here so both the cross-SDK form and the
+        // older host-only form Java callers may already use resolve to the same URL.
+        val raw = (baseUrl ?: "https://$resource.services.ai.azure.com").trimEnd('/')
+        return if (raw.endsWith("/anthropic")) raw else "$raw/anthropic"
+    }
 
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val pathSegments = request.pathSegments
@@ -49,11 +56,6 @@ private constructor(
         if (pathSegments.isEmpty()) {
             throw AnthropicInvalidDataException("Request missing all path segments.")
         }
-
-        // Path segments in the input will be, e.g., `v1/messages/count_tokens`. For Foundry, a new
-        // `anthropic` path segment must be inserted before the `v1` path segment. If `anthropic` is
-        // already present, then the request has already been prepared.
-        require(pathSegments[0] != "anthropic") { "Request already prepared for Foundry." }
 
         if (pathSegments[0] != "v1") {
             throw AnthropicInvalidDataException("Expected first 'v1' path segment.")
@@ -87,18 +89,12 @@ private constructor(
         // deployment is the same as the model name, but it may be changed to an arbitrary value,
         // so do _not_ validate the model name against the enum of known model names.
 
-        return request
-            .toBuilder()
-            .replaceAllPathSegments("anthropic")
-            .apply {
-                pathSegments.forEach { pathSegment -> addPathSegment(pathSegment) }
-                // A user-supplied "anthropic-version" (e.g. set by an interceptor) wins over the
-                // default.
-                if (!request.headers.names().contains(HEADER_VERSION)) {
-                    putHeader(HEADER_VERSION, ANTHROPIC_VERSION)
-                }
-            }
-            .build()
+        // The `/anthropic` prefix lives in `baseUrl()`, so the path segments pass through
+        // unchanged — only the version header is added.
+        if (request.headers.names().contains(HEADER_VERSION)) {
+            return request
+        }
+        return request.toBuilder().putHeader(HEADER_VERSION, ANTHROPIC_VERSION).build()
     }
 
     override fun authorizeRequest(request: HttpRequest): HttpRequest {
