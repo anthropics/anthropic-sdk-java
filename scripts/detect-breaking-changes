@@ -17,6 +17,8 @@ for PATHSPEC in "${TEST_PATHS[@]}"; do
     git checkout "$1" -- "${PATHSPEC}" 2>/dev/null || true
 done
 
-# Run the build so that the Kotlin compiler typechecks the restored
-# old test files against the current SDK.
-./scripts/build
+# Compile the test source set so the Kotlin compiler typechecks the restored
+# old test files against the current SDK. Compilation alone is sufficient to
+# surface a breaking API change; assembling jars (`./scripts/build`) is not
+# needed here.
+./gradlew :anthropic-java-core:testClasses

@@ -162,11 +162,19 @@ val r8Jar by tasks.registering(JavaExec::class) {
         shadowJarFile.get().asFile.absolutePath,
     )
 
-    // `args` are not tracked as task inputs, so declare them explicitly for
-    // up-to-date checking.
+    // `args` is an `@Input` on `JavaExec` (so the paths above already affect
+    // the cache key), but the file *contents* behind those paths are not
+    // tracked. Declare them explicitly so a changed shadow jar or rule file
+    // invalidates the task. The mapping file is a debug side-effect nothing
+    // consumes, so it is intentionally not a declared output (it would add
+    // ~29 MB to every cache entry).
     inputs.files(shadowJarFile)
     inputs.files(proguardConfigs)
     outputs.file(r8JarFile)
+    // `JavaExec` is not cacheable by default. Inputs/outputs above are
+    // complete, so the result is safe to pull from the build cache on CI
+    // (where the project `build/` directory does not survive between runs).
+    outputs.cacheIf { true }
 }
 
 val testR8 by tasks.registering(JavaExec::class) {
@@ -234,9 +242,16 @@ val compileKotlin1820 by tasks.registering(JavaExec::class) {
         }
     })
 
-    inputs.files(sources).withPropertyName("kotlinUsageSources")
-    inputs.files(compileClasspath).withPropertyName("kotlinCompatClasspath")
+    inputs.files(sources)
+        .withPropertyName("kotlinUsageSources")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.files(compileClasspath)
+        .withPropertyName("kotlinCompatClasspath")
+        .withNormalizer(ClasspathNormalizer::class)
     outputs.dir(outDir)
+    // `JavaExec` is not cacheable by default; inputs/outputs above are
+    // complete (the compiler version is fixed by `kotlinCompatCompiler`).
+    outputs.cacheIf { true }
 
     // Gradle only auto-cleans declared output directories for incremental tasks (those taking
     // `InputChanges`); `JavaExec` is not one, so stale .class files from since-removed sources

@@ -9,6 +9,11 @@ NC='\033[0m' # No Color
 
 MAVEN_REPO_PATH="./build/local-maven-repo"
 
+# Maximum number of files uploaded concurrently. Each upload makes two HTTPS
+# round trips (signed-URL request + PUT), so latency dominates and parallelism
+# is the only way to keep the runner's network busy.
+UPLOAD_CONCURRENCY="${UPLOAD_CONCURRENCY:-12}"
+
 log_error() {
     local msg="$1"
     local headers="$2"
@@ -99,25 +104,33 @@ upload_file() {
         if ! echo "$upload_response" | grep -q "HTTP/[0-9.]* 200"; then
             log_error "Failed to upload artifact file" "$tmp_headers" "$upload_response"
         fi
-
-        # Insert small throttle to reduce rate limiting risk
-        sleep 0.1
     fi
 }
 
+# Upload every regular file under $1 with bounded concurrency. Each file's two
+# HTTPS round trips run in a background subshell; `wait -n` reaps one finished
+# upload before launching the next once UPLOAD_CONCURRENCY are in flight. A
+# failed upload's non-zero exit is captured from `wait -n` and surfaced once
+# all in-flight work has drained, so `set -e` (or the caller) sees it.
 walk_tree() {
-    local current_dir="$1"
-
-    for entry in "$current_dir"/*; do
-        # Check that entry is valid
-        [ -e "$entry" ] || [ -h "$entry" ] || continue
-
-        if [ -d "$entry" ]; then
-            walk_tree "$entry"
-        else
-            upload_file "$entry"
+    local running=0 rc=0
+    while IFS= read -r -d '' file; do
+        if (( running >= UPLOAD_CONCURRENCY )); then
+            wait -n || rc=$?
+            running=$((running - 1))
         fi
+        # Stop launching new uploads once one has failed; just drain.
+        if (( rc == 0 )); then
+            upload_file "$file" &
+            running=$((running + 1))
+        fi
+    done < <(find "$1" -type f -print0)
+
+    while (( running > 0 )); do
+        wait -n || rc=$?
+        running=$((running - 1))
     done
+    return "$rc"
 }
 
 generate_instructions() {
