@@ -3,7 +3,6 @@
 package com.anthropic.models.beta.messages
 
 import com.anthropic.core.jsonMapper
-import com.anthropic.models.BetaIterationsUsageItems
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
@@ -63,7 +62,7 @@ internal class BetaUsageTest {
         assertThat(betaUsage.inputTokens()).isEqualTo(2095L)
         assertThat(betaUsage.iterations().getOrNull())
             .containsExactly(
-                BetaIterationsUsageItems.ofMessage(
+                BetaUsage.Iteration.ofMessage(
                     BetaMessageIterationUsage.builder()
                         .cacheCreation(
                             BetaCacheCreation.builder()

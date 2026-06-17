@@ -13,7 +13,6 @@ import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.BetaIterationsUsageItems
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -36,7 +35,7 @@ private constructor(
     private val cacheCreationInputTokens: JsonField<Long>,
     private val cacheReadInputTokens: JsonField<Long>,
     private val inputTokens: JsonField<Long>,
-    private val iterations: JsonField<List<BetaIterationsUsageItems>>,
+    private val iterations: JsonField<List<Iteration>>,
     private val outputTokens: JsonField<Long>,
     private val outputTokensDetails: JsonField<BetaOutputTokensDetails>,
     private val serverToolUse: JsonField<BetaServerToolUsage>,
@@ -56,7 +55,7 @@ private constructor(
         inputTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("iterations")
         @ExcludeMissing
-        iterations: JsonField<List<BetaIterationsUsageItems>> = JsonMissing.of(),
+        iterations: JsonField<List<Iteration>> = JsonMissing.of(),
         @JsonProperty("output_tokens")
         @ExcludeMissing
         outputTokens: JsonField<Long> = JsonMissing.of(),
@@ -115,8 +114,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun iterations(): Optional<List<BetaIterationsUsageItems>> =
-        iterations.getOptional("iterations")
+    fun iterations(): Optional<List<Iteration>> = iterations.getOptional("iterations")
 
     /**
      * The cumulative number of output tokens which were used.
@@ -183,7 +181,7 @@ private constructor(
      */
     @JsonProperty("iterations")
     @ExcludeMissing
-    fun _iterations(): JsonField<List<BetaIterationsUsageItems>> = iterations
+    fun _iterations(): JsonField<List<Iteration>> = iterations
 
     /**
      * Returns the raw JSON value of [outputTokens].
@@ -250,7 +248,7 @@ private constructor(
         private var cacheCreationInputTokens: JsonField<Long>? = null
         private var cacheReadInputTokens: JsonField<Long>? = null
         private var inputTokens: JsonField<Long>? = null
-        private var iterations: JsonField<MutableList<BetaIterationsUsageItems>>? = null
+        private var iterations: JsonField<MutableList<Iteration>>? = null
         private var outputTokens: JsonField<Long>? = null
         private var outputTokensDetails: JsonField<BetaOutputTokensDetails>? = null
         private var serverToolUse: JsonField<BetaServerToolUsage>? = null
@@ -362,60 +360,49 @@ private constructor(
          * - Calculate the true context window size from the last iteration
          * - Understand token accumulation across server-side tool use loops
          */
-        fun iterations(iterations: List<BetaIterationsUsageItems>?) =
-            iterations(JsonField.ofNullable(iterations))
+        fun iterations(iterations: List<Iteration>?) = iterations(JsonField.ofNullable(iterations))
 
         /** Alias for calling [Builder.iterations] with `iterations.orElse(null)`. */
-        fun iterations(iterations: Optional<List<BetaIterationsUsageItems>>) =
-            iterations(iterations.getOrNull())
+        fun iterations(iterations: Optional<List<Iteration>>) = iterations(iterations.getOrNull())
 
         /**
          * Sets [Builder.iterations] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.iterations] with a well-typed
-         * `List<BetaIterationsUsageItems>` value instead. This method is primarily for setting the
-         * field to an undocumented or not yet supported value.
+         * You should usually call [Builder.iterations] with a well-typed `List<Iteration>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun iterations(iterations: JsonField<List<BetaIterationsUsageItems>>) = apply {
+        fun iterations(iterations: JsonField<List<Iteration>>) = apply {
             this.iterations = iterations.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [BetaIterationsUsageItems] to [iterations].
+         * Adds a single [Iteration] to [iterations].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addIteration(iteration: BetaIterationsUsageItems) = apply {
+        fun addIteration(iteration: Iteration) = apply {
             iterations =
                 (iterations ?: JsonField.of(mutableListOf())).also {
                     checkKnown("iterations", it).add(iteration)
                 }
         }
 
-        /** Alias for calling [addIteration] with `BetaIterationsUsageItems.ofMessage(message)`. */
+        /** Alias for calling [addIteration] with `Iteration.ofMessage(message)`. */
         fun addIteration(message: BetaMessageIterationUsage) =
-            addIteration(BetaIterationsUsageItems.ofMessage(message))
+            addIteration(Iteration.ofMessage(message))
 
-        /**
-         * Alias for calling [addIteration] with
-         * `BetaIterationsUsageItems.ofCompaction(compaction)`.
-         */
+        /** Alias for calling [addIteration] with `Iteration.ofCompaction(compaction)`. */
         fun addIteration(compaction: BetaCompactionIterationUsage) =
-            addIteration(BetaIterationsUsageItems.ofCompaction(compaction))
+            addIteration(Iteration.ofCompaction(compaction))
 
-        /**
-         * Alias for calling [addIteration] with
-         * `BetaIterationsUsageItems.ofAdvisorMessage(advisorMessage)`.
-         */
+        /** Alias for calling [addIteration] with `Iteration.ofAdvisorMessage(advisorMessage)`. */
         fun addIteration(advisorMessage: BetaAdvisorMessageIterationUsage) =
-            addIteration(BetaIterationsUsageItems.ofAdvisorMessage(advisorMessage))
+            addIteration(Iteration.ofAdvisorMessage(advisorMessage))
 
-        /**
-         * Alias for calling [addIteration] with
-         * `BetaIterationsUsageItems.ofFallbackMessage(fallbackMessage)`.
-         */
+        /** Alias for calling [addIteration] with `Iteration.ofFallbackMessage(fallbackMessage)`. */
         fun addIteration(fallbackMessage: BetaFallbackMessageIterationUsage) =
-            addIteration(BetaIterationsUsageItems.ofFallbackMessage(fallbackMessage))
+            addIteration(Iteration.ofFallbackMessage(fallbackMessage))
 
         /** The cumulative number of output tokens which were used. */
         fun outputTokens(outputTokens: Long) = outputTokens(JsonField.of(outputTokens))
@@ -575,9 +562,9 @@ private constructor(
             (serverToolUse.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Token usage for a sampling iteration. */
-    @JsonDeserialize(using = BetaIterationsUsageItems.Deserializer::class)
-    @JsonSerialize(using = BetaIterationsUsageItems.Serializer::class)
-    class BetaIterationsUsageItems
+    @JsonDeserialize(using = Iteration.Deserializer::class)
+    @JsonSerialize(using = Iteration.Serializer::class)
+    class Iteration
     private constructor(
         private val message: BetaMessageIterationUsage? = null,
         private val compaction: BetaCompactionIterationUsage? = null,
@@ -646,7 +633,7 @@ private constructor(
          * import com.anthropic.core.JsonValue;
          * import java.util.Optional;
          *
-         * Optional<String> result = betaIterationsUsageItems.accept(new BetaIterationsUsageItems.Visitor<Optional<String>>() {
+         * Optional<String> result = iteration.accept(new Iteration.Visitor<Optional<String>>() {
          *     @Override
          *     public Optional<String> visitMessage(BetaMessageIterationUsage message) {
          *         return Optional.of(message.toString());
@@ -685,7 +672,7 @@ private constructor(
          * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
          *   expected type.
          */
-        fun validate(): BetaIterationsUsageItems = apply {
+        fun validate(): Iteration = apply {
             if (validated) {
                 return@apply
             }
@@ -757,7 +744,7 @@ private constructor(
                 return true
             }
 
-            return other is BetaIterationsUsageItems &&
+            return other is Iteration &&
                 message == other.message &&
                 compaction == other.compaction &&
                 advisorMessage == other.advisorMessage &&
@@ -769,31 +756,29 @@ private constructor(
 
         override fun toString(): String =
             when {
-                message != null -> "BetaIterationsUsageItems{message=$message}"
-                compaction != null -> "BetaIterationsUsageItems{compaction=$compaction}"
-                advisorMessage != null -> "BetaIterationsUsageItems{advisorMessage=$advisorMessage}"
-                fallbackMessage != null ->
-                    "BetaIterationsUsageItems{fallbackMessage=$fallbackMessage}"
-                _json != null -> "BetaIterationsUsageItems{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid BetaIterationsUsageItems")
+                message != null -> "Iteration{message=$message}"
+                compaction != null -> "Iteration{compaction=$compaction}"
+                advisorMessage != null -> "Iteration{advisorMessage=$advisorMessage}"
+                fallbackMessage != null -> "Iteration{fallbackMessage=$fallbackMessage}"
+                _json != null -> "Iteration{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Iteration")
             }
 
         companion object {
 
             /** Token usage for a sampling iteration. */
             @JvmStatic
-            fun ofMessage(message: BetaMessageIterationUsage) =
-                BetaIterationsUsageItems(message = message)
+            fun ofMessage(message: BetaMessageIterationUsage) = Iteration(message = message)
 
             /** Token usage for a compaction iteration. */
             @JvmStatic
             fun ofCompaction(compaction: BetaCompactionIterationUsage) =
-                BetaIterationsUsageItems(compaction = compaction)
+                Iteration(compaction = compaction)
 
             /** Token usage for an advisor sub-inference iteration. */
             @JvmStatic
             fun ofAdvisorMessage(advisorMessage: BetaAdvisorMessageIterationUsage) =
-                BetaIterationsUsageItems(advisorMessage = advisorMessage)
+                Iteration(advisorMessage = advisorMessage)
 
             /**
              * Token usage for the fallback-model attempt of a server-side fallback request.
@@ -804,12 +789,11 @@ private constructor(
              */
             @JvmStatic
             fun ofFallbackMessage(fallbackMessage: BetaFallbackMessageIterationUsage) =
-                BetaIterationsUsageItems(fallbackMessage = fallbackMessage)
+                Iteration(fallbackMessage = fallbackMessage)
         }
 
         /**
-         * An interface that defines how to map each variant of [BetaIterationsUsageItems] to a
-         * value of type [T].
+         * An interface that defines how to map each variant of [Iteration] to a value of type [T].
          */
         interface Visitor<out T> {
 
@@ -832,65 +816,63 @@ private constructor(
             fun visitFallbackMessage(fallbackMessage: BetaFallbackMessageIterationUsage): T
 
             /**
-             * Maps an unknown variant of [BetaIterationsUsageItems] to a value of type [T].
+             * Maps an unknown variant of [Iteration] to a value of type [T].
              *
-             * An instance of [BetaIterationsUsageItems] can contain an unknown variant if it was
-             * deserialized from data that doesn't match any known variant. For example, if the SDK
-             * is on an older version than the API, then the API may respond with new variants that
-             * the SDK is unaware of.
+             * An instance of [Iteration] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
              *
              * @throws AnthropicInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown BetaIterationsUsageItems: $json")
+                throw AnthropicInvalidDataException("Unknown Iteration: $json")
             }
         }
 
-        internal class Deserializer :
-            BaseDeserializer<BetaIterationsUsageItems>(BetaIterationsUsageItems::class) {
+        internal class Deserializer : BaseDeserializer<Iteration>(Iteration::class) {
 
-            override fun ObjectCodec.deserialize(node: JsonNode): BetaIterationsUsageItems {
+            override fun ObjectCodec.deserialize(node: JsonNode): Iteration {
                 val json = JsonValue.fromJsonNode(node)
                 val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
                 when (type) {
                     "message" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaMessageIterationUsage>())
-                            ?.let { BetaIterationsUsageItems(message = it, _json = json) }
-                            ?: BetaIterationsUsageItems(_json = json)
+                            ?.let { Iteration(message = it, _json = json) }
+                            ?: Iteration(_json = json)
                     }
                     "compaction" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaCompactionIterationUsage>())
-                            ?.let { BetaIterationsUsageItems(compaction = it, _json = json) }
-                            ?: BetaIterationsUsageItems(_json = json)
+                            ?.let { Iteration(compaction = it, _json = json) }
+                            ?: Iteration(_json = json)
                     }
                     "advisor_message" -> {
                         return tryDeserialize(
                                 node,
                                 jacksonTypeRef<BetaAdvisorMessageIterationUsage>(),
                             )
-                            ?.let { BetaIterationsUsageItems(advisorMessage = it, _json = json) }
-                            ?: BetaIterationsUsageItems(_json = json)
+                            ?.let { Iteration(advisorMessage = it, _json = json) }
+                            ?: Iteration(_json = json)
                     }
                     "fallback_message" -> {
                         return tryDeserialize(
                                 node,
                                 jacksonTypeRef<BetaFallbackMessageIterationUsage>(),
                             )
-                            ?.let { BetaIterationsUsageItems(fallbackMessage = it, _json = json) }
-                            ?: BetaIterationsUsageItems(_json = json)
+                            ?.let { Iteration(fallbackMessage = it, _json = json) }
+                            ?: Iteration(_json = json)
                     }
                 }
 
-                return BetaIterationsUsageItems(_json = json)
+                return Iteration(_json = json)
             }
         }
 
-        internal class Serializer :
-            BaseSerializer<BetaIterationsUsageItems>(BetaIterationsUsageItems::class) {
+        internal class Serializer : BaseSerializer<Iteration>(Iteration::class) {
 
             override fun serialize(
-                value: BetaIterationsUsageItems,
+                value: Iteration,
                 generator: JsonGenerator,
                 provider: SerializerProvider,
             ) {
@@ -900,7 +882,7 @@ private constructor(
                     value.advisorMessage != null -> generator.writeObject(value.advisorMessage)
                     value.fallbackMessage != null -> generator.writeObject(value.fallbackMessage)
                     value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid BetaIterationsUsageItems")
+                    else -> throw IllegalStateException("Invalid Iteration")
                 }
             }
         }
