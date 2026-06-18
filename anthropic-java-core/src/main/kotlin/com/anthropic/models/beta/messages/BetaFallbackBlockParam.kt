@@ -19,17 +19,15 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * A `fallback` block echoed back from a prior response.
  *
- * Accepted in `messages[].content` and never rendered into the prompt, not validated against the
- * request's `fallbacks` chain or top-level `model`, and stripped before the sticky-routing cache
- * key is computed.
+ * Accepted in `messages[].content` and not rendered into the prompt; not validated against the
+ * request's `fallbacks` chain or top-level `model`.
  *
- * Callers should echo the assistant turn verbatim — block included. The block's position is
- * load-bearing for thinking verification: the thinking runs on either side of a fallback hop carry
- * independently-rooted verification hash chains, and this block is the only record of where one
- * chain ends and the next begins. When thinking runs flank the boundary, omitting the block merges
- * the runs into one contiguous span whose hashes cannot verify (the request is rejected), and
- * moving it into the middle of a single run splits that run's chain and is likewise rejected;
- * between non-thinking blocks the block's placement has no verification effect.
+ * Echo the assistant turn back verbatim, including this block in its original position. The block
+ * marks the boundary between content produced before and after a fallback hop, and the server
+ * relies on that boundary to validate the turn: when thinking runs flank the boundary, omitting the
+ * block merges them into one span the server cannot validate (the request is rejected), and moving
+ * it into the middle of a single run is likewise rejected; between non-thinking blocks the block's
+ * placement has no validation effect.
  */
 class BetaFallbackBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -37,6 +35,7 @@ private constructor(
     private val from: JsonField<BetaFallbackInfoParam>,
     private val to: JsonField<BetaFallbackInfoParam>,
     private val type: JsonValue,
+    private val trigger: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -47,7 +46,8 @@ private constructor(
         from: JsonField<BetaFallbackInfoParam> = JsonMissing.of(),
         @JsonProperty("to") @ExcludeMissing to: JsonField<BetaFallbackInfoParam> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(from, to, type, mutableMapOf())
+        @JsonProperty("trigger") @ExcludeMissing trigger: JsonValue = JsonMissing.of(),
+    ) : this(from, to, type, trigger, mutableMapOf())
 
     /**
      * Identifies one hop of a fallback transition.
@@ -75,6 +75,17 @@ private constructor(
      * with an unexpected value).
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+    /**
+     * The response block's `trigger`, echoed verbatim. Accepted and ignored by the server; any
+     * object or `null` is allowed.
+     *
+     * This arbitrary value can be deserialized into a custom type using the `convert` method:
+     * ```java
+     * MyClass myObject = betaFallbackBlockParam.trigger().convert(MyClass.class);
+     * ```
+     */
+    @JsonProperty("trigger") @ExcludeMissing fun _trigger(): JsonValue = trigger
 
     /**
      * Returns the raw JSON value of [from].
@@ -122,6 +133,7 @@ private constructor(
         private var from: JsonField<BetaFallbackInfoParam>? = null
         private var to: JsonField<BetaFallbackInfoParam>? = null
         private var type: JsonValue = JsonValue.from("fallback")
+        private var trigger: JsonValue = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -129,6 +141,7 @@ private constructor(
             from = betaFallbackBlockParam.from
             to = betaFallbackBlockParam.to
             type = betaFallbackBlockParam.type
+            trigger = betaFallbackBlockParam.trigger
             additionalProperties = betaFallbackBlockParam.additionalProperties.toMutableMap()
         }
 
@@ -176,6 +189,12 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
+        /**
+         * The response block's `trigger`, echoed verbatim. Accepted and ignored by the server; any
+         * object or `null` is allowed.
+         */
+        fun trigger(trigger: JsonValue) = apply { this.trigger = trigger }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -213,6 +232,7 @@ private constructor(
                 checkRequired("from", from),
                 checkRequired("to", to),
                 type,
+                trigger,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -270,13 +290,16 @@ private constructor(
             from == other.from &&
             to == other.to &&
             type == other.type &&
+            trigger == other.trigger &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(from, to, type, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(from, to, type, trigger, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaFallbackBlockParam{from=$from, to=$to, type=$type, additionalProperties=$additionalProperties}"
+        "BetaFallbackBlockParam{from=$from, to=$to, type=$type, trigger=$trigger, additionalProperties=$additionalProperties}"
 }

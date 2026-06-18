@@ -359,6 +359,11 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(codeExecutionTool20260521: CodeExecutionTool20260521) = apply {
+            paramsBuilder.addTool(codeExecutionTool20260521)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
         fun addTool(memoryTool20250818: MemoryTool20250818) = apply {
             paramsBuilder.addTool(memoryTool20250818)
         }

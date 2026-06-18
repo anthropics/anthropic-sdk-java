@@ -47,6 +47,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -103,6 +104,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -159,6 +161,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -215,6 +218,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -272,6 +276,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -328,6 +333,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -384,6 +390,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -442,6 +449,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -499,6 +507,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -555,6 +564,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -612,6 +622,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -669,6 +680,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -727,6 +739,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -786,6 +799,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -845,6 +859,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -901,6 +916,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -957,6 +973,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1013,6 +1030,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1071,6 +1089,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1130,6 +1149,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).contains(vaultCredentialArchived)
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1189,6 +1209,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).contains(vaultCredentialDeleted)
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1249,6 +1270,7 @@ internal class BetaWebhookEventDataTest {
         assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
         assertThat(betaWebhookEventData.vaultCredentialRefreshFailed())
             .contains(vaultCredentialRefreshFailed)
+        assertThat(betaWebhookEventData.sessionUpdated()).isEmpty
     }
 
     @Test
@@ -1260,6 +1282,63 @@ internal class BetaWebhookEventDataTest {
                     .id("id")
                     .organizationId("organization_id")
                     .vaultId("vault_id")
+                    .workspaceId("workspace_id")
+                    .build()
+            )
+
+        val roundtrippedBetaWebhookEventData =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaWebhookEventData),
+                jacksonTypeRef<BetaWebhookEventData>(),
+            )
+
+        assertThat(roundtrippedBetaWebhookEventData).isEqualTo(betaWebhookEventData)
+    }
+
+    @Test
+    fun ofSessionUpdated() {
+        val sessionUpdated =
+            BetaWebhookSessionUpdatedEventData.builder()
+                .id("id")
+                .organizationId("organization_id")
+                .workspaceId("workspace_id")
+                .build()
+
+        val betaWebhookEventData = BetaWebhookEventData.ofSessionUpdated(sessionUpdated)
+
+        assertThat(betaWebhookEventData.sessionCreated()).isEmpty
+        assertThat(betaWebhookEventData.sessionPending()).isEmpty
+        assertThat(betaWebhookEventData.sessionRunning()).isEmpty
+        assertThat(betaWebhookEventData.sessionIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionRequiresAction()).isEmpty
+        assertThat(betaWebhookEventData.sessionArchived()).isEmpty
+        assertThat(betaWebhookEventData.sessionDeleted()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRescheduled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusRunStarted()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionStatusTerminated()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadCreated()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadIdled()).isEmpty
+        assertThat(betaWebhookEventData.sessionThreadTerminated()).isEmpty
+        assertThat(betaWebhookEventData.sessionOutcomeEvaluationEnded()).isEmpty
+        assertThat(betaWebhookEventData.vaultCreated()).isEmpty
+        assertThat(betaWebhookEventData.vaultArchived()).isEmpty
+        assertThat(betaWebhookEventData.vaultDeleted()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialCreated()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialArchived()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialDeleted()).isEmpty
+        assertThat(betaWebhookEventData.vaultCredentialRefreshFailed()).isEmpty
+        assertThat(betaWebhookEventData.sessionUpdated()).contains(sessionUpdated)
+    }
+
+    @Test
+    fun ofSessionUpdatedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaWebhookEventData =
+            BetaWebhookEventData.ofSessionUpdated(
+                BetaWebhookSessionUpdatedEventData.builder()
+                    .id("id")
+                    .organizationId("organization_id")
                     .workspaceId("workspace_id")
                     .build()
             )

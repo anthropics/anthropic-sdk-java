@@ -1412,6 +1412,7 @@ internal class BetaMessageAccumulatorTest {
                 BetaFallbackBlock.builder()
                     .from(BetaFallbackInfo.builder().model(fromModel).build())
                     .to(BetaFallbackInfo.builder().model(toModel).build())
+                    .trigger(BetaFallbackRefusalTrigger.builder().category(null).build())
                     .build()
             ),
         )

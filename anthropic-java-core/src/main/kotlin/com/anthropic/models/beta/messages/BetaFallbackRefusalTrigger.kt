@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.models.messages
+package com.anthropic.models.beta.messages
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -18,12 +18,11 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Structured information about a refusal. */
-class RefusalStopDetails
+/** The `from` model declined for policy reasons. */
+class BetaFallbackRefusalTrigger
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val category: JsonField<Category>,
-    private val explanation: JsonField<String>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -31,11 +30,8 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("category") @ExcludeMissing category: JsonField<Category> = JsonMissing.of(),
-        @JsonProperty("explanation")
-        @ExcludeMissing
-        explanation: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(category, explanation, type, mutableMapOf())
+    ) : this(category, type, mutableMapOf())
 
     /**
      * The policy category that triggered a refusal.
@@ -44,17 +40,6 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun category(): Optional<Category> = category.getOptional("category")
-
-    /**
-     * Human-readable explanation of the refusal.
-     *
-     * This text is not guaranteed to be stable. `null` when no explanation is available for the
-     * category.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun explanation(): Optional<String> = explanation.getOptional("explanation")
 
     /**
      * Expected to always return the following:
@@ -74,13 +59,6 @@ private constructor(
      */
     @JsonProperty("category") @ExcludeMissing fun _category(): JsonField<Category> = category
 
-    /**
-     * Returns the raw JSON value of [explanation].
-     *
-     * Unlike [explanation], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("explanation") @ExcludeMissing fun _explanation(): JsonField<String> = explanation
-
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -96,31 +74,28 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [RefusalStopDetails].
+         * Returns a mutable builder for constructing an instance of [BetaFallbackRefusalTrigger].
          *
          * The following fields are required:
          * ```java
          * .category()
-         * .explanation()
          * ```
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [RefusalStopDetails]. */
+    /** A builder for [BetaFallbackRefusalTrigger]. */
     class Builder internal constructor() {
 
         private var category: JsonField<Category>? = null
-        private var explanation: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("refusal")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(refusalStopDetails: RefusalStopDetails) = apply {
-            category = refusalStopDetails.category
-            explanation = refusalStopDetails.explanation
-            type = refusalStopDetails.type
-            additionalProperties = refusalStopDetails.additionalProperties.toMutableMap()
+        internal fun from(betaFallbackRefusalTrigger: BetaFallbackRefusalTrigger) = apply {
+            category = betaFallbackRefusalTrigger.category
+            type = betaFallbackRefusalTrigger.type
+            additionalProperties = betaFallbackRefusalTrigger.additionalProperties.toMutableMap()
         }
 
         /** The policy category that triggered a refusal. */
@@ -137,26 +112,6 @@ private constructor(
          * value.
          */
         fun category(category: JsonField<Category>) = apply { this.category = category }
-
-        /**
-         * Human-readable explanation of the refusal.
-         *
-         * This text is not guaranteed to be stable. `null` when no explanation is available for the
-         * category.
-         */
-        fun explanation(explanation: String?) = explanation(JsonField.ofNullable(explanation))
-
-        /** Alias for calling [Builder.explanation] with `explanation.orElse(null)`. */
-        fun explanation(explanation: Optional<String>) = explanation(explanation.getOrNull())
-
-        /**
-         * Sets [Builder.explanation] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.explanation] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun explanation(explanation: JsonField<String>) = apply { this.explanation = explanation }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -192,22 +147,20 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [RefusalStopDetails].
+         * Returns an immutable instance of [BetaFallbackRefusalTrigger].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
          * .category()
-         * .explanation()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): RefusalStopDetails =
-            RefusalStopDetails(
+        fun build(): BetaFallbackRefusalTrigger =
+            BetaFallbackRefusalTrigger(
                 checkRequired("category", category),
-                checkRequired("explanation", explanation),
                 type,
                 additionalProperties.toMutableMap(),
             )
@@ -223,13 +176,12 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): RefusalStopDetails = apply {
+    fun validate(): BetaFallbackRefusalTrigger = apply {
         if (validated) {
             return@apply
         }
 
         category().ifPresent { it.validate() }
-        explanation()
         _type().let {
             if (it != JsonValue.from("refusal")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -254,7 +206,6 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (category.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (explanation.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("refusal")) 1 else 0 }
 
     /** The policy category that triggered a refusal. */
@@ -411,19 +362,16 @@ private constructor(
             return true
         }
 
-        return other is RefusalStopDetails &&
+        return other is BetaFallbackRefusalTrigger &&
             category == other.category &&
-            explanation == other.explanation &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(category, explanation, type, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(category, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "RefusalStopDetails{category=$category, explanation=$explanation, type=$type, additionalProperties=$additionalProperties}"
+        "BetaFallbackRefusalTrigger{category=$category, type=$type, additionalProperties=$additionalProperties}"
 }

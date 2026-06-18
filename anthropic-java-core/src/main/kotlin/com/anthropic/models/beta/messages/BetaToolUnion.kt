@@ -29,6 +29,7 @@ private constructor(
     private val codeExecutionTool20250522: BetaCodeExecutionTool20250522? = null,
     private val codeExecutionTool20250825: BetaCodeExecutionTool20250825? = null,
     private val codeExecutionTool20260120: BetaCodeExecutionTool20260120? = null,
+    private val codeExecutionTool20260521: BetaCodeExecutionTool20260521? = null,
     private val computerUse20241022: BetaToolComputerUse20241022? = null,
     private val memoryTool20250818: BetaMemoryTool20250818? = null,
     private val computerUse20250124: BetaToolComputerUse20250124? = null,
@@ -64,6 +65,10 @@ private constructor(
     /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
     fun codeExecutionTool20260120(): Optional<BetaCodeExecutionTool20260120> =
         Optional.ofNullable(codeExecutionTool20260120)
+
+    /** Code execution tool with REPL state persistence. */
+    fun codeExecutionTool20260521(): Optional<BetaCodeExecutionTool20260521> =
+        Optional.ofNullable(codeExecutionTool20260521)
 
     fun computerUse20241022(): Optional<BetaToolComputerUse20241022> =
         Optional.ofNullable(computerUse20241022)
@@ -134,6 +139,8 @@ private constructor(
 
     fun isCodeExecutionTool20260120(): Boolean = codeExecutionTool20260120 != null
 
+    fun isCodeExecutionTool20260521(): Boolean = codeExecutionTool20260521 != null
+
     fun isComputerUse20241022(): Boolean = computerUse20241022 != null
 
     fun isMemoryTool20250818(): Boolean = memoryTool20250818 != null
@@ -183,6 +190,10 @@ private constructor(
     /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
     fun asCodeExecutionTool20260120(): BetaCodeExecutionTool20260120 =
         codeExecutionTool20260120.getOrThrow("codeExecutionTool20260120")
+
+    /** Code execution tool with REPL state persistence. */
+    fun asCodeExecutionTool20260521(): BetaCodeExecutionTool20260521 =
+        codeExecutionTool20260521.getOrThrow("codeExecutionTool20260521")
 
     fun asComputerUse20241022(): BetaToolComputerUse20241022 =
         computerUse20241022.getOrThrow("computerUse20241022")
@@ -283,6 +294,8 @@ private constructor(
                 visitor.visitCodeExecutionTool20250825(codeExecutionTool20250825)
             codeExecutionTool20260120 != null ->
                 visitor.visitCodeExecutionTool20260120(codeExecutionTool20260120)
+            codeExecutionTool20260521 != null ->
+                visitor.visitCodeExecutionTool20260521(codeExecutionTool20260521)
             computerUse20241022 != null -> visitor.visitComputerUse20241022(computerUse20241022)
             memoryTool20250818 != null -> visitor.visitMemoryTool20250818(memoryTool20250818)
             computerUse20250124 != null -> visitor.visitComputerUse20250124(computerUse20250124)
@@ -352,6 +365,12 @@ private constructor(
                     codeExecutionTool20260120: BetaCodeExecutionTool20260120
                 ) {
                     codeExecutionTool20260120.validate()
+                }
+
+                override fun visitCodeExecutionTool20260521(
+                    codeExecutionTool20260521: BetaCodeExecutionTool20260521
+                ) {
+                    codeExecutionTool20260521.validate()
                 }
 
                 override fun visitComputerUse20241022(
@@ -493,6 +512,10 @@ private constructor(
                     codeExecutionTool20260120: BetaCodeExecutionTool20260120
                 ) = codeExecutionTool20260120.validity()
 
+                override fun visitCodeExecutionTool20260521(
+                    codeExecutionTool20260521: BetaCodeExecutionTool20260521
+                ) = codeExecutionTool20260521.validity()
+
                 override fun visitComputerUse20241022(
                     computerUse20241022: BetaToolComputerUse20241022
                 ) = computerUse20241022.validity()
@@ -574,6 +597,7 @@ private constructor(
             codeExecutionTool20250522 == other.codeExecutionTool20250522 &&
             codeExecutionTool20250825 == other.codeExecutionTool20250825 &&
             codeExecutionTool20260120 == other.codeExecutionTool20260120 &&
+            codeExecutionTool20260521 == other.codeExecutionTool20260521 &&
             computerUse20241022 == other.computerUse20241022 &&
             memoryTool20250818 == other.memoryTool20250818 &&
             computerUse20250124 == other.computerUse20250124 &&
@@ -601,6 +625,7 @@ private constructor(
             codeExecutionTool20250522,
             codeExecutionTool20250825,
             codeExecutionTool20260120,
+            codeExecutionTool20260521,
             computerUse20241022,
             memoryTool20250818,
             computerUse20250124,
@@ -631,6 +656,8 @@ private constructor(
                 "BetaToolUnion{codeExecutionTool20250825=$codeExecutionTool20250825}"
             codeExecutionTool20260120 != null ->
                 "BetaToolUnion{codeExecutionTool20260120=$codeExecutionTool20260120}"
+            codeExecutionTool20260521 != null ->
+                "BetaToolUnion{codeExecutionTool20260521=$codeExecutionTool20260521}"
             computerUse20241022 != null -> "BetaToolUnion{computerUse20241022=$computerUse20241022}"
             memoryTool20250818 != null -> "BetaToolUnion{memoryTool20250818=$memoryTool20250818}"
             computerUse20250124 != null -> "BetaToolUnion{computerUse20250124=$computerUse20250124}"
@@ -683,6 +710,11 @@ private constructor(
         @JvmStatic
         fun ofCodeExecutionTool20260120(codeExecutionTool20260120: BetaCodeExecutionTool20260120) =
             BetaToolUnion(codeExecutionTool20260120 = codeExecutionTool20260120)
+
+        /** Code execution tool with REPL state persistence. */
+        @JvmStatic
+        fun ofCodeExecutionTool20260521(codeExecutionTool20260521: BetaCodeExecutionTool20260521) =
+            BetaToolUnion(codeExecutionTool20260521 = codeExecutionTool20260521)
 
         @JvmStatic
         fun ofComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022) =
@@ -783,6 +815,11 @@ private constructor(
             codeExecutionTool20260120: BetaCodeExecutionTool20260120
         ): T
 
+        /** Code execution tool with REPL state persistence. */
+        fun visitCodeExecutionTool20260521(
+            codeExecutionTool20260521: BetaCodeExecutionTool20260521
+        ): T
+
         fun visitComputerUse20241022(computerUse20241022: BetaToolComputerUse20241022): T
 
         fun visitMemoryTool20250818(memoryTool20250818: BetaMemoryTool20250818): T
@@ -867,6 +904,9 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20260120>())?.let {
                             BetaToolUnion(codeExecutionTool20260120 = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20260521>())?.let {
+                            BetaToolUnion(codeExecutionTool20260521 = it, _json = json)
+                        },
                         tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())?.let {
                             BetaToolUnion(computerUse20241022 = it, _json = json)
                         },
@@ -949,6 +989,8 @@ private constructor(
                     generator.writeObject(value.codeExecutionTool20250825)
                 value.codeExecutionTool20260120 != null ->
                     generator.writeObject(value.codeExecutionTool20260120)
+                value.codeExecutionTool20260521 != null ->
+                    generator.writeObject(value.codeExecutionTool20260521)
                 value.computerUse20241022 != null ->
                     generator.writeObject(value.computerUse20241022)
                 value.memoryTool20250818 != null -> generator.writeObject(value.memoryTool20250818)

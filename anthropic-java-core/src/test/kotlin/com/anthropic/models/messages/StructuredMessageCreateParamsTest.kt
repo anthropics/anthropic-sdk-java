@@ -190,6 +190,7 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addTool", CodeExecutionTool20250522.builder().build()),
                 DelegationWriteTestCase("addTool", CodeExecutionTool20250825.builder().build()),
                 DelegationWriteTestCase("addTool", CodeExecutionTool20260120.builder().build()),
+                DelegationWriteTestCase("addTool", CodeExecutionTool20260521.builder().build()),
                 DelegationWriteTestCase("addTool", MemoryTool20250818.builder().build()),
                 DelegationWriteTestCase("addTool", WebSearchTool20260209.builder().build()),
                 DelegationWriteTestCase("addTool", WebFetchTool20260209.builder().build()),

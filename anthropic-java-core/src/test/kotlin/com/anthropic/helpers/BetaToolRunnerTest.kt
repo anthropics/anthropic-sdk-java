@@ -414,6 +414,7 @@ internal class BetaToolRunnerTest {
                     BetaFallbackBlock.builder()
                         .from(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_4_5).build())
                         .to(BetaFallbackInfo.builder().model(Model.CLAUDE_HAIKU_4_5).build())
+                        .trigger(BetaFallbackRefusalTrigger.builder().category(null).build())
                         .build()
                 )
                 .addContent(

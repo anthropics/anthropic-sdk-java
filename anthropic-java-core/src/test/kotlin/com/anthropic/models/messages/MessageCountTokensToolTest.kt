@@ -53,6 +53,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -136,6 +137,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -201,6 +203,7 @@ internal class MessageCountTokensToolTest {
             .contains(codeExecutionTool20250522)
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -261,6 +264,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825())
             .contains(codeExecutionTool20250825)
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -321,6 +325,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120())
             .contains(codeExecutionTool20260120)
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -341,6 +346,67 @@ internal class MessageCountTokensToolTest {
             MessageCountTokensTool.ofCodeExecutionTool20260120(
                 CodeExecutionTool20260120.builder()
                     .addAllowedCaller(CodeExecutionTool20260120.AllowedCaller.DIRECT)
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .deferLoading(true)
+                    .strict(true)
+                    .build()
+            )
+
+        val roundtrippedMessageCountTokensTool =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(messageCountTokensTool),
+                jacksonTypeRef<MessageCountTokensTool>(),
+            )
+
+        assertThat(roundtrippedMessageCountTokensTool).isEqualTo(messageCountTokensTool)
+    }
+
+    @Test
+    fun ofCodeExecutionTool20260521() {
+        val codeExecutionTool20260521 =
+            CodeExecutionTool20260521.builder()
+                .addAllowedCaller(CodeExecutionTool20260521.AllowedCaller.DIRECT)
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .deferLoading(true)
+                .strict(true)
+                .build()
+
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofCodeExecutionTool20260521(codeExecutionTool20260521)
+
+        assertThat(messageCountTokensTool.tool()).isEmpty
+        assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521())
+            .contains(codeExecutionTool20260521)
+        assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20250910()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
+        assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+    }
+
+    @Test
+    fun ofCodeExecutionTool20260521Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofCodeExecutionTool20260521(
+                CodeExecutionTool20260521.builder()
+                    .addAllowedCaller(CodeExecutionTool20260521.AllowedCaller.DIRECT)
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
@@ -384,6 +450,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).contains(memoryTool20250818)
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -453,6 +520,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).contains(toolTextEditor20250124)
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -522,6 +590,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).contains(toolTextEditor20250429)
@@ -592,6 +661,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -668,6 +738,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -743,6 +814,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -818,6 +890,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -893,6 +966,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -963,6 +1037,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -1029,6 +1104,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
@@ -1091,6 +1167,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty

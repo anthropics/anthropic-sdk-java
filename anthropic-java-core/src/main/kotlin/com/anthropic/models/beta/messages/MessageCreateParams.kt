@@ -1631,6 +1631,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `BetaToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)`.
+         */
+        fun addTool(codeExecutionTool20260521: BetaCodeExecutionTool20260521) = apply {
+            body.addTool(codeExecutionTool20260521)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `BetaToolUnion.ofComputerUse20241022(computerUse20241022)`.
          */
         fun addTool(computerUse20241022: BetaToolComputerUse20241022) = apply {
@@ -3756,6 +3764,13 @@ private constructor(
              */
             fun addTool(codeExecutionTool20260120: BetaCodeExecutionTool20260120) =
                 addTool(BetaToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)`.
+             */
+            fun addTool(codeExecutionTool20260521: BetaCodeExecutionTool20260521) =
+                addTool(BetaToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521))
 
             /**
              * Alias for calling [addTool] with

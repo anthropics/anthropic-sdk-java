@@ -140,6 +140,7 @@ internal class StructuredContentBlockTest {
             BetaFallbackBlock.builder()
                 .from(BetaFallbackInfo.builder().model(Model.CLAUDE_OPUS_4_8).build())
                 .to(BetaFallbackInfo.builder().model(Model.CLAUDE_HAIKU_4_5).build())
+                .trigger(BetaFallbackRefusalTrigger.builder().category(null).build())
                 .build()
 
         // The list order follows the declaration order in `BetaContentBlock` for easier

@@ -27,6 +27,7 @@ import com.anthropic.models.beta.messages.BetaFallbackBlock
 import com.anthropic.models.beta.messages.BetaFallbackBlockParam
 import com.anthropic.models.beta.messages.BetaFallbackInfo
 import com.anthropic.models.beta.messages.BetaFallbackParam
+import com.anthropic.models.beta.messages.BetaFallbackRefusalTrigger
 import com.anthropic.models.beta.messages.BetaImageBlockParam
 import com.anthropic.models.beta.messages.BetaMcpToolUseBlockParam
 import com.anthropic.models.beta.messages.BetaMessage
@@ -218,7 +219,7 @@ private constructor(
                     }
                 }
 
-                val seams = mutableListOf<Pair<String, String>>()
+                val seams = mutableListOf<Seam>()
                 while (index < fallbacks.size - 1) {
                     // Only a successful response can be a refusal; errors get normal handling.
                     if (response.statusCode() !in 200..299) {
@@ -229,11 +230,12 @@ private constructor(
                     val fallbackCreditToken =
                         refusalCreditToken(response)
                             ?: return prependSeamIfStitched(response, seams)
+                    val category = refusalCategory(response)
 
                     val fromModel = preparedRequest.modelAt(index)
                     index++
                     preparedRequest.pin(index)
-                    seams += fromModel to preparedRequest.modelAt(index)
+                    seams += Seam(fromModel, preparedRequest.modelAt(index), category)
 
                     response.close()
                     response =
@@ -288,10 +290,8 @@ private constructor(
         preparedRequest: PreparedRequest,
         index: Int,
         response: HttpResponse,
-        /**
-         * One entry per model boundary crossed to reach [response]: (refused model, retry model).
-         */
-        seams: List<Pair<String, String>>,
+        /** One entry per model boundary crossed to reach [response]. */
+        seams: List<Seam>,
     ): CompletableFuture<HttpResponse> {
         // Only a successful response can be a refusal; errors get normal handling.
         if (index >= fallbacks.size - 1 || response.statusCode() !in 200..299) {
@@ -304,11 +304,12 @@ private constructor(
                 ?: return CompletableFuture.completedFuture(
                     prependSeamIfStitched(bufferedResponse, seams)
                 )
+        val category = refusalCategory(bufferedResponse)
 
         val fromModel = preparedRequest.modelAt(index)
         val nextIndex = index + 1
         preparedRequest.pin(nextIndex)
-        val nextSeams = seams + (fromModel to preparedRequest.modelAt(nextIndex))
+        val nextSeams = seams + Seam(fromModel, preparedRequest.modelAt(nextIndex), category)
 
         bufferedResponse.close()
         return httpClient
@@ -334,10 +335,7 @@ private constructor(
      * Responses that aren't a served message pass through unchanged: errors, refusals (an exhausted
      * chain's terminal refusal is surfaced verbatim), and shapes that don't parse.
      */
-    private fun prependSeamIfStitched(
-        response: HttpResponse,
-        seams: List<Pair<String, String>>,
-    ): HttpResponse {
+    private fun prependSeamIfStitched(response: HttpResponse, seams: List<Seam>): HttpResponse {
         if (seams.isEmpty() || response.statusCode() !in 200..299) {
             return response
         }
@@ -359,12 +357,13 @@ private constructor(
         }
         val content = message.get("content") as? ArrayNode ?: return buffered
         val newContent = jsonMapper.createArrayNode()
-        for ((fromModel, toModel) in seams) {
+        for (seam in seams) {
             newContent.add(
                 jsonMapper.valueToTree<ObjectNode>(
                     BetaFallbackBlock.builder()
-                        .from(BetaFallbackInfo.builder().model(Model.of(fromModel)).build())
-                        .to(BetaFallbackInfo.builder().model(Model.of(toModel)).build())
+                        .from(BetaFallbackInfo.builder().model(Model.of(seam.from)).build())
+                        .to(BetaFallbackInfo.builder().model(Model.of(seam.to)).build())
+                        .trigger(triggerFrom(seam.category))
                         .build()
                 )
             )
@@ -691,6 +690,29 @@ private constructor(
             null
         }
 
+    /**
+     * Returns the refusal's policy `category` if the response is a refused message, or `null` if it
+     * isn't (or none was surfaced). [response] must be buffered — re-parses the same body
+     * [refusalCreditToken] read.
+     */
+    private fun refusalCategory(response: HttpResponse): BetaRefusalStopDetails.Category? =
+        try {
+            response
+                .json(BetaMessage::class.java)
+                .stopDetails()
+                .flatMap(BetaRefusalStopDetails::category)
+                .getOrNull()
+        } catch (e: AnthropicInvalidDataException) {
+            null
+        }
+
+    /** One model boundary the non-streaming retry chain crossed. */
+    private data class Seam(
+        val from: String,
+        val to: String,
+        val category: BetaRefusalStopDetails.Category?,
+    )
+
     /** A request being retried through the fallback chain. */
     private inner class PreparedRequest(
         private val request: HttpRequest,
@@ -773,6 +795,16 @@ private constructor(
 //   refusal arrives; the `fallback` block's `model` field carries the serving model.
 // * Refusal text streamed before the refusal stays in the message and is resent as-is — the
 //   appended turn must match the partial output verbatim.
+
+/**
+ * Builds the `trigger` for a synthetic seam block from the refusal's stop_details category. `null`
+ * when none was surfaced — mirrors the server's gated emission. Shared between the non-streaming
+ * interceptor and [FallbackStreamSplicer].
+ */
+private fun triggerFrom(category: BetaRefusalStopDetails.Category?): BetaFallbackRefusalTrigger =
+    BetaFallbackRefusalTrigger.builder()
+        .category(category?.let { BetaFallbackRefusalTrigger.Category.of(it.toString()) })
+        .build()
 
 /**
  * Splices the fallback chain's events onto a stream that ends in a retryable refusal.
@@ -907,7 +939,14 @@ private class FallbackStreamSplicer(
             // next attempt emits its own (still `from: fromModel` — the last model that
             // contributed output).
             val boundaryIndex = nextIndex++
-            yield(fallbackBlockStart(boundaryIndex, fromModel, model))
+            yield(
+                fallbackBlockStart(
+                    boundaryIndex,
+                    fromModel,
+                    model,
+                    refusal.details.category().getOrNull(),
+                )
+            )
             yield(contentBlockStop(boundaryIndex))
 
             // --- build the request: appended-assistant continuation ---
@@ -1185,7 +1224,12 @@ private class FallbackStreamSplicer(
 
     // --- event synthesis & serialization ---
 
-    private fun fallbackBlockStart(index: Int, fromModel: String, toModel: String): ByteArray =
+    private fun fallbackBlockStart(
+        index: Int,
+        fromModel: String,
+        toModel: String,
+        category: BetaRefusalStopDetails.Category?,
+    ): ByteArray =
         emit(
             "content_block_start",
             BetaRawContentBlockStartEvent.builder()
@@ -1195,6 +1239,7 @@ private class FallbackStreamSplicer(
                         BetaFallbackBlock.builder()
                             .from(BetaFallbackInfo.builder().model(Model.of(fromModel)).build())
                             .to(BetaFallbackInfo.builder().model(Model.of(toModel)).build())
+                            .trigger(triggerFrom(category))
                             .build()
                     )
                 )

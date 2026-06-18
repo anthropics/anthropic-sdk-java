@@ -53,6 +53,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -136,6 +137,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -199,6 +201,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).contains(codeExecutionTool20250522)
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -257,6 +260,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).contains(codeExecutionTool20250825)
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -315,6 +319,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).contains(codeExecutionTool20260120)
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -335,6 +340,65 @@ internal class ToolUnionTest {
             ToolUnion.ofCodeExecutionTool20260120(
                 CodeExecutionTool20260120.builder()
                     .addAllowedCaller(CodeExecutionTool20260120.AllowedCaller.DIRECT)
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .deferLoading(true)
+                    .strict(true)
+                    .build()
+            )
+
+        val roundtrippedToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(toolUnion),
+                jacksonTypeRef<ToolUnion>(),
+            )
+
+        assertThat(roundtrippedToolUnion).isEqualTo(toolUnion)
+    }
+
+    @Test
+    fun ofCodeExecutionTool20260521() {
+        val codeExecutionTool20260521 =
+            CodeExecutionTool20260521.builder()
+                .addAllowedCaller(CodeExecutionTool20260521.AllowedCaller.DIRECT)
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .deferLoading(true)
+                .strict(true)
+                .build()
+
+        val toolUnion = ToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)
+
+        assertThat(toolUnion.tool()).isEmpty
+        assertThat(toolUnion.bash20250124()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).contains(codeExecutionTool20260521)
+        assertThat(toolUnion.memoryTool20250818()).isEmpty
+        assertThat(toolUnion.textEditor20250124()).isEmpty
+        assertThat(toolUnion.textEditor20250429()).isEmpty
+        assertThat(toolUnion.textEditor20250728()).isEmpty
+        assertThat(toolUnion.webSearchTool20250305()).isEmpty
+        assertThat(toolUnion.webFetchTool20250910()).isEmpty
+        assertThat(toolUnion.webSearchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260209()).isEmpty
+        assertThat(toolUnion.webFetchTool20260309()).isEmpty
+        assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
+        assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+    }
+
+    @Test
+    fun ofCodeExecutionTool20260521Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val toolUnion =
+            ToolUnion.ofCodeExecutionTool20260521(
+                CodeExecutionTool20260521.builder()
+                    .addAllowedCaller(CodeExecutionTool20260521.AllowedCaller.DIRECT)
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
@@ -378,6 +442,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).contains(memoryTool20250818)
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -446,6 +511,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).contains(textEditor20250124)
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -514,6 +580,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).contains(textEditor20250429)
@@ -583,6 +650,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -658,6 +726,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -732,6 +801,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -806,6 +876,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -880,6 +951,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -949,6 +1021,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -1014,6 +1087,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty
@@ -1074,6 +1148,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.codeExecutionTool20250522()).isEmpty
         assertThat(toolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(toolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(toolUnion.codeExecutionTool20260521()).isEmpty
         assertThat(toolUnion.memoryTool20250818()).isEmpty
         assertThat(toolUnion.textEditor20250124()).isEmpty
         assertThat(toolUnion.textEditor20250429()).isEmpty

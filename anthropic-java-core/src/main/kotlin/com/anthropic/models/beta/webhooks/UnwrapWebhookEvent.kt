@@ -316,6 +316,12 @@ private constructor(
             data(BetaWebhookEventData.ofVaultCredentialRefreshFailed(vaultCredentialRefreshFailed))
 
         /**
+         * Alias for calling [data] with `BetaWebhookEventData.ofSessionUpdated(sessionUpdated)`.
+         */
+        fun data(sessionUpdated: BetaWebhookSessionUpdatedEventData) =
+            data(BetaWebhookEventData.ofSessionUpdated(sessionUpdated))
+
+        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the

@@ -573,6 +573,11 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(codeExecutionTool20260521: BetaCodeExecutionTool20260521) = apply {
+            paramsBuilder.addTool(codeExecutionTool20260521)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
         fun addTool(webSearchTool20260209: BetaWebSearchTool20260209) = apply {
             paramsBuilder.addTool(webSearchTool20260209)
         }

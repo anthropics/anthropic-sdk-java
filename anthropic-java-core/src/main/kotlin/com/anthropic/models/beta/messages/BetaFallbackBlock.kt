@@ -20,8 +20,8 @@ import kotlin.jvm.optionals.getOrNull
  * Marks the point in `content` where one model's output gives way to the next.
  *
  * One block appears per hop where a preceding model actually ran this turn and declined. A turn
- * routed directly by the sticky decision has no such boundary and carries no block — the signal for
- * whether a fallback model served the response is the presence of a `fallback_message` entry in
+ * where no preceding model ran and declined has no such boundary and carries no block — the signal
+ * for whether a fallback model served the response is the presence of a `fallback_message` entry in
  * `usage.iterations`, not this block.
  *
  * The block is treated like a server-tool content block for streaming: it arrives via the standard
@@ -32,6 +32,7 @@ class BetaFallbackBlock
 private constructor(
     private val from: JsonField<BetaFallbackInfo>,
     private val to: JsonField<BetaFallbackInfo>,
+    private val trigger: JsonField<BetaFallbackRefusalTrigger>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -40,8 +41,11 @@ private constructor(
     private constructor(
         @JsonProperty("from") @ExcludeMissing from: JsonField<BetaFallbackInfo> = JsonMissing.of(),
         @JsonProperty("to") @ExcludeMissing to: JsonField<BetaFallbackInfo> = JsonMissing.of(),
+        @JsonProperty("trigger")
+        @ExcludeMissing
+        trigger: JsonField<BetaFallbackRefusalTrigger> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(from, to, type, mutableMapOf())
+    ) : this(from, to, trigger, type, mutableMapOf())
 
     fun toParam(): BetaFallbackBlockParam =
         BetaFallbackBlockParam.builder()
@@ -70,6 +74,14 @@ private constructor(
     fun to(): BetaFallbackInfo = to.getRequired("to")
 
     /**
+     * What caused the `from` model to hand over at this hop.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun trigger(): BetaFallbackRefusalTrigger = trigger.getRequired("trigger")
+
+    /**
      * Expected to always return the following:
      * ```java
      * JsonValue.from("fallback")
@@ -94,6 +106,15 @@ private constructor(
      */
     @JsonProperty("to") @ExcludeMissing fun _to(): JsonField<BetaFallbackInfo> = to
 
+    /**
+     * Returns the raw JSON value of [trigger].
+     *
+     * Unlike [trigger], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("trigger")
+    @ExcludeMissing
+    fun _trigger(): JsonField<BetaFallbackRefusalTrigger> = trigger
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -115,6 +136,7 @@ private constructor(
          * ```java
          * .from()
          * .to()
+         * .trigger()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -125,6 +147,7 @@ private constructor(
 
         private var from: JsonField<BetaFallbackInfo>? = null
         private var to: JsonField<BetaFallbackInfo>? = null
+        private var trigger: JsonField<BetaFallbackRefusalTrigger>? = null
         private var type: JsonValue = JsonValue.from("fallback")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -132,6 +155,7 @@ private constructor(
         internal fun from(betaFallbackBlock: BetaFallbackBlock) = apply {
             from = betaFallbackBlock.from
             to = betaFallbackBlock.to
+            trigger = betaFallbackBlock.trigger
             type = betaFallbackBlock.type
             additionalProperties = betaFallbackBlock.additionalProperties.toMutableMap()
         }
@@ -167,6 +191,20 @@ private constructor(
          * value.
          */
         fun to(to: JsonField<BetaFallbackInfo>) = apply { this.to = to }
+
+        /** What caused the `from` model to hand over at this hop. */
+        fun trigger(trigger: BetaFallbackRefusalTrigger) = trigger(JsonField.of(trigger))
+
+        /**
+         * Sets [Builder.trigger] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.trigger] with a well-typed [BetaFallbackRefusalTrigger]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun trigger(trigger: JsonField<BetaFallbackRefusalTrigger>) = apply {
+            this.trigger = trigger
+        }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -210,6 +248,7 @@ private constructor(
          * ```java
          * .from()
          * .to()
+         * .trigger()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -218,6 +257,7 @@ private constructor(
             BetaFallbackBlock(
                 checkRequired("from", from),
                 checkRequired("to", to),
+                checkRequired("trigger", trigger),
                 type,
                 additionalProperties.toMutableMap(),
             )
@@ -240,6 +280,7 @@ private constructor(
 
         from().validate()
         to().validate()
+        trigger().validate()
         _type().let {
             if (it != JsonValue.from("fallback")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -265,6 +306,7 @@ private constructor(
     internal fun validity(): Int =
         (from.asKnown().getOrNull()?.validity() ?: 0) +
             (to.asKnown().getOrNull()?.validity() ?: 0) +
+            (trigger.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("fallback")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
@@ -275,14 +317,17 @@ private constructor(
         return other is BetaFallbackBlock &&
             from == other.from &&
             to == other.to &&
+            trigger == other.trigger &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(from, to, type, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(from, to, trigger, type, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaFallbackBlock{from=$from, to=$to, type=$type, additionalProperties=$additionalProperties}"
+        "BetaFallbackBlock{from=$from, to=$to, trigger=$trigger, type=$type, additionalProperties=$additionalProperties}"
 }
