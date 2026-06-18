@@ -16,12 +16,23 @@ internal class BetaFallbackBlockTest {
             BetaFallbackBlock.builder()
                 .from(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
                 .to(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
+                .trigger(
+                    BetaFallbackRefusalTrigger.builder()
+                        .category(BetaFallbackRefusalTrigger.Category.CYBER)
+                        .build()
+                )
                 .build()
 
         assertThat(betaFallbackBlock.from())
             .isEqualTo(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
         assertThat(betaFallbackBlock.to())
             .isEqualTo(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
+        assertThat(betaFallbackBlock.trigger())
+            .isEqualTo(
+                BetaFallbackRefusalTrigger.builder()
+                    .category(BetaFallbackRefusalTrigger.Category.CYBER)
+                    .build()
+            )
     }
 
     @Test
@@ -31,6 +42,11 @@ internal class BetaFallbackBlockTest {
             BetaFallbackBlock.builder()
                 .from(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
                 .to(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
+                .trigger(
+                    BetaFallbackRefusalTrigger.builder()
+                        .category(BetaFallbackRefusalTrigger.Category.CYBER)
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaFallbackBlock =

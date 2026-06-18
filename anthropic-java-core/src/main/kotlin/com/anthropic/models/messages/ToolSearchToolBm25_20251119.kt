@@ -523,7 +523,8 @@ private constructor(
      *
      * Values: direct: The model can call this tool directly. code_execution_20250825: The tool can
      * be called from the code execution environment (v1). code_execution_20260120: The tool can be
-     * called from the code execution environment (v2 with persistence).
+     * called from the code execution environment (v2 with persistence). code_execution_20260521:
+     * The tool can be called from the code execution environment (v2 with persistence).
      */
     class AllowedCaller @JsonCreator private constructor(private val value: JsonField<String>) :
         Enum {
@@ -546,6 +547,8 @@ private constructor(
 
             @JvmField val CODE_EXECUTION_20260120 = of("code_execution_20260120")
 
+            @JvmField val CODE_EXECUTION_20260521 = of("code_execution_20260521")
+
             @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
         }
 
@@ -554,6 +557,7 @@ private constructor(
             DIRECT,
             CODE_EXECUTION_20250825,
             CODE_EXECUTION_20260120,
+            CODE_EXECUTION_20260521,
         }
 
         /**
@@ -569,6 +573,7 @@ private constructor(
             DIRECT,
             CODE_EXECUTION_20250825,
             CODE_EXECUTION_20260120,
+            CODE_EXECUTION_20260521,
             /**
              * An enum member indicating that [AllowedCaller] was instantiated with an unknown
              * value.
@@ -588,6 +593,7 @@ private constructor(
                 DIRECT -> Value.DIRECT
                 CODE_EXECUTION_20250825 -> Value.CODE_EXECUTION_20250825
                 CODE_EXECUTION_20260120 -> Value.CODE_EXECUTION_20260120
+                CODE_EXECUTION_20260521 -> Value.CODE_EXECUTION_20260521
                 else -> Value._UNKNOWN
             }
 
@@ -605,6 +611,7 @@ private constructor(
                 DIRECT -> Known.DIRECT
                 CODE_EXECUTION_20250825 -> Known.CODE_EXECUTION_20250825
                 CODE_EXECUTION_20260120 -> Known.CODE_EXECUTION_20260120
+                CODE_EXECUTION_20260521 -> Known.CODE_EXECUTION_20260521
                 else -> throw AnthropicInvalidDataException("Unknown AllowedCaller: $value")
             }
 

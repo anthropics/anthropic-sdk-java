@@ -24,6 +24,7 @@ import com.anthropic.models.beta.messages.BetaCacheControlEphemeral
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20250522
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20250825
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20260120
+import com.anthropic.models.beta.messages.BetaCodeExecutionTool20260521
 import com.anthropic.models.beta.messages.BetaContainerParams
 import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaContextManagementConfig
@@ -2589,6 +2590,13 @@ private constructor(
                  */
                 fun addTool(codeExecutionTool20260120: BetaCodeExecutionTool20260120) =
                     addTool(BetaToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)`.
+                 */
+                fun addTool(codeExecutionTool20260521: BetaCodeExecutionTool20260521) =
+                    addTool(BetaToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521))
 
                 /**
                  * Alias for calling [addTool] with

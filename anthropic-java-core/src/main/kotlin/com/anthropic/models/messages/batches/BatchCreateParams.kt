@@ -22,6 +22,7 @@ import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CodeExecutionTool20250522
 import com.anthropic.models.messages.CodeExecutionTool20250825
 import com.anthropic.models.messages.CodeExecutionTool20260120
+import com.anthropic.models.messages.CodeExecutionTool20260521
 import com.anthropic.models.messages.ContentBlockParam
 import com.anthropic.models.messages.MemoryTool20250818
 import com.anthropic.models.messages.Message
@@ -2054,6 +2055,13 @@ private constructor(
                  */
                 fun addTool(codeExecutionTool20260120: CodeExecutionTool20260120) =
                     addTool(ToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `ToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)`.
+                 */
+                fun addTool(codeExecutionTool20260521: CodeExecutionTool20260521) =
+                    addTool(ToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521))
 
                 /**
                  * Alias for calling [addTool] with

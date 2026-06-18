@@ -28,6 +28,7 @@ private constructor(
     private val codeExecutionTool20250522: CodeExecutionTool20250522? = null,
     private val codeExecutionTool20250825: CodeExecutionTool20250825? = null,
     private val codeExecutionTool20260120: CodeExecutionTool20260120? = null,
+    private val codeExecutionTool20260521: CodeExecutionTool20260521? = null,
     private val memoryTool20250818: MemoryTool20250818? = null,
     private val toolTextEditor20250124: ToolTextEditor20250124? = null,
     private val toolTextEditor20250429: ToolTextEditor20250429? = null,
@@ -55,6 +56,10 @@ private constructor(
     /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
     fun codeExecutionTool20260120(): Optional<CodeExecutionTool20260120> =
         Optional.ofNullable(codeExecutionTool20260120)
+
+    /** Code execution tool with REPL state persistence. */
+    fun codeExecutionTool20260521(): Optional<CodeExecutionTool20260521> =
+        Optional.ofNullable(codeExecutionTool20260521)
 
     fun memoryTool20250818(): Optional<MemoryTool20250818> = Optional.ofNullable(memoryTool20250818)
 
@@ -99,6 +104,8 @@ private constructor(
 
     fun isCodeExecutionTool20260120(): Boolean = codeExecutionTool20260120 != null
 
+    fun isCodeExecutionTool20260521(): Boolean = codeExecutionTool20260521 != null
+
     fun isMemoryTool20250818(): Boolean = memoryTool20250818 != null
 
     fun isToolTextEditor20250124(): Boolean = toolTextEditor20250124 != null
@@ -134,6 +141,10 @@ private constructor(
     /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
     fun asCodeExecutionTool20260120(): CodeExecutionTool20260120 =
         codeExecutionTool20260120.getOrThrow("codeExecutionTool20260120")
+
+    /** Code execution tool with REPL state persistence. */
+    fun asCodeExecutionTool20260521(): CodeExecutionTool20260521 =
+        codeExecutionTool20260521.getOrThrow("codeExecutionTool20260521")
 
     fun asMemoryTool20250818(): MemoryTool20250818 =
         memoryTool20250818.getOrThrow("memoryTool20250818")
@@ -210,6 +221,8 @@ private constructor(
                 visitor.visitCodeExecutionTool20250825(codeExecutionTool20250825)
             codeExecutionTool20260120 != null ->
                 visitor.visitCodeExecutionTool20260120(codeExecutionTool20260120)
+            codeExecutionTool20260521 != null ->
+                visitor.visitCodeExecutionTool20260521(codeExecutionTool20260521)
             memoryTool20250818 != null -> visitor.visitMemoryTool20250818(memoryTool20250818)
             toolTextEditor20250124 != null ->
                 visitor.visitToolTextEditor20250124(toolTextEditor20250124)
@@ -272,6 +285,12 @@ private constructor(
                     codeExecutionTool20260120: CodeExecutionTool20260120
                 ) {
                     codeExecutionTool20260120.validate()
+                }
+
+                override fun visitCodeExecutionTool20260521(
+                    codeExecutionTool20260521: CodeExecutionTool20260521
+                ) {
+                    codeExecutionTool20260521.validate()
                 }
 
                 override fun visitMemoryTool20250818(memoryTool20250818: MemoryTool20250818) {
@@ -370,6 +389,10 @@ private constructor(
                     codeExecutionTool20260120: CodeExecutionTool20260120
                 ) = codeExecutionTool20260120.validity()
 
+                override fun visitCodeExecutionTool20260521(
+                    codeExecutionTool20260521: CodeExecutionTool20260521
+                ) = codeExecutionTool20260521.validity()
+
                 override fun visitMemoryTool20250818(memoryTool20250818: MemoryTool20250818) =
                     memoryTool20250818.validity()
 
@@ -425,6 +448,7 @@ private constructor(
             codeExecutionTool20250522 == other.codeExecutionTool20250522 &&
             codeExecutionTool20250825 == other.codeExecutionTool20250825 &&
             codeExecutionTool20260120 == other.codeExecutionTool20260120 &&
+            codeExecutionTool20260521 == other.codeExecutionTool20260521 &&
             memoryTool20250818 == other.memoryTool20250818 &&
             toolTextEditor20250124 == other.toolTextEditor20250124 &&
             toolTextEditor20250429 == other.toolTextEditor20250429 &&
@@ -445,6 +469,7 @@ private constructor(
             codeExecutionTool20250522,
             codeExecutionTool20250825,
             codeExecutionTool20260120,
+            codeExecutionTool20260521,
             memoryTool20250818,
             toolTextEditor20250124,
             toolTextEditor20250429,
@@ -468,6 +493,8 @@ private constructor(
                 "MessageCountTokensTool{codeExecutionTool20250825=$codeExecutionTool20250825}"
             codeExecutionTool20260120 != null ->
                 "MessageCountTokensTool{codeExecutionTool20260120=$codeExecutionTool20260120}"
+            codeExecutionTool20260521 != null ->
+                "MessageCountTokensTool{codeExecutionTool20260521=$codeExecutionTool20260521}"
             memoryTool20250818 != null ->
                 "MessageCountTokensTool{memoryTool20250818=$memoryTool20250818}"
             toolTextEditor20250124 != null ->
@@ -514,6 +541,11 @@ private constructor(
         @JvmStatic
         fun ofCodeExecutionTool20260120(codeExecutionTool20260120: CodeExecutionTool20260120) =
             MessageCountTokensTool(codeExecutionTool20260120 = codeExecutionTool20260120)
+
+        /** Code execution tool with REPL state persistence. */
+        @JvmStatic
+        fun ofCodeExecutionTool20260521(codeExecutionTool20260521: CodeExecutionTool20260521) =
+            MessageCountTokensTool(codeExecutionTool20260521 = codeExecutionTool20260521)
 
         @JvmStatic
         fun ofMemoryTool20250818(memoryTool20250818: MemoryTool20250818) =
@@ -580,6 +612,9 @@ private constructor(
         /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
         fun visitCodeExecutionTool20260120(codeExecutionTool20260120: CodeExecutionTool20260120): T
 
+        /** Code execution tool with REPL state persistence. */
+        fun visitCodeExecutionTool20260521(codeExecutionTool20260521: CodeExecutionTool20260521): T
+
         fun visitMemoryTool20250818(memoryTool20250818: MemoryTool20250818): T
 
         fun visitToolTextEditor20250124(toolTextEditor20250124: ToolTextEditor20250124): T
@@ -644,6 +679,9 @@ private constructor(
                         },
                         tryDeserialize(node, jacksonTypeRef<CodeExecutionTool20260120>())?.let {
                             MessageCountTokensTool(codeExecutionTool20260120 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<CodeExecutionTool20260521>())?.let {
+                            MessageCountTokensTool(codeExecutionTool20260521 = it, _json = json)
                         },
                         tryDeserialize(node, jacksonTypeRef<MemoryTool20250818>())?.let {
                             MessageCountTokensTool(memoryTool20250818 = it, _json = json)
@@ -711,6 +749,8 @@ private constructor(
                     generator.writeObject(value.codeExecutionTool20250825)
                 value.codeExecutionTool20260120 != null ->
                     generator.writeObject(value.codeExecutionTool20260120)
+                value.codeExecutionTool20260521 != null ->
+                    generator.writeObject(value.codeExecutionTool20260521)
                 value.memoryTool20250818 != null -> generator.writeObject(value.memoryTool20250818)
                 value.toolTextEditor20250124 != null ->
                     generator.writeObject(value.toolTextEditor20250124)
