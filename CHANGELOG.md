@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.42.0 (2026-06-18)
+
+Full Changelog: [v2.41.1...v2.42.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.41.1...v2.42.0)
+
+### Features
+
+* **api:** add support for new code_execution_20260120 tool ([1a1a6b9](https://github.com/anthropics/anthropic-sdk-java/commit/1a1a6b95c8f742d7bd2197700deec7cc31748e75))
+
 ## 2.41.1 (2026-06-18)
 
 Full Changelog: [v2.41.0...v2.41.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.41.0...v2.41.1)
