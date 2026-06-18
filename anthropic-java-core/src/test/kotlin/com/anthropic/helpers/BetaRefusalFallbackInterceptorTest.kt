@@ -261,6 +261,73 @@ internal class BetaRefusalFallbackInterceptorTest {
 
     @ParameterizedTest
     @ValueSource(booleans = [false, true])
+    fun tagsTheOriginalAndFallbackRequests(async: Boolean) {
+        val httpClient =
+            FakeHttpClient(refusal("primary-model", "credit-token"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        assertThat(httpClient.requests.map { it.headers.values(STAINLESS_HELPER_HEADER) })
+            .containsExactly(
+                listOf("fallback-refusal-middleware"),
+                listOf("fallback-refusal-middleware"),
+            )
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun appendsToAHelperTagAlreadyOnTheRequest(async: Boolean) {
+        val httpClient = FakeHttpClient(message("primary-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest().toBuilder().putHeader("X-Stainless-Helper", "BetaToolRunner").build(),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        assertThat(httpClient.requests.single().headers.values(STAINLESS_HELPER_HEADER))
+            .containsExactly("BetaToolRunner, fallback-refusal-middleware")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun doesNotTagRequestsItPassesThrough(async: Boolean) {
+        val httpClient = FakeHttpClient(message("primary-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        // the GA surface (no ?beta=true) is not applicable to this interceptor
+        val gaRequest =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl("https://api.example.com")
+                .addPathSegments("v1", "messages")
+                .body(HttpRequestBody.ofJson(messagesBody()))
+                .build()
+        interceptedClient.execute(gaRequest, RequestOptions.none(), async)
+
+        assertThat(httpClient.requests.single().headers.values(STAINLESS_HELPER_HEADER)).isEmpty()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
     fun walksEachHopThroughTheChainUntilAModelAccepts(async: Boolean) {
         val httpClient =
             FakeHttpClient(refusal("primary-model"), refusal("mid-model"), message("last-model"))
