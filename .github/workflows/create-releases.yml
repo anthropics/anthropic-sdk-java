@@ -10,7 +10,7 @@ jobs:
   release:
     name: release
     if: github.ref == 'refs/heads/main' && github.repository == 'anthropics/anthropic-sdk-java'
-    runs-on: ubuntu-latest-16-core
+    runs-on: ${{ github.repository == 'anthropics/anthropic-sdk-java' && 'ubuntu-latest-16core' || 'ubuntu-latest-16-core' }}
     environment: production-release
 
     steps:
