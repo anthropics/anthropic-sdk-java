@@ -463,9 +463,10 @@ private constructor(
             )
         }
 
-        // Send the configured betas on this and every hop request derived from it.
+        // Send the configured betas on this and every hop request derived from it,
+        // and tag this and every hop with the interceptor's helper telemetry.
         return PreparedRequest(
-            appendBetas(trimmedRequest),
+            withInterceptorHeaders(trimmedRequest),
             body,
             state,
             index,
@@ -655,22 +656,29 @@ private constructor(
         }
 
     /**
-     * Returns a copy of the request with [betas] appended to its `anthropic-beta` header, skipping
-     * values already present (set by the caller or another interceptor).
+     * Returns a copy of the request with [betas] appended to its `anthropic-beta` header (skipping
+     * values already present) and the interceptor's helper-telemetry tag appended to
+     * `x-stainless-helper`. Single rebuild for both.
      */
-    private fun appendBetas(request: HttpRequest): HttpRequest {
-        if (betas.isEmpty()) {
-            return request
-        }
+    private fun withInterceptorHeaders(request: HttpRequest): HttpRequest {
+        val builder = request.toBuilder()
         val existing =
             request.headers.values("anthropic-beta").flatMapTo(mutableSetOf()) { value ->
                 value.split(",").map { it.trim() }
             }
         val missing = betas.map { it.asString() }.filter { existing.add(it) }
-        if (missing.isEmpty()) {
-            return request
+        if (missing.isNotEmpty()) {
+            builder.putHeaders("anthropic-beta", missing)
         }
-        return request.toBuilder().putHeaders("anthropic-beta", missing).build()
+        return builder
+            .replaceHeaders(
+                STAINLESS_HELPER_HEADER,
+                mergedStainlessHelperValue(
+                    request.headers,
+                    StainlessHelperHeaderValue.FALLBACK_REFUSAL_MIDDLEWARE,
+                ),
+            )
+            .build()
     }
 
     /**
