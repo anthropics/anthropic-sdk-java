@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.41.1 (2026-06-18)
+
+Full Changelog: [v2.41.0...v2.41.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.41.0...v2.41.1)
+
+### Chores
+
+* fix release runs-on ([#354](https://github.com/anthropics/anthropic-sdk-java/issues/354)) ([78e23a5](https://github.com/anthropics/anthropic-sdk-java/commit/78e23a5e6e039f9c9efaf92ba60ade54c1e1bea4))
+
+
+### Build System
+
+* fix signing for publishing ([#90](https://github.com/anthropics/anthropic-sdk-java/issues/90)) ([700f81d](https://github.com/anthropics/anthropic-sdk-java/commit/700f81db9769907966d1c36a1e4469a0ac428f4b))
+
 ## 2.41.0 (2026-06-17)
 
 Full Changelog: [v2.40.1...v2.41.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.40.1...v2.41.0)
