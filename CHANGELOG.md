@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.43.0 (2026-06-18)
+
+Full Changelog: [v2.42.0...v2.43.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.42.0...v2.43.0)
+
+### Features
+
+* **helpers:** introduce x-stainless-helper telemetry + tag the refusal-fallback interceptor ([#91](https://github.com/anthropics/anthropic-sdk-java/issues/91)) ([a14925b](https://github.com/anthropics/anthropic-sdk-java/commit/a14925bb5b3f1495a553e310e57705a597581b62))
+
 ## 2.42.0 (2026-06-18)
 
 Full Changelog: [v2.41.1...v2.42.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.41.1...v2.42.0)
