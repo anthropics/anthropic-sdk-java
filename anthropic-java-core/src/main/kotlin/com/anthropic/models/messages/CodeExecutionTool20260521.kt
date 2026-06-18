@@ -19,7 +19,8 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class CodeExecutionTool20250522
+/** Code execution tool with REPL state persistence. */
+class CodeExecutionTool20260521
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val name: JsonValue,
@@ -65,7 +66,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("code_execution_20250522")
+     * JsonValue.from("code_execution_20260521")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -154,16 +155,16 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [CodeExecutionTool20250522].
+         * Returns a mutable builder for constructing an instance of [CodeExecutionTool20260521].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [CodeExecutionTool20250522]. */
+    /** A builder for [CodeExecutionTool20260521]. */
     class Builder internal constructor() {
 
         private var name: JsonValue = JsonValue.from("code_execution")
-        private var type: JsonValue = JsonValue.from("code_execution_20250522")
+        private var type: JsonValue = JsonValue.from("code_execution_20260521")
         private var allowedCallers: JsonField<MutableList<AllowedCaller>>? = null
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
         private var deferLoading: JsonField<Boolean> = JsonMissing.of()
@@ -171,17 +172,17 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(codeExecutionTool20250522: CodeExecutionTool20250522) = apply {
-            name = codeExecutionTool20250522.name
-            type = codeExecutionTool20250522.type
+        internal fun from(codeExecutionTool20260521: CodeExecutionTool20260521) = apply {
+            name = codeExecutionTool20260521.name
+            type = codeExecutionTool20260521.type
             allowedCallers =
-                codeExecutionTool20250522.allowedCallers
+                codeExecutionTool20260521.allowedCallers
                     .map { it.toMutableList() }
                     .takeUnless { it.isMissing() }
-            cacheControl = codeExecutionTool20250522.cacheControl
-            deferLoading = codeExecutionTool20250522.deferLoading
-            strict = codeExecutionTool20250522.strict
-            additionalProperties = codeExecutionTool20250522.additionalProperties.toMutableMap()
+            cacheControl = codeExecutionTool20260521.cacheControl
+            deferLoading = codeExecutionTool20260521.deferLoading
+            strict = codeExecutionTool20260521.strict
+            additionalProperties = codeExecutionTool20260521.additionalProperties.toMutableMap()
         }
 
         /**
@@ -204,7 +205,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("code_execution_20250522")
+         * JsonValue.from("code_execution_20260521")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -305,12 +306,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [CodeExecutionTool20250522].
+         * Returns an immutable instance of [CodeExecutionTool20260521].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): CodeExecutionTool20250522 =
-            CodeExecutionTool20250522(
+        fun build(): CodeExecutionTool20260521 =
+            CodeExecutionTool20260521(
                 name,
                 type,
                 (allowedCallers ?: JsonMissing.of()).map { it.toImmutable() },
@@ -331,7 +332,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CodeExecutionTool20250522 = apply {
+    fun validate(): CodeExecutionTool20260521 = apply {
         if (validated) {
             return@apply
         }
@@ -342,7 +343,7 @@ private constructor(
             }
         }
         _type().let {
-            if (it != JsonValue.from("code_execution_20250522")) {
+            if (it != JsonValue.from("code_execution_20260521")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
@@ -369,7 +370,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         name.let { if (it == JsonValue.from("code_execution")) 1 else 0 } +
-            type.let { if (it == JsonValue.from("code_execution_20250522")) 1 else 0 } +
+            type.let { if (it == JsonValue.from("code_execution_20260521")) 1 else 0 } +
             (allowedCallers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (if (deferLoading.asKnown().isPresent) 1 else 0) +
@@ -540,7 +541,7 @@ private constructor(
             return true
         }
 
-        return other is CodeExecutionTool20250522 &&
+        return other is CodeExecutionTool20260521 &&
             name == other.name &&
             type == other.type &&
             allowedCallers == other.allowedCallers &&
@@ -565,5 +566,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CodeExecutionTool20250522{name=$name, type=$type, allowedCallers=$allowedCallers, cacheControl=$cacheControl, deferLoading=$deferLoading, strict=$strict, additionalProperties=$additionalProperties}"
+        "CodeExecutionTool20260521{name=$name, type=$type, allowedCallers=$allowedCallers, cacheControl=$cacheControl, deferLoading=$deferLoading, strict=$strict, additionalProperties=$additionalProperties}"
 }

@@ -793,6 +793,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofCodeExecutionTool20260521(codeExecutionTool20260521)`.
+         */
+        fun addTool(codeExecutionTool20260521: CodeExecutionTool20260521) = apply {
+            body.addTool(codeExecutionTool20260521)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `MessageCountTokensTool.ofMemoryTool20250818(memoryTool20250818)`.
          */
         fun addTool(memoryTool20250818: MemoryTool20250818) = apply {
@@ -1872,6 +1880,15 @@ private constructor(
             fun addTool(codeExecutionTool20260120: CodeExecutionTool20260120) =
                 addTool(
                     MessageCountTokensTool.ofCodeExecutionTool20260120(codeExecutionTool20260120)
+                )
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofCodeExecutionTool20260521(codeExecutionTool20260521)`.
+             */
+            fun addTool(codeExecutionTool20260521: CodeExecutionTool20260521) =
+                addTool(
+                    MessageCountTokensTool.ofCodeExecutionTool20260521(codeExecutionTool20260521)
                 )
 
             /**

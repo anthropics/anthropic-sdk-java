@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.models.messages
+package com.anthropic.models.beta.messages
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -19,13 +19,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class CodeExecutionTool20250522
+/** Code execution tool with REPL state persistence. */
+class BetaCodeExecutionTool20260521
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val name: JsonValue,
     private val type: JsonValue,
     private val allowedCallers: JsonField<List<AllowedCaller>>,
-    private val cacheControl: JsonField<CacheControlEphemeral>,
+    private val cacheControl: JsonField<BetaCacheControlEphemeral>,
     private val deferLoading: JsonField<Boolean>,
     private val strict: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -40,7 +41,7 @@ private constructor(
         allowedCallers: JsonField<List<AllowedCaller>> = JsonMissing.of(),
         @JsonProperty("cache_control")
         @ExcludeMissing
-        cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
+        cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
         @JsonProperty("defer_loading")
         @ExcludeMissing
         deferLoading: JsonField<Boolean> = JsonMissing.of(),
@@ -65,7 +66,7 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("code_execution_20250522")
+     * JsonValue.from("code_execution_20260521")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -86,7 +87,8 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun cacheControl(): Optional<CacheControlEphemeral> = cacheControl.getOptional("cache_control")
+    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
+        cacheControl.getOptional("cache_control")
 
     /**
      * If true, tool will not be included in initial system prompt. Only loaded when returned via
@@ -121,7 +123,7 @@ private constructor(
      */
     @JsonProperty("cache_control")
     @ExcludeMissing
-    fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
+    fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
     /**
      * Returns the raw JSON value of [deferLoading].
@@ -154,34 +156,35 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [CodeExecutionTool20250522].
+         * Returns a mutable builder for constructing an instance of
+         * [BetaCodeExecutionTool20260521].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [CodeExecutionTool20250522]. */
+    /** A builder for [BetaCodeExecutionTool20260521]. */
     class Builder internal constructor() {
 
         private var name: JsonValue = JsonValue.from("code_execution")
-        private var type: JsonValue = JsonValue.from("code_execution_20250522")
+        private var type: JsonValue = JsonValue.from("code_execution_20260521")
         private var allowedCallers: JsonField<MutableList<AllowedCaller>>? = null
-        private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
+        private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var deferLoading: JsonField<Boolean> = JsonMissing.of()
         private var strict: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(codeExecutionTool20250522: CodeExecutionTool20250522) = apply {
-            name = codeExecutionTool20250522.name
-            type = codeExecutionTool20250522.type
+        internal fun from(betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521) = apply {
+            name = betaCodeExecutionTool20260521.name
+            type = betaCodeExecutionTool20260521.type
             allowedCallers =
-                codeExecutionTool20250522.allowedCallers
+                betaCodeExecutionTool20260521.allowedCallers
                     .map { it.toMutableList() }
                     .takeUnless { it.isMissing() }
-            cacheControl = codeExecutionTool20250522.cacheControl
-            deferLoading = codeExecutionTool20250522.deferLoading
-            strict = codeExecutionTool20250522.strict
-            additionalProperties = codeExecutionTool20250522.additionalProperties.toMutableMap()
+            cacheControl = betaCodeExecutionTool20260521.cacheControl
+            deferLoading = betaCodeExecutionTool20260521.deferLoading
+            strict = betaCodeExecutionTool20260521.strict
+            additionalProperties = betaCodeExecutionTool20260521.additionalProperties.toMutableMap()
         }
 
         /**
@@ -204,7 +207,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("code_execution_20250522")
+         * JsonValue.from("code_execution_20260521")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -239,21 +242,21 @@ private constructor(
         }
 
         /** Create a cache control breakpoint at this content block. */
-        fun cacheControl(cacheControl: CacheControlEphemeral?) =
+        fun cacheControl(cacheControl: BetaCacheControlEphemeral?) =
             cacheControl(JsonField.ofNullable(cacheControl))
 
         /** Alias for calling [Builder.cacheControl] with `cacheControl.orElse(null)`. */
-        fun cacheControl(cacheControl: Optional<CacheControlEphemeral>) =
+        fun cacheControl(cacheControl: Optional<BetaCacheControlEphemeral>) =
             cacheControl(cacheControl.getOrNull())
 
         /**
          * Sets [Builder.cacheControl] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.cacheControl] with a well-typed [CacheControlEphemeral]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.cacheControl] with a well-typed
+         * [BetaCacheControlEphemeral] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
          */
-        fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
+        fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
         }
 
@@ -305,12 +308,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [CodeExecutionTool20250522].
+         * Returns an immutable instance of [BetaCodeExecutionTool20260521].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): CodeExecutionTool20250522 =
-            CodeExecutionTool20250522(
+        fun build(): BetaCodeExecutionTool20260521 =
+            BetaCodeExecutionTool20260521(
                 name,
                 type,
                 (allowedCallers ?: JsonMissing.of()).map { it.toImmutable() },
@@ -331,7 +334,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CodeExecutionTool20250522 = apply {
+    fun validate(): BetaCodeExecutionTool20260521 = apply {
         if (validated) {
             return@apply
         }
@@ -342,7 +345,7 @@ private constructor(
             }
         }
         _type().let {
-            if (it != JsonValue.from("code_execution_20250522")) {
+            if (it != JsonValue.from("code_execution_20260521")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
@@ -369,7 +372,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         name.let { if (it == JsonValue.from("code_execution")) 1 else 0 } +
-            type.let { if (it == JsonValue.from("code_execution_20250522")) 1 else 0 } +
+            type.let { if (it == JsonValue.from("code_execution_20260521")) 1 else 0 } +
             (allowedCallers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (if (deferLoading.asKnown().isPresent) 1 else 0) +
@@ -540,7 +543,7 @@ private constructor(
             return true
         }
 
-        return other is CodeExecutionTool20250522 &&
+        return other is BetaCodeExecutionTool20260521 &&
             name == other.name &&
             type == other.type &&
             allowedCallers == other.allowedCallers &&
@@ -565,5 +568,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CodeExecutionTool20250522{name=$name, type=$type, allowedCallers=$allowedCallers, cacheControl=$cacheControl, deferLoading=$deferLoading, strict=$strict, additionalProperties=$additionalProperties}"
+        "BetaCodeExecutionTool20260521{name=$name, type=$type, allowedCallers=$allowedCallers, cacheControl=$cacheControl, deferLoading=$deferLoading, strict=$strict, additionalProperties=$additionalProperties}"
 }

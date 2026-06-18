@@ -1568,6 +1568,7 @@ internal class BetaContentBlockParamTest {
             BetaFallbackBlockParam.builder()
                 .from(BetaFallbackInfoParam.builder().model(Model.CLAUDE_FABLE_5).build())
                 .to(BetaFallbackInfoParam.builder().model(Model.CLAUDE_FABLE_5).build())
+                .trigger(JsonValue.from(mapOf<String, Any>()))
                 .build()
 
         val betaContentBlockParam = BetaContentBlockParam.ofFallback(fallback)
@@ -1604,6 +1605,7 @@ internal class BetaContentBlockParamTest {
                 BetaFallbackBlockParam.builder()
                     .from(BetaFallbackInfoParam.builder().model(Model.CLAUDE_FABLE_5).build())
                     .to(BetaFallbackInfoParam.builder().model(Model.CLAUDE_FABLE_5).build())
+                    .trigger(JsonValue.from(mapOf<String, Any>()))
                     .build()
             )
 

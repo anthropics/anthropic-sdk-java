@@ -46,6 +46,7 @@ private constructor(
     private val vaultCredentialDeleted: BetaWebhookVaultCredentialDeletedEventData? = null,
     private val vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData? =
         null,
+    private val sessionUpdated: BetaWebhookSessionUpdatedEventData? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -116,6 +117,9 @@ private constructor(
     fun vaultCredentialRefreshFailed(): Optional<BetaWebhookVaultCredentialRefreshFailedEventData> =
         Optional.ofNullable(vaultCredentialRefreshFailed)
 
+    fun sessionUpdated(): Optional<BetaWebhookSessionUpdatedEventData> =
+        Optional.ofNullable(sessionUpdated)
+
     fun isSessionCreated(): Boolean = sessionCreated != null
 
     fun isSessionPending(): Boolean = sessionPending != null
@@ -159,6 +163,8 @@ private constructor(
     fun isVaultCredentialDeleted(): Boolean = vaultCredentialDeleted != null
 
     fun isVaultCredentialRefreshFailed(): Boolean = vaultCredentialRefreshFailed != null
+
+    fun isSessionUpdated(): Boolean = sessionUpdated != null
 
     fun asSessionCreated(): BetaWebhookSessionCreatedEventData =
         sessionCreated.getOrThrow("sessionCreated")
@@ -222,6 +228,9 @@ private constructor(
 
     fun asVaultCredentialRefreshFailed(): BetaWebhookVaultCredentialRefreshFailedEventData =
         vaultCredentialRefreshFailed.getOrThrow("vaultCredentialRefreshFailed")
+
+    fun asSessionUpdated(): BetaWebhookSessionUpdatedEventData =
+        sessionUpdated.getOrThrow("sessionUpdated")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -288,6 +297,7 @@ private constructor(
                 visitor.visitVaultCredentialDeleted(vaultCredentialDeleted)
             vaultCredentialRefreshFailed != null ->
                 visitor.visitVaultCredentialRefreshFailed(vaultCredentialRefreshFailed)
+            sessionUpdated != null -> visitor.visitSessionUpdated(sessionUpdated)
             else -> visitor.unknown(_json)
         }
 
@@ -431,6 +441,12 @@ private constructor(
                 ) {
                     vaultCredentialRefreshFailed.validate()
                 }
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaWebhookSessionUpdatedEventData
+                ) {
+                    sessionUpdated.validate()
+                }
             }
         )
         validated = true
@@ -537,6 +553,10 @@ private constructor(
                     vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
                 ) = vaultCredentialRefreshFailed.validity()
 
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaWebhookSessionUpdatedEventData
+                ) = sessionUpdated.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -568,7 +588,8 @@ private constructor(
             vaultCredentialCreated == other.vaultCredentialCreated &&
             vaultCredentialArchived == other.vaultCredentialArchived &&
             vaultCredentialDeleted == other.vaultCredentialDeleted &&
-            vaultCredentialRefreshFailed == other.vaultCredentialRefreshFailed
+            vaultCredentialRefreshFailed == other.vaultCredentialRefreshFailed &&
+            sessionUpdated == other.sessionUpdated
     }
 
     override fun hashCode(): Int =
@@ -595,6 +616,7 @@ private constructor(
             vaultCredentialArchived,
             vaultCredentialDeleted,
             vaultCredentialRefreshFailed,
+            sessionUpdated,
         )
 
     override fun toString(): String =
@@ -634,6 +656,7 @@ private constructor(
                 "BetaWebhookEventData{vaultCredentialDeleted=$vaultCredentialDeleted}"
             vaultCredentialRefreshFailed != null ->
                 "BetaWebhookEventData{vaultCredentialRefreshFailed=$vaultCredentialRefreshFailed}"
+            sessionUpdated != null -> "BetaWebhookEventData{sessionUpdated=$sessionUpdated}"
             _json != null -> "BetaWebhookEventData{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaWebhookEventData")
         }
@@ -737,6 +760,10 @@ private constructor(
         fun ofVaultCredentialRefreshFailed(
             vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
         ) = BetaWebhookEventData(vaultCredentialRefreshFailed = vaultCredentialRefreshFailed)
+
+        @JvmStatic
+        fun ofSessionUpdated(sessionUpdated: BetaWebhookSessionUpdatedEventData) =
+            BetaWebhookEventData(sessionUpdated = sessionUpdated)
     }
 
     /**
@@ -810,6 +837,8 @@ private constructor(
         fun visitVaultCredentialRefreshFailed(
             vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
         ): T
+
+        fun visitSessionUpdated(sessionUpdated: BetaWebhookSessionUpdatedEventData): T
 
         /**
          * Maps an unknown variant of [BetaWebhookEventData] to a value of type [T].
@@ -1000,6 +1029,14 @@ private constructor(
                             BetaWebhookEventData(vaultCredentialRefreshFailed = it, _json = json)
                         } ?: BetaWebhookEventData(_json = json)
                 }
+                "session.updated" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookSessionUpdatedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(sessionUpdated = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
             }
 
             return BetaWebhookEventData(_json = json)
@@ -1047,6 +1084,7 @@ private constructor(
                     generator.writeObject(value.vaultCredentialDeleted)
                 value.vaultCredentialRefreshFailed != null ->
                     generator.writeObject(value.vaultCredentialRefreshFailed)
+                value.sessionUpdated != null -> generator.writeObject(value.sessionUpdated)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaWebhookEventData")
             }

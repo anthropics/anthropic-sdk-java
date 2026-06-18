@@ -1009,6 +1009,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `Tool.ofBetaCodeExecutionTool20260521(betaCodeExecutionTool20260521)`.
+         */
+        fun addTool(betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521) = apply {
+            body.addTool(betaCodeExecutionTool20260521)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `Tool.ofBetaToolComputerUse20241022(betaToolComputerUse20241022)`.
          */
         fun addTool(betaToolComputerUse20241022: BetaToolComputerUse20241022) = apply {
@@ -2370,6 +2378,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `Tool.ofBetaCodeExecutionTool20260521(betaCodeExecutionTool20260521)`.
+             */
+            fun addTool(betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521) =
+                addTool(Tool.ofBetaCodeExecutionTool20260521(betaCodeExecutionTool20260521))
+
+            /**
+             * Alias for calling [addTool] with
              * `Tool.ofBetaToolComputerUse20241022(betaToolComputerUse20241022)`.
              */
             fun addTool(betaToolComputerUse20241022: BetaToolComputerUse20241022) =
@@ -3015,6 +3030,7 @@ private constructor(
         private val betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522? = null,
         private val betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825? = null,
         private val betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120? = null,
+        private val betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521? = null,
         private val betaToolComputerUse20241022: BetaToolComputerUse20241022? = null,
         private val betaMemoryTool20250818: BetaMemoryTool20250818? = null,
         private val betaToolComputerUse20250124: BetaToolComputerUse20250124? = null,
@@ -3052,6 +3068,10 @@ private constructor(
         /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
         fun betaCodeExecutionTool20260120(): Optional<BetaCodeExecutionTool20260120> =
             Optional.ofNullable(betaCodeExecutionTool20260120)
+
+        /** Code execution tool with REPL state persistence. */
+        fun betaCodeExecutionTool20260521(): Optional<BetaCodeExecutionTool20260521> =
+            Optional.ofNullable(betaCodeExecutionTool20260521)
 
         fun betaToolComputerUse20241022(): Optional<BetaToolComputerUse20241022> =
             Optional.ofNullable(betaToolComputerUse20241022)
@@ -3122,6 +3142,8 @@ private constructor(
 
         fun isBetaCodeExecutionTool20260120(): Boolean = betaCodeExecutionTool20260120 != null
 
+        fun isBetaCodeExecutionTool20260521(): Boolean = betaCodeExecutionTool20260521 != null
+
         fun isBetaToolComputerUse20241022(): Boolean = betaToolComputerUse20241022 != null
 
         fun isBetaMemoryTool20250818(): Boolean = betaMemoryTool20250818 != null
@@ -3173,6 +3195,10 @@ private constructor(
         /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
         fun asBetaCodeExecutionTool20260120(): BetaCodeExecutionTool20260120 =
             betaCodeExecutionTool20260120.getOrThrow("betaCodeExecutionTool20260120")
+
+        /** Code execution tool with REPL state persistence. */
+        fun asBetaCodeExecutionTool20260521(): BetaCodeExecutionTool20260521 =
+            betaCodeExecutionTool20260521.getOrThrow("betaCodeExecutionTool20260521")
 
         fun asBetaToolComputerUse20241022(): BetaToolComputerUse20241022 =
             betaToolComputerUse20241022.getOrThrow("betaToolComputerUse20241022")
@@ -3275,6 +3301,8 @@ private constructor(
                     visitor.visitBetaCodeExecutionTool20250825(betaCodeExecutionTool20250825)
                 betaCodeExecutionTool20260120 != null ->
                     visitor.visitBetaCodeExecutionTool20260120(betaCodeExecutionTool20260120)
+                betaCodeExecutionTool20260521 != null ->
+                    visitor.visitBetaCodeExecutionTool20260521(betaCodeExecutionTool20260521)
                 betaToolComputerUse20241022 != null ->
                     visitor.visitBetaToolComputerUse20241022(betaToolComputerUse20241022)
                 betaMemoryTool20250818 != null ->
@@ -3361,6 +3389,12 @@ private constructor(
                         betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
                     ) {
                         betaCodeExecutionTool20260120.validate()
+                    }
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ) {
+                        betaCodeExecutionTool20260521.validate()
                     }
 
                     override fun visitBetaToolComputerUse20241022(
@@ -3507,6 +3541,10 @@ private constructor(
                         betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
                     ) = betaCodeExecutionTool20260120.validity()
 
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ) = betaCodeExecutionTool20260521.validity()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ) = betaToolComputerUse20241022.validity()
@@ -3590,6 +3628,7 @@ private constructor(
                 betaCodeExecutionTool20250522 == other.betaCodeExecutionTool20250522 &&
                 betaCodeExecutionTool20250825 == other.betaCodeExecutionTool20250825 &&
                 betaCodeExecutionTool20260120 == other.betaCodeExecutionTool20260120 &&
+                betaCodeExecutionTool20260521 == other.betaCodeExecutionTool20260521 &&
                 betaToolComputerUse20241022 == other.betaToolComputerUse20241022 &&
                 betaMemoryTool20250818 == other.betaMemoryTool20250818 &&
                 betaToolComputerUse20250124 == other.betaToolComputerUse20250124 &&
@@ -3617,6 +3656,7 @@ private constructor(
                 betaCodeExecutionTool20250522,
                 betaCodeExecutionTool20250825,
                 betaCodeExecutionTool20260120,
+                betaCodeExecutionTool20260521,
                 betaToolComputerUse20241022,
                 betaMemoryTool20250818,
                 betaToolComputerUse20250124,
@@ -3647,6 +3687,8 @@ private constructor(
                     "Tool{betaCodeExecutionTool20250825=$betaCodeExecutionTool20250825}"
                 betaCodeExecutionTool20260120 != null ->
                     "Tool{betaCodeExecutionTool20260120=$betaCodeExecutionTool20260120}"
+                betaCodeExecutionTool20260521 != null ->
+                    "Tool{betaCodeExecutionTool20260521=$betaCodeExecutionTool20260521}"
                 betaToolComputerUse20241022 != null ->
                     "Tool{betaToolComputerUse20241022=$betaToolComputerUse20241022}"
                 betaMemoryTool20250818 != null ->
@@ -3713,6 +3755,12 @@ private constructor(
             fun ofBetaCodeExecutionTool20260120(
                 betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
             ) = Tool(betaCodeExecutionTool20260120 = betaCodeExecutionTool20260120)
+
+            /** Code execution tool with REPL state persistence. */
+            @JvmStatic
+            fun ofBetaCodeExecutionTool20260521(
+                betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+            ) = Tool(betaCodeExecutionTool20260521 = betaCodeExecutionTool20260521)
 
             @JvmStatic
             fun ofBetaToolComputerUse20241022(
@@ -3823,6 +3871,11 @@ private constructor(
                 betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
             ): T
 
+            /** Code execution tool with REPL state persistence. */
+            fun visitBetaCodeExecutionTool20260521(
+                betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+            ): T
+
             fun visitBetaToolComputerUse20241022(
                 betaToolComputerUse20241022: BetaToolComputerUse20241022
             ): T
@@ -3922,6 +3975,8 @@ private constructor(
                                 ?.let { Tool(betaCodeExecutionTool20250825 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20260120>())
                                 ?.let { Tool(betaCodeExecutionTool20260120 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20260521>())
+                                ?.let { Tool(betaCodeExecutionTool20260521 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())
                                 ?.let { Tool(betaToolComputerUse20241022 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaMemoryTool20250818>())?.let {
@@ -4000,6 +4055,8 @@ private constructor(
                         generator.writeObject(value.betaCodeExecutionTool20250825)
                     value.betaCodeExecutionTool20260120 != null ->
                         generator.writeObject(value.betaCodeExecutionTool20260120)
+                    value.betaCodeExecutionTool20260521 != null ->
+                        generator.writeObject(value.betaCodeExecutionTool20260521)
                     value.betaToolComputerUse20241022 != null ->
                         generator.writeObject(value.betaToolComputerUse20241022)
                     value.betaMemoryTool20250818 != null ->
