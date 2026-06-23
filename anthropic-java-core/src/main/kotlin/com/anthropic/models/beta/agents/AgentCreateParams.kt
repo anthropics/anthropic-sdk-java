@@ -75,7 +75,10 @@ private constructor(
     fun description(): Optional<String> = body.description()
 
     /**
-     * MCP servers this agent connects to. Maximum 20. Names must be unique within the array.
+     * MCP servers this agent connects to. Maximum 20. Names must be unique within the array. Every
+     * server must be referenced by an `mcp_toolset` in `tools`; unreferenced servers are rejected.
+     * See the
+     * [MCP connector guide](https://platform.claude.com/docs/en/managed-agents/mcp-connector).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -320,6 +323,9 @@ private constructor(
 
         /**
          * MCP servers this agent connects to. Maximum 20. Names must be unique within the array.
+         * Every server must be referenced by an `mcp_toolset` in `tools`; unreferenced servers are
+         * rejected. See the
+         * [MCP connector guide](https://platform.claude.com/docs/en/managed-agents/mcp-connector).
          */
         fun mcpServers(mcpServers: List<BetaManagedAgentsUrlMcpServerParams>) = apply {
             body.mcpServers(mcpServers)
@@ -741,6 +747,9 @@ private constructor(
 
         /**
          * MCP servers this agent connects to. Maximum 20. Names must be unique within the array.
+         * Every server must be referenced by an `mcp_toolset` in `tools`; unreferenced servers are
+         * rejected. See the
+         * [MCP connector guide](https://platform.claude.com/docs/en/managed-agents/mcp-connector).
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -980,7 +989,9 @@ private constructor(
 
             /**
              * MCP servers this agent connects to. Maximum 20. Names must be unique within the
-             * array.
+             * array. Every server must be referenced by an `mcp_toolset` in `tools`; unreferenced
+             * servers are rejected. See the
+             * [MCP connector guide](https://platform.claude.com/docs/en/managed-agents/mcp-connector).
              */
             fun mcpServers(mcpServers: List<BetaManagedAgentsUrlMcpServerParams>) =
                 mcpServers(JsonField.of(mcpServers))

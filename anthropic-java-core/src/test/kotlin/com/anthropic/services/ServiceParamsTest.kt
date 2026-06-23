@@ -52,6 +52,7 @@ internal class ServiceParamsTest {
 
         messageService.create(
             MessageCreateParams.builder()
+                .userProfileId("anthropic-user-profile-id")
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)

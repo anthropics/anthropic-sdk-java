@@ -16,6 +16,7 @@ internal class MessageCreateParamsTest {
     fun create() {
         MessageCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .userProfileId("anthropic-user-profile-id")
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_4_6)
@@ -187,7 +188,6 @@ internal class MessageCreateParamsTest {
             )
             .topK(5L)
             .topP(0.7)
-            .userProfileId("user_profile_id")
             .build()
     }
 
@@ -196,6 +196,7 @@ internal class MessageCreateParamsTest {
         val params =
             MessageCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .userProfileId("anthropic-user-profile-id")
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)
@@ -373,14 +374,16 @@ internal class MessageCreateParamsTest {
                 )
                 .topK(5L)
                 .topP(0.7)
-                .userProfileId("user_profile_id")
                 .build()
 
         val headers = params._headers()
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-user-profile-id", "anthropic-user-profile-id")
+                    .build()
             )
     }
 
@@ -403,6 +406,7 @@ internal class MessageCreateParamsTest {
         val params =
             MessageCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .userProfileId("anthropic-user-profile-id")
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)
@@ -580,7 +584,6 @@ internal class MessageCreateParamsTest {
                 )
                 .topK(5L)
                 .topP(0.7)
-                .userProfileId("user_profile_id")
                 .build()
 
         val body = params._body()
@@ -787,7 +790,6 @@ internal class MessageCreateParamsTest {
             )
         assertThat(body.topK()).contains(5L)
         assertThat(body.topP()).contains(0.7)
-        assertThat(body.userProfileId()).contains("user_profile_id")
     }
 
     @Test

@@ -49,6 +49,7 @@ internal class MessageServiceAsyncTest {
             messageServiceAsync.create(
                 MessageCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .userProfileId("anthropic-user-profile-id")
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)
@@ -239,7 +240,6 @@ internal class MessageServiceAsyncTest {
                     )
                     .topK(5L)
                     .topP(0.7)
-                    .userProfileId("user_profile_id")
                     .build()
             )
 
@@ -260,6 +260,7 @@ internal class MessageServiceAsyncTest {
             messageServiceAsync.createStreaming(
                 MessageCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .userProfileId("anthropic-user-profile-id")
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)
@@ -450,7 +451,6 @@ internal class MessageServiceAsyncTest {
                     )
                     .topK(5L)
                     .topP(0.7)
-                    .userProfileId("user_profile_id")
                     .build()
             )
 

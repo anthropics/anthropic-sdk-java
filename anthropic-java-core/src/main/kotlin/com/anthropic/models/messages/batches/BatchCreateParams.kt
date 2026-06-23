@@ -81,10 +81,19 @@ import kotlin.jvm.optionals.getOrNull
  */
 class BatchCreateParams
 private constructor(
+    private val userProfileId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * The user profile ID to attribute the requests in this batch to. Use when acting on behalf of
+     * a party other than your organization. Requires the `user-profiles` beta header. Applies to
+     * every request in the batch; an individual request whose `user_profile_id` body field
+     * conflicts with this header is errored.
+     */
+    fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
 
     /**
      * List of requests for prompt completion. Each is an individual request to create a Message.
@@ -127,16 +136,30 @@ private constructor(
     /** A builder for [BatchCreateParams]. */
     class Builder internal constructor() {
 
+        private var userProfileId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(batchCreateParams: BatchCreateParams) = apply {
+            userProfileId = batchCreateParams.userProfileId
             body = batchCreateParams.body.toBuilder()
             additionalHeaders = batchCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = batchCreateParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * The user profile ID to attribute the requests in this batch to. Use when acting on behalf
+         * of a party other than your organization. Requires the `user-profiles` beta header.
+         * Applies to every request in the batch; an individual request whose `user_profile_id` body
+         * field conflicts with this header is errored.
+         */
+        fun userProfileId(userProfileId: String?) = apply { this.userProfileId = userProfileId }
+
+        /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
+        fun userProfileId(userProfileId: Optional<String>) =
+            userProfileId(userProfileId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -300,6 +323,7 @@ private constructor(
          */
         fun build(): BatchCreateParams =
             BatchCreateParams(
+                userProfileId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -308,7 +332,13 @@ private constructor(
 
     fun _body(): Body = body
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                userProfileId?.let { put("anthropic-user-profile-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -2785,13 +2815,15 @@ private constructor(
         }
 
         return other is BatchCreateParams &&
+            userProfileId == other.userProfileId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(userProfileId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "BatchCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "BatchCreateParams{userProfileId=$userProfileId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

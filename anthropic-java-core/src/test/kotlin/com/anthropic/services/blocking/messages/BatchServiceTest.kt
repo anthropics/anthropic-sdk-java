@@ -34,6 +34,7 @@ internal class BatchServiceTest {
         val messageBatch =
             batchService.create(
                 BatchCreateParams.builder()
+                    .userProfileId("anthropic-user-profile-id")
                     .addRequest(
                         BatchCreateParams.Request.builder()
                             .customId("my-custom-id-1")
@@ -73,7 +74,7 @@ internal class BatchServiceTest {
                                     )
                                     .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
                                     .addStopSequence("string")
-                                    .stream(true)
+                                    .stream(false)
                                     .systemOfTextBlockParams(
                                         listOf(
                                             TextBlockParam.builder()
