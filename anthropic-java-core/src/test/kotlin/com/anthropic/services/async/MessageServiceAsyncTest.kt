@@ -35,6 +35,7 @@ internal class MessageServiceAsyncTest {
         val messageFuture =
             messageServiceAsync.create(
                 MessageCreateParams.builder()
+                    .userProfileId("anthropic-user-profile-id")
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)
@@ -148,6 +149,7 @@ internal class MessageServiceAsyncTest {
         val messageStreamResponse =
             messageServiceAsync.createStreaming(
                 MessageCreateParams.builder()
+                    .userProfileId("anthropic-user-profile-id")
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)

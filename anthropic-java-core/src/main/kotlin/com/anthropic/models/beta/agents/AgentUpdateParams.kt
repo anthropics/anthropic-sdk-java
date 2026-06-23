@@ -70,8 +70,10 @@ private constructor(
     fun description(): Optional<String> = body.description()
 
     /**
-     * MCP servers. Full replacement. Omit to preserve; send empty array or null to clear. Names
-     * must be unique. Maximum 20.
+     * MCP servers. Full replacement. Omit to preserve; send empty array or `null` to clear. Names
+     * must be unique. Maximum 20. Every server must be referenced by an `mcp_toolset` in the
+     * agent's resulting `tools`; unreferenced servers are rejected. See the
+     * [MCP connector guide](https://platform.claude.com/docs/en/managed-agents/mcp-connector).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -326,8 +328,10 @@ private constructor(
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
         /**
-         * MCP servers. Full replacement. Omit to preserve; send empty array or null to clear. Names
-         * must be unique. Maximum 20.
+         * MCP servers. Full replacement. Omit to preserve; send empty array or `null` to clear.
+         * Names must be unique. Maximum 20. Every server must be referenced by an `mcp_toolset` in
+         * the agent's resulting `tools`; unreferenced servers are rejected. See the
+         * [MCP connector guide](https://platform.claude.com/docs/en/managed-agents/mcp-connector).
          */
         fun mcpServers(mcpServers: List<BetaManagedAgentsUrlMcpServerParams>?) = apply {
             body.mcpServers(mcpServers)
@@ -804,8 +808,10 @@ private constructor(
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
-         * MCP servers. Full replacement. Omit to preserve; send empty array or null to clear. Names
-         * must be unique. Maximum 20.
+         * MCP servers. Full replacement. Omit to preserve; send empty array or `null` to clear.
+         * Names must be unique. Maximum 20. Every server must be referenced by an `mcp_toolset` in
+         * the agent's resulting `tools`; unreferenced servers are rejected. See the
+         * [MCP connector guide](https://platform.claude.com/docs/en/managed-agents/mcp-connector).
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1046,8 +1052,10 @@ private constructor(
             }
 
             /**
-             * MCP servers. Full replacement. Omit to preserve; send empty array or null to clear.
-             * Names must be unique. Maximum 20.
+             * MCP servers. Full replacement. Omit to preserve; send empty array or `null` to clear.
+             * Names must be unique. Maximum 20. Every server must be referenced by an `mcp_toolset`
+             * in the agent's resulting `tools`; unreferenced servers are rejected. See the
+             * [MCP connector guide](https://platform.claude.com/docs/en/managed-agents/mcp-connector).
              */
             fun mcpServers(mcpServers: List<BetaManagedAgentsUrlMcpServerParams>?) =
                 mcpServers(JsonField.ofNullable(mcpServers))

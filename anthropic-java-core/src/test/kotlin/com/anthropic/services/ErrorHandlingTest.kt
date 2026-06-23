@@ -82,6 +82,7 @@ internal class ErrorHandlingTest {
             assertThrows<BadRequestException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -204,6 +205,7 @@ internal class ErrorHandlingTest {
             assertThrows<BadRequestException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -326,6 +328,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnauthorizedException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -448,6 +451,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnauthorizedException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -570,6 +574,7 @@ internal class ErrorHandlingTest {
             assertThrows<PermissionDeniedException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -692,6 +697,7 @@ internal class ErrorHandlingTest {
             assertThrows<PermissionDeniedException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -814,6 +820,7 @@ internal class ErrorHandlingTest {
             assertThrows<NotFoundException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -936,6 +943,7 @@ internal class ErrorHandlingTest {
             assertThrows<NotFoundException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -1058,6 +1066,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnprocessableEntityException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -1180,6 +1189,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnprocessableEntityException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -1302,6 +1312,7 @@ internal class ErrorHandlingTest {
             assertThrows<RateLimitException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -1424,6 +1435,7 @@ internal class ErrorHandlingTest {
             assertThrows<RateLimitException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -1546,6 +1558,7 @@ internal class ErrorHandlingTest {
             assertThrows<InternalServerException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -1668,6 +1681,7 @@ internal class ErrorHandlingTest {
             assertThrows<InternalServerException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -1790,6 +1804,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnexpectedStatusCodeException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -1912,6 +1927,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnexpectedStatusCodeException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)
@@ -2032,6 +2048,7 @@ internal class ErrorHandlingTest {
             assertThrows<AnthropicException> {
                 messageService.create(
                     MessageCreateParams.builder()
+                        .userProfileId("anthropic-user-profile-id")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_4_6)

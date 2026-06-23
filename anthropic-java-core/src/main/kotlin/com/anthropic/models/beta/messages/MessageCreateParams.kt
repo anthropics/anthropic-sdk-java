@@ -48,6 +48,7 @@ import kotlin.jvm.optionals.getOrNull
 class MessageCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
+    private val userProfileId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -55,6 +56,12 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    /**
+     * The user profile ID to attribute this request to. Use when acting on behalf of a party other
+     * than your organization. Requires the `user-profiles` beta header.
+     */
+    fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
 
     /**
      * The maximum number of tokens to generate before stopping.
@@ -460,15 +467,6 @@ private constructor(
     fun topP(): Optional<Double> = body.topP()
 
     /**
-     * The user profile ID to attribute this request to. Use when acting on behalf of a party other
-     * than your organization.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun userProfileId(): Optional<String> = body.userProfileId()
-
-    /**
      * Returns the raw JSON value of [maxTokens].
      *
      * Unlike [maxTokens], this method doesn't throw if the JSON field has an unexpected type.
@@ -648,13 +646,6 @@ private constructor(
     )
     fun _topP(): JsonField<Double> = body._topP()
 
-    /**
-     * Returns the raw JSON value of [userProfileId].
-     *
-     * Unlike [userProfileId], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    fun _userProfileId(): JsonField<String> = body._userProfileId()
-
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
     /** Additional headers to send with the request. */
@@ -684,6 +675,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
+        private var userProfileId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -691,6 +683,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(messageCreateParams: MessageCreateParams) = apply {
             betas = messageCreateParams.betas?.toMutableList()
+            userProfileId = messageCreateParams.userProfileId
             body = messageCreateParams.body.toBuilder()
             additionalHeaders = messageCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = messageCreateParams.additionalQueryParams.toBuilder()
@@ -719,6 +712,16 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        /**
+         * The user profile ID to attribute this request to. Use when acting on behalf of a party
+         * other than your organization. Requires the `user-profiles` beta header.
+         */
+        fun userProfileId(userProfileId: String?) = apply { this.userProfileId = userProfileId }
+
+        /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
+        fun userProfileId(userProfileId: Optional<String>) =
+            userProfileId(userProfileId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -1715,27 +1718,6 @@ private constructor(
         )
         fun topP(topP: JsonField<Double>) = apply { body.topP(topP) }
 
-        /**
-         * The user profile ID to attribute this request to. Use when acting on behalf of a party
-         * other than your organization.
-         */
-        fun userProfileId(userProfileId: String?) = apply { body.userProfileId(userProfileId) }
-
-        /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
-        fun userProfileId(userProfileId: Optional<String>) =
-            userProfileId(userProfileId.getOrNull())
-
-        /**
-         * Sets [Builder.userProfileId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.userProfileId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun userProfileId(userProfileId: JsonField<String>) = apply {
-            body.userProfileId(userProfileId)
-        }
-
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
         }
@@ -1870,6 +1852,7 @@ private constructor(
         fun build(): MessageCreateParams =
             MessageCreateParams(
                 betas?.toImmutable(),
+                userProfileId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -1882,6 +1865,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                userProfileId?.let { put("anthropic-user-profile-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -1915,7 +1899,6 @@ private constructor(
         private val tools: JsonField<List<BetaToolUnion>>,
         private val topK: JsonField<Long>,
         private val topP: JsonField<Double>,
-        private val userProfileId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -1983,9 +1966,6 @@ private constructor(
             tools: JsonField<List<BetaToolUnion>> = JsonMissing.of(),
             @JsonProperty("top_k") @ExcludeMissing topK: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("top_p") @ExcludeMissing topP: JsonField<Double> = JsonMissing.of(),
-            @JsonProperty("user_profile_id")
-            @ExcludeMissing
-            userProfileId: JsonField<String> = JsonMissing.of(),
         ) : this(
             maxTokens,
             messages,
@@ -2011,7 +1991,6 @@ private constructor(
             tools,
             topK,
             topP,
-            userProfileId,
             mutableMapOf(),
         )
 
@@ -2430,15 +2409,6 @@ private constructor(
         fun topP(): Optional<Double> = topP.getOptional("top_p")
 
         /**
-         * The user profile ID to attribute this request to. Use when acting on behalf of a party
-         * other than your organization.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun userProfileId(): Optional<String> = userProfileId.getOptional("user_profile_id")
-
-        /**
          * Returns the raw JSON value of [maxTokens].
          *
          * Unlike [maxTokens], this method doesn't throw if the JSON field has an unexpected type.
@@ -2661,16 +2631,6 @@ private constructor(
         @ExcludeMissing
         fun _topP(): JsonField<Double> = topP
 
-        /**
-         * Returns the raw JSON value of [userProfileId].
-         *
-         * Unlike [userProfileId], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("user_profile_id")
-        @ExcludeMissing
-        fun _userProfileId(): JsonField<String> = userProfileId
-
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -2726,7 +2686,6 @@ private constructor(
             private var tools: JsonField<MutableList<BetaToolUnion>>? = null
             private var topK: JsonField<Long> = JsonMissing.of()
             private var topP: JsonField<Double> = JsonMissing.of()
-            private var userProfileId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -2757,7 +2716,6 @@ private constructor(
                 tools = body.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 topK = body.topK
                 topP = body.topP
-                userProfileId = body.userProfileId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -3797,28 +3755,6 @@ private constructor(
             )
             fun topP(topP: JsonField<Double>) = apply { this.topP = topP }
 
-            /**
-             * The user profile ID to attribute this request to. Use when acting on behalf of a
-             * party other than your organization.
-             */
-            fun userProfileId(userProfileId: String?) =
-                userProfileId(JsonField.ofNullable(userProfileId))
-
-            /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
-            fun userProfileId(userProfileId: Optional<String>) =
-                userProfileId(userProfileId.getOrNull())
-
-            /**
-             * Sets [Builder.userProfileId] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.userProfileId] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun userProfileId(userProfileId: JsonField<String>) = apply {
-                this.userProfileId = userProfileId
-            }
-
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -3878,7 +3814,6 @@ private constructor(
                     (tools ?: JsonMissing.of()).map { it.toImmutable() },
                     topK,
                     topP,
-                    userProfileId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -3923,7 +3858,6 @@ private constructor(
             tools().ifPresent { it.forEach { it.validate() } }
             topK()
             topP()
-            userProfileId()
             validated = true
         }
 
@@ -3966,8 +3900,7 @@ private constructor(
                 (toolChoice.asKnown().getOrNull()?.validity() ?: 0) +
                 (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (topK.asKnown().isPresent) 1 else 0) +
-                (if (topP.asKnown().isPresent) 1 else 0) +
-                (if (userProfileId.asKnown().isPresent) 1 else 0)
+                (if (topP.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -3999,7 +3932,6 @@ private constructor(
                 tools == other.tools &&
                 topK == other.topK &&
                 topP == other.topP &&
-                userProfileId == other.userProfileId &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -4029,7 +3961,6 @@ private constructor(
                 tools,
                 topK,
                 topP,
-                userProfileId,
                 additionalProperties,
             )
         }
@@ -4037,7 +3968,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, fallbackCreditToken=$fallbackCreditToken, fallbacks=$fallbacks, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, userProfileId=$userProfileId, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, fallbackCreditToken=$fallbackCreditToken, fallbacks=$fallbacks, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /** Container identifier for reuse across requests. */
@@ -4783,14 +4714,15 @@ private constructor(
 
         return other is MessageCreateParams &&
             betas == other.betas &&
+            userProfileId == other.userProfileId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(betas, userProfileId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "MessageCreateParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MessageCreateParams{betas=$betas, userProfileId=$userProfileId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

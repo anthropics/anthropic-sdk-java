@@ -45,10 +45,17 @@ import kotlin.jvm.optionals.getOrNull
  */
 class MessageCreateParams
 private constructor(
+    private val userProfileId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * The user profile ID to attribute this request to. Use when acting on behalf of a party other
+     * than your organization. Requires the `user-profiles` beta header.
+     */
+    fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
 
     /**
      * The maximum number of tokens to generate before stopping.
@@ -525,16 +532,28 @@ private constructor(
     /** A builder for [MessageCreateParams]. */
     class Builder internal constructor() {
 
+        private var userProfileId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(messageCreateParams: MessageCreateParams) = apply {
+            userProfileId = messageCreateParams.userProfileId
             body = messageCreateParams.body.toBuilder()
             additionalHeaders = messageCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = messageCreateParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * The user profile ID to attribute this request to. Use when acting on behalf of a party
+         * other than your organization. Requires the `user-profiles` beta header.
+         */
+        fun userProfileId(userProfileId: String?) = apply { this.userProfileId = userProfileId }
+
+        /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
+        fun userProfileId(userProfileId: Optional<String>) =
+            userProfileId(userProfileId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -1402,6 +1421,7 @@ private constructor(
          */
         fun build(): MessageCreateParams =
             MessageCreateParams(
+                userProfileId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -1410,7 +1430,13 @@ private constructor(
 
     fun _body(): Body = body
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                userProfileId?.let { put("anthropic-user-profile-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -3367,13 +3393,15 @@ private constructor(
         }
 
         return other is MessageCreateParams &&
+            userProfileId == other.userProfileId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(userProfileId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "MessageCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MessageCreateParams{userProfileId=$userProfileId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

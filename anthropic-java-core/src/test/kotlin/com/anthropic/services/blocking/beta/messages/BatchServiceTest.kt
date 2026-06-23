@@ -52,6 +52,7 @@ internal class BatchServiceTest {
             batchService.create(
                 BatchCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .userProfileId("anthropic-user-profile-id")
                     .addRequest(
                         BatchCreateParams.Request.builder()
                             .customId("my-custom-id-1")
@@ -198,7 +199,7 @@ internal class BatchServiceTest {
                                     .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
                                     .speed(BatchCreateParams.Request.Params.Speed.STANDARD)
                                     .addStopSequence("string")
-                                    .stream(true)
+                                    .stream(false)
                                     .systemOfBetaTextBlockParams(
                                         listOf(
                                             BetaTextBlockParam.builder()
@@ -276,7 +277,6 @@ internal class BatchServiceTest {
                                     )
                                     .topK(5L)
                                     .topP(0.7)
-                                    .userProfileId("user_profile_id")
                                     .build()
                             )
                             .build()
