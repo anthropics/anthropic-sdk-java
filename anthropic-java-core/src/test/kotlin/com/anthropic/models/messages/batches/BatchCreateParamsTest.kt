@@ -3,6 +3,7 @@
 package com.anthropic.models.messages.batches
 
 import com.anthropic.core.JsonValue
+import com.anthropic.core.http.Headers
 import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CitationCharLocationParam
 import com.anthropic.models.messages.JsonOutputFormat
@@ -21,6 +22,7 @@ internal class BatchCreateParamsTest {
     @Test
     fun create() {
         BatchCreateParams.builder()
+            .userProfileId("anthropic-user-profile-id")
             .addRequest(
                 BatchCreateParams.Request.builder()
                     .customId("my-custom-id-1")
@@ -60,7 +62,7 @@ internal class BatchCreateParamsTest {
                             )
                             .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
                             .addStopSequence("string")
-                            .stream(true)
+                            .stream(false)
                             .systemOfTextBlockParams(
                                 listOf(
                                     TextBlockParam.builder()
@@ -139,9 +141,10 @@ internal class BatchCreateParamsTest {
     }
 
     @Test
-    fun body() {
+    fun headers() {
         val params =
             BatchCreateParams.builder()
+                .userProfileId("anthropic-user-profile-id")
                 .addRequest(
                     BatchCreateParams.Request.builder()
                         .customId("my-custom-id-1")
@@ -181,7 +184,161 @@ internal class BatchCreateParamsTest {
                                 )
                                 .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
                                 .addStopSequence("string")
-                                .stream(true)
+                                .stream(false)
+                                .systemOfTextBlockParams(
+                                    listOf(
+                                        TextBlockParam.builder()
+                                            .text("Today's date is 2024-06-01.")
+                                            .cacheControl(
+                                                CacheControlEphemeral.builder()
+                                                    .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                                    .build()
+                                            )
+                                            .addCitation(
+                                                CitationCharLocationParam.builder()
+                                                    .citedText("cited_text")
+                                                    .documentIndex(0L)
+                                                    .documentTitle("x")
+                                                    .endCharIndex(0L)
+                                                    .startCharIndex(0L)
+                                                    .build()
+                                            )
+                                            .build()
+                                    )
+                                )
+                                .temperature(1.0)
+                                .thinking(
+                                    ThinkingConfigAdaptive.builder()
+                                        .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                                        .build()
+                                )
+                                .toolChoice(
+                                    ToolChoiceAuto.builder().disableParallelToolUse(true).build()
+                                )
+                                .addTool(
+                                    Tool.builder()
+                                        .inputSchema(
+                                            Tool.InputSchema.builder()
+                                                .properties(
+                                                    Tool.InputSchema.Properties.builder()
+                                                        .putAdditionalProperty(
+                                                            "location",
+                                                            JsonValue.from("bar"),
+                                                        )
+                                                        .putAdditionalProperty(
+                                                            "unit",
+                                                            JsonValue.from("bar"),
+                                                        )
+                                                        .build()
+                                                )
+                                                .addRequired("location")
+                                                .build()
+                                        )
+                                        .name("name")
+                                        .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                                        .cacheControl(
+                                            CacheControlEphemeral.builder()
+                                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                                .build()
+                                        )
+                                        .deferLoading(true)
+                                        .description("Get the current weather in a given location")
+                                        .eagerInputStreaming(true)
+                                        .addInputExample(
+                                            Tool.InputExample.builder()
+                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                                .build()
+                                        )
+                                        .strict(true)
+                                        .type(Tool.Type.CUSTOM)
+                                        .build()
+                                )
+                                .topK(5L)
+                                .topP(0.7)
+                                .build()
+                        )
+                        .build()
+                )
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder()
+                    .put("anthropic-user-profile-id", "anthropic-user-profile-id")
+                    .build()
+            )
+    }
+
+    @Test
+    fun headersWithoutOptionalFields() {
+        val params =
+            BatchCreateParams.builder()
+                .addRequest(
+                    BatchCreateParams.Request.builder()
+                        .customId("my-custom-id-1")
+                        .params(
+                            BatchCreateParams.Request.Params.builder()
+                                .maxTokens(1024L)
+                                .addUserMessage("Hello, world")
+                                .model(Model.CLAUDE_OPUS_4_6)
+                                .build()
+                        )
+                        .build()
+                )
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers).isEqualTo(Headers.builder().build())
+    }
+
+    @Test
+    fun body() {
+        val params =
+            BatchCreateParams.builder()
+                .userProfileId("anthropic-user-profile-id")
+                .addRequest(
+                    BatchCreateParams.Request.builder()
+                        .customId("my-custom-id-1")
+                        .params(
+                            BatchCreateParams.Request.Params.builder()
+                                .maxTokens(1024L)
+                                .addUserMessage("Hello, world")
+                                .model(Model.CLAUDE_OPUS_4_6)
+                                .cacheControl(
+                                    CacheControlEphemeral.builder()
+                                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                        .build()
+                                )
+                                .container("container")
+                                .inferenceGeo("inference_geo")
+                                .metadata(
+                                    Metadata.builder()
+                                        .userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b")
+                                        .build()
+                                )
+                                .outputConfig(
+                                    OutputConfig.builder()
+                                        .effort(OutputConfig.Effort.LOW)
+                                        .format(
+                                            JsonOutputFormat.builder()
+                                                .schema(
+                                                    JsonOutputFormat.Schema.builder()
+                                                        .putAdditionalProperty(
+                                                            "foo",
+                                                            JsonValue.from("bar"),
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
+                                .addStopSequence("string")
+                                .stream(false)
                                 .systemOfTextBlockParams(
                                     listOf(
                                         TextBlockParam.builder()
@@ -300,7 +457,7 @@ internal class BatchCreateParamsTest {
                             )
                             .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
                             .addStopSequence("string")
-                            .stream(true)
+                            .stream(false)
                             .systemOfTextBlockParams(
                                 listOf(
                                     TextBlockParam.builder()

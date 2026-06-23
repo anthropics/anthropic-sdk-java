@@ -647,11 +647,6 @@ internal constructor(
             paramsBuilder.userProfileId(userProfileId)
         }
 
-        /** @see MessageCreateParams.Builder.userProfileId */
-        fun userProfileId(userProfileId: JsonField<String>) = apply {
-            paramsBuilder.userProfileId(userProfileId)
-        }
-
         /** @see MessageCreateParams.Builder.additionalBodyProperties */
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             paramsBuilder.additionalBodyProperties(additionalBodyProperties)

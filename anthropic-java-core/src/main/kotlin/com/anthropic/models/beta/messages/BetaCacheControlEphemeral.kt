@@ -49,7 +49,9 @@ private constructor(
      * - `5m`: 5 minutes
      * - `1h`: 1 hour
      *
-     * Defaults to `5m`.
+     * Defaults to `5m`. See
+     * [prompt caching pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching)
+     * for details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -118,7 +120,9 @@ private constructor(
          * - `5m`: 5 minutes
          * - `1h`: 1 hour
          *
-         * Defaults to `5m`.
+         * Defaults to `5m`. See
+         * [prompt caching pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching)
+         * for details.
          */
         fun ttl(ttl: Ttl) = ttl(JsonField.of(ttl))
 
@@ -207,7 +211,9 @@ private constructor(
      * - `5m`: 5 minutes
      * - `1h`: 1 hour
      *
-     * Defaults to `5m`.
+     * Defaults to `5m`. See
+     * [prompt caching pricing](https://docs.claude.com/en/docs/build-with-claude/prompt-caching)
+     * for details.
      */
     class Ttl @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

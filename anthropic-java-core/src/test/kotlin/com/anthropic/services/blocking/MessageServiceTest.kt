@@ -35,6 +35,7 @@ internal class MessageServiceTest {
         val message =
             messageService.create(
                 MessageCreateParams.builder()
+                    .userProfileId("anthropic-user-profile-id")
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)
@@ -147,6 +148,7 @@ internal class MessageServiceTest {
         val messageStreamResponse =
             messageService.createStreaming(
                 MessageCreateParams.builder()
+                    .userProfileId("anthropic-user-profile-id")
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)

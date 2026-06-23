@@ -11,6 +11,7 @@ import com.anthropic.core.findDelegationMethod
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.outputFormatFromClass
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -214,6 +215,8 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("topK", JsonField.of(10L)),
                 DelegationWriteTestCase("topP", 0.9),
                 DelegationWriteTestCase("topP", JsonField.of(0.9)),
+                DelegationWriteTestCase("userProfileId", "uprof_test"),
+                DelegationWriteTestCase("userProfileId", Optional.of("uprof_test")),
                 DelegationWriteTestCase(
                     "additionalBodyProperties",
                     mapOf("k" to JsonValue.from("v")),
