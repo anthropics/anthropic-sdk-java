@@ -21,18 +21,32 @@ val dokkaAggregationClasspath by configurations.creating {
 
 dependencies {
     api(project(":anthropic-java-client-okhttp"))
+}
 
-    rootProject.subprojects
-        .filter { it.file("src/main/kotlin").exists() && it.name != project.name }
-        .forEach { add(dokkaAggregationClasspath.name, project(it.path)) }
+// The aggregated javadoc covers exactly the modules this umbrella re-exports: derive them from
+// this project's resolved runtime classpath so build-tooling and optional add-on modules can never
+// leak in.
+val documentedModules: Set<Project> =
+    configurations.runtimeClasspath
+        .get()
+        .incoming
+        .resolutionResult
+        .allComponents
+        .map { it.id }
+        .filterIsInstance<ProjectComponentIdentifier>()
+        .filter { it.projectName != project.name }
+        .map { rootProject.project(it.projectPath) }
+        .toSet()
+
+dependencies {
+    documentedModules.forEach { add(dokkaAggregationClasspath.name, project(it.path)) }
 }
 
 // This module's javadoc JAR must document the API of every module it
 // re-exports, so add each module's main sources as extra Dokka source sets.
 extensions.configure<org.jetbrains.dokka.gradle.DokkaExtension> {
     dokkaSourceSets {
-        rootProject.subprojects
-            .filter { it.file("src/main/kotlin").exists() }
+        documentedModules
             .sortedBy { it.name }
             .forEach { subproject ->
                 register(subproject.name) {
