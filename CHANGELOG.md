@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.44.0 (2026-06-24)
+
+Full Changelog: [v2.43.0...v2.44.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.43.0...v2.44.0)
+
+### Features
+
+* **client:** add support for system.message streaming events ([e27e961](https://github.com/anthropics/anthropic-sdk-java/commit/e27e9613a570ddd4981a175fa96617635cb353ca))
+
+
+### Chores
+
+* **api:** add support for new refusal category ([8c1bd29](https://github.com/anthropics/anthropic-sdk-java/commit/8c1bd29b53721182ec114f214c22eebc3475e2dc))
+* **api:** add support for sending User Profile ID in request headers ([8d69cbe](https://github.com/anthropics/anthropic-sdk-java/commit/8d69cbe7a7a5c733e80e0385a971a8f77d98a566))
+
+
+### Build System
+
+* enable warnings as errors ([#106](https://github.com/anthropics/anthropic-sdk-java/issues/106)) ([43f1430](https://github.com/anthropics/anthropic-sdk-java/commit/43f1430e3077d038a457127e303d7008806e1985))
+* fix lock file enforcement for IDEs ([#107](https://github.com/anthropics/anthropic-sdk-java/issues/107)) ([48940e3](https://github.com/anthropics/anthropic-sdk-java/commit/48940e34f71a711efec12bd5f1891129217999ed))
+
 ## 2.43.0 (2026-06-18)
 
 Full Changelog: [v2.42.0...v2.43.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.42.0...v2.43.0)
