@@ -9,3 +9,8 @@ echo "==> Updating dependency lockfiles"
 # resolves every configuration in every module so `--write-locks` captures
 # the full lock state in one pass; the flag also propagates to `buildSrc`.
 ./gradlew resolveAndLockAll --write-locks "$@"
+
+# The root invocation can't address `buildSrc` tasks (included build); run its
+# own `resolveAndLockAll` to lock `runtimeClasspath`, which only IntelliJ sync
+# resolves.
+./gradlew -p buildSrc resolveAndLockAll --write-locks "$@"

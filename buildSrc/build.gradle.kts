@@ -15,6 +15,24 @@ dependencyLocking {
     lockMode.set(LockMode.STRICT)
 }
 
+// Mirrors `anthropic.java`'s task of the same name. A CLI build never resolves
+// `:buildSrc:runtimeClasspath`, so `--write-locks` alone omits it from the lockfile and STRICT
+// mode then rejects IntelliJ sync, which does resolve it.
+tasks.register("resolveAndLockAll") {
+    group = "Help"
+    description = "Resolves all configurations to write dependency lock state."
+    notCompatibleWithConfigurationCache("Resolves configurations at execution time")
+    val startParameter = project.gradle.startParameter
+    doFirst {
+        require(startParameter.isWriteDependencyLocks) {
+            "Run with --write-locks to update lock state"
+        }
+    }
+    doLast {
+        configurations.filter { it.isCanBeResolved }.forEach { it.resolve() }
+    }
+}
+
 repositories {
     gradlePluginPortal()
     mavenCentral()
