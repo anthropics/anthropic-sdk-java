@@ -112,7 +112,7 @@ internal class StructuredOutputsTest {
 
     @Test
     fun schemaTest_mapHasNoNamedProperties() {
-        @Suppress("unused") class X(val m: Map<String, Integer>)
+        @Suppress("unused") class X(val m: Map<String, Int>)
 
         schema = extractSchema(X::class.java)
         validator.validate(schema)

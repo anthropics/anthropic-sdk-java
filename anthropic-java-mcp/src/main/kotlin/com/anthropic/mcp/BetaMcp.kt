@@ -94,10 +94,6 @@ object BetaMcp {
                 throw AnthropicInvalidDataException(
                     "MCP resource links must be resolved by the MCP client before conversion"
                 )
-            else ->
-                throw AnthropicInvalidDataException(
-                    "Unsupported MCP content type: ${content.type()}"
-                )
         }
 
     /**
@@ -259,14 +255,12 @@ object BetaMcp {
             is McpSchema.TextResourceContents -> item.text()
             is McpSchema.BlobResourceContents ->
                 String(Base64.getDecoder().decode(item.blob()), StandardCharsets.UTF_8)
-            else -> throw AnthropicInvalidDataException("Unsupported resource contents type")
         }
 
     private fun resourceContentsToBytes(item: McpSchema.ResourceContents): ByteArray =
         when (item) {
             is McpSchema.BlobResourceContents -> Base64.getDecoder().decode(item.blob())
             is McpSchema.TextResourceContents -> item.text().toByteArray(StandardCharsets.UTF_8)
-            else -> throw AnthropicInvalidDataException("Unsupported resource contents type")
         }
 
     private fun convertCallToolResult(

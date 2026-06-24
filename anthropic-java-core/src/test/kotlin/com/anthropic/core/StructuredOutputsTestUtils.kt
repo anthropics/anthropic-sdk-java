@@ -290,9 +290,9 @@ private fun findJavaMethod(
 private fun toJavaType(type: Class<*>) =
     when (type) {
         // This only needs to cover the types used in the test cases.
-        java.lang.Long::class.java -> java.lang.Long.TYPE
-        java.lang.Boolean::class.java -> java.lang.Boolean.TYPE
-        java.lang.Double::class.java -> java.lang.Double.TYPE
+        Long::class.javaObjectType -> Long::class.javaPrimitiveType!!
+        Boolean::class.javaObjectType -> Boolean::class.javaPrimitiveType!!
+        Double::class.javaObjectType -> Double::class.javaPrimitiveType!!
         else -> type
     }
 

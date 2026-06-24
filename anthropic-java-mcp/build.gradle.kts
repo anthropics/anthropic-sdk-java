@@ -29,12 +29,12 @@ tasks.withType<JavaCompile>().configureEach { options.release.set(17) }
 
 kotlin {
     compilerOptions {
-        // Override the Java 8 settings inherited from `anthropic.kotlin` so we can reference MCP
-        // SDK types that extend `java.lang.Record` (introduced in Java 16). This reassigns the
-        // whole list, so the flags shared with `anthropic.kotlin` must be repeated here —
-        // `-Xsuppress-version-warnings` in particular is still needed because we inherit
-        // `languageVersion = 2.0`, whose deprecation notice `-nowarn` does not cover.
-        freeCompilerArgs = listOf("-Xjdk-release=17", "-nowarn", "-Xsuppress-version-warnings")
+        // Override the Java 8 target inherited from `anthropic.kotlin` so we can reference MCP SDK
+        // types that extend `java.lang.Record` (Java 16+). Swap only `-Xjdk-release` rather than
+        // reassigning the list, so the convention plugin's warning-suppression flags stay in sync.
+        freeCompilerArgs.set(
+            freeCompilerArgs.get().map { if (it.startsWith("-Xjdk-release=")) "-Xjdk-release=17" else it }
+        )
         jvmTarget.set(JvmTarget.JVM_17)
     }
 }
