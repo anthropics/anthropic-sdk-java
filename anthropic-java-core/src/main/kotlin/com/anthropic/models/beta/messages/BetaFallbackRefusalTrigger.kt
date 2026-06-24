@@ -231,6 +231,8 @@ private constructor(
 
             @JvmField val REASONING_EXTRACTION = of("reasoning_extraction")
 
+            @JvmField val MILITARY_WEAPONS = of("military_weapons")
+
             @JvmStatic fun of(value: String) = Category(JsonField.of(value))
         }
 
@@ -240,6 +242,7 @@ private constructor(
             BIO,
             FRONTIER_LLM,
             REASONING_EXTRACTION,
+            MILITARY_WEAPONS,
         }
 
         /**
@@ -256,6 +259,7 @@ private constructor(
             BIO,
             FRONTIER_LLM,
             REASONING_EXTRACTION,
+            MILITARY_WEAPONS,
             /** An enum member indicating that [Category] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -273,6 +277,7 @@ private constructor(
                 BIO -> Value.BIO
                 FRONTIER_LLM -> Value.FRONTIER_LLM
                 REASONING_EXTRACTION -> Value.REASONING_EXTRACTION
+                MILITARY_WEAPONS -> Value.MILITARY_WEAPONS
                 else -> Value._UNKNOWN
             }
 
@@ -291,6 +296,7 @@ private constructor(
                 BIO -> Known.BIO
                 FRONTIER_LLM -> Known.FRONTIER_LLM
                 REASONING_EXTRACTION -> Known.REASONING_EXTRACTION
+                MILITARY_WEAPONS -> Known.MILITARY_WEAPONS
                 else -> throw AnthropicInvalidDataException("Unknown Category: $value")
             }
 
