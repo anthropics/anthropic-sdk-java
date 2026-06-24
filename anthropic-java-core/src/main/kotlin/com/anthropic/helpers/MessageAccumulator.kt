@@ -214,8 +214,8 @@ class MessageAccumulator private constructor() {
                         ) = TextCitation.ofContentBlockLocation(contentBlockLocation)
 
                         override fun visitWebSearchResultLocation(
-                            citationsWebSearchResultLocation: CitationsWebSearchResultLocation
-                        ) = TextCitation.ofWebSearchResultLocation(citationsWebSearchResultLocation)
+                            webSearchResultLocation: CitationsWebSearchResultLocation
+                        ) = TextCitation.ofWebSearchResultLocation(webSearchResultLocation)
 
                         override fun visitSearchResultLocation(
                             searchResultLocation: CitationsSearchResultLocation
@@ -263,18 +263,18 @@ class MessageAccumulator private constructor() {
 
         event.accept(
             object : RawMessageStreamEvent.Visitor<Unit> {
-                override fun visitMessageStart(start: RawMessageStartEvent) {
+                override fun visitMessageStart(messageStart: RawMessageStartEvent) {
                     if (messageBuilder != null) {
                         throw AnthropicInvalidDataException(
                             "'message_start' event already received."
                         )
                     }
-                    messageBuilder = start.message().toBuilder()
-                    messageUsage = start.message().usage()
+                    messageBuilder = messageStart.message().toBuilder()
+                    messageUsage = messageStart.message().usage()
                 }
 
-                override fun visitMessageDelta(deltaEvent: RawMessageDeltaEvent) {
-                    val delta = deltaEvent.delta()
+                override fun visitMessageDelta(messageDelta: RawMessageDeltaEvent) {
+                    val delta = messageDelta.delta()
 
                     // The Anthropic API allows that there may be "one or more `message_delta`
                     // events". Here, the interpretation is that if multiple `message_delta` events
@@ -302,10 +302,10 @@ class MessageAccumulator private constructor() {
                     }
 
                     // Ensure we properly update the usage information from the delta event
-                    messageUsage = mergeMessageUsage(requireMessageUsage(), deltaEvent.usage())
+                    messageUsage = mergeMessageUsage(requireMessageUsage(), messageDelta.usage())
                 }
 
-                override fun visitMessageStop(stop: RawMessageStopEvent) {
+                override fun visitMessageStop(messageStop: RawMessageStopEvent) {
                     message =
                         requireMessageBuilder()
                             // The indexed content block map is converted to a list with the blocks

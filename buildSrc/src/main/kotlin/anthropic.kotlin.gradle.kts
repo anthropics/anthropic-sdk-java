@@ -17,14 +17,18 @@ kotlin {
     }
 
     compilerOptions {
+        allWarningsAsErrors = true
         freeCompilerArgs = listOf(
             "-Xjdk-release=1.8",
-            // Suppress all warnings: generated code may reference and test deprecated members and
-            // trigger style lints that we can't act on.
-            "-nowarn",
-            // `-nowarn` doesn't cover the "language version 2.0 is deprecated" notice. That comes
-            // from the version-validation pass. We pin 2.0 deliberately (see `languageVersion`).
+            // The "language version 2.0 is deprecated" notice comes from the version-validation
+            // pass; we pin 2.0 deliberately (see `languageVersion`).
             "-Xsuppress-version-warnings",
+            // The SDK necessarily references its own `@Deprecated` members (delegating overloads,
+            // `validate()`, tests), so deprecation can't be promoted to an error.
+            "-Xwarning-level=DEPRECATION:disabled",
+            // Generated `validity()` helpers emit `.toInt()` on `Int` values; harmless and not
+            // worth special-casing in the generator.
+            "-Xwarning-level=REDUNDANT_CALL_OF_CONVERSION_METHOD:disabled",
         )
         // Emit default interface methods for the JVM.
         jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)

@@ -19,7 +19,7 @@ internal class PhantomReachableClosingAsyncStreamResponse<T>(
     /**
      * An object used for keeping `asyncStreamResponse` open while the object is still reachable.
      */
-    private val reachabilityTracker = Object()
+    private val reachabilityTracker = Any()
 
     init {
         closeWhenPhantomReachable(reachabilityTracker, asyncStreamResponse::close)
