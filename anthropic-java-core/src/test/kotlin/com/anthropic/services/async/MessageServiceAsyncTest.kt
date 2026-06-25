@@ -264,6 +264,7 @@ internal class MessageServiceAsyncTest {
         val messageTokensCountFuture =
             messageServiceAsync.countTokens(
                 MessageCountTokensParams.builder()
+                    .userProfileId("anthropic-user-profile-id")
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)
                     .cacheControl(
