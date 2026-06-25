@@ -12,16 +12,17 @@ internal class DeploymentRunParamsTest {
     @Test
     fun create() {
         DeploymentRunParams.builder()
-            .deploymentId("deployment_id")
+            .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
 
     @Test
     fun pathParams() {
-        val params = DeploymentRunParams.builder().deploymentId("deployment_id").build()
+        val params =
+            DeploymentRunParams.builder().deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai").build()
 
-        assertThat(params._pathParam(0)).isEqualTo("deployment_id")
+        assertThat(params._pathParam(0)).isEqualTo("depl_011CZkZcDH3vPqd7xnEfwTai")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
@@ -30,7 +31,7 @@ internal class DeploymentRunParamsTest {
     fun headers() {
         val params =
             DeploymentRunParams.builder()
-                .deploymentId("deployment_id")
+                .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
@@ -44,7 +45,8 @@ internal class DeploymentRunParamsTest {
 
     @Test
     fun headersWithoutOptionalFields() {
-        val params = DeploymentRunParams.builder().deploymentId("deployment_id").build()
+        val params =
+            DeploymentRunParams.builder().deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai").build()
 
         val headers = params._headers()
 
