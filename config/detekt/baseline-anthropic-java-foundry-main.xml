@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BuilderEntryPoints:FoundryBackend.kt$FoundryBackend : Backend</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:FoundryBackend.kt$FoundryBackend.Builder$fun bearerTokenSupplier(bearerTokenSupplier: Supplier&lt;String>?)</ID>
+    <ID>NullableToStringCall:FoundryBackend.kt$FoundryBackend$$resource</ID>
+    <ID>UnsafeCallOnNullableType:FoundryBackend.kt$FoundryBackend$bearerTokenSupplier!!</ID>
+    <ID>UseCheckOrError:FoundryBackend.kt$FoundryBackend.Builder$throw IllegalStateException( "No API key set in the $ENV_API_KEY environment variable." )</ID>
+    <ID>UseCheckOrError:FoundryBackend.kt$FoundryBackend.Builder$throw IllegalStateException( "One of the $ENV_RESOURCE and $ENV_BASE_URL environment variables must " + "be set, but not both." )</ID>
+  </CurrentIssues>
+</SmellBaseline>

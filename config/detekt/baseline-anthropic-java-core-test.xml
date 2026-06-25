@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>CastNullableToNonNullableType:FakeHttpClient.kt$FakeHttpClient.TrackedResponse$as</ID>
+    <ID>ExpressionBodySyntax:CredentialResolverTest.kt$CredentialResolverTest.MockHttpClient$return CompletableFuture.completedFuture(syncHandler(request))</ID>
+    <ID>ExpressionBodySyntax:CredentialResolverTest.kt$CredentialResolverTest.MockHttpClient$return syncHandler(request)</ID>
+    <ID>ExpressionBodySyntax:WorkloadIdentityCredentialsTest.kt$WorkloadIdentityCredentialsTest.MockHttpClient$return CompletableFuture.completedFuture(syncHandler(request))</ID>
+    <ID>ExpressionBodySyntax:WorkloadIdentityCredentialsTest.kt$WorkloadIdentityCredentialsTest.MockHttpClient$return syncHandler(request)</ID>
+    <ID>NullableToStringCall:BetaRefusalFallbackInterceptorTest.kt$BetaRefusalFallbackInterceptorTest$${fallbackCreditToken?.let { "\"$it\"" }}</ID>
+    <ID>NullableToStringCall:StructuredOutputsTest.kt$StructuredOutputsTest$validator.toString()</ID>
+    <ID>NullableToStringCall:StructuredOutputsTestUtils.kt$${supersetClass.simpleName}</ID>
+    <ID>TestClassMustBeInternal:RequestOptionsTest.kt$RequestOptionsTest</ID>
+    <ID>UnsafeCast:FileUploadParamsTest.kt$FileUploadParamsTest$it as? ByteArray</ID>
+    <ID>UnsafeCast:VersionCreateParamsTest.kt$VersionCreateParamsTest$it as? ByteArray</ID>
+    <ID>UnusedPrivateProperty:StructuredMessageCreateParamsTest.kt$StructuredMessageCreateParamsTest$val mockDelegateMethod = findDelegationMethod(mockBuilderDelegate, mockDelegateTestCase)</ID>
+  </CurrentIssues>
+</SmellBaseline>

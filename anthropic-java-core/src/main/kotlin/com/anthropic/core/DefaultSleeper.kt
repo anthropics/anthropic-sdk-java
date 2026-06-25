@@ -9,6 +9,8 @@ class DefaultSleeper : Sleeper {
 
     private val timer = Timer("DefaultSleeper", true)
 
+    // This is the `Sleeper` implementation the rule's reason text points at.
+    @Suppress("ForbiddenMethodCall")
     override fun sleep(duration: Duration) = Thread.sleep(duration.toMillis())
 
     override fun sleepAsync(duration: Duration): CompletableFuture<Void> {

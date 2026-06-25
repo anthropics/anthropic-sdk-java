@@ -42,6 +42,7 @@ repositories {
 // regular dependencies here (the scripts' `plugins {}` blocks can't carry versions).
 dependencies {
     implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.detekt.gradle.plugin)
     implementation(libs.maven.publish.gradle.plugin)
     implementation(libs.dokka.gradle.plugin)
     // Not a real Gradle plugin (it publishes no plugin marker): just a library carrying

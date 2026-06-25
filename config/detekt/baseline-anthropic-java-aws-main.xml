@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BuilderEntryPoints:AwsBackend.kt$AwsBackend : Backend</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:AwsBackend.kt$AwsBackend.Builder$fun awsSessionToken(awsSessionToken: String?)</ID>
+    <ID>UnsafeCallOnNullableType:AwsBackend.kt$AwsBackend.Builder$awsAccessKey!!</ID>
+    <ID>UnsafeCallOnNullableType:AwsBackend.kt$AwsBackend.Builder$awsProfile!!</ID>
+    <ID>UnsafeCallOnNullableType:AwsBackend.kt$AwsBackend.Builder$awsSecretAccessKey!!</ID>
+    <ID>UnsafeCallOnNullableType:AwsBackend.kt$AwsBackend.Builder$awsSessionToken!!</ID>
+    <ID>UseCheckOrError:AwsBackend.kt$AwsBackend$throw IllegalStateException("AWS credentials provider or API key must be set.")</ID>
+    <ID>UseCheckOrError:AwsBackend.kt$AwsBackend$throw IllegalStateException("AWS credentials provider was not set.")</ID>
+    <ID>UseCheckOrError:AwsBackend.kt$AwsBackend.Builder$throw IllegalStateException( "A region or base URL must be set when using AWS credentials." )</ID>
+    <ID>UseCheckOrError:AwsBackend.kt$AwsBackend.Builder$throw IllegalStateException( "A region or base URL must be set when using an API key." )</ID>
+    <ID>UseCheckOrError:AwsBackend.kt$AwsBackend.Builder$throw IllegalStateException( "An AWS credentials provider or an API key must be set, but not both." )</ID>
+    <ID>UseCheckOrError:AwsBackend.kt$AwsBackend.Builder$throw IllegalStateException("No AWS credentials provider or API key was set.")</ID>
+  </CurrentIssues>
+</SmellBaseline>

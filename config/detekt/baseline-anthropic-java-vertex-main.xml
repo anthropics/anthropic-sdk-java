@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BuilderEntryPoints:VertexBackend.kt$VertexBackend : Backend</ID>
+    <ID>UseCheckOrError:VertexBackend.kt$VertexBackend.Builder$throw IllegalStateException( "No project set in $ENV_PROJECT environment variable." )</ID>
+    <ID>UseCheckOrError:VertexBackend.kt$VertexBackend.Builder$throw IllegalStateException( "No region set in $ENV_REGION environment variable." )</ID>
+  </CurrentIssues>
+</SmellBaseline>

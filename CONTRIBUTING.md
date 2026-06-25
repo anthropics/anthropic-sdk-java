@@ -66,7 +66,7 @@ Commit the updated `gradle.lockfile`s alongside the dependency change.
 
 ## Linting and formatting
 
-This repository uses [ktfmt](https://github.com/facebook/ktfmt) for Kotlin and [palantir-java-format](https://github.com/palantir/palantir-java-format) for Java.
+This repository uses [ktfmt](https://github.com/facebook/ktfmt) for Kotlin formatting, [palantir-java-format](https://github.com/palantir/palantir-java-format) for Java formatting, and [detekt](https://detekt.dev) for static analysis. The detekt configuration is an allowlist at [`config/detekt/detekt.yml`](config/detekt/detekt.yml) plus custom Java-interop rules in [`anthropic-java-detekt-rules`](anthropic-java-detekt-rules); pre-existing findings are baselined per module under `config/detekt/`.
 
 To lint:
 
