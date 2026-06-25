@@ -14,6 +14,10 @@ kotlin-compat-compiler = "1.8.20"
 # version the ecosystem consumer compiles and runs against.
 kotlin-compat-stdlib = "1.9.0"
 dokka = "2.2.0"
+# detekt 1.23.8 embeds Kotlin compiler 2.0.21, which can't read Kotlin 2.3 metadata. This repo pins
+# `languageVersion = 2.0` (own classes carry 2.0.0 metadata) and stdlib 1.9.0, so type-resolution
+# rules work. Re-verify when bumping `kotlin` or `languageVersion`.
+detekt = "1.23.8"
 maven-publish = "0.36.0"
 proguard = "7.9.1"
 shadow = "8.3.8"
@@ -32,6 +36,10 @@ junit-platform = "1.14.4"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+detekt-api = { module = "io.gitlab.arturbosch.detekt:detekt-api", version.ref = "detekt" }
+detekt-test = { module = "io.gitlab.arturbosch.detekt:detekt-test", version.ref = "detekt" }
+detekt-rules-libraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
 maven-publish-gradle-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "maven-publish" }
 # Carries both the `org.jetbrains.dokka` and `org.jetbrains.dokka-javadoc` plugins applied by the
 # `anthropic.dokka` convention script.

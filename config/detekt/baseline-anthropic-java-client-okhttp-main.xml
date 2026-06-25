@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BuilderEntryPoints:AnthropicOkHttpClient.kt$AnthropicOkHttpClient</ID>
+    <ID>BuilderEntryPoints:AnthropicOkHttpClientAsync.kt$AnthropicOkHttpClientAsync</ID>
+    <ID>BuilderEntryPoints:OkHttpClient.kt$OkHttpClient : HttpClient</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:OkHttpClient.kt$OkHttpClient.Builder$fun dispatcherExecutorService(dispatcherExecutorService: ExecutorService?)</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:OkHttpClient.kt$OkHttpClient.Builder$fun hostnameVerifier(hostnameVerifier: HostnameVerifier?)</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:OkHttpClient.kt$OkHttpClient.Builder$fun keepAliveDuration(keepAliveDuration: Duration?)</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:OkHttpClient.kt$OkHttpClient.Builder$fun maxIdleConnections(maxIdleConnections: Int?)</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:OkHttpClient.kt$OkHttpClient.Builder$fun proxy(proxy: Proxy?)</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:OkHttpClient.kt$OkHttpClient.Builder$fun proxyAuthenticator(proxyAuthenticator: ProxyAuthenticator?)</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:OkHttpClient.kt$OkHttpClient.Builder$fun sslSocketFactory(sslSocketFactory: SSLSocketFactory?)</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:OkHttpClient.kt$OkHttpClient.Builder$fun trustManager(trustManager: X509TrustManager?)</ID>
+    <ID>ExpressionBodySyntax:OkHttpClient.kt$OkHttpClient$return toBuilder().baseUrl(toUrl()).build()</ID>
+    <ID>ForbiddenMethodCall:OkHttpClient.kt$OkHttpClient$whenComplete { _, e -> if (e is CancellationException) { call.cancel() } preparedRequest.body?.close() }</ID>
+    <ID>UnsafeCallOnNullableType:OkHttpClient.kt$&lt;no name provided>$body!!</ID>
+    <ID>UnsafeCallOnNullableType:OkHttpClient.kt$baseUrl!!</ID>
+    <ID>UseOrEmpty:OkHttpClient.kt$OkHttpClient$baseUrl ?: ""</ID>
+    <ID>VarCouldBeVal:AnthropicOkHttpClient.kt$AnthropicOkHttpClient.Builder$private var clientOptions: ClientOptions.Builder = ClientOptions.builder()</ID>
+    <ID>VarCouldBeVal:AnthropicOkHttpClientAsync.kt$AnthropicOkHttpClientAsync.Builder$private var clientOptions: ClientOptions.Builder = ClientOptions.builder()</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BuilderEntryPoints:AnthropicBackend.kt$AnthropicBackend : Backend</ID>
+    <ID>BuilderEntryPoints:RequestOptions.kt$RequestOptions</ID>
+    <ID>BuilderEntryPoints:RetryingHttpClient.kt$RetryingHttpClient : HttpClient</ID>
+    <ID>BuilderEntryPoints:StructuredMessageCreateParams.kt$StructuredMessageCreateParams&lt;T : Any></ID>
+    <ID>BuilderEntryPoints:Values.kt$MultipartField&lt;T : Any></ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:AnthropicBackend.kt$AnthropicBackend.Builder$fun baseUrl(baseUrl: String?)</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:AnthropicBackend.kt$AnthropicBackend.Builder$fun jsonMapper(jsonMapper: JsonMapper?)</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:Values.kt$MultipartField.Builder$fun value(value: T?)</ID>
+    <ID>CastNullableToNonNullableType:BetaRefusalFallbackInterceptor.kt$BetaRefusalFallbackInterceptor$as</ID>
+    <ID>CompanionFunctionMissingJvmStatic:AutoPager.kt$AutoPager.Companion$fun &lt;T> from(firstPage: Page&lt;T>): AutoPager&lt;T></ID>
+    <ID>CompanionFunctionMissingJvmStatic:AutoPagerAsync.kt$AutoPagerAsync.Companion$fun &lt;T> from(firstPage: PageAsync&lt;T>, defaultExecutor: Executor): AutoPagerAsync&lt;T></ID>
+    <ID>CompanionFunctionMissingJvmStatic:LogLevel.kt$LogLevel.Companion$fun fromEnv()</ID>
+    <ID>ExpressionBodySyntax:Backend.kt$Backend$return request</ID>
+    <ID>ExpressionBodySyntax:Backend.kt$Backend$return response</ID>
+    <ID>ExpressionBodySyntax:BaseDeserializer.kt$BaseDeserializer$return parser.codec.deserialize(parser.readValueAsTree())</ID>
+    <ID>ExpressionBodySyntax:BaseDeserializer.kt$BaseDeserializer$return this</ID>
+    <ID>ExpressionBodySyntax:FileIdentityTokenProvider.kt$FileIdentityTokenProvider$return CompletableFuture.supplyAsync { get() }</ID>
+    <ID>ExpressionBodySyntax:FileIdentityTokenProvider.kt$FileIdentityTokenProvider$return String(Files.readAllBytes(Paths.get(path))).trim()</ID>
+    <ID>ExpressionBodySyntax:ProfileConfig.kt$ProfileConfig.Companion$return mapper.readValue(json, ProfileConfig::class.java)</ID>
+    <ID>ForbiddenComment:JsonSchemaValidator.kt$JsonSchemaValidator$// TODO: How should duplicate names be handled? Will the generator use longer names?</ID>
+    <ID>ForbiddenMethodCall:AsyncStreamResponse.kt$&lt;no name provided>$whenComplete { _, error -> // If an error occurs from the original future, then we should resolve the // `onCompleteFuture` even if `subscribe` has not been called. error?.let(onCompleteFuture::completeExceptionally) }</ID>
+    <ID>ForbiddenMethodCall:AsyncStreamResponse.kt$&lt;no name provided>$whenComplete { streamResponse, error -> streamResponse?.close() }</ID>
+    <ID>ForbiddenMethodCall:AuthorizingHttpClient.kt$AuthorizingHttpClient$thenApply { token -> buildAuthorizedRequest(request, token.token) }</ID>
+    <ID>ForbiddenMethodCall:AutoPagerAsync.kt$AutoPagerAsync$whenComplete { _, error -> val actualError = if (error is CompletionException &amp;&amp; error.cause != null) error.cause else error try { handler.onComplete(Optional.ofNullable(actualError)) } finally { try { if (actualError == null) { onCompleteFuture.complete(null) } else { onCompleteFuture.completeExceptionally(actualError) } } finally { close() } } }</ID>
+    <ID>ForbiddenMethodCall:CachingAccessTokenProvider.kt$CachingAccessTokenProvider$whenComplete { _, _ -> provider.getAsync(baseUrl, true).whenComplete { token, err -> completeAsync(future, baseUrl, token, err, advisory = false) } }</ID>
+    <ID>ForbiddenMethodCall:CachingAccessTokenProvider.kt$CachingAccessTokenProvider$whenComplete { token, err -> completeAsync(future, baseUrl, token, err, advisory = false) }</ID>
+    <ID>ForbiddenMethodCall:CachingAccessTokenProvider.kt$CachingAccessTokenProvider$whenComplete { token, err -> completeAsync(future, baseUrl, token, err, advisory) }</ID>
+    <ID>ForbiddenMethodCall:Utils.kt$whenComplete { _, _ -> unlock() }</ID>
+    <ID>ForbiddenMethodCall:WorkloadIdentityCredentials.kt$WorkloadIdentityCredentials$thenApply { response -> parseResponse(response) }</ID>
+    <ID>InternalMemberMissingJvmSynthetic:ThinkingWarnings.kt$internal fun warnIfThinkingEnabled(model: String, thinking: BetaThinkingConfigParam?)</ID>
+    <ID>InternalMemberMissingJvmSynthetic:ThinkingWarnings.kt$internal fun warnIfThinkingEnabled(model: String, thinking: ThinkingConfigParam?)</ID>
+    <ID>IteratorNotThrowingNoSuchElementException:StreamHandler.kt$CloseableSequence$&lt;no name provided> : Iterator</ID>
+    <ID>IteratorNotThrowingNoSuchElementException:StreamHandler.kt$IOExceptionWrappingSequence$&lt;no name provided> : Iterator</ID>
+    <ID>NullablePublicReturn:BetaToolUseBlock.kt$BetaToolUseBlock$fun &lt;T : Any> input(parametersType: Class&lt;T>): T?</ID>
+    <ID>NullablePublicReturn:ClientOptions.kt$ClientOptions$fun baseUrl(): String?</ID>
+    <ID>NullablePublicReturn:HttpRequestBody.kt$HttpRequestBody$fun contentType(): String?</ID>
+    <ID>NullablePublicReturn:Values.kt$JsonValue$fun &lt;R : Any> convert(type: Class&lt;R>): R?</ID>
+    <ID>NullablePublicReturn:Values.kt$JsonValue$fun &lt;R : Any> convert(type: TypeReference&lt;R>): R?</ID>
+    <ID>NullableToStringCall:BetaToolRunner.kt$BetaToolRunner$${e.message}</ID>
+    <ID>NullableToStringCall:HttpRequest.kt$HttpRequest$$baseUrl</ID>
+    <ID>NullableToStringCall:HttpRequest.kt$HttpRequest$$body</ID>
+    <ID>NullableToStringCall:NoCredentialsException.kt$CredentialSource$$detail</ID>
+    <ID>NullableToStringCall:SseMessage.kt$SseMessage$$event</ID>
+    <ID>NullableToStringCall:SseMessage.kt$SseMessage$$id</ID>
+    <ID>NullableToStringCall:SseMessage.kt$SseMessage$$retry</ID>
+    <ID>NullableToStringCall:Timeout.kt$Timeout$$connect</ID>
+    <ID>NullableToStringCall:Timeout.kt$Timeout$$read</ID>
+    <ID>NullableToStringCall:Timeout.kt$Timeout$$request</ID>
+    <ID>NullableToStringCall:Timeout.kt$Timeout$$write</ID>
+    <ID>NullableToStringCall:UnwrapWebhookParams.kt$UnwrapWebhookParams$$headers</ID>
+    <ID>NullableToStringCall:UnwrapWebhookParams.kt$UnwrapWebhookParams$$secret</ID>
+    <ID>NullableToStringCall:Values.kt$MultipartField$$filename</ID>
+    <ID>OptionalOrElseNull:AnthropicBackend.kt$AnthropicBackend.Builder$orElse(null)</ID>
+    <ID>OptionalOrElseNull:CredentialResolver.kt$CredentialResolver$orElse(null)</ID>
+    <ID>OptionalOrElseNull:MessageServiceAsyncImpl.kt$MessageServiceAsyncImpl.WithRawResponseImpl$orElse(null)</ID>
+    <ID>OptionalOrElseNull:MessageServiceImpl.kt$MessageServiceImpl.WithRawResponseImpl$orElse(null)</ID>
+    <ID>OptionalOrElseNull:ProfileConfig.kt$AuthenticationConfig.Builder$orElse(null)</ID>
+    <ID>OptionalOrElseNull:ProfileConfig.kt$IdentityTokenConfig.Builder$orElse(null)</ID>
+    <ID>OptionalOrElseNull:ProfileConfig.kt$ProfileConfig$orElse(null)</ID>
+    <ID>OptionalOrElseNull:ProfileConfig.kt$ProfileConfig.Builder$orElse(null)</ID>
+    <ID>OptionalOrElseNull:Values.kt$MultipartField.Builder$orElse(null)</ID>
+    <ID>PublicConstructor:AnthropicClientAsyncImpl.kt$AnthropicClientAsyncImpl$(private val clientOptions: ClientOptions)</ID>
+    <ID>PublicConstructor:AnthropicClientImpl.kt$AnthropicClientImpl$(private val clientOptions: ClientOptions)</ID>
+    <ID>PublicConstructor:DefaultSleeper.kt$DefaultSleeper : Sleeper</ID>
+    <ID>PublicConstructor:Values.kt$JsonField$IsMissing</ID>
+    <ID>PublicConstructor:Values.kt$JsonField.Deserializer$(private val type: JavaType? = null)</ID>
+    <ID>PublicConstructor:Values.kt$JsonMissing : JsonValue</ID>
+    <ID>PublicConstructor:Values.kt$JsonMissing$Serializer : BaseSerializer</ID>
+    <ID>PublicConstructor:Values.kt$JsonNull : JsonValue</ID>
+    <ID>PublicConstructor:Values.kt$JsonValue$Deserializer : BaseDeserializer</ID>
+    <ID>UnconditionalJumpStatementInLoop:BetaRefusalFallbackInterceptor.kt$FallbackStreamSplicer$for (attempt in 0..1) { val hopRequest = buildFallbackRequest(model, refusal.token, continuation) val response = try { executeHop(hopRequest) } catch (e: Throwable) { val cause = (e as? CompletionException)?.cause ?: e warn("fallback request to $model failed: $cause") failed = true break } // The spliced stream may have been closed while the hop was in flight; the request // can't be cancelled, so release its response now that it has resolved. if (closed.get()) { response.close() return@sequence } if (response.statusCode() in 200..299) { hopResponse = response break } val errorBody = readErrorBody(response) if (attempt == 0 &amp;&amp; response.statusCode() == 400 &amp;&amp; partial.isNotEmpty()) { warn( "fallback request with the partial output appended was rejected (HTTP 400: $errorBody); retrying without it" ) continuation = base continue } warn("fallback request to $model failed: HTTP ${response.statusCode()}: $errorBody") failed = true break }</ID>
+    <ID>UnnecessaryNotNullOperator:UserOAuthCredentials.kt$UserOAuthCredentials$clientId!!</ID>
+    <ID>UnsafeCallOnNullableType:BetaRefusalFallbackInterceptor.kt$BetaRefusalFallbackInterceptor$bufferedRequest.body!!</ID>
+    <ID>UnsafeCallOnNullableType:BetaRefusalFallbackInterceptor.kt$FallbackStreamSplicer$hopResponse!!</ID>
+    <ID>UnsafeCallOnNullableType:BetaRefusalFallbackInterceptor.kt$FallbackStreamSplicer$initialRequest.body!!</ID>
+    <ID>UnsafeCallOnNullableType:HttpRequest.kt$HttpRequest$bufferedBody!!</ID>
+    <ID>UnsafeCallOnNullableType:LoggingHttpClient.kt$LoggingHttpClient$error.cause!!</ID>
+    <ID>UnsafeCallOnNullableType:RequestOptions.kt$RequestOptions$requestOptions.timeout!!</ID>
+    <ID>UnsafeCallOnNullableType:RetryingHttpClient.kt$RetryingHttpClient$throwable!!</ID>
+    <ID>UnsafeCallOnNullableType:SseMessage.kt$SseMessage.Builder$jsonMapper!!</ID>
+    <ID>UnsafeCallOnNullableType:UserOAuthCredentials.kt$UserOAuthCredentials$clientId!!</ID>
+    <ID>UnsafeCallOnNullableType:UserOAuthCredentials.kt$UserOAuthCredentials$httpClient!!</ID>
+    <ID>UnsafeCallOnNullableType:UserOAuthCredentials.kt$UserOAuthCredentials$refreshed.accessToken!!</ID>
+    <ID>UnusedPrivateProperty:BetaToolRunner.kt$BetaToolRunner$iteration</ID>
+    <ID>UnusedPrivateProperty:BetaToolRunner.kt$BetaToolRunner.&lt;no name provided>$iteration</ID>
+    <ID>UseCheckOrError:BetaToolRunner.kt$BetaToolRunner$throw IllegalStateException("Cannot iterate the same `BetaToolRunner` twice")</ID>
+    <ID>UseCheckOrError:BetaToolRunner.kt$BetaToolRunner.&lt;no name provided>$throw IllegalStateException("Cannot iterate the same `BetaToolRunner` twice")</ID>
+    <ID>UseCheckOrError:Values.kt$JsonMissing.Serializer$throw IllegalStateException("JsonMissing cannot be serialized")</ID>
+    <ID>UseCheckOrError:Values.kt$JsonValue.Companion$throw IllegalStateException("Unexpected JsonNode type: ${node.nodeType}")</ID>
+    <ID>UseOrEmpty:BetaMessageAccumulator.kt$BetaMessageAccumulator.&lt;no name provided>.&lt;no name provided>$oldInputJson ?: ""</ID>
+    <ID>UseOrEmpty:BetaRefusalFallbackInterceptor.kt$FallbackStreamSplicer$initial.model ?: ""</ID>
+    <ID>UseOrEmpty:ConfigDir.kt$ConfigDir$System.getProperty("os.name") ?: ""</ID>
+    <ID>UseOrEmpty:MessageAccumulator.kt$MessageAccumulator.&lt;no name provided>.&lt;no name provided>$oldInputJson ?: ""</ID>
+    <ID>UseOrEmpty:NoCredentialsException.kt$NoCredentialsException.Companion$source.detail?.let { " ($it)" } ?: ""</ID>
+    <ID>UseRequire:StructuredMessageCreateParams.kt$StructuredMessageCreateParams.Builder$throw IllegalArgumentException( "Both outputFormat and outputConfig were called. " + "Please use only outputConfig (outputFormat is deprecated)." )</ID>
+    <ID>UseRequire:StructuredMessageCreateParams.kt$StructuredMessageCreateParams.Builder$throw IllegalArgumentException( "outputConfig was called multiple times. Please use only one outputConfig call." )</ID>
+    <ID>VarCouldBeVal:BetaToolRunner.kt$BetaToolRunner$private var consumed = AtomicBoolean()</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BuilderEntryPoints:BedrockBackend.kt$BedrockBackend : Backend</ID>
+    <ID>BuilderEntryPoints:BedrockMantleBackend.kt$BedrockMantleBackend : Backend</ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$fun awsSessionToken(awsSessionToken: String?)</ID>
+    <ID>NullableToStringCall:BedrockBackend.kt$BedrockBackend$$apiKey</ID>
+    <ID>UnsafeCallOnNullableType:BedrockBackend.kt$BedrockBackend$request.body!!</ID>
+    <ID>UnsafeCallOnNullableType:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$awsAccessKey!!</ID>
+    <ID>UnsafeCallOnNullableType:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$awsProfile!!</ID>
+    <ID>UnsafeCallOnNullableType:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$awsSecretAccessKey!!</ID>
+    <ID>UnsafeCallOnNullableType:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$awsSessionToken!!</ID>
+    <ID>UseCheckOrError:BedrockBackend.kt$BedrockBackend$throw IllegalStateException("AWS credentials provider or API key must be set.")</ID>
+    <ID>UseCheckOrError:BedrockBackend.kt$BedrockBackend$throw IllegalStateException("AWS credentials provider was not set.")</ID>
+    <ID>UseCheckOrError:BedrockBackend.kt$BedrockBackend.Builder$throw IllegalStateException( "An AWS credentials provider or an API key must be set, but not both." )</ID>
+    <ID>UseCheckOrError:BedrockBackend.kt$BedrockBackend.Builder$throw IllegalStateException("Credentials provider already set.")</ID>
+    <ID>UseCheckOrError:BedrockBackend.kt$BedrockBackend.Builder$throw IllegalStateException("No AWS credentials provider or API key was set.")</ID>
+    <ID>UseCheckOrError:BedrockMantleBackend.kt$BedrockMantleBackend$throw IllegalStateException("AWS credentials provider or API key must be set.")</ID>
+    <ID>UseCheckOrError:BedrockMantleBackend.kt$BedrockMantleBackend$throw IllegalStateException("AWS credentials provider was not set.")</ID>
+    <ID>UseCheckOrError:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$throw IllegalStateException( "A region or base URL must be set when using AWS credentials." )</ID>
+    <ID>UseCheckOrError:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$throw IllegalStateException( "A region or base URL must be set when using an API key." )</ID>
+    <ID>UseCheckOrError:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$throw IllegalStateException( "An AWS credentials provider or an API key must be set, but not both." )</ID>
+    <ID>UseCheckOrError:BedrockMantleBackend.kt$BedrockMantleBackend.Builder$throw IllegalStateException("No AWS credentials provider or API key was set.")</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# Regenerate the per-module detekt baselines after fixing or accepting findings
+# or editing a rule in :anthropic-java-detekt-rules.
+#
+# detekt runs via Gradle's process-isolation worker API. Gradle pools those
+# workers by classpath *path* (gradle/gradle#17012), so a worker that loaded the
+# old rules jar keeps using it after the jar is rebuilt at the same path. The
+# build-cache key is content-hashed and correct; only the worker pool is stale,
+# so stop the daemon.
+echo "==> Stopping Gradle daemon"
+./gradlew --stop
+
+echo "==> Regenerating detekt baselines"
+./gradlew detektBaselineMain detektBaselineTest "$@"

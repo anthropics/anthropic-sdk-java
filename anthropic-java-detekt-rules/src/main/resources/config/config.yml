@@ -1,0 +1,41 @@
+anthropic:
+  active: true
+  AcronymCasing:
+    active: true
+  BuilderEntryPoints:
+    active: true
+  BuilderNullablePrimitiveSetterMissingUnboxedOverload:
+    active: true
+  BuilderNullableSetterMissingOptionalOverload:
+    active: true
+  CompanionConstantMissingJvmField:
+    active: true
+  CompanionFunctionMissingJvmStatic:
+    active: true
+  DefaultArgsInvisibleToJava:
+    active: true
+  FileJvmSynthetic:
+    active: true
+  InternalMemberMissingJvmSynthetic:
+    active: true
+  KotlinOnlyTypeInPublicApi:
+    active: true
+  NullablePublicReturn:
+    active: true
+  OptionalOrElseNull:
+    active: true
+  PublicConstructor:
+    active: true
+  PublicPropertyMissingJvmName:
+    active: true
+  PublicSuspendFunction:
+    active: true
+  RuntimeExceptionSubclass:
+    active: true
+    allowedClasses: ['AnthropicException']
+  TestClassMustBeInternal:
+    active: true
+  ThrowableSubclassNaming:
+    active: true
+  TopLevelPublicWithoutFileJvmName:
+    active: true

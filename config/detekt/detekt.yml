@@ -1,0 +1,360 @@
+config:
+  validation: true
+
+style:
+  active: true
+
+  # `= expr` over `{ return expr }`.
+  ExpressionBodySyntax:
+    active: true
+    includeLineWrapping: false
+
+  # `if (...) throw IllegalStateException(...)` -> `check(...)`; `IllegalArgumentException` ->
+  # `require(...)`.
+  UseCheckOrError:
+    active: true
+    # TODO(codegen): generated enum/union `known()` does `throw IllegalStateException(...)`;
+    # change template to `error(...)` then drop this exclude.
+    excludes: ['**/models/**']
+  UseRequire:
+    active: true
+  UseCheckNotNull:
+    active: true
+  UseRequireNotNull:
+    active: true
+
+  # `*Async` over same-thread `CompletableFuture` callbacks.
+  # `.orElse(null)` is covered by `anthropic:OptionalOrElseNull`; banning `Optional.orElse` here
+  # would also reject typed defaults like `orElse(0)`.
+  ForbiddenMethodCall:
+    active: true
+    # TODO(codegen): generated `*ServiceAsyncImpl` uses `.thenApply { ... }` for parse/validate on
+    # the completing thread; change template to `.thenApplyAsync(..., executor)` then drop services/.
+    excludes: ['**/test/**', '**/services/**']
+    methods:
+      - value: 'java.util.concurrent.CompletableFuture.whenComplete'
+        reason: 'Use whenCompleteAsync with an explicit executor so user callbacks never run on the completing thread.'
+      - value: 'java.util.concurrent.CompletableFuture.thenAccept'
+        reason: 'Use thenAcceptAsync with an explicit executor so user callbacks never run on the completing thread.'
+      - value: 'java.util.concurrent.CompletableFuture.thenApply'
+        reason: 'Use thenApplyAsync with an explicit executor so user callbacks never run on the completing thread.'
+      - value: 'kotlin.io.print'
+        reason: 'stdout is not the SDK output channel; warnings go to System.err.'
+      - value: 'kotlin.io.println'
+        reason: 'stdout is not the SDK output channel; warnings go to System.err.'
+      - value: 'kotlin.TODO'
+        reason: 'TODO() ships a runtime crash.'
+      - value: 'java.lang.Thread.sleep'
+        reason: 'Use com.anthropic.core.Sleeper so tests can substitute a fake.'
+      - value: 'kotlin.Throwable.printStackTrace'
+        reason: 'Throw or propagate; never write to stderr from library code paths implicitly.'
+
+  # `TODO:`/`FIXME:`/`STOPSHIP` markers.
+  ForbiddenComment:
+    active: true
+
+  # `val FOO = "x"` -> `const val` so Java sees a real static.
+  MayBeConst:
+    active: true
+
+  # Dead code and obvious redundancy.
+  EqualsNullCall:
+    active: true
+  ProtectedMemberInFinalClass:
+    active: true
+  RedundantHigherOrderMapUsage:
+    active: true
+  UnnecessaryApply:
+    active: true
+  UnnecessaryFilter:
+    active: true
+  UnnecessaryInheritance:
+    active: true
+  UnusedPrivateClass:
+    active: true
+  UnusedPrivateMember:
+    active: true
+    # Java-serialization magic methods are called reflectively.
+    allowedNames: '^(readResolve|writeReplace|readObject|writeObject|readObjectNoData)$'
+    # Jackson invokes `@JsonAnySetter`/`@JsonCreator`/`@JsonProperty` members reflectively.
+    ignoreAnnotated: ['JsonAnySetter', 'JsonCreator', 'JsonProperty']
+  UnusedPrivateProperty:
+    active: true
+  UseAnyOrNoneInsteadOfFind:
+    active: true
+  UseIsNullOrEmpty:
+    active: true
+  UseOrEmpty:
+    active: true
+    # TODO(codegen): generated path-param and pager helpers use `x ?: ""` / `x ?: emptyList()`;
+    # change template to `.orEmpty()` then drop this exclude.
+    excludes: ['**/models/**']
+  UselessCallOnNotNull:
+    active: true
+  VarCouldBeVal:
+    active: true
+
+potential-bugs:
+  active: true
+
+  # Prefer `checkRequired(...)` or local extraction over `!!`.
+  UnsafeCallOnNullableType:
+    active: true
+    # TODO(codegen): generated service impls use `requestOptions.responseValidation!!`; change
+    # template to a non-null accessor then drop services/.
+    excludes: ['**/test/**', '**/services/**']
+
+  # Public declarations must not leak inferred platform types.
+  HasPlatformType:
+    active: true
+
+  # `lowercase()`/`uppercase()`/`String.format` without a `Locale` are locale-sensitive (Turkish-i);
+  # header and identifier handling must be locale-invariant.
+  ImplicitDefaultLocale:
+    active: true
+
+  # Contract bugs and provably-wrong code.
+  AvoidReferentialEquality:
+    active: true
+  CastNullableToNonNullableType:
+    active: true
+  DontDowncastCollectionTypes:
+    active: true
+  EqualsAlwaysReturnsTrueOrFalse:
+    active: true
+  EqualsWithHashCodeExist:
+    active: true
+  ExitOutsideMain:
+    active: true
+  ExplicitGarbageCollectionCall:
+    active: true
+    excludes: ['**/test/**']
+  IgnoredReturnValue:
+    active: true
+    # Mockito's `doReturn(...).whenever(mock).method()` stubbing DSL fires this on the trailing
+    # call, which *is* the registration.
+    excludes: ['**/test/**']
+  InvalidRange:
+    active: true
+  IteratorHasNextCallsNextMethod:
+    active: true
+  IteratorNotThrowingNoSuchElementException:
+    active: true
+  MapGetWithNotNullAssertionOperator:
+    active: true
+  MissingPackageDeclaration:
+    active: true
+  # `"$nullable"` can render `"null"` into headers/error messages.
+  NullableToStringCall:
+    active: true
+    # TODO(codegen): generated `toString()` interpolates every nullable field; decide whether to
+    # accept `"null"` rendering or change the template, then drop this exclude.
+    excludes: ['**/models/**']
+  UnconditionalJumpStatementInLoop:
+    active: true
+  UnnecessaryNotNullCheck:
+    active: true
+  UnnecessaryNotNullOperator:
+    active: true
+  UnnecessarySafeCall:
+    active: true
+  UnreachableCatchBlock:
+    active: true
+  UnreachableCode:
+    active: true
+  UnsafeCast:
+    active: true
+  UnusedUnaryOperator:
+    active: true
+  UselessPostfixExpression:
+    active: true
+  WrongEqualsTypeParameter:
+    active: true
+
+exceptions:
+  active: true
+
+  # New exceptions go through `AnthropicException`; never throw a raw stdlib type.
+  TooGenericExceptionThrown:
+    active: true
+    excludes: ['**/test/**']
+    exceptionNames:
+      - 'Error'
+      - 'Exception'
+      - 'RuntimeException'
+      - 'Throwable'
+
+  # Throwing in `equals`/`hashCode`/`toString`, from `finally`, or as a singleton are all bugs.
+  ExceptionRaisedInUnexpectedLocation:
+    active: true
+    # TODO(codegen): generated union `toString()` throws on the all-null case; change template to
+    # render a sentinel string instead, then drop this exclude.
+    excludes: ['**/models/**']
+  NotImplementedDeclaration:
+    active: true
+  ObjectExtendsThrowable:
+    active: true
+  ReturnFromFinally:
+    active: true
+  ThrowingExceptionFromFinally:
+    active: true
+  ThrowingNewInstanceOfSameException:
+    active: true
+
+performance:
+  active: true
+  # `Array<Int>` boxes; `IntArray` is a different JVM type Java callers see.
+  ArrayPrimitive:
+    active: true
+  UnnecessaryTemporaryInstantiation:
+    active: true
+
+naming:
+  active: true
+  InvalidPackageDeclaration:
+    active: true
+  MatchingDeclarationName:
+    active: true
+
+comments:
+  active: true
+  # `@deprecated` in KDoc is wrong; use the annotation.
+  DeprecatedBlockTag:
+    active: true
+
+empty-blocks:
+  active: true
+  # Empty control-flow is almost always a bug; marker classes and no-op overrides are exempt.
+  EmptyCatchBlock:
+    active: true
+  EmptyDoWhileBlock:
+    active: true
+  EmptyElseBlock:
+    active: true
+  EmptyFinallyBlock:
+    active: true
+  EmptyForBlock:
+    active: true
+  EmptyIfBlock:
+    active: true
+  EmptyInitBlock:
+    active: true
+  EmptyKtFile:
+    active: true
+  EmptyTryBlock:
+    active: true
+  EmptyWhenBlock:
+    active: true
+  EmptyWhileBlock:
+    active: true
+
+libraries:
+  active: true
+  excludes: ['**/test/**', '**/anthropic-java-example/**']
+
+  # Public API types are `class` + private constructor + builder; never `data class`.
+  ForbiddenPublicDataClass:
+    active: true
+    ignorePackages: ['*.internal', '*.internal.*']
+
+anthropic:
+  active: true
+
+  # `internal` functions and property accessors leak to Java without `@JvmSynthetic`.
+  InternalMemberMissingJvmSynthetic:
+    active: true
+    excludes: &api_excludes ['**/test/**', '**/anthropic-java-example/**']
+
+  # `@file:JvmSynthetic` hides the whole file facade; annotate members individually instead.
+  FileJvmSynthetic:
+    active: true
+    excludes: *api_excludes
+
+  # Public Kotlin properties surface as `getX()` to Java without `@get:JvmName("x")`.
+  PublicPropertyMissingJvmName:
+    active: true
+    excludes: *api_excludes
+
+  # Public API never returns Kotlin nullable types; use `Optional<T>`.
+  NullablePublicReturn:
+    active: true
+    excludes: *api_excludes
+
+  # `AnthropicException` is the single root extending `RuntimeException`.
+  RuntimeExceptionSubclass:
+    active: true
+    excludes: *api_excludes
+    allowedClasses: ['AnthropicException']
+
+  # Throwable subclasses end in `Exception`, never `Error`.
+  ThrowableSubclassNaming:
+    active: true
+    excludes: *api_excludes
+
+  # `SseMessage`, not `SSEMessage`; `getId`, not `getID`.
+  AcronymCasing:
+    active: true
+    excludes: *api_excludes
+
+  # Kotlin default arguments don't reach Java; require `@JvmOverloads` or an explicit overload
+  # (interfaces and abstracts can use only the latter).
+  DefaultArgsInvisibleToJava:
+    active: true
+    excludes: *api_excludes
+
+  # Public concrete classes are not `new`-able; use `private constructor` + builder/`of`.
+  # `@Keep` (errorprone) marks a constructor that is a reflection contract.
+  PublicConstructor:
+    active: true
+    excludes: *api_excludes
+    ignoreAnnotated: ['Keep']
+
+  # A class with a nested `Builder` exposes companion `builder()` and `toBuilder()`.
+  BuilderEntryPoints:
+    active: true
+    excludes: *api_excludes
+
+  # Public companion functions surface as `Type.Companion.foo()` without `@JvmStatic`.
+  CompanionFunctionMissingJvmStatic:
+    active: true
+    excludes: *api_excludes
+
+  # Builder setters taking `T?` must also offer `Optional<T>`.
+  BuilderNullableSetterMissingOptionalOverload:
+    active: true
+    excludes: *api_excludes
+
+  # Builder setters taking `Long?`/`Double?`/`Float?` also offer the unboxed primitive so Java
+  # callers can pass `int` literals (Java won't widen-then-box).
+  BuilderNullablePrimitiveSetterMissingUnboxedOverload:
+    active: true
+    excludes: *api_excludes
+
+  # `.orElse(null)` returns a platform type; `.getOrNull()` returns `T?`.
+  OptionalOrElseNull:
+    active: true
+
+  # Public companion SCREAMING_CASE constants carry `@JvmField` (or `const`).
+  CompanionConstantMissingJvmField:
+    active: true
+    excludes: *api_excludes
+
+  # Coroutines aren't part of the published API.
+  PublicSuspendFunction:
+    active: true
+    excludes: *api_excludes
+
+  # `Sequence`/`Flow`/`Pair`/`Triple`/`Result`/lambda types in public signatures.
+  KotlinOnlyTypeInPublicApi:
+    active: true
+    excludes: *api_excludes
+
+  # Public top-level callables need `@file:JvmName` so Java sees a deliberate facade name.
+  TopLevelPublicWithoutFileJvmName:
+    active: true
+    excludes: *api_excludes
+
+  # Test classes are `internal class`.
+  TestClassMustBeInternal:
+    active: true
+    includes: ['**/test/**']
