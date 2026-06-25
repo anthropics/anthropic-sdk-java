@@ -65,8 +65,8 @@ internal class DeploymentServiceAsyncTest {
                     )
                     .schedule(
                         BetaManagedAgentsScheduleParams.builder()
-                            .expression("x")
-                            .timezone("x")
+                            .expression("0 9 * * 1-5")
+                            .timezone("America/Los_Angeles")
                             .type(BetaManagedAgentsScheduleParams.Type.CRON)
                             .build()
                     )
@@ -91,7 +91,7 @@ internal class DeploymentServiceAsyncTest {
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.retrieve(
                 DeploymentRetrieveParams.builder()
-                    .deploymentId("deployment_id")
+                    .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
@@ -112,7 +112,7 @@ internal class DeploymentServiceAsyncTest {
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.update(
                 DeploymentUpdateParams.builder()
-                    .deploymentId("deployment_id")
+                    .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .agent("string")
                     .description("description")
@@ -142,8 +142,8 @@ internal class DeploymentServiceAsyncTest {
                     )
                     .schedule(
                         BetaManagedAgentsScheduleParams.builder()
-                            .expression("x")
-                            .timezone("x")
+                            .expression("0 9 * * 1-5")
+                            .timezone("America/Los_Angeles")
                             .type(BetaManagedAgentsScheduleParams.Type.CRON)
                             .build()
                     )
@@ -183,7 +183,7 @@ internal class DeploymentServiceAsyncTest {
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.archive(
                 DeploymentArchiveParams.builder()
-                    .deploymentId("deployment_id")
+                    .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
@@ -204,7 +204,7 @@ internal class DeploymentServiceAsyncTest {
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.pause(
                 DeploymentPauseParams.builder()
-                    .deploymentId("deployment_id")
+                    .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
@@ -225,7 +225,7 @@ internal class DeploymentServiceAsyncTest {
         val betaManagedAgentsDeploymentRunFuture =
             deploymentServiceAsync.run(
                 DeploymentRunParams.builder()
-                    .deploymentId("deployment_id")
+                    .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
@@ -246,7 +246,7 @@ internal class DeploymentServiceAsyncTest {
         val betaManagedAgentsDeploymentFuture =
             deploymentServiceAsync.unpause(
                 DeploymentUnpauseParams.builder()
-                    .deploymentId("deployment_id")
+                    .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )

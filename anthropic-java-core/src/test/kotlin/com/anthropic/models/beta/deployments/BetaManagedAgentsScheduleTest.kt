@@ -15,39 +15,47 @@ internal class BetaManagedAgentsScheduleTest {
     fun create() {
         val betaManagedAgentsSchedule =
             BetaManagedAgentsSchedule.builder()
-                .expression("x")
-                .timezone("x")
+                .expression("0 9 * * 1-5")
+                .timezone("America/Los_Angeles")
                 .type(BetaManagedAgentsSchedule.Type.CRON)
-                .lastRunAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .addUpcomingRunsAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .lastRunAt(OffsetDateTime.parse("2026-03-16T16:00:09Z"))
+                .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-17T16:00:00Z"))
+                .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-18T16:00:00Z"))
                 .build()
 
-        assertThat(betaManagedAgentsSchedule.expression()).isEqualTo("x")
-        assertThat(betaManagedAgentsSchedule.timezone()).isEqualTo("x")
+        assertThat(betaManagedAgentsSchedule.expression()).isEqualTo("0 9 * * 1-5")
+        assertThat(betaManagedAgentsSchedule.timezone()).isEqualTo("America/Los_Angeles")
         assertThat(betaManagedAgentsSchedule.type()).isEqualTo(BetaManagedAgentsSchedule.Type.CRON)
         assertThat(betaManagedAgentsSchedule.lastRunAt())
-            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .contains(OffsetDateTime.parse("2026-03-16T16:00:09Z"))
         assertThat(betaManagedAgentsSchedule.upcomingRunsAt().getOrNull())
-            .containsExactly(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .containsExactly(
+                OffsetDateTime.parse("2026-03-17T16:00:00Z"),
+                OffsetDateTime.parse("2026-03-18T16:00:00Z"),
+            )
     }
 
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaManagedAgentsSchedule =
             BetaManagedAgentsSchedule.builder()
-                .expression("x")
-                .timezone("x")
+                .expression("0 9 * * 1-5")
+                .timezone("America/Los_Angeles")
                 .type(BetaManagedAgentsSchedule.Type.CRON)
                 .build()
 
         val betaManagedAgentsSchedule =
             baseBetaManagedAgentsSchedule
                 .toBuilder()
-                .addUpcomingRunsAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-17T16:00:00Z"))
+                .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-18T16:00:00Z"))
                 .build()
 
         assertThat(betaManagedAgentsSchedule.upcomingRunsAt().getOrNull())
-            .containsExactly(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .containsExactly(
+                OffsetDateTime.parse("2026-03-17T16:00:00Z"),
+                OffsetDateTime.parse("2026-03-18T16:00:00Z"),
+            )
     }
 
     @Test
@@ -55,11 +63,12 @@ internal class BetaManagedAgentsScheduleTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSchedule =
             BetaManagedAgentsSchedule.builder()
-                .expression("x")
-                .timezone("x")
+                .expression("0 9 * * 1-5")
+                .timezone("America/Los_Angeles")
                 .type(BetaManagedAgentsSchedule.Type.CRON)
-                .lastRunAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .addUpcomingRunsAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .lastRunAt(OffsetDateTime.parse("2026-03-16T16:00:09Z"))
+                .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-17T16:00:00Z"))
+                .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-18T16:00:00Z"))
                 .build()
 
         val roundtrippedBetaManagedAgentsSchedule =
