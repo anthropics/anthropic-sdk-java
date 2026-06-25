@@ -17,7 +17,7 @@ internal class DeploymentUpdateParamsTest {
     @Test
     fun create() {
         DeploymentUpdateParams.builder()
-            .deploymentId("deployment_id")
+            .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .agent("string")
             .description("description")
@@ -47,8 +47,8 @@ internal class DeploymentUpdateParamsTest {
             )
             .schedule(
                 BetaManagedAgentsScheduleParams.builder()
-                    .expression("x")
-                    .timezone("x")
+                    .expression("0 9 * * 1-5")
+                    .timezone("America/Los_Angeles")
                     .type(BetaManagedAgentsScheduleParams.Type.CRON)
                     .build()
             )
@@ -58,9 +58,10 @@ internal class DeploymentUpdateParamsTest {
 
     @Test
     fun pathParams() {
-        val params = DeploymentUpdateParams.builder().deploymentId("deployment_id").build()
+        val params =
+            DeploymentUpdateParams.builder().deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai").build()
 
-        assertThat(params._pathParam(0)).isEqualTo("deployment_id")
+        assertThat(params._pathParam(0)).isEqualTo("depl_011CZkZcDH3vPqd7xnEfwTai")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
@@ -69,7 +70,7 @@ internal class DeploymentUpdateParamsTest {
     fun headers() {
         val params =
             DeploymentUpdateParams.builder()
-                .deploymentId("deployment_id")
+                .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .agent("string")
                 .description("description")
@@ -99,8 +100,8 @@ internal class DeploymentUpdateParamsTest {
                 )
                 .schedule(
                     BetaManagedAgentsScheduleParams.builder()
-                        .expression("x")
-                        .timezone("x")
+                        .expression("0 9 * * 1-5")
+                        .timezone("America/Los_Angeles")
                         .type(BetaManagedAgentsScheduleParams.Type.CRON)
                         .build()
                 )
@@ -117,7 +118,8 @@ internal class DeploymentUpdateParamsTest {
 
     @Test
     fun headersWithoutOptionalFields() {
-        val params = DeploymentUpdateParams.builder().deploymentId("deployment_id").build()
+        val params =
+            DeploymentUpdateParams.builder().deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai").build()
 
         val headers = params._headers()
 
@@ -128,7 +130,7 @@ internal class DeploymentUpdateParamsTest {
     fun body() {
         val params =
             DeploymentUpdateParams.builder()
-                .deploymentId("deployment_id")
+                .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .agent("string")
                 .description("description")
@@ -158,8 +160,8 @@ internal class DeploymentUpdateParamsTest {
                 )
                 .schedule(
                     BetaManagedAgentsScheduleParams.builder()
-                        .expression("x")
-                        .timezone("x")
+                        .expression("0 9 * * 1-5")
+                        .timezone("America/Los_Angeles")
                         .type(BetaManagedAgentsScheduleParams.Type.CRON)
                         .build()
                 )
@@ -200,8 +202,8 @@ internal class DeploymentUpdateParamsTest {
         assertThat(body.schedule())
             .contains(
                 BetaManagedAgentsScheduleParams.builder()
-                    .expression("x")
-                    .timezone("x")
+                    .expression("0 9 * * 1-5")
+                    .timezone("America/Los_Angeles")
                     .type(BetaManagedAgentsScheduleParams.Type.CRON)
                     .build()
             )
@@ -210,7 +212,8 @@ internal class DeploymentUpdateParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = DeploymentUpdateParams.builder().deploymentId("deployment_id").build()
+        val params =
+            DeploymentUpdateParams.builder().deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai").build()
 
         val body = params._body()
     }

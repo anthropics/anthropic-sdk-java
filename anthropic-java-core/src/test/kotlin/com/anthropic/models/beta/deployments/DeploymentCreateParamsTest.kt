@@ -46,8 +46,8 @@ internal class DeploymentCreateParamsTest {
             )
             .schedule(
                 BetaManagedAgentsScheduleParams.builder()
-                    .expression("x")
-                    .timezone("x")
+                    .expression("0 9 * * 1-5")
+                    .timezone("America/Los_Angeles")
                     .type(BetaManagedAgentsScheduleParams.Type.CRON)
                     .build()
             )
@@ -88,8 +88,8 @@ internal class DeploymentCreateParamsTest {
                 )
                 .schedule(
                     BetaManagedAgentsScheduleParams.builder()
-                        .expression("x")
-                        .timezone("x")
+                        .expression("0 9 * * 1-5")
+                        .timezone("America/Los_Angeles")
                         .type(BetaManagedAgentsScheduleParams.Type.CRON)
                         .build()
                 )
@@ -161,8 +161,8 @@ internal class DeploymentCreateParamsTest {
                 )
                 .schedule(
                     BetaManagedAgentsScheduleParams.builder()
-                        .expression("x")
-                        .timezone("x")
+                        .expression("0 9 * * 1-5")
+                        .timezone("America/Los_Angeles")
                         .type(BetaManagedAgentsScheduleParams.Type.CRON)
                         .build()
                 )
@@ -203,8 +203,8 @@ internal class DeploymentCreateParamsTest {
         assertThat(body.schedule())
             .contains(
                 BetaManagedAgentsScheduleParams.builder()
-                    .expression("x")
-                    .timezone("x")
+                    .expression("0 9 * * 1-5")
+                    .timezone("America/Los_Angeles")
                     .type(BetaManagedAgentsScheduleParams.Type.CRON)
                     .build()
             )

@@ -2,7 +2,6 @@
 
 package com.anthropic.models.beta.deployments
 
-import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentReference
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
@@ -19,34 +18,32 @@ internal class DeploymentListPageResponseTest {
             DeploymentListPageResponse.builder()
                 .addData(
                     BetaManagedAgentsDeployment.builder()
-                        .id("id")
+                        .id("depl_011CZkZcDH3vPqd7xnEfwTai")
                         .agent(
                             BetaManagedAgentsAgentReference.builder()
-                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                .id("agent_011CZkYpogX7uDKUyvBTophP")
                                 .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
-                        .archivedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .description("description")
-                        .environmentId("environment_id")
+                        .archivedAt(null)
+                        .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .description(
+                            "Compiles yesterday's orders into a report every weekday morning."
+                        )
+                        .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                         .addUserMessageInitialEvent(
                             listOf(
                                 BetaManagedAgentsDeploymentUserMessageEvent.Content.ofText(
                                     BetaManagedAgentsTextBlock.builder()
-                                        .text("Where is my order #1234?")
+                                        .text("Compile yesterday's orders into report.md.")
                                         .type(BetaManagedAgentsTextBlock.Type.TEXT)
                                         .build()
                                 )
                             )
                         )
-                        .metadata(
-                            BetaManagedAgentsDeployment.Metadata.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("string"))
-                                .build()
-                        )
-                        .name("name")
+                        .metadata(BetaManagedAgentsDeployment.Metadata.builder().build())
+                        .name("Daily order report")
                         .pausedReason(
                             BetaManagedAgentsManualDeploymentPausedReason.builder()
                                 .type(BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL)
@@ -65,53 +62,50 @@ internal class DeploymentListPageResponseTest {
                         )
                         .schedule(
                             BetaManagedAgentsSchedule.builder()
-                                .expression("x")
-                                .timezone("x")
+                                .expression("0 9 * * 1-5")
+                                .timezone("America/Los_Angeles")
                                 .type(BetaManagedAgentsSchedule.Type.CRON)
-                                .lastRunAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                                .addUpcomingRunsAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .lastRunAt(OffsetDateTime.parse("2026-03-16T16:00:09Z"))
+                                .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-17T16:00:00Z"))
+                                .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-18T16:00:00Z"))
                                 .build()
                         )
                         .status(BetaManagedAgentsDeploymentStatus.ACTIVE)
                         .type(BetaManagedAgentsDeployment.Type.DEPLOYMENT)
-                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .addVaultId("string")
+                        .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                         .build()
                 )
-                .nextPage("next_page")
+                .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
                 .build()
 
         assertThat(deploymentListPageResponse.data())
             .containsExactly(
                 BetaManagedAgentsDeployment.builder()
-                    .id("id")
+                    .id("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .agent(
                         BetaManagedAgentsAgentReference.builder()
-                            .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                            .id("agent_011CZkYpogX7uDKUyvBTophP")
                             .type(BetaManagedAgentsAgentReference.Type.AGENT)
                             .version(1)
                             .build()
                     )
-                    .archivedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .description("description")
-                    .environmentId("environment_id")
+                    .archivedAt(null)
+                    .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                    .description("Compiles yesterday's orders into a report every weekday morning.")
+                    .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .addUserMessageInitialEvent(
                         listOf(
                             BetaManagedAgentsDeploymentUserMessageEvent.Content.ofText(
                                 BetaManagedAgentsTextBlock.builder()
-                                    .text("Where is my order #1234?")
+                                    .text("Compile yesterday's orders into report.md.")
                                     .type(BetaManagedAgentsTextBlock.Type.TEXT)
                                     .build()
                             )
                         )
                     )
-                    .metadata(
-                        BetaManagedAgentsDeployment.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .name("name")
+                    .metadata(BetaManagedAgentsDeployment.Metadata.builder().build())
+                    .name("Daily order report")
                     .pausedReason(
                         BetaManagedAgentsManualDeploymentPausedReason.builder()
                             .type(BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL)
@@ -130,20 +124,22 @@ internal class DeploymentListPageResponseTest {
                     )
                     .schedule(
                         BetaManagedAgentsSchedule.builder()
-                            .expression("x")
-                            .timezone("x")
+                            .expression("0 9 * * 1-5")
+                            .timezone("America/Los_Angeles")
                             .type(BetaManagedAgentsSchedule.Type.CRON)
-                            .lastRunAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                            .addUpcomingRunsAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .lastRunAt(OffsetDateTime.parse("2026-03-16T16:00:09Z"))
+                            .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-17T16:00:00Z"))
+                            .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-18T16:00:00Z"))
                             .build()
                     )
                     .status(BetaManagedAgentsDeploymentStatus.ACTIVE)
                     .type(BetaManagedAgentsDeployment.Type.DEPLOYMENT)
-                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .addVaultId("string")
+                    .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                    .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .build()
             )
-        assertThat(deploymentListPageResponse.nextPage()).contains("next_page")
+        assertThat(deploymentListPageResponse.nextPage())
+            .contains("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
     }
 
     @Test
@@ -153,34 +149,32 @@ internal class DeploymentListPageResponseTest {
             DeploymentListPageResponse.builder()
                 .addData(
                     BetaManagedAgentsDeployment.builder()
-                        .id("id")
+                        .id("depl_011CZkZcDH3vPqd7xnEfwTai")
                         .agent(
                             BetaManagedAgentsAgentReference.builder()
-                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                .id("agent_011CZkYpogX7uDKUyvBTophP")
                                 .type(BetaManagedAgentsAgentReference.Type.AGENT)
                                 .version(1)
                                 .build()
                         )
-                        .archivedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .description("description")
-                        .environmentId("environment_id")
+                        .archivedAt(null)
+                        .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .description(
+                            "Compiles yesterday's orders into a report every weekday morning."
+                        )
+                        .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                         .addUserMessageInitialEvent(
                             listOf(
                                 BetaManagedAgentsDeploymentUserMessageEvent.Content.ofText(
                                     BetaManagedAgentsTextBlock.builder()
-                                        .text("Where is my order #1234?")
+                                        .text("Compile yesterday's orders into report.md.")
                                         .type(BetaManagedAgentsTextBlock.Type.TEXT)
                                         .build()
                                 )
                             )
                         )
-                        .metadata(
-                            BetaManagedAgentsDeployment.Metadata.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("string"))
-                                .build()
-                        )
-                        .name("name")
+                        .metadata(BetaManagedAgentsDeployment.Metadata.builder().build())
+                        .name("Daily order report")
                         .pausedReason(
                             BetaManagedAgentsManualDeploymentPausedReason.builder()
                                 .type(BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL)
@@ -199,20 +193,21 @@ internal class DeploymentListPageResponseTest {
                         )
                         .schedule(
                             BetaManagedAgentsSchedule.builder()
-                                .expression("x")
-                                .timezone("x")
+                                .expression("0 9 * * 1-5")
+                                .timezone("America/Los_Angeles")
                                 .type(BetaManagedAgentsSchedule.Type.CRON)
-                                .lastRunAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                                .addUpcomingRunsAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .lastRunAt(OffsetDateTime.parse("2026-03-16T16:00:09Z"))
+                                .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-17T16:00:00Z"))
+                                .addUpcomingRunsAt(OffsetDateTime.parse("2026-03-18T16:00:00Z"))
                                 .build()
                         )
                         .status(BetaManagedAgentsDeploymentStatus.ACTIVE)
                         .type(BetaManagedAgentsDeployment.Type.DEPLOYMENT)
-                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .addVaultId("string")
+                        .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                         .build()
                 )
-                .nextPage("next_page")
+                .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
                 .build()
 
         val roundtrippedDeploymentListPageResponse =

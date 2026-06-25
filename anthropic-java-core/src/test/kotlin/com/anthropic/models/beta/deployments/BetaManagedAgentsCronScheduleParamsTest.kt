@@ -13,13 +13,13 @@ internal class BetaManagedAgentsCronScheduleParamsTest {
     fun create() {
         val betaManagedAgentsCronScheduleParams =
             BetaManagedAgentsCronScheduleParams.builder()
-                .expression("x")
-                .timezone("x")
+                .expression("0 9 * * 1-5")
+                .timezone("America/Los_Angeles")
                 .type(BetaManagedAgentsCronScheduleParams.Type.CRON)
                 .build()
 
-        assertThat(betaManagedAgentsCronScheduleParams.expression()).isEqualTo("x")
-        assertThat(betaManagedAgentsCronScheduleParams.timezone()).isEqualTo("x")
+        assertThat(betaManagedAgentsCronScheduleParams.expression()).isEqualTo("0 9 * * 1-5")
+        assertThat(betaManagedAgentsCronScheduleParams.timezone()).isEqualTo("America/Los_Angeles")
         assertThat(betaManagedAgentsCronScheduleParams.type())
             .isEqualTo(BetaManagedAgentsCronScheduleParams.Type.CRON)
     }
@@ -29,8 +29,8 @@ internal class BetaManagedAgentsCronScheduleParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsCronScheduleParams =
             BetaManagedAgentsCronScheduleParams.builder()
-                .expression("x")
-                .timezone("x")
+                .expression("0 9 * * 1-5")
+                .timezone("America/Los_Angeles")
                 .type(BetaManagedAgentsCronScheduleParams.Type.CRON)
                 .build()
 
