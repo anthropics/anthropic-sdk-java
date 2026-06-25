@@ -474,6 +474,7 @@ internal class MessageServiceAsyncTest {
             messageServiceAsync.countTokens(
                 MessageCountTokensParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .userProfileId("anthropic-user-profile-id")
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_4_6)
                     .cacheControl(

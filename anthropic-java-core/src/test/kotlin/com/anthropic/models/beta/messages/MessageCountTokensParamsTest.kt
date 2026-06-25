@@ -16,6 +16,7 @@ internal class MessageCountTokensParamsTest {
     fun create() {
         MessageCountTokensParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .userProfileId("anthropic-user-profile-id")
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_4_6)
             .cacheControl(
@@ -141,6 +142,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .userProfileId("anthropic-user-profile-id")
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)
                 .cacheControl(
@@ -268,7 +270,10 @@ internal class MessageCountTokensParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-user-profile-id", "anthropic-user-profile-id")
+                    .build()
             )
     }
 
@@ -290,6 +295,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .userProfileId("anthropic-user-profile-id")
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)
                 .cacheControl(

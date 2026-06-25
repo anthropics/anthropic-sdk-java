@@ -48,6 +48,7 @@ import kotlin.jvm.optionals.getOrNull
 class MessageCountTokensParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
+    private val userProfileId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -55,6 +56,12 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    /**
+     * The user profile ID to attribute this request to. Use when acting on behalf of a party other
+     * than your organization. Requires the `user-profiles` beta header.
+     */
+    fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
 
     /**
      * Input messages.
@@ -410,6 +417,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
+        private var userProfileId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -417,6 +425,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(messageCountTokensParams: MessageCountTokensParams) = apply {
             betas = messageCountTokensParams.betas?.toMutableList()
+            userProfileId = messageCountTokensParams.userProfileId
             body = messageCountTokensParams.body.toBuilder()
             additionalHeaders = messageCountTokensParams.additionalHeaders.toBuilder()
             additionalQueryParams = messageCountTokensParams.additionalQueryParams.toBuilder()
@@ -445,6 +454,16 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        /**
+         * The user profile ID to attribute this request to. Use when acting on behalf of a party
+         * other than your organization. Requires the `user-profiles` beta header.
+         */
+        fun userProfileId(userProfileId: String?) = apply { this.userProfileId = userProfileId }
+
+        /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
+        fun userProfileId(userProfileId: Optional<String>) =
+            userProfileId(userProfileId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -1278,6 +1297,7 @@ private constructor(
         fun build(): MessageCountTokensParams =
             MessageCountTokensParams(
                 betas?.toImmutable(),
+                userProfileId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -1290,6 +1310,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                userProfileId?.let { put("anthropic-user-profile-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -4104,14 +4125,15 @@ private constructor(
 
         return other is MessageCountTokensParams &&
             betas == other.betas &&
+            userProfileId == other.userProfileId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(betas, userProfileId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "MessageCountTokensParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MessageCountTokensParams{betas=$betas, userProfileId=$userProfileId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

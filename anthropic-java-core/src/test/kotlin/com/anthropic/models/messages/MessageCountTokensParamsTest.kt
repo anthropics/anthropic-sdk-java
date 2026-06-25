@@ -3,6 +3,7 @@
 package com.anthropic.models.messages
 
 import com.anthropic.core.JsonValue
+import com.anthropic.core.http.Headers
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,6 +13,7 @@ internal class MessageCountTokensParamsTest {
     @Test
     fun create() {
         MessageCountTokensParams.builder()
+            .userProfileId("anthropic-user-profile-id")
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_4_6)
             .cacheControl(
@@ -94,9 +96,118 @@ internal class MessageCountTokensParamsTest {
     }
 
     @Test
+    fun headers() {
+        val params =
+            MessageCountTokensParams.builder()
+                .userProfileId("anthropic-user-profile-id")
+                .addUserMessage("Hello, world")
+                .model(Model.CLAUDE_OPUS_4_6)
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .outputConfig(
+                    OutputConfig.builder()
+                        .effort(OutputConfig.Effort.LOW)
+                        .format(
+                            JsonOutputFormat.builder()
+                                .schema(
+                                    JsonOutputFormat.Schema.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
+                )
+                .systemOfTextBlockParams(
+                    listOf(
+                        TextBlockParam.builder()
+                            .text("Today's date is 2024-06-01.")
+                            .cacheControl(
+                                CacheControlEphemeral.builder()
+                                    .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                    .build()
+                            )
+                            .addCitation(
+                                CitationCharLocationParam.builder()
+                                    .citedText("cited_text")
+                                    .documentIndex(0L)
+                                    .documentTitle("x")
+                                    .endCharIndex(0L)
+                                    .startCharIndex(0L)
+                                    .build()
+                            )
+                            .build()
+                    )
+                )
+                .thinking(
+                    ThinkingConfigAdaptive.builder()
+                        .display(ThinkingConfigAdaptive.Display.SUMMARIZED)
+                        .build()
+                )
+                .toolChoice(ToolChoiceAuto.builder().disableParallelToolUse(true).build())
+                .addTool(
+                    Tool.builder()
+                        .inputSchema(
+                            Tool.InputSchema.builder()
+                                .properties(
+                                    Tool.InputSchema.Properties.builder()
+                                        .putAdditionalProperty("location", JsonValue.from("bar"))
+                                        .putAdditionalProperty("unit", JsonValue.from("bar"))
+                                        .build()
+                                )
+                                .addRequired("location")
+                                .build()
+                        )
+                        .name("name")
+                        .addAllowedCaller(Tool.AllowedCaller.DIRECT)
+                        .cacheControl(
+                            CacheControlEphemeral.builder()
+                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .deferLoading(true)
+                        .description("Get the current weather in a given location")
+                        .eagerInputStreaming(true)
+                        .addInputExample(
+                            Tool.InputExample.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .strict(true)
+                        .type(Tool.Type.CUSTOM)
+                        .build()
+                )
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder()
+                    .put("anthropic-user-profile-id", "anthropic-user-profile-id")
+                    .build()
+            )
+    }
+
+    @Test
+    fun headersWithoutOptionalFields() {
+        val params =
+            MessageCountTokensParams.builder()
+                .addUserMessage("Hello, world")
+                .model(Model.CLAUDE_OPUS_4_6)
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers).isEqualTo(Headers.builder().build())
+    }
+
+    @Test
     fun body() {
         val params =
             MessageCountTokensParams.builder()
+                .userProfileId("anthropic-user-profile-id")
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_4_6)
                 .cacheControl(
