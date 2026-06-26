@@ -4,10 +4,12 @@ package com.anthropic.services.blocking.beta
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.core.MultipartField
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.skills.SkillCreateParams
 import com.anthropic.models.beta.skills.SkillDeleteParams
 import com.anthropic.models.beta.skills.SkillRetrieveParams
+import java.io.InputStream
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -28,7 +30,7 @@ internal class SkillServiceTest {
                 SkillCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .displayTitle("display_title")
-                    .addFile("Example data".byteInputStream())
+                    .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
                     .build()
             )
 

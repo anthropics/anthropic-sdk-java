@@ -18,6 +18,7 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock;
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams;
 import com.anthropic.models.beta.sessions.events.EventSendParams;
 import com.anthropic.models.beta.sessions.resources.ResourceListParams;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
 public final class ManagedAgentsWithFilesExample {
     private ManagedAgentsWithFilesExample() {}
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws URISyntaxException {
         // Configures using the `ANTHROPIC_API_KEY` environment variable
         AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
@@ -57,10 +58,13 @@ public final class ManagedAgentsWithFilesExample {
                         .build());
         System.out.println("Created agent: " + agent.id());
 
-        // Upload a file (resolved relative to the example working directory)
+        // Upload a file bundled as an example resource
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         var file = client.beta()
                 .files()
-                .upload(FileUploadParams.builder().file(Paths.get("data.csv")).build());
+                .upload(FileUploadParams.builder()
+                        .file(Paths.get(classloader.getResource("data.csv").toURI()))
+                        .build());
         System.out.println("Uploaded file: " + file.id());
 
         // Create a session with the file mounted as a resource

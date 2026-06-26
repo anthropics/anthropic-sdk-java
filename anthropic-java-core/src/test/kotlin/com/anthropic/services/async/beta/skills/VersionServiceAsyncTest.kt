@@ -4,6 +4,7 @@ package com.anthropic.services.async.beta.skills
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
+import com.anthropic.core.MultipartField
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.skills.versions.VersionCreateParams
 import com.anthropic.models.beta.skills.versions.VersionDeleteParams
@@ -15,6 +16,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.ok
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
+import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -39,7 +41,7 @@ internal class VersionServiceAsyncTest {
                 VersionCreateParams.builder()
                     .skillId("skill_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .addFile("Example data".byteInputStream())
+                    .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
                     .build()
             )
 

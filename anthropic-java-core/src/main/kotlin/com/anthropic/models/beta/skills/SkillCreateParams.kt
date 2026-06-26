@@ -6,7 +6,6 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.MultipartField
 import com.anthropic.core.Params
-import com.anthropic.core.checkKnown
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -16,11 +15,9 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.InputStream
-import java.nio.file.Path
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
-import kotlin.io.path.inputStream
 import kotlin.jvm.optionals.getOrNull
 
 /** Create Skill */
@@ -50,11 +47,8 @@ private constructor(
      *
      * All files must be in the same top-level directory and must include a SKILL.md file at the
      * root of that directory.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
      */
-    fun files(): Optional<List<InputStream>> = body.files()
+    fun files(): Optional<List<MultipartField<InputStream>>> = body.files()
 
     /**
      * Returns the raw multipart value of [displayTitle].
@@ -63,13 +57,6 @@ private constructor(
      * type.
      */
     fun _displayTitle(): MultipartField<String> = body._displayTitle()
-
-    /**
-     * Returns the raw multipart value of [files].
-     *
-     * Unlike [files], this method doesn't throw if the multipart field has an unexpected type.
-     */
-    fun _files(): MultipartField<List<InputStream>> = body._files()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -166,42 +153,13 @@ private constructor(
          * All files must be in the same top-level directory and must include a SKILL.md file at the
          * root of that directory.
          */
-        fun files(files: List<InputStream>?) = apply { body.files(files) }
+        fun files(files: List<MultipartField<InputStream>>?) = apply { body.files(files) }
 
         /** Alias for calling [Builder.files] with `files.orElse(null)`. */
-        fun files(files: Optional<List<InputStream>>) = files(files.getOrNull())
+        fun files(files: Optional<List<MultipartField<InputStream>>>) = files(files.getOrNull())
 
-        /**
-         * Sets [Builder.files] to an arbitrary multipart value.
-         *
-         * You should usually call [Builder.files] with a well-typed `List<InputStream>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun files(files: MultipartField<List<InputStream>>) = apply { body.files(files) }
-
-        /**
-         * Adds a single [InputStream] to [files].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addFile(file: InputStream) = apply { body.addFile(file) }
-
-        /**
-         * Files to upload for the skill.
-         *
-         * All files must be in the same top-level directory and must include a SKILL.md file at the
-         * root of that directory.
-         */
-        fun addFile(file: ByteArray) = apply { body.addFile(file) }
-
-        /**
-         * Files to upload for the skill.
-         *
-         * All files must be in the same top-level directory and must include a SKILL.md file at the
-         * root of that directory.
-         */
-        fun addFile(path: Path) = apply { body.addFile(path) }
+        /** Adds a single [MultipartField] to [files]. */
+        fun addFile(file: MultipartField<InputStream>) = apply { body.addFile(file) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -335,8 +293,10 @@ private constructor(
     }
 
     fun _body(): Map<String, MultipartField<*>> =
-        (mapOf("display_title" to _displayTitle(), "files" to _files()) +
-                _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
+        (mapOf(
+                "display_title" to _displayTitle(),
+                "files" to MultipartField.of(files().getOrNull()),
+            ) + _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
             .toImmutable()
 
     override fun _headers(): Headers =
@@ -352,7 +312,7 @@ private constructor(
     class Body
     private constructor(
         private val displayTitle: MultipartField<String>,
-        private val files: MultipartField<List<InputStream>>,
+        private val files: List<MultipartField<InputStream>>?,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -371,11 +331,8 @@ private constructor(
          *
          * All files must be in the same top-level directory and must include a SKILL.md file at the
          * root of that directory.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
          */
-        fun files(): Optional<List<InputStream>> = files.value.getOptional("files")
+        fun files(): Optional<List<MultipartField<InputStream>>> = Optional.ofNullable(files)
 
         /**
          * Returns the raw multipart value of [displayTitle].
@@ -386,15 +343,6 @@ private constructor(
         @JsonProperty("display_title")
         @ExcludeMissing
         fun _displayTitle(): MultipartField<String> = displayTitle
-
-        /**
-         * Returns the raw multipart value of [files].
-         *
-         * Unlike [files], this method doesn't throw if the multipart field has an unexpected type.
-         */
-        @JsonProperty("files")
-        @ExcludeMissing
-        fun _files(): MultipartField<List<InputStream>> = files
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -418,13 +366,13 @@ private constructor(
         class Builder internal constructor() {
 
             private var displayTitle: MultipartField<String> = MultipartField.of(null)
-            private var files: MultipartField<MutableList<InputStream>>? = null
+            private var files: MutableList<MultipartField<InputStream>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 displayTitle = body.displayTitle
-                files = body.files.map { it.toMutableList() }
+                files = body.files?.toMutableList()
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -456,58 +404,17 @@ private constructor(
              * All files must be in the same top-level directory and must include a SKILL.md file at
              * the root of that directory.
              */
-            fun files(files: List<InputStream>?) =
-                files(
-                    MultipartField.builder<List<InputStream>>()
-                        .value(files)
-                        .contentType("application/octet-stream")
-                        .build()
-                )
+            fun files(files: List<MultipartField<InputStream>>?) = apply {
+                this.files = files?.toMutableList()
+            }
 
             /** Alias for calling [Builder.files] with `files.orElse(null)`. */
-            fun files(files: Optional<List<InputStream>>) = files(files.getOrNull())
+            fun files(files: Optional<List<MultipartField<InputStream>>>) = files(files.getOrNull())
 
-            /**
-             * Sets [Builder.files] to an arbitrary multipart value.
-             *
-             * You should usually call [Builder.files] with a well-typed `List<InputStream>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun files(files: MultipartField<List<InputStream>>) = apply {
-                this.files = files.map { it.toMutableList() }
+            /** Adds a single [MultipartField] to [files]. */
+            fun addFile(file: MultipartField<InputStream>) = apply {
+                files = (files ?: mutableListOf()).apply { add(file) }
             }
-
-            /**
-             * Adds a single [InputStream] to [files].
-             *
-             * @throws IllegalStateException if the field was previously set to a non-list.
-             */
-            fun addFile(file: InputStream) = apply {
-                files =
-                    (files
-                            ?: MultipartField.builder<MutableList<InputStream>>()
-                                .value(mutableListOf())
-                                .contentType("application/octet-stream")
-                                .build())
-                        .also { checkKnown("files", it).add(file) }
-            }
-
-            /**
-             * Files to upload for the skill.
-             *
-             * All files must be in the same top-level directory and must include a SKILL.md file at
-             * the root of that directory.
-             */
-            fun addFile(file: ByteArray) = addFile(file.inputStream())
-
-            /**
-             * Files to upload for the skill.
-             *
-             * All files must be in the same top-level directory and must include a SKILL.md file at
-             * the root of that directory.
-             */
-            fun addFile(path: Path) = addFile(path.inputStream())
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -534,11 +441,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): Body =
-                Body(
-                    displayTitle,
-                    (files ?: MultipartField.of(null)).map { it.toImmutable() },
-                    additionalProperties.toMutableMap(),
-                )
+                Body(displayTitle, files?.toImmutable(), additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false

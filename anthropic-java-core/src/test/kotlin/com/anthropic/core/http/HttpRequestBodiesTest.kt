@@ -316,6 +316,140 @@ internal class HttpRequestBodiesTest {
     }
 
     @Test
+    fun multipartFormData_serializesArrayOfMultipartFields() {
+        val body =
+            multipartFormData(
+                jsonMapper(),
+                mapOf(
+                    "files" to
+                        MultipartField.builder<List<MultipartField<InputStream>>>()
+                            .value(
+                                listOf(
+                                    MultipartField.builder<InputStream>()
+                                        .value("# Skill".byteInputStream())
+                                        .filename("my-skill/SKILL.md")
+                                        .contentType("text/markdown")
+                                        .build(),
+                                    MultipartField.builder<InputStream>()
+                                        .value("print()".byteInputStream())
+                                        .filename("my-skill/run.py")
+                                        .contentType("text/x-python")
+                                        .build(),
+                                )
+                            )
+                            .contentType("application/octet-stream")
+                            .build()
+                ),
+            )
+
+        val output = ByteArrayOutputStream()
+        body.writeTo(output)
+
+        assertThat(body.repeatable()).isTrue()
+        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        val boundary = boundary(body)
+        assertThat(output.toString("UTF-8"))
+            .isEqualTo(
+                """
+                |--$boundary
+                |Content-Disposition: form-data; name="files[]"; filename="my-skill/SKILL.md"
+                |Content-Type: text/markdown
+                |
+                |# Skill
+                |--$boundary
+                |Content-Disposition: form-data; name="files[]"; filename="my-skill/run.py"
+                |Content-Type: text/x-python
+                |
+                |print()
+                |--$boundary--
+                |
+                """
+                    .trimMargin()
+                    .replace("\n", "\r\n")
+            )
+    }
+
+    @Test
+    fun multipartFormData_streamsArrayOfMultipartFieldInputStreams() {
+        val body =
+            multipartFormData(
+                jsonMapper(),
+                mapOf(
+                    "files" to
+                        MultipartField.of(
+                            listOf(
+                                MultipartField.builder<InputStream>()
+                                    // Use `.buffered()` to get a non-ByteArrayInputStream, which
+                                    // hits the non-repeatable code path.
+                                    .value("streamed".byteInputStream().buffered())
+                                    .filename("file.bin")
+                                    .contentType("application/octet-stream")
+                                    .build()
+                            )
+                        )
+                ),
+            )
+
+        val output = ByteArrayOutputStream()
+        body.writeTo(output)
+
+        assertThat(body.repeatable()).isFalse()
+        assertThat(body.contentLength()).isEqualTo(-1L)
+        val boundary = boundary(body)
+        assertThat(output.toString("UTF-8"))
+            .isEqualTo(
+                """
+                |--$boundary
+                |Content-Disposition: form-data; name="files[]"; filename="file.bin"
+                |Content-Type: application/octet-stream
+                |
+                |streamed
+                |--$boundary--
+                |
+                """
+                    .trimMargin()
+                    .replace("\n", "\r\n")
+            )
+    }
+
+    @Test
+    fun multipartFormData_serializesEmptyArrayOfMultipartFields() {
+        val body =
+            multipartFormData(
+                jsonMapper(),
+                mapOf(
+                    "required" to
+                        MultipartField.builder<String>()
+                            .value("present")
+                            .contentType("text/plain")
+                            .build(),
+                    "files" to MultipartField.of(emptyList<MultipartField<InputStream>>()),
+                ),
+            )
+
+        val output = ByteArrayOutputStream()
+        body.writeTo(output)
+
+        assertThat(body.repeatable()).isTrue()
+        assertThat(body.contentLength()).isEqualTo(output.size().toLong())
+        val boundary = boundary(body)
+        assertThat(output.toString("UTF-8"))
+            .isEqualTo(
+                """
+                |--$boundary
+                |Content-Disposition: form-data; name="required"
+                |Content-Type: text/plain
+                |
+                |present
+                |--$boundary--
+                |
+                """
+                    .trimMargin()
+                    .replace("\n", "\r\n")
+            )
+    }
+
+    @Test
     fun multipartFormData_serializesObjectAsNestedParts() {
         val body =
             multipartFormData(
