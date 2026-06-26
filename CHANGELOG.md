@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.44.1 (2026-06-26)
+
+Full Changelog: [v2.44.0...v2.44.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.44.0...v2.44.1)
+
+### Bug Fixes
+
+* **bedrock:** use daemon threads for the SSE transcoding pool ([#97](https://github.com/anthropics/anthropic-sdk-java/issues/97)) ([0678c4d](https://github.com/anthropics/anthropic-sdk-java/commit/0678c4d7bb52d2376cce2155bbcbf52894449fab))
+* skill creation ([#119](https://github.com/anthropics/anthropic-sdk-java/issues/119)) ([5dadc03](https://github.com/anthropics/anthropic-sdk-java/commit/5dadc03465a357f2dd06163bb35cde072c246a20))
+
+
+### Chores
+
+* **api:** accept user profile ID's when counting tokens ([ee8b72d](https://github.com/anthropics/anthropic-sdk-java/commit/ee8b72dd7f05975bdfa881b2248d8298a4277ad9))
+* delete unnecessary dir ([#108](https://github.com/anthropics/anthropic-sdk-java/issues/108)) ([35a9662](https://github.com/anthropics/anthropic-sdk-java/commit/35a9662f79a623404e3fd2caa88d5a7a2a66cf72))
+* **docs:** updates to descriptions and example values ([6686e6b](https://github.com/anthropics/anthropic-sdk-java/commit/6686e6baac7004081cd2f28b23561f276b8b3db8))
+
+
+### Build System
+
+* add detekt rules ([#109](https://github.com/anthropics/anthropic-sdk-java/issues/109)) ([86b8f8d](https://github.com/anthropics/anthropic-sdk-java/commit/86b8f8d0aa66cbde14e762c19f7fee90cd74e811))
+* derive umbrella Dokka aggregation from re-exported modules ([#110](https://github.com/anthropics/anthropic-sdk-java/issues/110)) ([82c00c7](https://github.com/anthropics/anthropic-sdk-java/commit/82c00c7c8f5b341326f05a63ffe8ff16bf60d1bf))
+
 ## 2.44.0 (2026-06-24)
 
 Full Changelog: [v2.43.0...v2.44.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.43.0...v2.44.0)
