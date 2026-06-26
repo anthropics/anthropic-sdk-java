@@ -72,6 +72,14 @@ private constructor(
                 override fun newThread(runnable: Runnable): Thread =
                     threadFactory.newThread(runnable).apply {
                         name = "bedrock-sse-pipeline-${count.getAndIncrement()}"
+                        // These threads only _produce_ data: they transcode the AWS
+                        // EventStream response and feed it to a consumer on another
+                        // thread. They do no useful work of their own, so once no
+                        // non-daemon thread remains to consume that data there is no
+                        // reason for them to keep the JVM alive. Marking them daemon
+                        // also means an idle worker parked for the cached pool's 60s
+                        // keep-alive cannot block JVM exit after a stream completes.
+                        isDaemon = true
                     }
             }
         )
