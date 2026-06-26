@@ -16,7 +16,7 @@ internal class VersionCreateParamsTest {
         VersionCreateParams.builder()
             .skillId("skill_id")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-            .addFile("Example data".byteInputStream())
+            .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
             .build()
     }
 
@@ -35,7 +35,7 @@ internal class VersionCreateParamsTest {
             VersionCreateParams.builder()
                 .skillId("skill_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .addFile("Example data".byteInputStream())
+                .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
                 .build()
 
         val headers = params._headers()
@@ -61,7 +61,7 @@ internal class VersionCreateParamsTest {
             VersionCreateParams.builder()
                 .skillId("skill_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .addFile("Example data".byteInputStream())
+                .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
                 .build()
 
         val body = params._body()
@@ -77,10 +77,11 @@ internal class VersionCreateParamsTest {
             .isEqualTo(
                 mapOf(
                         "files" to
-                            MultipartField.builder<List<InputStream>>()
-                                .value(listOf("Example data".byteInputStream()))
-                                .contentType("application/octet-stream")
-                                .build()
+                            MultipartField.of(
+                                listOf(
+                                    MultipartField.of<InputStream>("Example data".byteInputStream())
+                                )
+                            )
                     )
                     .mapValues { (_, field) ->
                         field.map { (it as? ByteArray)?.inputStream() ?: it }

@@ -68,67 +68,82 @@ internal fun multipartFormData(
     fields: Map<String, MultipartField<*>>,
 ): HttpRequestBody =
     MultipartBody.Builder()
-        .apply {
-            fields.forEach { (name, field) ->
-                val knownValue = field.value.asKnown().getOrNull()
-                val parts =
-                    if (knownValue is InputStream) {
-                        // Read directly from the `InputStream` instead of reading it all
-                        // into memory due to the `jsonMapper` serialization below.
-                        sequenceOf(name to knownValue)
-                    } else {
-                        val node = jsonMapper.valueToTree<JsonNode>(field.value)
-                        serializePart(name, node)
+        .apply { fields.forEach { (name, field) -> addParts(jsonMapper, name, field) } }
+        .build()
+
+private fun MultipartBody.Builder.addParts(
+    jsonMapper: JsonMapper,
+    name: String,
+    field: MultipartField<*>,
+) {
+    val knownValue = field.value.asKnown().getOrNull()
+
+    if (knownValue is List<*>) {
+        val elementFields = knownValue.filterIsInstance<MultipartField<*>>()
+        if (elementFields.size == knownValue.size) {
+            // Each element carries its own filename and content type, so it must be serialized as
+            // its own part instead of inheriting the metadata of the enclosing field.
+            elementFields.forEach { addParts(jsonMapper, "$name[]", it) }
+            return
+        }
+    }
+
+    val parts =
+        if (knownValue is InputStream) {
+            // Read directly from the `InputStream` instead of reading it all
+            // into memory due to the `jsonMapper` serialization below.
+            sequenceOf(name to knownValue)
+        } else {
+            val node = jsonMapper.valueToTree<JsonNode>(field.value)
+            serializePart(name, node)
+        }
+
+    parts.forEach { (name, bytes) ->
+        val partBody =
+            if (bytes is ByteArrayInputStream) {
+                val byteArray = bytes.readBytes()
+
+                object : HttpRequestBody {
+
+                    override fun writeTo(outputStream: OutputStream) {
+                        outputStream.write(byteArray)
                     }
 
-                parts.forEach { (name, bytes) ->
-                    val partBody =
-                        if (bytes is ByteArrayInputStream) {
-                            val byteArray = bytes.readBytes()
+                    override fun contentType(): String = field.contentType
 
-                            object : HttpRequestBody {
+                    override fun contentLength(): Long = byteArray.size.toLong()
 
-                                override fun writeTo(outputStream: OutputStream) {
-                                    outputStream.write(byteArray)
-                                }
+                    override fun repeatable(): Boolean = true
 
-                                override fun contentType(): String = field.contentType
+                    override fun close() {}
+                }
+            } else {
+                object : HttpRequestBody {
 
-                                override fun contentLength(): Long = byteArray.size.toLong()
+                    override fun writeTo(outputStream: OutputStream) {
+                        bytes.copyTo(outputStream)
+                    }
 
-                                override fun repeatable(): Boolean = true
+                    override fun contentType(): String = field.contentType
 
-                                override fun close() {}
-                            }
-                        } else {
-                            object : HttpRequestBody {
+                    override fun contentLength(): Long = -1L
 
-                                override fun writeTo(outputStream: OutputStream) {
-                                    bytes.copyTo(outputStream)
-                                }
+                    override fun repeatable(): Boolean = false
 
-                                override fun contentType(): String = field.contentType
-
-                                override fun contentLength(): Long = -1L
-
-                                override fun repeatable(): Boolean = false
-
-                                override fun close() = bytes.close()
-                            }
-                        }
-
-                    addPart(
-                        MultipartBody.Part.create(
-                            name,
-                            field.filename().getOrNull(),
-                            field.contentType,
-                            partBody,
-                        )
-                    )
+                    override fun close() = bytes.close()
                 }
             }
-        }
-        .build()
+
+        addPart(
+            MultipartBody.Part.create(
+                name,
+                field.filename().getOrNull(),
+                field.contentType,
+                partBody,
+            )
+        )
+    }
+}
 
 private fun serializePart(name: String, node: JsonNode): Sequence<Pair<String, InputStream>> =
     when (node.nodeType) {

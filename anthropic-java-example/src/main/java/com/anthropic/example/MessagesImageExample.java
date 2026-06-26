@@ -15,7 +15,7 @@ public final class MessagesImageExample {
         AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        byte[] logoBytes = classloader.getResource("logo.png").openStream().readAllBytes();
+        byte[] logoBytes = classloader.getResourceAsStream("logo.png").readAllBytes();
         String logoBase64 = Base64.getEncoder().encodeToString(logoBytes);
 
         ContentBlockParam logoImageParam = ContentBlockParam.ofImage(ImageBlockParam.builder()

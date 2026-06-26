@@ -3,6 +3,7 @@ package com.anthropic.example;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.JsonValue;
+import com.anthropic.core.MultipartField;
 import com.anthropic.core.http.StreamResponse;
 import com.anthropic.models.beta.agents.AgentCreateParams;
 import com.anthropic.models.beta.agents.AgentUpdateParams;
@@ -24,7 +25,7 @@ import com.anthropic.models.beta.skills.SkillCreateParams;
 import com.anthropic.models.beta.vaults.VaultCreateParams;
 import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsStaticBearerCreateParams;
 import com.anthropic.models.beta.vaults.credentials.CredentialCreateParams;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -78,11 +79,17 @@ public final class ManagedAgentsComprehensiveExample {
         System.out.println("Created credential: " + credential.id());
 
         // Upload a custom skill
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         var skill = client.beta()
                 .skills()
                 .create(SkillCreateParams.builder()
                         .displayTitle("comprehensive-greeting-" + System.currentTimeMillis())
-                        .addFile(Paths.get("greeting-SKILL.md"))
+                        // Each file's `filename` is its path inside the skill, including the
+                        // skill's top-level directory.
+                        .addFile(MultipartField.<InputStream>builder()
+                                .value(classloader.getResourceAsStream("greeting-SKILL.md"))
+                                .filename("greeting/SKILL.md")
+                                .build())
                         .build());
         System.out.println("Created skill: " + skill.id());
 
