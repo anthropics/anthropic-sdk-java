@@ -80,6 +80,18 @@ private constructor(
     fun _additionalProperties(): Map<String, JsonValue> =
         Collections.unmodifiableMap(additionalProperties)
 
+    @JvmSynthetic
+    internal fun isEmptyAssistant(): Boolean =
+        _role().asString().orElse(null) == "assistant" &&
+            _content()
+                .asKnown()
+                .map {
+                    it.string().map(String::isEmpty).orElseGet {
+                        it.blockParams().map(List<*>::isEmpty).orElse(false)
+                    }
+                }
+                .orElse(false)
+
     fun toBuilder() = Builder().from(this)
 
     companion object {
