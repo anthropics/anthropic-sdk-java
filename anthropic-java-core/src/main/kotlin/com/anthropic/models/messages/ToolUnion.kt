@@ -38,6 +38,8 @@ private constructor(
     private val webSearchTool20260209: WebSearchTool20260209? = null,
     private val webFetchTool20260209: WebFetchTool20260209? = null,
     private val webFetchTool20260309: WebFetchTool20260309? = null,
+    private val webSearchTool20260318: WebSearchTool20260318? = null,
+    private val webFetchTool20260318: WebFetchTool20260318? = null,
     private val searchToolBm25_20251119: ToolSearchToolBm25_20251119? = null,
     private val searchToolRegex20251119: ToolSearchToolRegex20251119? = null,
     private val _json: JsonValue? = null,
@@ -88,6 +90,12 @@ private constructor(
     fun webFetchTool20260309(): Optional<WebFetchTool20260309> =
         Optional.ofNullable(webFetchTool20260309)
 
+    fun webSearchTool20260318(): Optional<WebSearchTool20260318> =
+        Optional.ofNullable(webSearchTool20260318)
+
+    fun webFetchTool20260318(): Optional<WebFetchTool20260318> =
+        Optional.ofNullable(webFetchTool20260318)
+
     fun searchToolBm25_20251119(): Optional<ToolSearchToolBm25_20251119> =
         Optional.ofNullable(searchToolBm25_20251119)
 
@@ -123,6 +131,10 @@ private constructor(
     fun isWebFetchTool20260209(): Boolean = webFetchTool20260209 != null
 
     fun isWebFetchTool20260309(): Boolean = webFetchTool20260309 != null
+
+    fun isWebSearchTool20260318(): Boolean = webSearchTool20260318 != null
+
+    fun isWebFetchTool20260318(): Boolean = webFetchTool20260318 != null
 
     fun isSearchToolBm25_20251119(): Boolean = searchToolBm25_20251119 != null
 
@@ -173,6 +185,12 @@ private constructor(
     /** Web fetch tool with use_cache parameter for bypassing cached content. */
     fun asWebFetchTool20260309(): WebFetchTool20260309 =
         webFetchTool20260309.getOrThrow("webFetchTool20260309")
+
+    fun asWebSearchTool20260318(): WebSearchTool20260318 =
+        webSearchTool20260318.getOrThrow("webSearchTool20260318")
+
+    fun asWebFetchTool20260318(): WebFetchTool20260318 =
+        webFetchTool20260318.getOrThrow("webFetchTool20260318")
 
     fun asSearchToolBm25_20251119(): ToolSearchToolBm25_20251119 =
         searchToolBm25_20251119.getOrThrow("searchToolBm25_20251119")
@@ -234,6 +252,9 @@ private constructor(
                 visitor.visitWebSearchTool20260209(webSearchTool20260209)
             webFetchTool20260209 != null -> visitor.visitWebFetchTool20260209(webFetchTool20260209)
             webFetchTool20260309 != null -> visitor.visitWebFetchTool20260309(webFetchTool20260309)
+            webSearchTool20260318 != null ->
+                visitor.visitWebSearchTool20260318(webSearchTool20260318)
+            webFetchTool20260318 != null -> visitor.visitWebFetchTool20260318(webFetchTool20260318)
             searchToolBm25_20251119 != null ->
                 visitor.visitSearchToolBm25_20251119(searchToolBm25_20251119)
             searchToolRegex20251119 != null ->
@@ -330,6 +351,16 @@ private constructor(
                     webFetchTool20260309.validate()
                 }
 
+                override fun visitWebSearchTool20260318(
+                    webSearchTool20260318: WebSearchTool20260318
+                ) {
+                    webSearchTool20260318.validate()
+                }
+
+                override fun visitWebFetchTool20260318(webFetchTool20260318: WebFetchTool20260318) {
+                    webFetchTool20260318.validate()
+                }
+
                 override fun visitSearchToolBm25_20251119(
                     searchToolBm25_20251119: ToolSearchToolBm25_20251119
                 ) {
@@ -413,6 +444,13 @@ private constructor(
                 override fun visitWebFetchTool20260309(webFetchTool20260309: WebFetchTool20260309) =
                     webFetchTool20260309.validity()
 
+                override fun visitWebSearchTool20260318(
+                    webSearchTool20260318: WebSearchTool20260318
+                ) = webSearchTool20260318.validity()
+
+                override fun visitWebFetchTool20260318(webFetchTool20260318: WebFetchTool20260318) =
+                    webFetchTool20260318.validity()
+
                 override fun visitSearchToolBm25_20251119(
                     searchToolBm25_20251119: ToolSearchToolBm25_20251119
                 ) = searchToolBm25_20251119.validity()
@@ -446,6 +484,8 @@ private constructor(
             webSearchTool20260209 == other.webSearchTool20260209 &&
             webFetchTool20260209 == other.webFetchTool20260209 &&
             webFetchTool20260309 == other.webFetchTool20260309 &&
+            webSearchTool20260318 == other.webSearchTool20260318 &&
+            webFetchTool20260318 == other.webFetchTool20260318 &&
             searchToolBm25_20251119 == other.searchToolBm25_20251119 &&
             searchToolRegex20251119 == other.searchToolRegex20251119
     }
@@ -467,6 +507,8 @@ private constructor(
             webSearchTool20260209,
             webFetchTool20260209,
             webFetchTool20260309,
+            webSearchTool20260318,
+            webFetchTool20260318,
             searchToolBm25_20251119,
             searchToolRegex20251119,
         )
@@ -494,6 +536,9 @@ private constructor(
                 "ToolUnion{webSearchTool20260209=$webSearchTool20260209}"
             webFetchTool20260209 != null -> "ToolUnion{webFetchTool20260209=$webFetchTool20260209}"
             webFetchTool20260309 != null -> "ToolUnion{webFetchTool20260309=$webFetchTool20260309}"
+            webSearchTool20260318 != null ->
+                "ToolUnion{webSearchTool20260318=$webSearchTool20260318}"
+            webFetchTool20260318 != null -> "ToolUnion{webFetchTool20260318=$webFetchTool20260318}"
             searchToolBm25_20251119 != null ->
                 "ToolUnion{searchToolBm25_20251119=$searchToolBm25_20251119}"
             searchToolRegex20251119 != null ->
@@ -565,6 +610,14 @@ private constructor(
             ToolUnion(webFetchTool20260309 = webFetchTool20260309)
 
         @JvmStatic
+        fun ofWebSearchTool20260318(webSearchTool20260318: WebSearchTool20260318) =
+            ToolUnion(webSearchTool20260318 = webSearchTool20260318)
+
+        @JvmStatic
+        fun ofWebFetchTool20260318(webFetchTool20260318: WebFetchTool20260318) =
+            ToolUnion(webFetchTool20260318 = webFetchTool20260318)
+
+        @JvmStatic
         fun ofSearchToolBm25_20251119(searchToolBm25_20251119: ToolSearchToolBm25_20251119) =
             ToolUnion(searchToolBm25_20251119 = searchToolBm25_20251119)
 
@@ -608,6 +661,10 @@ private constructor(
 
         /** Web fetch tool with use_cache parameter for bypassing cached content. */
         fun visitWebFetchTool20260309(webFetchTool20260309: WebFetchTool20260309): T
+
+        fun visitWebSearchTool20260318(webSearchTool20260318: WebSearchTool20260318): T
+
+        fun visitWebFetchTool20260318(webFetchTool20260318: WebFetchTool20260318): T
 
         fun visitSearchToolBm25_20251119(searchToolBm25_20251119: ToolSearchToolBm25_20251119): T
 
@@ -679,6 +736,12 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<WebFetchTool20260309>())?.let {
                             ToolUnion(webFetchTool20260309 = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<WebSearchTool20260318>())?.let {
+                            ToolUnion(webSearchTool20260318 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<WebFetchTool20260318>())?.let {
+                            ToolUnion(webFetchTool20260318 = it, _json = json)
+                        },
                         tryDeserialize(node, jacksonTypeRef<ToolSearchToolBm25_20251119>())?.let {
                             ToolUnion(searchToolBm25_20251119 = it, _json = json)
                         },
@@ -733,6 +796,10 @@ private constructor(
                     generator.writeObject(value.webFetchTool20260209)
                 value.webFetchTool20260309 != null ->
                     generator.writeObject(value.webFetchTool20260309)
+                value.webSearchTool20260318 != null ->
+                    generator.writeObject(value.webSearchTool20260318)
+                value.webFetchTool20260318 != null ->
+                    generator.writeObject(value.webFetchTool20260318)
                 value.searchToolBm25_20251119 != null ->
                     generator.writeObject(value.searchToolBm25_20251119)
                 value.searchToolRegex20251119 != null ->

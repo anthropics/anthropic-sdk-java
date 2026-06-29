@@ -63,6 +63,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -147,6 +149,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -213,6 +217,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -274,6 +280,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -335,6 +343,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -396,6 +406,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -460,6 +472,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -530,6 +544,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -600,6 +616,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -671,6 +689,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -748,6 +768,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -824,6 +846,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -900,6 +924,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).contains(webSearchTool20260209)
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -976,6 +1002,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).contains(webFetchTool20260209)
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -1047,6 +1075,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).contains(webFetchTool20260309)
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
     }
@@ -1069,6 +1099,168 @@ internal class MessageCountTokensToolTest {
                     .deferLoading(true)
                     .maxContentTokens(1L)
                     .maxUses(1L)
+                    .strict(true)
+                    .useCache(true)
+                    .build()
+            )
+
+        val roundtrippedMessageCountTokensTool =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(messageCountTokensTool),
+                jacksonTypeRef<MessageCountTokensTool>(),
+            )
+
+        assertThat(roundtrippedMessageCountTokensTool).isEqualTo(messageCountTokensTool)
+    }
+
+    @Test
+    fun ofWebSearchTool20260318() {
+        val webSearchTool20260318 =
+            WebSearchTool20260318.builder()
+                .addAllowedCaller(WebSearchTool20260318.AllowedCaller.DIRECT)
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .deferLoading(true)
+                .maxUses(1L)
+                .responseInclusion(WebSearchTool20260318.ResponseInclusion.FULL)
+                .strict(true)
+                .userLocation(
+                    UserLocation.builder()
+                        .city("New York")
+                        .country("US")
+                        .region("California")
+                        .timezone("America/New_York")
+                        .build()
+                )
+                .build()
+
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofWebSearchTool20260318(webSearchTool20260318)
+
+        assertThat(messageCountTokensTool.tool()).isEmpty
+        assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20250910()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).contains(webSearchTool20260318)
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
+        assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+    }
+
+    @Test
+    fun ofWebSearchTool20260318Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofWebSearchTool20260318(
+                WebSearchTool20260318.builder()
+                    .addAllowedCaller(WebSearchTool20260318.AllowedCaller.DIRECT)
+                    .addAllowedDomain("string")
+                    .addBlockedDomain("string")
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .deferLoading(true)
+                    .maxUses(1L)
+                    .responseInclusion(WebSearchTool20260318.ResponseInclusion.FULL)
+                    .strict(true)
+                    .userLocation(
+                        UserLocation.builder()
+                            .city("New York")
+                            .country("US")
+                            .region("California")
+                            .timezone("America/New_York")
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedMessageCountTokensTool =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(messageCountTokensTool),
+                jacksonTypeRef<MessageCountTokensTool>(),
+            )
+
+        assertThat(roundtrippedMessageCountTokensTool).isEqualTo(messageCountTokensTool)
+    }
+
+    @Test
+    fun ofWebFetchTool20260318() {
+        val webFetchTool20260318 =
+            WebFetchTool20260318.builder()
+                .addAllowedCaller(WebFetchTool20260318.AllowedCaller.DIRECT)
+                .addAllowedDomain("string")
+                .addBlockedDomain("string")
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .citations(CitationsConfigParam.builder().enabled(true).build())
+                .deferLoading(true)
+                .maxContentTokens(1L)
+                .maxUses(1L)
+                .responseInclusion(WebFetchTool20260318.ResponseInclusion.FULL)
+                .strict(true)
+                .useCache(true)
+                .build()
+
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofWebFetchTool20260318(webFetchTool20260318)
+
+        assertThat(messageCountTokensTool.tool()).isEmpty
+        assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20250910()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).contains(webFetchTool20260318)
+        assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
+        assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+    }
+
+    @Test
+    fun ofWebFetchTool20260318Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofWebFetchTool20260318(
+                WebFetchTool20260318.builder()
+                    .addAllowedCaller(WebFetchTool20260318.AllowedCaller.DIRECT)
+                    .addAllowedDomain("string")
+                    .addBlockedDomain("string")
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .citations(CitationsConfigParam.builder().enabled(true).build())
+                    .deferLoading(true)
+                    .maxContentTokens(1L)
+                    .maxUses(1L)
+                    .responseInclusion(WebFetchTool20260318.ResponseInclusion.FULL)
                     .strict(true)
                     .useCache(true)
                     .build()
@@ -1114,6 +1306,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119())
             .contains(toolSearchToolBm25_20251119)
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
@@ -1177,6 +1371,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
         assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119())
             .contains(toolSearchToolRegex20251119)

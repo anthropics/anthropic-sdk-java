@@ -43,7 +43,7 @@ import kotlin.jvm.optionals.getOrNull
  * The Messages API can be used for either single queries or stateless multi-turn conversations.
  *
  * Learn more about the Messages API in our
- * [user guide](https://docs.claude.com/en/docs/initial-setup)
+ * [user guide](https://platform.claude.com/docs/en/get-started)
  */
 class MessageCreateParams
 private constructor(
@@ -70,11 +70,11 @@ private constructor(
      * the absolute maximum number of tokens to generate.
      *
      * Set to `0` to populate the
-     * [prompt cache](https://docs.claude.com/en/docs/build-with-claude/prompt-caching#pre-warming-the-cache)
+     * [prompt cache](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pre-warming-the-cache)
      * without generating a response.
      *
      * Different models have different maximum values for this parameter. See
-     * [models](https://docs.claude.com/en/docs/models-overview) for details.
+     * [models](https://platform.claude.com/docs/en/about-claude/models/overview) for details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -128,11 +128,13 @@ private constructor(
      * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
      * ```
      *
-     * See [input examples](https://docs.claude.com/en/api/messages-examples).
+     * See
+     * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
      *
      * Note that if you want to include a
-     * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the top-level
-     * `system` parameter — there is no `"system"` role for input messages in the Messages API.
+     * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
+     * you can use the top-level `system` parameter — there is no `"system"` role for input messages
+     * in the Messages API.
      *
      * There is a limit of 100,000 messages in a single request.
      *
@@ -274,7 +276,7 @@ private constructor(
      * request.
      *
      * Anthropic offers different levels of service for your API requests. See
-     * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
+     * [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -311,7 +313,7 @@ private constructor(
      *
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
      * a particular goal or role. See our
-     * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+     * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -341,7 +343,8 @@ private constructor(
      * before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your
      * `max_tokens` limit.
      *
-     * See [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
+     * See
+     * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
      * for details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -368,9 +371,9 @@ private constructor(
      *
      * There are two types of tools: **client tools** and **server tools**. The behavior described
      * below applies to client tools. For
-     * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
+     * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
      * see their individual documentation as each has its own behavior (e.g., the
-     * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+     * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
      *
      * Each tool definition includes:
      * * `name`: Name of the tool.
@@ -426,7 +429,8 @@ private constructor(
      * Tools can be used for workflows that include running client-side tools and functions, or more
      * generally whenever you want the model to produce a particular JSON structure of output.
      *
-     * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+     * See our [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview) for
+     * more details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -744,11 +748,11 @@ private constructor(
          * specifies the absolute maximum number of tokens to generate.
          *
          * Set to `0` to populate the
-         * [prompt cache](https://docs.claude.com/en/docs/build-with-claude/prompt-caching#pre-warming-the-cache)
+         * [prompt cache](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pre-warming-the-cache)
          * without generating a response.
          *
          * Different models have different maximum values for this parameter. See
-         * [models](https://docs.claude.com/en/docs/models-overview) for details.
+         * [models](https://platform.claude.com/docs/en/about-claude/models/overview) for details.
          */
         fun maxTokens(maxTokens: Long) = apply { body.maxTokens(maxTokens) }
 
@@ -809,12 +813,13 @@ private constructor(
          * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
          * ```
          *
-         * See [input examples](https://docs.claude.com/en/api/messages-examples).
+         * See
+         * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
          *
          * Note that if you want to include a
-         * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
+         * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
+         * you can use the top-level `system` parameter — there is no `"system"` role for input
+         * messages in the Messages API.
          *
          * There is a limit of 100,000 messages in a single request.
          */
@@ -1213,7 +1218,7 @@ private constructor(
          * request.
          *
          * Anthropic offers different levels of service for your API requests. See
-         * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
+         * [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
          */
         fun serviceTier(serviceTier: ServiceTier) = apply { body.serviceTier(serviceTier) }
 
@@ -1281,7 +1286,7 @@ private constructor(
          *
          * A system prompt is a way of providing context and instructions to Claude, such as
          * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+         * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
          */
         fun system(system: System) = apply { body.system(system) }
 
@@ -1334,7 +1339,7 @@ private constructor(
          * towards your `max_tokens` limit.
          *
          * See
-         * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
+         * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
          * for details.
          */
         fun thinking(thinking: BetaThinkingConfigParam) = apply { body.thinking(thinking) }
@@ -1418,9 +1423,9 @@ private constructor(
          *
          * There are two types of tools: **client tools** and **server tools**. The behavior
          * described below applies to client tools. For
-         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
+         * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
          * see their individual documentation as each has its own behavior (e.g., the
-         * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+         * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
          *
          * Each tool definition includes:
          * * `name`: Name of the tool.
@@ -1477,7 +1482,8 @@ private constructor(
          * more generally whenever you want the model to produce a particular JSON structure of
          * output.
          *
-         * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+         * See our [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
+         * for more details.
          */
         fun tools(tools: List<BetaToolUnion>) = apply { body.tools(tools) }
 
@@ -1640,6 +1646,22 @@ private constructor(
          */
         fun addTool(webFetchTool20260309: BetaWebFetchTool20260309) = apply {
             body.addTool(webFetchTool20260309)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofWebSearchTool20260318(webSearchTool20260318)`.
+         */
+        fun addTool(webSearchTool20260318: BetaWebSearchTool20260318) = apply {
+            body.addTool(webSearchTool20260318)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `BetaToolUnion.ofWebFetchTool20260318(webFetchTool20260318)`.
+         */
+        fun addTool(webFetchTool20260318: BetaWebFetchTool20260318) = apply {
+            body.addTool(webFetchTool20260318)
         }
 
         /**
@@ -2001,11 +2023,11 @@ private constructor(
          * specifies the absolute maximum number of tokens to generate.
          *
          * Set to `0` to populate the
-         * [prompt cache](https://docs.claude.com/en/docs/build-with-claude/prompt-caching#pre-warming-the-cache)
+         * [prompt cache](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pre-warming-the-cache)
          * without generating a response.
          *
          * Different models have different maximum values for this parameter. See
-         * [models](https://docs.claude.com/en/docs/models-overview) for details.
+         * [models](https://platform.claude.com/docs/en/about-claude/models/overview) for details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -2061,12 +2083,13 @@ private constructor(
          * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
          * ```
          *
-         * See [input examples](https://docs.claude.com/en/api/messages-examples).
+         * See
+         * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
          *
          * Note that if you want to include a
-         * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
+         * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
+         * you can use the top-level `system` parameter — there is no `"system"` role for input
+         * messages in the Messages API.
          *
          * There is a limit of 100,000 messages in a single request.
          *
@@ -2214,7 +2237,7 @@ private constructor(
          * request.
          *
          * Anthropic offers different levels of service for your API requests. See
-         * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
+         * [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -2251,7 +2274,7 @@ private constructor(
          *
          * A system prompt is a way of providing context and instructions to Claude, such as
          * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+         * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -2282,7 +2305,7 @@ private constructor(
          * towards your `max_tokens` limit.
          *
          * See
-         * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
+         * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
          * for details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -2309,9 +2332,9 @@ private constructor(
          *
          * There are two types of tools: **client tools** and **server tools**. The behavior
          * described below applies to client tools. For
-         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
+         * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
          * see their individual documentation as each has its own behavior (e.g., the
-         * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+         * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
          *
          * Each tool definition includes:
          * * `name`: Name of the tool.
@@ -2368,7 +2391,8 @@ private constructor(
          * more generally whenever you want the model to produce a particular JSON structure of
          * output.
          *
-         * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+         * See our [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
+         * for more details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -2726,11 +2750,12 @@ private constructor(
              * specifies the absolute maximum number of tokens to generate.
              *
              * Set to `0` to populate the
-             * [prompt cache](https://docs.claude.com/en/docs/build-with-claude/prompt-caching#pre-warming-the-cache)
+             * [prompt cache](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pre-warming-the-cache)
              * without generating a response.
              *
              * Different models have different maximum values for this parameter. See
-             * [models](https://docs.claude.com/en/docs/models-overview) for details.
+             * [models](https://platform.claude.com/docs/en/about-claude/models/overview) for
+             * details.
              */
             fun maxTokens(maxTokens: Long) = maxTokens(JsonField.of(maxTokens))
 
@@ -2793,12 +2818,13 @@ private constructor(
              * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
              * ```
              *
-             * See [input examples](https://docs.claude.com/en/api/messages-examples).
+             * See
+             * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
              *
              * Note that if you want to include a
-             * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
+             * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
+             * you can use the top-level `system` parameter — there is no `"system"` role for input
+             * messages in the Messages API.
              *
              * There is a limit of 100,000 messages in a single request.
              */
@@ -3241,7 +3267,7 @@ private constructor(
              * this request.
              *
              * Anthropic offers different levels of service for your API requests. See
-             * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
+             * [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
              */
             fun serviceTier(serviceTier: ServiceTier) = serviceTier(JsonField.of(serviceTier))
 
@@ -3316,7 +3342,7 @@ private constructor(
              *
              * A system prompt is a way of providing context and instructions to Claude, such as
              * specifying a particular goal or role. See our
-             * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+             * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
              */
             fun system(system: System) = system(JsonField.of(system))
 
@@ -3374,7 +3400,7 @@ private constructor(
              * towards your `max_tokens` limit.
              *
              * See
-             * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
+             * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
              * for details.
              */
             fun thinking(thinking: BetaThinkingConfigParam) = thinking(JsonField.of(thinking))
@@ -3463,9 +3489,9 @@ private constructor(
              *
              * There are two types of tools: **client tools** and **server tools**. The behavior
              * described below applies to client tools. For
-             * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
+             * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
              * see their individual documentation as each has its own behavior (e.g., the
-             * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+             * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
              *
              * Each tool definition includes:
              * * `name`: Name of the tool.
@@ -3522,7 +3548,9 @@ private constructor(
              * or more generally whenever you want the model to produce a particular JSON structure
              * of output.
              *
-             * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+             * See our
+             * [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview) for
+             * more details.
              */
             fun tools(tools: List<BetaToolUnion>) = tools(JsonField.of(tools))
 
@@ -3678,6 +3706,20 @@ private constructor(
              */
             fun addTool(webFetchTool20260309: BetaWebFetchTool20260309) =
                 addTool(BetaToolUnion.ofWebFetchTool20260309(webFetchTool20260309))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofWebSearchTool20260318(webSearchTool20260318)`.
+             */
+            fun addTool(webSearchTool20260318: BetaWebSearchTool20260318) =
+                addTool(BetaToolUnion.ofWebSearchTool20260318(webSearchTool20260318))
+
+            /**
+             * Alias for calling [addTool] with
+             * `BetaToolUnion.ofWebFetchTool20260318(webFetchTool20260318)`.
+             */
+            fun addTool(webFetchTool20260318: BetaWebFetchTool20260318) =
+                addTool(BetaToolUnion.ofWebFetchTool20260318(webFetchTool20260318))
 
             /**
              * Alias for calling [addTool] with
@@ -4201,7 +4243,7 @@ private constructor(
      * request.
      *
      * Anthropic offers different levels of service for your API requests. See
-     * [service-tiers](https://docs.claude.com/en/api/service-tiers) for details.
+     * [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
      */
     class ServiceTier @JsonCreator private constructor(private val value: JsonField<String>) :
         Enum {
@@ -4487,7 +4529,7 @@ private constructor(
      *
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
      * a particular goal or role. See our
-     * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+     * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
      */
     @JsonDeserialize(using = System.Deserializer::class)
     @JsonSerialize(using = System.Serializer::class)

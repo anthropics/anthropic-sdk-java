@@ -43,7 +43,7 @@ import kotlin.jvm.optionals.getOrNull
  * images, and documents, without creating it.
  *
  * Learn more about token counting in our
- * [user guide](https://docs.claude.com/en/docs/build-with-claude/token-counting)
+ * [user guide](https://platform.claude.com/docs/en/build-with-claude/token-counting)
  */
 class MessageCountTokensParams
 private constructor(
@@ -110,11 +110,13 @@ private constructor(
      * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
      * ```
      *
-     * See [input examples](https://docs.claude.com/en/api/messages-examples).
+     * See
+     * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
      *
      * Note that if you want to include a
-     * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the top-level
-     * `system` parameter — there is no `"system"` role for input messages in the Messages API.
+     * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
+     * you can use the top-level `system` parameter — there is no `"system"` role for input messages
+     * in the Messages API.
      *
      * There is a limit of 100,000 messages in a single request.
      *
@@ -197,7 +199,7 @@ private constructor(
      *
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
      * a particular goal or role. See our
-     * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+     * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -211,7 +213,8 @@ private constructor(
      * before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your
      * `max_tokens` limit.
      *
-     * See [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
+     * See
+     * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
      * for details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -238,9 +241,9 @@ private constructor(
      *
      * There are two types of tools: **client tools** and **server tools**. The behavior described
      * below applies to client tools. For
-     * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
+     * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
      * see their individual documentation as each has its own behavior (e.g., the
-     * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+     * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
      *
      * Each tool definition includes:
      * * `name`: Name of the tool.
@@ -296,7 +299,8 @@ private constructor(
      * Tools can be used for workflows that include running client-side tools and functions, or more
      * generally whenever you want the model to produce a particular JSON structure of output.
      *
-     * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+     * See our [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview) for
+     * more details.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -528,12 +532,13 @@ private constructor(
          * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
          * ```
          *
-         * See [input examples](https://docs.claude.com/en/api/messages-examples).
+         * See
+         * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
          *
          * Note that if you want to include a
-         * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
+         * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
+         * you can use the top-level `system` parameter — there is no `"system"` role for input
+         * messages in the Messages API.
          *
          * There is a limit of 100,000 messages in a single request.
          */
@@ -798,7 +803,7 @@ private constructor(
          *
          * A system prompt is a way of providing context and instructions to Claude, such as
          * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+         * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
          */
         fun system(system: System) = apply { body.system(system) }
 
@@ -826,7 +831,7 @@ private constructor(
          * towards your `max_tokens` limit.
          *
          * See
-         * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
+         * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
          * for details.
          */
         fun thinking(thinking: BetaThinkingConfigParam) = apply { body.thinking(thinking) }
@@ -910,9 +915,9 @@ private constructor(
          *
          * There are two types of tools: **client tools** and **server tools**. The behavior
          * described below applies to client tools. For
-         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
+         * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
          * see their individual documentation as each has its own behavior (e.g., the
-         * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+         * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
          *
          * Each tool definition includes:
          * * `name`: Name of the tool.
@@ -969,7 +974,8 @@ private constructor(
          * more generally whenever you want the model to produce a particular JSON structure of
          * output.
          *
-         * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+         * See our [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
+         * for more details.
          */
         fun tools(tools: List<Tool>) = apply { body.tools(tools) }
 
@@ -1135,6 +1141,22 @@ private constructor(
          */
         fun addTool(betaWebFetchTool20260309: BetaWebFetchTool20260309) = apply {
             body.addTool(betaWebFetchTool20260309)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `Tool.ofBetaWebSearchTool20260318(betaWebSearchTool20260318)`.
+         */
+        fun addTool(betaWebSearchTool20260318: BetaWebSearchTool20260318) = apply {
+            body.addTool(betaWebSearchTool20260318)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `Tool.ofBetaWebFetchTool20260318(betaWebFetchTool20260318)`.
+         */
+        fun addTool(betaWebFetchTool20260318: BetaWebFetchTool20260318) = apply {
+            body.addTool(betaWebFetchTool20260318)
         }
 
         /**
@@ -1430,12 +1452,13 @@ private constructor(
          * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
          * ```
          *
-         * See [input examples](https://docs.claude.com/en/api/messages-examples).
+         * See
+         * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
          *
          * Note that if you want to include a
-         * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
-         * top-level `system` parameter — there is no `"system"` role for input messages in the
-         * Messages API.
+         * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
+         * you can use the top-level `system` parameter — there is no `"system"` role for input
+         * messages in the Messages API.
          *
          * There is a limit of 100,000 messages in a single request.
          *
@@ -1522,7 +1545,7 @@ private constructor(
          *
          * A system prompt is a way of providing context and instructions to Claude, such as
          * specifying a particular goal or role. See our
-         * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+         * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1537,7 +1560,7 @@ private constructor(
          * towards your `max_tokens` limit.
          *
          * See
-         * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
+         * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
          * for details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1564,9 +1587,9 @@ private constructor(
          *
          * There are two types of tools: **client tools** and **server tools**. The behavior
          * described below applies to client tools. For
-         * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
+         * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
          * see their individual documentation as each has its own behavior (e.g., the
-         * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+         * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
          *
          * Each tool definition includes:
          * * `name`: Name of the tool.
@@ -1623,7 +1646,8 @@ private constructor(
          * more generally whenever you want the model to produce a particular JSON structure of
          * output.
          *
-         * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+         * See our [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview)
+         * for more details.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1847,12 +1871,13 @@ private constructor(
              * {"role": "user", "content": [{"type": "text", "text": "Hello, Claude"}]}
              * ```
              *
-             * See [input examples](https://docs.claude.com/en/api/messages-examples).
+             * See
+             * [input examples](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
              *
              * Note that if you want to include a
-             * [system prompt](https://docs.claude.com/en/docs/system-prompts), you can use the
-             * top-level `system` parameter — there is no `"system"` role for input messages in the
-             * Messages API.
+             * [system prompt](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role),
+             * you can use the top-level `system` parameter — there is no `"system"` role for input
+             * messages in the Messages API.
              *
              * There is a limit of 100,000 messages in a single request.
              */
@@ -2156,7 +2181,7 @@ private constructor(
              *
              * A system prompt is a way of providing context and instructions to Claude, such as
              * specifying a particular goal or role. See our
-             * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+             * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
              */
             fun system(system: System) = system(JsonField.of(system))
 
@@ -2186,7 +2211,7 @@ private constructor(
              * towards your `max_tokens` limit.
              *
              * See
-             * [extended thinking](https://docs.claude.com/en/docs/build-with-claude/extended-thinking)
+             * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
              * for details.
              */
             fun thinking(thinking: BetaThinkingConfigParam) = thinking(JsonField.of(thinking))
@@ -2275,9 +2300,9 @@ private constructor(
              *
              * There are two types of tools: **client tools** and **server tools**. The behavior
              * described below applies to client tools. For
-             * [server tools](https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview#server-tools),
+             * [server tools](https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools),
              * see their individual documentation as each has its own behavior (e.g., the
-             * [web search tool](https://docs.claude.com/en/docs/agents-and-tools/tool-use/web-search-tool)).
+             * [web search tool](https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool)).
              *
              * Each tool definition includes:
              * * `name`: Name of the tool.
@@ -2334,7 +2359,9 @@ private constructor(
              * or more generally whenever you want the model to produce a particular JSON structure
              * of output.
              *
-             * See our [guide](https://docs.claude.com/en/docs/tool-use) for more details.
+             * See our
+             * [guide](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview) for
+             * more details.
              */
             fun tools(tools: List<Tool>) = tools(JsonField.of(tools))
 
@@ -2494,6 +2521,20 @@ private constructor(
              */
             fun addTool(betaWebFetchTool20260309: BetaWebFetchTool20260309) =
                 addTool(Tool.ofBetaWebFetchTool20260309(betaWebFetchTool20260309))
+
+            /**
+             * Alias for calling [addTool] with
+             * `Tool.ofBetaWebSearchTool20260318(betaWebSearchTool20260318)`.
+             */
+            fun addTool(betaWebSearchTool20260318: BetaWebSearchTool20260318) =
+                addTool(Tool.ofBetaWebSearchTool20260318(betaWebSearchTool20260318))
+
+            /**
+             * Alias for calling [addTool] with
+             * `Tool.ofBetaWebFetchTool20260318(betaWebFetchTool20260318)`.
+             */
+            fun addTool(betaWebFetchTool20260318: BetaWebFetchTool20260318) =
+                addTool(Tool.ofBetaWebFetchTool20260318(betaWebFetchTool20260318))
 
             /**
              * Alias for calling [addTool] with
@@ -2820,7 +2861,7 @@ private constructor(
      *
      * A system prompt is a way of providing context and instructions to Claude, such as specifying
      * a particular goal or role. See our
-     * [guide to system prompts](https://docs.claude.com/en/docs/system-prompts).
+     * [guide to system prompts](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#give-claude-a-role).
      */
     @JsonDeserialize(using = System.Deserializer::class)
     @JsonSerialize(using = System.Serializer::class)
@@ -3065,6 +3106,8 @@ private constructor(
         private val betaWebSearchTool20260209: BetaWebSearchTool20260209? = null,
         private val betaWebFetchTool20260209: BetaWebFetchTool20260209? = null,
         private val betaWebFetchTool20260309: BetaWebFetchTool20260309? = null,
+        private val betaWebSearchTool20260318: BetaWebSearchTool20260318? = null,
+        private val betaWebFetchTool20260318: BetaWebFetchTool20260318? = null,
         private val betaAdvisorTool20260301: BetaAdvisorTool20260301? = null,
         private val betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119? = null,
         private val betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119? = null,
@@ -3134,6 +3177,12 @@ private constructor(
         fun betaWebFetchTool20260309(): Optional<BetaWebFetchTool20260309> =
             Optional.ofNullable(betaWebFetchTool20260309)
 
+        fun betaWebSearchTool20260318(): Optional<BetaWebSearchTool20260318> =
+            Optional.ofNullable(betaWebSearchTool20260318)
+
+        fun betaWebFetchTool20260318(): Optional<BetaWebFetchTool20260318> =
+            Optional.ofNullable(betaWebFetchTool20260318)
+
         fun betaAdvisorTool20260301(): Optional<BetaAdvisorTool20260301> =
             Optional.ofNullable(betaAdvisorTool20260301)
 
@@ -3190,6 +3239,10 @@ private constructor(
         fun isBetaWebFetchTool20260209(): Boolean = betaWebFetchTool20260209 != null
 
         fun isBetaWebFetchTool20260309(): Boolean = betaWebFetchTool20260309 != null
+
+        fun isBetaWebSearchTool20260318(): Boolean = betaWebSearchTool20260318 != null
+
+        fun isBetaWebFetchTool20260318(): Boolean = betaWebFetchTool20260318 != null
 
         fun isBetaAdvisorTool20260301(): Boolean = betaAdvisorTool20260301 != null
 
@@ -3260,6 +3313,12 @@ private constructor(
         /** Web fetch tool with use_cache parameter for bypassing cached content. */
         fun asBetaWebFetchTool20260309(): BetaWebFetchTool20260309 =
             betaWebFetchTool20260309.getOrThrow("betaWebFetchTool20260309")
+
+        fun asBetaWebSearchTool20260318(): BetaWebSearchTool20260318 =
+            betaWebSearchTool20260318.getOrThrow("betaWebSearchTool20260318")
+
+        fun asBetaWebFetchTool20260318(): BetaWebFetchTool20260318 =
+            betaWebFetchTool20260318.getOrThrow("betaWebFetchTool20260318")
 
         fun asBetaAdvisorTool20260301(): BetaAdvisorTool20260301 =
             betaAdvisorTool20260301.getOrThrow("betaAdvisorTool20260301")
@@ -3350,6 +3409,10 @@ private constructor(
                     visitor.visitBetaWebFetchTool20260209(betaWebFetchTool20260209)
                 betaWebFetchTool20260309 != null ->
                     visitor.visitBetaWebFetchTool20260309(betaWebFetchTool20260309)
+                betaWebSearchTool20260318 != null ->
+                    visitor.visitBetaWebSearchTool20260318(betaWebSearchTool20260318)
+                betaWebFetchTool20260318 != null ->
+                    visitor.visitBetaWebFetchTool20260318(betaWebFetchTool20260318)
                 betaAdvisorTool20260301 != null ->
                     visitor.visitBetaAdvisorTool20260301(betaAdvisorTool20260301)
                 betaToolSearchToolBm25_20251119 != null ->
@@ -3496,6 +3559,18 @@ private constructor(
                         betaWebFetchTool20260309.validate()
                     }
 
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ) {
+                        betaWebSearchTool20260318.validate()
+                    }
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ) {
+                        betaWebFetchTool20260318.validate()
+                    }
+
                     override fun visitBetaAdvisorTool20260301(
                         betaAdvisorTool20260301: BetaAdvisorTool20260301
                     ) {
@@ -3618,6 +3693,14 @@ private constructor(
                         betaWebFetchTool20260309: BetaWebFetchTool20260309
                     ) = betaWebFetchTool20260309.validity()
 
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ) = betaWebSearchTool20260318.validity()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ) = betaWebFetchTool20260318.validity()
+
                     override fun visitBetaAdvisorTool20260301(
                         betaAdvisorTool20260301: BetaAdvisorTool20260301
                     ) = betaAdvisorTool20260301.validity()
@@ -3663,6 +3746,8 @@ private constructor(
                 betaWebSearchTool20260209 == other.betaWebSearchTool20260209 &&
                 betaWebFetchTool20260209 == other.betaWebFetchTool20260209 &&
                 betaWebFetchTool20260309 == other.betaWebFetchTool20260309 &&
+                betaWebSearchTool20260318 == other.betaWebSearchTool20260318 &&
+                betaWebFetchTool20260318 == other.betaWebFetchTool20260318 &&
                 betaAdvisorTool20260301 == other.betaAdvisorTool20260301 &&
                 betaToolSearchToolBm25_20251119 == other.betaToolSearchToolBm25_20251119 &&
                 betaToolSearchToolRegex20251119 == other.betaToolSearchToolRegex20251119 &&
@@ -3691,6 +3776,8 @@ private constructor(
                 betaWebSearchTool20260209,
                 betaWebFetchTool20260209,
                 betaWebFetchTool20260309,
+                betaWebSearchTool20260318,
+                betaWebFetchTool20260318,
                 betaAdvisorTool20260301,
                 betaToolSearchToolBm25_20251119,
                 betaToolSearchToolRegex20251119,
@@ -3736,6 +3823,10 @@ private constructor(
                     "Tool{betaWebFetchTool20260209=$betaWebFetchTool20260209}"
                 betaWebFetchTool20260309 != null ->
                     "Tool{betaWebFetchTool20260309=$betaWebFetchTool20260309}"
+                betaWebSearchTool20260318 != null ->
+                    "Tool{betaWebSearchTool20260318=$betaWebSearchTool20260318}"
+                betaWebFetchTool20260318 != null ->
+                    "Tool{betaWebFetchTool20260318=$betaWebFetchTool20260318}"
                 betaAdvisorTool20260301 != null ->
                     "Tool{betaAdvisorTool20260301=$betaAdvisorTool20260301}"
                 betaToolSearchToolBm25_20251119 != null ->
@@ -3844,6 +3935,14 @@ private constructor(
                 Tool(betaWebFetchTool20260309 = betaWebFetchTool20260309)
 
             @JvmStatic
+            fun ofBetaWebSearchTool20260318(betaWebSearchTool20260318: BetaWebSearchTool20260318) =
+                Tool(betaWebSearchTool20260318 = betaWebSearchTool20260318)
+
+            @JvmStatic
+            fun ofBetaWebFetchTool20260318(betaWebFetchTool20260318: BetaWebFetchTool20260318) =
+                Tool(betaWebFetchTool20260318 = betaWebFetchTool20260318)
+
+            @JvmStatic
             fun ofBetaAdvisorTool20260301(betaAdvisorTool20260301: BetaAdvisorTool20260301) =
                 Tool(betaAdvisorTool20260301 = betaAdvisorTool20260301)
 
@@ -3942,6 +4041,12 @@ private constructor(
             /** Web fetch tool with use_cache parameter for bypassing cached content. */
             fun visitBetaWebFetchTool20260309(betaWebFetchTool20260309: BetaWebFetchTool20260309): T
 
+            fun visitBetaWebSearchTool20260318(
+                betaWebSearchTool20260318: BetaWebSearchTool20260318
+            ): T
+
+            fun visitBetaWebFetchTool20260318(betaWebFetchTool20260318: BetaWebFetchTool20260318): T
+
             fun visitBetaAdvisorTool20260301(betaAdvisorTool20260301: BetaAdvisorTool20260301): T
 
             fun visitBetaToolSearchToolBm25_20251119(
@@ -4030,6 +4135,12 @@ private constructor(
                             tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20260309>())?.let {
                                 Tool(betaWebFetchTool20260309 = it, _json = json)
                             },
+                            tryDeserialize(node, jacksonTypeRef<BetaWebSearchTool20260318>())?.let {
+                                Tool(betaWebSearchTool20260318 = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<BetaWebFetchTool20260318>())?.let {
+                                Tool(betaWebFetchTool20260318 = it, _json = json)
+                            },
                             tryDeserialize(node, jacksonTypeRef<BetaAdvisorTool20260301>())?.let {
                                 Tool(betaAdvisorTool20260301 = it, _json = json)
                             },
@@ -4104,6 +4215,10 @@ private constructor(
                         generator.writeObject(value.betaWebFetchTool20260209)
                     value.betaWebFetchTool20260309 != null ->
                         generator.writeObject(value.betaWebFetchTool20260309)
+                    value.betaWebSearchTool20260318 != null ->
+                        generator.writeObject(value.betaWebSearchTool20260318)
+                    value.betaWebFetchTool20260318 != null ->
+                        generator.writeObject(value.betaWebFetchTool20260318)
                     value.betaAdvisorTool20260301 != null ->
                         generator.writeObject(value.betaAdvisorTool20260301)
                     value.betaToolSearchToolBm25_20251119 != null ->
