@@ -13,7 +13,7 @@ import kotlin.jvm.optionals.getOrNull
  * List all Message Batches within a Workspace. Most recently created batches are returned first.
  *
  * Learn more about the Message Batches API in our
- * [user guide](https://docs.claude.com/en/docs/build-with-claude/batch-processing)
+ * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
  */
 class BatchListParams
 private constructor(
