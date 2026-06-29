@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.45.0 (2026-06-29)
+
+Full Changelog: [v2.44.1...v2.45.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.44.1...v2.45.0)
+
+### Features
+
+* **api:** add support for 20260318 web fetch and support tools ([f38d0e6](https://github.com/anthropics/anthropic-sdk-java/commit/f38d0e64a16157f7e1b0be5f2c8229c2b54bf206))
+
+
+### Bug Fixes
+
+* add web tools 20260318 delegate overloads to StructuredMessageCreateParams ([#120](https://github.com/anthropics/anthropic-sdk-java/issues/120)) ([a66f7a3](https://github.com/anthropics/anthropic-sdk-java/commit/a66f7a38e1c486489bca87d0d61ecb2ee3f925b2))
+
 ## 2.44.1 (2026-06-26)
 
 Full Changelog: [v2.44.0...v2.44.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.44.0...v2.44.1)
