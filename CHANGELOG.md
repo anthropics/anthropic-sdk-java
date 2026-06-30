@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.46.0 (2026-06-30)
+
+Full Changelog: [v2.45.0...v2.46.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.45.0...v2.46.0)
+
+### Features
+
+* **api:** add support for claude-sonnet-5 ([444f054](https://github.com/anthropics/anthropic-sdk-java/commit/444f0543f992b03e551a10796f78256dcce21bee))
+
 ## 2.45.0 (2026-06-29)
 
 Full Changelog: [v2.44.1...v2.45.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.44.1...v2.45.0)
