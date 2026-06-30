@@ -13,6 +13,12 @@ internal class BetaManagedAgentsEnvironmentVariableAuthResponseTest {
     fun create() {
         val betaManagedAgentsEnvironmentVariableAuthResponse =
             BetaManagedAgentsEnvironmentVariableAuthResponse.builder()
+                .injectionLocation(
+                    BetaManagedAgentsInjectionLocationResponse.builder()
+                        .body(true)
+                        .header(true)
+                        .build()
+                )
                 .networking(
                     BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.builder()
                         .type(
@@ -25,6 +31,10 @@ internal class BetaManagedAgentsEnvironmentVariableAuthResponseTest {
                 .type(BetaManagedAgentsEnvironmentVariableAuthResponse.Type.ENVIRONMENT_VARIABLE)
                 .build()
 
+        assertThat(betaManagedAgentsEnvironmentVariableAuthResponse.injectionLocation())
+            .isEqualTo(
+                BetaManagedAgentsInjectionLocationResponse.builder().body(true).header(true).build()
+            )
         assertThat(betaManagedAgentsEnvironmentVariableAuthResponse.networking())
             .isEqualTo(
                 BetaManagedAgentsEnvironmentVariableAuthResponse.Networking.ofUnrestricted(
@@ -47,6 +57,12 @@ internal class BetaManagedAgentsEnvironmentVariableAuthResponseTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsEnvironmentVariableAuthResponse =
             BetaManagedAgentsEnvironmentVariableAuthResponse.builder()
+                .injectionLocation(
+                    BetaManagedAgentsInjectionLocationResponse.builder()
+                        .body(true)
+                        .header(true)
+                        .build()
+                )
                 .networking(
                     BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.builder()
                         .type(

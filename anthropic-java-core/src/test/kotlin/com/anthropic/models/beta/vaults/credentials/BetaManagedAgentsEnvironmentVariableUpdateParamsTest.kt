@@ -14,6 +14,12 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
         val betaManagedAgentsEnvironmentVariableUpdateParams =
             BetaManagedAgentsEnvironmentVariableUpdateParams.builder()
                 .type(BetaManagedAgentsEnvironmentVariableUpdateParams.Type.ENVIRONMENT_VARIABLE)
+                .injectionLocation(
+                    BetaManagedAgentsInjectionLocationUpdateParams.builder()
+                        .body(true)
+                        .header(true)
+                        .build()
+                )
                 .networking(
                     BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder()
                         .type(
@@ -27,6 +33,13 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
 
         assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.type())
             .isEqualTo(BetaManagedAgentsEnvironmentVariableUpdateParams.Type.ENVIRONMENT_VARIABLE)
+        assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.injectionLocation())
+            .contains(
+                BetaManagedAgentsInjectionLocationUpdateParams.builder()
+                    .body(true)
+                    .header(true)
+                    .build()
+            )
         assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.networking())
             .contains(
                 BetaManagedAgentsCredentialNetworkingParams.ofUnrestricted(
@@ -47,6 +60,12 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
         val betaManagedAgentsEnvironmentVariableUpdateParams =
             BetaManagedAgentsEnvironmentVariableUpdateParams.builder()
                 .type(BetaManagedAgentsEnvironmentVariableUpdateParams.Type.ENVIRONMENT_VARIABLE)
+                .injectionLocation(
+                    BetaManagedAgentsInjectionLocationUpdateParams.builder()
+                        .body(true)
+                        .header(true)
+                        .build()
+                )
                 .networking(
                     BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder()
                         .type(

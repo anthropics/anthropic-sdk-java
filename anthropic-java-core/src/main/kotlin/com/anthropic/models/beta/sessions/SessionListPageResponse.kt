@@ -24,6 +24,7 @@ class SessionListPageResponse
 private constructor(
     private val data: JsonField<List<BetaManagedAgentsSession>>,
     private val nextPage: JsonField<String>,
+    private val prevPage: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -33,7 +34,8 @@ private constructor(
         @ExcludeMissing
         data: JsonField<List<BetaManagedAgentsSession>> = JsonMissing.of(),
         @JsonProperty("next_page") @ExcludeMissing nextPage: JsonField<String> = JsonMissing.of(),
-    ) : this(data, nextPage, mutableMapOf())
+        @JsonProperty("prev_page") @ExcludeMissing prevPage: JsonField<String> = JsonMissing.of(),
+    ) : this(data, nextPage, prevPage, mutableMapOf())
 
     /**
      * List of sessions.
@@ -52,6 +54,15 @@ private constructor(
     fun nextPage(): Optional<String> = nextPage.getOptional("next_page")
 
     /**
+     * Opaque cursor for the previous page. Null when on the first page. Pass as the `page`
+     * parameter to navigate backward.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun prevPage(): Optional<String> = prevPage.getOptional("prev_page")
+
+    /**
      * Returns the raw JSON value of [data].
      *
      * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
@@ -66,6 +77,13 @@ private constructor(
      * Unlike [nextPage], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("next_page") @ExcludeMissing fun _nextPage(): JsonField<String> = nextPage
+
+    /**
+     * Returns the raw JSON value of [prevPage].
+     *
+     * Unlike [prevPage], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("prev_page") @ExcludeMissing fun _prevPage(): JsonField<String> = prevPage
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -90,6 +108,7 @@ private constructor(
 
         private var data: JsonField<MutableList<BetaManagedAgentsSession>>? = null
         private var nextPage: JsonField<String> = JsonMissing.of()
+        private var prevPage: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -99,6 +118,7 @@ private constructor(
                     .map { it.toMutableList() }
                     .takeUnless { it.isMissing() }
             nextPage = sessionListPageResponse.nextPage
+            prevPage = sessionListPageResponse.prevPage
             additionalProperties = sessionListPageResponse.additionalProperties.toMutableMap()
         }
 
@@ -142,6 +162,23 @@ private constructor(
          */
         fun nextPage(nextPage: JsonField<String>) = apply { this.nextPage = nextPage }
 
+        /**
+         * Opaque cursor for the previous page. Null when on the first page. Pass as the `page`
+         * parameter to navigate backward.
+         */
+        fun prevPage(prevPage: String?) = prevPage(JsonField.ofNullable(prevPage))
+
+        /** Alias for calling [Builder.prevPage] with `prevPage.orElse(null)`. */
+        fun prevPage(prevPage: Optional<String>) = prevPage(prevPage.getOrNull())
+
+        /**
+         * Sets [Builder.prevPage] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.prevPage] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun prevPage(prevPage: JsonField<String>) = apply { this.prevPage = prevPage }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -170,6 +207,7 @@ private constructor(
             SessionListPageResponse(
                 (data ?: JsonMissing.of()).map { it.toImmutable() },
                 nextPage,
+                prevPage,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -191,6 +229,7 @@ private constructor(
 
         data().ifPresent { it.forEach { it.validate() } }
         nextPage()
+        prevPage()
         validated = true
     }
 
@@ -210,7 +249,8 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (nextPage.asKnown().isPresent) 1 else 0)
+            (if (nextPage.asKnown().isPresent) 1 else 0) +
+            (if (prevPage.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -220,13 +260,16 @@ private constructor(
         return other is SessionListPageResponse &&
             data == other.data &&
             nextPage == other.nextPage &&
+            prevPage == other.prevPage &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(data, nextPage, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(data, nextPage, prevPage, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SessionListPageResponse{data=$data, nextPage=$nextPage, additionalProperties=$additionalProperties}"
+        "SessionListPageResponse{data=$data, nextPage=$nextPage, prevPage=$prevPage, additionalProperties=$additionalProperties}"
 }

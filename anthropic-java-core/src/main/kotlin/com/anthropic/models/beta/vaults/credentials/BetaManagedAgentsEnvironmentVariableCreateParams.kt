@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Parameters for creating an environment variable credential. */
@@ -25,6 +26,7 @@ private constructor(
     private val secretName: JsonField<String>,
     private val secretValue: JsonField<String>,
     private val type: JsonField<Type>,
+    private val injectionLocation: JsonField<BetaManagedAgentsInjectionLocationParams>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -40,7 +42,10 @@ private constructor(
         @ExcludeMissing
         secretValue: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-    ) : this(networking, secretName, secretValue, type, mutableMapOf())
+        @JsonProperty("injection_location")
+        @ExcludeMissing
+        injectionLocation: JsonField<BetaManagedAgentsInjectionLocationParams> = JsonMissing.of(),
+    ) : this(networking, secretName, secretValue, type, injectionLocation, mutableMapOf())
 
     /**
      * Outbound hosts the secret value is substituted on.
@@ -74,6 +79,15 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
+     * Where in the outbound request the secret value may be substituted.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun injectionLocation(): Optional<BetaManagedAgentsInjectionLocationParams> =
+        injectionLocation.getOptional("injection_location")
+
+    /**
      * Returns the raw JSON value of [networking].
      *
      * Unlike [networking], this method doesn't throw if the JSON field has an unexpected type.
@@ -104,6 +118,17 @@ private constructor(
      * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+
+    /**
+     * Returns the raw JSON value of [injectionLocation].
+     *
+     * Unlike [injectionLocation], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("injection_location")
+    @ExcludeMissing
+    fun _injectionLocation(): JsonField<BetaManagedAgentsInjectionLocationParams> =
+        injectionLocation
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -141,6 +166,8 @@ private constructor(
         private var secretName: JsonField<String>? = null
         private var secretValue: JsonField<String>? = null
         private var type: JsonField<Type>? = null
+        private var injectionLocation: JsonField<BetaManagedAgentsInjectionLocationParams> =
+            JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -152,6 +179,7 @@ private constructor(
             secretName = betaManagedAgentsEnvironmentVariableCreateParams.secretName
             secretValue = betaManagedAgentsEnvironmentVariableCreateParams.secretValue
             type = betaManagedAgentsEnvironmentVariableCreateParams.type
+            injectionLocation = betaManagedAgentsEnvironmentVariableCreateParams.injectionLocation
             additionalProperties =
                 betaManagedAgentsEnvironmentVariableCreateParams.additionalProperties.toMutableMap()
         }
@@ -236,6 +264,21 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
+        /** Where in the outbound request the secret value may be substituted. */
+        fun injectionLocation(injectionLocation: BetaManagedAgentsInjectionLocationParams) =
+            injectionLocation(JsonField.of(injectionLocation))
+
+        /**
+         * Sets [Builder.injectionLocation] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.injectionLocation] with a well-typed
+         * [BetaManagedAgentsInjectionLocationParams] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
+         */
+        fun injectionLocation(
+            injectionLocation: JsonField<BetaManagedAgentsInjectionLocationParams>
+        ) = apply { this.injectionLocation = injectionLocation }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -276,6 +319,7 @@ private constructor(
                 checkRequired("secretName", secretName),
                 checkRequired("secretValue", secretValue),
                 checkRequired("type", type),
+                injectionLocation,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -299,6 +343,7 @@ private constructor(
         secretName()
         secretValue()
         type().validate()
+        injectionLocation().ifPresent { it.validate() }
         validated = true
     }
 
@@ -320,7 +365,8 @@ private constructor(
         (networking.asKnown().getOrNull()?.validity() ?: 0) +
             (if (secretName.asKnown().isPresent) 1 else 0) +
             (if (secretValue.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0)
+            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            (injectionLocation.asKnown().getOrNull()?.validity() ?: 0)
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -462,15 +508,23 @@ private constructor(
             secretName == other.secretName &&
             secretValue == other.secretValue &&
             type == other.type &&
+            injectionLocation == other.injectionLocation &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(networking, secretName, secretValue, type, additionalProperties)
+        Objects.hash(
+            networking,
+            secretName,
+            secretValue,
+            type,
+            injectionLocation,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsEnvironmentVariableCreateParams{networking=$networking, secretName=$secretName, secretValue=$secretValue, type=$type, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsEnvironmentVariableCreateParams{networking=$networking, secretName=$secretName, secretValue=$secretValue, type=$type, injectionLocation=$injectionLocation, additionalProperties=$additionalProperties}"
 }

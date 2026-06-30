@@ -5,6 +5,7 @@ package com.anthropic.services.blocking.beta.sessions
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaType
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import com.anthropic.models.beta.sessions.events.EventSendParams
@@ -74,6 +75,7 @@ internal class EventServiceTest {
             eventService.streamStreaming(
                 EventStreamParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
+                    .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )
