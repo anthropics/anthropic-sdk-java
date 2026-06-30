@@ -58,7 +58,7 @@ public final class BetaStructuredOutputsExample {
 
         // Note: The beta header is auto-injected when using outputConfig
         StructuredMessageCreateParams<BookList> createParams = MessageCreateParams.builder()
-                .model("claude-sonnet-4-5")
+                .model("claude-sonnet-5")
                 .maxTokens(2048)
                 .outputConfig(BookList.class)
                 .addUserMessage("List some famous late twentieth century novels.")

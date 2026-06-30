@@ -87,7 +87,7 @@ internal class BatchCreateParamsTest {
                             .fallbackCreditToken("x")
                             .addFallback(
                                 BetaFallbackParam.builder()
-                                    .model(Model.CLAUDE_FABLE_5)
+                                    .model(Model.CLAUDE_SONNET_5)
                                     .maxTokens(0L)
                                     .outputConfig(
                                         BetaOutputConfig.builder()
@@ -309,7 +309,7 @@ internal class BatchCreateParamsTest {
                                 .fallbackCreditToken("x")
                                 .addFallback(
                                     BetaFallbackParam.builder()
-                                        .model(Model.CLAUDE_FABLE_5)
+                                        .model(Model.CLAUDE_SONNET_5)
                                         .maxTokens(0L)
                                         .outputConfig(
                                             BetaOutputConfig.builder()
@@ -568,7 +568,7 @@ internal class BatchCreateParamsTest {
                                 .fallbackCreditToken("x")
                                 .addFallback(
                                     BetaFallbackParam.builder()
-                                        .model(Model.CLAUDE_FABLE_5)
+                                        .model(Model.CLAUDE_SONNET_5)
                                         .maxTokens(0L)
                                         .outputConfig(
                                             BetaOutputConfig.builder()
@@ -790,7 +790,7 @@ internal class BatchCreateParamsTest {
                             .fallbackCreditToken("x")
                             .addFallback(
                                 BetaFallbackParam.builder()
-                                    .model(Model.CLAUDE_FABLE_5)
+                                    .model(Model.CLAUDE_SONNET_5)
                                     .maxTokens(0L)
                                     .outputConfig(
                                         BetaOutputConfig.builder()

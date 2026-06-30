@@ -13,7 +13,7 @@ public final class MessagesAsyncExample {
         AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model(Model.CLAUDE_SONNET_4_5)
+                .model(Model.CLAUDE_SONNET_5)
                 .maxTokens(2048)
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();

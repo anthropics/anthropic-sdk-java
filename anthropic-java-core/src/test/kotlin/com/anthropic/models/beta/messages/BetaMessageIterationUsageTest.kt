@@ -23,7 +23,7 @@ internal class BetaMessageIterationUsageTest {
                 .cacheCreationInputTokens(0L)
                 .cacheReadInputTokens(0L)
                 .inputTokens(0L)
-                .model(Model.CLAUDE_FABLE_5)
+                .model(Model.CLAUDE_SONNET_5)
                 .outputTokens(0L)
                 .build()
 
@@ -37,7 +37,7 @@ internal class BetaMessageIterationUsageTest {
         assertThat(betaMessageIterationUsage.cacheCreationInputTokens()).isEqualTo(0L)
         assertThat(betaMessageIterationUsage.cacheReadInputTokens()).isEqualTo(0L)
         assertThat(betaMessageIterationUsage.inputTokens()).isEqualTo(0L)
-        assertThat(betaMessageIterationUsage.model()).isEqualTo(Model.CLAUDE_FABLE_5)
+        assertThat(betaMessageIterationUsage.model()).isEqualTo(Model.CLAUDE_SONNET_5)
         assertThat(betaMessageIterationUsage.outputTokens()).isEqualTo(0L)
     }
 
@@ -55,7 +55,7 @@ internal class BetaMessageIterationUsageTest {
                 .cacheCreationInputTokens(0L)
                 .cacheReadInputTokens(0L)
                 .inputTokens(0L)
-                .model(Model.CLAUDE_FABLE_5)
+                .model(Model.CLAUDE_SONNET_5)
                 .outputTokens(0L)
                 .build()
 

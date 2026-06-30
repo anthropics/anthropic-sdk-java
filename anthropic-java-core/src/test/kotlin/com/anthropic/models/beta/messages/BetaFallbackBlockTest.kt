@@ -14,8 +14,8 @@ internal class BetaFallbackBlockTest {
     fun create() {
         val betaFallbackBlock =
             BetaFallbackBlock.builder()
-                .from(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
-                .to(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
+                .from(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
+                .to(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
                 .trigger(
                     BetaFallbackRefusalTrigger.builder()
                         .category(BetaFallbackRefusalTrigger.Category.CYBER)
@@ -24,9 +24,9 @@ internal class BetaFallbackBlockTest {
                 .build()
 
         assertThat(betaFallbackBlock.from())
-            .isEqualTo(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
+            .isEqualTo(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
         assertThat(betaFallbackBlock.to())
-            .isEqualTo(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
+            .isEqualTo(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
         assertThat(betaFallbackBlock.trigger())
             .isEqualTo(
                 BetaFallbackRefusalTrigger.builder()
@@ -40,8 +40,8 @@ internal class BetaFallbackBlockTest {
         val jsonMapper = jsonMapper()
         val betaFallbackBlock =
             BetaFallbackBlock.builder()
-                .from(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
-                .to(BetaFallbackInfo.builder().model(Model.CLAUDE_FABLE_5).build())
+                .from(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
+                .to(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
                 .trigger(
                     BetaFallbackRefusalTrigger.builder()
                         .category(BetaFallbackRefusalTrigger.Category.CYBER)

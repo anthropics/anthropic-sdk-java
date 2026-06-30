@@ -25,7 +25,7 @@ public final class MessagesImageExample {
                         .build())
                 .build());
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model(Model.CLAUDE_SONNET_4_5)
+                .model(Model.CLAUDE_SONNET_5)
                 .addUserMessage("Describe this image.")
                 .addUserMessageOfBlockParams(List.of(logoImageParam))
                 .maxTokens(2048)

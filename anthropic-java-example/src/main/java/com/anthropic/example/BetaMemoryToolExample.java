@@ -396,7 +396,7 @@ public final class BetaMemoryToolExample {
         // Adding a memory tool tells Claude that you will support the handling of memory tool
         // commands in the model's responses.
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model(Model.CLAUDE_SONNET_4_5)
+                .model(Model.CLAUDE_SONNET_5)
                 .addTool(BetaMemoryTool20250818.builder().build())
                 .maxTokens(2048)
                 .addUserMessage(userMessage)
