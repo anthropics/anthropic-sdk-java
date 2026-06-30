@@ -66,6 +66,8 @@ internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessa
                 "session.thread_status_idle",
                 "session.thread_status_rescheduled",
                 "session.thread_status_terminated",
+                "event_start",
+                "event_delta",
                 "system.message" -> yield(message)
                 "ping" -> continue
                 "error" -> {

@@ -7,7 +7,9 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsStartEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.fasterxml.jackson.core.JsonGenerator
@@ -68,6 +70,8 @@ private constructor(
         BetaManagedAgentsSessionThreadStatusRescheduledEvent? =
         null,
     private val sessionUpdated: BetaManagedAgentsSessionUpdatedEvent? = null,
+    private val eventStart: BetaManagedAgentsStartEvent? = null,
+    private val eventDelta: BetaManagedAgentsDeltaEvent? = null,
     private val systemMessage: BetaManagedAgentsSystemMessageEvent? = null,
     private val _json: JsonValue? = null,
 ) {
@@ -258,6 +262,24 @@ private constructor(
         Optional.ofNullable(sessionUpdated)
 
     /**
+     * Opens a preview of a buffered event. Carries the previewed event's type and id only. Followed
+     * by zero or more event_delta events with the same event id, normally concluded by the buffered
+     * event carrying that id. If the producing model request ends without that event (an error or
+     * interrupt mid-stream), its terminal span.model_request_end closes the preview. Only sent on
+     * stream connections that opt in via event_deltas; never appears in event history.
+     */
+    fun eventStart(): Optional<BetaManagedAgentsStartEvent> = Optional.ofNullable(eventStart)
+
+    /**
+     * An incremental update to an event that is still being streamed. Deltas are best-effort and
+     * may stop early; when the buffered event with id == event_id is produced it carries the
+     * complete content. A model request that ends early (an error or interrupt) produces no
+     * buffered event — its terminal span.model_request_end closes the preview. Only sent on stream
+     * connections that opt in via event_deltas; never appears in event history.
+     */
+    fun eventDelta(): Optional<BetaManagedAgentsDeltaEvent> = Optional.ofNullable(eventDelta)
+
+    /**
      * A mid-conversation system message event. Carries system-role content that is appended to the
      * session as a `role: "system"` turn.
      */
@@ -329,6 +351,10 @@ private constructor(
     fun isSessionThreadStatusRescheduled(): Boolean = sessionThreadStatusRescheduled != null
 
     fun isSessionUpdated(): Boolean = sessionUpdated != null
+
+    fun isEventStart(): Boolean = eventStart != null
+
+    fun isEventDelta(): Boolean = eventDelta != null
 
     fun isSystemMessage(): Boolean = systemMessage != null
 
@@ -514,6 +540,24 @@ private constructor(
         sessionUpdated.getOrThrow("sessionUpdated")
 
     /**
+     * Opens a preview of a buffered event. Carries the previewed event's type and id only. Followed
+     * by zero or more event_delta events with the same event id, normally concluded by the buffered
+     * event carrying that id. If the producing model request ends without that event (an error or
+     * interrupt mid-stream), its terminal span.model_request_end closes the preview. Only sent on
+     * stream connections that opt in via event_deltas; never appears in event history.
+     */
+    fun asEventStart(): BetaManagedAgentsStartEvent = eventStart.getOrThrow("eventStart")
+
+    /**
+     * An incremental update to an event that is still being streamed. Deltas are best-effort and
+     * may stop early; when the buffered event with id == event_id is produced it carries the
+     * complete content. A model request that ends early (an error or interrupt) produces no
+     * buffered event — its terminal span.model_request_end closes the preview. Only sent on stream
+     * connections that opt in via event_deltas; never appears in event history.
+     */
+    fun asEventDelta(): BetaManagedAgentsDeltaEvent = eventDelta.getOrThrow("eventDelta")
+
+    /**
      * A mid-conversation system message event. Carries system-role content that is appended to the
      * session as a `role: "system"` turn.
      */
@@ -599,6 +643,8 @@ private constructor(
             sessionThreadStatusRescheduled != null ->
                 visitor.visitSessionThreadStatusRescheduled(sessionThreadStatusRescheduled)
             sessionUpdated != null -> visitor.visitSessionUpdated(sessionUpdated)
+            eventStart != null -> visitor.visitEventStart(eventStart)
+            eventDelta != null -> visitor.visitEventDelta(eventDelta)
             systemMessage != null -> visitor.visitSystemMessage(systemMessage)
             else -> visitor.unknown(_json)
         }
@@ -812,6 +858,14 @@ private constructor(
                     sessionUpdated.validate()
                 }
 
+                override fun visitEventStart(eventStart: BetaManagedAgentsStartEvent) {
+                    eventStart.validate()
+                }
+
+                override fun visitEventDelta(eventDelta: BetaManagedAgentsDeltaEvent) {
+                    eventDelta.validate()
+                }
+
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
                 ) {
@@ -969,6 +1023,12 @@ private constructor(
                     sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
                 ) = sessionUpdated.validity()
 
+                override fun visitEventStart(eventStart: BetaManagedAgentsStartEvent) =
+                    eventStart.validity()
+
+                override fun visitEventDelta(eventDelta: BetaManagedAgentsDeltaEvent) =
+                    eventDelta.validity()
+
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
                 ) = systemMessage.validity()
@@ -1016,6 +1076,8 @@ private constructor(
             userToolResult == other.userToolResult &&
             sessionThreadStatusRescheduled == other.sessionThreadStatusRescheduled &&
             sessionUpdated == other.sessionUpdated &&
+            eventStart == other.eventStart &&
+            eventDelta == other.eventDelta &&
             systemMessage == other.systemMessage
     }
 
@@ -1054,6 +1116,8 @@ private constructor(
             userToolResult,
             sessionThreadStatusRescheduled,
             sessionUpdated,
+            eventStart,
+            eventDelta,
             systemMessage,
         )
 
@@ -1124,6 +1188,8 @@ private constructor(
                 "BetaManagedAgentsStreamSessionEvents{sessionThreadStatusRescheduled=$sessionThreadStatusRescheduled}"
             sessionUpdated != null ->
                 "BetaManagedAgentsStreamSessionEvents{sessionUpdated=$sessionUpdated}"
+            eventStart != null -> "BetaManagedAgentsStreamSessionEvents{eventStart=$eventStart}"
+            eventDelta != null -> "BetaManagedAgentsStreamSessionEvents{eventDelta=$eventDelta}"
             systemMessage != null ->
                 "BetaManagedAgentsStreamSessionEvents{systemMessage=$systemMessage}"
             _json != null -> "BetaManagedAgentsStreamSessionEvents{_unknown=$_json}"
@@ -1394,6 +1460,29 @@ private constructor(
             BetaManagedAgentsStreamSessionEvents(sessionUpdated = sessionUpdated)
 
         /**
+         * Opens a preview of a buffered event. Carries the previewed event's type and id only.
+         * Followed by zero or more event_delta events with the same event id, normally concluded by
+         * the buffered event carrying that id. If the producing model request ends without that
+         * event (an error or interrupt mid-stream), its terminal span.model_request_end closes the
+         * preview. Only sent on stream connections that opt in via event_deltas; never appears in
+         * event history.
+         */
+        @JvmStatic
+        fun ofEventStart(eventStart: BetaManagedAgentsStartEvent) =
+            BetaManagedAgentsStreamSessionEvents(eventStart = eventStart)
+
+        /**
+         * An incremental update to an event that is still being streamed. Deltas are best-effort
+         * and may stop early; when the buffered event with id == event_id is produced it carries
+         * the complete content. A model request that ends early (an error or interrupt) produces no
+         * buffered event — its terminal span.model_request_end closes the preview. Only sent on
+         * stream connections that opt in via event_deltas; never appears in event history.
+         */
+        @JvmStatic
+        fun ofEventDelta(eventDelta: BetaManagedAgentsDeltaEvent) =
+            BetaManagedAgentsStreamSessionEvents(eventDelta = eventDelta)
+
+        /**
          * A mid-conversation system message event. Carries system-role content that is appended to
          * the session as a `role: "system"` turn.
          */
@@ -1594,6 +1683,25 @@ private constructor(
          * from the next turn.
          */
         fun visitSessionUpdated(sessionUpdated: BetaManagedAgentsSessionUpdatedEvent): T
+
+        /**
+         * Opens a preview of a buffered event. Carries the previewed event's type and id only.
+         * Followed by zero or more event_delta events with the same event id, normally concluded by
+         * the buffered event carrying that id. If the producing model request ends without that
+         * event (an error or interrupt mid-stream), its terminal span.model_request_end closes the
+         * preview. Only sent on stream connections that opt in via event_deltas; never appears in
+         * event history.
+         */
+        fun visitEventStart(eventStart: BetaManagedAgentsStartEvent): T
+
+        /**
+         * An incremental update to an event that is still being streamed. Deltas are best-effort
+         * and may stop early; when the buffered event with id == event_id is produced it carries
+         * the complete content. A model request that ends early (an error or interrupt) produces no
+         * buffered event — its terminal span.model_request_end closes the preview. Only sent on
+         * stream connections that opt in via event_deltas; never appears in event history.
+         */
+        fun visitEventDelta(eventDelta: BetaManagedAgentsDeltaEvent): T
 
         /**
          * A mid-conversation system message event. Carries system-role content that is appended to
@@ -1988,6 +2096,18 @@ private constructor(
                             BetaManagedAgentsStreamSessionEvents(sessionUpdated = it, _json = json)
                         } ?: BetaManagedAgentsStreamSessionEvents(_json = json)
                 }
+                "event_start" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsStartEvent>())
+                        ?.let {
+                            BetaManagedAgentsStreamSessionEvents(eventStart = it, _json = json)
+                        } ?: BetaManagedAgentsStreamSessionEvents(_json = json)
+                }
+                "event_delta" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsDeltaEvent>())
+                        ?.let {
+                            BetaManagedAgentsStreamSessionEvents(eventDelta = it, _json = json)
+                        } ?: BetaManagedAgentsStreamSessionEvents(_json = json)
+                }
                 "system.message" -> {
                     return tryDeserialize(
                             node,
@@ -2065,6 +2185,8 @@ private constructor(
                 value.sessionThreadStatusRescheduled != null ->
                     generator.writeObject(value.sessionThreadStatusRescheduled)
                 value.sessionUpdated != null -> generator.writeObject(value.sessionUpdated)
+                value.eventStart != null -> generator.writeObject(value.eventStart)
+                value.eventDelta != null -> generator.writeObject(value.eventDelta)
                 value.systemMessage != null -> generator.writeObject(value.systemMessage)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsStreamSessionEvents")

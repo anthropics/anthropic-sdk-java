@@ -32,6 +32,7 @@ import kotlin.jvm.optionals.getOrNull
 class BetaManagedAgentsEnvironmentVariableAuthResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val injectionLocation: JsonField<BetaManagedAgentsInjectionLocationResponse>,
     private val networking: JsonField<Networking>,
     private val secretName: JsonField<String>,
     private val type: JsonField<Type>,
@@ -40,6 +41,9 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("injection_location")
+        @ExcludeMissing
+        injectionLocation: JsonField<BetaManagedAgentsInjectionLocationResponse> = JsonMissing.of(),
         @JsonProperty("networking")
         @ExcludeMissing
         networking: JsonField<Networking> = JsonMissing.of(),
@@ -47,7 +51,16 @@ private constructor(
         @ExcludeMissing
         secretName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-    ) : this(networking, secretName, type, mutableMapOf())
+    ) : this(injectionLocation, networking, secretName, type, mutableMapOf())
+
+    /**
+     * Where in the outbound request the secret value is substituted.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun injectionLocation(): BetaManagedAgentsInjectionLocationResponse =
+        injectionLocation.getRequired("injection_location")
 
     /**
      * Outbound hosts the secret value is substituted on.
@@ -70,6 +83,17 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun type(): Type = type.getRequired("type")
+
+    /**
+     * Returns the raw JSON value of [injectionLocation].
+     *
+     * Unlike [injectionLocation], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("injection_location")
+    @ExcludeMissing
+    fun _injectionLocation(): JsonField<BetaManagedAgentsInjectionLocationResponse> =
+        injectionLocation
 
     /**
      * Returns the raw JSON value of [networking].
@@ -114,6 +138,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .injectionLocation()
          * .networking()
          * .secretName()
          * .type()
@@ -125,6 +150,7 @@ private constructor(
     /** A builder for [BetaManagedAgentsEnvironmentVariableAuthResponse]. */
     class Builder internal constructor() {
 
+        private var injectionLocation: JsonField<BetaManagedAgentsInjectionLocationResponse>? = null
         private var networking: JsonField<Networking>? = null
         private var secretName: JsonField<String>? = null
         private var type: JsonField<Type>? = null
@@ -135,12 +161,28 @@ private constructor(
             betaManagedAgentsEnvironmentVariableAuthResponse:
                 BetaManagedAgentsEnvironmentVariableAuthResponse
         ) = apply {
+            injectionLocation = betaManagedAgentsEnvironmentVariableAuthResponse.injectionLocation
             networking = betaManagedAgentsEnvironmentVariableAuthResponse.networking
             secretName = betaManagedAgentsEnvironmentVariableAuthResponse.secretName
             type = betaManagedAgentsEnvironmentVariableAuthResponse.type
             additionalProperties =
                 betaManagedAgentsEnvironmentVariableAuthResponse.additionalProperties.toMutableMap()
         }
+
+        /** Where in the outbound request the secret value is substituted. */
+        fun injectionLocation(injectionLocation: BetaManagedAgentsInjectionLocationResponse) =
+            injectionLocation(JsonField.of(injectionLocation))
+
+        /**
+         * Sets [Builder.injectionLocation] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.injectionLocation] with a well-typed
+         * [BetaManagedAgentsInjectionLocationResponse] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
+         */
+        fun injectionLocation(
+            injectionLocation: JsonField<BetaManagedAgentsInjectionLocationResponse>
+        ) = apply { this.injectionLocation = injectionLocation }
 
         /** Outbound hosts the secret value is substituted on. */
         fun networking(networking: Networking) = networking(JsonField.of(networking))
@@ -227,6 +269,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .injectionLocation()
          * .networking()
          * .secretName()
          * .type()
@@ -236,6 +279,7 @@ private constructor(
          */
         fun build(): BetaManagedAgentsEnvironmentVariableAuthResponse =
             BetaManagedAgentsEnvironmentVariableAuthResponse(
+                checkRequired("injectionLocation", injectionLocation),
                 checkRequired("networking", networking),
                 checkRequired("secretName", secretName),
                 checkRequired("type", type),
@@ -258,6 +302,7 @@ private constructor(
             return@apply
         }
 
+        injectionLocation().validate()
         networking().validate()
         secretName()
         type().validate()
@@ -279,7 +324,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (networking.asKnown().getOrNull()?.validity() ?: 0) +
+        (injectionLocation.asKnown().getOrNull()?.validity() ?: 0) +
+            (networking.asKnown().getOrNull()?.validity() ?: 0) +
             (if (secretName.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -675,6 +721,7 @@ private constructor(
         }
 
         return other is BetaManagedAgentsEnvironmentVariableAuthResponse &&
+            injectionLocation == other.injectionLocation &&
             networking == other.networking &&
             secretName == other.secretName &&
             type == other.type &&
@@ -682,11 +729,11 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(networking, secretName, type, additionalProperties)
+        Objects.hash(injectionLocation, networking, secretName, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsEnvironmentVariableAuthResponse{networking=$networking, secretName=$secretName, type=$type, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsEnvironmentVariableAuthResponse{injectionLocation=$injectionLocation, networking=$networking, secretName=$secretName, type=$type, additionalProperties=$additionalProperties}"
 }
