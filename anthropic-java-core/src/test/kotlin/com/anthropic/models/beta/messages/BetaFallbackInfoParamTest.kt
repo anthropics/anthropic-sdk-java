@@ -13,16 +13,16 @@ internal class BetaFallbackInfoParamTest {
     @Test
     fun create() {
         val betaFallbackInfoParam =
-            BetaFallbackInfoParam.builder().model(Model.CLAUDE_FABLE_5).build()
+            BetaFallbackInfoParam.builder().model(Model.CLAUDE_SONNET_5).build()
 
-        assertThat(betaFallbackInfoParam.model()).isEqualTo(Model.CLAUDE_FABLE_5)
+        assertThat(betaFallbackInfoParam.model()).isEqualTo(Model.CLAUDE_SONNET_5)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaFallbackInfoParam =
-            BetaFallbackInfoParam.builder().model(Model.CLAUDE_FABLE_5).build()
+            BetaFallbackInfoParam.builder().model(Model.CLAUDE_SONNET_5).build()
 
         val roundtrippedBetaFallbackInfoParam =
             jsonMapper.readValue(

@@ -28,6 +28,9 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
+        /** High-performance model for coding and agents */
+        @JvmField val CLAUDE_SONNET_5 = of("claude-sonnet-5")
+
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         @JvmField val CLAUDE_FABLE_5 = of("claude-fable-5")
 
@@ -66,6 +69,8 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [BetaManagedAgentsModel]'s known values. */
     enum class Known {
+        /** High-performance model for coding and agents */
+        CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         CLAUDE_FABLE_5,
         /** Frontier intelligence for long-running agents and coding */
@@ -100,6 +105,8 @@ private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** High-performance model for coding and agents */
+        CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         CLAUDE_FABLE_5,
         /** Frontier intelligence for long-running agents and coding */
@@ -138,6 +145,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_SONNET_5 -> Value.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Value.CLAUDE_FABLE_5
             CLAUDE_OPUS_4_8 -> Value.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Value.CLAUDE_OPUS_4_7
@@ -162,6 +170,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_SONNET_5 -> Known.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Known.CLAUDE_FABLE_5
             CLAUDE_OPUS_4_8 -> Known.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Known.CLAUDE_OPUS_4_7
