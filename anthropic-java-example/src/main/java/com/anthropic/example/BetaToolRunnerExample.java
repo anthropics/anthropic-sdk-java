@@ -30,7 +30,7 @@ public final class BetaToolRunnerExample {
         BetaToolRunner toolRunner = client.beta()
                 .messages()
                 .toolRunner(MessageCreateParams.builder()
-                        .model("claude-sonnet-4-5")
+                        .model("claude-sonnet-5")
                         .putAdditionalHeader("anthropic-beta", "structured-outputs-2025-11-13")
                         .maxTokens(1000)
                         .addUserMessage("What is the weather in San Francisco?")

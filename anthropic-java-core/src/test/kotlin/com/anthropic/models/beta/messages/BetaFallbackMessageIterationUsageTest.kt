@@ -23,7 +23,7 @@ internal class BetaFallbackMessageIterationUsageTest {
                 .cacheCreationInputTokens(0L)
                 .cacheReadInputTokens(0L)
                 .inputTokens(0L)
-                .model(Model.CLAUDE_FABLE_5)
+                .model(Model.CLAUDE_SONNET_5)
                 .outputTokens(0L)
                 .build()
 
@@ -37,7 +37,7 @@ internal class BetaFallbackMessageIterationUsageTest {
         assertThat(betaFallbackMessageIterationUsage.cacheCreationInputTokens()).isEqualTo(0L)
         assertThat(betaFallbackMessageIterationUsage.cacheReadInputTokens()).isEqualTo(0L)
         assertThat(betaFallbackMessageIterationUsage.inputTokens()).isEqualTo(0L)
-        assertThat(betaFallbackMessageIterationUsage.model()).isEqualTo(Model.CLAUDE_FABLE_5)
+        assertThat(betaFallbackMessageIterationUsage.model()).isEqualTo(Model.CLAUDE_SONNET_5)
         assertThat(betaFallbackMessageIterationUsage.outputTokens()).isEqualTo(0L)
     }
 
@@ -55,7 +55,7 @@ internal class BetaFallbackMessageIterationUsageTest {
                 .cacheCreationInputTokens(0L)
                 .cacheReadInputTokens(0L)
                 .inputTokens(0L)
-                .model(Model.CLAUDE_FABLE_5)
+                .model(Model.CLAUDE_SONNET_5)
                 .outputTokens(0L)
                 .build()
 

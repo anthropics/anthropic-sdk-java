@@ -67,7 +67,7 @@ public final class BetaMcpToolRunnerExample {
             System.out.println();
 
             MessageCreateParams params = MessageCreateParams.builder()
-                    .model(Model.CLAUDE_SONNET_4_5)
+                    .model(Model.CLAUDE_SONNET_5)
                     .maxTokens(1024)
                     .addUserMessage(
                             "List the 5 most recently opened issues in the github/github-mcp-server repository. For"

@@ -79,7 +79,7 @@ public final class BetaMessagesToolsExample {
         AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 
         MessageCreateParams.Builder createParamsBuilder = MessageCreateParams.builder()
-                .model("claude-sonnet-4-5")
+                .model("claude-sonnet-5")
                 .putAdditionalHeader("anthropic-beta", "structured-outputs-2025-11-13")
                 .maxTokens(2048)
                 .addTool(GetWeather.class)

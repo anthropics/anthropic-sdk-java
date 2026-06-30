@@ -74,7 +74,7 @@ public final class StructuredOutputsExample {
         // GA structured outputs - no beta header required!
         // Use client.messages() instead of client.beta().messages()
         StructuredMessageCreateParams<BookList> createParams = MessageCreateParams.builder()
-                .model(Model.CLAUDE_SONNET_4_5_20250929)
+                .model(Model.CLAUDE_SONNET_5)
                 .maxTokens(2048)
                 .outputConfig(BookList.class)
                 .addUserMessage("List some famous late twentieth century novels.")
