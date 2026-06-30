@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.47.0 (2026-06-30)
+
+Full Changelog: [v2.46.0...v2.47.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.46.0...v2.47.0)
+
+### Features
+
+* **api:** add support for Managed Agents event delta streaming, agent overrides, reverse pagination, vault credential injection scoping, and agent and deployment webhook events ([5eed04b](https://github.com/anthropics/anthropic-sdk-java/commit/5eed04b793a44b9d3dabbafe079d88ba0ac6651f))
+
 ## 2.46.0 (2026-06-30)
 
 Full Changelog: [v2.45.0...v2.46.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.45.0...v2.46.0)
