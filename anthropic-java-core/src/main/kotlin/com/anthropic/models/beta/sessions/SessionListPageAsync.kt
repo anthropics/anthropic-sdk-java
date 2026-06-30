@@ -36,6 +36,13 @@ private constructor(
      */
     fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")
 
+    /**
+     * Delegates to [SessionListPageResponse], but gracefully handles missing data.
+     *
+     * @see SessionListPageResponse.prevPage
+     */
+    fun prevPage(): Optional<String> = response._prevPage().getOptional("prev_page")
+
     override fun items(): List<BetaManagedAgentsSession> = data()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent

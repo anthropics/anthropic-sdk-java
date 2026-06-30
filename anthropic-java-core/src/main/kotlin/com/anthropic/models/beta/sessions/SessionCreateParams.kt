@@ -241,6 +241,14 @@ private constructor(
             body.agent(betaManagedAgentsAgentParams)
         }
 
+        /**
+         * Alias for calling [agent] with
+         * `Agent.ofBetaManagedAgentsAgentWithOverridesParams(betaManagedAgentsAgentWithOverridesParams)`.
+         */
+        fun agent(
+            betaManagedAgentsAgentWithOverridesParams: BetaManagedAgentsAgentWithOverridesParams
+        ) = apply { body.agent(betaManagedAgentsAgentWithOverridesParams) }
+
         /** ID of the `environment` defining the container configuration for this session. */
         fun environmentId(environmentId: String) = apply { body.environmentId(environmentId) }
 
@@ -715,6 +723,19 @@ private constructor(
             fun agent(betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams) =
                 agent(Agent.ofBetaManagedAgentsAgentParams(betaManagedAgentsAgentParams))
 
+            /**
+             * Alias for calling [agent] with
+             * `Agent.ofBetaManagedAgentsAgentWithOverridesParams(betaManagedAgentsAgentWithOverridesParams)`.
+             */
+            fun agent(
+                betaManagedAgentsAgentWithOverridesParams: BetaManagedAgentsAgentWithOverridesParams
+            ) =
+                agent(
+                    Agent.ofBetaManagedAgentsAgentWithOverridesParams(
+                        betaManagedAgentsAgentWithOverridesParams
+                    )
+                )
+
             /** ID of the `environment` defining the container configuration for this session. */
             fun environmentId(environmentId: String) = environmentId(JsonField.of(environmentId))
 
@@ -994,6 +1015,9 @@ private constructor(
     private constructor(
         private val string: String? = null,
         private val betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams? = null,
+        private val betaManagedAgentsAgentWithOverridesParams:
+            BetaManagedAgentsAgentWithOverridesParams? =
+            null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -1006,9 +1030,20 @@ private constructor(
         fun betaManagedAgentsAgentParams(): Optional<BetaManagedAgentsAgentParams> =
             Optional.ofNullable(betaManagedAgentsAgentParams)
 
+        /**
+         * Reference to an `agent` plus optional configuration overrides. Each provided field
+         * replaces the agent's value for the caller's use; the agent resource is unchanged.
+         */
+        fun betaManagedAgentsAgentWithOverridesParams():
+            Optional<BetaManagedAgentsAgentWithOverridesParams> =
+            Optional.ofNullable(betaManagedAgentsAgentWithOverridesParams)
+
         fun isString(): Boolean = string != null
 
         fun isBetaManagedAgentsAgentParams(): Boolean = betaManagedAgentsAgentParams != null
+
+        fun isBetaManagedAgentsAgentWithOverridesParams(): Boolean =
+            betaManagedAgentsAgentWithOverridesParams != null
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -1018,6 +1053,16 @@ private constructor(
          */
         fun asBetaManagedAgentsAgentParams(): BetaManagedAgentsAgentParams =
             betaManagedAgentsAgentParams.getOrThrow("betaManagedAgentsAgentParams")
+
+        /**
+         * Reference to an `agent` plus optional configuration overrides. Each provided field
+         * replaces the agent's value for the caller's use; the agent resource is unchanged.
+         */
+        fun asBetaManagedAgentsAgentWithOverridesParams():
+            BetaManagedAgentsAgentWithOverridesParams =
+            betaManagedAgentsAgentWithOverridesParams.getOrThrow(
+                "betaManagedAgentsAgentWithOverridesParams"
+            )
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -1055,6 +1100,10 @@ private constructor(
                 string != null -> visitor.visitString(string)
                 betaManagedAgentsAgentParams != null ->
                     visitor.visitBetaManagedAgentsAgentParams(betaManagedAgentsAgentParams)
+                betaManagedAgentsAgentWithOverridesParams != null ->
+                    visitor.visitBetaManagedAgentsAgentWithOverridesParams(
+                        betaManagedAgentsAgentWithOverridesParams
+                    )
                 else -> visitor.unknown(_json)
             }
 
@@ -1082,6 +1131,13 @@ private constructor(
                         betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
                     ) {
                         betaManagedAgentsAgentParams.validate()
+                    }
+
+                    override fun visitBetaManagedAgentsAgentWithOverridesParams(
+                        betaManagedAgentsAgentWithOverridesParams:
+                            BetaManagedAgentsAgentWithOverridesParams
+                    ) {
+                        betaManagedAgentsAgentWithOverridesParams.validate()
                     }
                 }
             )
@@ -1112,6 +1168,11 @@ private constructor(
                         betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
                     ) = betaManagedAgentsAgentParams.validity()
 
+                    override fun visitBetaManagedAgentsAgentWithOverridesParams(
+                        betaManagedAgentsAgentWithOverridesParams:
+                            BetaManagedAgentsAgentWithOverridesParams
+                    ) = betaManagedAgentsAgentWithOverridesParams.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -1123,16 +1184,25 @@ private constructor(
 
             return other is Agent &&
                 string == other.string &&
-                betaManagedAgentsAgentParams == other.betaManagedAgentsAgentParams
+                betaManagedAgentsAgentParams == other.betaManagedAgentsAgentParams &&
+                betaManagedAgentsAgentWithOverridesParams ==
+                    other.betaManagedAgentsAgentWithOverridesParams
         }
 
-        override fun hashCode(): Int = Objects.hash(string, betaManagedAgentsAgentParams)
+        override fun hashCode(): Int =
+            Objects.hash(
+                string,
+                betaManagedAgentsAgentParams,
+                betaManagedAgentsAgentWithOverridesParams,
+            )
 
         override fun toString(): String =
             when {
                 string != null -> "Agent{string=$string}"
                 betaManagedAgentsAgentParams != null ->
                     "Agent{betaManagedAgentsAgentParams=$betaManagedAgentsAgentParams}"
+                betaManagedAgentsAgentWithOverridesParams != null ->
+                    "Agent{betaManagedAgentsAgentWithOverridesParams=$betaManagedAgentsAgentWithOverridesParams}"
                 _json != null -> "Agent{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Agent")
             }
@@ -1149,6 +1219,19 @@ private constructor(
             fun ofBetaManagedAgentsAgentParams(
                 betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
             ) = Agent(betaManagedAgentsAgentParams = betaManagedAgentsAgentParams)
+
+            /**
+             * Reference to an `agent` plus optional configuration overrides. Each provided field
+             * replaces the agent's value for the caller's use; the agent resource is unchanged.
+             */
+            @JvmStatic
+            fun ofBetaManagedAgentsAgentWithOverridesParams(
+                betaManagedAgentsAgentWithOverridesParams: BetaManagedAgentsAgentWithOverridesParams
+            ) =
+                Agent(
+                    betaManagedAgentsAgentWithOverridesParams =
+                        betaManagedAgentsAgentWithOverridesParams
+                )
         }
 
         /** An interface that defines how to map each variant of [Agent] to a value of type [T]. */
@@ -1162,6 +1245,14 @@ private constructor(
              */
             fun visitBetaManagedAgentsAgentParams(
                 betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
+            ): T
+
+            /**
+             * Reference to an `agent` plus optional configuration overrides. Each provided field
+             * replaces the agent's value for the caller's use; the agent resource is unchanged.
+             */
+            fun visitBetaManagedAgentsAgentWithOverridesParams(
+                betaManagedAgentsAgentWithOverridesParams: BetaManagedAgentsAgentWithOverridesParams
             ): T
 
             /**
@@ -1188,6 +1279,16 @@ private constructor(
                     sequenceOf(
                             tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsAgentParams>())
                                 ?.let { Agent(betaManagedAgentsAgentParams = it, _json = json) },
+                            tryDeserialize(
+                                    node,
+                                    jacksonTypeRef<BetaManagedAgentsAgentWithOverridesParams>(),
+                                )
+                                ?.let {
+                                    Agent(
+                                        betaManagedAgentsAgentWithOverridesParams = it,
+                                        _json = json,
+                                    )
+                                },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Agent(string = it, _json = json)
                             },
@@ -1219,6 +1320,8 @@ private constructor(
                     value.string != null -> generator.writeObject(value.string)
                     value.betaManagedAgentsAgentParams != null ->
                         generator.writeObject(value.betaManagedAgentsAgentParams)
+                    value.betaManagedAgentsAgentWithOverridesParams != null ->
+                        generator.writeObject(value.betaManagedAgentsAgentWithOverridesParams)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Agent")
                 }

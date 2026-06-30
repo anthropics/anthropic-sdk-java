@@ -47,6 +47,26 @@ private constructor(
     private val vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData? =
         null,
     private val sessionUpdated: BetaWebhookSessionUpdatedEventData? = null,
+    private val agentCreated: BetaWebhookAgentCreatedEventData? = null,
+    private val agentArchived: BetaWebhookAgentArchivedEventData? = null,
+    private val agentDeleted: BetaWebhookAgentDeletedEventData? = null,
+    private val deploymentPaused: BetaWebhookDeploymentPausedEventData? = null,
+    private val deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData? = null,
+    private val deploymentCreated: BetaWebhookDeploymentCreatedEventData? = null,
+    private val deploymentUpdated: BetaWebhookDeploymentUpdatedEventData? = null,
+    private val deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData? = null,
+    private val agentUpdated: BetaWebhookAgentUpdatedEventData? = null,
+    private val deploymentArchived: BetaWebhookDeploymentArchivedEventData? = null,
+    private val deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData? = null,
+    private val deploymentDeleted: BetaWebhookDeploymentDeletedEventData? = null,
+    private val deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData? = null,
+    private val environmentCreated: BetaWebhookEnvironmentCreatedEventData? = null,
+    private val environmentUpdated: BetaWebhookEnvironmentUpdatedEventData? = null,
+    private val environmentArchived: BetaWebhookEnvironmentArchivedEventData? = null,
+    private val environmentDeleted: BetaWebhookEnvironmentDeletedEventData? = null,
+    private val memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData? = null,
+    private val memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData? = null,
+    private val memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -120,6 +140,66 @@ private constructor(
     fun sessionUpdated(): Optional<BetaWebhookSessionUpdatedEventData> =
         Optional.ofNullable(sessionUpdated)
 
+    fun agentCreated(): Optional<BetaWebhookAgentCreatedEventData> =
+        Optional.ofNullable(agentCreated)
+
+    fun agentArchived(): Optional<BetaWebhookAgentArchivedEventData> =
+        Optional.ofNullable(agentArchived)
+
+    fun agentDeleted(): Optional<BetaWebhookAgentDeletedEventData> =
+        Optional.ofNullable(agentDeleted)
+
+    fun deploymentPaused(): Optional<BetaWebhookDeploymentPausedEventData> =
+        Optional.ofNullable(deploymentPaused)
+
+    fun deploymentRunFailed(): Optional<BetaWebhookDeploymentRunFailedEventData> =
+        Optional.ofNullable(deploymentRunFailed)
+
+    fun deploymentCreated(): Optional<BetaWebhookDeploymentCreatedEventData> =
+        Optional.ofNullable(deploymentCreated)
+
+    fun deploymentUpdated(): Optional<BetaWebhookDeploymentUpdatedEventData> =
+        Optional.ofNullable(deploymentUpdated)
+
+    fun deploymentUnpaused(): Optional<BetaWebhookDeploymentUnpausedEventData> =
+        Optional.ofNullable(deploymentUnpaused)
+
+    fun agentUpdated(): Optional<BetaWebhookAgentUpdatedEventData> =
+        Optional.ofNullable(agentUpdated)
+
+    fun deploymentArchived(): Optional<BetaWebhookDeploymentArchivedEventData> =
+        Optional.ofNullable(deploymentArchived)
+
+    fun deploymentRunStarted(): Optional<BetaWebhookDeploymentRunStartedEventData> =
+        Optional.ofNullable(deploymentRunStarted)
+
+    fun deploymentDeleted(): Optional<BetaWebhookDeploymentDeletedEventData> =
+        Optional.ofNullable(deploymentDeleted)
+
+    fun deploymentRunSucceeded(): Optional<BetaWebhookDeploymentRunSucceededEventData> =
+        Optional.ofNullable(deploymentRunSucceeded)
+
+    fun environmentCreated(): Optional<BetaWebhookEnvironmentCreatedEventData> =
+        Optional.ofNullable(environmentCreated)
+
+    fun environmentUpdated(): Optional<BetaWebhookEnvironmentUpdatedEventData> =
+        Optional.ofNullable(environmentUpdated)
+
+    fun environmentArchived(): Optional<BetaWebhookEnvironmentArchivedEventData> =
+        Optional.ofNullable(environmentArchived)
+
+    fun environmentDeleted(): Optional<BetaWebhookEnvironmentDeletedEventData> =
+        Optional.ofNullable(environmentDeleted)
+
+    fun memoryStoreCreated(): Optional<BetaWebhookMemoryStoreCreatedEventData> =
+        Optional.ofNullable(memoryStoreCreated)
+
+    fun memoryStoreArchived(): Optional<BetaWebhookMemoryStoreArchivedEventData> =
+        Optional.ofNullable(memoryStoreArchived)
+
+    fun memoryStoreDeleted(): Optional<BetaWebhookMemoryStoreDeletedEventData> =
+        Optional.ofNullable(memoryStoreDeleted)
+
     fun isSessionCreated(): Boolean = sessionCreated != null
 
     fun isSessionPending(): Boolean = sessionPending != null
@@ -165,6 +245,46 @@ private constructor(
     fun isVaultCredentialRefreshFailed(): Boolean = vaultCredentialRefreshFailed != null
 
     fun isSessionUpdated(): Boolean = sessionUpdated != null
+
+    fun isAgentCreated(): Boolean = agentCreated != null
+
+    fun isAgentArchived(): Boolean = agentArchived != null
+
+    fun isAgentDeleted(): Boolean = agentDeleted != null
+
+    fun isDeploymentPaused(): Boolean = deploymentPaused != null
+
+    fun isDeploymentRunFailed(): Boolean = deploymentRunFailed != null
+
+    fun isDeploymentCreated(): Boolean = deploymentCreated != null
+
+    fun isDeploymentUpdated(): Boolean = deploymentUpdated != null
+
+    fun isDeploymentUnpaused(): Boolean = deploymentUnpaused != null
+
+    fun isAgentUpdated(): Boolean = agentUpdated != null
+
+    fun isDeploymentArchived(): Boolean = deploymentArchived != null
+
+    fun isDeploymentRunStarted(): Boolean = deploymentRunStarted != null
+
+    fun isDeploymentDeleted(): Boolean = deploymentDeleted != null
+
+    fun isDeploymentRunSucceeded(): Boolean = deploymentRunSucceeded != null
+
+    fun isEnvironmentCreated(): Boolean = environmentCreated != null
+
+    fun isEnvironmentUpdated(): Boolean = environmentUpdated != null
+
+    fun isEnvironmentArchived(): Boolean = environmentArchived != null
+
+    fun isEnvironmentDeleted(): Boolean = environmentDeleted != null
+
+    fun isMemoryStoreCreated(): Boolean = memoryStoreCreated != null
+
+    fun isMemoryStoreArchived(): Boolean = memoryStoreArchived != null
+
+    fun isMemoryStoreDeleted(): Boolean = memoryStoreDeleted != null
 
     fun asSessionCreated(): BetaWebhookSessionCreatedEventData =
         sessionCreated.getOrThrow("sessionCreated")
@@ -232,6 +352,63 @@ private constructor(
     fun asSessionUpdated(): BetaWebhookSessionUpdatedEventData =
         sessionUpdated.getOrThrow("sessionUpdated")
 
+    fun asAgentCreated(): BetaWebhookAgentCreatedEventData = agentCreated.getOrThrow("agentCreated")
+
+    fun asAgentArchived(): BetaWebhookAgentArchivedEventData =
+        agentArchived.getOrThrow("agentArchived")
+
+    fun asAgentDeleted(): BetaWebhookAgentDeletedEventData = agentDeleted.getOrThrow("agentDeleted")
+
+    fun asDeploymentPaused(): BetaWebhookDeploymentPausedEventData =
+        deploymentPaused.getOrThrow("deploymentPaused")
+
+    fun asDeploymentRunFailed(): BetaWebhookDeploymentRunFailedEventData =
+        deploymentRunFailed.getOrThrow("deploymentRunFailed")
+
+    fun asDeploymentCreated(): BetaWebhookDeploymentCreatedEventData =
+        deploymentCreated.getOrThrow("deploymentCreated")
+
+    fun asDeploymentUpdated(): BetaWebhookDeploymentUpdatedEventData =
+        deploymentUpdated.getOrThrow("deploymentUpdated")
+
+    fun asDeploymentUnpaused(): BetaWebhookDeploymentUnpausedEventData =
+        deploymentUnpaused.getOrThrow("deploymentUnpaused")
+
+    fun asAgentUpdated(): BetaWebhookAgentUpdatedEventData = agentUpdated.getOrThrow("agentUpdated")
+
+    fun asDeploymentArchived(): BetaWebhookDeploymentArchivedEventData =
+        deploymentArchived.getOrThrow("deploymentArchived")
+
+    fun asDeploymentRunStarted(): BetaWebhookDeploymentRunStartedEventData =
+        deploymentRunStarted.getOrThrow("deploymentRunStarted")
+
+    fun asDeploymentDeleted(): BetaWebhookDeploymentDeletedEventData =
+        deploymentDeleted.getOrThrow("deploymentDeleted")
+
+    fun asDeploymentRunSucceeded(): BetaWebhookDeploymentRunSucceededEventData =
+        deploymentRunSucceeded.getOrThrow("deploymentRunSucceeded")
+
+    fun asEnvironmentCreated(): BetaWebhookEnvironmentCreatedEventData =
+        environmentCreated.getOrThrow("environmentCreated")
+
+    fun asEnvironmentUpdated(): BetaWebhookEnvironmentUpdatedEventData =
+        environmentUpdated.getOrThrow("environmentUpdated")
+
+    fun asEnvironmentArchived(): BetaWebhookEnvironmentArchivedEventData =
+        environmentArchived.getOrThrow("environmentArchived")
+
+    fun asEnvironmentDeleted(): BetaWebhookEnvironmentDeletedEventData =
+        environmentDeleted.getOrThrow("environmentDeleted")
+
+    fun asMemoryStoreCreated(): BetaWebhookMemoryStoreCreatedEventData =
+        memoryStoreCreated.getOrThrow("memoryStoreCreated")
+
+    fun asMemoryStoreArchived(): BetaWebhookMemoryStoreArchivedEventData =
+        memoryStoreArchived.getOrThrow("memoryStoreArchived")
+
+    fun asMemoryStoreDeleted(): BetaWebhookMemoryStoreDeletedEventData =
+        memoryStoreDeleted.getOrThrow("memoryStoreDeleted")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -298,6 +475,27 @@ private constructor(
             vaultCredentialRefreshFailed != null ->
                 visitor.visitVaultCredentialRefreshFailed(vaultCredentialRefreshFailed)
             sessionUpdated != null -> visitor.visitSessionUpdated(sessionUpdated)
+            agentCreated != null -> visitor.visitAgentCreated(agentCreated)
+            agentArchived != null -> visitor.visitAgentArchived(agentArchived)
+            agentDeleted != null -> visitor.visitAgentDeleted(agentDeleted)
+            deploymentPaused != null -> visitor.visitDeploymentPaused(deploymentPaused)
+            deploymentRunFailed != null -> visitor.visitDeploymentRunFailed(deploymentRunFailed)
+            deploymentCreated != null -> visitor.visitDeploymentCreated(deploymentCreated)
+            deploymentUpdated != null -> visitor.visitDeploymentUpdated(deploymentUpdated)
+            deploymentUnpaused != null -> visitor.visitDeploymentUnpaused(deploymentUnpaused)
+            agentUpdated != null -> visitor.visitAgentUpdated(agentUpdated)
+            deploymentArchived != null -> visitor.visitDeploymentArchived(deploymentArchived)
+            deploymentRunStarted != null -> visitor.visitDeploymentRunStarted(deploymentRunStarted)
+            deploymentDeleted != null -> visitor.visitDeploymentDeleted(deploymentDeleted)
+            deploymentRunSucceeded != null ->
+                visitor.visitDeploymentRunSucceeded(deploymentRunSucceeded)
+            environmentCreated != null -> visitor.visitEnvironmentCreated(environmentCreated)
+            environmentUpdated != null -> visitor.visitEnvironmentUpdated(environmentUpdated)
+            environmentArchived != null -> visitor.visitEnvironmentArchived(environmentArchived)
+            environmentDeleted != null -> visitor.visitEnvironmentDeleted(environmentDeleted)
+            memoryStoreCreated != null -> visitor.visitMemoryStoreCreated(memoryStoreCreated)
+            memoryStoreArchived != null -> visitor.visitMemoryStoreArchived(memoryStoreArchived)
+            memoryStoreDeleted != null -> visitor.visitMemoryStoreDeleted(memoryStoreDeleted)
             else -> visitor.unknown(_json)
         }
 
@@ -447,6 +645,118 @@ private constructor(
                 ) {
                     sessionUpdated.validate()
                 }
+
+                override fun visitAgentCreated(agentCreated: BetaWebhookAgentCreatedEventData) {
+                    agentCreated.validate()
+                }
+
+                override fun visitAgentArchived(agentArchived: BetaWebhookAgentArchivedEventData) {
+                    agentArchived.validate()
+                }
+
+                override fun visitAgentDeleted(agentDeleted: BetaWebhookAgentDeletedEventData) {
+                    agentDeleted.validate()
+                }
+
+                override fun visitDeploymentPaused(
+                    deploymentPaused: BetaWebhookDeploymentPausedEventData
+                ) {
+                    deploymentPaused.validate()
+                }
+
+                override fun visitDeploymentRunFailed(
+                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
+                ) {
+                    deploymentRunFailed.validate()
+                }
+
+                override fun visitDeploymentCreated(
+                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
+                ) {
+                    deploymentCreated.validate()
+                }
+
+                override fun visitDeploymentUpdated(
+                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
+                ) {
+                    deploymentUpdated.validate()
+                }
+
+                override fun visitDeploymentUnpaused(
+                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
+                ) {
+                    deploymentUnpaused.validate()
+                }
+
+                override fun visitAgentUpdated(agentUpdated: BetaWebhookAgentUpdatedEventData) {
+                    agentUpdated.validate()
+                }
+
+                override fun visitDeploymentArchived(
+                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
+                ) {
+                    deploymentArchived.validate()
+                }
+
+                override fun visitDeploymentRunStarted(
+                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
+                ) {
+                    deploymentRunStarted.validate()
+                }
+
+                override fun visitDeploymentDeleted(
+                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
+                ) {
+                    deploymentDeleted.validate()
+                }
+
+                override fun visitDeploymentRunSucceeded(
+                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
+                ) {
+                    deploymentRunSucceeded.validate()
+                }
+
+                override fun visitEnvironmentCreated(
+                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
+                ) {
+                    environmentCreated.validate()
+                }
+
+                override fun visitEnvironmentUpdated(
+                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
+                ) {
+                    environmentUpdated.validate()
+                }
+
+                override fun visitEnvironmentArchived(
+                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
+                ) {
+                    environmentArchived.validate()
+                }
+
+                override fun visitEnvironmentDeleted(
+                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
+                ) {
+                    environmentDeleted.validate()
+                }
+
+                override fun visitMemoryStoreCreated(
+                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
+                ) {
+                    memoryStoreCreated.validate()
+                }
+
+                override fun visitMemoryStoreArchived(
+                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
+                ) {
+                    memoryStoreArchived.validate()
+                }
+
+                override fun visitMemoryStoreDeleted(
+                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
+                ) {
+                    memoryStoreDeleted.validate()
+                }
             }
         )
         validated = true
@@ -557,6 +867,82 @@ private constructor(
                     sessionUpdated: BetaWebhookSessionUpdatedEventData
                 ) = sessionUpdated.validity()
 
+                override fun visitAgentCreated(agentCreated: BetaWebhookAgentCreatedEventData) =
+                    agentCreated.validity()
+
+                override fun visitAgentArchived(agentArchived: BetaWebhookAgentArchivedEventData) =
+                    agentArchived.validity()
+
+                override fun visitAgentDeleted(agentDeleted: BetaWebhookAgentDeletedEventData) =
+                    agentDeleted.validity()
+
+                override fun visitDeploymentPaused(
+                    deploymentPaused: BetaWebhookDeploymentPausedEventData
+                ) = deploymentPaused.validity()
+
+                override fun visitDeploymentRunFailed(
+                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
+                ) = deploymentRunFailed.validity()
+
+                override fun visitDeploymentCreated(
+                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
+                ) = deploymentCreated.validity()
+
+                override fun visitDeploymentUpdated(
+                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
+                ) = deploymentUpdated.validity()
+
+                override fun visitDeploymentUnpaused(
+                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
+                ) = deploymentUnpaused.validity()
+
+                override fun visitAgentUpdated(agentUpdated: BetaWebhookAgentUpdatedEventData) =
+                    agentUpdated.validity()
+
+                override fun visitDeploymentArchived(
+                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
+                ) = deploymentArchived.validity()
+
+                override fun visitDeploymentRunStarted(
+                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
+                ) = deploymentRunStarted.validity()
+
+                override fun visitDeploymentDeleted(
+                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
+                ) = deploymentDeleted.validity()
+
+                override fun visitDeploymentRunSucceeded(
+                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
+                ) = deploymentRunSucceeded.validity()
+
+                override fun visitEnvironmentCreated(
+                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
+                ) = environmentCreated.validity()
+
+                override fun visitEnvironmentUpdated(
+                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
+                ) = environmentUpdated.validity()
+
+                override fun visitEnvironmentArchived(
+                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
+                ) = environmentArchived.validity()
+
+                override fun visitEnvironmentDeleted(
+                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
+                ) = environmentDeleted.validity()
+
+                override fun visitMemoryStoreCreated(
+                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
+                ) = memoryStoreCreated.validity()
+
+                override fun visitMemoryStoreArchived(
+                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
+                ) = memoryStoreArchived.validity()
+
+                override fun visitMemoryStoreDeleted(
+                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
+                ) = memoryStoreDeleted.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -589,7 +975,27 @@ private constructor(
             vaultCredentialArchived == other.vaultCredentialArchived &&
             vaultCredentialDeleted == other.vaultCredentialDeleted &&
             vaultCredentialRefreshFailed == other.vaultCredentialRefreshFailed &&
-            sessionUpdated == other.sessionUpdated
+            sessionUpdated == other.sessionUpdated &&
+            agentCreated == other.agentCreated &&
+            agentArchived == other.agentArchived &&
+            agentDeleted == other.agentDeleted &&
+            deploymentPaused == other.deploymentPaused &&
+            deploymentRunFailed == other.deploymentRunFailed &&
+            deploymentCreated == other.deploymentCreated &&
+            deploymentUpdated == other.deploymentUpdated &&
+            deploymentUnpaused == other.deploymentUnpaused &&
+            agentUpdated == other.agentUpdated &&
+            deploymentArchived == other.deploymentArchived &&
+            deploymentRunStarted == other.deploymentRunStarted &&
+            deploymentDeleted == other.deploymentDeleted &&
+            deploymentRunSucceeded == other.deploymentRunSucceeded &&
+            environmentCreated == other.environmentCreated &&
+            environmentUpdated == other.environmentUpdated &&
+            environmentArchived == other.environmentArchived &&
+            environmentDeleted == other.environmentDeleted &&
+            memoryStoreCreated == other.memoryStoreCreated &&
+            memoryStoreArchived == other.memoryStoreArchived &&
+            memoryStoreDeleted == other.memoryStoreDeleted
     }
 
     override fun hashCode(): Int =
@@ -617,6 +1023,26 @@ private constructor(
             vaultCredentialDeleted,
             vaultCredentialRefreshFailed,
             sessionUpdated,
+            agentCreated,
+            agentArchived,
+            agentDeleted,
+            deploymentPaused,
+            deploymentRunFailed,
+            deploymentCreated,
+            deploymentUpdated,
+            deploymentUnpaused,
+            agentUpdated,
+            deploymentArchived,
+            deploymentRunStarted,
+            deploymentDeleted,
+            deploymentRunSucceeded,
+            environmentCreated,
+            environmentUpdated,
+            environmentArchived,
+            environmentDeleted,
+            memoryStoreCreated,
+            memoryStoreArchived,
+            memoryStoreDeleted,
         )
 
     override fun toString(): String =
@@ -657,6 +1083,41 @@ private constructor(
             vaultCredentialRefreshFailed != null ->
                 "BetaWebhookEventData{vaultCredentialRefreshFailed=$vaultCredentialRefreshFailed}"
             sessionUpdated != null -> "BetaWebhookEventData{sessionUpdated=$sessionUpdated}"
+            agentCreated != null -> "BetaWebhookEventData{agentCreated=$agentCreated}"
+            agentArchived != null -> "BetaWebhookEventData{agentArchived=$agentArchived}"
+            agentDeleted != null -> "BetaWebhookEventData{agentDeleted=$agentDeleted}"
+            deploymentPaused != null -> "BetaWebhookEventData{deploymentPaused=$deploymentPaused}"
+            deploymentRunFailed != null ->
+                "BetaWebhookEventData{deploymentRunFailed=$deploymentRunFailed}"
+            deploymentCreated != null ->
+                "BetaWebhookEventData{deploymentCreated=$deploymentCreated}"
+            deploymentUpdated != null ->
+                "BetaWebhookEventData{deploymentUpdated=$deploymentUpdated}"
+            deploymentUnpaused != null ->
+                "BetaWebhookEventData{deploymentUnpaused=$deploymentUnpaused}"
+            agentUpdated != null -> "BetaWebhookEventData{agentUpdated=$agentUpdated}"
+            deploymentArchived != null ->
+                "BetaWebhookEventData{deploymentArchived=$deploymentArchived}"
+            deploymentRunStarted != null ->
+                "BetaWebhookEventData{deploymentRunStarted=$deploymentRunStarted}"
+            deploymentDeleted != null ->
+                "BetaWebhookEventData{deploymentDeleted=$deploymentDeleted}"
+            deploymentRunSucceeded != null ->
+                "BetaWebhookEventData{deploymentRunSucceeded=$deploymentRunSucceeded}"
+            environmentCreated != null ->
+                "BetaWebhookEventData{environmentCreated=$environmentCreated}"
+            environmentUpdated != null ->
+                "BetaWebhookEventData{environmentUpdated=$environmentUpdated}"
+            environmentArchived != null ->
+                "BetaWebhookEventData{environmentArchived=$environmentArchived}"
+            environmentDeleted != null ->
+                "BetaWebhookEventData{environmentDeleted=$environmentDeleted}"
+            memoryStoreCreated != null ->
+                "BetaWebhookEventData{memoryStoreCreated=$memoryStoreCreated}"
+            memoryStoreArchived != null ->
+                "BetaWebhookEventData{memoryStoreArchived=$memoryStoreArchived}"
+            memoryStoreDeleted != null ->
+                "BetaWebhookEventData{memoryStoreDeleted=$memoryStoreDeleted}"
             _json != null -> "BetaWebhookEventData{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaWebhookEventData")
         }
@@ -764,6 +1225,87 @@ private constructor(
         @JvmStatic
         fun ofSessionUpdated(sessionUpdated: BetaWebhookSessionUpdatedEventData) =
             BetaWebhookEventData(sessionUpdated = sessionUpdated)
+
+        @JvmStatic
+        fun ofAgentCreated(agentCreated: BetaWebhookAgentCreatedEventData) =
+            BetaWebhookEventData(agentCreated = agentCreated)
+
+        @JvmStatic
+        fun ofAgentArchived(agentArchived: BetaWebhookAgentArchivedEventData) =
+            BetaWebhookEventData(agentArchived = agentArchived)
+
+        @JvmStatic
+        fun ofAgentDeleted(agentDeleted: BetaWebhookAgentDeletedEventData) =
+            BetaWebhookEventData(agentDeleted = agentDeleted)
+
+        @JvmStatic
+        fun ofDeploymentPaused(deploymentPaused: BetaWebhookDeploymentPausedEventData) =
+            BetaWebhookEventData(deploymentPaused = deploymentPaused)
+
+        @JvmStatic
+        fun ofDeploymentRunFailed(deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData) =
+            BetaWebhookEventData(deploymentRunFailed = deploymentRunFailed)
+
+        @JvmStatic
+        fun ofDeploymentCreated(deploymentCreated: BetaWebhookDeploymentCreatedEventData) =
+            BetaWebhookEventData(deploymentCreated = deploymentCreated)
+
+        @JvmStatic
+        fun ofDeploymentUpdated(deploymentUpdated: BetaWebhookDeploymentUpdatedEventData) =
+            BetaWebhookEventData(deploymentUpdated = deploymentUpdated)
+
+        @JvmStatic
+        fun ofDeploymentUnpaused(deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData) =
+            BetaWebhookEventData(deploymentUnpaused = deploymentUnpaused)
+
+        @JvmStatic
+        fun ofAgentUpdated(agentUpdated: BetaWebhookAgentUpdatedEventData) =
+            BetaWebhookEventData(agentUpdated = agentUpdated)
+
+        @JvmStatic
+        fun ofDeploymentArchived(deploymentArchived: BetaWebhookDeploymentArchivedEventData) =
+            BetaWebhookEventData(deploymentArchived = deploymentArchived)
+
+        @JvmStatic
+        fun ofDeploymentRunStarted(deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData) =
+            BetaWebhookEventData(deploymentRunStarted = deploymentRunStarted)
+
+        @JvmStatic
+        fun ofDeploymentDeleted(deploymentDeleted: BetaWebhookDeploymentDeletedEventData) =
+            BetaWebhookEventData(deploymentDeleted = deploymentDeleted)
+
+        @JvmStatic
+        fun ofDeploymentRunSucceeded(
+            deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
+        ) = BetaWebhookEventData(deploymentRunSucceeded = deploymentRunSucceeded)
+
+        @JvmStatic
+        fun ofEnvironmentCreated(environmentCreated: BetaWebhookEnvironmentCreatedEventData) =
+            BetaWebhookEventData(environmentCreated = environmentCreated)
+
+        @JvmStatic
+        fun ofEnvironmentUpdated(environmentUpdated: BetaWebhookEnvironmentUpdatedEventData) =
+            BetaWebhookEventData(environmentUpdated = environmentUpdated)
+
+        @JvmStatic
+        fun ofEnvironmentArchived(environmentArchived: BetaWebhookEnvironmentArchivedEventData) =
+            BetaWebhookEventData(environmentArchived = environmentArchived)
+
+        @JvmStatic
+        fun ofEnvironmentDeleted(environmentDeleted: BetaWebhookEnvironmentDeletedEventData) =
+            BetaWebhookEventData(environmentDeleted = environmentDeleted)
+
+        @JvmStatic
+        fun ofMemoryStoreCreated(memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData) =
+            BetaWebhookEventData(memoryStoreCreated = memoryStoreCreated)
+
+        @JvmStatic
+        fun ofMemoryStoreArchived(memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData) =
+            BetaWebhookEventData(memoryStoreArchived = memoryStoreArchived)
+
+        @JvmStatic
+        fun ofMemoryStoreDeleted(memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData) =
+            BetaWebhookEventData(memoryStoreDeleted = memoryStoreDeleted)
     }
 
     /**
@@ -839,6 +1381,56 @@ private constructor(
         ): T
 
         fun visitSessionUpdated(sessionUpdated: BetaWebhookSessionUpdatedEventData): T
+
+        fun visitAgentCreated(agentCreated: BetaWebhookAgentCreatedEventData): T
+
+        fun visitAgentArchived(agentArchived: BetaWebhookAgentArchivedEventData): T
+
+        fun visitAgentDeleted(agentDeleted: BetaWebhookAgentDeletedEventData): T
+
+        fun visitDeploymentPaused(deploymentPaused: BetaWebhookDeploymentPausedEventData): T
+
+        fun visitDeploymentRunFailed(
+            deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
+        ): T
+
+        fun visitDeploymentCreated(deploymentCreated: BetaWebhookDeploymentCreatedEventData): T
+
+        fun visitDeploymentUpdated(deploymentUpdated: BetaWebhookDeploymentUpdatedEventData): T
+
+        fun visitDeploymentUnpaused(deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData): T
+
+        fun visitAgentUpdated(agentUpdated: BetaWebhookAgentUpdatedEventData): T
+
+        fun visitDeploymentArchived(deploymentArchived: BetaWebhookDeploymentArchivedEventData): T
+
+        fun visitDeploymentRunStarted(
+            deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
+        ): T
+
+        fun visitDeploymentDeleted(deploymentDeleted: BetaWebhookDeploymentDeletedEventData): T
+
+        fun visitDeploymentRunSucceeded(
+            deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
+        ): T
+
+        fun visitEnvironmentCreated(environmentCreated: BetaWebhookEnvironmentCreatedEventData): T
+
+        fun visitEnvironmentUpdated(environmentUpdated: BetaWebhookEnvironmentUpdatedEventData): T
+
+        fun visitEnvironmentArchived(
+            environmentArchived: BetaWebhookEnvironmentArchivedEventData
+        ): T
+
+        fun visitEnvironmentDeleted(environmentDeleted: BetaWebhookEnvironmentDeletedEventData): T
+
+        fun visitMemoryStoreCreated(memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData): T
+
+        fun visitMemoryStoreArchived(
+            memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
+        ): T
+
+        fun visitMemoryStoreDeleted(memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData): T
 
         /**
          * Maps an unknown variant of [BetaWebhookEventData] to a value of type [T].
@@ -1037,6 +1629,154 @@ private constructor(
                         ?.let { BetaWebhookEventData(sessionUpdated = it, _json = json) }
                         ?: BetaWebhookEventData(_json = json)
                 }
+                "agent.created" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaWebhookAgentCreatedEventData>())
+                        ?.let { BetaWebhookEventData(agentCreated = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "agent.archived" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaWebhookAgentArchivedEventData>())
+                        ?.let { BetaWebhookEventData(agentArchived = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "agent.deleted" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaWebhookAgentDeletedEventData>())
+                        ?.let { BetaWebhookEventData(agentDeleted = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "deployment.paused" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookDeploymentPausedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(deploymentPaused = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "deployment_run.failed" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookDeploymentRunFailedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(deploymentRunFailed = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "deployment.created" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookDeploymentCreatedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(deploymentCreated = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "deployment.updated" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookDeploymentUpdatedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(deploymentUpdated = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "deployment.unpaused" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookDeploymentUnpausedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(deploymentUnpaused = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "agent.updated" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaWebhookAgentUpdatedEventData>())
+                        ?.let { BetaWebhookEventData(agentUpdated = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "deployment.archived" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookDeploymentArchivedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(deploymentArchived = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "deployment_run.started" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookDeploymentRunStartedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(deploymentRunStarted = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "deployment.deleted" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookDeploymentDeletedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(deploymentDeleted = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "deployment_run.succeeded" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookDeploymentRunSucceededEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(deploymentRunSucceeded = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "environment.created" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookEnvironmentCreatedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(environmentCreated = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "environment.updated" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookEnvironmentUpdatedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(environmentUpdated = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "environment.archived" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookEnvironmentArchivedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(environmentArchived = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "environment.deleted" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookEnvironmentDeletedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(environmentDeleted = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "memory_store.created" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookMemoryStoreCreatedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(memoryStoreCreated = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "memory_store.archived" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookMemoryStoreArchivedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(memoryStoreArchived = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
+                "memory_store.deleted" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookMemoryStoreDeletedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(memoryStoreDeleted = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
             }
 
             return BetaWebhookEventData(_json = json)
@@ -1085,6 +1825,31 @@ private constructor(
                 value.vaultCredentialRefreshFailed != null ->
                     generator.writeObject(value.vaultCredentialRefreshFailed)
                 value.sessionUpdated != null -> generator.writeObject(value.sessionUpdated)
+                value.agentCreated != null -> generator.writeObject(value.agentCreated)
+                value.agentArchived != null -> generator.writeObject(value.agentArchived)
+                value.agentDeleted != null -> generator.writeObject(value.agentDeleted)
+                value.deploymentPaused != null -> generator.writeObject(value.deploymentPaused)
+                value.deploymentRunFailed != null ->
+                    generator.writeObject(value.deploymentRunFailed)
+                value.deploymentCreated != null -> generator.writeObject(value.deploymentCreated)
+                value.deploymentUpdated != null -> generator.writeObject(value.deploymentUpdated)
+                value.deploymentUnpaused != null -> generator.writeObject(value.deploymentUnpaused)
+                value.agentUpdated != null -> generator.writeObject(value.agentUpdated)
+                value.deploymentArchived != null -> generator.writeObject(value.deploymentArchived)
+                value.deploymentRunStarted != null ->
+                    generator.writeObject(value.deploymentRunStarted)
+                value.deploymentDeleted != null -> generator.writeObject(value.deploymentDeleted)
+                value.deploymentRunSucceeded != null ->
+                    generator.writeObject(value.deploymentRunSucceeded)
+                value.environmentCreated != null -> generator.writeObject(value.environmentCreated)
+                value.environmentUpdated != null -> generator.writeObject(value.environmentUpdated)
+                value.environmentArchived != null ->
+                    generator.writeObject(value.environmentArchived)
+                value.environmentDeleted != null -> generator.writeObject(value.environmentDeleted)
+                value.memoryStoreCreated != null -> generator.writeObject(value.memoryStoreCreated)
+                value.memoryStoreArchived != null ->
+                    generator.writeObject(value.memoryStoreArchived)
+                value.memoryStoreDeleted != null -> generator.writeObject(value.memoryStoreDeleted)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaWebhookEventData")
             }

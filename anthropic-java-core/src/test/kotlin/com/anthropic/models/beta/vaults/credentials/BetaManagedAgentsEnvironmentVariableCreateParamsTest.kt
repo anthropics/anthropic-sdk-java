@@ -24,6 +24,12 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
                 .secretName("x")
                 .secretValue("x")
                 .type(BetaManagedAgentsEnvironmentVariableCreateParams.Type.ENVIRONMENT_VARIABLE)
+                .injectionLocation(
+                    BetaManagedAgentsInjectionLocationParams.builder()
+                        .body(true)
+                        .header(true)
+                        .build()
+                )
                 .build()
 
         assertThat(betaManagedAgentsEnvironmentVariableCreateParams.networking())
@@ -41,6 +47,10 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
         assertThat(betaManagedAgentsEnvironmentVariableCreateParams.secretValue()).isEqualTo("x")
         assertThat(betaManagedAgentsEnvironmentVariableCreateParams.type())
             .isEqualTo(BetaManagedAgentsEnvironmentVariableCreateParams.Type.ENVIRONMENT_VARIABLE)
+        assertThat(betaManagedAgentsEnvironmentVariableCreateParams.injectionLocation())
+            .contains(
+                BetaManagedAgentsInjectionLocationParams.builder().body(true).header(true).build()
+            )
     }
 
     @Test
@@ -59,6 +69,12 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
                 .secretName("x")
                 .secretValue("x")
                 .type(BetaManagedAgentsEnvironmentVariableCreateParams.Type.ENVIRONMENT_VARIABLE)
+                .injectionLocation(
+                    BetaManagedAgentsInjectionLocationParams.builder()
+                        .body(true)
+                        .header(true)
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaManagedAgentsEnvironmentVariableCreateParams =

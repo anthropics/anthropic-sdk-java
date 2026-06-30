@@ -277,6 +277,7 @@ internal class SessionListPageResponseTest {
                         .build()
                 )
                 .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
+                .prevPage("page_MjAyNS0wNS0xM1QwMDowMDowMFo=")
                 .build()
 
         assertThat(sessionListPageResponse.data().getOrNull())
@@ -517,6 +518,7 @@ internal class SessionListPageResponseTest {
                     .build()
             )
         assertThat(sessionListPageResponse.nextPage()).contains("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
+        assertThat(sessionListPageResponse.prevPage()).contains("page_MjAyNS0wNS0xM1QwMDowMDowMFo=")
     }
 
     @Test
@@ -1269,6 +1271,7 @@ internal class SessionListPageResponseTest {
                         .build()
                 )
                 .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
+                .prevPage("page_MjAyNS0wNS0xM1QwMDowMDowMFo=")
                 .build()
 
         val roundtrippedSessionListPageResponse =

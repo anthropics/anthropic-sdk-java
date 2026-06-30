@@ -321,6 +321,134 @@ private constructor(
         fun data(sessionUpdated: BetaWebhookSessionUpdatedEventData) =
             data(BetaWebhookEventData.ofSessionUpdated(sessionUpdated))
 
+        /** Alias for calling [data] with `BetaWebhookEventData.ofAgentCreated(agentCreated)`. */
+        fun data(agentCreated: BetaWebhookAgentCreatedEventData) =
+            data(BetaWebhookEventData.ofAgentCreated(agentCreated))
+
+        /** Alias for calling [data] with `BetaWebhookEventData.ofAgentArchived(agentArchived)`. */
+        fun data(agentArchived: BetaWebhookAgentArchivedEventData) =
+            data(BetaWebhookEventData.ofAgentArchived(agentArchived))
+
+        /** Alias for calling [data] with `BetaWebhookEventData.ofAgentDeleted(agentDeleted)`. */
+        fun data(agentDeleted: BetaWebhookAgentDeletedEventData) =
+            data(BetaWebhookEventData.ofAgentDeleted(agentDeleted))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofDeploymentPaused(deploymentPaused)`.
+         */
+        fun data(deploymentPaused: BetaWebhookDeploymentPausedEventData) =
+            data(BetaWebhookEventData.ofDeploymentPaused(deploymentPaused))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofDeploymentRunFailed(deploymentRunFailed)`.
+         */
+        fun data(deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData) =
+            data(BetaWebhookEventData.ofDeploymentRunFailed(deploymentRunFailed))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofDeploymentCreated(deploymentCreated)`.
+         */
+        fun data(deploymentCreated: BetaWebhookDeploymentCreatedEventData) =
+            data(BetaWebhookEventData.ofDeploymentCreated(deploymentCreated))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofDeploymentUpdated(deploymentUpdated)`.
+         */
+        fun data(deploymentUpdated: BetaWebhookDeploymentUpdatedEventData) =
+            data(BetaWebhookEventData.ofDeploymentUpdated(deploymentUpdated))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofDeploymentUnpaused(deploymentUnpaused)`.
+         */
+        fun data(deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData) =
+            data(BetaWebhookEventData.ofDeploymentUnpaused(deploymentUnpaused))
+
+        /** Alias for calling [data] with `BetaWebhookEventData.ofAgentUpdated(agentUpdated)`. */
+        fun data(agentUpdated: BetaWebhookAgentUpdatedEventData) =
+            data(BetaWebhookEventData.ofAgentUpdated(agentUpdated))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofDeploymentArchived(deploymentArchived)`.
+         */
+        fun data(deploymentArchived: BetaWebhookDeploymentArchivedEventData) =
+            data(BetaWebhookEventData.ofDeploymentArchived(deploymentArchived))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofDeploymentRunStarted(deploymentRunStarted)`.
+         */
+        fun data(deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData) =
+            data(BetaWebhookEventData.ofDeploymentRunStarted(deploymentRunStarted))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofDeploymentDeleted(deploymentDeleted)`.
+         */
+        fun data(deploymentDeleted: BetaWebhookDeploymentDeletedEventData) =
+            data(BetaWebhookEventData.ofDeploymentDeleted(deploymentDeleted))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofDeploymentRunSucceeded(deploymentRunSucceeded)`.
+         */
+        fun data(deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData) =
+            data(BetaWebhookEventData.ofDeploymentRunSucceeded(deploymentRunSucceeded))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofEnvironmentCreated(environmentCreated)`.
+         */
+        fun data(environmentCreated: BetaWebhookEnvironmentCreatedEventData) =
+            data(BetaWebhookEventData.ofEnvironmentCreated(environmentCreated))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofEnvironmentUpdated(environmentUpdated)`.
+         */
+        fun data(environmentUpdated: BetaWebhookEnvironmentUpdatedEventData) =
+            data(BetaWebhookEventData.ofEnvironmentUpdated(environmentUpdated))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofEnvironmentArchived(environmentArchived)`.
+         */
+        fun data(environmentArchived: BetaWebhookEnvironmentArchivedEventData) =
+            data(BetaWebhookEventData.ofEnvironmentArchived(environmentArchived))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofEnvironmentDeleted(environmentDeleted)`.
+         */
+        fun data(environmentDeleted: BetaWebhookEnvironmentDeletedEventData) =
+            data(BetaWebhookEventData.ofEnvironmentDeleted(environmentDeleted))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofMemoryStoreCreated(memoryStoreCreated)`.
+         */
+        fun data(memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData) =
+            data(BetaWebhookEventData.ofMemoryStoreCreated(memoryStoreCreated))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofMemoryStoreArchived(memoryStoreArchived)`.
+         */
+        fun data(memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData) =
+            data(BetaWebhookEventData.ofMemoryStoreArchived(memoryStoreArchived))
+
+        /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofMemoryStoreDeleted(memoryStoreDeleted)`.
+         */
+        fun data(memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData) =
+            data(BetaWebhookEventData.ofMemoryStoreDeleted(memoryStoreDeleted))
+
         /**
          * Sets the field to an arbitrary JSON value.
          *

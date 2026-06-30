@@ -7,6 +7,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaType
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -15,12 +16,25 @@ import kotlin.jvm.optionals.getOrNull
 class EventStreamParams
 private constructor(
     private val sessionId: String?,
+    private val eventDeltas: List<BetaManagedAgentsDeltaType>?,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun sessionId(): Optional<String> = Optional.ofNullable(sessionId)
+
+    /**
+     * When set, this connection also receives streaming deltas (`event_start`, `event_delta`) while
+     * an event is being produced, before the event itself arrives. Deltas are best-effort; when the
+     * final event is produced it carries the complete content. A model request that ends early (an
+     * error or interrupt) produces no final event — its terminal `span.model_request_end` closes
+     * the preview. Accepts one or more event types to preview and may be repeated: `agent.message`
+     * streams `content_delta` fragments; `agent.thinking` is start-only — a signal that the agent
+     * has begun extended thinking, concluded by the `agent.thinking` event itself. Only previews of
+     * the requested event types are sent.
+     */
+    fun eventDeltas(): Optional<List<BetaManagedAgentsDeltaType>> = Optional.ofNullable(eventDeltas)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
@@ -45,6 +59,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var sessionId: String? = null
+        private var eventDeltas: MutableList<BetaManagedAgentsDeltaType>? = null
         private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -52,6 +67,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(eventStreamParams: EventStreamParams) = apply {
             sessionId = eventStreamParams.sessionId
+            eventDeltas = eventStreamParams.eventDeltas?.toMutableList()
             betas = eventStreamParams.betas?.toMutableList()
             additionalHeaders = eventStreamParams.additionalHeaders.toBuilder()
             additionalQueryParams = eventStreamParams.additionalQueryParams.toBuilder()
@@ -61,6 +77,33 @@ private constructor(
 
         /** Alias for calling [Builder.sessionId] with `sessionId.orElse(null)`. */
         fun sessionId(sessionId: Optional<String>) = sessionId(sessionId.getOrNull())
+
+        /**
+         * When set, this connection also receives streaming deltas (`event_start`, `event_delta`)
+         * while an event is being produced, before the event itself arrives. Deltas are
+         * best-effort; when the final event is produced it carries the complete content. A model
+         * request that ends early (an error or interrupt) produces no final event — its terminal
+         * `span.model_request_end` closes the preview. Accepts one or more event types to preview
+         * and may be repeated: `agent.message` streams `content_delta` fragments; `agent.thinking`
+         * is start-only — a signal that the agent has begun extended thinking, concluded by the
+         * `agent.thinking` event itself. Only previews of the requested event types are sent.
+         */
+        fun eventDeltas(eventDeltas: List<BetaManagedAgentsDeltaType>?) = apply {
+            this.eventDeltas = eventDeltas?.toMutableList()
+        }
+
+        /** Alias for calling [Builder.eventDeltas] with `eventDeltas.orElse(null)`. */
+        fun eventDeltas(eventDeltas: Optional<List<BetaManagedAgentsDeltaType>>) =
+            eventDeltas(eventDeltas.getOrNull())
+
+        /**
+         * Adds a single [BetaManagedAgentsDeltaType] to [eventDeltas].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addEventDelta(eventDelta: BetaManagedAgentsDeltaType) = apply {
+            eventDeltas = (eventDeltas ?: mutableListOf()).apply { add(eventDelta) }
+        }
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
@@ -192,6 +235,7 @@ private constructor(
         fun build(): EventStreamParams =
             EventStreamParams(
                 sessionId,
+                eventDeltas?.toImmutable(),
                 betas?.toImmutable(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -212,7 +256,13 @@ private constructor(
             }
             .build()
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                eventDeltas?.forEach { put("event_deltas[]", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -221,14 +271,15 @@ private constructor(
 
         return other is EventStreamParams &&
             sessionId == other.sessionId &&
+            eventDeltas == other.eventDeltas &&
             betas == other.betas &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(sessionId, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(sessionId, eventDeltas, betas, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "EventStreamParams{sessionId=$sessionId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "EventStreamParams{sessionId=$sessionId, eventDeltas=$eventDeltas, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
