@@ -35,7 +35,6 @@ private constructor(
     private val environmentId: JsonField<String>,
     private val latestHeartbeatAt: JsonField<String>,
     private val metadata: JsonField<Metadata>,
-    private val secret: JsonField<String>,
     private val startedAt: JsonField<String>,
     private val state: JsonField<State>,
     private val stopRequestedAt: JsonField<String>,
@@ -61,7 +60,6 @@ private constructor(
         @ExcludeMissing
         latestHeartbeatAt: JsonField<String> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
-        @JsonProperty("secret") @ExcludeMissing secret: JsonField<String> = JsonMissing.of(),
         @JsonProperty("started_at") @ExcludeMissing startedAt: JsonField<String> = JsonMissing.of(),
         @JsonProperty("state") @ExcludeMissing state: JsonField<State> = JsonMissing.of(),
         @JsonProperty("stop_requested_at")
@@ -77,7 +75,6 @@ private constructor(
         environmentId,
         latestHeartbeatAt,
         metadata,
-        secret,
         startedAt,
         state,
         stopRequestedAt,
@@ -141,15 +138,6 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun metadata(): Metadata = metadata.getRequired("metadata")
-
-    /**
-     * Credential payload used by the environment worker to execute this work item. May be populated
-     * when polling for work; null on all other retrieval paths.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun secret(): Optional<String> = secret.getOptional("secret")
 
     /**
      * RFC 3339 timestamp when work execution started
@@ -253,13 +241,6 @@ private constructor(
     @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
 
     /**
-     * Returns the raw JSON value of [secret].
-     *
-     * Unlike [secret], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("secret") @ExcludeMissing fun _secret(): JsonField<String> = secret
-
-    /**
      * Returns the raw JSON value of [startedAt].
      *
      * Unlike [startedAt], this method doesn't throw if the JSON field has an unexpected type.
@@ -315,7 +296,6 @@ private constructor(
          * .environmentId()
          * .latestHeartbeatAt()
          * .metadata()
-         * .secret()
          * .startedAt()
          * .state()
          * .stopRequestedAt()
@@ -335,7 +315,6 @@ private constructor(
         private var environmentId: JsonField<String>? = null
         private var latestHeartbeatAt: JsonField<String>? = null
         private var metadata: JsonField<Metadata>? = null
-        private var secret: JsonField<String>? = null
         private var startedAt: JsonField<String>? = null
         private var state: JsonField<State>? = null
         private var stopRequestedAt: JsonField<String>? = null
@@ -352,7 +331,6 @@ private constructor(
             environmentId = betaSelfHostedWork.environmentId
             latestHeartbeatAt = betaSelfHostedWork.latestHeartbeatAt
             metadata = betaSelfHostedWork.metadata
-            secret = betaSelfHostedWork.secret
             startedAt = betaSelfHostedWork.startedAt
             state = betaSelfHostedWork.state
             stopRequestedAt = betaSelfHostedWork.stopRequestedAt
@@ -463,23 +441,6 @@ private constructor(
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
-        /**
-         * Credential payload used by the environment worker to execute this work item. May be
-         * populated when polling for work; null on all other retrieval paths.
-         */
-        fun secret(secret: String?) = secret(JsonField.ofNullable(secret))
-
-        /** Alias for calling [Builder.secret] with `secret.orElse(null)`. */
-        fun secret(secret: Optional<String>) = secret(secret.getOrNull())
-
-        /**
-         * Sets [Builder.secret] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.secret] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun secret(secret: JsonField<String>) = apply { this.secret = secret }
-
         /** RFC 3339 timestamp when work execution started */
         fun startedAt(startedAt: String?) = startedAt(JsonField.ofNullable(startedAt))
 
@@ -587,7 +548,6 @@ private constructor(
          * .environmentId()
          * .latestHeartbeatAt()
          * .metadata()
-         * .secret()
          * .startedAt()
          * .state()
          * .stopRequestedAt()
@@ -605,7 +565,6 @@ private constructor(
                 checkRequired("environmentId", environmentId),
                 checkRequired("latestHeartbeatAt", latestHeartbeatAt),
                 checkRequired("metadata", metadata),
-                checkRequired("secret", secret),
                 checkRequired("startedAt", startedAt),
                 checkRequired("state", state),
                 checkRequired("stopRequestedAt", stopRequestedAt),
@@ -637,7 +596,6 @@ private constructor(
         environmentId()
         latestHeartbeatAt()
         metadata().validate()
-        secret()
         startedAt()
         state().validate()
         stopRequestedAt()
@@ -672,7 +630,6 @@ private constructor(
             (if (environmentId.asKnown().isPresent) 1 else 0) +
             (if (latestHeartbeatAt.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (secret.asKnown().isPresent) 1 else 0) +
             (if (startedAt.asKnown().isPresent) 1 else 0) +
             (state.asKnown().getOrNull()?.validity() ?: 0) +
             (if (stopRequestedAt.asKnown().isPresent) 1 else 0) +
@@ -956,7 +913,6 @@ private constructor(
             environmentId == other.environmentId &&
             latestHeartbeatAt == other.latestHeartbeatAt &&
             metadata == other.metadata &&
-            secret == other.secret &&
             startedAt == other.startedAt &&
             state == other.state &&
             stopRequestedAt == other.stopRequestedAt &&
@@ -974,7 +930,6 @@ private constructor(
             environmentId,
             latestHeartbeatAt,
             metadata,
-            secret,
             startedAt,
             state,
             stopRequestedAt,
@@ -987,5 +942,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaSelfHostedWork{id=$id, acknowledgedAt=$acknowledgedAt, createdAt=$createdAt, data=$data, environmentId=$environmentId, latestHeartbeatAt=$latestHeartbeatAt, metadata=$metadata, secret=$secret, startedAt=$startedAt, state=$state, stopRequestedAt=$stopRequestedAt, stoppedAt=$stoppedAt, type=$type, additionalProperties=$additionalProperties}"
+        "BetaSelfHostedWork{id=$id, acknowledgedAt=$acknowledgedAt, createdAt=$createdAt, data=$data, environmentId=$environmentId, latestHeartbeatAt=$latestHeartbeatAt, metadata=$metadata, startedAt=$startedAt, state=$state, stopRequestedAt=$stopRequestedAt, stoppedAt=$stoppedAt, type=$type, additionalProperties=$additionalProperties}"
 }

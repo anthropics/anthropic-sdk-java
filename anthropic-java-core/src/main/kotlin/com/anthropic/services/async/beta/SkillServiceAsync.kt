@@ -34,22 +34,14 @@ interface SkillServiceAsync {
     fun versions(): VersionServiceAsync
 
     /** Create Skill */
-    fun create(): CompletableFuture<SkillCreateResponse> = create(SkillCreateParams.none())
+    fun create(params: SkillCreateParams): CompletableFuture<SkillCreateResponse> =
+        create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
-        params: SkillCreateParams = SkillCreateParams.none(),
+        params: SkillCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SkillCreateResponse>
-
-    /** @see create */
-    fun create(
-        params: SkillCreateParams = SkillCreateParams.none()
-    ): CompletableFuture<SkillCreateResponse> = create(params, RequestOptions.none())
-
-    /** @see create */
-    fun create(requestOptions: RequestOptions): CompletableFuture<SkillCreateResponse> =
-        create(SkillCreateParams.none(), requestOptions)
 
     /** Get Skill */
     fun retrieve(skillId: String): CompletableFuture<SkillRetrieveResponse> =
@@ -157,26 +149,16 @@ interface SkillServiceAsync {
          * Returns a raw HTTP response for `post /v1/skills?beta=true`, but is otherwise the same as
          * [SkillServiceAsync.create].
          */
-        fun create(): CompletableFuture<HttpResponseFor<SkillCreateResponse>> =
-            create(SkillCreateParams.none())
-
-        /** @see create */
         fun create(
-            params: SkillCreateParams = SkillCreateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SkillCreateResponse>>
-
-        /** @see create */
-        fun create(
-            params: SkillCreateParams = SkillCreateParams.none()
+            params: SkillCreateParams
         ): CompletableFuture<HttpResponseFor<SkillCreateResponse>> =
             create(params, RequestOptions.none())
 
         /** @see create */
         fun create(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<SkillCreateResponse>> =
-            create(SkillCreateParams.none(), requestOptions)
+            params: SkillCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SkillCreateResponse>>
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}?beta=true`, but is otherwise

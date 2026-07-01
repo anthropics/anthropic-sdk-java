@@ -15,8 +15,8 @@ internal class SkillCreateParamsTest {
     fun create() {
         SkillCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-            .displayTitle("display_title")
             .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
+            .displayTitle("display_title")
             .build()
     }
 
@@ -25,8 +25,8 @@ internal class SkillCreateParamsTest {
         val params =
             SkillCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .displayTitle("display_title")
                 .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
+                .displayTitle("display_title")
                 .build()
 
         val headers = params._headers()
@@ -39,7 +39,10 @@ internal class SkillCreateParamsTest {
 
     @Test
     fun headersWithoutOptionalFields() {
-        val params = SkillCreateParams.builder().build()
+        val params =
+            SkillCreateParams.builder()
+                .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
+                .build()
 
         val headers = params._headers()
 
@@ -51,7 +54,33 @@ internal class SkillCreateParamsTest {
         val params =
             SkillCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
                 .displayTitle("display_title")
+                .build()
+
+        val body = params._body()
+
+        assertThat(body.filterValues { !it.value.isNull() })
+            .usingRecursiveComparison()
+            .withEqualsForType(
+                { a, b -> a.readBytes() contentEquals b.readBytes() },
+                InputStream::class.java,
+            )
+            .isEqualTo(
+                mapOf(
+                    "display_title" to MultipartField.of("display_title"),
+                    "files" to
+                        MultipartField.of(
+                            listOf(MultipartField.of<InputStream>("Example data".byteInputStream()))
+                        ),
+                )
+            )
+    }
+
+    @Test
+    fun bodyWithoutOptionalFields() {
+        val params =
+            SkillCreateParams.builder()
                 .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
                 .build()
 
@@ -59,34 +88,17 @@ internal class SkillCreateParamsTest {
 
         assertThat(body.filterValues { !it.value.isNull() })
             .usingRecursiveComparison()
-            // TODO(AssertJ): Replace this and the `mapValues` below with:
-            // https://github.com/assertj/assertj/issues/3165
             .withEqualsForType(
                 { a, b -> a.readBytes() contentEquals b.readBytes() },
                 InputStream::class.java,
             )
             .isEqualTo(
                 mapOf(
-                        "display_title" to MultipartField.of("display_title"),
-                        "files" to
-                            MultipartField.of(
-                                listOf(
-                                    MultipartField.of<InputStream>("Example data".byteInputStream())
-                                )
-                            ),
-                    )
-                    .mapValues { (_, field) ->
-                        field.map { (it as? ByteArray)?.inputStream() ?: it }
-                    }
+                    "files" to
+                        MultipartField.of(
+                            listOf(MultipartField.of<InputStream>("Example data".byteInputStream()))
+                        )
+                )
             )
-    }
-
-    @Test
-    fun bodyWithoutOptionalFields() {
-        val params = SkillCreateParams.builder().build()
-
-        val body = params._body()
-
-        assertThat(body.filterValues { !it.value.isNull() }).isEmpty()
     }
 }

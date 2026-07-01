@@ -6,6 +6,7 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.MultipartField
 import com.anthropic.core.Params
+import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -45,7 +46,7 @@ private constructor(
      * All files must be in the same top-level directory and must include a SKILL.md file at the
      * root of that directory.
      */
-    fun files(): Optional<List<MultipartField<InputStream>>> = body.files()
+    fun files(): List<MultipartField<InputStream>> = body.files()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -59,9 +60,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): VersionCreateParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [VersionCreateParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [VersionCreateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .files()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -132,10 +138,7 @@ private constructor(
          * All files must be in the same top-level directory and must include a SKILL.md file at the
          * root of that directory.
          */
-        fun files(files: List<MultipartField<InputStream>>?) = apply { body.files(files) }
-
-        /** Alias for calling [Builder.files] with `files.orElse(null)`. */
-        fun files(files: Optional<List<MultipartField<InputStream>>>) = files(files.getOrNull())
+        fun files(files: List<MultipartField<InputStream>>) = apply { body.files(files) }
 
         /** Adds a single [MultipartField] to [files]. */
         fun addFile(file: MultipartField<InputStream>) = apply { body.addFile(file) }
@@ -261,6 +264,13 @@ private constructor(
          * Returns an immutable instance of [VersionCreateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .files()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): VersionCreateParams =
             VersionCreateParams(
@@ -273,7 +283,7 @@ private constructor(
     }
 
     fun _body(): Map<String, MultipartField<*>> =
-        (mapOf("files" to MultipartField.of(files().getOrNull())) +
+        (mapOf("files" to MultipartField.of(files())) +
                 _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
             .toImmutable()
 
@@ -295,7 +305,7 @@ private constructor(
 
     class Body
     private constructor(
-        private val files: List<MultipartField<InputStream>>?,
+        private val files: List<MultipartField<InputStream>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -305,7 +315,7 @@ private constructor(
          * All files must be in the same top-level directory and must include a SKILL.md file at the
          * root of that directory.
          */
-        fun files(): Optional<List<MultipartField<InputStream>>> = Optional.ofNullable(files)
+        fun files(): List<MultipartField<InputStream>> = files
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -321,7 +331,14 @@ private constructor(
 
         companion object {
 
-            /** Returns a mutable builder for constructing an instance of [Body]. */
+            /**
+             * Returns a mutable builder for constructing an instance of [Body].
+             *
+             * The following fields are required:
+             * ```java
+             * .files()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -333,7 +350,7 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
-                files = body.files?.toMutableList()
+                files = body.files.toMutableList()
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -343,12 +360,9 @@ private constructor(
              * All files must be in the same top-level directory and must include a SKILL.md file at
              * the root of that directory.
              */
-            fun files(files: List<MultipartField<InputStream>>?) = apply {
-                this.files = files?.toMutableList()
+            fun files(files: List<MultipartField<InputStream>>) = apply {
+                this.files = files.toMutableList()
             }
-
-            /** Alias for calling [Builder.files] with `files.orElse(null)`. */
-            fun files(files: Optional<List<MultipartField<InputStream>>>) = files(files.getOrNull())
 
             /** Adds a single [MultipartField] to [files]. */
             fun addFile(file: MultipartField<InputStream>) = apply {
@@ -378,8 +392,19 @@ private constructor(
              * Returns an immutable instance of [Body].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .files()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): Body = Body(files?.toImmutable(), additionalProperties.toMutableMap())
+            fun build(): Body =
+                Body(
+                    checkRequired("files", files).toImmutable(),
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false

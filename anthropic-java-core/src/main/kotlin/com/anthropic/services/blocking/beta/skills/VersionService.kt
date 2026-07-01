@@ -33,34 +33,25 @@ interface VersionService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService
 
     /** Create Skill Version */
-    fun create(skillId: String): VersionCreateResponse = create(skillId, VersionCreateParams.none())
+    fun create(skillId: String, params: VersionCreateParams): VersionCreateResponse =
+        create(skillId, params, RequestOptions.none())
 
     /** @see create */
     fun create(
         skillId: String,
-        params: VersionCreateParams = VersionCreateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionCreateResponse = create(params.toBuilder().skillId(skillId).build(), requestOptions)
-
-    /** @see create */
-    fun create(
-        skillId: String,
-        params: VersionCreateParams = VersionCreateParams.none(),
-    ): VersionCreateResponse = create(skillId, params, RequestOptions.none())
-
-    /** @see create */
-    fun create(
         params: VersionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionCreateResponse
+    ): VersionCreateResponse = create(params.toBuilder().skillId(skillId).build(), requestOptions)
 
     /** @see create */
     fun create(params: VersionCreateParams): VersionCreateResponse =
         create(params, RequestOptions.none())
 
     /** @see create */
-    fun create(skillId: String, requestOptions: RequestOptions): VersionCreateResponse =
-        create(skillId, VersionCreateParams.none(), requestOptions)
+    fun create(
+        params: VersionCreateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): VersionCreateResponse
 
     /** Get Skill Version */
     fun retrieve(version: String, params: VersionRetrieveParams): VersionRetrieveResponse =
@@ -174,31 +165,19 @@ interface VersionService {
          * otherwise the same as [VersionService.create].
          */
         @MustBeClosed
-        fun create(skillId: String): HttpResponseFor<VersionCreateResponse> =
-            create(skillId, VersionCreateParams.none())
-
-        /** @see create */
-        @MustBeClosed
         fun create(
             skillId: String,
-            params: VersionCreateParams = VersionCreateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionCreateResponse> =
-            create(params.toBuilder().skillId(skillId).build(), requestOptions)
-
-        /** @see create */
-        @MustBeClosed
-        fun create(
-            skillId: String,
-            params: VersionCreateParams = VersionCreateParams.none(),
+            params: VersionCreateParams,
         ): HttpResponseFor<VersionCreateResponse> = create(skillId, params, RequestOptions.none())
 
         /** @see create */
         @MustBeClosed
         fun create(
+            skillId: String,
             params: VersionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionCreateResponse>
+        ): HttpResponseFor<VersionCreateResponse> =
+            create(params.toBuilder().skillId(skillId).build(), requestOptions)
 
         /** @see create */
         @MustBeClosed
@@ -208,10 +187,9 @@ interface VersionService {
         /** @see create */
         @MustBeClosed
         fun create(
-            skillId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<VersionCreateResponse> =
-            create(skillId, VersionCreateParams.none(), requestOptions)
+            params: VersionCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<VersionCreateResponse>
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}?beta=true`,
