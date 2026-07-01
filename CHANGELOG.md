@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.47.1 (2026-07-01)
+
+Full Changelog: [v2.47.0...v2.47.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.47.0...v2.47.1)
+
+### Chores
+
+* **api:** remove some nonfunctional types from the SDKs ([2f92a48](https://github.com/anthropics/anthropic-sdk-java/commit/2f92a48d5e6b7dde8efebc493c96def5ddcbe523))
+
 ## 2.47.0 (2026-06-30)
 
 Full Changelog: [v2.46.0...v2.47.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.46.0...v2.47.0)
