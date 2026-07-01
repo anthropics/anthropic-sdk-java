@@ -34,21 +34,14 @@ interface SkillService {
     fun versions(): VersionService
 
     /** Create Skill */
-    fun create(): SkillCreateResponse = create(SkillCreateParams.none())
-
-    /** @see create */
-    fun create(
-        params: SkillCreateParams = SkillCreateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SkillCreateResponse
-
-    /** @see create */
-    fun create(params: SkillCreateParams = SkillCreateParams.none()): SkillCreateResponse =
+    fun create(params: SkillCreateParams): SkillCreateResponse =
         create(params, RequestOptions.none())
 
     /** @see create */
-    fun create(requestOptions: RequestOptions): SkillCreateResponse =
-        create(SkillCreateParams.none(), requestOptions)
+    fun create(
+        params: SkillCreateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): SkillCreateResponse
 
     /** Get Skill */
     fun retrieve(skillId: String): SkillRetrieveResponse =
@@ -145,25 +138,15 @@ interface SkillService {
          * [SkillService.create].
          */
         @MustBeClosed
-        fun create(): HttpResponseFor<SkillCreateResponse> = create(SkillCreateParams.none())
+        fun create(params: SkillCreateParams): HttpResponseFor<SkillCreateResponse> =
+            create(params, RequestOptions.none())
 
         /** @see create */
         @MustBeClosed
         fun create(
-            params: SkillCreateParams = SkillCreateParams.none(),
+            params: SkillCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SkillCreateResponse>
-
-        /** @see create */
-        @MustBeClosed
-        fun create(
-            params: SkillCreateParams = SkillCreateParams.none()
-        ): HttpResponseFor<SkillCreateResponse> = create(params, RequestOptions.none())
-
-        /** @see create */
-        @MustBeClosed
-        fun create(requestOptions: RequestOptions): HttpResponseFor<SkillCreateResponse> =
-            create(SkillCreateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}?beta=true`, but is otherwise

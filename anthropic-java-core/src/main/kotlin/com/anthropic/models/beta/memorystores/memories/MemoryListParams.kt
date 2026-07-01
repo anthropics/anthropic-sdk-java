@@ -33,10 +33,18 @@ private constructor(
 
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
-    /** Query parameter for depth */
+    /**
+     * `0` (or omitted) returns all descendants below `path_prefix` (recursive). `1` returns
+     * immediate children only; deeper entries roll up as `memory_prefix` items. `depth=1` behaves
+     * like `ls`; omitting `depth` behaves like `find`.
+     */
     fun depth(): Optional<Int> = Optional.ofNullable(depth)
 
-    /** Query parameter for limit */
+    /**
+     * Maximum number of items to return per page. Must be between 1 and 100. Defaults to 20 when
+     * omitted. Capped at 20 when `view=full`. Both `memory` and `memory_prefix` items count toward
+     * the limit.
+     */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
     /** Query parameter for order */
@@ -45,17 +53,23 @@ private constructor(
     /** Query parameter for order_by */
     fun orderBy(): Optional<String> = Optional.ofNullable(orderBy)
 
-    /** Query parameter for page */
+    /**
+     * Opaque pagination cursor (a `page_...` value). Pass the `next_page` value from a previous
+     * response to fetch the next page; omit for the first page.
+     */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /**
-     * Optional path prefix filter (raw string-prefix match; include a trailing slash for
-     * directory-scoped lists). This value appears in request URLs. Do not include secrets or
-     * personally identifiable information.
+     * Optional path prefix filter. Must end with `/` (segment-aligned), e.g., `/notes/`. This value
+     * appears in request URLs. Do not include secrets or personally identifiable information.
      */
     fun pathPrefix(): Optional<String> = Optional.ofNullable(pathPrefix)
 
-    /** Query parameter for view */
+    /**
+     * Which projection of each `memory` to return. Defaults to `basic` (content omitted). `full`
+     * populates `content` on each item and caps `limit` at 20; use this as the bulk-read path for
+     * export and sync.
+     */
     fun view(): Optional<BetaManagedAgentsMemoryView> = Optional.ofNullable(view)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -113,7 +127,11 @@ private constructor(
         fun memoryStoreId(memoryStoreId: Optional<String>) =
             memoryStoreId(memoryStoreId.getOrNull())
 
-        /** Query parameter for depth */
+        /**
+         * `0` (or omitted) returns all descendants below `path_prefix` (recursive). `1` returns
+         * immediate children only; deeper entries roll up as `memory_prefix` items. `depth=1`
+         * behaves like `ls`; omitting `depth` behaves like `find`.
+         */
         fun depth(depth: Int?) = apply { this.depth = depth }
 
         /**
@@ -126,7 +144,11 @@ private constructor(
         /** Alias for calling [Builder.depth] with `depth.orElse(null)`. */
         fun depth(depth: Optional<Int>) = depth(depth.getOrNull())
 
-        /** Query parameter for limit */
+        /**
+         * Maximum number of items to return per page. Must be between 1 and 100. Defaults to 20
+         * when omitted. Capped at 20 when `view=full`. Both `memory` and `memory_prefix` items
+         * count toward the limit.
+         */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -151,23 +173,30 @@ private constructor(
         /** Alias for calling [Builder.orderBy] with `orderBy.orElse(null)`. */
         fun orderBy(orderBy: Optional<String>) = orderBy(orderBy.getOrNull())
 
-        /** Query parameter for page */
+        /**
+         * Opaque pagination cursor (a `page_...` value). Pass the `next_page` value from a previous
+         * response to fetch the next page; omit for the first page.
+         */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
 
         /**
-         * Optional path prefix filter (raw string-prefix match; include a trailing slash for
-         * directory-scoped lists). This value appears in request URLs. Do not include secrets or
-         * personally identifiable information.
+         * Optional path prefix filter. Must end with `/` (segment-aligned), e.g., `/notes/`. This
+         * value appears in request URLs. Do not include secrets or personally identifiable
+         * information.
          */
         fun pathPrefix(pathPrefix: String?) = apply { this.pathPrefix = pathPrefix }
 
         /** Alias for calling [Builder.pathPrefix] with `pathPrefix.orElse(null)`. */
         fun pathPrefix(pathPrefix: Optional<String>) = pathPrefix(pathPrefix.getOrNull())
 
-        /** Query parameter for view */
+        /**
+         * Which projection of each `memory` to return. Defaults to `basic` (content omitted).
+         * `full` populates `content` on each item and caps `limit` at 20; use this as the bulk-read
+         * path for export and sync.
+         */
         fun view(view: BetaManagedAgentsMemoryView?) = apply { this.view = view }
 
         /** Alias for calling [Builder.view] with `view.orElse(null)`. */

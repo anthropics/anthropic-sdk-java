@@ -6,6 +6,7 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.MultipartField
 import com.anthropic.core.Params
+import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -33,6 +34,14 @@ private constructor(
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
+     * Files to upload for the skill.
+     *
+     * All files must be in the same top-level directory and must include a SKILL.md file at the
+     * root of that directory.
+     */
+    fun files(): List<MultipartField<InputStream>> = body.files()
+
+    /**
      * Display title for the skill.
      *
      * This is a human-readable label that is not included in the prompt sent to the model.
@@ -41,14 +50,6 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun displayTitle(): Optional<String> = body.displayTitle()
-
-    /**
-     * Files to upload for the skill.
-     *
-     * All files must be in the same top-level directory and must include a SKILL.md file at the
-     * root of that directory.
-     */
-    fun files(): Optional<List<MultipartField<InputStream>>> = body.files()
 
     /**
      * Returns the raw multipart value of [displayTitle].
@@ -70,9 +71,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): SkillCreateParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [SkillCreateParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [SkillCreateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .files()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -121,10 +127,21 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [displayTitle]
          * - [files]
+         * - [displayTitle]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
+
+        /**
+         * Files to upload for the skill.
+         *
+         * All files must be in the same top-level directory and must include a SKILL.md file at the
+         * root of that directory.
+         */
+        fun files(files: List<MultipartField<InputStream>>) = apply { body.files(files) }
+
+        /** Adds a single [MultipartField] to [files]. */
+        fun addFile(file: MultipartField<InputStream>) = apply { body.addFile(file) }
 
         /**
          * Display title for the skill.
@@ -146,20 +163,6 @@ private constructor(
         fun displayTitle(displayTitle: MultipartField<String>) = apply {
             body.displayTitle(displayTitle)
         }
-
-        /**
-         * Files to upload for the skill.
-         *
-         * All files must be in the same top-level directory and must include a SKILL.md file at the
-         * root of that directory.
-         */
-        fun files(files: List<MultipartField<InputStream>>?) = apply { body.files(files) }
-
-        /** Alias for calling [Builder.files] with `files.orElse(null)`. */
-        fun files(files: Optional<List<MultipartField<InputStream>>>) = files(files.getOrNull())
-
-        /** Adds a single [MultipartField] to [files]. */
-        fun addFile(file: MultipartField<InputStream>) = apply { body.addFile(file) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -282,6 +285,13 @@ private constructor(
          * Returns an immutable instance of [SkillCreateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .files()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): SkillCreateParams =
             SkillCreateParams(
@@ -293,10 +303,8 @@ private constructor(
     }
 
     fun _body(): Map<String, MultipartField<*>> =
-        (mapOf(
-                "display_title" to _displayTitle(),
-                "files" to MultipartField.of(files().getOrNull()),
-            ) + _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
+        (mapOf("display_title" to _displayTitle(), "files" to MultipartField.of(files())) +
+                _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
             .toImmutable()
 
     override fun _headers(): Headers =
@@ -312,9 +320,17 @@ private constructor(
     class Body
     private constructor(
         private val displayTitle: MultipartField<String>,
-        private val files: List<MultipartField<InputStream>>?,
+        private val files: List<MultipartField<InputStream>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
+
+        /**
+         * Files to upload for the skill.
+         *
+         * All files must be in the same top-level directory and must include a SKILL.md file at the
+         * root of that directory.
+         */
+        fun files(): List<MultipartField<InputStream>> = files
 
         /**
          * Display title for the skill.
@@ -325,14 +341,6 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun displayTitle(): Optional<String> = displayTitle.value.getOptional("display_title")
-
-        /**
-         * Files to upload for the skill.
-         *
-         * All files must be in the same top-level directory and must include a SKILL.md file at the
-         * root of that directory.
-         */
-        fun files(): Optional<List<MultipartField<InputStream>>> = Optional.ofNullable(files)
 
         /**
          * Returns the raw multipart value of [displayTitle].
@@ -358,7 +366,14 @@ private constructor(
 
         companion object {
 
-            /** Returns a mutable builder for constructing an instance of [Body]. */
+            /**
+             * Returns a mutable builder for constructing an instance of [Body].
+             *
+             * The following fields are required:
+             * ```java
+             * .files()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -372,8 +387,23 @@ private constructor(
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 displayTitle = body.displayTitle
-                files = body.files?.toMutableList()
+                files = body.files.toMutableList()
                 additionalProperties = body.additionalProperties.toMutableMap()
+            }
+
+            /**
+             * Files to upload for the skill.
+             *
+             * All files must be in the same top-level directory and must include a SKILL.md file at
+             * the root of that directory.
+             */
+            fun files(files: List<MultipartField<InputStream>>) = apply {
+                this.files = files.toMutableList()
+            }
+
+            /** Adds a single [MultipartField] to [files]. */
+            fun addFile(file: MultipartField<InputStream>) = apply {
+                files = (files ?: mutableListOf()).apply { add(file) }
             }
 
             /**
@@ -396,24 +426,6 @@ private constructor(
              */
             fun displayTitle(displayTitle: MultipartField<String>) = apply {
                 this.displayTitle = displayTitle
-            }
-
-            /**
-             * Files to upload for the skill.
-             *
-             * All files must be in the same top-level directory and must include a SKILL.md file at
-             * the root of that directory.
-             */
-            fun files(files: List<MultipartField<InputStream>>?) = apply {
-                this.files = files?.toMutableList()
-            }
-
-            /** Alias for calling [Builder.files] with `files.orElse(null)`. */
-            fun files(files: Optional<List<MultipartField<InputStream>>>) = files(files.getOrNull())
-
-            /** Adds a single [MultipartField] to [files]. */
-            fun addFile(file: MultipartField<InputStream>) = apply {
-                files = (files ?: mutableListOf()).apply { add(file) }
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -439,9 +451,20 @@ private constructor(
              * Returns an immutable instance of [Body].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .files()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
-                Body(displayTitle, files?.toImmutable(), additionalProperties.toMutableMap())
+                Body(
+                    displayTitle,
+                    checkRequired("files", files).toImmutable(),
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -460,8 +483,8 @@ private constructor(
                 return@apply
             }
 
-            displayTitle()
             files()
+            displayTitle()
             validated = true
         }
 
@@ -479,19 +502,19 @@ private constructor(
             }
 
             return other is Body &&
-                displayTitle == other.displayTitle &&
                 files == other.files &&
+                displayTitle == other.displayTitle &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(displayTitle, files, additionalProperties)
+            Objects.hash(files, displayTitle, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{displayTitle=$displayTitle, files=$files, additionalProperties=$additionalProperties}"
+            "Body{files=$files, displayTitle=$displayTitle, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

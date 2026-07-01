@@ -60,13 +60,6 @@ private constructor(
     private val deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData? = null,
     private val deploymentDeleted: BetaWebhookDeploymentDeletedEventData? = null,
     private val deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData? = null,
-    private val environmentCreated: BetaWebhookEnvironmentCreatedEventData? = null,
-    private val environmentUpdated: BetaWebhookEnvironmentUpdatedEventData? = null,
-    private val environmentArchived: BetaWebhookEnvironmentArchivedEventData? = null,
-    private val environmentDeleted: BetaWebhookEnvironmentDeletedEventData? = null,
-    private val memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData? = null,
-    private val memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData? = null,
-    private val memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -179,27 +172,6 @@ private constructor(
     fun deploymentRunSucceeded(): Optional<BetaWebhookDeploymentRunSucceededEventData> =
         Optional.ofNullable(deploymentRunSucceeded)
 
-    fun environmentCreated(): Optional<BetaWebhookEnvironmentCreatedEventData> =
-        Optional.ofNullable(environmentCreated)
-
-    fun environmentUpdated(): Optional<BetaWebhookEnvironmentUpdatedEventData> =
-        Optional.ofNullable(environmentUpdated)
-
-    fun environmentArchived(): Optional<BetaWebhookEnvironmentArchivedEventData> =
-        Optional.ofNullable(environmentArchived)
-
-    fun environmentDeleted(): Optional<BetaWebhookEnvironmentDeletedEventData> =
-        Optional.ofNullable(environmentDeleted)
-
-    fun memoryStoreCreated(): Optional<BetaWebhookMemoryStoreCreatedEventData> =
-        Optional.ofNullable(memoryStoreCreated)
-
-    fun memoryStoreArchived(): Optional<BetaWebhookMemoryStoreArchivedEventData> =
-        Optional.ofNullable(memoryStoreArchived)
-
-    fun memoryStoreDeleted(): Optional<BetaWebhookMemoryStoreDeletedEventData> =
-        Optional.ofNullable(memoryStoreDeleted)
-
     fun isSessionCreated(): Boolean = sessionCreated != null
 
     fun isSessionPending(): Boolean = sessionPending != null
@@ -271,20 +243,6 @@ private constructor(
     fun isDeploymentDeleted(): Boolean = deploymentDeleted != null
 
     fun isDeploymentRunSucceeded(): Boolean = deploymentRunSucceeded != null
-
-    fun isEnvironmentCreated(): Boolean = environmentCreated != null
-
-    fun isEnvironmentUpdated(): Boolean = environmentUpdated != null
-
-    fun isEnvironmentArchived(): Boolean = environmentArchived != null
-
-    fun isEnvironmentDeleted(): Boolean = environmentDeleted != null
-
-    fun isMemoryStoreCreated(): Boolean = memoryStoreCreated != null
-
-    fun isMemoryStoreArchived(): Boolean = memoryStoreArchived != null
-
-    fun isMemoryStoreDeleted(): Boolean = memoryStoreDeleted != null
 
     fun asSessionCreated(): BetaWebhookSessionCreatedEventData =
         sessionCreated.getOrThrow("sessionCreated")
@@ -388,27 +346,6 @@ private constructor(
     fun asDeploymentRunSucceeded(): BetaWebhookDeploymentRunSucceededEventData =
         deploymentRunSucceeded.getOrThrow("deploymentRunSucceeded")
 
-    fun asEnvironmentCreated(): BetaWebhookEnvironmentCreatedEventData =
-        environmentCreated.getOrThrow("environmentCreated")
-
-    fun asEnvironmentUpdated(): BetaWebhookEnvironmentUpdatedEventData =
-        environmentUpdated.getOrThrow("environmentUpdated")
-
-    fun asEnvironmentArchived(): BetaWebhookEnvironmentArchivedEventData =
-        environmentArchived.getOrThrow("environmentArchived")
-
-    fun asEnvironmentDeleted(): BetaWebhookEnvironmentDeletedEventData =
-        environmentDeleted.getOrThrow("environmentDeleted")
-
-    fun asMemoryStoreCreated(): BetaWebhookMemoryStoreCreatedEventData =
-        memoryStoreCreated.getOrThrow("memoryStoreCreated")
-
-    fun asMemoryStoreArchived(): BetaWebhookMemoryStoreArchivedEventData =
-        memoryStoreArchived.getOrThrow("memoryStoreArchived")
-
-    fun asMemoryStoreDeleted(): BetaWebhookMemoryStoreDeletedEventData =
-        memoryStoreDeleted.getOrThrow("memoryStoreDeleted")
-
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -489,13 +426,6 @@ private constructor(
             deploymentDeleted != null -> visitor.visitDeploymentDeleted(deploymentDeleted)
             deploymentRunSucceeded != null ->
                 visitor.visitDeploymentRunSucceeded(deploymentRunSucceeded)
-            environmentCreated != null -> visitor.visitEnvironmentCreated(environmentCreated)
-            environmentUpdated != null -> visitor.visitEnvironmentUpdated(environmentUpdated)
-            environmentArchived != null -> visitor.visitEnvironmentArchived(environmentArchived)
-            environmentDeleted != null -> visitor.visitEnvironmentDeleted(environmentDeleted)
-            memoryStoreCreated != null -> visitor.visitMemoryStoreCreated(memoryStoreCreated)
-            memoryStoreArchived != null -> visitor.visitMemoryStoreArchived(memoryStoreArchived)
-            memoryStoreDeleted != null -> visitor.visitMemoryStoreDeleted(memoryStoreDeleted)
             else -> visitor.unknown(_json)
         }
 
@@ -715,48 +645,6 @@ private constructor(
                 ) {
                     deploymentRunSucceeded.validate()
                 }
-
-                override fun visitEnvironmentCreated(
-                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
-                ) {
-                    environmentCreated.validate()
-                }
-
-                override fun visitEnvironmentUpdated(
-                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
-                ) {
-                    environmentUpdated.validate()
-                }
-
-                override fun visitEnvironmentArchived(
-                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
-                ) {
-                    environmentArchived.validate()
-                }
-
-                override fun visitEnvironmentDeleted(
-                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
-                ) {
-                    environmentDeleted.validate()
-                }
-
-                override fun visitMemoryStoreCreated(
-                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
-                ) {
-                    memoryStoreCreated.validate()
-                }
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-                ) {
-                    memoryStoreArchived.validate()
-                }
-
-                override fun visitMemoryStoreDeleted(
-                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
-                ) {
-                    memoryStoreDeleted.validate()
-                }
             }
         )
         validated = true
@@ -915,34 +803,6 @@ private constructor(
                     deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
                 ) = deploymentRunSucceeded.validity()
 
-                override fun visitEnvironmentCreated(
-                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
-                ) = environmentCreated.validity()
-
-                override fun visitEnvironmentUpdated(
-                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
-                ) = environmentUpdated.validity()
-
-                override fun visitEnvironmentArchived(
-                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
-                ) = environmentArchived.validity()
-
-                override fun visitEnvironmentDeleted(
-                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
-                ) = environmentDeleted.validity()
-
-                override fun visitMemoryStoreCreated(
-                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
-                ) = memoryStoreCreated.validity()
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-                ) = memoryStoreArchived.validity()
-
-                override fun visitMemoryStoreDeleted(
-                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
-                ) = memoryStoreDeleted.validity()
-
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -988,14 +848,7 @@ private constructor(
             deploymentArchived == other.deploymentArchived &&
             deploymentRunStarted == other.deploymentRunStarted &&
             deploymentDeleted == other.deploymentDeleted &&
-            deploymentRunSucceeded == other.deploymentRunSucceeded &&
-            environmentCreated == other.environmentCreated &&
-            environmentUpdated == other.environmentUpdated &&
-            environmentArchived == other.environmentArchived &&
-            environmentDeleted == other.environmentDeleted &&
-            memoryStoreCreated == other.memoryStoreCreated &&
-            memoryStoreArchived == other.memoryStoreArchived &&
-            memoryStoreDeleted == other.memoryStoreDeleted
+            deploymentRunSucceeded == other.deploymentRunSucceeded
     }
 
     override fun hashCode(): Int =
@@ -1036,13 +889,6 @@ private constructor(
             deploymentRunStarted,
             deploymentDeleted,
             deploymentRunSucceeded,
-            environmentCreated,
-            environmentUpdated,
-            environmentArchived,
-            environmentDeleted,
-            memoryStoreCreated,
-            memoryStoreArchived,
-            memoryStoreDeleted,
         )
 
     override fun toString(): String =
@@ -1104,20 +950,6 @@ private constructor(
                 "BetaWebhookEventData{deploymentDeleted=$deploymentDeleted}"
             deploymentRunSucceeded != null ->
                 "BetaWebhookEventData{deploymentRunSucceeded=$deploymentRunSucceeded}"
-            environmentCreated != null ->
-                "BetaWebhookEventData{environmentCreated=$environmentCreated}"
-            environmentUpdated != null ->
-                "BetaWebhookEventData{environmentUpdated=$environmentUpdated}"
-            environmentArchived != null ->
-                "BetaWebhookEventData{environmentArchived=$environmentArchived}"
-            environmentDeleted != null ->
-                "BetaWebhookEventData{environmentDeleted=$environmentDeleted}"
-            memoryStoreCreated != null ->
-                "BetaWebhookEventData{memoryStoreCreated=$memoryStoreCreated}"
-            memoryStoreArchived != null ->
-                "BetaWebhookEventData{memoryStoreArchived=$memoryStoreArchived}"
-            memoryStoreDeleted != null ->
-                "BetaWebhookEventData{memoryStoreDeleted=$memoryStoreDeleted}"
             _json != null -> "BetaWebhookEventData{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaWebhookEventData")
         }
@@ -1278,34 +1110,6 @@ private constructor(
         fun ofDeploymentRunSucceeded(
             deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
         ) = BetaWebhookEventData(deploymentRunSucceeded = deploymentRunSucceeded)
-
-        @JvmStatic
-        fun ofEnvironmentCreated(environmentCreated: BetaWebhookEnvironmentCreatedEventData) =
-            BetaWebhookEventData(environmentCreated = environmentCreated)
-
-        @JvmStatic
-        fun ofEnvironmentUpdated(environmentUpdated: BetaWebhookEnvironmentUpdatedEventData) =
-            BetaWebhookEventData(environmentUpdated = environmentUpdated)
-
-        @JvmStatic
-        fun ofEnvironmentArchived(environmentArchived: BetaWebhookEnvironmentArchivedEventData) =
-            BetaWebhookEventData(environmentArchived = environmentArchived)
-
-        @JvmStatic
-        fun ofEnvironmentDeleted(environmentDeleted: BetaWebhookEnvironmentDeletedEventData) =
-            BetaWebhookEventData(environmentDeleted = environmentDeleted)
-
-        @JvmStatic
-        fun ofMemoryStoreCreated(memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData) =
-            BetaWebhookEventData(memoryStoreCreated = memoryStoreCreated)
-
-        @JvmStatic
-        fun ofMemoryStoreArchived(memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData) =
-            BetaWebhookEventData(memoryStoreArchived = memoryStoreArchived)
-
-        @JvmStatic
-        fun ofMemoryStoreDeleted(memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData) =
-            BetaWebhookEventData(memoryStoreDeleted = memoryStoreDeleted)
     }
 
     /**
@@ -1413,24 +1217,6 @@ private constructor(
         fun visitDeploymentRunSucceeded(
             deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
         ): T
-
-        fun visitEnvironmentCreated(environmentCreated: BetaWebhookEnvironmentCreatedEventData): T
-
-        fun visitEnvironmentUpdated(environmentUpdated: BetaWebhookEnvironmentUpdatedEventData): T
-
-        fun visitEnvironmentArchived(
-            environmentArchived: BetaWebhookEnvironmentArchivedEventData
-        ): T
-
-        fun visitEnvironmentDeleted(environmentDeleted: BetaWebhookEnvironmentDeletedEventData): T
-
-        fun visitMemoryStoreCreated(memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData): T
-
-        fun visitMemoryStoreArchived(
-            memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-        ): T
-
-        fun visitMemoryStoreDeleted(memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData): T
 
         /**
          * Maps an unknown variant of [BetaWebhookEventData] to a value of type [T].
@@ -1721,62 +1507,6 @@ private constructor(
                         ?.let { BetaWebhookEventData(deploymentRunSucceeded = it, _json = json) }
                         ?: BetaWebhookEventData(_json = json)
                 }
-                "environment.created" -> {
-                    return tryDeserialize(
-                            node,
-                            jacksonTypeRef<BetaWebhookEnvironmentCreatedEventData>(),
-                        )
-                        ?.let { BetaWebhookEventData(environmentCreated = it, _json = json) }
-                        ?: BetaWebhookEventData(_json = json)
-                }
-                "environment.updated" -> {
-                    return tryDeserialize(
-                            node,
-                            jacksonTypeRef<BetaWebhookEnvironmentUpdatedEventData>(),
-                        )
-                        ?.let { BetaWebhookEventData(environmentUpdated = it, _json = json) }
-                        ?: BetaWebhookEventData(_json = json)
-                }
-                "environment.archived" -> {
-                    return tryDeserialize(
-                            node,
-                            jacksonTypeRef<BetaWebhookEnvironmentArchivedEventData>(),
-                        )
-                        ?.let { BetaWebhookEventData(environmentArchived = it, _json = json) }
-                        ?: BetaWebhookEventData(_json = json)
-                }
-                "environment.deleted" -> {
-                    return tryDeserialize(
-                            node,
-                            jacksonTypeRef<BetaWebhookEnvironmentDeletedEventData>(),
-                        )
-                        ?.let { BetaWebhookEventData(environmentDeleted = it, _json = json) }
-                        ?: BetaWebhookEventData(_json = json)
-                }
-                "memory_store.created" -> {
-                    return tryDeserialize(
-                            node,
-                            jacksonTypeRef<BetaWebhookMemoryStoreCreatedEventData>(),
-                        )
-                        ?.let { BetaWebhookEventData(memoryStoreCreated = it, _json = json) }
-                        ?: BetaWebhookEventData(_json = json)
-                }
-                "memory_store.archived" -> {
-                    return tryDeserialize(
-                            node,
-                            jacksonTypeRef<BetaWebhookMemoryStoreArchivedEventData>(),
-                        )
-                        ?.let { BetaWebhookEventData(memoryStoreArchived = it, _json = json) }
-                        ?: BetaWebhookEventData(_json = json)
-                }
-                "memory_store.deleted" -> {
-                    return tryDeserialize(
-                            node,
-                            jacksonTypeRef<BetaWebhookMemoryStoreDeletedEventData>(),
-                        )
-                        ?.let { BetaWebhookEventData(memoryStoreDeleted = it, _json = json) }
-                        ?: BetaWebhookEventData(_json = json)
-                }
             }
 
             return BetaWebhookEventData(_json = json)
@@ -1841,15 +1571,6 @@ private constructor(
                 value.deploymentDeleted != null -> generator.writeObject(value.deploymentDeleted)
                 value.deploymentRunSucceeded != null ->
                     generator.writeObject(value.deploymentRunSucceeded)
-                value.environmentCreated != null -> generator.writeObject(value.environmentCreated)
-                value.environmentUpdated != null -> generator.writeObject(value.environmentUpdated)
-                value.environmentArchived != null ->
-                    generator.writeObject(value.environmentArchived)
-                value.environmentDeleted != null -> generator.writeObject(value.environmentDeleted)
-                value.memoryStoreCreated != null -> generator.writeObject(value.memoryStoreCreated)
-                value.memoryStoreArchived != null ->
-                    generator.writeObject(value.memoryStoreArchived)
-                value.memoryStoreDeleted != null -> generator.writeObject(value.memoryStoreDeleted)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaWebhookEventData")
             }
