@@ -7,6 +7,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.MultipartField
 import com.anthropic.core.Params
 import com.anthropic.core.checkKnown
+import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -49,10 +50,10 @@ private constructor(
      * All files must be in the same top-level directory and must include a SKILL.md file at the
      * root of that directory.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun files(): Optional<List<InputStream>> = body.files()
+    fun files(): List<InputStream> = body.files()
 
     /**
      * Returns the raw multipart value of [files].
@@ -73,9 +74,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): VersionCreateParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [VersionCreateParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [VersionCreateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .files()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -146,10 +152,7 @@ private constructor(
          * All files must be in the same top-level directory and must include a SKILL.md file at the
          * root of that directory.
          */
-        fun files(files: List<InputStream>?) = apply { body.files(files) }
-
-        /** Alias for calling [Builder.files] with `files.orElse(null)`. */
-        fun files(files: Optional<List<InputStream>>) = files(files.getOrNull())
+        fun files(files: List<InputStream>) = apply { body.files(files) }
 
         /**
          * Sets [Builder.files] to an arbitrary multipart value.
@@ -304,6 +307,13 @@ private constructor(
          * Returns an immutable instance of [VersionCreateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .files()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): VersionCreateParams =
             VersionCreateParams(
@@ -348,10 +358,10 @@ private constructor(
          * All files must be in the same top-level directory and must include a SKILL.md file at the
          * root of that directory.
          *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun files(): Optional<List<InputStream>> = files.value.getOptional("files")
+        fun files(): List<InputStream> = files.value.getRequired("files")
 
         /**
          * Returns the raw multipart value of [files].
@@ -376,7 +386,14 @@ private constructor(
 
         companion object {
 
-            /** Returns a mutable builder for constructing an instance of [Body]. */
+            /**
+             * Returns a mutable builder for constructing an instance of [Body].
+             *
+             * The following fields are required:
+             * ```java
+             * .files()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -398,16 +415,13 @@ private constructor(
              * All files must be in the same top-level directory and must include a SKILL.md file at
              * the root of that directory.
              */
-            fun files(files: List<InputStream>?) =
+            fun files(files: List<InputStream>) =
                 files(
                     MultipartField.builder<List<InputStream>>()
                         .value(files)
                         .contentType("application/octet-stream")
                         .build()
                 )
-
-            /** Alias for calling [Builder.files] with `files.orElse(null)`. */
-            fun files(files: Optional<List<InputStream>>) = files(files.getOrNull())
 
             /**
              * Sets [Builder.files] to an arbitrary multipart value.
@@ -474,10 +488,17 @@ private constructor(
              * Returns an immutable instance of [Body].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .files()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
                 Body(
-                    (files ?: MultipartField.of(null)).map { it.toImmutable() },
+                    checkRequired("files", files).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
         }

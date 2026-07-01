@@ -22,7 +22,11 @@ internal class VersionCreateParamsTest {
 
     @Test
     fun pathParams() {
-        val params = VersionCreateParams.builder().skillId("skill_id").build()
+        val params =
+            VersionCreateParams.builder()
+                .skillId("skill_id")
+                .addFile("Example data".byteInputStream())
+                .build()
 
         assertThat(params._pathParam(0)).isEqualTo("skill_id")
         // out-of-bound path param
@@ -48,7 +52,11 @@ internal class VersionCreateParamsTest {
 
     @Test
     fun headersWithoutOptionalFields() {
-        val params = VersionCreateParams.builder().skillId("skill_id").build()
+        val params =
+            VersionCreateParams.builder()
+                .skillId("skill_id")
+                .addFile("Example data".byteInputStream())
+                .build()
 
         val headers = params._headers()
 
@@ -90,10 +98,33 @@ internal class VersionCreateParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = VersionCreateParams.builder().skillId("skill_id").build()
+        val params =
+            VersionCreateParams.builder()
+                .skillId("skill_id")
+                .addFile("Example data".byteInputStream())
+                .build()
 
         val body = params._body()
 
-        assertThat(body.filterValues { !it.value.isNull() }).isEmpty()
+        assertThat(body.filterValues { !it.value.isNull() })
+            .usingRecursiveComparison()
+            // TODO(AssertJ): Replace this and the `mapValues` below with:
+            // https://github.com/assertj/assertj/issues/3165
+            .withEqualsForType(
+                { a, b -> a.readBytes() contentEquals b.readBytes() },
+                InputStream::class.java,
+            )
+            .isEqualTo(
+                mapOf(
+                        "files" to
+                            MultipartField.builder<List<InputStream>>()
+                                .value(listOf("Example data".byteInputStream()))
+                                .contentType("application/octet-stream")
+                                .build()
+                    )
+                    .mapValues { (_, field) ->
+                        field.map { (it as? ByteArray)?.inputStream() ?: it }
+                    }
+            )
     }
 }

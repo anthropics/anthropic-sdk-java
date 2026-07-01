@@ -401,55 +401,6 @@ private constructor(
             data(BetaWebhookEventData.ofDeploymentRunSucceeded(deploymentRunSucceeded))
 
         /**
-         * Alias for calling [data] with
-         * `BetaWebhookEventData.ofEnvironmentCreated(environmentCreated)`.
-         */
-        fun data(environmentCreated: BetaWebhookEnvironmentCreatedEventData) =
-            data(BetaWebhookEventData.ofEnvironmentCreated(environmentCreated))
-
-        /**
-         * Alias for calling [data] with
-         * `BetaWebhookEventData.ofEnvironmentUpdated(environmentUpdated)`.
-         */
-        fun data(environmentUpdated: BetaWebhookEnvironmentUpdatedEventData) =
-            data(BetaWebhookEventData.ofEnvironmentUpdated(environmentUpdated))
-
-        /**
-         * Alias for calling [data] with
-         * `BetaWebhookEventData.ofEnvironmentArchived(environmentArchived)`.
-         */
-        fun data(environmentArchived: BetaWebhookEnvironmentArchivedEventData) =
-            data(BetaWebhookEventData.ofEnvironmentArchived(environmentArchived))
-
-        /**
-         * Alias for calling [data] with
-         * `BetaWebhookEventData.ofEnvironmentDeleted(environmentDeleted)`.
-         */
-        fun data(environmentDeleted: BetaWebhookEnvironmentDeletedEventData) =
-            data(BetaWebhookEventData.ofEnvironmentDeleted(environmentDeleted))
-
-        /**
-         * Alias for calling [data] with
-         * `BetaWebhookEventData.ofMemoryStoreCreated(memoryStoreCreated)`.
-         */
-        fun data(memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData) =
-            data(BetaWebhookEventData.ofMemoryStoreCreated(memoryStoreCreated))
-
-        /**
-         * Alias for calling [data] with
-         * `BetaWebhookEventData.ofMemoryStoreArchived(memoryStoreArchived)`.
-         */
-        fun data(memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData) =
-            data(BetaWebhookEventData.ofMemoryStoreArchived(memoryStoreArchived))
-
-        /**
-         * Alias for calling [data] with
-         * `BetaWebhookEventData.ofMemoryStoreDeleted(memoryStoreDeleted)`.
-         */
-        fun data(memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData) =
-            data(BetaWebhookEventData.ofMemoryStoreDeleted(memoryStoreDeleted))
-
-        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the

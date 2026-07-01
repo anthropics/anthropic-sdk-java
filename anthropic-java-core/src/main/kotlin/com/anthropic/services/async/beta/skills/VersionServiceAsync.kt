@@ -33,28 +33,18 @@ interface VersionServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionServiceAsync
 
     /** Create Skill Version */
-    fun create(skillId: String): CompletableFuture<VersionCreateResponse> =
-        create(skillId, VersionCreateParams.none())
-
-    /** @see create */
     fun create(
         skillId: String,
-        params: VersionCreateParams = VersionCreateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionCreateResponse> =
-        create(params.toBuilder().skillId(skillId).build(), requestOptions)
-
-    /** @see create */
-    fun create(
-        skillId: String,
-        params: VersionCreateParams = VersionCreateParams.none(),
+        params: VersionCreateParams,
     ): CompletableFuture<VersionCreateResponse> = create(skillId, params, RequestOptions.none())
 
     /** @see create */
     fun create(
+        skillId: String,
         params: VersionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionCreateResponse>
+    ): CompletableFuture<VersionCreateResponse> =
+        create(params.toBuilder().skillId(skillId).build(), requestOptions)
 
     /** @see create */
     fun create(params: VersionCreateParams): CompletableFuture<VersionCreateResponse> =
@@ -62,10 +52,9 @@ interface VersionServiceAsync {
 
     /** @see create */
     fun create(
-        skillId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<VersionCreateResponse> =
-        create(skillId, VersionCreateParams.none(), requestOptions)
+        params: VersionCreateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<VersionCreateResponse>
 
     /** Get Skill Version */
     fun retrieve(
@@ -190,29 +179,19 @@ interface VersionServiceAsync {
          * Returns a raw HTTP response for `post /v1/skills/{skill_id}/versions?beta=true`, but is
          * otherwise the same as [VersionServiceAsync.create].
          */
-        fun create(skillId: String): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
-            create(skillId, VersionCreateParams.none())
-
-        /** @see create */
         fun create(
             skillId: String,
-            params: VersionCreateParams = VersionCreateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
-            create(params.toBuilder().skillId(skillId).build(), requestOptions)
-
-        /** @see create */
-        fun create(
-            skillId: String,
-            params: VersionCreateParams = VersionCreateParams.none(),
+            params: VersionCreateParams,
         ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
             create(skillId, params, RequestOptions.none())
 
         /** @see create */
         fun create(
+            skillId: String,
             params: VersionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>>
+        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
+            create(params.toBuilder().skillId(skillId).build(), requestOptions)
 
         /** @see create */
         fun create(
@@ -222,10 +201,9 @@ interface VersionServiceAsync {
 
         /** @see create */
         fun create(
-            skillId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
-            create(skillId, VersionCreateParams.none(), requestOptions)
+            params: VersionCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>>
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}?beta=true`,

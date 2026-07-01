@@ -27,8 +27,8 @@ internal class SkillServiceAsyncTest {
             skillServiceAsync.create(
                 SkillCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .displayTitle("display_title")
                     .addFile("Example data".byteInputStream())
+                    .displayTitle("display_title")
                     .build()
             )
 
