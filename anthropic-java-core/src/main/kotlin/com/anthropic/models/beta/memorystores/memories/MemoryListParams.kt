@@ -2,15 +2,11 @@
 
 package com.anthropic.models.beta.memorystores.memories
 
-import com.anthropic.core.Enum
-import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
-import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
-import com.fasterxml.jackson.annotation.JsonCreator
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -21,8 +17,6 @@ private constructor(
     private val memoryStoreId: String?,
     private val depth: Int?,
     private val limit: Int?,
-    private val order: Order?,
-    private val orderBy: String?,
     private val page: String?,
     private val pathPrefix: String?,
     private val view: BetaManagedAgentsMemoryView?,
@@ -46,12 +40,6 @@ private constructor(
      * the limit.
      */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
-
-    /** Query parameter for order */
-    fun order(): Optional<Order> = Optional.ofNullable(order)
-
-    /** Query parameter for order_by */
-    fun orderBy(): Optional<String> = Optional.ofNullable(orderBy)
 
     /**
      * Opaque pagination cursor (a `page_...` value). Pass the `next_page` value from a previous
@@ -97,8 +85,6 @@ private constructor(
         private var memoryStoreId: String? = null
         private var depth: Int? = null
         private var limit: Int? = null
-        private var order: Order? = null
-        private var orderBy: String? = null
         private var page: String? = null
         private var pathPrefix: String? = null
         private var view: BetaManagedAgentsMemoryView? = null
@@ -111,8 +97,6 @@ private constructor(
             memoryStoreId = memoryListParams.memoryStoreId
             depth = memoryListParams.depth
             limit = memoryListParams.limit
-            order = memoryListParams.order
-            orderBy = memoryListParams.orderBy
             page = memoryListParams.page
             pathPrefix = memoryListParams.pathPrefix
             view = memoryListParams.view
@@ -160,18 +144,6 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
-
-        /** Query parameter for order */
-        fun order(order: Order?) = apply { this.order = order }
-
-        /** Alias for calling [Builder.order] with `order.orElse(null)`. */
-        fun order(order: Optional<Order>) = order(order.getOrNull())
-
-        /** Query parameter for order_by */
-        fun orderBy(orderBy: String?) = apply { this.orderBy = orderBy }
-
-        /** Alias for calling [Builder.orderBy] with `orderBy.orElse(null)`. */
-        fun orderBy(orderBy: Optional<String>) = orderBy(orderBy.getOrNull())
 
         /**
          * Opaque pagination cursor (a `page_...` value). Pass the `next_page` value from a previous
@@ -334,8 +306,6 @@ private constructor(
                 memoryStoreId,
                 depth,
                 limit,
-                order,
-                orderBy,
                 page,
                 pathPrefix,
                 view,
@@ -364,151 +334,12 @@ private constructor(
             .apply {
                 depth?.let { put("depth", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
-                order?.let { put("order", it.toString()) }
-                orderBy?.let { put("order_by", it) }
                 page?.let { put("page", it) }
                 pathPrefix?.let { put("path_prefix", it) }
                 view?.let { put("view", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
-
-    /** Query parameter for order */
-    class Order @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val ASC = of("asc")
-
-            @JvmField val DESC = of("desc")
-
-            @JvmStatic fun of(value: String) = Order(JsonField.of(value))
-        }
-
-        /** An enum containing [Order]'s known values. */
-        enum class Known {
-            ASC,
-            DESC,
-        }
-
-        /**
-         * An enum containing [Order]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Order] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            ASC,
-            DESC,
-            /** An enum member indicating that [Order] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                ASC -> Value.ASC
-                DESC -> Value.DESC
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                ASC -> Known.ASC
-                DESC -> Known.DESC
-                else -> throw AnthropicInvalidDataException("Unknown Order: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): Order = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Order && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -519,8 +350,6 @@ private constructor(
             memoryStoreId == other.memoryStoreId &&
             depth == other.depth &&
             limit == other.limit &&
-            order == other.order &&
-            orderBy == other.orderBy &&
             page == other.page &&
             pathPrefix == other.pathPrefix &&
             view == other.view &&
@@ -534,8 +363,6 @@ private constructor(
             memoryStoreId,
             depth,
             limit,
-            order,
-            orderBy,
             page,
             pathPrefix,
             view,
@@ -545,5 +372,5 @@ private constructor(
         )
 
     override fun toString() =
-        "MemoryListParams{memoryStoreId=$memoryStoreId, depth=$depth, limit=$limit, order=$order, orderBy=$orderBy, page=$page, pathPrefix=$pathPrefix, view=$view, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MemoryListParams{memoryStoreId=$memoryStoreId, depth=$depth, limit=$limit, page=$page, pathPrefix=$pathPrefix, view=$view, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
