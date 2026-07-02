@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.48.0 (2026-07-02)
+
+Full Changelog: [v2.47.1...v2.48.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.47.1...v2.48.0)
+
+### Features
+
+* **api:** add agent-memory-2026-07-22 beta header ([6603879](https://github.com/anthropics/anthropic-sdk-java/commit/66038797a7e1e4a57f41a1d6662e859e7e604116))
+
 ## 2.47.1 (2026-07-01)
 
 Full Changelog: [v2.47.0...v2.47.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.47.0...v2.47.1)
