@@ -41,7 +41,7 @@ class MemoryStoreServiceAsyncImpl internal constructor(private val clientOptions
     companion object {
 
         private val DEFAULT_HEADERS =
-            Headers.builder().put("anthropic-beta", "managed-agents-2026-04-01").build()
+            Headers.builder().put("anthropic-beta", "agent-memory-2026-07-22").build()
     }
 
     private val withRawResponse: MemoryStoreServiceAsync.WithRawResponse by lazy {

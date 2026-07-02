@@ -37,7 +37,7 @@ private constructor(
 
     /**
      * One page of results. Each item is either a `memory` object or, when `depth` was set, a
-     * `memory_prefix` rollup marker. Items appear in the requested `order_by`/`order`.
+     * `memory_prefix` rollup marker. Items are returned in a stable, server-defined order.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -104,7 +104,7 @@ private constructor(
 
         /**
          * One page of results. Each item is either a `memory` object or, when `depth` was set, a
-         * `memory_prefix` rollup marker. Items appear in the requested `order_by`/`order`.
+         * `memory_prefix` rollup marker. Items are returned in a stable, server-defined order.
          */
         fun data(data: List<BetaManagedAgentsMemoryListItem>) = data(JsonField.of(data))
 
