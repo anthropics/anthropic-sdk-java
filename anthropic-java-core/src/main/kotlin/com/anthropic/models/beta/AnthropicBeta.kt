@@ -78,6 +78,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val FALLBACK_CREDIT_2026_06_01 = of("fallback-credit-2026-06-01")
 
+        @JvmField val AGENT_MEMORY_2026_07_22 = of("agent-memory-2026-07-22")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }
 
@@ -111,6 +113,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         THINKING_TOKEN_COUNT_2026_05_13,
         SERVER_SIDE_FALLBACK_2026_06_01,
         FALLBACK_CREDIT_2026_06_01,
+        AGENT_MEMORY_2026_07_22,
     }
 
     /**
@@ -151,6 +154,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         THINKING_TOKEN_COUNT_2026_05_13,
         SERVER_SIDE_FALLBACK_2026_06_01,
         FALLBACK_CREDIT_2026_06_01,
+        AGENT_MEMORY_2026_07_22,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -195,6 +199,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             THINKING_TOKEN_COUNT_2026_05_13 -> Value.THINKING_TOKEN_COUNT_2026_05_13
             SERVER_SIDE_FALLBACK_2026_06_01 -> Value.SERVER_SIDE_FALLBACK_2026_06_01
             FALLBACK_CREDIT_2026_06_01 -> Value.FALLBACK_CREDIT_2026_06_01
+            AGENT_MEMORY_2026_07_22 -> Value.AGENT_MEMORY_2026_07_22
             else -> Value._UNKNOWN
         }
 
@@ -237,6 +242,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             THINKING_TOKEN_COUNT_2026_05_13 -> Known.THINKING_TOKEN_COUNT_2026_05_13
             SERVER_SIDE_FALLBACK_2026_06_01 -> Known.SERVER_SIDE_FALLBACK_2026_06_01
             FALLBACK_CREDIT_2026_06_01 -> Known.FALLBACK_CREDIT_2026_06_01
+            AGENT_MEMORY_2026_07_22 -> Known.AGENT_MEMORY_2026_07_22
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 
