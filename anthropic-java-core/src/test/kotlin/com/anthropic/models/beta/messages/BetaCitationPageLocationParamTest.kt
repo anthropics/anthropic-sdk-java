@@ -13,14 +13,15 @@ internal class BetaCitationPageLocationParamTest {
     fun create() {
         val betaCitationPageLocationParam =
             BetaCitationPageLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endPageNumber(0L)
                 .startPageNumber(1L)
                 .build()
 
-        assertThat(betaCitationPageLocationParam.citedText()).isEqualTo("cited_text")
+        assertThat(betaCitationPageLocationParam.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(betaCitationPageLocationParam.documentIndex()).isEqualTo(0L)
         assertThat(betaCitationPageLocationParam.documentTitle()).contains("x")
         assertThat(betaCitationPageLocationParam.endPageNumber()).isEqualTo(0L)
@@ -32,7 +33,7 @@ internal class BetaCitationPageLocationParamTest {
         val jsonMapper = jsonMapper()
         val betaCitationPageLocationParam =
             BetaCitationPageLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endPageNumber(0L)

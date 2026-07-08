@@ -13,19 +13,20 @@ internal class CitationPageLocationTest {
     fun create() {
         val citationPageLocation =
             CitationPageLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endPageNumber(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startPageNumber(1L)
                 .build()
 
-        assertThat(citationPageLocation.citedText()).isEqualTo("cited_text")
+        assertThat(citationPageLocation.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(citationPageLocation.documentIndex()).isEqualTo(0L)
-        assertThat(citationPageLocation.documentTitle()).contains("document_title")
+        assertThat(citationPageLocation.documentTitle()).contains("My Document")
         assertThat(citationPageLocation.endPageNumber()).isEqualTo(0L)
-        assertThat(citationPageLocation.fileId()).contains("file_id")
+        assertThat(citationPageLocation.fileId()).contains("file_011CNha8iCJcU1wXNR6q4V8w")
         assertThat(citationPageLocation.startPageNumber()).isEqualTo(1L)
     }
 
@@ -34,11 +35,11 @@ internal class CitationPageLocationTest {
         val jsonMapper = jsonMapper()
         val citationPageLocation =
             CitationPageLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endPageNumber(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startPageNumber(1L)
                 .build()
 

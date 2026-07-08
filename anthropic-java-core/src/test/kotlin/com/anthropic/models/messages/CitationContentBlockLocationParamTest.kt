@@ -13,14 +13,15 @@ internal class CitationContentBlockLocationParamTest {
     fun create() {
         val citationContentBlockLocationParam =
             CitationContentBlockLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endBlockIndex(0L)
                 .startBlockIndex(0L)
                 .build()
 
-        assertThat(citationContentBlockLocationParam.citedText()).isEqualTo("cited_text")
+        assertThat(citationContentBlockLocationParam.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(citationContentBlockLocationParam.documentIndex()).isEqualTo(0L)
         assertThat(citationContentBlockLocationParam.documentTitle()).contains("x")
         assertThat(citationContentBlockLocationParam.endBlockIndex()).isEqualTo(0L)
@@ -32,7 +33,7 @@ internal class CitationContentBlockLocationParamTest {
         val jsonMapper = jsonMapper()
         val citationContentBlockLocationParam =
             CitationContentBlockLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endBlockIndex(0L)

@@ -13,13 +13,14 @@ internal class CitationWebSearchResultLocationParamTest {
     fun create() {
         val citationWebSearchResultLocationParam =
             CitationWebSearchResultLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .encryptedIndex("encrypted_index")
                 .title("x")
                 .url("x")
                 .build()
 
-        assertThat(citationWebSearchResultLocationParam.citedText()).isEqualTo("cited_text")
+        assertThat(citationWebSearchResultLocationParam.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(citationWebSearchResultLocationParam.encryptedIndex())
             .isEqualTo("encrypted_index")
         assertThat(citationWebSearchResultLocationParam.title()).contains("x")
@@ -31,7 +32,7 @@ internal class CitationWebSearchResultLocationParamTest {
         val jsonMapper = jsonMapper()
         val citationWebSearchResultLocationParam =
             CitationWebSearchResultLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .encryptedIndex("encrypted_index")
                 .title("x")
                 .url("x")

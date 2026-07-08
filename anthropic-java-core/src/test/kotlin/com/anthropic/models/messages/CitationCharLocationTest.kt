@@ -13,19 +13,20 @@ internal class CitationCharLocationTest {
     fun create() {
         val citationCharLocation =
             CitationCharLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endCharIndex(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startCharIndex(0L)
                 .build()
 
-        assertThat(citationCharLocation.citedText()).isEqualTo("cited_text")
+        assertThat(citationCharLocation.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(citationCharLocation.documentIndex()).isEqualTo(0L)
-        assertThat(citationCharLocation.documentTitle()).contains("document_title")
+        assertThat(citationCharLocation.documentTitle()).contains("My Document")
         assertThat(citationCharLocation.endCharIndex()).isEqualTo(0L)
-        assertThat(citationCharLocation.fileId()).contains("file_id")
+        assertThat(citationCharLocation.fileId()).contains("file_011CNha8iCJcU1wXNR6q4V8w")
         assertThat(citationCharLocation.startCharIndex()).isEqualTo(0L)
     }
 
@@ -34,11 +35,11 @@ internal class CitationCharLocationTest {
         val jsonMapper = jsonMapper()
         val citationCharLocation =
             CitationCharLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endCharIndex(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startCharIndex(0L)
                 .build()
 

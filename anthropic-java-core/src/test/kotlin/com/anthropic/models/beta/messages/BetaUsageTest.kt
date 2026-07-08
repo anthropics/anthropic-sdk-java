@@ -23,7 +23,7 @@ internal class BetaUsageTest {
                 )
                 .cacheCreationInputTokens(2051L)
                 .cacheReadInputTokens(2051L)
-                .inferenceGeo("inference_geo")
+                .inferenceGeo("global")
                 .inputTokens(2095L)
                 .addIteration(
                     BetaMessageIterationUsage.builder()
@@ -58,7 +58,7 @@ internal class BetaUsageTest {
             )
         assertThat(betaUsage.cacheCreationInputTokens()).contains(2051L)
         assertThat(betaUsage.cacheReadInputTokens()).contains(2051L)
-        assertThat(betaUsage.inferenceGeo()).contains("inference_geo")
+        assertThat(betaUsage.inferenceGeo()).contains("global")
         assertThat(betaUsage.inputTokens()).isEqualTo(2095L)
         assertThat(betaUsage.iterations().getOrNull())
             .containsExactly(
@@ -102,7 +102,7 @@ internal class BetaUsageTest {
                 )
                 .cacheCreationInputTokens(2051L)
                 .cacheReadInputTokens(2051L)
-                .inferenceGeo("inference_geo")
+                .inferenceGeo("global")
                 .inputTokens(2095L)
                 .addIteration(
                     BetaMessageIterationUsage.builder()

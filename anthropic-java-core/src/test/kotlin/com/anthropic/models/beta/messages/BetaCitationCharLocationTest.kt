@@ -13,19 +13,20 @@ internal class BetaCitationCharLocationTest {
     fun create() {
         val betaCitationCharLocation =
             BetaCitationCharLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endCharIndex(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startCharIndex(0L)
                 .build()
 
-        assertThat(betaCitationCharLocation.citedText()).isEqualTo("cited_text")
+        assertThat(betaCitationCharLocation.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(betaCitationCharLocation.documentIndex()).isEqualTo(0L)
-        assertThat(betaCitationCharLocation.documentTitle()).contains("document_title")
+        assertThat(betaCitationCharLocation.documentTitle()).contains("My Document")
         assertThat(betaCitationCharLocation.endCharIndex()).isEqualTo(0L)
-        assertThat(betaCitationCharLocation.fileId()).contains("file_id")
+        assertThat(betaCitationCharLocation.fileId()).contains("file_011CNha8iCJcU1wXNR6q4V8w")
         assertThat(betaCitationCharLocation.startCharIndex()).isEqualTo(0L)
     }
 
@@ -34,11 +35,11 @@ internal class BetaCitationCharLocationTest {
         val jsonMapper = jsonMapper()
         val betaCitationCharLocation =
             BetaCitationCharLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endCharIndex(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startCharIndex(0L)
                 .build()
 

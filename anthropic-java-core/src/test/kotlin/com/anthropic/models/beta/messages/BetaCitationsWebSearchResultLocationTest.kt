@@ -13,13 +13,14 @@ internal class BetaCitationsWebSearchResultLocationTest {
     fun create() {
         val betaCitationsWebSearchResultLocation =
             BetaCitationsWebSearchResultLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .encryptedIndex("encrypted_index")
                 .title("title")
                 .url("url")
                 .build()
 
-        assertThat(betaCitationsWebSearchResultLocation.citedText()).isEqualTo("cited_text")
+        assertThat(betaCitationsWebSearchResultLocation.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(betaCitationsWebSearchResultLocation.encryptedIndex())
             .isEqualTo("encrypted_index")
         assertThat(betaCitationsWebSearchResultLocation.title()).contains("title")
@@ -31,7 +32,7 @@ internal class BetaCitationsWebSearchResultLocationTest {
         val jsonMapper = jsonMapper()
         val betaCitationsWebSearchResultLocation =
             BetaCitationsWebSearchResultLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .encryptedIndex("encrypted_index")
                 .title("title")
                 .url("url")

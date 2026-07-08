@@ -13,14 +13,15 @@ internal class CitationPageLocationParamTest {
     fun create() {
         val citationPageLocationParam =
             CitationPageLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endPageNumber(0L)
                 .startPageNumber(1L)
                 .build()
 
-        assertThat(citationPageLocationParam.citedText()).isEqualTo("cited_text")
+        assertThat(citationPageLocationParam.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(citationPageLocationParam.documentIndex()).isEqualTo(0L)
         assertThat(citationPageLocationParam.documentTitle()).contains("x")
         assertThat(citationPageLocationParam.endPageNumber()).isEqualTo(0L)
@@ -32,7 +33,7 @@ internal class CitationPageLocationParamTest {
         val jsonMapper = jsonMapper()
         val citationPageLocationParam =
             CitationPageLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endPageNumber(0L)
