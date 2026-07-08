@@ -23,7 +23,7 @@ internal class SearchResultBlockParamTest {
                         )
                         .addCitation(
                             CitationCharLocationParam.builder()
-                                .citedText("cited_text")
+                                .citedText("The grass is green. The sky is blue.")
                                 .documentIndex(0L)
                                 .documentTitle("x")
                                 .endCharIndex(0L)
@@ -51,7 +51,7 @@ internal class SearchResultBlockParamTest {
                     )
                     .addCitation(
                         CitationCharLocationParam.builder()
-                            .citedText("cited_text")
+                            .citedText("The grass is green. The sky is blue.")
                             .documentIndex(0L)
                             .documentTitle("x")
                             .endCharIndex(0L)
@@ -83,7 +83,7 @@ internal class SearchResultBlockParamTest {
                         )
                         .addCitation(
                             CitationCharLocationParam.builder()
-                                .citedText("cited_text")
+                                .citedText("The grass is green. The sky is blue.")
                                 .documentIndex(0L)
                                 .documentTitle("x")
                                 .endCharIndex(0L)

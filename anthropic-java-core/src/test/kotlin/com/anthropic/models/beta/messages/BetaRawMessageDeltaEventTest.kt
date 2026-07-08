@@ -29,7 +29,7 @@ internal class BetaRawMessageDeltaEventTest {
                     BetaRawMessageDeltaEvent.Delta.builder()
                         .container(
                             BetaContainer.builder()
-                                .id("id")
+                                .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .addSkill(
                                     BetaSkill.builder()
@@ -43,10 +43,12 @@ internal class BetaRawMessageDeltaEventTest {
                         .stopDetails(
                             BetaRefusalStopDetails.builder()
                                 .category(BetaRefusalStopDetails.Category.CYBER)
-                                .explanation("explanation")
-                                .fallbackCreditToken("fallback_credit_token")
+                                .explanation(
+                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                )
+                                .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                                 .fallbackHasPrefillClaim(true)
-                                .recommendedModel("recommended_model")
+                                .recommendedModel("claude-sonnet-4-6")
                                 .build()
                         )
                         .stopReason(BetaStopReason.END_TURN)
@@ -103,7 +105,7 @@ internal class BetaRawMessageDeltaEventTest {
                 BetaRawMessageDeltaEvent.Delta.builder()
                     .container(
                         BetaContainer.builder()
-                            .id("id")
+                            .id("container_011CpZohnwH4vuy7gazohgSP")
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addSkill(
                                 BetaSkill.builder()
@@ -117,10 +119,12 @@ internal class BetaRawMessageDeltaEventTest {
                     .stopDetails(
                         BetaRefusalStopDetails.builder()
                             .category(BetaRefusalStopDetails.Category.CYBER)
-                            .explanation("explanation")
-                            .fallbackCreditToken("fallback_credit_token")
+                            .explanation(
+                                "This request was declined because it conflicts with Anthropic's Usage Policy."
+                            )
+                            .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                             .fallbackHasPrefillClaim(true)
-                            .recommendedModel("recommended_model")
+                            .recommendedModel("claude-sonnet-4-6")
                             .build()
                     )
                     .stopReason(BetaStopReason.END_TURN)
@@ -181,7 +185,7 @@ internal class BetaRawMessageDeltaEventTest {
                     BetaRawMessageDeltaEvent.Delta.builder()
                         .container(
                             BetaContainer.builder()
-                                .id("id")
+                                .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .addSkill(
                                     BetaSkill.builder()
@@ -195,10 +199,12 @@ internal class BetaRawMessageDeltaEventTest {
                         .stopDetails(
                             BetaRefusalStopDetails.builder()
                                 .category(BetaRefusalStopDetails.Category.CYBER)
-                                .explanation("explanation")
-                                .fallbackCreditToken("fallback_credit_token")
+                                .explanation(
+                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                )
+                                .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                                 .fallbackHasPrefillClaim(true)
-                                .recommendedModel("recommended_model")
+                                .recommendedModel("claude-sonnet-4-6")
                                 .build()
                         )
                         .stopReason(BetaStopReason.END_TURN)

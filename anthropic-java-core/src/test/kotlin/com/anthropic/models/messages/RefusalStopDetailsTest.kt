@@ -14,11 +14,16 @@ internal class RefusalStopDetailsTest {
         val refusalStopDetails =
             RefusalStopDetails.builder()
                 .category(RefusalStopDetails.Category.CYBER)
-                .explanation("explanation")
+                .explanation(
+                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                )
                 .build()
 
         assertThat(refusalStopDetails.category()).contains(RefusalStopDetails.Category.CYBER)
-        assertThat(refusalStopDetails.explanation()).contains("explanation")
+        assertThat(refusalStopDetails.explanation())
+            .contains(
+                "This request was declined because it conflicts with Anthropic's Usage Policy."
+            )
     }
 
     @Test
@@ -27,7 +32,9 @@ internal class RefusalStopDetailsTest {
         val refusalStopDetails =
             RefusalStopDetails.builder()
                 .category(RefusalStopDetails.Category.CYBER)
-                .explanation("explanation")
+                .explanation(
+                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                )
                 .build()
 
         val roundtrippedRefusalStopDetails =

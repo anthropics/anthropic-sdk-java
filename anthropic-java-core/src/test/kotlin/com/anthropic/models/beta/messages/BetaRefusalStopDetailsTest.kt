@@ -14,18 +14,24 @@ internal class BetaRefusalStopDetailsTest {
         val betaRefusalStopDetails =
             BetaRefusalStopDetails.builder()
                 .category(BetaRefusalStopDetails.Category.CYBER)
-                .explanation("explanation")
-                .fallbackCreditToken("fallback_credit_token")
+                .explanation(
+                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                )
+                .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                 .fallbackHasPrefillClaim(true)
-                .recommendedModel("recommended_model")
+                .recommendedModel("claude-sonnet-4-6")
                 .build()
 
         assertThat(betaRefusalStopDetails.category())
             .contains(BetaRefusalStopDetails.Category.CYBER)
-        assertThat(betaRefusalStopDetails.explanation()).contains("explanation")
-        assertThat(betaRefusalStopDetails.fallbackCreditToken()).contains("fallback_credit_token")
+        assertThat(betaRefusalStopDetails.explanation())
+            .contains(
+                "This request was declined because it conflicts with Anthropic's Usage Policy."
+            )
+        assertThat(betaRefusalStopDetails.fallbackCreditToken())
+            .contains("QW50aHJvcGljL0NsYXVkZQ==")
         assertThat(betaRefusalStopDetails.fallbackHasPrefillClaim()).contains(true)
-        assertThat(betaRefusalStopDetails.recommendedModel()).contains("recommended_model")
+        assertThat(betaRefusalStopDetails.recommendedModel()).contains("claude-sonnet-4-6")
     }
 
     @Test
@@ -34,10 +40,12 @@ internal class BetaRefusalStopDetailsTest {
         val betaRefusalStopDetails =
             BetaRefusalStopDetails.builder()
                 .category(BetaRefusalStopDetails.Category.CYBER)
-                .explanation("explanation")
-                .fallbackCreditToken("fallback_credit_token")
+                .explanation(
+                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                )
+                .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                 .fallbackHasPrefillClaim(true)
-                .recommendedModel("recommended_model")
+                .recommendedModel("claude-sonnet-4-6")
                 .build()
 
         val roundtrippedBetaRefusalStopDetails =

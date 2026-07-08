@@ -30,7 +30,7 @@ internal class MessageBatchSucceededResultTest {
                         .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                         .container(
                             Container.builder()
-                                .id("id")
+                                .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
                         )
@@ -38,11 +38,11 @@ internal class MessageBatchSucceededResultTest {
                             TextBlock.builder()
                                 .addCitation(
                                     CitationCharLocation.builder()
-                                        .citedText("cited_text")
+                                        .citedText("The grass is green. The sky is blue.")
                                         .documentIndex(0L)
-                                        .documentTitle("document_title")
+                                        .documentTitle("My Document")
                                         .endCharIndex(0L)
-                                        .fileId("file_id")
+                                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                                         .startCharIndex(0L)
                                         .build()
                                 )
@@ -53,7 +53,9 @@ internal class MessageBatchSucceededResultTest {
                         .stopDetails(
                             RefusalStopDetails.builder()
                                 .category(RefusalStopDetails.Category.CYBER)
-                                .explanation("explanation")
+                                .explanation(
+                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                )
                                 .build()
                         )
                         .stopReason(StopReason.END_TURN)
@@ -68,7 +70,7 @@ internal class MessageBatchSucceededResultTest {
                                 )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
-                                .inferenceGeo("inference_geo")
+                                .inferenceGeo("global")
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
                                 .outputTokensDetails(
@@ -93,7 +95,7 @@ internal class MessageBatchSucceededResultTest {
                     .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                     .container(
                         Container.builder()
-                            .id("id")
+                            .id("container_011CpZohnwH4vuy7gazohgSP")
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .build()
                     )
@@ -101,11 +103,11 @@ internal class MessageBatchSucceededResultTest {
                         TextBlock.builder()
                             .addCitation(
                                 CitationCharLocation.builder()
-                                    .citedText("cited_text")
+                                    .citedText("The grass is green. The sky is blue.")
                                     .documentIndex(0L)
-                                    .documentTitle("document_title")
+                                    .documentTitle("My Document")
                                     .endCharIndex(0L)
-                                    .fileId("file_id")
+                                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                                     .startCharIndex(0L)
                                     .build()
                             )
@@ -116,7 +118,9 @@ internal class MessageBatchSucceededResultTest {
                     .stopDetails(
                         RefusalStopDetails.builder()
                             .category(RefusalStopDetails.Category.CYBER)
-                            .explanation("explanation")
+                            .explanation(
+                                "This request was declined because it conflicts with Anthropic's Usage Policy."
+                            )
                             .build()
                     )
                     .stopReason(StopReason.END_TURN)
@@ -131,7 +135,7 @@ internal class MessageBatchSucceededResultTest {
                             )
                             .cacheCreationInputTokens(2051L)
                             .cacheReadInputTokens(2051L)
-                            .inferenceGeo("inference_geo")
+                            .inferenceGeo("global")
                             .inputTokens(2095L)
                             .outputTokens(503L)
                             .outputTokensDetails(
@@ -160,7 +164,7 @@ internal class MessageBatchSucceededResultTest {
                         .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                         .container(
                             Container.builder()
-                                .id("id")
+                                .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
                         )
@@ -168,11 +172,11 @@ internal class MessageBatchSucceededResultTest {
                             TextBlock.builder()
                                 .addCitation(
                                     CitationCharLocation.builder()
-                                        .citedText("cited_text")
+                                        .citedText("The grass is green. The sky is blue.")
                                         .documentIndex(0L)
-                                        .documentTitle("document_title")
+                                        .documentTitle("My Document")
                                         .endCharIndex(0L)
-                                        .fileId("file_id")
+                                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                                         .startCharIndex(0L)
                                         .build()
                                 )
@@ -183,7 +187,9 @@ internal class MessageBatchSucceededResultTest {
                         .stopDetails(
                             RefusalStopDetails.builder()
                                 .category(RefusalStopDetails.Category.CYBER)
-                                .explanation("explanation")
+                                .explanation(
+                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                )
                                 .build()
                         )
                         .stopReason(StopReason.END_TURN)
@@ -198,7 +204,7 @@ internal class MessageBatchSucceededResultTest {
                                 )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
-                                .inferenceGeo("inference_geo")
+                                .inferenceGeo("global")
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
                                 .outputTokensDetails(

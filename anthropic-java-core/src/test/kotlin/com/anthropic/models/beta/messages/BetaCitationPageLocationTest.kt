@@ -13,19 +13,20 @@ internal class BetaCitationPageLocationTest {
     fun create() {
         val betaCitationPageLocation =
             BetaCitationPageLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endPageNumber(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startPageNumber(1L)
                 .build()
 
-        assertThat(betaCitationPageLocation.citedText()).isEqualTo("cited_text")
+        assertThat(betaCitationPageLocation.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(betaCitationPageLocation.documentIndex()).isEqualTo(0L)
-        assertThat(betaCitationPageLocation.documentTitle()).contains("document_title")
+        assertThat(betaCitationPageLocation.documentTitle()).contains("My Document")
         assertThat(betaCitationPageLocation.endPageNumber()).isEqualTo(0L)
-        assertThat(betaCitationPageLocation.fileId()).contains("file_id")
+        assertThat(betaCitationPageLocation.fileId()).contains("file_011CNha8iCJcU1wXNR6q4V8w")
         assertThat(betaCitationPageLocation.startPageNumber()).isEqualTo(1L)
     }
 
@@ -34,11 +35,11 @@ internal class BetaCitationPageLocationTest {
         val jsonMapper = jsonMapper()
         val betaCitationPageLocation =
             BetaCitationPageLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endPageNumber(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startPageNumber(1L)
                 .build()
 

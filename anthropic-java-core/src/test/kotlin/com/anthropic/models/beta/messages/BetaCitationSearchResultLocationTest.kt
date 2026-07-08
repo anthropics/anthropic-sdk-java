@@ -13,7 +13,7 @@ internal class BetaCitationSearchResultLocationTest {
     fun create() {
         val betaCitationSearchResultLocation =
             BetaCitationSearchResultLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .endBlockIndex(0L)
                 .searchResultIndex(0L)
                 .source("source")
@@ -21,7 +21,8 @@ internal class BetaCitationSearchResultLocationTest {
                 .title("title")
                 .build()
 
-        assertThat(betaCitationSearchResultLocation.citedText()).isEqualTo("cited_text")
+        assertThat(betaCitationSearchResultLocation.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(betaCitationSearchResultLocation.endBlockIndex()).isEqualTo(0L)
         assertThat(betaCitationSearchResultLocation.searchResultIndex()).isEqualTo(0L)
         assertThat(betaCitationSearchResultLocation.source()).isEqualTo("source")
@@ -34,7 +35,7 @@ internal class BetaCitationSearchResultLocationTest {
         val jsonMapper = jsonMapper()
         val betaCitationSearchResultLocation =
             BetaCitationSearchResultLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .endBlockIndex(0L)
                 .searchResultIndex(0L)
                 .source("source")

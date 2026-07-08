@@ -14,11 +14,11 @@ internal class ContainerTest {
     fun create() {
         val container =
             Container.builder()
-                .id("id")
+                .id("container_011CpZohnwH4vuy7gazohgSP")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
-        assertThat(container.id()).isEqualTo("id")
+        assertThat(container.id()).isEqualTo("container_011CpZohnwH4vuy7gazohgSP")
         assertThat(container.expiresAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
@@ -28,7 +28,7 @@ internal class ContainerTest {
         val jsonMapper = jsonMapper()
         val container =
             Container.builder()
-                .id("id")
+                .id("container_011CpZohnwH4vuy7gazohgSP")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 

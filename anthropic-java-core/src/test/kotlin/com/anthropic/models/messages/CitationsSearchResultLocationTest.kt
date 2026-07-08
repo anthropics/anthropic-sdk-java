@@ -13,7 +13,7 @@ internal class CitationsSearchResultLocationTest {
     fun create() {
         val citationsSearchResultLocation =
             CitationsSearchResultLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .endBlockIndex(0L)
                 .searchResultIndex(0L)
                 .source("source")
@@ -21,7 +21,8 @@ internal class CitationsSearchResultLocationTest {
                 .title("title")
                 .build()
 
-        assertThat(citationsSearchResultLocation.citedText()).isEqualTo("cited_text")
+        assertThat(citationsSearchResultLocation.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(citationsSearchResultLocation.endBlockIndex()).isEqualTo(0L)
         assertThat(citationsSearchResultLocation.searchResultIndex()).isEqualTo(0L)
         assertThat(citationsSearchResultLocation.source()).isEqualTo("source")
@@ -34,7 +35,7 @@ internal class CitationsSearchResultLocationTest {
         val jsonMapper = jsonMapper()
         val citationsSearchResultLocation =
             CitationsSearchResultLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .endBlockIndex(0L)
                 .searchResultIndex(0L)
                 .source("source")

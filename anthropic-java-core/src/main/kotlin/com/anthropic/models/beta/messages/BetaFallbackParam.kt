@@ -32,9 +32,9 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * One entry in the `fallbacks` chain on a `/v1/messages` request.
  *
- * `model` is required. The four override fields (`max_tokens`, `thinking`, `output_config`, and
- * `speed`) replace the corresponding top-level field for this attempt only and are validated as if
- * the request were made to `model`. Any other key is rejected at parse time.
+ * `model` is required. The override fields (`max_tokens`, `thinking`, `output_config`, and `speed`)
+ * set the corresponding parameter for this attempt only and are validated as if the request were
+ * made to `model`. Any other key is rejected at parse time.
  */
 class BetaFallbackParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)

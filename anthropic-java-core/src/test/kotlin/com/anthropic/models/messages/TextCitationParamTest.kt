@@ -18,7 +18,7 @@ internal class TextCitationParamTest {
     fun ofCharLocation() {
         val charLocation =
             CitationCharLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endCharIndex(0L)
@@ -40,7 +40,7 @@ internal class TextCitationParamTest {
         val textCitationParam =
             TextCitationParam.ofCharLocation(
                 CitationCharLocationParam.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
                     .documentTitle("x")
                     .endCharIndex(0L)
@@ -61,7 +61,7 @@ internal class TextCitationParamTest {
     fun ofPageLocation() {
         val pageLocation =
             CitationPageLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endPageNumber(0L)
@@ -83,7 +83,7 @@ internal class TextCitationParamTest {
         val textCitationParam =
             TextCitationParam.ofPageLocation(
                 CitationPageLocationParam.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
                     .documentTitle("x")
                     .endPageNumber(0L)
@@ -104,7 +104,7 @@ internal class TextCitationParamTest {
     fun ofContentBlockLocation() {
         val contentBlockLocation =
             CitationContentBlockLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endBlockIndex(0L)
@@ -126,7 +126,7 @@ internal class TextCitationParamTest {
         val textCitationParam =
             TextCitationParam.ofContentBlockLocation(
                 CitationContentBlockLocationParam.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
                     .documentTitle("x")
                     .endBlockIndex(0L)
@@ -147,7 +147,7 @@ internal class TextCitationParamTest {
     fun ofWebSearchResultLocation() {
         val webSearchResultLocation =
             CitationWebSearchResultLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .encryptedIndex("encrypted_index")
                 .title("x")
                 .url("x")
@@ -168,7 +168,7 @@ internal class TextCitationParamTest {
         val textCitationParam =
             TextCitationParam.ofWebSearchResultLocation(
                 CitationWebSearchResultLocationParam.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .encryptedIndex("encrypted_index")
                     .title("x")
                     .url("x")
@@ -188,7 +188,7 @@ internal class TextCitationParamTest {
     fun ofSearchResultLocation() {
         val searchResultLocation =
             CitationSearchResultLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .endBlockIndex(0L)
                 .searchResultIndex(0L)
                 .source("source")
@@ -211,7 +211,7 @@ internal class TextCitationParamTest {
         val textCitationParam =
             TextCitationParam.ofSearchResultLocation(
                 CitationSearchResultLocationParam.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .endBlockIndex(0L)
                     .searchResultIndex(0L)
                     .source("source")
