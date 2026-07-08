@@ -13,14 +13,15 @@ internal class CitationCharLocationParamTest {
     fun create() {
         val citationCharLocationParam =
             CitationCharLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endCharIndex(0L)
                 .startCharIndex(0L)
                 .build()
 
-        assertThat(citationCharLocationParam.citedText()).isEqualTo("cited_text")
+        assertThat(citationCharLocationParam.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(citationCharLocationParam.documentIndex()).isEqualTo(0L)
         assertThat(citationCharLocationParam.documentTitle()).contains("x")
         assertThat(citationCharLocationParam.endCharIndex()).isEqualTo(0L)
@@ -32,7 +33,7 @@ internal class CitationCharLocationParamTest {
         val jsonMapper = jsonMapper()
         val citationCharLocationParam =
             CitationCharLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endCharIndex(0L)

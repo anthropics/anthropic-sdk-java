@@ -18,11 +18,11 @@ internal class TextCitationTest {
     fun ofCharLocation() {
         val charLocation =
             CitationCharLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endCharIndex(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startCharIndex(0L)
                 .build()
 
@@ -41,11 +41,11 @@ internal class TextCitationTest {
         val textCitation =
             TextCitation.ofCharLocation(
                 CitationCharLocation.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
-                    .documentTitle("document_title")
+                    .documentTitle("My Document")
                     .endCharIndex(0L)
-                    .fileId("file_id")
+                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                     .startCharIndex(0L)
                     .build()
             )
@@ -63,11 +63,11 @@ internal class TextCitationTest {
     fun ofPageLocation() {
         val pageLocation =
             CitationPageLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endPageNumber(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startPageNumber(1L)
                 .build()
 
@@ -86,11 +86,11 @@ internal class TextCitationTest {
         val textCitation =
             TextCitation.ofPageLocation(
                 CitationPageLocation.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
-                    .documentTitle("document_title")
+                    .documentTitle("My Document")
                     .endPageNumber(0L)
-                    .fileId("file_id")
+                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                     .startPageNumber(1L)
                     .build()
             )
@@ -108,11 +108,11 @@ internal class TextCitationTest {
     fun ofContentBlockLocation() {
         val contentBlockLocation =
             CitationContentBlockLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endBlockIndex(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startBlockIndex(0L)
                 .build()
 
@@ -131,11 +131,11 @@ internal class TextCitationTest {
         val textCitation =
             TextCitation.ofContentBlockLocation(
                 CitationContentBlockLocation.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
-                    .documentTitle("document_title")
+                    .documentTitle("My Document")
                     .endBlockIndex(0L)
-                    .fileId("file_id")
+                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                     .startBlockIndex(0L)
                     .build()
             )
@@ -153,7 +153,7 @@ internal class TextCitationTest {
     fun ofWebSearchResultLocation() {
         val webSearchResultLocation =
             CitationsWebSearchResultLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .encryptedIndex("encrypted_index")
                 .title("title")
                 .url("url")
@@ -174,7 +174,7 @@ internal class TextCitationTest {
         val textCitation =
             TextCitation.ofWebSearchResultLocation(
                 CitationsWebSearchResultLocation.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .encryptedIndex("encrypted_index")
                     .title("title")
                     .url("url")
@@ -194,7 +194,7 @@ internal class TextCitationTest {
     fun ofSearchResultLocation() {
         val searchResultLocation =
             CitationsSearchResultLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .endBlockIndex(0L)
                 .searchResultIndex(0L)
                 .source("source")
@@ -217,7 +217,7 @@ internal class TextCitationTest {
         val textCitation =
             TextCitation.ofSearchResultLocation(
                 CitationsSearchResultLocation.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .endBlockIndex(0L)
                     .searchResultIndex(0L)
                     .source("source")

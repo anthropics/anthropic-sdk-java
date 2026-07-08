@@ -15,7 +15,7 @@ internal class BetaContainerTest {
     fun create() {
         val betaContainer =
             BetaContainer.builder()
-                .id("id")
+                .id("container_011CpZohnwH4vuy7gazohgSP")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addSkill(
                     BetaSkill.builder()
@@ -26,7 +26,7 @@ internal class BetaContainerTest {
                 )
                 .build()
 
-        assertThat(betaContainer.id()).isEqualTo("id")
+        assertThat(betaContainer.id()).isEqualTo("container_011CpZohnwH4vuy7gazohgSP")
         assertThat(betaContainer.expiresAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaContainer.skills().getOrNull())
@@ -44,7 +44,7 @@ internal class BetaContainerTest {
         val jsonMapper = jsonMapper()
         val betaContainer =
             BetaContainer.builder()
-                .id("id")
+                .id("container_011CpZohnwH4vuy7gazohgSP")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addSkill(
                     BetaSkill.builder()

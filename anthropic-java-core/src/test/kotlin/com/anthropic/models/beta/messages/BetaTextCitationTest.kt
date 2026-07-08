@@ -18,11 +18,11 @@ internal class BetaTextCitationTest {
     fun ofCharLocation() {
         val charLocation =
             BetaCitationCharLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endCharIndex(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startCharIndex(0L)
                 .build()
 
@@ -41,11 +41,11 @@ internal class BetaTextCitationTest {
         val betaTextCitation =
             BetaTextCitation.ofCharLocation(
                 BetaCitationCharLocation.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
-                    .documentTitle("document_title")
+                    .documentTitle("My Document")
                     .endCharIndex(0L)
-                    .fileId("file_id")
+                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                     .startCharIndex(0L)
                     .build()
             )
@@ -63,11 +63,11 @@ internal class BetaTextCitationTest {
     fun ofPageLocation() {
         val pageLocation =
             BetaCitationPageLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endPageNumber(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startPageNumber(1L)
                 .build()
 
@@ -86,11 +86,11 @@ internal class BetaTextCitationTest {
         val betaTextCitation =
             BetaTextCitation.ofPageLocation(
                 BetaCitationPageLocation.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
-                    .documentTitle("document_title")
+                    .documentTitle("My Document")
                     .endPageNumber(0L)
-                    .fileId("file_id")
+                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                     .startPageNumber(1L)
                     .build()
             )
@@ -108,11 +108,11 @@ internal class BetaTextCitationTest {
     fun ofContentBlockLocation() {
         val contentBlockLocation =
             BetaCitationContentBlockLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endBlockIndex(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startBlockIndex(0L)
                 .build()
 
@@ -131,11 +131,11 @@ internal class BetaTextCitationTest {
         val betaTextCitation =
             BetaTextCitation.ofContentBlockLocation(
                 BetaCitationContentBlockLocation.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
-                    .documentTitle("document_title")
+                    .documentTitle("My Document")
                     .endBlockIndex(0L)
-                    .fileId("file_id")
+                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                     .startBlockIndex(0L)
                     .build()
             )
@@ -153,7 +153,7 @@ internal class BetaTextCitationTest {
     fun ofWebSearchResultLocation() {
         val webSearchResultLocation =
             BetaCitationsWebSearchResultLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .encryptedIndex("encrypted_index")
                 .title("title")
                 .url("url")
@@ -174,7 +174,7 @@ internal class BetaTextCitationTest {
         val betaTextCitation =
             BetaTextCitation.ofWebSearchResultLocation(
                 BetaCitationsWebSearchResultLocation.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .encryptedIndex("encrypted_index")
                     .title("title")
                     .url("url")
@@ -194,7 +194,7 @@ internal class BetaTextCitationTest {
     fun ofSearchResultLocation() {
         val searchResultLocation =
             BetaCitationSearchResultLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .endBlockIndex(0L)
                 .searchResultIndex(0L)
                 .source("source")
@@ -217,7 +217,7 @@ internal class BetaTextCitationTest {
         val betaTextCitation =
             BetaTextCitation.ofSearchResultLocation(
                 BetaCitationSearchResultLocation.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .endBlockIndex(0L)
                     .searchResultIndex(0L)
                     .source("source")

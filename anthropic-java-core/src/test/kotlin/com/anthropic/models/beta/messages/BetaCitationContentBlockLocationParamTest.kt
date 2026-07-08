@@ -13,14 +13,15 @@ internal class BetaCitationContentBlockLocationParamTest {
     fun create() {
         val betaCitationContentBlockLocationParam =
             BetaCitationContentBlockLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endBlockIndex(0L)
                 .startBlockIndex(0L)
                 .build()
 
-        assertThat(betaCitationContentBlockLocationParam.citedText()).isEqualTo("cited_text")
+        assertThat(betaCitationContentBlockLocationParam.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(betaCitationContentBlockLocationParam.documentIndex()).isEqualTo(0L)
         assertThat(betaCitationContentBlockLocationParam.documentTitle()).contains("x")
         assertThat(betaCitationContentBlockLocationParam.endBlockIndex()).isEqualTo(0L)
@@ -32,7 +33,7 @@ internal class BetaCitationContentBlockLocationParamTest {
         val jsonMapper = jsonMapper()
         val betaCitationContentBlockLocationParam =
             BetaCitationContentBlockLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endBlockIndex(0L)

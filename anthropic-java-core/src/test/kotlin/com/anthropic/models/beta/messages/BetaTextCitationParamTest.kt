@@ -18,7 +18,7 @@ internal class BetaTextCitationParamTest {
     fun ofCharLocation() {
         val charLocation =
             BetaCitationCharLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endCharIndex(0L)
@@ -40,7 +40,7 @@ internal class BetaTextCitationParamTest {
         val betaTextCitationParam =
             BetaTextCitationParam.ofCharLocation(
                 BetaCitationCharLocationParam.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
                     .documentTitle("x")
                     .endCharIndex(0L)
@@ -61,7 +61,7 @@ internal class BetaTextCitationParamTest {
     fun ofPageLocation() {
         val pageLocation =
             BetaCitationPageLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endPageNumber(0L)
@@ -83,7 +83,7 @@ internal class BetaTextCitationParamTest {
         val betaTextCitationParam =
             BetaTextCitationParam.ofPageLocation(
                 BetaCitationPageLocationParam.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
                     .documentTitle("x")
                     .endPageNumber(0L)
@@ -104,7 +104,7 @@ internal class BetaTextCitationParamTest {
     fun ofContentBlockLocation() {
         val contentBlockLocation =
             BetaCitationContentBlockLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
                 .documentTitle("x")
                 .endBlockIndex(0L)
@@ -127,7 +127,7 @@ internal class BetaTextCitationParamTest {
         val betaTextCitationParam =
             BetaTextCitationParam.ofContentBlockLocation(
                 BetaCitationContentBlockLocationParam.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .documentIndex(0L)
                     .documentTitle("x")
                     .endBlockIndex(0L)
@@ -148,7 +148,7 @@ internal class BetaTextCitationParamTest {
     fun ofWebSearchResultLocation() {
         val webSearchResultLocation =
             BetaCitationWebSearchResultLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .encryptedIndex("encrypted_index")
                 .title("x")
                 .url("x")
@@ -171,7 +171,7 @@ internal class BetaTextCitationParamTest {
         val betaTextCitationParam =
             BetaTextCitationParam.ofWebSearchResultLocation(
                 BetaCitationWebSearchResultLocationParam.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .encryptedIndex("encrypted_index")
                     .title("x")
                     .url("x")
@@ -191,7 +191,7 @@ internal class BetaTextCitationParamTest {
     fun ofSearchResultLocation() {
         val searchResultLocation =
             BetaCitationSearchResultLocationParam.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .endBlockIndex(0L)
                 .searchResultIndex(0L)
                 .source("source")
@@ -215,7 +215,7 @@ internal class BetaTextCitationParamTest {
         val betaTextCitationParam =
             BetaTextCitationParam.ofSearchResultLocation(
                 BetaCitationSearchResultLocationParam.builder()
-                    .citedText("cited_text")
+                    .citedText("The grass is green. The sky is blue.")
                     .endBlockIndex(0L)
                     .searchResultIndex(0L)
                     .source("source")

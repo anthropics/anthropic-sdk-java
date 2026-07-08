@@ -13,19 +13,20 @@ internal class CitationContentBlockLocationTest {
     fun create() {
         val citationContentBlockLocation =
             CitationContentBlockLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endBlockIndex(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startBlockIndex(0L)
                 .build()
 
-        assertThat(citationContentBlockLocation.citedText()).isEqualTo("cited_text")
+        assertThat(citationContentBlockLocation.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
         assertThat(citationContentBlockLocation.documentIndex()).isEqualTo(0L)
-        assertThat(citationContentBlockLocation.documentTitle()).contains("document_title")
+        assertThat(citationContentBlockLocation.documentTitle()).contains("My Document")
         assertThat(citationContentBlockLocation.endBlockIndex()).isEqualTo(0L)
-        assertThat(citationContentBlockLocation.fileId()).contains("file_id")
+        assertThat(citationContentBlockLocation.fileId()).contains("file_011CNha8iCJcU1wXNR6q4V8w")
         assertThat(citationContentBlockLocation.startBlockIndex()).isEqualTo(0L)
     }
 
@@ -34,11 +35,11 @@ internal class CitationContentBlockLocationTest {
         val jsonMapper = jsonMapper()
         val citationContentBlockLocation =
             CitationContentBlockLocation.builder()
-                .citedText("cited_text")
+                .citedText("The grass is green. The sky is blue.")
                 .documentIndex(0L)
-                .documentTitle("document_title")
+                .documentTitle("My Document")
                 .endBlockIndex(0L)
-                .fileId("file_id")
+                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                 .startBlockIndex(0L)
                 .build()
 

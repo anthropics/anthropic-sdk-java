@@ -25,7 +25,7 @@ internal class BetaRawMessageStreamEventTest {
                         .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                         .container(
                             BetaContainer.builder()
-                                .id("id")
+                                .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .addSkill(
                                     BetaSkill.builder()
@@ -40,11 +40,11 @@ internal class BetaRawMessageStreamEventTest {
                             BetaTextBlock.builder()
                                 .addCitation(
                                     BetaCitationCharLocation.builder()
-                                        .citedText("cited_text")
+                                        .citedText("The grass is green. The sky is blue.")
                                         .documentIndex(0L)
-                                        .documentTitle("document_title")
+                                        .documentTitle("My Document")
                                         .endCharIndex(0L)
-                                        .fileId("file_id")
+                                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                                         .startCharIndex(0L)
                                         .build()
                                 )
@@ -68,10 +68,12 @@ internal class BetaRawMessageStreamEventTest {
                         .stopDetails(
                             BetaRefusalStopDetails.builder()
                                 .category(BetaRefusalStopDetails.Category.CYBER)
-                                .explanation("explanation")
-                                .fallbackCreditToken("fallback_credit_token")
+                                .explanation(
+                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                )
+                                .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                                 .fallbackHasPrefillClaim(true)
-                                .recommendedModel("recommended_model")
+                                .recommendedModel("claude-sonnet-4-6")
                                 .build()
                         )
                         .stopReason(BetaStopReason.END_TURN)
@@ -86,7 +88,7 @@ internal class BetaRawMessageStreamEventTest {
                                 )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
-                                .inferenceGeo("inference_geo")
+                                .inferenceGeo("global")
                                 .inputTokens(2095L)
                                 .addIteration(
                                     BetaMessageIterationUsage.builder()
@@ -142,7 +144,7 @@ internal class BetaRawMessageStreamEventTest {
                             .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                             .container(
                                 BetaContainer.builder()
-                                    .id("id")
+                                    .id("container_011CpZohnwH4vuy7gazohgSP")
                                     .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .addSkill(
                                         BetaSkill.builder()
@@ -157,11 +159,11 @@ internal class BetaRawMessageStreamEventTest {
                                 BetaTextBlock.builder()
                                     .addCitation(
                                         BetaCitationCharLocation.builder()
-                                            .citedText("cited_text")
+                                            .citedText("The grass is green. The sky is blue.")
                                             .documentIndex(0L)
-                                            .documentTitle("document_title")
+                                            .documentTitle("My Document")
                                             .endCharIndex(0L)
-                                            .fileId("file_id")
+                                            .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                                             .startCharIndex(0L)
                                             .build()
                                     )
@@ -185,10 +187,12 @@ internal class BetaRawMessageStreamEventTest {
                             .stopDetails(
                                 BetaRefusalStopDetails.builder()
                                     .category(BetaRefusalStopDetails.Category.CYBER)
-                                    .explanation("explanation")
-                                    .fallbackCreditToken("fallback_credit_token")
+                                    .explanation(
+                                        "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                    )
+                                    .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                                     .fallbackHasPrefillClaim(true)
-                                    .recommendedModel("recommended_model")
+                                    .recommendedModel("claude-sonnet-4-6")
                                     .build()
                             )
                             .stopReason(BetaStopReason.END_TURN)
@@ -203,7 +207,7 @@ internal class BetaRawMessageStreamEventTest {
                                     )
                                     .cacheCreationInputTokens(2051L)
                                     .cacheReadInputTokens(2051L)
-                                    .inferenceGeo("inference_geo")
+                                    .inferenceGeo("global")
                                     .inputTokens(2095L)
                                     .addIteration(
                                         BetaMessageIterationUsage.builder()
@@ -266,7 +270,7 @@ internal class BetaRawMessageStreamEventTest {
                     BetaRawMessageDeltaEvent.Delta.builder()
                         .container(
                             BetaContainer.builder()
-                                .id("id")
+                                .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .addSkill(
                                     BetaSkill.builder()
@@ -280,10 +284,12 @@ internal class BetaRawMessageStreamEventTest {
                         .stopDetails(
                             BetaRefusalStopDetails.builder()
                                 .category(BetaRefusalStopDetails.Category.CYBER)
-                                .explanation("explanation")
-                                .fallbackCreditToken("fallback_credit_token")
+                                .explanation(
+                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                )
+                                .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                                 .fallbackHasPrefillClaim(true)
-                                .recommendedModel("recommended_model")
+                                .recommendedModel("claude-sonnet-4-6")
                                 .build()
                         )
                         .stopReason(BetaStopReason.END_TURN)
@@ -354,7 +360,7 @@ internal class BetaRawMessageStreamEventTest {
                         BetaRawMessageDeltaEvent.Delta.builder()
                             .container(
                                 BetaContainer.builder()
-                                    .id("id")
+                                    .id("container_011CpZohnwH4vuy7gazohgSP")
                                     .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .addSkill(
                                         BetaSkill.builder()
@@ -368,10 +374,12 @@ internal class BetaRawMessageStreamEventTest {
                             .stopDetails(
                                 BetaRefusalStopDetails.builder()
                                     .category(BetaRefusalStopDetails.Category.CYBER)
-                                    .explanation("explanation")
-                                    .fallbackCreditToken("fallback_credit_token")
+                                    .explanation(
+                                        "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                    )
+                                    .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                                     .fallbackHasPrefillClaim(true)
-                                    .recommendedModel("recommended_model")
+                                    .recommendedModel("claude-sonnet-4-6")
                                     .build()
                             )
                             .stopReason(BetaStopReason.END_TURN)
@@ -459,11 +467,11 @@ internal class BetaRawMessageStreamEventTest {
                     BetaTextBlock.builder()
                         .addCitation(
                             BetaCitationCharLocation.builder()
-                                .citedText("cited_text")
+                                .citedText("The grass is green. The sky is blue.")
                                 .documentIndex(0L)
-                                .documentTitle("document_title")
+                                .documentTitle("My Document")
                                 .endCharIndex(0L)
-                                .fileId("file_id")
+                                .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                                 .startCharIndex(0L)
                                 .build()
                         )
@@ -494,11 +502,11 @@ internal class BetaRawMessageStreamEventTest {
                         BetaTextBlock.builder()
                             .addCitation(
                                 BetaCitationCharLocation.builder()
-                                    .citedText("cited_text")
+                                    .citedText("The grass is green. The sky is blue.")
                                     .documentIndex(0L)
-                                    .documentTitle("document_title")
+                                    .documentTitle("My Document")
                                     .endCharIndex(0L)
-                                    .fileId("file_id")
+                                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
                                     .startCharIndex(0L)
                                     .build()
                             )

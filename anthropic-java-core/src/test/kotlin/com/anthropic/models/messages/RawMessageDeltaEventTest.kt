@@ -18,14 +18,16 @@ internal class RawMessageDeltaEventTest {
                     RawMessageDeltaEvent.Delta.builder()
                         .container(
                             Container.builder()
-                                .id("id")
+                                .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
                         )
                         .stopDetails(
                             RefusalStopDetails.builder()
                                 .category(RefusalStopDetails.Category.CYBER)
-                                .explanation("explanation")
+                                .explanation(
+                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                )
                                 .build()
                         )
                         .stopReason(StopReason.END_TURN)
@@ -56,14 +58,16 @@ internal class RawMessageDeltaEventTest {
                 RawMessageDeltaEvent.Delta.builder()
                     .container(
                         Container.builder()
-                            .id("id")
+                            .id("container_011CpZohnwH4vuy7gazohgSP")
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .build()
                     )
                     .stopDetails(
                         RefusalStopDetails.builder()
                             .category(RefusalStopDetails.Category.CYBER)
-                            .explanation("explanation")
+                            .explanation(
+                                "This request was declined because it conflicts with Anthropic's Usage Policy."
+                            )
                             .build()
                     )
                     .stopReason(StopReason.END_TURN)
@@ -94,14 +98,16 @@ internal class RawMessageDeltaEventTest {
                     RawMessageDeltaEvent.Delta.builder()
                         .container(
                             Container.builder()
-                                .id("id")
+                                .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .build()
                         )
                         .stopDetails(
                             RefusalStopDetails.builder()
                                 .category(RefusalStopDetails.Category.CYBER)
-                                .explanation("explanation")
+                                .explanation(
+                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                )
                                 .build()
                         )
                         .stopReason(StopReason.END_TURN)
