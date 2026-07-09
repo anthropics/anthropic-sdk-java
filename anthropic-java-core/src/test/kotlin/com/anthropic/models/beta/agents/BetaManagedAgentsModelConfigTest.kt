@@ -13,12 +13,12 @@ internal class BetaManagedAgentsModelConfigTest {
     fun create() {
         val betaManagedAgentsModelConfig =
             BetaManagedAgentsModelConfig.builder()
-                .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                 .build()
 
         assertThat(betaManagedAgentsModelConfig.id())
-            .isEqualTo(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+            .isEqualTo(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
         assertThat(betaManagedAgentsModelConfig.speed())
             .contains(BetaManagedAgentsModelConfig.Speed.STANDARD)
     }
@@ -28,7 +28,7 @@ internal class BetaManagedAgentsModelConfigTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsModelConfig =
             BetaManagedAgentsModelConfig.builder()
-                .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                 .build()
 
