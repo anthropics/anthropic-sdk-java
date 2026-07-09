@@ -33,7 +33,7 @@ internal class AgentUpdateParamsTest {
             )
             .model(
                 BetaManagedAgentsModelConfigParams.builder()
-                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
                     .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                     .build()
             )
@@ -120,7 +120,7 @@ internal class AgentUpdateParamsTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
@@ -216,7 +216,7 @@ internal class AgentUpdateParamsTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
@@ -294,7 +294,7 @@ internal class AgentUpdateParamsTest {
             .contains(
                 AgentUpdateParams.Model.ofBetaManagedAgentsModelConfigParams(
                     BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
