@@ -6,6 +6,7 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.services.async.beta.AgentServiceAsync
 import com.anthropic.services.async.beta.DeploymentRunServiceAsync
 import com.anthropic.services.async.beta.DeploymentServiceAsync
+import com.anthropic.services.async.beta.DreamServiceAsync
 import com.anthropic.services.async.beta.EnvironmentServiceAsync
 import com.anthropic.services.async.beta.FileServiceAsync
 import com.anthropic.services.async.beta.MemoryStoreServiceAsync
@@ -58,6 +59,8 @@ interface BetaServiceAsync {
 
     fun userProfiles(): UserProfileServiceAsync
 
+    fun dreams(): DreamServiceAsync
+
     /** A view of [BetaServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
@@ -93,5 +96,7 @@ interface BetaServiceAsync {
         fun webhooks(): WebhookServiceAsync.WithRawResponse
 
         fun userProfiles(): UserProfileServiceAsync.WithRawResponse
+
+        fun dreams(): DreamServiceAsync.WithRawResponse
     }
 }

@@ -82,6 +82,9 @@ private constructor(
     fun outputConfig(): Optional<BetaOutputConfig> = outputConfig.getOptional("output_config")
 
     /**
+     * Inference speed mode. `fast` provides significantly faster output token generation at premium
+     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -237,6 +240,11 @@ private constructor(
             this.outputConfig = outputConfig
         }
 
+        /**
+         * Inference speed mode. `fast` provides significantly faster output token generation at
+         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
+         * create time.
+         */
         fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
         /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
@@ -370,6 +378,10 @@ private constructor(
             (speed.asKnown().getOrNull()?.validity() ?: 0) +
             (thinking.asKnown().getOrNull()?.validity() ?: 0)
 
+    /**
+     * Inference speed mode. `fast` provides significantly faster output token generation at premium
+     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     */
     class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
