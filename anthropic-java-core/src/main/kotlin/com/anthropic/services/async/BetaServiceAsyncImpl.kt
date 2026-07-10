@@ -9,6 +9,8 @@ import com.anthropic.services.async.beta.DeploymentRunServiceAsync
 import com.anthropic.services.async.beta.DeploymentRunServiceAsyncImpl
 import com.anthropic.services.async.beta.DeploymentServiceAsync
 import com.anthropic.services.async.beta.DeploymentServiceAsyncImpl
+import com.anthropic.services.async.beta.DreamServiceAsync
+import com.anthropic.services.async.beta.DreamServiceAsyncImpl
 import com.anthropic.services.async.beta.EnvironmentServiceAsync
 import com.anthropic.services.async.beta.EnvironmentServiceAsyncImpl
 import com.anthropic.services.async.beta.FileServiceAsync
@@ -74,6 +76,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         UserProfileServiceAsyncImpl(clientOptions)
     }
 
+    private val dreams: DreamServiceAsync by lazy { DreamServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): BetaServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaServiceAsync =
@@ -104,6 +108,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun webhooks(): WebhookServiceAsync = webhooks
 
     override fun userProfiles(): UserProfileServiceAsync = userProfiles
+
+    override fun dreams(): DreamServiceAsync = dreams
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaServiceAsync.WithRawResponse {
@@ -160,6 +166,10 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
             UserProfileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val dreams: DreamServiceAsync.WithRawResponse by lazy {
+            DreamServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): BetaServiceAsync.WithRawResponse =
@@ -192,5 +202,7 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks
 
         override fun userProfiles(): UserProfileServiceAsync.WithRawResponse = userProfiles
+
+        override fun dreams(): DreamServiceAsync.WithRawResponse = dreams
     }
 }

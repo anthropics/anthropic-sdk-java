@@ -186,8 +186,8 @@ private constructor(
     fun outputFormat(): Optional<BetaJsonOutputFormat> = body.outputFormat()
 
     /**
-     * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
-     * inference.
+     * Inference speed mode. `fast` provides significantly faster output token generation at premium
+     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -782,8 +782,9 @@ private constructor(
         }
 
         /**
-         * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
-         * inference.
+         * Inference speed mode. `fast` provides significantly faster output token generation at
+         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
+         * create time.
          */
         fun speed(speed: Speed?) = apply { body.speed(speed) }
 
@@ -1532,8 +1533,9 @@ private constructor(
             outputFormat.getOptional("output_format")
 
         /**
-         * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
-         * inference.
+         * Inference speed mode. `fast` provides significantly faster output token generation at
+         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
+         * create time.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -2159,8 +2161,9 @@ private constructor(
             }
 
             /**
-             * The inference speed mode for this request. `"fast"` enables high
-             * output-tokens-per-second inference.
+             * Inference speed mode. `fast` provides significantly faster output token generation at
+             * premium pricing. Not all models support `fast`; invalid combinations are rejected at
+             * create time.
              */
             fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
@@ -2717,8 +2720,8 @@ private constructor(
     }
 
     /**
-     * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
-     * inference.
+     * Inference speed mode. `fast` provides significantly faster output token generation at premium
+     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
      */
     class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
