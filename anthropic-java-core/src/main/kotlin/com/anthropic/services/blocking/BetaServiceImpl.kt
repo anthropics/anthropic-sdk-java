@@ -9,6 +9,8 @@ import com.anthropic.services.blocking.beta.DeploymentRunService
 import com.anthropic.services.blocking.beta.DeploymentRunServiceImpl
 import com.anthropic.services.blocking.beta.DeploymentService
 import com.anthropic.services.blocking.beta.DeploymentServiceImpl
+import com.anthropic.services.blocking.beta.DreamService
+import com.anthropic.services.blocking.beta.DreamServiceImpl
 import com.anthropic.services.blocking.beta.EnvironmentService
 import com.anthropic.services.blocking.beta.EnvironmentServiceImpl
 import com.anthropic.services.blocking.beta.FileService
@@ -65,6 +67,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     private val userProfiles: UserProfileService by lazy { UserProfileServiceImpl(clientOptions) }
 
+    private val dreams: DreamService by lazy { DreamServiceImpl(clientOptions) }
+
     override fun withRawResponse(): BetaService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaService =
@@ -95,6 +99,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun webhooks(): WebhookService = webhooks
 
     override fun userProfiles(): UserProfileService = userProfiles
+
+    override fun dreams(): DreamService = dreams
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaService.WithRawResponse {
@@ -151,6 +157,10 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
             UserProfileServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val dreams: DreamService.WithRawResponse by lazy {
+            DreamServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): BetaService.WithRawResponse =
@@ -183,5 +193,7 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
         override fun webhooks(): WebhookService.WithRawResponse = webhooks
 
         override fun userProfiles(): UserProfileService.WithRawResponse = userProfiles
+
+        override fun dreams(): DreamService.WithRawResponse = dreams
     }
 }

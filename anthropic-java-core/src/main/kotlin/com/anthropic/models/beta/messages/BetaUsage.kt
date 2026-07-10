@@ -191,7 +191,8 @@ private constructor(
     fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
 
     /**
-     * The inference speed mode used for this request.
+     * Inference speed mode. `fast` provides significantly faster output token generation at premium
+     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -601,7 +602,11 @@ private constructor(
             this.serviceTier = serviceTier
         }
 
-        /** The inference speed mode used for this request. */
+        /**
+         * Inference speed mode. `fast` provides significantly faster output token generation at
+         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
+         * create time.
+         */
         fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
         /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
@@ -1202,7 +1207,10 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** The inference speed mode used for this request. */
+    /**
+     * Inference speed mode. `fast` provides significantly faster output token generation at premium
+     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     */
     class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
