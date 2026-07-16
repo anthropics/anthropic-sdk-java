@@ -14,6 +14,7 @@ import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.ModelService
 import com.anthropic.services.blocking.beta.SessionService
 import com.anthropic.services.blocking.beta.SkillService
+import com.anthropic.services.blocking.beta.TunnelService
 import com.anthropic.services.blocking.beta.UserProfileService
 import com.anthropic.services.blocking.beta.VaultService
 import com.anthropic.services.blocking.beta.WebhookService
@@ -61,6 +62,8 @@ interface BetaService {
 
     fun dreams(): DreamService
 
+    fun tunnels(): TunnelService
+
     /** A view of [BetaService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
@@ -98,5 +101,7 @@ interface BetaService {
         fun userProfiles(): UserProfileService.WithRawResponse
 
         fun dreams(): DreamService.WithRawResponse
+
+        fun tunnels(): TunnelService.WithRawResponse
     }
 }
