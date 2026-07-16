@@ -9,6 +9,7 @@ dependencies {
     implementation(project(":anthropic-java-aws"))
     implementation(project(":anthropic-java-bedrock"))
     implementation(project(":anthropic-java-foundry"))
+    implementation(project(":anthropic-java-google-cloud"))
     implementation(project(":anthropic-java-vertex"))
     // Microsoft Entra ID library for Foundry examples.
     implementation(libs.azure.identity)
