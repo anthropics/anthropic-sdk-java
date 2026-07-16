@@ -8,6 +8,7 @@ jobs:
   publish:
     name: publish
     runs-on: ${{ github.repository == 'anthropics/anthropic-sdk-java' && 'ubuntu-latest-16core' || 'ubuntu-latest-16-core' }}
+    environment: production-release
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
