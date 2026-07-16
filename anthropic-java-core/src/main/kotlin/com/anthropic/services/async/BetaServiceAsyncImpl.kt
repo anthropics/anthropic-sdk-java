@@ -25,6 +25,8 @@ import com.anthropic.services.async.beta.SessionServiceAsync
 import com.anthropic.services.async.beta.SessionServiceAsyncImpl
 import com.anthropic.services.async.beta.SkillServiceAsync
 import com.anthropic.services.async.beta.SkillServiceAsyncImpl
+import com.anthropic.services.async.beta.TunnelServiceAsync
+import com.anthropic.services.async.beta.TunnelServiceAsyncImpl
 import com.anthropic.services.async.beta.UserProfileServiceAsync
 import com.anthropic.services.async.beta.UserProfileServiceAsyncImpl
 import com.anthropic.services.async.beta.VaultServiceAsync
@@ -78,6 +80,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     private val dreams: DreamServiceAsync by lazy { DreamServiceAsyncImpl(clientOptions) }
 
+    private val tunnels: TunnelServiceAsync by lazy { TunnelServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): BetaServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaServiceAsync =
@@ -110,6 +114,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun userProfiles(): UserProfileServiceAsync = userProfiles
 
     override fun dreams(): DreamServiceAsync = dreams
+
+    override fun tunnels(): TunnelServiceAsync = tunnels
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaServiceAsync.WithRawResponse {
@@ -170,6 +176,10 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
             DreamServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val tunnels: TunnelServiceAsync.WithRawResponse by lazy {
+            TunnelServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): BetaServiceAsync.WithRawResponse =
@@ -204,5 +214,7 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         override fun userProfiles(): UserProfileServiceAsync.WithRawResponse = userProfiles
 
         override fun dreams(): DreamServiceAsync.WithRawResponse = dreams
+
+        override fun tunnels(): TunnelServiceAsync.WithRawResponse = tunnels
     }
 }
