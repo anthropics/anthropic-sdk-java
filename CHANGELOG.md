@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.49.0 (2026-07-16)
+
+Full Changelog: [v2.48.0...v2.49.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.48.0...v2.49.0)
+
+### Features
+
+* **api:** add support for dreaming ([836ee60](https://github.com/anthropics/anthropic-sdk-java/commit/836ee60391f5188d27dbc97903f40377df4f240a))
+* **api:** add support for MCP Tunnels ([a05c5cf](https://github.com/anthropics/anthropic-sdk-java/commit/a05c5cfd632dc6f5a59ef84b34e14160bdc483bf))
+* **helpers:** add session delta accumulator for agent.message previews ([#123](https://github.com/anthropics/anthropic-sdk-java/issues/123)) ([fc902ed](https://github.com/anthropics/anthropic-sdk-java/commit/fc902ed1b0be11f84751da83e748acd16428bcd5))
+
+
+### Chores
+
+* **docs:** small updates to field descriptions ([6405877](https://github.com/anthropics/anthropic-sdk-java/commit/6405877c46bcfe8a276d4ff1d85e15ab1cf5f35d))
+* **docs:** update model example ([f940d27](https://github.com/anthropics/anthropic-sdk-java/commit/f940d27dee46ac7ab2b2bd5651b40375ce4b01bf))
+* **docs:** updates to descriptions and examples ([cd1d008](https://github.com/anthropics/anthropic-sdk-java/commit/cd1d008c321afe579a19e4591a27b97f9adfd5b7))
+
 ## 2.48.0 (2026-07-02)
 
 Full Changelog: [v2.47.1...v2.48.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.47.1...v2.48.0)
