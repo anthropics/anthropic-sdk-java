@@ -272,12 +272,31 @@ private constructor(
 
         companion object {
 
+            /**
+             * The request could enable cyber harm, such as malware or exploit development. Benign
+             * cybersecurity work can also trigger this category.
+             */
             @JvmField val CYBER = of("cyber")
 
+            /**
+             * The request could enable biological harm, such as dangerous lab methods. Beneficial
+             * life sciences work can also trigger this category.
+             */
             @JvmField val BIO = of("bio")
 
+            /**
+             * The request could assist the development of competing AI models, which is restricted
+             * under
+             * [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms).
+             * Benign machine learning work can also trigger this category.
+             */
             @JvmField val FRONTIER_LLM = of("frontier_llm")
 
+            /**
+             * The request asks the model to reproduce its internal reasoning in the response text.
+             * To get reasoning in a structured form instead, use
+             * [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking).
+             */
             @JvmField val REASONING_EXTRACTION = of("reasoning_extraction")
 
             @JvmStatic fun of(value: String) = Category(JsonField.of(value))
@@ -285,9 +304,28 @@ private constructor(
 
         /** An enum containing [Category]'s known values. */
         enum class Known {
+            /**
+             * The request could enable cyber harm, such as malware or exploit development. Benign
+             * cybersecurity work can also trigger this category.
+             */
             CYBER,
+            /**
+             * The request could enable biological harm, such as dangerous lab methods. Beneficial
+             * life sciences work can also trigger this category.
+             */
             BIO,
+            /**
+             * The request could assist the development of competing AI models, which is restricted
+             * under
+             * [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms).
+             * Benign machine learning work can also trigger this category.
+             */
             FRONTIER_LLM,
+            /**
+             * The request asks the model to reproduce its internal reasoning in the response text.
+             * To get reasoning in a structured form instead, use
+             * [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking).
+             */
             REASONING_EXTRACTION,
         }
 
@@ -301,9 +339,28 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /**
+             * The request could enable cyber harm, such as malware or exploit development. Benign
+             * cybersecurity work can also trigger this category.
+             */
             CYBER,
+            /**
+             * The request could enable biological harm, such as dangerous lab methods. Beneficial
+             * life sciences work can also trigger this category.
+             */
             BIO,
+            /**
+             * The request could assist the development of competing AI models, which is restricted
+             * under
+             * [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms).
+             * Benign machine learning work can also trigger this category.
+             */
             FRONTIER_LLM,
+            /**
+             * The request asks the model to reproduce its internal reasoning in the response text.
+             * To get reasoning in a structured form instead, use
+             * [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking).
+             */
             REASONING_EXTRACTION,
             /** An enum member indicating that [Category] was instantiated with an unknown value. */
             _UNKNOWN,
