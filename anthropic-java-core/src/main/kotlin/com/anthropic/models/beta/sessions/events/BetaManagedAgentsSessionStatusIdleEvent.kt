@@ -350,8 +350,8 @@ private constructor(
             Optional.ofNullable(requiresAction)
 
         /**
-         * The turn ended because the retry budget was exhausted (`max_iterations` hit or an error
-         * escalated to `retry_status: 'exhausted'`).
+         * The turn ended because repeated errors exhausted the automatic retry budget or the agent
+         * reached an internal execution limit.
          */
         fun retriesExhausted(): Optional<BetaManagedAgentsSessionRetriesExhausted> =
             Optional.ofNullable(retriesExhausted)
@@ -373,8 +373,8 @@ private constructor(
             requiresAction.getOrThrow("requiresAction")
 
         /**
-         * The turn ended because the retry budget was exhausted (`max_iterations` hit or an error
-         * escalated to `retry_status: 'exhausted'`).
+         * The turn ended because repeated errors exhausted the automatic retry budget or the agent
+         * reached an internal execution limit.
          */
         fun asRetriesExhausted(): BetaManagedAgentsSessionRetriesExhausted =
             retriesExhausted.getOrThrow("retriesExhausted")
@@ -527,8 +527,8 @@ private constructor(
                 StopReason(requiresAction = requiresAction)
 
             /**
-             * The turn ended because the retry budget was exhausted (`max_iterations` hit or an
-             * error escalated to `retry_status: 'exhausted'`).
+             * The turn ended because repeated errors exhausted the automatic retry budget or the
+             * agent reached an internal execution limit.
              */
             @JvmStatic
             fun ofRetriesExhausted(retriesExhausted: BetaManagedAgentsSessionRetriesExhausted) =
@@ -551,8 +551,8 @@ private constructor(
             fun visitRequiresAction(requiresAction: BetaManagedAgentsSessionRequiresAction): T
 
             /**
-             * The turn ended because the retry budget was exhausted (`max_iterations` hit or an
-             * error escalated to `retry_status: 'exhausted'`).
+             * The turn ended because repeated errors exhausted the automatic retry budget or the
+             * agent reached an internal execution limit.
              */
             fun visitRetriesExhausted(retriesExhausted: BetaManagedAgentsSessionRetriesExhausted): T
 
