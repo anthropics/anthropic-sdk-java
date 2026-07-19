@@ -64,12 +64,16 @@ private constructor(
                             override fun visitCodeExecution20250825(
                                 codeExecution20250825: ServerToolCaller
                             ): ToolUseBlockParam.Caller =
-                                ToolUseBlockParam.Caller.ofDirect(DirectCaller.builder().build())
+                                ToolUseBlockParam.Caller.ofCodeExecution20250825(
+                                    codeExecution20250825
+                                )
 
                             override fun visitCodeExecution20260120(
                                 codeExecution20260120: ServerToolCaller20260120
                             ): ToolUseBlockParam.Caller =
-                                ToolUseBlockParam.Caller.ofDirect(DirectCaller.builder().build())
+                                ToolUseBlockParam.Caller.ofCodeExecution20260120(
+                                    codeExecution20260120
+                                )
                         }
                     )
                 }
