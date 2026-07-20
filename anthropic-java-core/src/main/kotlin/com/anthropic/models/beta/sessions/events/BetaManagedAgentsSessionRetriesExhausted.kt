@@ -18,8 +18,8 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * The turn ended because repeated errors exhausted the automatic retry budget or the agent reached
- * an internal execution limit.
+ * The turn ended because repeated errors exhausted the retry budget or an error escalated to
+ * `retry_status: 'exhausted'`.
  */
 class BetaManagedAgentsSessionRetriesExhausted
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
