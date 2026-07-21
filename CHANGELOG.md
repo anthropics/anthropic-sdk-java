@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.49.1 (2026-07-21)
+
+Full Changelog: [v2.49.0...v2.49.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.49.0...v2.49.1)
+
+### Chores
+
+* **api:** add support for new refusal category ([40db9c7](https://github.com/anthropics/anthropic-sdk-java/commit/40db9c7d5d847ec22d1aaf968421db73701e21cc))
+* **client:** docs updates ([5b25c27](https://github.com/anthropics/anthropic-sdk-java/commit/5b25c27b593c2aeead62df707238236b9cde0dac))
+* **docs:** small updates ([99a2a8c](https://github.com/anthropics/anthropic-sdk-java/commit/99a2a8c368f112a435bfb2977e3ab1bbe00166bc))
+* **docs:** small updates ([adc11f5](https://github.com/anthropics/anthropic-sdk-java/commit/adc11f5dd1ac1bef357553b3baf11a503164a58e))
+* **internal:** codegen related update ([9d85f79](https://github.com/anthropics/anthropic-sdk-java/commit/9d85f79e551952907923d528a3fea27cb08d5720))
+
 ## 2.49.0 (2026-07-16)
 
 Full Changelog: [v2.48.0...v2.49.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.48.0...v2.49.0)
