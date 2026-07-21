@@ -14,7 +14,7 @@ internal class UnwrapWebhookEventTest {
     fun create() {
         val unwrapWebhookEvent =
             UnwrapWebhookEvent.builder()
-                .id("wevt_011CZkZYZd9rLmz3ujAcsqEw")
+                .id("whe_0f1e2d3c4b5a69788796a5b4c3d2e1f0")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .data(
                     BetaWebhookSessionStatusIdledEventData.builder()
@@ -25,7 +25,7 @@ internal class UnwrapWebhookEventTest {
                 )
                 .build()
 
-        assertThat(unwrapWebhookEvent.id()).isEqualTo("wevt_011CZkZYZd9rLmz3ujAcsqEw")
+        assertThat(unwrapWebhookEvent.id()).isEqualTo("whe_0f1e2d3c4b5a69788796a5b4c3d2e1f0")
         assertThat(unwrapWebhookEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(unwrapWebhookEvent.data())
@@ -45,7 +45,7 @@ internal class UnwrapWebhookEventTest {
         val jsonMapper = jsonMapper()
         val unwrapWebhookEvent =
             UnwrapWebhookEvent.builder()
-                .id("wevt_011CZkZYZd9rLmz3ujAcsqEw")
+                .id("whe_0f1e2d3c4b5a69788796a5b4c3d2e1f0")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .data(
                     BetaWebhookSessionStatusIdledEventData.builder()

@@ -539,6 +539,12 @@ private constructor(
              */
             @JvmField val REASONING_EXTRACTION = of("reasoning_extraction")
 
+            /**
+             * The request could be related to an area that was determined as harmful. Benign work
+             * might sometimes trigger this category.
+             */
+            @JvmField val GENERAL_HARMS = of("general_harms")
+
             @JvmStatic fun of(value: String) = Category(JsonField.of(value))
         }
 
@@ -567,6 +573,11 @@ private constructor(
              * [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking).
              */
             REASONING_EXTRACTION,
+            /**
+             * The request could be related to an area that was determined as harmful. Benign work
+             * might sometimes trigger this category.
+             */
+            GENERAL_HARMS,
         }
 
         /**
@@ -602,6 +613,11 @@ private constructor(
              * [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking).
              */
             REASONING_EXTRACTION,
+            /**
+             * The request could be related to an area that was determined as harmful. Benign work
+             * might sometimes trigger this category.
+             */
+            GENERAL_HARMS,
             /** An enum member indicating that [Category] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -619,6 +635,7 @@ private constructor(
                 BIO -> Value.BIO
                 FRONTIER_LLM -> Value.FRONTIER_LLM
                 REASONING_EXTRACTION -> Value.REASONING_EXTRACTION
+                GENERAL_HARMS -> Value.GENERAL_HARMS
                 else -> Value._UNKNOWN
             }
 
@@ -637,6 +654,7 @@ private constructor(
                 BIO -> Known.BIO
                 FRONTIER_LLM -> Known.FRONTIER_LLM
                 REASONING_EXTRACTION -> Known.REASONING_EXTRACTION
+                GENERAL_HARMS -> Known.GENERAL_HARMS
                 else -> throw AnthropicInvalidDataException("Unknown Category: $value")
             }
 
