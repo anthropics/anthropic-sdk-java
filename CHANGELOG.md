@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.50.0 (2026-07-22)
+
+Full Changelog: [v2.49.1...v2.50.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.49.1...v2.50.0)
+
+### Features
+
+* **api:** add support for Managed Agents model effort, initial session events, and threads delta streaming ([e312432](https://github.com/anthropics/anthropic-sdk-java/commit/e31243247e54acbea9df93f541124d1062e7ef55))
+
 ## 2.49.1 (2026-07-21)
 
 Full Changelog: [v2.49.0...v2.49.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.49.0...v2.49.1)
