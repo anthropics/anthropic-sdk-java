@@ -78,18 +78,28 @@ interface AgentServiceAsync {
         retrieve(agentId, AgentRetrieveParams.none(), requestOptions)
 
     /** Update Agent */
-    fun update(
-        agentId: String,
-        params: AgentUpdateParams,
-    ): CompletableFuture<BetaManagedAgentsAgent> = update(agentId, params, RequestOptions.none())
+    fun update(agentId: String): CompletableFuture<BetaManagedAgentsAgent> =
+        update(agentId, AgentUpdateParams.none())
 
     /** @see update */
     fun update(
         agentId: String,
-        params: AgentUpdateParams,
+        params: AgentUpdateParams = AgentUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsAgent> =
         update(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+    /** @see update */
+    fun update(
+        agentId: String,
+        params: AgentUpdateParams = AgentUpdateParams.none(),
+    ): CompletableFuture<BetaManagedAgentsAgent> = update(agentId, params, RequestOptions.none())
+
+    /** @see update */
+    fun update(
+        params: AgentUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<BetaManagedAgentsAgent>
 
     /** @see update */
     fun update(params: AgentUpdateParams): CompletableFuture<BetaManagedAgentsAgent> =
@@ -97,9 +107,10 @@ interface AgentServiceAsync {
 
     /** @see update */
     fun update(
-        params: AgentUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BetaManagedAgentsAgent>
+        agentId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<BetaManagedAgentsAgent> =
+        update(agentId, AgentUpdateParams.none(), requestOptions)
 
     /** List Agents */
     fun list(): CompletableFuture<AgentListPageAsync> = list(AgentListParams.none())
@@ -228,19 +239,29 @@ interface AgentServiceAsync {
          * Returns a raw HTTP response for `post /v1/agents/{agent_id}?beta=true`, but is otherwise
          * the same as [AgentServiceAsync.update].
          */
+        fun update(agentId: String): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>> =
+            update(agentId, AgentUpdateParams.none())
+
+        /** @see update */
         fun update(
             agentId: String,
-            params: AgentUpdateParams,
+            params: AgentUpdateParams = AgentUpdateParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>> =
+            update(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+        /** @see update */
+        fun update(
+            agentId: String,
+            params: AgentUpdateParams = AgentUpdateParams.none(),
         ): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>> =
             update(agentId, params, RequestOptions.none())
 
         /** @see update */
         fun update(
-            agentId: String,
             params: AgentUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>> =
-            update(params.toBuilder().agentId(agentId).build(), requestOptions)
+        ): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>>
 
         /** @see update */
         fun update(
@@ -250,9 +271,10 @@ interface AgentServiceAsync {
 
         /** @see update */
         fun update(
-            params: AgentUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>>
+            agentId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BetaManagedAgentsAgent>> =
+            update(agentId, AgentUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/agents?beta=true`, but is otherwise the same as

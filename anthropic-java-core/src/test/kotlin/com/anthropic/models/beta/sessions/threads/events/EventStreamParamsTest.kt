@@ -3,7 +3,9 @@
 package com.anthropic.models.beta.sessions.threads.events
 
 import com.anthropic.core.http.Headers
+import com.anthropic.core.http.QueryParams
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -14,6 +16,7 @@ internal class EventStreamParamsTest {
         EventStreamParams.builder()
             .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
             .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+            .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
     }
@@ -38,6 +41,7 @@ internal class EventStreamParamsTest {
             EventStreamParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                 .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
 
@@ -60,5 +64,34 @@ internal class EventStreamParamsTest {
         val headers = params._headers()
 
         assertThat(headers).isEqualTo(Headers.builder().build())
+    }
+
+    @Test
+    fun queryParams() {
+        val params =
+            EventStreamParams.builder()
+                .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
+                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
+                .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .build()
+
+        val queryParams = params._queryParams()
+
+        assertThat(queryParams)
+            .isEqualTo(QueryParams.builder().put("event_deltas[]", "agent.message").build())
+    }
+
+    @Test
+    fun queryParamsWithoutOptionalFields() {
+        val params =
+            EventStreamParams.builder()
+                .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
+                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .build()
+
+        val queryParams = params._queryParams()
+
+        assertThat(queryParams).isEqualTo(QueryParams.builder().build())
     }
 }

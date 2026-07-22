@@ -10,6 +10,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAskPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
 import com.anthropic.models.beta.agents.BetaManagedAgentsCustomSkill
+import com.anthropic.models.beta.agents.BetaManagedAgentsEffortLow
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
@@ -43,6 +44,11 @@ internal class BetaManagedAgentsSessionTest {
                         .model(
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                .effort(
+                                    BetaManagedAgentsEffortLow.builder()
+                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
+                                        .build()
+                                )
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
@@ -66,6 +72,11 @@ internal class BetaManagedAgentsSessionTest {
                                         .model(
                                             BetaManagedAgentsModelConfig.builder()
                                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                                .effort(
+                                                    BetaManagedAgentsEffortLow.builder()
+                                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
+                                                        .build()
+                                                )
                                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                                 .build()
                                         )
@@ -269,6 +280,11 @@ internal class BetaManagedAgentsSessionTest {
                     .model(
                         BetaManagedAgentsModelConfig.builder()
                             .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                            .effort(
+                                BetaManagedAgentsEffortLow.builder()
+                                    .type(BetaManagedAgentsEffortLow.Type.LOW)
+                                    .build()
+                            )
                             .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                             .build()
                     )
@@ -290,6 +306,11 @@ internal class BetaManagedAgentsSessionTest {
                                     .model(
                                         BetaManagedAgentsModelConfig.builder()
                                             .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                            .effort(
+                                                BetaManagedAgentsEffortLow.builder()
+                                                    .type(BetaManagedAgentsEffortLow.Type.LOW)
+                                                    .build()
+                                            )
                                             .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                             .build()
                                     )
@@ -495,6 +516,11 @@ internal class BetaManagedAgentsSessionTest {
                         .model(
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                .effort(
+                                    BetaManagedAgentsEffortLow.builder()
+                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
+                                        .build()
+                                )
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
@@ -518,6 +544,11 @@ internal class BetaManagedAgentsSessionTest {
                                         .model(
                                             BetaManagedAgentsModelConfig.builder()
                                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                                .effort(
+                                                    BetaManagedAgentsEffortLow.builder()
+                                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
+                                                        .build()
+                                                )
                                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                                 .build()
                                         )
