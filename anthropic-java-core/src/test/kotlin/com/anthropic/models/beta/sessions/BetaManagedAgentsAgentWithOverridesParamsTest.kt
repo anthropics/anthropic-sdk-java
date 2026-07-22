@@ -35,6 +35,10 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                 .model(
                     BetaManagedAgentsModelConfigParams.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                        .effort(
+                            BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
+                                .LOW
+                        )
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
@@ -94,6 +98,11 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                     .ofBetaManagedAgentsModelConfigParams(
                         BetaManagedAgentsModelConfigParams.builder()
                             .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                            .effort(
+                                BetaManagedAgentsModelConfigParams.Effort
+                                    .BetaManagedAgentsEffortLevel
+                                    .LOW
+                            )
                             .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                             .build()
                     )
@@ -275,6 +284,10 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                 .model(
                     BetaManagedAgentsModelConfigParams.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                        .effort(
+                            BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
+                                .LOW
+                        )
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )

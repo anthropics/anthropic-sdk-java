@@ -18,6 +18,8 @@ import com.anthropic.models.beta.sessions.SessionCreateParams
 import com.anthropic.models.beta.sessions.SessionDeleteParams
 import com.anthropic.models.beta.sessions.SessionRetrieveParams
 import com.anthropic.models.beta.sessions.SessionUpdateParams
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -40,6 +42,16 @@ internal class SessionServiceAsyncTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .agent("agent_011CZkYpogX7uDKUyvBTophP")
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
+                    .addUserMessageInitialEvent(
+                        listOf(
+                            BetaManagedAgentsUserMessageEventParams.Content.ofText(
+                                BetaManagedAgentsTextBlock.builder()
+                                    .text("Where is my order #1234?")
+                                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                                    .build()
+                            )
+                        )
+                    )
                     .metadata(
                         SessionCreateParams.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))

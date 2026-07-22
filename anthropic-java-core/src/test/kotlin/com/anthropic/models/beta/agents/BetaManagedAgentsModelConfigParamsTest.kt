@@ -14,11 +14,18 @@ internal class BetaManagedAgentsModelConfigParamsTest {
         val betaManagedAgentsModelConfigParams =
             BetaManagedAgentsModelConfigParams.builder()
                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                .effort(BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW)
                 .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                 .build()
 
         assertThat(betaManagedAgentsModelConfigParams.id())
             .isEqualTo(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+        assertThat(betaManagedAgentsModelConfigParams.effort())
+            .contains(
+                BetaManagedAgentsModelConfigParams.Effort.ofBetaManagedAgentsEffortLevel(
+                    BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW
+                )
+            )
         assertThat(betaManagedAgentsModelConfigParams.speed())
             .contains(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
     }
@@ -29,6 +36,7 @@ internal class BetaManagedAgentsModelConfigParamsTest {
         val betaManagedAgentsModelConfigParams =
             BetaManagedAgentsModelConfigParams.builder()
                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                .effort(BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW)
                 .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                 .build()
 

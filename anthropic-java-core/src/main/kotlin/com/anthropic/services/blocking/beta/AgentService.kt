@@ -75,25 +75,34 @@ interface AgentService {
         retrieve(agentId, AgentRetrieveParams.none(), requestOptions)
 
     /** Update Agent */
-    fun update(agentId: String, params: AgentUpdateParams): BetaManagedAgentsAgent =
-        update(agentId, params, RequestOptions.none())
+    fun update(agentId: String): BetaManagedAgentsAgent = update(agentId, AgentUpdateParams.none())
 
     /** @see update */
     fun update(
         agentId: String,
-        params: AgentUpdateParams,
+        params: AgentUpdateParams = AgentUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsAgent = update(params.toBuilder().agentId(agentId).build(), requestOptions)
 
     /** @see update */
-    fun update(params: AgentUpdateParams): BetaManagedAgentsAgent =
-        update(params, RequestOptions.none())
+    fun update(
+        agentId: String,
+        params: AgentUpdateParams = AgentUpdateParams.none(),
+    ): BetaManagedAgentsAgent = update(agentId, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: AgentUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaManagedAgentsAgent
+
+    /** @see update */
+    fun update(params: AgentUpdateParams): BetaManagedAgentsAgent =
+        update(params, RequestOptions.none())
+
+    /** @see update */
+    fun update(agentId: String, requestOptions: RequestOptions): BetaManagedAgentsAgent =
+        update(agentId, AgentUpdateParams.none(), requestOptions)
 
     /** List Agents */
     fun list(): AgentListPage = list(AgentListParams.none())
@@ -220,19 +229,31 @@ interface AgentService {
          * the same as [AgentService.update].
          */
         @MustBeClosed
-        fun update(
-            agentId: String,
-            params: AgentUpdateParams,
-        ): HttpResponseFor<BetaManagedAgentsAgent> = update(agentId, params, RequestOptions.none())
+        fun update(agentId: String): HttpResponseFor<BetaManagedAgentsAgent> =
+            update(agentId, AgentUpdateParams.none())
 
         /** @see update */
         @MustBeClosed
         fun update(
             agentId: String,
-            params: AgentUpdateParams,
+            params: AgentUpdateParams = AgentUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<BetaManagedAgentsAgent> =
             update(params.toBuilder().agentId(agentId).build(), requestOptions)
+
+        /** @see update */
+        @MustBeClosed
+        fun update(
+            agentId: String,
+            params: AgentUpdateParams = AgentUpdateParams.none(),
+        ): HttpResponseFor<BetaManagedAgentsAgent> = update(agentId, params, RequestOptions.none())
+
+        /** @see update */
+        @MustBeClosed
+        fun update(
+            params: AgentUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BetaManagedAgentsAgent>
 
         /** @see update */
         @MustBeClosed
@@ -242,9 +263,10 @@ interface AgentService {
         /** @see update */
         @MustBeClosed
         fun update(
-            params: AgentUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BetaManagedAgentsAgent>
+            agentId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaManagedAgentsAgent> =
+            update(agentId, AgentUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/agents?beta=true`, but is otherwise the same as

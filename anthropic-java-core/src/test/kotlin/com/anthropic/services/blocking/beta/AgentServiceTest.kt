@@ -151,8 +151,7 @@ internal class AgentServiceTest {
                 AgentUpdateParams.builder()
                     .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .version(1)
-                    .description("description")
+                    .description("updated")
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
                             .name("example-mcp")
@@ -168,6 +167,11 @@ internal class AgentServiceTest {
                     .model(
                         BetaManagedAgentsModelConfigParams.builder()
                             .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                            .effort(
+                                BetaManagedAgentsModelConfigParams.Effort
+                                    .BetaManagedAgentsEffortLevel
+                                    .LOW
+                            )
                             .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                             .build()
                     )
@@ -226,6 +230,7 @@ internal class AgentServiceTest {
                             )
                             .build()
                     )
+                    .version(1)
                     .build()
             )
 
