@@ -5,6 +5,7 @@ package com.anthropic.services.blocking.beta.sessions.threads
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaType
 import com.anthropic.models.beta.sessions.threads.events.EventListParams
 import com.anthropic.models.beta.sessions.threads.events.EventStreamParams
 import org.junit.jupiter.api.Disabled
@@ -49,6 +50,7 @@ internal class EventServiceTest {
                 EventStreamParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .build()
             )

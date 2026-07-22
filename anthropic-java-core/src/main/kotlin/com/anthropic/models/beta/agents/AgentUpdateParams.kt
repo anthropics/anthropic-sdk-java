@@ -11,7 +11,6 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.Params
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkKnown
-import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
@@ -50,16 +49,6 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
-
-    /**
-     * The agent's current version, used to prevent concurrent overwrites. Obtain this value from a
-     * create or retrieve response. The request fails if this does not match the server's current
-     * version.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun version(): Int = body.version()
 
     /**
      * Description. Omit to preserve; send empty string or null to clear.
@@ -144,11 +133,15 @@ private constructor(
     fun tools(): Optional<List<Tool>> = body.tools()
 
     /**
-     * Returns the raw JSON value of [version].
+     * The agent's current version, used to prevent concurrent overwrites. Obtain this value from a
+     * create or retrieve response. Must be at least 1 if specified. When supplied, the request
+     * fails if it does not match the server's current version; omit to apply the update
+     * unconditionally.
      *
-     * Unlike [version], this method doesn't throw if the JSON field has an unexpected type.
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
-    fun _version(): JsonField<Int> = body._version()
+    fun version(): Optional<Int> = body.version()
 
     /**
      * Returns the raw JSON value of [description].
@@ -213,6 +206,13 @@ private constructor(
      */
     fun _tools(): JsonField<List<Tool>> = body._tools()
 
+    /**
+     * Returns the raw JSON value of [version].
+     *
+     * Unlike [version], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _version(): JsonField<Int> = body._version()
+
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
     /** Additional headers to send with the request. */
@@ -225,14 +225,9 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [AgentUpdateParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .version()
-         * ```
-         */
+        @JvmStatic fun none(): AgentUpdateParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [AgentUpdateParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -288,29 +283,14 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [version]
          * - [description]
          * - [mcpServers]
          * - [metadata]
          * - [model]
+         * - [multiagent]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
-
-        /**
-         * The agent's current version, used to prevent concurrent overwrites. Obtain this value
-         * from a create or retrieve response. The request fails if this does not match the server's
-         * current version.
-         */
-        fun version(version: Int) = apply { body.version(version) }
-
-        /**
-         * Sets [Builder.version] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.version] with a well-typed [Int] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun version(version: JsonField<Int>) = apply { body.version(version) }
 
         /** Description. Omit to preserve; send empty string or null to clear. */
         fun description(description: String?) = apply { body.description(description) }
@@ -579,6 +559,22 @@ private constructor(
         /** Alias for calling [addTool] with `Tool.ofCustom(custom)`. */
         fun addTool(custom: BetaManagedAgentsCustomToolParams) = apply { body.addTool(custom) }
 
+        /**
+         * The agent's current version, used to prevent concurrent overwrites. Obtain this value
+         * from a create or retrieve response. Must be at least 1 if specified. When supplied, the
+         * request fails if it does not match the server's current version; omit to apply the update
+         * unconditionally.
+         */
+        fun version(version: Int) = apply { body.version(version) }
+
+        /**
+         * Sets [Builder.version] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.version] with a well-typed [Int] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun version(version: JsonField<Int>) = apply { body.version(version) }
+
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
         }
@@ -700,13 +696,6 @@ private constructor(
          * Returns an immutable instance of [AgentUpdateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .version()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): AgentUpdateParams =
             AgentUpdateParams(
@@ -740,7 +729,6 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val version: JsonField<Int>,
         private val description: JsonField<String>,
         private val mcpServers: JsonField<List<BetaManagedAgentsUrlMcpServerParams>>,
         private val metadata: JsonField<Metadata>,
@@ -750,12 +738,12 @@ private constructor(
         private val skills: JsonField<List<BetaManagedAgentsSkillParams>>,
         private val system: JsonField<String>,
         private val tools: JsonField<List<Tool>>,
+        private val version: JsonField<Int>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("version") @ExcludeMissing version: JsonField<Int> = JsonMissing.of(),
             @JsonProperty("description")
             @ExcludeMissing
             description: JsonField<String> = JsonMissing.of(),
@@ -775,8 +763,8 @@ private constructor(
             skills: JsonField<List<BetaManagedAgentsSkillParams>> = JsonMissing.of(),
             @JsonProperty("system") @ExcludeMissing system: JsonField<String> = JsonMissing.of(),
             @JsonProperty("tools") @ExcludeMissing tools: JsonField<List<Tool>> = JsonMissing.of(),
+            @JsonProperty("version") @ExcludeMissing version: JsonField<Int> = JsonMissing.of(),
         ) : this(
-            version,
             description,
             mcpServers,
             metadata,
@@ -786,18 +774,9 @@ private constructor(
             skills,
             system,
             tools,
+            version,
             mutableMapOf(),
         )
-
-        /**
-         * The agent's current version, used to prevent concurrent overwrites. Obtain this value
-         * from a create or retrieve response. The request fails if this does not match the server's
-         * current version.
-         *
-         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun version(): Int = version.getRequired("version")
 
         /**
          * Description. Omit to preserve; send empty string or null to clear.
@@ -884,11 +863,15 @@ private constructor(
         fun tools(): Optional<List<Tool>> = tools.getOptional("tools")
 
         /**
-         * Returns the raw JSON value of [version].
+         * The agent's current version, used to prevent concurrent overwrites. Obtain this value
+         * from a create or retrieve response. Must be at least 1 if specified. When supplied, the
+         * request fails if it does not match the server's current version; omit to apply the update
+         * unconditionally.
          *
-         * Unlike [version], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
-        @JsonProperty("version") @ExcludeMissing fun _version(): JsonField<Int> = version
+        fun version(): Optional<Int> = version.getOptional("version")
 
         /**
          * Returns the raw JSON value of [description].
@@ -961,6 +944,13 @@ private constructor(
          */
         @JsonProperty("tools") @ExcludeMissing fun _tools(): JsonField<List<Tool>> = tools
 
+        /**
+         * Returns the raw JSON value of [version].
+         *
+         * Unlike [version], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("version") @ExcludeMissing fun _version(): JsonField<Int> = version
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -975,21 +965,13 @@ private constructor(
 
         companion object {
 
-            /**
-             * Returns a mutable builder for constructing an instance of [Body].
-             *
-             * The following fields are required:
-             * ```java
-             * .version()
-             * ```
-             */
+            /** Returns a mutable builder for constructing an instance of [Body]. */
             @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var version: JsonField<Int>? = null
             private var description: JsonField<String> = JsonMissing.of()
             private var mcpServers: JsonField<MutableList<BetaManagedAgentsUrlMcpServerParams>>? =
                 null
@@ -1000,11 +982,11 @@ private constructor(
             private var skills: JsonField<MutableList<BetaManagedAgentsSkillParams>>? = null
             private var system: JsonField<String> = JsonMissing.of()
             private var tools: JsonField<MutableList<Tool>>? = null
+            private var version: JsonField<Int> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
-                version = body.version
                 description = body.description
                 mcpServers =
                     body.mcpServers.map { it.toMutableList() }.takeUnless { it.isMissing() }
@@ -1015,24 +997,9 @@ private constructor(
                 skills = body.skills.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 system = body.system
                 tools = body.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
+                version = body.version
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
-
-            /**
-             * The agent's current version, used to prevent concurrent overwrites. Obtain this value
-             * from a create or retrieve response. The request fails if this does not match the
-             * server's current version.
-             */
-            fun version(version: Int) = version(JsonField.of(version))
-
-            /**
-             * Sets [Builder.version] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.version] with a well-typed [Int] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun version(version: JsonField<Int>) = apply { this.version = version }
 
             /** Description. Omit to preserve; send empty string or null to clear. */
             fun description(description: String?) = description(JsonField.ofNullable(description))
@@ -1343,6 +1310,23 @@ private constructor(
             /** Alias for calling [addTool] with `Tool.ofCustom(custom)`. */
             fun addTool(custom: BetaManagedAgentsCustomToolParams) = addTool(Tool.ofCustom(custom))
 
+            /**
+             * The agent's current version, used to prevent concurrent overwrites. Obtain this value
+             * from a create or retrieve response. Must be at least 1 if specified. When supplied,
+             * the request fails if it does not match the server's current version; omit to apply
+             * the update unconditionally.
+             */
+            fun version(version: Int) = version(JsonField.of(version))
+
+            /**
+             * Sets [Builder.version] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.version] with a well-typed [Int] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun version(version: JsonField<Int>) = apply { this.version = version }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1366,17 +1350,9 @@ private constructor(
              * Returns an immutable instance of [Body].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .version()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
                 Body(
-                    checkRequired("version", version),
                     description,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
@@ -1386,6 +1362,7 @@ private constructor(
                     (skills ?: JsonMissing.of()).map { it.toImmutable() },
                     system,
                     (tools ?: JsonMissing.of()).map { it.toImmutable() },
+                    version,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1406,7 +1383,6 @@ private constructor(
                 return@apply
             }
 
-            version()
             description()
             mcpServers().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
@@ -1416,6 +1392,7 @@ private constructor(
             skills().ifPresent { it.forEach { it.validate() } }
             system()
             tools().ifPresent { it.forEach { it.validate() } }
+            version()
             validated = true
         }
 
@@ -1435,8 +1412,7 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (version.asKnown().isPresent) 1 else 0) +
-                (if (description.asKnown().isPresent) 1 else 0) +
+            (if (description.asKnown().isPresent) 1 else 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (model.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1444,7 +1420,8 @@ private constructor(
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (skills.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (system.asKnown().isPresent) 1 else 0) +
-                (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+                (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (version.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1452,7 +1429,6 @@ private constructor(
             }
 
             return other is Body &&
-                version == other.version &&
                 description == other.description &&
                 mcpServers == other.mcpServers &&
                 metadata == other.metadata &&
@@ -1462,12 +1438,12 @@ private constructor(
                 skills == other.skills &&
                 system == other.system &&
                 tools == other.tools &&
+                version == other.version &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                version,
                 description,
                 mcpServers,
                 metadata,
@@ -1477,6 +1453,7 @@ private constructor(
                 skills,
                 system,
                 tools,
+                version,
                 additionalProperties,
             )
         }
@@ -1484,7 +1461,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{version=$version, description=$description, mcpServers=$mcpServers, metadata=$metadata, model=$model, multiagent=$multiagent, name=$name, skills=$skills, system=$system, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{description=$description, mcpServers=$mcpServers, metadata=$metadata, model=$model, multiagent=$multiagent, name=$name, skills=$skills, system=$system, tools=$tools, version=$version, additionalProperties=$additionalProperties}"
     }
 
     /**

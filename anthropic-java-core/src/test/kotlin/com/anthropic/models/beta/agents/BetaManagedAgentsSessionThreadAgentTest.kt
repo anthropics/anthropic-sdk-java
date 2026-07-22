@@ -25,6 +25,11 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                 .model(
                     BetaManagedAgentsModelConfig.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                        .effort(
+                            BetaManagedAgentsEffortLow.builder()
+                                .type(BetaManagedAgentsEffortLow.Type.LOW)
+                                .build()
+                        )
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                         .build()
                 )
@@ -85,6 +90,11 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
             .isEqualTo(
                 BetaManagedAgentsModelConfig.builder()
                     .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                    .effort(
+                        BetaManagedAgentsEffortLow.builder()
+                            .type(BetaManagedAgentsEffortLow.Type.LOW)
+                            .build()
+                    )
                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                     .build()
             )
@@ -154,6 +164,11 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                 .model(
                     BetaManagedAgentsModelConfig.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                        .effort(
+                            BetaManagedAgentsEffortLow.builder()
+                                .type(BetaManagedAgentsEffortLow.Type.LOW)
+                                .build()
+                        )
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                         .build()
                 )

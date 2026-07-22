@@ -18,6 +18,8 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserDefineOutcomeEventParams
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -62,6 +64,15 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun environmentId(): String = body.environmentId()
+
+    /**
+     * Initial events to send to the `session` at creation, processed in order. Supports
+     * `user.message` and `user.define_outcome` events. Maximum 50 events.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun initialEvents(): Optional<List<InitialEvent>> = body.initialEvents()
 
     /**
      * Arbitrary key-value metadata attached to the session. Maximum 16 pairs, keys up to 64 chars,
@@ -109,6 +120,13 @@ private constructor(
      * Unlike [environmentId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _environmentId(): JsonField<String> = body._environmentId()
+
+    /**
+     * Returns the raw JSON value of [initialEvents].
+     *
+     * Unlike [initialEvents], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _initialEvents(): JsonField<List<InitialEvent>> = body._initialEvents()
 
     /**
      * Returns the raw JSON value of [metadata].
@@ -209,9 +227,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [agent]
          * - [environmentId]
+         * - [initialEvents]
          * - [metadata]
          * - [resources]
-         * - [title]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -262,6 +280,61 @@ private constructor(
         fun environmentId(environmentId: JsonField<String>) = apply {
             body.environmentId(environmentId)
         }
+
+        /**
+         * Initial events to send to the `session` at creation, processed in order. Supports
+         * `user.message` and `user.define_outcome` events. Maximum 50 events.
+         */
+        fun initialEvents(initialEvents: List<InitialEvent>) = apply {
+            body.initialEvents(initialEvents)
+        }
+
+        /**
+         * Sets [Builder.initialEvents] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.initialEvents] with a well-typed `List<InitialEvent>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun initialEvents(initialEvents: JsonField<List<InitialEvent>>) = apply {
+            body.initialEvents(initialEvents)
+        }
+
+        /**
+         * Adds a single [InitialEvent] to [initialEvents].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addInitialEvent(initialEvent: InitialEvent) = apply {
+            body.addInitialEvent(initialEvent)
+        }
+
+        /** Alias for calling [addInitialEvent] with `InitialEvent.ofUserMessage(userMessage)`. */
+        fun addInitialEvent(userMessage: BetaManagedAgentsUserMessageEventParams) = apply {
+            body.addInitialEvent(userMessage)
+        }
+
+        /**
+         * Alias for calling [addInitialEvent] with the following:
+         * ```java
+         * BetaManagedAgentsUserMessageEventParams.builder()
+         *     .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
+         *     .content(content)
+         *     .build()
+         * ```
+         */
+        fun addUserMessageInitialEvent(
+            content: List<BetaManagedAgentsUserMessageEventParams.Content>
+        ) = apply { body.addUserMessageInitialEvent(content) }
+
+        /**
+         * Alias for calling [addInitialEvent] with
+         * `InitialEvent.ofUserDefineOutcome(userDefineOutcome)`.
+         */
+        fun addInitialEvent(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams) =
+            apply {
+                body.addInitialEvent(userDefineOutcome)
+            }
 
         /**
          * Arbitrary key-value metadata attached to the session. Maximum 16 pairs, keys up to 64
@@ -526,6 +599,7 @@ private constructor(
     private constructor(
         private val agent: JsonField<Agent>,
         private val environmentId: JsonField<String>,
+        private val initialEvents: JsonField<List<InitialEvent>>,
         private val metadata: JsonField<Metadata>,
         private val resources: JsonField<List<Resource>>,
         private val title: JsonField<String>,
@@ -539,6 +613,9 @@ private constructor(
             @JsonProperty("environment_id")
             @ExcludeMissing
             environmentId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("initial_events")
+            @ExcludeMissing
+            initialEvents: JsonField<List<InitialEvent>> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -549,7 +626,16 @@ private constructor(
             @JsonProperty("vault_ids")
             @ExcludeMissing
             vaultIds: JsonField<List<String>> = JsonMissing.of(),
-        ) : this(agent, environmentId, metadata, resources, title, vaultIds, mutableMapOf())
+        ) : this(
+            agent,
+            environmentId,
+            initialEvents,
+            metadata,
+            resources,
+            title,
+            vaultIds,
+            mutableMapOf(),
+        )
 
         /**
          * Agent identifier. Accepts the `agent` ID string, which pins the latest version for the
@@ -567,6 +653,16 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun environmentId(): String = environmentId.getRequired("environment_id")
+
+        /**
+         * Initial events to send to the `session` at creation, processed in order. Supports
+         * `user.message` and `user.define_outcome` events. Maximum 50 events.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun initialEvents(): Optional<List<InitialEvent>> =
+            initialEvents.getOptional("initial_events")
 
         /**
          * Arbitrary key-value metadata attached to the session. Maximum 16 pairs, keys up to 64
@@ -617,6 +713,16 @@ private constructor(
         @JsonProperty("environment_id")
         @ExcludeMissing
         fun _environmentId(): JsonField<String> = environmentId
+
+        /**
+         * Returns the raw JSON value of [initialEvents].
+         *
+         * Unlike [initialEvents], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("initial_events")
+        @ExcludeMissing
+        fun _initialEvents(): JsonField<List<InitialEvent>> = initialEvents
 
         /**
          * Returns the raw JSON value of [metadata].
@@ -681,6 +787,7 @@ private constructor(
 
             private var agent: JsonField<Agent>? = null
             private var environmentId: JsonField<String>? = null
+            private var initialEvents: JsonField<MutableList<InitialEvent>>? = null
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var resources: JsonField<MutableList<Resource>>? = null
             private var title: JsonField<String> = JsonMissing.of()
@@ -691,6 +798,8 @@ private constructor(
             internal fun from(body: Body) = apply {
                 agent = body.agent
                 environmentId = body.environmentId
+                initialEvents =
+                    body.initialEvents.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 metadata = body.metadata
                 resources = body.resources.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 title = body.title
@@ -749,6 +858,68 @@ private constructor(
             fun environmentId(environmentId: JsonField<String>) = apply {
                 this.environmentId = environmentId
             }
+
+            /**
+             * Initial events to send to the `session` at creation, processed in order. Supports
+             * `user.message` and `user.define_outcome` events. Maximum 50 events.
+             */
+            fun initialEvents(initialEvents: List<InitialEvent>) =
+                initialEvents(JsonField.of(initialEvents))
+
+            /**
+             * Sets [Builder.initialEvents] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.initialEvents] with a well-typed
+             * `List<InitialEvent>` value instead. This method is primarily for setting the field to
+             * an undocumented or not yet supported value.
+             */
+            fun initialEvents(initialEvents: JsonField<List<InitialEvent>>) = apply {
+                this.initialEvents = initialEvents.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [InitialEvent] to [initialEvents].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addInitialEvent(initialEvent: InitialEvent) = apply {
+                initialEvents =
+                    (initialEvents ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("initialEvents", it).add(initialEvent)
+                    }
+            }
+
+            /**
+             * Alias for calling [addInitialEvent] with `InitialEvent.ofUserMessage(userMessage)`.
+             */
+            fun addInitialEvent(userMessage: BetaManagedAgentsUserMessageEventParams) =
+                addInitialEvent(InitialEvent.ofUserMessage(userMessage))
+
+            /**
+             * Alias for calling [addInitialEvent] with the following:
+             * ```java
+             * BetaManagedAgentsUserMessageEventParams.builder()
+             *     .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
+             *     .content(content)
+             *     .build()
+             * ```
+             */
+            fun addUserMessageInitialEvent(
+                content: List<BetaManagedAgentsUserMessageEventParams.Content>
+            ) =
+                addInitialEvent(
+                    BetaManagedAgentsUserMessageEventParams.builder()
+                        .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
+                        .content(content)
+                        .build()
+                )
+
+            /**
+             * Alias for calling [addInitialEvent] with
+             * `InitialEvent.ofUserDefineOutcome(userDefineOutcome)`.
+             */
+            fun addInitialEvent(userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams) =
+                addInitialEvent(InitialEvent.ofUserDefineOutcome(userDefineOutcome))
 
             /**
              * Arbitrary key-value metadata attached to the session. Maximum 16 pairs, keys up to 64
@@ -916,6 +1087,7 @@ private constructor(
                 Body(
                     checkRequired("agent", agent),
                     checkRequired("environmentId", environmentId),
+                    (initialEvents ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
                     (resources ?: JsonMissing.of()).map { it.toImmutable() },
                     title,
@@ -942,6 +1114,7 @@ private constructor(
 
             agent().validate()
             environmentId()
+            initialEvents().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
             resources().ifPresent { it.forEach { it.validate() } }
             title()
@@ -967,6 +1140,7 @@ private constructor(
         internal fun validity(): Int =
             (agent.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (environmentId.asKnown().isPresent) 1 else 0) +
+                (initialEvents.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (resources.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (title.asKnown().isPresent) 1 else 0) +
@@ -980,6 +1154,7 @@ private constructor(
             return other is Body &&
                 agent == other.agent &&
                 environmentId == other.environmentId &&
+                initialEvents == other.initialEvents &&
                 metadata == other.metadata &&
                 resources == other.resources &&
                 title == other.title &&
@@ -991,6 +1166,7 @@ private constructor(
             Objects.hash(
                 agent,
                 environmentId,
+                initialEvents,
                 metadata,
                 resources,
                 title,
@@ -1002,7 +1178,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{agent=$agent, environmentId=$environmentId, metadata=$metadata, resources=$resources, title=$title, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
+            "Body{agent=$agent, environmentId=$environmentId, initialEvents=$initialEvents, metadata=$metadata, resources=$resources, title=$title, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -1324,6 +1500,263 @@ private constructor(
                         generator.writeObject(value.betaManagedAgentsAgentWithOverridesParams)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Agent")
+                }
+            }
+        }
+    }
+
+    /**
+     * An event sent to the `session` immediately after it is created. Supports `user.message` and
+     * `user.define_outcome`.
+     */
+    @JsonDeserialize(using = InitialEvent.Deserializer::class)
+    @JsonSerialize(using = InitialEvent.Serializer::class)
+    class InitialEvent
+    private constructor(
+        private val userMessage: BetaManagedAgentsUserMessageEventParams? = null,
+        private val userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        /** Parameters for sending a user message to the session. */
+        fun userMessage(): Optional<BetaManagedAgentsUserMessageEventParams> =
+            Optional.ofNullable(userMessage)
+
+        /**
+         * Parameters for defining an outcome the agent should work toward. The agent begins work on
+         * receipt.
+         */
+        fun userDefineOutcome(): Optional<BetaManagedAgentsUserDefineOutcomeEventParams> =
+            Optional.ofNullable(userDefineOutcome)
+
+        fun isUserMessage(): Boolean = userMessage != null
+
+        fun isUserDefineOutcome(): Boolean = userDefineOutcome != null
+
+        /** Parameters for sending a user message to the session. */
+        fun asUserMessage(): BetaManagedAgentsUserMessageEventParams =
+            userMessage.getOrThrow("userMessage")
+
+        /**
+         * Parameters for defining an outcome the agent should work toward. The agent begins work on
+         * receipt.
+         */
+        fun asUserDefineOutcome(): BetaManagedAgentsUserDefineOutcomeEventParams =
+            userDefineOutcome.getOrThrow("userDefineOutcome")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import com.anthropic.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = initialEvent.accept(new InitialEvent.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitUserMessage(BetaManagedAgentsUserMessageEventParams userMessage) {
+         *         return Optional.of(userMessage.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws AnthropicInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                userMessage != null -> visitor.visitUserMessage(userMessage)
+                userDefineOutcome != null -> visitor.visitUserDefineOutcome(userDefineOutcome)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): InitialEvent = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitUserMessage(
+                        userMessage: BetaManagedAgentsUserMessageEventParams
+                    ) {
+                        userMessage.validate()
+                    }
+
+                    override fun visitUserDefineOutcome(
+                        userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
+                    ) {
+                        userDefineOutcome.validate()
+                    }
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitUserMessage(
+                        userMessage: BetaManagedAgentsUserMessageEventParams
+                    ) = userMessage.validity()
+
+                    override fun visitUserDefineOutcome(
+                        userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
+                    ) = userDefineOutcome.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is InitialEvent &&
+                userMessage == other.userMessage &&
+                userDefineOutcome == other.userDefineOutcome
+        }
+
+        override fun hashCode(): Int = Objects.hash(userMessage, userDefineOutcome)
+
+        override fun toString(): String =
+            when {
+                userMessage != null -> "InitialEvent{userMessage=$userMessage}"
+                userDefineOutcome != null -> "InitialEvent{userDefineOutcome=$userDefineOutcome}"
+                _json != null -> "InitialEvent{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid InitialEvent")
+            }
+
+        companion object {
+
+            /** Parameters for sending a user message to the session. */
+            @JvmStatic
+            fun ofUserMessage(userMessage: BetaManagedAgentsUserMessageEventParams) =
+                InitialEvent(userMessage = userMessage)
+
+            /**
+             * Parameters for defining an outcome the agent should work toward. The agent begins
+             * work on receipt.
+             */
+            @JvmStatic
+            fun ofUserDefineOutcome(
+                userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
+            ) = InitialEvent(userDefineOutcome = userDefineOutcome)
+        }
+
+        /**
+         * An interface that defines how to map each variant of [InitialEvent] to a value of type
+         * [T].
+         */
+        interface Visitor<out T> {
+
+            /** Parameters for sending a user message to the session. */
+            fun visitUserMessage(userMessage: BetaManagedAgentsUserMessageEventParams): T
+
+            /**
+             * Parameters for defining an outcome the agent should work toward. The agent begins
+             * work on receipt.
+             */
+            fun visitUserDefineOutcome(
+                userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
+            ): T
+
+            /**
+             * Maps an unknown variant of [InitialEvent] to a value of type [T].
+             *
+             * An instance of [InitialEvent] can contain an unknown variant if it was deserialized
+             * from data that doesn't match any known variant. For example, if the SDK is on an
+             * older version than the API, then the API may respond with new variants that the SDK
+             * is unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown InitialEvent: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<InitialEvent>(InitialEvent::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): InitialEvent {
+                val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+
+                when (type) {
+                    "user.message" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsUserMessageEventParams>(),
+                            )
+                            ?.let { InitialEvent(userMessage = it, _json = json) }
+                            ?: InitialEvent(_json = json)
+                    }
+                    "user.define_outcome" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsUserDefineOutcomeEventParams>(),
+                            )
+                            ?.let { InitialEvent(userDefineOutcome = it, _json = json) }
+                            ?: InitialEvent(_json = json)
+                    }
+                }
+
+                return InitialEvent(_json = json)
+            }
+        }
+
+        internal class Serializer : BaseSerializer<InitialEvent>(InitialEvent::class) {
+
+            override fun serialize(
+                value: InitialEvent,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.userMessage != null -> generator.writeObject(value.userMessage)
+                    value.userDefineOutcome != null ->
+                        generator.writeObject(value.userDefineOutcome)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid InitialEvent")
                 }
             }
         }

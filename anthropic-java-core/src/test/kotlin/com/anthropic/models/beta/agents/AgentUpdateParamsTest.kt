@@ -17,8 +17,7 @@ internal class AgentUpdateParamsTest {
         AgentUpdateParams.builder()
             .agentId("agent_011CZkYpogX7uDKUyvBTophP")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-            .version(1)
-            .description("description")
+            .description("updated")
             .addMcpServer(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
@@ -34,6 +33,9 @@ internal class AgentUpdateParamsTest {
             .model(
                 BetaManagedAgentsModelConfigParams.builder()
                     .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                    .effort(
+                        BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW
+                    )
                     .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                     .build()
             )
@@ -85,13 +87,13 @@ internal class AgentUpdateParamsTest {
                     )
                     .build()
             )
+            .version(1)
             .build()
     }
 
     @Test
     fun pathParams() {
-        val params =
-            AgentUpdateParams.builder().agentId("agent_011CZkYpogX7uDKUyvBTophP").version(1).build()
+        val params = AgentUpdateParams.builder().agentId("agent_011CZkYpogX7uDKUyvBTophP").build()
 
         assertThat(params._pathParam(0)).isEqualTo("agent_011CZkYpogX7uDKUyvBTophP")
         // out-of-bound path param
@@ -104,8 +106,7 @@ internal class AgentUpdateParamsTest {
             AgentUpdateParams.builder()
                 .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .version(1)
-                .description("description")
+                .description("updated")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -121,6 +122,10 @@ internal class AgentUpdateParamsTest {
                 .model(
                     BetaManagedAgentsModelConfigParams.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                        .effort(
+                            BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
+                                .LOW
+                        )
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
@@ -174,6 +179,7 @@ internal class AgentUpdateParamsTest {
                         )
                         .build()
                 )
+                .version(1)
                 .build()
 
         val headers = params._headers()
@@ -186,8 +192,7 @@ internal class AgentUpdateParamsTest {
 
     @Test
     fun headersWithoutOptionalFields() {
-        val params =
-            AgentUpdateParams.builder().agentId("agent_011CZkYpogX7uDKUyvBTophP").version(1).build()
+        val params = AgentUpdateParams.builder().agentId("agent_011CZkYpogX7uDKUyvBTophP").build()
 
         val headers = params._headers()
 
@@ -200,8 +205,7 @@ internal class AgentUpdateParamsTest {
             AgentUpdateParams.builder()
                 .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                .version(1)
-                .description("description")
+                .description("updated")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -217,6 +221,10 @@ internal class AgentUpdateParamsTest {
                 .model(
                     BetaManagedAgentsModelConfigParams.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                        .effort(
+                            BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
+                                .LOW
+                        )
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
@@ -270,12 +278,12 @@ internal class AgentUpdateParamsTest {
                         )
                         .build()
                 )
+                .version(1)
                 .build()
 
         val body = params._body()
 
-        assertThat(body.version()).isEqualTo(1)
-        assertThat(body.description()).contains("description")
+        assertThat(body.description()).contains("updated")
         assertThat(body.mcpServers().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()
@@ -295,6 +303,10 @@ internal class AgentUpdateParamsTest {
                 AgentUpdateParams.Model.ofBetaManagedAgentsModelConfigParams(
                     BetaManagedAgentsModelConfigParams.builder()
                         .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                        .effort(
+                            BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
+                                .LOW
+                        )
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
@@ -357,15 +369,13 @@ internal class AgentUpdateParamsTest {
                         .build()
                 )
             )
+        assertThat(body.version()).contains(1)
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params =
-            AgentUpdateParams.builder().agentId("agent_011CZkYpogX7uDKUyvBTophP").version(1).build()
+        val params = AgentUpdateParams.builder().agentId("agent_011CZkYpogX7uDKUyvBTophP").build()
 
         val body = params._body()
-
-        assertThat(body.version()).isEqualTo(1)
     }
 }
