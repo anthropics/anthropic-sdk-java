@@ -32,7 +32,7 @@ internal constructor(@get:JvmName("sources") val sources: List<CredentialSource>
                 sources.joinToString("\n  - ") { source ->
                     "${source.name}: ${source.state}${source.detail?.let { " ($it)" } ?: ""}"
                 }
-            return "No credentials found. Tried:\n  - $details\n\nRun 'anthropic auth login' or set ANTHROPIC_API_KEY."
+            return "No credentials found. Tried:\n  - $details\n\nRun 'ant auth login' or set ANTHROPIC_API_KEY."
         }
     }
 }
