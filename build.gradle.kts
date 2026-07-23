@@ -1,4 +1,4 @@
 allprojects {
     group = "com.anthropic"
-    version = "2.50.0" // x-release-please-version
+    version = "2.51.0" // x-release-please-version
 }
