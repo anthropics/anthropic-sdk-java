@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.51.0 (2026-07-23)
+
+Full Changelog: [v2.50.0...v2.51.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.50.0...v2.51.0)
+
+### Features
+
+* **api:** add new stop reason 'model_context_window_exceeded' ([f4b644e](https://github.com/anthropics/anthropic-sdk-java/commit/f4b644ef3ba1cd6726bb3aed879eb5a36101ca3f))
+
+
+### Bug Fixes
+
+* refer to the CLI as `ant` in NoCredentialsException ([#170](https://github.com/anthropics/anthropic-sdk-java/issues/170)) ([1bc2be9](https://github.com/anthropics/anthropic-sdk-java/commit/1bc2be998422fc17267268b7742fbaaa2ccff890))
+
 ## 2.50.0 (2026-07-22)
 
 Full Changelog: [v2.49.1...v2.50.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.49.1...v2.50.0)
