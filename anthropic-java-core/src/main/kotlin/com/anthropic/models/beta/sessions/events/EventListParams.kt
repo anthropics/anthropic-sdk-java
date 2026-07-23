@@ -36,22 +36,37 @@ private constructor(
 
     fun sessionId(): Optional<String> = Optional.ofNullable(sessionId)
 
-    /** Return events created after this time (exclusive). */
+    /**
+     * Return events created after this time (exclusive). Compared against the event's
+     * `processed_at` value.
+     */
     fun createdAtGt(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGt)
 
-    /** Return events created at or after this time (inclusive). */
+    /**
+     * Return events created at or after this time (inclusive). Compared against the event's
+     * `processed_at` value.
+     */
     fun createdAtGte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGte)
 
-    /** Return events created before this time (exclusive). */
+    /**
+     * Return events created before this time (exclusive). Compared against the event's
+     * `processed_at` value.
+     */
     fun createdAtLt(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLt)
 
-    /** Return events created at or before this time (inclusive). */
+    /**
+     * Return events created at or before this time (inclusive). Compared against the event's
+     * `processed_at` value.
+     */
     fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
 
     /** Query parameter for limit */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Sort direction for results, ordered by created_at. Defaults to asc (chronological). */
+    /**
+     * Sort direction for results, ordered by the event's `processed_at`. Defaults to asc
+     * (chronological).
+     */
     fun order(): Optional<Order> = Optional.ofNullable(order)
 
     /** Opaque pagination cursor from a previous response's next_page. */
@@ -119,28 +134,40 @@ private constructor(
         /** Alias for calling [Builder.sessionId] with `sessionId.orElse(null)`. */
         fun sessionId(sessionId: Optional<String>) = sessionId(sessionId.getOrNull())
 
-        /** Return events created after this time (exclusive). */
+        /**
+         * Return events created after this time (exclusive). Compared against the event's
+         * `processed_at` value.
+         */
         fun createdAtGt(createdAtGt: OffsetDateTime?) = apply { this.createdAtGt = createdAtGt }
 
         /** Alias for calling [Builder.createdAtGt] with `createdAtGt.orElse(null)`. */
         fun createdAtGt(createdAtGt: Optional<OffsetDateTime>) =
             createdAtGt(createdAtGt.getOrNull())
 
-        /** Return events created at or after this time (inclusive). */
+        /**
+         * Return events created at or after this time (inclusive). Compared against the event's
+         * `processed_at` value.
+         */
         fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
 
         /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
         fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
             createdAtGte(createdAtGte.getOrNull())
 
-        /** Return events created before this time (exclusive). */
+        /**
+         * Return events created before this time (exclusive). Compared against the event's
+         * `processed_at` value.
+         */
         fun createdAtLt(createdAtLt: OffsetDateTime?) = apply { this.createdAtLt = createdAtLt }
 
         /** Alias for calling [Builder.createdAtLt] with `createdAtLt.orElse(null)`. */
         fun createdAtLt(createdAtLt: Optional<OffsetDateTime>) =
             createdAtLt(createdAtLt.getOrNull())
 
-        /** Return events created at or before this time (inclusive). */
+        /**
+         * Return events created at or before this time (inclusive). Compared against the event's
+         * `processed_at` value.
+         */
         fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
 
         /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
@@ -160,7 +187,10 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Sort direction for results, ordered by created_at. Defaults to asc (chronological). */
+        /**
+         * Sort direction for results, ordered by the event's `processed_at`. Defaults to asc
+         * (chronological).
+         */
         fun order(order: Order?) = apply { this.order = order }
 
         /** Alias for calling [Builder.order] with `order.orElse(null)`. */
@@ -369,7 +399,10 @@ private constructor(
             }
             .build()
 
-    /** Sort direction for results, ordered by created_at. Defaults to asc (chronological). */
+    /**
+     * Sort direction for results, ordered by the event's `processed_at`. Defaults to asc
+     * (chronological).
+     */
     class Order @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
