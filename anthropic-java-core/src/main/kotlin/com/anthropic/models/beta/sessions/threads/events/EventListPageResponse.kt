@@ -71,7 +71,7 @@ private constructor(
     ) : this(data, nextPage, mutableMapOf())
 
     /**
-     * Events for the thread, ordered by `created_at`.
+     * Events for the thread, ordered by `processed_at`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -135,7 +135,7 @@ private constructor(
             additionalProperties = eventListPageResponse.additionalProperties.toMutableMap()
         }
 
-        /** Events for the thread, ordered by `created_at`. */
+        /** Events for the thread, ordered by `processed_at`. */
         fun data(data: List<BetaManagedAgentsSessionEvent>) = data(JsonField.of(data))
 
         /**
