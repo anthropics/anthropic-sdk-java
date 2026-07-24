@@ -79,6 +79,11 @@ internal class BetaMessageTest {
                         )
                         .cacheCreationInputTokens(2051L)
                         .cacheReadInputTokens(2051L)
+                        .fallbackCredit(
+                            BetaFallbackCreditUsage.builder()
+                                .status(BetaFallbackCreditRedeemed.builder().build())
+                                .build()
+                        )
                         .inferenceGeo("global")
                         .inputTokens(2095L)
                         .addIteration(
@@ -184,6 +189,11 @@ internal class BetaMessageTest {
                     )
                     .cacheCreationInputTokens(2051L)
                     .cacheReadInputTokens(2051L)
+                    .fallbackCredit(
+                        BetaFallbackCreditUsage.builder()
+                            .status(BetaFallbackCreditRedeemed.builder().build())
+                            .build()
+                    )
                     .inferenceGeo("global")
                     .inputTokens(2095L)
                     .addIteration(
@@ -286,6 +296,11 @@ internal class BetaMessageTest {
                         )
                         .cacheCreationInputTokens(2051L)
                         .cacheReadInputTokens(2051L)
+                        .fallbackCredit(
+                            BetaFallbackCreditUsage.builder()
+                                .status(BetaFallbackCreditRedeemed.builder().build())
+                                .build()
+                        )
                         .inferenceGeo("global")
                         .inputTokens(2095L)
                         .addIteration(

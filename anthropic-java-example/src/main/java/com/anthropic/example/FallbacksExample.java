@@ -13,6 +13,7 @@ import com.anthropic.models.beta.messages.BetaMessage;
 import com.anthropic.models.beta.messages.BetaRawMessageStreamEvent;
 import com.anthropic.models.beta.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
+import java.util.List;
 
 /**
  * An example of falling back to another model when a request is refused: server-side via the
@@ -32,10 +33,10 @@ public final class FallbacksExample {
                         .model(Model.CLAUDE_FABLE_5)
                         .maxTokens(1024)
                         .addUserMessage("Some prompt that triggers a refusal")
-                        .addFallback(BetaFallbackParam.builder()
+                        .fallbacksOfFallbackParams(List.of(BetaFallbackParam.builder()
                                 .model(Model.CLAUDE_OPUS_4_8)
-                                .build())
-                        .addBeta(AnthropicBeta.SERVER_SIDE_FALLBACK_2026_06_01)
+                                .build()))
+                        .addBeta(AnthropicBeta.SERVER_SIDE_FALLBACK_2026_07_01)
                         .build());
         System.out.println("server-side, served by: " + served.model().asString());
 

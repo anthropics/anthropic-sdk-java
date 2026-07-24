@@ -12,6 +12,8 @@ import com.anthropic.models.beta.messages.BetaClearToolUses20250919EditResponse
 import com.anthropic.models.beta.messages.BetaContainer
 import com.anthropic.models.beta.messages.BetaContextManagementResponse
 import com.anthropic.models.beta.messages.BetaDiagnostics
+import com.anthropic.models.beta.messages.BetaFallbackCreditRedeemed
+import com.anthropic.models.beta.messages.BetaFallbackCreditUsage
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageIterationUsage
 import com.anthropic.models.beta.messages.BetaOutputTokensDetails
@@ -104,6 +106,11 @@ internal class BetaMessageBatchResultTest {
                                 )
                                 .cacheCreationInputTokens(2051L)
                                 .cacheReadInputTokens(2051L)
+                                .fallbackCredit(
+                                    BetaFallbackCreditUsage.builder()
+                                        .status(BetaFallbackCreditRedeemed.builder().build())
+                                        .build()
+                                )
                                 .inferenceGeo("global")
                                 .inputTokens(2095L)
                                 .addIteration(
@@ -221,6 +228,11 @@ internal class BetaMessageBatchResultTest {
                                     )
                                     .cacheCreationInputTokens(2051L)
                                     .cacheReadInputTokens(2051L)
+                                    .fallbackCredit(
+                                        BetaFallbackCreditUsage.builder()
+                                            .status(BetaFallbackCreditRedeemed.builder().build())
+                                            .build()
+                                    )
                                     .inferenceGeo("global")
                                     .inputTokens(2095L)
                                     .addIteration(

@@ -32,6 +32,7 @@ internal class BetaMessageAccumulatorTest {
             BetaMessageAccumulator.mergeMessageUsage(
                 usage(INPUT_TOKENS),
                 BetaMessageDeltaUsage.builder()
+                    .fallbackCredit(null)
                     .outputTokens(44L)
                     .outputTokensDetails(
                         BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
@@ -52,6 +53,7 @@ internal class BetaMessageAccumulatorTest {
             BetaMessageAccumulator.mergeMessageUsage(
                 usage1,
                 BetaMessageDeltaUsage.builder()
+                    .fallbackCredit(null)
                     .outputTokens(11L)
                     .outputTokensDetails(
                         BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
@@ -94,6 +96,7 @@ internal class BetaMessageAccumulatorTest {
             BetaMessageAccumulator.mergeMessageUsage(
                 usage(INPUT_TOKENS),
                 BetaMessageDeltaUsage.builder()
+                    .fallbackCredit(null)
                     .outputTokens(106L)
                     .outputTokensDetails(
                         BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
@@ -132,6 +135,7 @@ internal class BetaMessageAccumulatorTest {
             BetaMessageAccumulator.mergeMessageUsage(
                 startUsage,
                 BetaMessageDeltaUsage.builder()
+                    .fallbackCredit(null)
                     .outputTokens(3L)
                     .outputTokensDetails(null)
                     .cacheCreationInputTokens(0L)
@@ -185,6 +189,7 @@ internal class BetaMessageAccumulatorTest {
             BetaMessageAccumulator.mergeMessageUsage(
                 usage(INPUT_TOKENS),
                 BetaMessageDeltaUsage.builder()
+                    .fallbackCredit(null)
                     .outputTokens(7L)
                     .outputTokensDetails(
                         BetaOutputTokensDetails.builder().thinkingTokens(89L).build()
@@ -198,6 +203,33 @@ internal class BetaMessageAccumulatorTest {
             )
 
         assertThat(merged.outputTokensDetails().get().thinkingTokens()).isEqualTo(89L)
+    }
+
+    @Test
+    fun mergeMessageUsageMergesFallbackCredit() {
+        // The fallback-credit outcome arrives only on the terminal `message_delta` usage, so it
+        // must be carried onto the accumulated usage.
+        val fallbackCredit =
+            BetaFallbackCreditUsage.builder()
+                .status(BetaFallbackCreditRedeemed.builder().build())
+                .build()
+
+        val merged =
+            BetaMessageAccumulator.mergeMessageUsage(
+                usage(INPUT_TOKENS),
+                BetaMessageDeltaUsage.builder()
+                    .fallbackCredit(fallbackCredit)
+                    .outputTokens(7L)
+                    .outputTokensDetails(null)
+                    .cacheCreationInputTokens(0L)
+                    .cacheReadInputTokens(0L)
+                    .inputTokens(INPUT_TOKENS)
+                    .serverToolUse(null)
+                    .iterations(null)
+                    .build(),
+            )
+
+        assertThat(merged.fallbackCredit()).hasValue(fallbackCredit)
     }
 
     @Test
@@ -1285,6 +1317,7 @@ internal class BetaMessageAccumulatorTest {
                 )
                 .usage(
                     BetaMessageDeltaUsage.builder()
+                        .fallbackCredit(null)
                         .outputTokens(outputTokens)
                         .outputTokensDetails(
                             BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
@@ -1460,6 +1493,7 @@ internal class BetaMessageAccumulatorTest {
 
     private fun usage(inputTokens: Long) =
         BetaUsage.builder()
+            .fallbackCredit(null)
             .inputTokens(inputTokens)
             .cacheCreation(
                 BetaCacheCreation.builder()

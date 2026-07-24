@@ -239,37 +239,52 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.fallbackCreditToken */
-        fun fallbackCreditToken(fallbackCreditToken: String?) = apply {
-            paramsBuilder.fallbackCreditToken(fallbackCreditToken)
+        fun fallbackCreditToken(fallbackCreditToken: MessageCreateParams.FallbackCreditToken?) =
+            apply {
+                paramsBuilder.fallbackCreditToken(fallbackCreditToken)
+            }
+
+        /** @see MessageCreateParams.Builder.fallbackCreditToken */
+        fun fallbackCreditToken(
+            fallbackCreditToken: Optional<MessageCreateParams.FallbackCreditToken>
+        ) = apply { paramsBuilder.fallbackCreditToken(fallbackCreditToken) }
+
+        /** @see MessageCreateParams.Builder.fallbackCreditToken */
+        fun fallbackCreditToken(
+            fallbackCreditToken: JsonField<MessageCreateParams.FallbackCreditToken>
+        ) = apply { paramsBuilder.fallbackCreditToken(fallbackCreditToken) }
+
+        /** @see MessageCreateParams.Builder.fallbackCreditToken */
+        fun fallbackCreditToken(string: String) = apply {
+            paramsBuilder.fallbackCreditToken(string)
         }
 
         /** @see MessageCreateParams.Builder.fallbackCreditToken */
-        fun fallbackCreditToken(fallbackCreditToken: Optional<String>) = apply {
-            paramsBuilder.fallbackCreditToken(fallbackCreditToken)
-        }
-
-        /** @see MessageCreateParams.Builder.fallbackCreditToken */
-        fun fallbackCreditToken(fallbackCreditToken: JsonField<String>) = apply {
-            paramsBuilder.fallbackCreditToken(fallbackCreditToken)
-        }
+        fun fallbackCreditToken(betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam) =
+            apply {
+                paramsBuilder.fallbackCreditToken(betaFallbackCreditTokenParam)
+            }
 
         /** @see MessageCreateParams.Builder.fallbacks */
-        fun fallbacks(fallbacks: List<BetaFallbackParam>?) = apply {
+        fun fallbacks(fallbacks: BetaFallbacksParam?) = apply { paramsBuilder.fallbacks(fallbacks) }
+
+        /** @see MessageCreateParams.Builder.fallbacks */
+        fun fallbacks(fallbacks: Optional<BetaFallbacksParam>) = apply {
             paramsBuilder.fallbacks(fallbacks)
         }
 
         /** @see MessageCreateParams.Builder.fallbacks */
-        fun fallbacks(fallbacks: Optional<List<BetaFallbackParam>>) = apply {
+        fun fallbacks(fallbacks: JsonField<BetaFallbacksParam>) = apply {
             paramsBuilder.fallbacks(fallbacks)
         }
 
-        /** @see MessageCreateParams.Builder.fallbacks */
-        fun fallbacks(fallbacks: JsonField<List<BetaFallbackParam>>) = apply {
-            paramsBuilder.fallbacks(fallbacks)
+        /** @see MessageCreateParams.Builder.fallbacksOfFallbackParams */
+        fun fallbacksOfFallbackParams(fallbackParams: List<BetaFallbackParam>) = apply {
+            paramsBuilder.fallbacksOfFallbackParams(fallbackParams)
         }
 
-        /** @see MessageCreateParams.Builder.addFallback */
-        fun addFallback(fallback: BetaFallbackParam) = apply { paramsBuilder.addFallback(fallback) }
+        /** @see MessageCreateParams.Builder.fallbacksDefault */
+        fun fallbacksDefault() = apply { paramsBuilder.fallbacksDefault() }
 
         /** @see MessageCreateParams.Builder.mcpServers */
         fun mcpServers(mcpServers: List<BetaRequestMcpServerUrlDefinition>) = apply {

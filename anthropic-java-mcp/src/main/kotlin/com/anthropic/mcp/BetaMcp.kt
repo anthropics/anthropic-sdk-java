@@ -22,6 +22,8 @@ import com.anthropic.models.beta.messages.BetaPlainTextSource
 import com.anthropic.models.beta.messages.BetaRedactedThinkingBlockParam
 import com.anthropic.models.beta.messages.BetaRequestDocumentBlock
 import com.anthropic.models.beta.messages.BetaRequestMcpToolResultBlockParam
+import com.anthropic.models.beta.messages.BetaRequestToolAdditionBlock
+import com.anthropic.models.beta.messages.BetaRequestToolRemovalBlock
 import com.anthropic.models.beta.messages.BetaSearchResultBlockParam
 import com.anthropic.models.beta.messages.BetaServerToolUseBlockParam
 import com.anthropic.models.beta.messages.BetaTextBlockParam
@@ -369,6 +371,12 @@ object BetaMcp {
                 override fun visitMidConvSystem(
                     midConvSystem: BetaMidConversationSystemBlockParam
                 ) = unsupported("mid_conv_system")
+
+                override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock) =
+                    unsupported("tool_addition")
+
+                override fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
+                    unsupported("tool_removal")
 
                 private fun unsupported(type: String): BetaToolResultBlockParam.Content.Block =
                     throw AnthropicInvalidDataException(

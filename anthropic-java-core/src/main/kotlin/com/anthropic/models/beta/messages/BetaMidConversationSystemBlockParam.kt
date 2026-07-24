@@ -2,18 +2,28 @@
 
 package com.anthropic.models.beta.messages
 
+import com.anthropic.core.BaseDeserializer
+import com.anthropic.core.BaseSerializer
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
+import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.ObjectCodec
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -28,7 +38,7 @@ import kotlin.jvm.optionals.getOrNull
 class BetaMidConversationSystemBlockParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val content: JsonField<List<BetaTextBlockParam>>,
+    private val content: JsonField<List<Content>>,
     private val type: JsonValue,
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -38,7 +48,7 @@ private constructor(
     private constructor(
         @JsonProperty("content")
         @ExcludeMissing
-        content: JsonField<List<BetaTextBlockParam>> = JsonMissing.of(),
+        content: JsonField<List<Content>> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("cache_control")
         @ExcludeMissing
@@ -51,7 +61,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun content(): List<BetaTextBlockParam> = content.getRequired("content")
+    fun content(): List<Content> = content.getRequired("content")
 
     /**
      * Expected to always return the following:
@@ -78,9 +88,7 @@ private constructor(
      *
      * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("content")
-    @ExcludeMissing
-    fun _content(): JsonField<List<BetaTextBlockParam>> = content
+    @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<List<Content>> = content
 
     /**
      * Returns the raw JSON value of [cacheControl].
@@ -120,7 +128,7 @@ private constructor(
     /** A builder for [BetaMidConversationSystemBlockParam]. */
     class Builder internal constructor() {
 
-        private var content: JsonField<MutableList<BetaTextBlockParam>>? = null
+        private var content: JsonField<MutableList<Content>>? = null
         private var type: JsonValue = JsonValue.from("mid_conv_system")
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -140,33 +148,36 @@ private constructor(
         }
 
         /** System instruction text blocks. */
-        fun content(content: List<BetaTextBlockParam>) = content(JsonField.of(content))
+        fun content(content: List<Content>) = content(JsonField.of(content))
 
         /**
          * Sets [Builder.content] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.content] with a well-typed `List<BetaTextBlockParam>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.content] with a well-typed `List<Content>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun content(content: JsonField<List<BetaTextBlockParam>>) = apply {
+        fun content(content: JsonField<List<Content>>) = apply {
             this.content = content.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [BetaTextBlockParam] to [Builder.content].
+         * Adds a single [Content] to [Builder.content].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addContent(content: BetaTextBlockParam) = apply {
+        fun addContent(content: Content) = apply {
             this.content =
                 (this.content ?: JsonField.of(mutableListOf())).also {
                     checkKnown("content", it).add(content)
                 }
         }
 
-        /** Alias for calling [addContent] with `content.toParam()`. */
-        fun addContent(content: BetaTextBlock) = addContent(content.toParam())
+        /** Alias for calling [addContent] with `Content.ofText(text)`. */
+        fun addContent(text: BetaTextBlockParam) = addContent(Content.ofText(text))
+
+        /** Alias for calling [addContent] with `text.toParam()`. */
+        fun addContent(text: BetaTextBlock) = addContent(text.toParam())
 
         /**
          * Alias for calling [addContent] with the following:
@@ -178,6 +189,134 @@ private constructor(
          */
         fun addTextContent(text: String) =
             addContent(BetaTextBlockParam.builder().text(text).build())
+
+        /** Alias for calling [addContent] with `Content.ofToolAddition(toolAddition)`. */
+        fun addContent(toolAddition: BetaRequestToolAdditionBlock) =
+            addContent(Content.ofToolAddition(toolAddition))
+
+        /**
+         * Alias for calling [addContent] with the following:
+         * ```java
+         * BetaRequestToolAdditionBlock.builder()
+         *     .tool(tool)
+         *     .build()
+         * ```
+         */
+        fun addToolAdditionContent(tool: BetaRequestToolAdditionBlock.Tool) =
+            addContent(BetaRequestToolAdditionBlock.builder().tool(tool).build())
+
+        /**
+         * Alias for calling [addToolAdditionContent] with
+         * `BetaRequestToolAdditionBlock.Tool.ofReference(reference)`.
+         */
+        fun addToolAdditionContent(reference: BetaToolChangeToolReference) =
+            addToolAdditionContent(BetaRequestToolAdditionBlock.Tool.ofReference(reference))
+
+        /**
+         * Alias for calling [addToolAdditionContent] with the following:
+         * ```java
+         * BetaToolChangeToolReference.builder()
+         *     .name(name)
+         *     .build()
+         * ```
+         */
+        fun addReferenceToolAdditionContent(name: String) =
+            addToolAdditionContent(BetaToolChangeToolReference.builder().name(name).build())
+
+        /**
+         * Alias for calling [addToolAdditionContent] with
+         * `BetaRequestToolAdditionBlock.Tool.ofMcpToolReference(mcpToolReference)`.
+         */
+        fun addToolAdditionContent(mcpToolReference: BetaToolChangeMcpToolReference) =
+            addToolAdditionContent(
+                BetaRequestToolAdditionBlock.Tool.ofMcpToolReference(mcpToolReference)
+            )
+
+        /**
+         * Alias for calling [addToolAdditionContent] with
+         * `BetaRequestToolAdditionBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)`.
+         */
+        fun addToolAdditionContent(mcpToolsetReference: BetaToolChangeMcpToolsetReference) =
+            addToolAdditionContent(
+                BetaRequestToolAdditionBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)
+            )
+
+        /**
+         * Alias for calling [addToolAdditionContent] with the following:
+         * ```java
+         * BetaToolChangeMcpToolsetReference.builder()
+         *     .serverName(serverName)
+         *     .build()
+         * ```
+         */
+        fun addMcpToolsetReferenceToolAdditionContent(serverName: String) =
+            addToolAdditionContent(
+                BetaToolChangeMcpToolsetReference.builder().serverName(serverName).build()
+            )
+
+        /** Alias for calling [addContent] with `Content.ofToolRemoval(toolRemoval)`. */
+        fun addContent(toolRemoval: BetaRequestToolRemovalBlock) =
+            addContent(Content.ofToolRemoval(toolRemoval))
+
+        /**
+         * Alias for calling [addContent] with the following:
+         * ```java
+         * BetaRequestToolRemovalBlock.builder()
+         *     .tool(tool)
+         *     .build()
+         * ```
+         */
+        fun addToolRemovalContent(tool: BetaRequestToolRemovalBlock.Tool) =
+            addContent(BetaRequestToolRemovalBlock.builder().tool(tool).build())
+
+        /**
+         * Alias for calling [addToolRemovalContent] with
+         * `BetaRequestToolRemovalBlock.Tool.ofReference(reference)`.
+         */
+        fun addToolRemovalContent(reference: BetaToolChangeToolReference) =
+            addToolRemovalContent(BetaRequestToolRemovalBlock.Tool.ofReference(reference))
+
+        /**
+         * Alias for calling [addToolRemovalContent] with the following:
+         * ```java
+         * BetaToolChangeToolReference.builder()
+         *     .name(name)
+         *     .build()
+         * ```
+         */
+        fun addReferenceToolRemovalContent(name: String) =
+            addToolRemovalContent(BetaToolChangeToolReference.builder().name(name).build())
+
+        /**
+         * Alias for calling [addToolRemovalContent] with
+         * `BetaRequestToolRemovalBlock.Tool.ofMcpToolReference(mcpToolReference)`.
+         */
+        fun addToolRemovalContent(mcpToolReference: BetaToolChangeMcpToolReference) =
+            addToolRemovalContent(
+                BetaRequestToolRemovalBlock.Tool.ofMcpToolReference(mcpToolReference)
+            )
+
+        /**
+         * Alias for calling [addToolRemovalContent] with
+         * `BetaRequestToolRemovalBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)`.
+         */
+        fun addToolRemovalContent(mcpToolsetReference: BetaToolChangeMcpToolsetReference) =
+            addToolRemovalContent(
+                BetaRequestToolRemovalBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)
+            )
+
+        /**
+         * Alias for calling [addToolRemovalContent] with the following:
+         * ```java
+         * BetaToolChangeMcpToolsetReference.builder()
+         *     .serverName(serverName)
+         *     .build()
+         * ```
+         */
+        fun addMcpToolsetReferenceToolRemovalContent(serverName: String) =
+            addToolRemovalContent(
+                BetaToolChangeMcpToolsetReference.builder().serverName(serverName).build()
+            )
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -295,6 +434,299 @@ private constructor(
         (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             type.let { if (it == JsonValue.from("mid_conv_system")) 1 else 0 } +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0)
+
+    /**
+     * Mid-conversation directive to surface a declared tool.
+     *
+     * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+     * offered to the model from this point in the conversation onward.
+     */
+    @JsonDeserialize(using = Content.Deserializer::class)
+    @JsonSerialize(using = Content.Serializer::class)
+    class Content
+    private constructor(
+        private val text: BetaTextBlockParam? = null,
+        private val toolAddition: BetaRequestToolAdditionBlock? = null,
+        private val toolRemoval: BetaRequestToolRemovalBlock? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        fun text(): Optional<BetaTextBlockParam> = Optional.ofNullable(text)
+
+        /**
+         * Mid-conversation directive to surface a declared tool.
+         *
+         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+         * offered to the model from this point in the conversation onward.
+         */
+        fun toolAddition(): Optional<BetaRequestToolAdditionBlock> =
+            Optional.ofNullable(toolAddition)
+
+        /**
+         * Mid-conversation directive to withdraw a tool.
+         *
+         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+         * no longer offered to the model from this point in the conversation onward.
+         */
+        fun toolRemoval(): Optional<BetaRequestToolRemovalBlock> = Optional.ofNullable(toolRemoval)
+
+        fun isText(): Boolean = text != null
+
+        fun isToolAddition(): Boolean = toolAddition != null
+
+        fun isToolRemoval(): Boolean = toolRemoval != null
+
+        fun asText(): BetaTextBlockParam = text.getOrThrow("text")
+
+        /**
+         * Mid-conversation directive to surface a declared tool.
+         *
+         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+         * offered to the model from this point in the conversation onward.
+         */
+        fun asToolAddition(): BetaRequestToolAdditionBlock = toolAddition.getOrThrow("toolAddition")
+
+        /**
+         * Mid-conversation directive to withdraw a tool.
+         *
+         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+         * no longer offered to the model from this point in the conversation onward.
+         */
+        fun asToolRemoval(): BetaRequestToolRemovalBlock = toolRemoval.getOrThrow("toolRemoval")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import com.anthropic.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = content.accept(new Content.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitText(BetaTextBlockParam text) {
+         *         return Optional.of(text.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws AnthropicInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                text != null -> visitor.visitText(text)
+                toolAddition != null -> visitor.visitToolAddition(toolAddition)
+                toolRemoval != null -> visitor.visitToolRemoval(toolRemoval)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Content = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitText(text: BetaTextBlockParam) {
+                        text.validate()
+                    }
+
+                    override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock) {
+                        toolAddition.validate()
+                    }
+
+                    override fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) {
+                        toolRemoval.validate()
+                    }
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitText(text: BetaTextBlockParam) = text.validity()
+
+                    override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock) =
+                        toolAddition.validity()
+
+                    override fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
+                        toolRemoval.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Content &&
+                text == other.text &&
+                toolAddition == other.toolAddition &&
+                toolRemoval == other.toolRemoval
+        }
+
+        override fun hashCode(): Int = Objects.hash(text, toolAddition, toolRemoval)
+
+        override fun toString(): String =
+            when {
+                text != null -> "Content{text=$text}"
+                toolAddition != null -> "Content{toolAddition=$toolAddition}"
+                toolRemoval != null -> "Content{toolRemoval=$toolRemoval}"
+                _json != null -> "Content{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Content")
+            }
+
+        companion object {
+
+            @JvmStatic fun ofText(text: BetaTextBlockParam) = Content(text = text)
+
+            /**
+             * Mid-conversation directive to surface a declared tool.
+             *
+             * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it
+             * is offered to the model from this point in the conversation onward.
+             */
+            @JvmStatic
+            fun ofToolAddition(toolAddition: BetaRequestToolAdditionBlock) =
+                Content(toolAddition = toolAddition)
+
+            /**
+             * Mid-conversation directive to withdraw a tool.
+             *
+             * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it
+             * is no longer offered to the model from this point in the conversation onward.
+             */
+            @JvmStatic
+            fun ofToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
+                Content(toolRemoval = toolRemoval)
+        }
+
+        /**
+         * An interface that defines how to map each variant of [Content] to a value of type [T].
+         */
+        interface Visitor<out T> {
+
+            fun visitText(text: BetaTextBlockParam): T
+
+            /**
+             * Mid-conversation directive to surface a declared tool.
+             *
+             * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it
+             * is offered to the model from this point in the conversation onward.
+             */
+            fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock): T
+
+            /**
+             * Mid-conversation directive to withdraw a tool.
+             *
+             * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it
+             * is no longer offered to the model from this point in the conversation onward.
+             */
+            fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock): T
+
+            /**
+             * Maps an unknown variant of [Content] to a value of type [T].
+             *
+             * An instance of [Content] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown Content: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<Content>(Content::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): Content {
+                val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+
+                when (type) {
+                    "text" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaTextBlockParam>())?.let {
+                            Content(text = it, _json = json)
+                        } ?: Content(_json = json)
+                    }
+                    "tool_addition" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaRequestToolAdditionBlock>())
+                            ?.let { Content(toolAddition = it, _json = json) }
+                            ?: Content(_json = json)
+                    }
+                    "tool_removal" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaRequestToolRemovalBlock>())
+                            ?.let { Content(toolRemoval = it, _json = json) }
+                            ?: Content(_json = json)
+                    }
+                }
+
+                return Content(_json = json)
+            }
+        }
+
+        internal class Serializer : BaseSerializer<Content>(Content::class) {
+
+            override fun serialize(
+                value: Content,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.text != null -> generator.writeObject(value.text)
+                    value.toolAddition != null -> generator.writeObject(value.toolAddition)
+                    value.toolRemoval != null -> generator.writeObject(value.toolRemoval)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid Content")
+                }
+            }
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

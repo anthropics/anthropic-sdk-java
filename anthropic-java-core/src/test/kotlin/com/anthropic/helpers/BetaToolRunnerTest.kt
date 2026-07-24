@@ -169,6 +169,178 @@ internal class BetaToolRunnerTest {
     }
 
     @Test
+    fun iteration_whenToolRemoved_respondsWithNotFoundError() {
+        // A `tool_use` for a `tool_removal`ed tool must produce the same result as a `tool_use`
+        // for a tool that was never declared in `tools`.
+        val paramsWithRemoval =
+            initialMessageParams
+                .toBuilder()
+                .addSystemMessageOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolRemoval(
+                            BetaRequestToolRemovalBlock.builder()
+                                .referenceTool("get_weather")
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(paramsWithRemoval)
+                    .maxIterations(2)
+                    .build(),
+                requestOptions,
+            )
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("toolUseId")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "Removed City")))
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        val expectedToolResponseMessageParam =
+            BetaMessageParam.builder()
+                .role(BetaMessageParam.Role.USER)
+                .contentOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolResult(
+                            BetaToolResultBlockParam.builder()
+                                .toolUseId("toolUseId")
+                                .content("Error: Tool 'get_weather' not found")
+                                .isError(true)
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaTextBlock.builder()
+                        .citations(null)
+                        .text("The weather in Removed City is 404!")
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(paramsWithRemoval, requestOptions))
+            .thenReturn(assistantMessage1)
+        whenever(
+                messageService.create(
+                    paramsWithRemoval
+                        .toBuilder()
+                        .addMessage(assistantMessage1)
+                        .addMessage(expectedToolResponseMessageParam)
+                        .build(),
+                    requestOptions,
+                )
+            )
+            .thenReturn(assistantMessage2)
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).containsExactly(assistantMessage1, assistantMessage2)
+        assertThat(GetWeather.executions).doesNotContainKey("Removed City")
+        assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
+    }
+
+    @Test
+    fun iteration_whenToolRemovedThenAdded_executesTool() {
+        val paramsWithChanges =
+            initialMessageParams
+                .toBuilder()
+                .addSystemMessageOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolRemoval(
+                            BetaRequestToolRemovalBlock.builder()
+                                .referenceTool("get_weather")
+                                .build()
+                        )
+                    )
+                )
+                .addSystemMessageOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolAddition(
+                            BetaRequestToolAdditionBlock.builder()
+                                .referenceTool("get_weather")
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(paramsWithChanges)
+                    .maxIterations(2)
+                    .build(),
+                requestOptions,
+            )
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("toolUseId")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "Re-added City")))
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        val expectedToolResponseMessageParam =
+            BetaMessageParam.builder()
+                .role(BetaMessageParam.Role.USER)
+                .contentOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolResult(
+                            BetaToolResultBlockParam.builder()
+                                .toolUseId("toolUseId")
+                                .content("The weather in Re-added City is foggy and 60°F")
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaTextBlock.builder()
+                        .citations(null)
+                        .text("The weather in Re-added City is foggy and 60°F!")
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(paramsWithChanges, requestOptions))
+            .thenReturn(assistantMessage1)
+        whenever(
+                messageService.create(
+                    paramsWithChanges
+                        .toBuilder()
+                        .addMessage(assistantMessage1)
+                        .addMessage(expectedToolResponseMessageParam)
+                        .build(),
+                    requestOptions,
+                )
+            )
+            .thenReturn(assistantMessage2)
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).containsExactly(assistantMessage1, assistantMessage2)
+        assertThat(GetWeather.executions).containsEntry("Re-added City", 1)
+        assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
+    }
+
+    @Test
     fun iteration_whenToolUseThrows_respondsWithError() {
         val assistantMessage1 =
             betaMessageBuilder()
@@ -366,6 +538,7 @@ internal class BetaToolRunnerTest {
                         )
                         .usage(
                             BetaMessageDeltaUsage.builder()
+                                .fallbackCredit(null)
                                 .outputTokens(1L)
                                 .outputTokensDetails(null)
                                 .cacheCreationInputTokens(0L)
@@ -728,6 +901,252 @@ internal class BetaToolRunnerTest {
         assertThat(toolRunner.lastToolResponse()).isEmpty
     }
 
+    @Test
+    fun iteration_whenToolRemovedViaSetNextParams_respondsWithNotFoundError() {
+        // The `tool_removal` reaches the runner only through `setNextParams`, not the initial
+        // params, so this proves the availability fold reads the mutated params on later turns.
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(initialMessageParams)
+                    .maxIterations(3)
+                    .build(),
+                requestOptions,
+            )
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("toolUseId1")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "Removal Mutation Turn City")))
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        // The caller answers `assistantMessage1` itself and removes the tool for the rest of the
+        // run; setting the next params also stops the runner from executing this turn's tools.
+        val paramsWithRemoval =
+            initialMessageParams
+                .toBuilder()
+                .addMessage(assistantMessage1)
+                .addUserMessageOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolResult(
+                            BetaToolResultBlockParam.builder()
+                                .toolUseId("toolUseId1")
+                                .content("The weather is whatever I want!")
+                                .build()
+                        )
+                    )
+                )
+                .addSystemMessageOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolRemoval(
+                            BetaRequestToolRemovalBlock.builder()
+                                .referenceTool("get_weather")
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("toolUseId2")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "Removed Mid-run City")))
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        val expectedToolResponseMessageParam =
+            BetaMessageParam.builder()
+                .role(BetaMessageParam.Role.USER)
+                .contentOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolResult(
+                            BetaToolResultBlockParam.builder()
+                                .toolUseId("toolUseId2")
+                                .content("Error: Tool 'get_weather' not found")
+                                .isError(true)
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val assistantMessage3 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaTextBlock.builder()
+                        .citations(null)
+                        .text("The weather in Removed Mid-run City is 404!")
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(initialMessageParams, requestOptions))
+            .thenReturn(assistantMessage1)
+        whenever(messageService.create(paramsWithRemoval, requestOptions))
+            .thenReturn(assistantMessage2)
+        whenever(
+                messageService.create(
+                    paramsWithRemoval
+                        .toBuilder()
+                        .addMessage(assistantMessage2)
+                        .addMessage(expectedToolResponseMessageParam)
+                        .build(),
+                    requestOptions,
+                )
+            )
+            .thenReturn(assistantMessage3)
+
+        val messages =
+            toolRunner
+                .asSequence()
+                .onEachIndexed { index, _ ->
+                    if (index == 0) {
+                        toolRunner.setNextParams(paramsWithRemoval)
+                    }
+                }
+                .toList()
+
+        assertThat(messages)
+            .containsExactly(assistantMessage1, assistantMessage2, assistantMessage3)
+        // Neither the turn whose params were replaced nor the `tool_use` for the removed tool
+        // ran the tool.
+        assertThat(GetWeather.executions).doesNotContainKey("Removal Mutation Turn City")
+        assertThat(GetWeather.executions).doesNotContainKey("Removed Mid-run City")
+        assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
+    }
+
+    @Test
+    fun iteration_whenToolReAddedViaSetNextParams_executesTool() {
+        // A `tool_addition` following a `tool_removal`, both supplied through `setNextParams`,
+        // re-enables execution on the following turn.
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(initialMessageParams)
+                    .maxIterations(3)
+                    .build(),
+                requestOptions,
+            )
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("toolUseId1")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "Re-add Mutation Turn City")))
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        val paramsWithChanges =
+            initialMessageParams
+                .toBuilder()
+                .addMessage(assistantMessage1)
+                .addUserMessageOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolResult(
+                            BetaToolResultBlockParam.builder()
+                                .toolUseId("toolUseId1")
+                                .content("The weather is whatever I want!")
+                                .build()
+                        )
+                    )
+                )
+                .addSystemMessageOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolRemoval(
+                            BetaRequestToolRemovalBlock.builder()
+                                .referenceTool("get_weather")
+                                .build()
+                        )
+                    )
+                )
+                .addSystemMessageOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolAddition(
+                            BetaRequestToolAdditionBlock.builder()
+                                .referenceTool("get_weather")
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("toolUseId2")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "Re-added Mid-run City")))
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        val expectedToolResponseMessageParam =
+            BetaMessageParam.builder()
+                .role(BetaMessageParam.Role.USER)
+                .contentOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolResult(
+                            BetaToolResultBlockParam.builder()
+                                .toolUseId("toolUseId2")
+                                .content("The weather in Re-added Mid-run City is foggy and 60°F")
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val assistantMessage3 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaTextBlock.builder()
+                        .citations(null)
+                        .text("The weather in Re-added Mid-run City is foggy and 60°F!")
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(initialMessageParams, requestOptions))
+            .thenReturn(assistantMessage1)
+        whenever(messageService.create(paramsWithChanges, requestOptions))
+            .thenReturn(assistantMessage2)
+        whenever(
+                messageService.create(
+                    paramsWithChanges
+                        .toBuilder()
+                        .addMessage(assistantMessage2)
+                        .addMessage(expectedToolResponseMessageParam)
+                        .build(),
+                    requestOptions,
+                )
+            )
+            .thenReturn(assistantMessage3)
+
+        val messages =
+            toolRunner
+                .asSequence()
+                .onEachIndexed { index, _ ->
+                    if (index == 0) {
+                        toolRunner.setNextParams(paramsWithChanges)
+                    }
+                }
+                .toList()
+
+        assertThat(messages)
+            .containsExactly(assistantMessage1, assistantMessage2, assistantMessage3)
+        assertThat(GetWeather.executions).doesNotContainKey("Re-add Mutation Turn City")
+        assertThat(GetWeather.executions).containsEntry("Re-added Mid-run City", 1)
+        assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
+    }
+
     private fun betaMessageBuilder() =
         BetaMessage.builder()
             .id("id")
@@ -741,6 +1160,7 @@ internal class BetaToolRunnerTest {
 
     private fun betaUsage() =
         BetaUsage.builder()
+            .fallbackCredit(null)
             .cacheCreation(
                 BetaCacheCreation.builder()
                     .ephemeral1hInputTokens(0L)

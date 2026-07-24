@@ -35,10 +35,13 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         /** Most capable model for cybersecurity and biology research */
         @JvmField val CLAUDE_MYTHOS_5 = of("claude-mythos-5")
 
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
+        @JvmField val CLAUDE_OPUS_5 = of("claude-opus-5")
+
+        /** Powerful intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_8 = of("claude-opus-4-8")
 
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_7 = of("claude-opus-4-7")
 
         /** New class of intelligence, strongest in coding and cybersecurity */
@@ -48,7 +51,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @JvmField
         val CLAUDE_MYTHOS_PREVIEW = of("claude-mythos-preview")
 
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_6 = of("claude-opus-4-6")
 
         /** Best combination of speed and intelligence */
@@ -60,10 +63,10 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         /** Fastest model with near-frontier intelligence */
         @JvmField val CLAUDE_HAIKU_4_5_20251001 = of("claude-haiku-4-5-20251001")
 
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_5 = of("claude-opus-4-5")
 
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
 
         /** High-performance model for agents and coding */
@@ -72,14 +75,14 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         /** High-performance model for agents and coding */
         @JvmField val CLAUDE_SONNET_4_5_20250929 = of("claude-sonnet-4-5-20250929")
 
-        /** Exceptional model for specialized complex tasks */
+        /** Powerful intelligence for long-running agents and coding */
         @Deprecated(
             "Will reach end-of-life on August 5, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
         @JvmField
         val CLAUDE_OPUS_4_1 = of("claude-opus-4-1")
 
-        /** Exceptional model for specialized complex tasks */
+        /** Powerful intelligence for long-running agents and coding */
         @Deprecated(
             "Will reach end-of-life on August 5, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
@@ -97,16 +100,18 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_FABLE_5,
         /** Most capable model for cybersecurity and biology research */
         CLAUDE_MYTHOS_5,
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
+        CLAUDE_OPUS_5,
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_8,
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_7,
         @Deprecated(
             "Will reach end-of-life on June 30, 2026. Please migrate to claude-mythos-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
         /** New class of intelligence, strongest in coding and cybersecurity */
         CLAUDE_MYTHOS_PREVIEW,
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_6,
         /** Best combination of speed and intelligence */
         CLAUDE_SONNET_4_6,
@@ -114,9 +119,9 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_HAIKU_4_5,
         /** Fastest model with near-frontier intelligence */
         CLAUDE_HAIKU_4_5_20251001,
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5,
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5_20251101,
         /** High-performance model for agents and coding */
         CLAUDE_SONNET_4_5,
@@ -125,12 +130,12 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @Deprecated(
             "Will reach end-of-life on August 5, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
-        /** Exceptional model for specialized complex tasks */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_1,
         @Deprecated(
             "Will reach end-of-life on August 5, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
-        /** Exceptional model for specialized complex tasks */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_1_20250805,
     }
 
@@ -150,16 +155,18 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_FABLE_5,
         /** Most capable model for cybersecurity and biology research */
         CLAUDE_MYTHOS_5,
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
+        CLAUDE_OPUS_5,
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_8,
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_7,
         @Deprecated(
             "Will reach end-of-life on June 30, 2026. Please migrate to claude-mythos-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
         /** New class of intelligence, strongest in coding and cybersecurity */
         CLAUDE_MYTHOS_PREVIEW,
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_6,
         /** Best combination of speed and intelligence */
         CLAUDE_SONNET_4_6,
@@ -167,9 +174,9 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         CLAUDE_HAIKU_4_5,
         /** Fastest model with near-frontier intelligence */
         CLAUDE_HAIKU_4_5_20251001,
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5,
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5_20251101,
         /** High-performance model for agents and coding */
         CLAUDE_SONNET_4_5,
@@ -178,12 +185,12 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @Deprecated(
             "Will reach end-of-life on August 5, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
-        /** Exceptional model for specialized complex tasks */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_1,
         @Deprecated(
             "Will reach end-of-life on August 5, 2026. Please migrate to a newer model. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
-        /** Exceptional model for specialized complex tasks */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_1_20250805,
         /** An enum member indicating that [Model] was instantiated with an unknown value. */
         _UNKNOWN,
@@ -201,6 +208,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_SONNET_5 -> Value.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Value.CLAUDE_FABLE_5
             CLAUDE_MYTHOS_5 -> Value.CLAUDE_MYTHOS_5
+            CLAUDE_OPUS_5 -> Value.CLAUDE_OPUS_5
             CLAUDE_OPUS_4_8 -> Value.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Value.CLAUDE_OPUS_4_7
             CLAUDE_MYTHOS_PREVIEW -> Value.CLAUDE_MYTHOS_PREVIEW
@@ -230,6 +238,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
             CLAUDE_SONNET_5 -> Known.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Known.CLAUDE_FABLE_5
             CLAUDE_MYTHOS_5 -> Known.CLAUDE_MYTHOS_5
+            CLAUDE_OPUS_5 -> Known.CLAUDE_OPUS_5
             CLAUDE_OPUS_4_8 -> Known.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Known.CLAUDE_OPUS_4_7
             CLAUDE_MYTHOS_PREVIEW -> Known.CLAUDE_MYTHOS_PREVIEW

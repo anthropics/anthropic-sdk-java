@@ -10,10 +10,13 @@ import com.anthropic.errors.AnthropicException
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaFallbackBlockParam
+import com.anthropic.models.beta.messages.BetaFallbackCreditTokenParam
 import com.anthropic.models.beta.messages.BetaFallbackInfoParam
 import com.anthropic.models.beta.messages.BetaFallbackParam
+import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageParam
+import com.anthropic.models.beta.messages.BetaOutputConfig
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaThinkingBlockParam
 import com.anthropic.models.beta.messages.BetaToolUseBlockParam
@@ -51,7 +54,11 @@ internal class BetaRefusalFallbackInterceptorTest {
         assertThat(message.model().asString()).isEqualTo("fallback-model")
         assertThat(message.stopReason().getOrNull()?.asString()).isEqualTo("end_turn")
         assertThat(httpClient.models()).containsExactly("primary-model", "fallback-model")
-        assertThat(httpClient.bodies[1].fallbackCreditToken().getOrNull()).isEqualTo("credit-token")
+        val creditToken =
+            httpClient.bodies[1].fallbackCreditToken().getOrNull()?.asBetaFallbackCreditTokenParam()
+        assertThat(creditToken?.token()).isEqualTo("credit-token")
+        assertThat(creditToken?.mode()?.getOrNull())
+            .isEqualTo(BetaFallbackCreditTokenParam.Mode.BEST_EFFORT)
     }
 
     @ParameterizedTest
@@ -414,7 +421,7 @@ internal class BetaRefusalFallbackInterceptorTest {
         assertThat(httpClient.requests).hasSize(2)
         httpClient.requests.forEach {
             assertThat(it.headers.values("anthropic-beta"))
-                .containsExactly("fallback-credit-2026-06-01")
+                .containsExactly("fallback-credit-2026-07-01")
         }
     }
 
@@ -431,12 +438,12 @@ internal class BetaRefusalFallbackInterceptorTest {
         val request =
             messagesRequest()
                 .toBuilder()
-                .putHeader("anthropic-beta", "some-other-beta,fallback-credit-2026-06-01")
+                .putHeader("anthropic-beta", "some-other-beta,fallback-credit-2026-07-01")
                 .build()
         interceptedClient.execute(request, RequestOptions.none(), async)
 
         assertThat(httpClient.requests[0].headers.values("anthropic-beta"))
-            .containsExactly("some-other-beta,fallback-credit-2026-06-01")
+            .containsExactly("some-other-beta,fallback-credit-2026-07-01")
     }
 
     @ParameterizedTest
@@ -510,6 +517,322 @@ internal class BetaRefusalFallbackInterceptorTest {
 
         assertThat(httpClient.bodies[1]._additionalProperties()["custom_field"])
             .isEqualTo(JsonValue.from("custom-value"))
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun aSetFallbackFieldOverridesTheOriginalField(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model").toBuilder().maxTokens(512).build())
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        assertThat(httpClient.jsonBodies[0].path("max_tokens").asLong()).isEqualTo(1024)
+        assertThat(httpClient.jsonBodies[1].path("max_tokens").asLong()).isEqualTo(512)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun aNullFallbackFieldUnsetsTheOriginalField(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(
+                    fallback("fallback-model")
+                        .toBuilder()
+                        .maxTokens(null as Long?)
+                        .putAdditionalProperty("temperature", JsonValue.from(null))
+                        .build()
+                )
+                .build()
+                .intercept(httpClient)
+
+        val body =
+            messagesBody()
+                .toBuilder()
+                .putAdditionalProperty("temperature", JsonValue.from(1.0))
+                .build()
+        interceptedClient.execute(
+            messagesRequest(body),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        // An explicit null removes the field from the retried request — it is not sent as
+        // `null`, and it does not keep its original value.
+        assertThat(httpClient.jsonBodies[1].has("max_tokens")).isFalse()
+        assertThat(httpClient.jsonBodies[1].has("temperature")).isFalse()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun anOmittedFallbackFieldKeepsTheOriginalField(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        assertThat(httpClient.jsonBodies[1].path("max_tokens").asLong()).isEqualTo(1024)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun eachHopPatchesTheOriginalParamsNotThePreviousHops(async: Boolean) {
+        val httpClient =
+            FakeHttpClient(refusal("primary-model"), refusal("mid-model"), message("last-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(
+                    fallback("mid-model")
+                        .toBuilder()
+                        .maxTokens(512)
+                        .putAdditionalProperty("temperature", JsonValue.from(0.5))
+                        .build()
+                )
+                .addFallback(fallback("last-model"))
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        // Hop 1's overrides apply to its own attempt...
+        assertThat(httpClient.jsonBodies[1].path("max_tokens").asLong()).isEqualTo(512)
+        assertThat(httpClient.jsonBodies[1].path("temperature").asDouble()).isEqualTo(0.5)
+        // ...but hop 2 patches the original params, so they don't leak into its attempt.
+        assertThat(httpClient.jsonBodies[2].path("max_tokens").asLong()).isEqualTo(1024)
+        assertThat(httpClient.jsonBodies[2].has("temperature")).isFalse()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun aSetOutputConfigSubfieldMergesWithTheExistingSubfields(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(
+                    fallback("fallback-model").toBuilder().outputConfig(highEffort()).build()
+                )
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(bodyWithOutputConfig()),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        // Only `effort` is patched in; the original `format` subfield is kept.
+        val outputConfig = httpClient.jsonBodies[1].path("output_config")
+        assertThat(outputConfig.path("effort").asText()).isEqualTo("high")
+        assertThat(outputConfig.path("format").path("type").asText()).isEqualTo("json_schema")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun aNullOutputConfigSubfieldUnsetsOnlyThatSubfield(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(
+                    fallback("fallback-model")
+                        .toBuilder()
+                        .outputConfig(
+                            BetaOutputConfig.builder().effort(JsonValue.from(null)).build()
+                        )
+                        .build()
+                )
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(bodyWithOutputConfig(effort = "medium")),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        val outputConfig = httpClient.jsonBodies[1].path("output_config")
+        assertThat(outputConfig.has("effort")).isFalse()
+        assertThat(outputConfig.path("format").path("type").asText()).isEqualTo("json_schema")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun anOutputConfigLeftWithNoSubfieldsIsDroppedNotSentEmpty(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        // The hop unsets the original's only subfield, `effort`, leaving no subfields.
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(
+                    fallback("fallback-model")
+                        .toBuilder()
+                        .outputConfig(
+                            BetaOutputConfig.builder().effort(JsonValue.from(null)).build()
+                        )
+                        .build()
+                )
+                .build()
+                .intercept(httpClient)
+
+        val body =
+            messagesBody()
+                .toBuilder()
+                .outputConfig(
+                    BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
+                )
+                .build()
+        interceptedClient.execute(
+            messagesRequest(body),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        // The key is dropped entirely — never sent as `{}`.
+        assertThat(httpClient.jsonBodies[1].has("output_config")).isFalse()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun anAllNullOutputConfigPatchAddsNothingWhenTheOriginalHasNone(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        // The original has no `output_config`; the hop's subfields are all null.
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(
+                    fallback("fallback-model")
+                        .toBuilder()
+                        .outputConfig(
+                            BetaOutputConfig.builder().effort(JsonValue.from(null)).build()
+                        )
+                        .build()
+                )
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        // No `output_config` is added — not even as `{}`.
+        assertThat(httpClient.jsonBodies[1].has("output_config")).isFalse()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun anUntouchedEmptyOutputConfigIsLeftAsIs(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        // The hop carries no `output_config`, so the original `{}` passes through untouched.
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        val body =
+            messagesBody().toBuilder().outputConfig(BetaOutputConfig.builder().build()).build()
+        interceptedClient.execute(
+            messagesRequest(body),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        val outputConfig = httpClient.jsonBodies[1].get("output_config")
+        assertThat(outputConfig).isNotNull()
+        assertThat(outputConfig.isObject).isTrue()
+        assertThat(outputConfig.size()).isZero()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun aNullOutputConfigUnsetsTheWholeField(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(
+                    fallback("fallback-model")
+                        .toBuilder()
+                        .outputConfig(null as BetaOutputConfig?)
+                        .build()
+                )
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(bodyWithOutputConfig()),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        assertThat(httpClient.jsonBodies[1].has("output_config")).isFalse()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun anOmittedOutputConfigKeepsTheOriginalOutputConfig(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(bodyWithOutputConfig(effort = "medium")),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        val outputConfig = httpClient.jsonBodies[1].path("output_config")
+        assertThat(outputConfig.path("effort").asText()).isEqualTo("medium")
+        assertThat(outputConfig.path("format").path("type").asText()).isEqualTo("json_schema")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun eachHopPatchesTheOriginalOutputConfigNotThePreviousHops(async: Boolean) {
+        val httpClient =
+            FakeHttpClient(refusal("primary-model"), refusal("mid-model"), message("last-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("mid-model").toBuilder().outputConfig(highEffort()).build())
+                .addFallback(fallback("last-model"))
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(bodyWithOutputConfig()),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        // Hop 1 merges its `effort` into the original output_config...
+        assertThat(httpClient.jsonBodies[1].path("output_config").path("effort").asText())
+            .isEqualTo("high")
+        // ...but hop 2 patches the original, so hop 1's `effort` doesn't leak into it.
+        val hop2Config = httpClient.jsonBodies[2].path("output_config")
+        assertThat(hop2Config.has("effort")).isFalse()
+        assertThat(hop2Config.path("format").path("type").asText()).isEqualTo("json_schema")
     }
 
     @ParameterizedTest
@@ -631,14 +954,17 @@ internal class BetaRefusalFallbackInterceptorTest {
                 .intercept(httpClient)
 
         val body =
-            messagesBody().toBuilder().fallbacks(listOf(fallback("server-side-model"))).build()
+            messagesBody()
+                .toBuilder()
+                .fallbacksOfFallbackParams(listOf(fallback("server-side-model")))
+                .build()
 
         assertThatThrownBy {
                 interceptedClient.execute(messagesRequest(body), RequestOptions.none(), async)
             }
             .isInstanceOf(AnthropicException::class.java)
             .hasMessage(
-                "Sending the `fallbacks:` request param is not supported when using the `BetaRefusalFallbackInterceptor`. You should either remove the middleware and send `fallbacks:` with the `server-side-fallback-2026-06-01` beta header to let the API handle refusal fallbacks, or omit the `fallbacks:` param if you'd like `BetaRefusalFallbackInterceptor` to handle fallbacks on the client side."
+                "Sending the `fallbacks:` request param is not supported when using the `BetaRefusalFallbackInterceptor`. You should either remove the middleware and send `fallbacks:` with the `server-side-fallback-2026-07-01` beta header to let the API handle refusal fallbacks, or omit the `fallbacks:` param if you'd like `BetaRefusalFallbackInterceptor` to handle fallbacks on the client side."
             )
         assertThat(httpClient.requests).isEmpty()
     }
@@ -692,6 +1018,23 @@ internal class BetaRefusalFallbackInterceptorTest {
 
     private fun fallback(model: String): BetaFallbackParam =
         BetaFallbackParam.builder().model(model).build()
+
+    /** An `output_config` patch setting only `effort`. */
+    private fun highEffort(): BetaOutputConfig =
+        BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.HIGH).build()
+
+    /** The original request body, carrying an `output_config` with a `format` (and effort). */
+    private fun bodyWithOutputConfig(effort: String? = null): MessageCreateParams.Body {
+        val outputConfig =
+            BetaOutputConfig.builder()
+                .format(
+                    BetaJsonOutputFormat.builder()
+                        .schema(BetaJsonOutputFormat.Schema.builder().build())
+                        .build()
+                )
+        effort?.let { outputConfig.effort(BetaOutputConfig.Effort.of(it)) }
+        return messagesBody().toBuilder().outputConfig(outputConfig.build()).build()
+    }
 
     private fun requestWithHistory(messages: List<BetaMessageParam>): HttpRequest =
         messagesRequest(

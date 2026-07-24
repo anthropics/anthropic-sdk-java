@@ -100,6 +100,10 @@ class BetaMessageAccumulator private constructor() {
                 builder.outputTokensDetails(deltaUsage.outputTokensDetails().getOrNull())
             }
 
+            if (!deltaUsage._fallbackCredit().isMissing()) {
+                builder.fallbackCredit(deltaUsage.fallbackCredit().getOrNull())
+            }
+
             if (!deltaUsage._iterations().isMissing()) {
                 builder.iterations(
                     deltaUsage.iterations().getOrNull()?.map { deltaIteration ->

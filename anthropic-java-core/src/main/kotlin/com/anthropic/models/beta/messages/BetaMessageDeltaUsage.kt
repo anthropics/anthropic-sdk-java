@@ -34,6 +34,7 @@ class BetaMessageDeltaUsage
 private constructor(
     private val cacheCreationInputTokens: JsonField<Long>,
     private val cacheReadInputTokens: JsonField<Long>,
+    private val fallbackCredit: JsonField<BetaFallbackCreditUsage>,
     private val inputTokens: JsonField<Long>,
     private val iterations: JsonField<List<Iteration>>,
     private val outputTokens: JsonField<Long>,
@@ -50,6 +51,9 @@ private constructor(
         @JsonProperty("cache_read_input_tokens")
         @ExcludeMissing
         cacheReadInputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("fallback_credit")
+        @ExcludeMissing
+        fallbackCredit: JsonField<BetaFallbackCreditUsage> = JsonMissing.of(),
         @JsonProperty("input_tokens")
         @ExcludeMissing
         inputTokens: JsonField<Long> = JsonMissing.of(),
@@ -68,6 +72,7 @@ private constructor(
     ) : this(
         cacheCreationInputTokens,
         cacheReadInputTokens,
+        fallbackCredit,
         inputTokens,
         iterations,
         outputTokens,
@@ -93,6 +98,15 @@ private constructor(
      */
     fun cacheReadInputTokens(): Optional<Long> =
         cacheReadInputTokens.getOptional("cache_read_input_tokens")
+
+    /**
+     * Outcome of the ``fallback_credit_token`` presented on this request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun fallbackCredit(): Optional<BetaFallbackCreditUsage> =
+        fallbackCredit.getOptional("fallback_credit")
 
     /**
      * The cumulative number of input tokens which were used.
@@ -168,6 +182,15 @@ private constructor(
     fun _cacheReadInputTokens(): JsonField<Long> = cacheReadInputTokens
 
     /**
+     * Returns the raw JSON value of [fallbackCredit].
+     *
+     * Unlike [fallbackCredit], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("fallback_credit")
+    @ExcludeMissing
+    fun _fallbackCredit(): JsonField<BetaFallbackCreditUsage> = fallbackCredit
+
+    /**
      * Returns the raw JSON value of [inputTokens].
      *
      * Unlike [inputTokens], this method doesn't throw if the JSON field has an unexpected type.
@@ -232,6 +255,7 @@ private constructor(
          * ```java
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
+         * .fallbackCredit()
          * .inputTokens()
          * .iterations()
          * .outputTokens()
@@ -247,6 +271,7 @@ private constructor(
 
         private var cacheCreationInputTokens: JsonField<Long>? = null
         private var cacheReadInputTokens: JsonField<Long>? = null
+        private var fallbackCredit: JsonField<BetaFallbackCreditUsage>? = null
         private var inputTokens: JsonField<Long>? = null
         private var iterations: JsonField<MutableList<Iteration>>? = null
         private var outputTokens: JsonField<Long>? = null
@@ -258,6 +283,7 @@ private constructor(
         internal fun from(betaMessageDeltaUsage: BetaMessageDeltaUsage) = apply {
             cacheCreationInputTokens = betaMessageDeltaUsage.cacheCreationInputTokens
             cacheReadInputTokens = betaMessageDeltaUsage.cacheReadInputTokens
+            fallbackCredit = betaMessageDeltaUsage.fallbackCredit
             inputTokens = betaMessageDeltaUsage.inputTokens
             iterations =
                 betaMessageDeltaUsage.iterations
@@ -327,6 +353,25 @@ private constructor(
          */
         fun cacheReadInputTokens(cacheReadInputTokens: JsonField<Long>) = apply {
             this.cacheReadInputTokens = cacheReadInputTokens
+        }
+
+        /** Outcome of the ``fallback_credit_token`` presented on this request. */
+        fun fallbackCredit(fallbackCredit: BetaFallbackCreditUsage?) =
+            fallbackCredit(JsonField.ofNullable(fallbackCredit))
+
+        /** Alias for calling [Builder.fallbackCredit] with `fallbackCredit.orElse(null)`. */
+        fun fallbackCredit(fallbackCredit: Optional<BetaFallbackCreditUsage>) =
+            fallbackCredit(fallbackCredit.getOrNull())
+
+        /**
+         * Sets [Builder.fallbackCredit] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.fallbackCredit] with a well-typed
+         * [BetaFallbackCreditUsage] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun fallbackCredit(fallbackCredit: JsonField<BetaFallbackCreditUsage>) = apply {
+            this.fallbackCredit = fallbackCredit
         }
 
         /** The cumulative number of input tokens which were used. */
@@ -491,6 +536,7 @@ private constructor(
          * ```java
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
+         * .fallbackCredit()
          * .inputTokens()
          * .iterations()
          * .outputTokens()
@@ -504,6 +550,7 @@ private constructor(
             BetaMessageDeltaUsage(
                 checkRequired("cacheCreationInputTokens", cacheCreationInputTokens),
                 checkRequired("cacheReadInputTokens", cacheReadInputTokens),
+                checkRequired("fallbackCredit", fallbackCredit),
                 checkRequired("inputTokens", inputTokens),
                 checkRequired("iterations", iterations).map { it.toImmutable() },
                 checkRequired("outputTokens", outputTokens),
@@ -530,6 +577,7 @@ private constructor(
 
         cacheCreationInputTokens()
         cacheReadInputTokens()
+        fallbackCredit().ifPresent { it.validate() }
         inputTokens()
         iterations().ifPresent { it.forEach { it.validate() } }
         outputTokens()
@@ -555,6 +603,7 @@ private constructor(
     internal fun validity(): Int =
         (if (cacheCreationInputTokens.asKnown().isPresent) 1 else 0) +
             (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
+            (fallbackCredit.asKnown().getOrNull()?.validity() ?: 0) +
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
             (iterations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (outputTokens.asKnown().isPresent) 1 else 0) +
@@ -896,6 +945,7 @@ private constructor(
         return other is BetaMessageDeltaUsage &&
             cacheCreationInputTokens == other.cacheCreationInputTokens &&
             cacheReadInputTokens == other.cacheReadInputTokens &&
+            fallbackCredit == other.fallbackCredit &&
             inputTokens == other.inputTokens &&
             iterations == other.iterations &&
             outputTokens == other.outputTokens &&
@@ -908,6 +958,7 @@ private constructor(
         Objects.hash(
             cacheCreationInputTokens,
             cacheReadInputTokens,
+            fallbackCredit,
             inputTokens,
             iterations,
             outputTokens,
@@ -920,5 +971,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaMessageDeltaUsage{cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, iterations=$iterations, outputTokens=$outputTokens, outputTokensDetails=$outputTokensDetails, serverToolUse=$serverToolUse, additionalProperties=$additionalProperties}"
+        "BetaMessageDeltaUsage{cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, fallbackCredit=$fallbackCredit, inputTokens=$inputTokens, iterations=$iterations, outputTokens=$outputTokens, outputTokensDetails=$outputTokensDetails, serverToolUse=$serverToolUse, additionalProperties=$additionalProperties}"
 }

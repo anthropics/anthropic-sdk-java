@@ -59,6 +59,11 @@ internal class BetaRawMessageDeltaEventTest {
                     BetaMessageDeltaUsage.builder()
                         .cacheCreationInputTokens(2051L)
                         .cacheReadInputTokens(2051L)
+                        .fallbackCredit(
+                            BetaFallbackCreditUsage.builder()
+                                .status(BetaFallbackCreditRedeemed.builder().build())
+                                .build()
+                        )
                         .inputTokens(2095L)
                         .addIteration(
                             BetaMessageIterationUsage.builder()
@@ -136,6 +141,11 @@ internal class BetaRawMessageDeltaEventTest {
                 BetaMessageDeltaUsage.builder()
                     .cacheCreationInputTokens(2051L)
                     .cacheReadInputTokens(2051L)
+                    .fallbackCredit(
+                        BetaFallbackCreditUsage.builder()
+                            .status(BetaFallbackCreditRedeemed.builder().build())
+                            .build()
+                    )
                     .inputTokens(2095L)
                     .addIteration(
                         BetaMessageIterationUsage.builder()
@@ -215,6 +225,11 @@ internal class BetaRawMessageDeltaEventTest {
                     BetaMessageDeltaUsage.builder()
                         .cacheCreationInputTokens(2051L)
                         .cacheReadInputTokens(2051L)
+                        .fallbackCredit(
+                            BetaFallbackCreditUsage.builder()
+                                .status(BetaFallbackCreditRedeemed.builder().build())
+                                .build()
+                        )
                         .inputTokens(2095L)
                         .addIteration(
                             BetaMessageIterationUsage.builder()

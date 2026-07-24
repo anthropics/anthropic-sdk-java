@@ -157,34 +157,111 @@ internal constructor(
         }
 
         val toolsByName = currentParams.runnableTools().associateBy { it.name() }
+        val availableToolNames = availableToolNames()
         return BetaMessageParam.builder()
             .role(BetaMessageParam.Role.USER)
             .contentOfBetaContentBlockParams(
                 toolUseBlockParams.map { toolUse ->
-                    BetaContentBlockParam.ofToolResult(generateToolUseResult(toolUse, toolsByName))
+                    BetaContentBlockParam.ofToolResult(
+                        generateToolUseResult(toolUse, toolsByName, availableToolNames)
+                    )
                 }
             )
             .build()
             .also { lastToolResponse = it }
     }
 
+    /**
+     * Returns the names of the tools that are currently available to the assistant.
+     *
+     * Starts from every runnable tool's name and folds the `tool_removal`/`tool_addition` blocks of
+     * the `"system"` messages, in request order. A removed tool can still receive a `tool_use` from
+     * the model, so dispatch checks membership in this set and routes a removed name down the same
+     * not-found path as a tool that was never declared.
+     */
+    private fun availableToolNames(): MutableSet<String> {
+        val available = currentParams.runnableTools().map { it.name() }.toMutableSet()
+        // The assistant message being answered is either the last message in the history or hasn't
+        // been added to it yet, so every `"system"` message here precedes it.
+        for (message in currentParams.messages().filter { it.isSystem() }) {
+            // A `"system"` message whose content is a plain string carries no blocks.
+            val content =
+                message._content().asKnown().getOrNull()?.betaContentBlockParams()?.getOrNull()
+                    ?: continue
+            for (block in content) {
+                applyToolChange(block, available)
+            }
+        }
+        return available
+    }
+
+    /**
+     * A message built by [BetaMessage.toParam] carries `role` as a raw JSON string rather than a
+     * known [BetaMessageParam.Role], so the throwing [BetaMessageParam.role] accessor can't be used
+     * on the history. Both shapes are read back as their non-throwing string form instead.
+     */
+    private fun BetaMessageParam.isSystem(): Boolean =
+        (_role().asKnown().getOrNull()?._value() ?: _role()).asString().getOrNull() == "system"
+
+    private fun applyToolChange(block: BetaContentBlockParam, available: MutableSet<String>) {
+        when {
+            block.isToolRemoval() ->
+                block.asToolRemoval().tool().referencedToolName()?.let(available::remove)
+            block.isToolAddition() ->
+                block.asToolAddition().tool().referencedToolName()?.let(available::add)
+            block.isMidConvSystem() ->
+                block.asMidConvSystem().content().forEach { applyToolChange(it, available) }
+            else -> Unit // other and unknown block types are ignored for forward compatibility
+        }
+    }
+
+    /** Twin of [applyToolChange] over the nested `mid_conv_system` content union. */
+    private fun applyToolChange(
+        block: BetaMidConversationSystemBlockParam.Content,
+        available: MutableSet<String>,
+    ) {
+        when {
+            block.isToolRemoval() ->
+                block.asToolRemoval().tool().referencedToolName()?.let(available::remove)
+            block.isToolAddition() ->
+                block.asToolAddition().tool().referencedToolName()?.let(available::add)
+            else -> Unit // other and unknown block types are ignored for forward compatibility
+        }
+    }
+
+    private fun BetaRequestToolRemovalBlock.Tool.referencedToolName(): String? =
+        when {
+            isReference() -> asReference().name()
+            // MCP references are executed server-side, so they don't affect runnable tools.
+            else -> null // unknown reference types are ignored for forward compatibility
+        }
+
+    private fun BetaRequestToolAdditionBlock.Tool.referencedToolName(): String? =
+        when {
+            isReference() -> asReference().name()
+            // MCP references are executed server-side, so they don't affect runnable tools.
+            else -> null // unknown reference types are ignored for forward compatibility
+        }
+
     private fun generateToolUseResult(
         toolUse: BetaToolUseBlockParam,
         toolsByName: Map<String, RunnableTool>,
+        availableToolNames: Set<String>,
     ): BetaToolResultBlockParam =
         when (toolUse.name()) {
             // Memory tool commands have the same type (`"tool_use"`) as other tool use blocks, but
             // the tool name is always `"memory"`.
             "memory" -> generateMemoryToolUseResult(toolUse)
-            else -> generateGenericToolUseResult(toolUse, toolsByName)
+            else -> generateGenericToolUseResult(toolUse, toolsByName, availableToolNames)
         }
 
     private fun generateGenericToolUseResult(
         toolUse: BetaToolUseBlockParam,
         toolsByName: Map<String, RunnableTool>,
+        availableToolNames: Set<String>,
     ): BetaToolResultBlockParam {
         val tool =
-            toolsByName[toolUse.name()]
+            toolsByName[toolUse.name()].takeIf { toolUse.name() in availableToolNames }
                 ?: return BetaToolResultBlockParam.builder()
                     .toolUseId(toolUse.id())
                     .content("Error: Tool '${toolUse.name()}' not found")

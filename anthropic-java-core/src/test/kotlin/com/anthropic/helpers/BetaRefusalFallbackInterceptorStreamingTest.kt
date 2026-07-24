@@ -110,7 +110,9 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
 
         // Model swapped to the fallback, credit token from A's stop_details set.
         assertThat(bodyB.path("model").asText()).isEqualTo(FALLBACK_MODEL)
-        assertThat(bodyB.path("fallback_credit_token").asText()).isNotEmpty()
+        assertThat(bodyB.path("fallback_credit_token").path("token").asText()).isNotEmpty()
+        assertThat(bodyB.path("fallback_credit_token").path("mode").asText())
+            .isEqualTo("best_effort")
 
         // max_tokens untouched (any render-shaping change would 400).
         assertThat(bodyB.path("max_tokens").asInt()).isEqualTo(1024)
@@ -137,7 +139,7 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
         assertThat(httpClient.requests).hasSize(2)
         httpClient.requests.forEach {
             assertThat(it.headers.values("anthropic-beta"))
-                .containsExactly("fallback-credit-2026-06-01")
+                .containsExactly("fallback-credit-2026-07-01")
         }
     }
 
@@ -222,7 +224,7 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
 
         assertThat(httpClient.requests).hasSize(2)
         val bodyB = httpClient.jsonBodies[1]
-        assertThat(bodyB.path("fallback_credit_token").asText()).isEqualTo("tok_abc")
+        assertThat(bodyB.path("fallback_credit_token").path("token").asText()).isEqualTo("tok_abc")
         assertThat(bodyB.path("messages")).isEqualTo(httpClient.jsonBodies[0].path("messages"))
 
         // The boundary block leads, then the fallback's content follows at shifted indices.
@@ -261,7 +263,7 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
         consume(httpClient.intercepted(FALLBACK_MODEL), async)
 
         val bodyB = httpClient.jsonBodies[1]
-        assertThat(bodyB.path("fallback_credit_token").asText()).isEqualTo("tok_abc")
+        assertThat(bodyB.path("fallback_credit_token").path("token").asText()).isEqualTo("tok_abc")
         // No appended assistant turn — identical messages (same-body form).
         assertThat(bodyB.path("messages")).isEqualTo(httpClient.jsonBodies[0].path("messages"))
     }
@@ -710,7 +712,7 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
         val body2 = httpClient.jsonBodies[2]
         assertThat(body1.path("model").asText()).isEqualTo(FALLBACK_MODEL)
         assertThat(body2.path("model").asText()).isEqualTo(SECOND_MODEL)
-        assertThat(body2.path("fallback_credit_token").asText()).isEqualTo("tok_b")
+        assertThat(body2.path("fallback_credit_token").path("token").asText()).isEqualTo("tok_b")
         assertThat(body2.path("fallback_credit_token"))
             .isNotEqualTo(body1.path("fallback_credit_token"))
         val content1 = body1.path("messages").path(1).path("content")
