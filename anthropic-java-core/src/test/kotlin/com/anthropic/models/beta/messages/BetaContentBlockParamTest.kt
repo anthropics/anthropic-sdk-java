@@ -59,6 +59,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -135,6 +137,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -205,6 +209,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -291,6 +297,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -367,6 +375,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -414,6 +424,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -476,6 +488,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -547,6 +561,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -618,6 +634,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -698,6 +716,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -777,6 +797,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -850,6 +872,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -924,6 +948,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -1000,6 +1026,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -1083,6 +1111,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -1161,6 +1191,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -1238,6 +1270,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -1309,6 +1343,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -1373,6 +1409,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).contains(containerUpload)
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -1436,6 +1474,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).contains(compaction)
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -1517,6 +1557,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).contains(midConvSystem)
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).isEmpty
     }
 
@@ -1545,6 +1587,134 @@ internal class BetaContentBlockParamTest {
                             )
                             .build()
                     )
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlockParam),
+                jacksonTypeRef<BetaContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlockParam).isEqualTo(betaContentBlockParam)
+    }
+
+    @Test
+    fun ofToolAddition() {
+        val toolAddition =
+            BetaRequestToolAdditionBlock.builder()
+                .referenceTool("name")
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .build()
+
+        val betaContentBlockParam = BetaContentBlockParam.ofToolAddition(toolAddition)
+
+        assertThat(betaContentBlockParam.text()).isEmpty
+        assertThat(betaContentBlockParam.image()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
+        assertThat(betaContentBlockParam.searchResult()).isEmpty
+        assertThat(betaContentBlockParam.thinking()).isEmpty
+        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
+        assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.toolResult()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
+        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
+        assertThat(betaContentBlockParam.containerUpload()).isEmpty
+        assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).contains(toolAddition)
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
+        assertThat(betaContentBlockParam.fallback()).isEmpty
+    }
+
+    @Test
+    fun ofToolAdditionRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlockParam =
+            BetaContentBlockParam.ofToolAddition(
+                BetaRequestToolAdditionBlock.builder()
+                    .referenceTool("name")
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedBetaContentBlockParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaContentBlockParam),
+                jacksonTypeRef<BetaContentBlockParam>(),
+            )
+
+        assertThat(roundtrippedBetaContentBlockParam).isEqualTo(betaContentBlockParam)
+    }
+
+    @Test
+    fun ofToolRemoval() {
+        val toolRemoval =
+            BetaRequestToolRemovalBlock.builder()
+                .referenceTool("name")
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .build()
+
+        val betaContentBlockParam = BetaContentBlockParam.ofToolRemoval(toolRemoval)
+
+        assertThat(betaContentBlockParam.text()).isEmpty
+        assertThat(betaContentBlockParam.image()).isEmpty
+        assertThat(betaContentBlockParam.document()).isEmpty
+        assertThat(betaContentBlockParam.searchResult()).isEmpty
+        assertThat(betaContentBlockParam.thinking()).isEmpty
+        assertThat(betaContentBlockParam.redactedThinking()).isEmpty
+        assertThat(betaContentBlockParam.toolUse()).isEmpty
+        assertThat(betaContentBlockParam.toolResult()).isEmpty
+        assertThat(betaContentBlockParam.serverToolUse()).isEmpty
+        assertThat(betaContentBlockParam.webSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.webFetchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.advisorToolResult()).isEmpty
+        assertThat(betaContentBlockParam.codeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.bashCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
+        assertThat(betaContentBlockParam.toolSearchToolResult()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolUse()).isEmpty
+        assertThat(betaContentBlockParam.mcpToolResult()).isEmpty
+        assertThat(betaContentBlockParam.containerUpload()).isEmpty
+        assertThat(betaContentBlockParam.compaction()).isEmpty
+        assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).contains(toolRemoval)
+        assertThat(betaContentBlockParam.fallback()).isEmpty
+    }
+
+    @Test
+    fun ofToolRemovalRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaContentBlockParam =
+            BetaContentBlockParam.ofToolRemoval(
+                BetaRequestToolRemovalBlock.builder()
+                    .referenceTool("name")
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -1594,6 +1764,8 @@ internal class BetaContentBlockParamTest {
         assertThat(betaContentBlockParam.containerUpload()).isEmpty
         assertThat(betaContentBlockParam.compaction()).isEmpty
         assertThat(betaContentBlockParam.midConvSystem()).isEmpty
+        assertThat(betaContentBlockParam.toolAddition()).isEmpty
+        assertThat(betaContentBlockParam.toolRemoval()).isEmpty
         assertThat(betaContentBlockParam.fallback()).contains(fallback)
     }
 

@@ -213,17 +213,18 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun fallbackCreditToken(): Optional<String> = body.fallbackCreditToken()
+    fun fallbackCreditToken(): Optional<FallbackCreditToken> = body.fallbackCreditToken()
 
     /**
      * Opt-in server-side retry on one or more substitute models when the requested model declines
      * for policy reasons. Tried in order: if the first entry also declines, the second is tried,
-     * and so on.
+     * and so on. The string "default" requests the requested model's server-defined default
+     * fallback configuration.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun fallbacks(): Optional<List<BetaFallbackParam>> = body.fallbacks()
+    fun fallbacks(): Optional<BetaFallbacksParam> = body.fallbacks()
 
     /**
      * Specifies the geographic region for inference processing. If not specified, the workspace's
@@ -526,14 +527,14 @@ private constructor(
      * Unlike [fallbackCreditToken], this method doesn't throw if the JSON field has an unexpected
      * type.
      */
-    fun _fallbackCreditToken(): JsonField<String> = body._fallbackCreditToken()
+    fun _fallbackCreditToken(): JsonField<FallbackCreditToken> = body._fallbackCreditToken()
 
     /**
      * Returns the raw JSON value of [fallbacks].
      *
      * Unlike [fallbacks], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _fallbacks(): JsonField<List<BetaFallbackParam>> = body._fallbacks()
+    fun _fallbacks(): JsonField<BetaFallbacksParam> = body._fallbacks()
 
     /**
      * Returns the raw JSON value of [inferenceGeo].
@@ -1063,55 +1064,70 @@ private constructor(
          * When the appended-assistant form is used on a model that otherwise disallows
          * assistant-turn prefill, this token also authorizes that one prefill.
          */
-        fun fallbackCreditToken(fallbackCreditToken: String?) = apply {
+        fun fallbackCreditToken(fallbackCreditToken: FallbackCreditToken?) = apply {
             body.fallbackCreditToken(fallbackCreditToken)
         }
 
         /**
          * Alias for calling [Builder.fallbackCreditToken] with `fallbackCreditToken.orElse(null)`.
          */
-        fun fallbackCreditToken(fallbackCreditToken: Optional<String>) =
+        fun fallbackCreditToken(fallbackCreditToken: Optional<FallbackCreditToken>) =
             fallbackCreditToken(fallbackCreditToken.getOrNull())
 
         /**
          * Sets [Builder.fallbackCreditToken] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.fallbackCreditToken] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.fallbackCreditToken] with a well-typed
+         * [FallbackCreditToken] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
          */
-        fun fallbackCreditToken(fallbackCreditToken: JsonField<String>) = apply {
+        fun fallbackCreditToken(fallbackCreditToken: JsonField<FallbackCreditToken>) = apply {
             body.fallbackCreditToken(fallbackCreditToken)
         }
+
+        /** Alias for calling [fallbackCreditToken] with `FallbackCreditToken.ofString(string)`. */
+        fun fallbackCreditToken(string: String) = apply { body.fallbackCreditToken(string) }
+
+        /**
+         * Alias for calling [fallbackCreditToken] with
+         * `FallbackCreditToken.ofBetaFallbackCreditTokenParam(betaFallbackCreditTokenParam)`.
+         */
+        fun fallbackCreditToken(betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam) =
+            apply {
+                body.fallbackCreditToken(betaFallbackCreditTokenParam)
+            }
 
         /**
          * Opt-in server-side retry on one or more substitute models when the requested model
          * declines for policy reasons. Tried in order: if the first entry also declines, the second
-         * is tried, and so on.
+         * is tried, and so on. The string "default" requests the requested model's server-defined
+         * default fallback configuration.
          */
-        fun fallbacks(fallbacks: List<BetaFallbackParam>?) = apply { body.fallbacks(fallbacks) }
+        fun fallbacks(fallbacks: BetaFallbacksParam?) = apply { body.fallbacks(fallbacks) }
 
         /** Alias for calling [Builder.fallbacks] with `fallbacks.orElse(null)`. */
-        fun fallbacks(fallbacks: Optional<List<BetaFallbackParam>>) =
-            fallbacks(fallbacks.getOrNull())
+        fun fallbacks(fallbacks: Optional<BetaFallbacksParam>) = fallbacks(fallbacks.getOrNull())
 
         /**
          * Sets [Builder.fallbacks] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.fallbacks] with a well-typed `List<BetaFallbackParam>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.fallbacks] with a well-typed [BetaFallbacksParam] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun fallbacks(fallbacks: JsonField<List<BetaFallbackParam>>) = apply {
+        fun fallbacks(fallbacks: JsonField<BetaFallbacksParam>) = apply {
             body.fallbacks(fallbacks)
         }
 
         /**
-         * Adds a single [BetaFallbackParam] to [fallbacks].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
+         * Alias for calling [fallbacks] with `BetaFallbacksParam.ofFallbackParams(fallbackParams)`.
          */
-        fun addFallback(fallback: BetaFallbackParam) = apply { body.addFallback(fallback) }
+        fun fallbacksOfFallbackParams(fallbackParams: List<BetaFallbackParam>) = apply {
+            body.fallbacksOfFallbackParams(fallbackParams)
+        }
+
+        /** Alias for calling [fallbacks] with `BetaFallbacksParam.ofDefault()`. */
+        fun fallbacksDefault() = apply { body.fallbacksDefault() }
 
         /**
          * Specifies the geographic region for inference processing. If not specified, the
@@ -1905,8 +1921,8 @@ private constructor(
         private val container: JsonField<Container>,
         private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val diagnostics: JsonField<BetaDiagnosticsParam>,
-        private val fallbackCreditToken: JsonField<String>,
-        private val fallbacks: JsonField<List<BetaFallbackParam>>,
+        private val fallbackCreditToken: JsonField<FallbackCreditToken>,
+        private val fallbacks: JsonField<BetaFallbacksParam>,
         private val inferenceGeo: JsonField<String>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
         private val metadata: JsonField<BetaMetadata>,
@@ -1948,10 +1964,10 @@ private constructor(
             diagnostics: JsonField<BetaDiagnosticsParam> = JsonMissing.of(),
             @JsonProperty("fallback_credit_token")
             @ExcludeMissing
-            fallbackCreditToken: JsonField<String> = JsonMissing.of(),
+            fallbackCreditToken: JsonField<FallbackCreditToken> = JsonMissing.of(),
             @JsonProperty("fallbacks")
             @ExcludeMissing
-            fallbacks: JsonField<List<BetaFallbackParam>> = JsonMissing.of(),
+            fallbacks: JsonField<BetaFallbacksParam> = JsonMissing.of(),
             @JsonProperty("inference_geo")
             @ExcludeMissing
             inferenceGeo: JsonField<String> = JsonMissing.of(),
@@ -2172,18 +2188,19 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun fallbackCreditToken(): Optional<String> =
+        fun fallbackCreditToken(): Optional<FallbackCreditToken> =
             fallbackCreditToken.getOptional("fallback_credit_token")
 
         /**
          * Opt-in server-side retry on one or more substitute models when the requested model
          * declines for policy reasons. Tried in order: if the first entry also declines, the second
-         * is tried, and so on.
+         * is tried, and so on. The string "default" requests the requested model's server-defined
+         * default fallback configuration.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun fallbacks(): Optional<List<BetaFallbackParam>> = fallbacks.getOptional("fallbacks")
+        fun fallbacks(): Optional<BetaFallbacksParam> = fallbacks.getOptional("fallbacks")
 
         /**
          * Specifies the geographic region for inference processing. If not specified, the
@@ -2503,7 +2520,7 @@ private constructor(
          */
         @JsonProperty("fallback_credit_token")
         @ExcludeMissing
-        fun _fallbackCreditToken(): JsonField<String> = fallbackCreditToken
+        fun _fallbackCreditToken(): JsonField<FallbackCreditToken> = fallbackCreditToken
 
         /**
          * Returns the raw JSON value of [fallbacks].
@@ -2512,7 +2529,7 @@ private constructor(
          */
         @JsonProperty("fallbacks")
         @ExcludeMissing
-        fun _fallbacks(): JsonField<List<BetaFallbackParam>> = fallbacks
+        fun _fallbacks(): JsonField<BetaFallbacksParam> = fallbacks
 
         /**
          * Returns the raw JSON value of [inferenceGeo].
@@ -2694,8 +2711,8 @@ private constructor(
             private var container: JsonField<Container> = JsonMissing.of()
             private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
             private var diagnostics: JsonField<BetaDiagnosticsParam> = JsonMissing.of()
-            private var fallbackCreditToken: JsonField<String> = JsonMissing.of()
-            private var fallbacks: JsonField<MutableList<BetaFallbackParam>>? = null
+            private var fallbackCreditToken: JsonField<FallbackCreditToken> = JsonMissing.of()
+            private var fallbacks: JsonField<BetaFallbacksParam> = JsonMissing.of()
             private var inferenceGeo: JsonField<String> = JsonMissing.of()
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
@@ -2724,7 +2741,7 @@ private constructor(
                 contextManagement = body.contextManagement
                 diagnostics = body.diagnostics
                 fallbackCreditToken = body.fallbackCreditToken
-                fallbacks = body.fallbacks.map { it.toMutableList() }.takeUnless { it.isMissing() }
+                fallbacks = body.fallbacks
                 inferenceGeo = body.inferenceGeo
                 mcpServers =
                     body.mcpServers.map { it.toMutableList() }.takeUnless { it.isMissing() }
@@ -3104,61 +3121,75 @@ private constructor(
              * When the appended-assistant form is used on a model that otherwise disallows
              * assistant-turn prefill, this token also authorizes that one prefill.
              */
-            fun fallbackCreditToken(fallbackCreditToken: String?) =
+            fun fallbackCreditToken(fallbackCreditToken: FallbackCreditToken?) =
                 fallbackCreditToken(JsonField.ofNullable(fallbackCreditToken))
 
             /**
              * Alias for calling [Builder.fallbackCreditToken] with
              * `fallbackCreditToken.orElse(null)`.
              */
-            fun fallbackCreditToken(fallbackCreditToken: Optional<String>) =
+            fun fallbackCreditToken(fallbackCreditToken: Optional<FallbackCreditToken>) =
                 fallbackCreditToken(fallbackCreditToken.getOrNull())
 
             /**
              * Sets [Builder.fallbackCreditToken] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.fallbackCreditToken] with a well-typed [String]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.fallbackCreditToken] with a well-typed
+             * [FallbackCreditToken] value instead. This method is primarily for setting the field
+             * to an undocumented or not yet supported value.
              */
-            fun fallbackCreditToken(fallbackCreditToken: JsonField<String>) = apply {
+            fun fallbackCreditToken(fallbackCreditToken: JsonField<FallbackCreditToken>) = apply {
                 this.fallbackCreditToken = fallbackCreditToken
             }
 
             /**
+             * Alias for calling [fallbackCreditToken] with `FallbackCreditToken.ofString(string)`.
+             */
+            fun fallbackCreditToken(string: String) =
+                fallbackCreditToken(FallbackCreditToken.ofString(string))
+
+            /**
+             * Alias for calling [fallbackCreditToken] with
+             * `FallbackCreditToken.ofBetaFallbackCreditTokenParam(betaFallbackCreditTokenParam)`.
+             */
+            fun fallbackCreditToken(betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam) =
+                fallbackCreditToken(
+                    FallbackCreditToken.ofBetaFallbackCreditTokenParam(betaFallbackCreditTokenParam)
+                )
+
+            /**
              * Opt-in server-side retry on one or more substitute models when the requested model
              * declines for policy reasons. Tried in order: if the first entry also declines, the
-             * second is tried, and so on.
+             * second is tried, and so on. The string "default" requests the requested model's
+             * server-defined default fallback configuration.
              */
-            fun fallbacks(fallbacks: List<BetaFallbackParam>?) =
+            fun fallbacks(fallbacks: BetaFallbacksParam?) =
                 fallbacks(JsonField.ofNullable(fallbacks))
 
             /** Alias for calling [Builder.fallbacks] with `fallbacks.orElse(null)`. */
-            fun fallbacks(fallbacks: Optional<List<BetaFallbackParam>>) =
+            fun fallbacks(fallbacks: Optional<BetaFallbacksParam>) =
                 fallbacks(fallbacks.getOrNull())
 
             /**
              * Sets [Builder.fallbacks] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.fallbacks] with a well-typed
-             * `List<BetaFallbackParam>` value instead. This method is primarily for setting the
-             * field to an undocumented or not yet supported value.
+             * You should usually call [Builder.fallbacks] with a well-typed [BetaFallbacksParam]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
              */
-            fun fallbacks(fallbacks: JsonField<List<BetaFallbackParam>>) = apply {
-                this.fallbacks = fallbacks.map { it.toMutableList() }
+            fun fallbacks(fallbacks: JsonField<BetaFallbacksParam>) = apply {
+                this.fallbacks = fallbacks
             }
 
             /**
-             * Adds a single [BetaFallbackParam] to [fallbacks].
-             *
-             * @throws IllegalStateException if the field was previously set to a non-list.
+             * Alias for calling [fallbacks] with
+             * `BetaFallbacksParam.ofFallbackParams(fallbackParams)`.
              */
-            fun addFallback(fallback: BetaFallbackParam) = apply {
-                fallbacks =
-                    (fallbacks ?: JsonField.of(mutableListOf())).also {
-                        checkKnown("fallbacks", it).add(fallback)
-                    }
-            }
+            fun fallbacksOfFallbackParams(fallbackParams: List<BetaFallbackParam>) =
+                fallbacks(BetaFallbacksParam.ofFallbackParams(fallbackParams))
+
+            /** Alias for calling [fallbacks] with `BetaFallbacksParam.ofDefault()`. */
+            fun fallbacksDefault() = fallbacks(BetaFallbacksParam.ofDefault())
 
             /**
              * Specifies the geographic region for inference processing. If not specified, the
@@ -3843,7 +3874,7 @@ private constructor(
                     contextManagement,
                     diagnostics,
                     fallbackCreditToken,
-                    (fallbacks ?: JsonMissing.of()).map { it.toImmutable() },
+                    fallbacks,
                     inferenceGeo,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
@@ -3886,8 +3917,8 @@ private constructor(
             container().ifPresent { it.validate() }
             contextManagement().ifPresent { it.validate() }
             diagnostics().ifPresent { it.validate() }
-            fallbackCreditToken()
-            fallbacks().ifPresent { it.forEach { it.validate() } }
+            fallbackCreditToken().ifPresent { it.validate() }
+            fallbacks().ifPresent { it.validate() }
             inferenceGeo()
             mcpServers().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
@@ -3929,8 +3960,8 @@ private constructor(
                 (container.asKnown().getOrNull()?.validity() ?: 0) +
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (diagnostics.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (fallbackCreditToken.asKnown().isPresent) 1 else 0) +
-                (fallbacks.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (fallbackCreditToken.asKnown().getOrNull()?.validity() ?: 0) +
+                (fallbacks.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
@@ -4236,6 +4267,287 @@ private constructor(
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Container")
+                }
+            }
+        }
+    }
+
+    /**
+     * The `fallback_credit_token` from a prior refusal's `stop_details`.
+     *
+     * When a preceding request was refused and returned a `fallback_credit_token`, pass that code
+     * here on the retry to have the retry's cache-creation tokens for the prefix that was warm on
+     * the refused model billed at the cache-read rate. Must be redeemed by the same organization
+     * and workspace, with the same request body (optionally extended by one appended `assistant`
+     * message whose content is the partial text — with any trailing whitespace stripped from the
+     * final text block — and paired server-tool blocks streamed before the refusal; the
+     * appended-assistant form is not available for requests with `output_format` set or forced
+     * `tool_choice`), on an eligible fallback model, on the same platform, and within 5 minutes of
+     * the refusal; a mismatch is a 400. A token minted mid-server-tool-loop whose partial content
+     * was continuable may only be redeemed with the appended-assistant form — if an exact-body
+     * retry is rejected with a 400 saying the token must be redeemed by continuing the partial
+     * response, retry with the appended-assistant form instead.
+     *
+     * When the appended-assistant form is used on a model that otherwise disallows assistant-turn
+     * prefill, this token also authorizes that one prefill.
+     */
+    @JsonDeserialize(using = FallbackCreditToken.Deserializer::class)
+    @JsonSerialize(using = FallbackCreditToken.Serializer::class)
+    class FallbackCreditToken
+    private constructor(
+        private val string: String? = null,
+        private val betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        fun string(): Optional<String> = Optional.ofNullable(string)
+
+        /**
+         * Object form of ``fallback_credit_token``: the token plus a redemption mode.
+         *
+         * Requires ``anthropic-beta: fallback-credit-2026-07-01``; without that header the field
+         * accepts the bare string only. The bare string and the mode-less object are equivalent
+         * (both select ``strict``), so wrapping an existing token changes nothing by itself.
+         */
+        fun betaFallbackCreditTokenParam(): Optional<BetaFallbackCreditTokenParam> =
+            Optional.ofNullable(betaFallbackCreditTokenParam)
+
+        fun isString(): Boolean = string != null
+
+        fun isBetaFallbackCreditTokenParam(): Boolean = betaFallbackCreditTokenParam != null
+
+        fun asString(): String = string.getOrThrow("string")
+
+        /**
+         * Object form of ``fallback_credit_token``: the token plus a redemption mode.
+         *
+         * Requires ``anthropic-beta: fallback-credit-2026-07-01``; without that header the field
+         * accepts the bare string only. The bare string and the mode-less object are equivalent
+         * (both select ``strict``), so wrapping an existing token changes nothing by itself.
+         */
+        fun asBetaFallbackCreditTokenParam(): BetaFallbackCreditTokenParam =
+            betaFallbackCreditTokenParam.getOrThrow("betaFallbackCreditTokenParam")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import com.anthropic.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = fallbackCreditToken.accept(new FallbackCreditToken.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitString(String string) {
+         *         return Optional.of(string.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws AnthropicInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                string != null -> visitor.visitString(string)
+                betaFallbackCreditTokenParam != null ->
+                    visitor.visitBetaFallbackCreditTokenParam(betaFallbackCreditTokenParam)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): FallbackCreditToken = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitString(string: String) {}
+
+                    override fun visitBetaFallbackCreditTokenParam(
+                        betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam
+                    ) {
+                        betaFallbackCreditTokenParam.validate()
+                    }
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitString(string: String) = 1
+
+                    override fun visitBetaFallbackCreditTokenParam(
+                        betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam
+                    ) = betaFallbackCreditTokenParam.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is FallbackCreditToken &&
+                string == other.string &&
+                betaFallbackCreditTokenParam == other.betaFallbackCreditTokenParam
+        }
+
+        override fun hashCode(): Int = Objects.hash(string, betaFallbackCreditTokenParam)
+
+        override fun toString(): String =
+            when {
+                string != null -> "FallbackCreditToken{string=$string}"
+                betaFallbackCreditTokenParam != null ->
+                    "FallbackCreditToken{betaFallbackCreditTokenParam=$betaFallbackCreditTokenParam}"
+                _json != null -> "FallbackCreditToken{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid FallbackCreditToken")
+            }
+
+        companion object {
+
+            @JvmStatic fun ofString(string: String) = FallbackCreditToken(string = string)
+
+            /**
+             * Object form of ``fallback_credit_token``: the token plus a redemption mode.
+             *
+             * Requires ``anthropic-beta: fallback-credit-2026-07-01``; without that header the
+             * field accepts the bare string only. The bare string and the mode-less object are
+             * equivalent (both select ``strict``), so wrapping an existing token changes nothing by
+             * itself.
+             */
+            @JvmStatic
+            fun ofBetaFallbackCreditTokenParam(
+                betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam
+            ) = FallbackCreditToken(betaFallbackCreditTokenParam = betaFallbackCreditTokenParam)
+        }
+
+        /**
+         * An interface that defines how to map each variant of [FallbackCreditToken] to a value of
+         * type [T].
+         */
+        interface Visitor<out T> {
+
+            fun visitString(string: String): T
+
+            /**
+             * Object form of ``fallback_credit_token``: the token plus a redemption mode.
+             *
+             * Requires ``anthropic-beta: fallback-credit-2026-07-01``; without that header the
+             * field accepts the bare string only. The bare string and the mode-less object are
+             * equivalent (both select ``strict``), so wrapping an existing token changes nothing by
+             * itself.
+             */
+            fun visitBetaFallbackCreditTokenParam(
+                betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam
+            ): T
+
+            /**
+             * Maps an unknown variant of [FallbackCreditToken] to a value of type [T].
+             *
+             * An instance of [FallbackCreditToken] can contain an unknown variant if it was
+             * deserialized from data that doesn't match any known variant. For example, if the SDK
+             * is on an older version than the API, then the API may respond with new variants that
+             * the SDK is unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown FallbackCreditToken: $json")
+            }
+        }
+
+        internal class Deserializer :
+            BaseDeserializer<FallbackCreditToken>(FallbackCreditToken::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): FallbackCreditToken {
+                val json = JsonValue.fromJsonNode(node)
+
+                val bestMatches =
+                    sequenceOf(
+                            tryDeserialize(node, jacksonTypeRef<BetaFallbackCreditTokenParam>())
+                                ?.let {
+                                    FallbackCreditToken(
+                                        betaFallbackCreditTokenParam = it,
+                                        _json = json,
+                                    )
+                                },
+                            tryDeserialize(node, jacksonTypeRef<String>())?.let {
+                                FallbackCreditToken(string = it, _json = json)
+                            },
+                        )
+                        .filterNotNull()
+                        .allMaxBy { it.validity() }
+                        .toList()
+                return when (bestMatches.size) {
+                    // This can happen if what we're deserializing is completely incompatible with
+                    // all the possible variants (e.g. deserializing from boolean).
+                    0 -> FallbackCreditToken(_json = json)
+                    1 -> bestMatches.single()
+                    // If there's more than one match with the highest validity, then use the first
+                    // completely valid match, or simply the first match if none are completely
+                    // valid.
+                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                }
+            }
+        }
+
+        internal class Serializer :
+            BaseSerializer<FallbackCreditToken>(FallbackCreditToken::class) {
+
+            override fun serialize(
+                value: FallbackCreditToken,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.string != null -> generator.writeObject(value.string)
+                    value.betaFallbackCreditTokenParam != null ->
+                        generator.writeObject(value.betaFallbackCreditTokenParam)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid FallbackCreditToken")
                 }
             }
         }

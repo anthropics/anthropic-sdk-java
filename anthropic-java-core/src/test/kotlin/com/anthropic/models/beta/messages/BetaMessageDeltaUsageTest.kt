@@ -17,6 +17,11 @@ internal class BetaMessageDeltaUsageTest {
             BetaMessageDeltaUsage.builder()
                 .cacheCreationInputTokens(2051L)
                 .cacheReadInputTokens(2051L)
+                .fallbackCredit(
+                    BetaFallbackCreditUsage.builder()
+                        .status(BetaFallbackCreditRedeemed.builder().build())
+                        .build()
+                )
                 .inputTokens(2095L)
                 .addIteration(
                     BetaMessageIterationUsage.builder()
@@ -42,6 +47,12 @@ internal class BetaMessageDeltaUsageTest {
 
         assertThat(betaMessageDeltaUsage.cacheCreationInputTokens()).contains(2051L)
         assertThat(betaMessageDeltaUsage.cacheReadInputTokens()).contains(2051L)
+        assertThat(betaMessageDeltaUsage.fallbackCredit())
+            .contains(
+                BetaFallbackCreditUsage.builder()
+                    .status(BetaFallbackCreditRedeemed.builder().build())
+                    .build()
+            )
         assertThat(betaMessageDeltaUsage.inputTokens()).contains(2095L)
         assertThat(betaMessageDeltaUsage.iterations().getOrNull())
             .containsExactly(
@@ -77,6 +88,11 @@ internal class BetaMessageDeltaUsageTest {
             BetaMessageDeltaUsage.builder()
                 .cacheCreationInputTokens(2051L)
                 .cacheReadInputTokens(2051L)
+                .fallbackCredit(
+                    BetaFallbackCreditUsage.builder()
+                        .status(BetaFallbackCreditRedeemed.builder().build())
+                        .build()
+                )
                 .inputTokens(2095L)
                 .addIteration(
                     BetaMessageIterationUsage.builder()
