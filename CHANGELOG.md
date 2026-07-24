@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.52.0 (2026-07-24)
+
+Full Changelog: [v2.51.0...v2.52.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.51.0...v2.52.0)
+
+### Features
+
+* **api:** add claude-opus-5 model ([fb245bd](https://github.com/anthropics/anthropic-sdk-java/commit/fb245bd1b9721ba8e642f1a1cc48b9893b4bbd78))
+* **api:** add tool addition/removal blocks and tool_change events ([fb245bd](https://github.com/anthropics/anthropic-sdk-java/commit/fb245bd1b9721ba8e642f1a1cc48b9893b4bbd78))
+* **api:** expand client-side fallback credit token types and add server-side fallbacks default option ([fb245bd](https://github.com/anthropics/anthropic-sdk-java/commit/fb245bd1b9721ba8e642f1a1cc48b9893b4bbd78))
+
 ## 2.51.0 (2026-07-23)
 
 Full Changelog: [v2.50.0...v2.51.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.50.0...v2.51.0)
