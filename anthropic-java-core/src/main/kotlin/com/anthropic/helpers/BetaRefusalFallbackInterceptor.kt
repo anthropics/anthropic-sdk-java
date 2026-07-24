@@ -25,6 +25,7 @@ import com.anthropic.models.beta.messages.BetaContainerUploadBlockParam
 import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaFallbackBlock
 import com.anthropic.models.beta.messages.BetaFallbackBlockParam
+import com.anthropic.models.beta.messages.BetaFallbackCreditTokenParam
 import com.anthropic.models.beta.messages.BetaFallbackInfo
 import com.anthropic.models.beta.messages.BetaFallbackParam
 import com.anthropic.models.beta.messages.BetaFallbackRefusalTrigger
@@ -42,6 +43,8 @@ import com.anthropic.models.beta.messages.BetaRedactedThinkingBlockParam
 import com.anthropic.models.beta.messages.BetaRefusalStopDetails
 import com.anthropic.models.beta.messages.BetaRequestDocumentBlock
 import com.anthropic.models.beta.messages.BetaRequestMcpToolResultBlockParam
+import com.anthropic.models.beta.messages.BetaRequestToolAdditionBlock
+import com.anthropic.models.beta.messages.BetaRequestToolRemovalBlock
 import com.anthropic.models.beta.messages.BetaSearchResultBlockParam
 import com.anthropic.models.beta.messages.BetaServerToolUseBlockParam
 import com.anthropic.models.beta.messages.BetaStopReason
@@ -53,10 +56,10 @@ import com.anthropic.models.beta.messages.BetaToolSearchToolResultBlockParam
 import com.anthropic.models.beta.messages.BetaToolUseBlockParam
 import com.anthropic.models.beta.messages.BetaWebFetchToolResultBlockParam
 import com.anthropic.models.beta.messages.BetaWebSearchToolResultBlockParam
-import com.anthropic.models.beta.messages.MessageCreateParams
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ArrayNode
+import com.fasterxml.jackson.databind.node.BooleanNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -78,12 +81,14 @@ import kotlin.streams.asSequence
  * non-beta `client.messages()` requests pass through untouched.
  *
  * When a non-streaming response comes back with `stop_reason: "refusal"`, the request is retried
- * with each entry of the fallback chain applied over the original params — passing along the
- * refusal's `fallback_credit_token`, which refunds the retry's cache-miss cost — until a model
- * accepts or the chain is exhausted. A message served by a fallback retry mirrors the server-side
- * stitched envelope: one `fallback` content block per model boundary (`from`: the model that
- * refused, as the caller spelled it; `to`: the next entry's model) is prepended to the serving
- * hop's content.
+ * with each entry of the fallback chain applied as a patch over the original params (a field the
+ * entry sets overrides the original value, a field it sets to `null` is removed from the retried
+ * request, and a field it omits keeps the original value; entries never see each other's overrides)
+ * — passing along the refusal's `fallback_credit_token`, which refunds the retry's cache-miss cost
+ * — until a model accepts or the chain is exhausted. A message served by a fallback retry mirrors
+ * the server-side stitched envelope: one `fallback` content block per model boundary (`from`: the
+ * model that refused, as the caller spelled it; `to`: the next entry's model) is prepended to the
+ * serving hop's content.
  *
  * When a streaming response ends in `stop_reason: "refusal"`, a second request is issued to the
  * fallback model — carrying the refused model's partial output as a trailing assistant prefill when
@@ -136,7 +141,7 @@ private constructor(
     companion object {
 
         /** Betas sent by default; override with [Builder.betas]. */
-        private val DEFAULT_BETAS = listOf(AnthropicBeta.FALLBACK_CREDIT_2026_06_01)
+        private val DEFAULT_BETAS = listOf(AnthropicBeta.FALLBACK_CREDIT_2026_07_01)
 
         /**
          * Returns a mutable builder for constructing an instance of
@@ -180,7 +185,7 @@ private constructor(
          * interceptor handles — the original request included, since refusals only carry a
          * `fallback_credit_token` when the beta is enabled.
          *
-         * Defaults to [AnthropicBeta.FALLBACK_CREDIT_2026_06_01]; pass an empty list to send none.
+         * Defaults to [AnthropicBeta.FALLBACK_CREDIT_2026_07_01]; pass an empty list to send none.
          */
         fun betas(betas: List<AnthropicBeta>) = apply { this.betas = betas.toMutableList() }
 
@@ -436,7 +441,7 @@ private constructor(
         // chain, so it is rejected outright.
         if (bodyNode.hasNonNull("fallbacks")) {
             throw AnthropicException(
-                "Sending the `fallbacks:` request param is not supported when using the `BetaRefusalFallbackInterceptor`. You should either remove the middleware and send `fallbacks:` with the `server-side-fallback-2026-06-01` beta header to let the API handle refusal fallbacks, or omit the `fallbacks:` param if you'd like `BetaRefusalFallbackInterceptor` to handle fallbacks on the client side."
+                "Sending the `fallbacks:` request param is not supported when using the `BetaRefusalFallbackInterceptor`. You should either remove the middleware and send `fallbacks:` with the `server-side-fallback-2026-07-01` beta header to let the API handle refusal fallbacks, or omit the `fallbacks:` param if you'd like `BetaRefusalFallbackInterceptor` to handle fallbacks on the client side."
             )
         }
 
@@ -452,7 +457,6 @@ private constructor(
             } else {
                 bufferedRequest
             }
-        val body = jsonMapper.treeToValue(bodyNode, MessageCreateParams.Body::class.java)
 
         val state = requestOptions.fallbackState
         // Start from the pinned fallback (-1 = the original params).
@@ -467,10 +471,10 @@ private constructor(
         // and tag this and every hop with the interceptor's helper telemetry.
         return PreparedRequest(
             withInterceptorHeaders(trimmedRequest),
-            body,
+            bodyNode,
             state,
             index,
-            isStreaming = JsonValue.from(true) == body._additionalProperties()["stream"],
+            isStreaming = bodyNode.path("stream") == BooleanNode.TRUE,
         )
     }
 
@@ -643,6 +647,12 @@ private constructor(
             override fun visitMidConvSystem(midConvSystem: BetaMidConversationSystemBlockParam) =
                 TrimClassification.KEEP
 
+            override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock) =
+                TrimClassification.KEEP
+
+            override fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
+                TrimClassification.KEEP
+
             override fun visitFallback(fallback: BetaFallbackBlockParam) = TrimClassification.SEAM
 
             override fun unknown(json: JsonValue?): TrimClassification {
@@ -724,7 +734,8 @@ private constructor(
     /** A request being retried through the fallback chain. */
     private inner class PreparedRequest(
         private val request: HttpRequest,
-        private val body: MessageCreateParams.Body,
+        /** The original top-level body every fallback entry is applied against. */
+        private val bodyNode: ObjectNode,
         private val state: BetaFallbackState?,
         val initialIndex: Int,
         val isStreaming: Boolean,
@@ -750,7 +761,8 @@ private constructor(
          * original model, as they spelled it).
          */
         fun modelAt(index: Int): String =
-            if (index == -1) body.model().asString() else fallbacks[index].model().asString()
+            if (index == -1) bodyNode.path("model").asText("")
+            else fallbacks[index].model().asString()
 
         /** Pins requests sharing the [state] to the fallback at the given index. */
         fun pin(index: Int) {
@@ -763,29 +775,58 @@ private constructor(
             }
         }
 
-        private fun applyFallback(
-            index: Int,
-            fallbackCreditToken: Optional<String>,
-        ): MessageCreateParams.Body {
-            val fallback = fallbacks[index]
-            val newBody = body.toBuilder().model(fallback.model())
-            fallback.maxTokens().ifPresent { newBody.maxTokens(it) }
-            fallback.outputConfig().ifPresent { newBody.outputConfig(it) }
-            fallback.speed().ifPresent {
-                newBody.speed(MessageCreateParams.Speed.of(it.asString()))
+        /**
+         * Patches the fallback at the given index over the original top-level body: a field the
+         * entry sets overrides the original value, a field it sets to `null` is removed (not sent
+         * as `null`), and a field it omits keeps the original value. `output_config` alone patches
+         * one level deep — its subfields follow the same rules within the original object. Always
+         * applied against the original body, so one entry's overrides never leak into another's
+         * attempt.
+         */
+        private fun applyFallback(index: Int, fallbackCreditToken: Optional<String>): ObjectNode {
+            val patched = bodyNode.deepCopy()
+            // The entry serializes to exactly its patch: set fields as values, explicit nulls
+            // as JSON nulls, absent fields omitted (@ExcludeMissing) — one level down included.
+            patched.mergePatch(jsonMapper.valueToTree(fallbacks[index]))
+            fallbackCreditToken.ifPresent {
+                patched.set<ObjectNode>(
+                    "fallback_credit_token",
+                    jsonMapper.valueToTree(creditTokenParam(it)),
+                )
             }
-            fallback.thinking().ifPresent { thinking ->
-                when {
-                    thinking.isEnabled() -> newBody.thinking(thinking.asEnabled())
-                    thinking.isDisabled() -> newBody.thinking(thinking.asDisabled())
-                    else -> newBody.thinking(thinking.asAdaptive())
-                }
-            }
-            newBody.putAllAdditionalProperties(fallback._additionalProperties())
-            fallbackCreditToken.ifPresent { newBody.fallbackCreditToken(it) }
-            return newBody.build()
+            return patched
         }
     }
+}
+
+/** Request params whose object value a fallback entry patches one level deep, not wholesale. */
+private val DEEP_MERGED = setOf("output_config")
+
+/**
+ * Applies [patch] over this object as a patch: a field set to a value overrides it, a field set to
+ * `null` removes it, an omitted field keeps its value. A [DEEP_MERGED] key whose patch value is an
+ * object patches its subfields one level deep the same way (an object left empty is removed).
+ */
+private fun ObjectNode.mergePatch(patch: ObjectNode) {
+    patch.fields().forEach { (name, value) ->
+        if (name in DEEP_MERGED && value is ObjectNode) {
+            val nested = get(name) as? ObjectNode ?: putObject(name)
+            // One level deep only: the nested object patches flat, with no deep merge below it.
+            nested.mergeFlat(value)
+            if (nested.isEmpty) remove(name)
+        } else {
+            mergeField(name, value)
+        }
+    }
+}
+
+/** Applies each field of [patch] over this object flat: set replaces, `null` removes. */
+private fun ObjectNode.mergeFlat(patch: ObjectNode) {
+    patch.fields().forEach { (name, value) -> mergeField(name, value) }
+}
+
+private fun ObjectNode.mergeField(name: String, value: JsonNode) {
+    if (value.isNull) remove(name) else set<JsonNode>(name, value)
 }
 
 // --- streaming fallback (credit-token continuation) -----------------------------------------
@@ -812,6 +853,17 @@ private constructor(
 private fun triggerFrom(category: BetaRefusalStopDetails.Category?): BetaFallbackRefusalTrigger =
     BetaFallbackRefusalTrigger.builder()
         .category(category?.let { BetaFallbackRefusalTrigger.Category.of(it.toString()) })
+        .build()
+
+/**
+ * The object form the retry redeems [token] with. `best_effort` so a token-layer failure (expired,
+ * already-redeemed) serves the retry at normal price instead of failing it with a 400 — the
+ * fallback answers either way.
+ */
+private fun creditTokenParam(token: String): BetaFallbackCreditTokenParam =
+    BetaFallbackCreditTokenParam.builder()
+        .token(token)
+        .mode(BetaFallbackCreditTokenParam.Mode.BEST_EFFORT)
         .build()
 
 /**
@@ -1207,7 +1259,10 @@ private class FallbackStreamSplicer(
         val body = initialRequest.body!!.json(ObjectNode::class.java)
 
         body.put("model", model)
-        body.put("fallback_credit_token", creditToken)
+        body.set<ObjectNode>(
+            "fallback_credit_token",
+            jsonMapper.valueToTree(creditTokenParam(creditToken)),
+        )
 
         // Append the continuation (decided by the chain loop) as a trailing assistant turn;
         // everything else — max_tokens included — must stay identical to the refused request: the

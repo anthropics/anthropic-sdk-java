@@ -34,13 +34,16 @@ private constructor(private val value: JsonField<String>) : Enum {
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         @JvmField val CLAUDE_FABLE_5 = of("claude-fable-5")
 
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
+        @JvmField val CLAUDE_OPUS_5 = of("claude-opus-5")
+
+        /** Powerful intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_8 = of("claude-opus-4-8")
 
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_7 = of("claude-opus-4-7")
 
-        /** Most intelligent model for building agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_6 = of("claude-opus-4-6")
 
         /** Best combination of speed and intelligence */
@@ -52,10 +55,10 @@ private constructor(private val value: JsonField<String>) : Enum {
         /** Fastest model with near-frontier intelligence */
         @JvmField val CLAUDE_HAIKU_4_5_20251001 = of("claude-haiku-4-5-20251001")
 
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_5 = of("claude-opus-4-5")
 
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         @JvmField val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
 
         /** High-performance model for agents and coding */
@@ -73,11 +76,13 @@ private constructor(private val value: JsonField<String>) : Enum {
         CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         CLAUDE_FABLE_5,
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
+        CLAUDE_OPUS_5,
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_8,
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_7,
-        /** Most intelligent model for building agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_6,
         /** Best combination of speed and intelligence */
         CLAUDE_SONNET_4_6,
@@ -85,9 +90,9 @@ private constructor(private val value: JsonField<String>) : Enum {
         CLAUDE_HAIKU_4_5,
         /** Fastest model with near-frontier intelligence */
         CLAUDE_HAIKU_4_5_20251001,
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5,
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5_20251101,
         /** High-performance model for agents and coding */
         CLAUDE_SONNET_4_5,
@@ -109,11 +114,13 @@ private constructor(private val value: JsonField<String>) : Enum {
         CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         CLAUDE_FABLE_5,
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
+        CLAUDE_OPUS_5,
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_8,
-        /** Frontier intelligence for long-running agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_7,
-        /** Most intelligent model for building agents and coding */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_6,
         /** Best combination of speed and intelligence */
         CLAUDE_SONNET_4_6,
@@ -121,9 +128,9 @@ private constructor(private val value: JsonField<String>) : Enum {
         CLAUDE_HAIKU_4_5,
         /** Fastest model with near-frontier intelligence */
         CLAUDE_HAIKU_4_5_20251001,
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5,
-        /** Premium model combining maximum intelligence with practical performance */
+        /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5_20251101,
         /** High-performance model for agents and coding */
         CLAUDE_SONNET_4_5,
@@ -147,6 +154,7 @@ private constructor(private val value: JsonField<String>) : Enum {
         when (this) {
             CLAUDE_SONNET_5 -> Value.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Value.CLAUDE_FABLE_5
+            CLAUDE_OPUS_5 -> Value.CLAUDE_OPUS_5
             CLAUDE_OPUS_4_8 -> Value.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Value.CLAUDE_OPUS_4_7
             CLAUDE_OPUS_4_6 -> Value.CLAUDE_OPUS_4_6
@@ -172,6 +180,7 @@ private constructor(private val value: JsonField<String>) : Enum {
         when (this) {
             CLAUDE_SONNET_5 -> Known.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Known.CLAUDE_FABLE_5
+            CLAUDE_OPUS_5 -> Known.CLAUDE_OPUS_5
             CLAUDE_OPUS_4_8 -> Known.CLAUDE_OPUS_4_8
             CLAUDE_OPUS_4_7 -> Known.CLAUDE_OPUS_4_7
             CLAUDE_OPUS_4_6 -> Known.CLAUDE_OPUS_4_6

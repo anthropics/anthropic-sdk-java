@@ -23,6 +23,11 @@ internal class BetaUsageTest {
                 )
                 .cacheCreationInputTokens(2051L)
                 .cacheReadInputTokens(2051L)
+                .fallbackCredit(
+                    BetaFallbackCreditUsage.builder()
+                        .status(BetaFallbackCreditRedeemed.builder().build())
+                        .build()
+                )
                 .inferenceGeo("global")
                 .inputTokens(2095L)
                 .addIteration(
@@ -58,6 +63,12 @@ internal class BetaUsageTest {
             )
         assertThat(betaUsage.cacheCreationInputTokens()).contains(2051L)
         assertThat(betaUsage.cacheReadInputTokens()).contains(2051L)
+        assertThat(betaUsage.fallbackCredit())
+            .contains(
+                BetaFallbackCreditUsage.builder()
+                    .status(BetaFallbackCreditRedeemed.builder().build())
+                    .build()
+            )
         assertThat(betaUsage.inferenceGeo()).contains("global")
         assertThat(betaUsage.inputTokens()).isEqualTo(2095L)
         assertThat(betaUsage.iterations().getOrNull())
@@ -102,6 +113,11 @@ internal class BetaUsageTest {
                 )
                 .cacheCreationInputTokens(2051L)
                 .cacheReadInputTokens(2051L)
+                .fallbackCredit(
+                    BetaFallbackCreditUsage.builder()
+                        .status(BetaFallbackCreditRedeemed.builder().build())
+                        .build()
+                )
                 .inferenceGeo("global")
                 .inputTokens(2095L)
                 .addIteration(

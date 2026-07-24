@@ -12,7 +12,6 @@ import com.anthropic.models.beta.messages.BetaClearToolUses20250919Edit
 import com.anthropic.models.beta.messages.BetaContainerParams
 import com.anthropic.models.beta.messages.BetaContextManagementConfig
 import com.anthropic.models.beta.messages.BetaDiagnosticsParam
-import com.anthropic.models.beta.messages.BetaFallbackParam
 import com.anthropic.models.beta.messages.BetaInputTokensClearAtLeast
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaMetadata
@@ -22,7 +21,6 @@ import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
 import com.anthropic.models.beta.messages.BetaSkillParams
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaThinkingConfigAdaptive
-import com.anthropic.models.beta.messages.BetaThinkingConfigEnabled
 import com.anthropic.models.beta.messages.BetaTokenTaskBudget
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.beta.messages.BetaToolChoiceAuto
@@ -103,45 +101,7 @@ internal class BatchServiceTest {
                                             .build()
                                     )
                                     .fallbackCreditToken("x")
-                                    .addFallback(
-                                        BetaFallbackParam.builder()
-                                            .model(Model.CLAUDE_SONNET_5)
-                                            .maxTokens(0L)
-                                            .outputConfig(
-                                                BetaOutputConfig.builder()
-                                                    .effort(BetaOutputConfig.Effort.LOW)
-                                                    .format(
-                                                        BetaJsonOutputFormat.builder()
-                                                            .schema(
-                                                                BetaJsonOutputFormat.Schema
-                                                                    .builder()
-                                                                    .putAdditionalProperty(
-                                                                        "foo",
-                                                                        JsonValue.from("bar"),
-                                                                    )
-                                                                    .build()
-                                                            )
-                                                            .build()
-                                                    )
-                                                    .taskBudget(
-                                                        BetaTokenTaskBudget.builder()
-                                                            .total(1024L)
-                                                            .remaining(0L)
-                                                            .build()
-                                                    )
-                                                    .build()
-                                            )
-                                            .speed(BetaFallbackParam.Speed.STANDARD)
-                                            .thinking(
-                                                BetaThinkingConfigEnabled.builder()
-                                                    .budgetTokens(1024L)
-                                                    .display(
-                                                        BetaThinkingConfigEnabled.Display.SUMMARIZED
-                                                    )
-                                                    .build()
-                                            )
-                                            .build()
-                                    )
+                                    .fallbacksDefault()
                                     .inferenceGeo("inference_geo")
                                     .addMcpServer(
                                         BetaRequestMcpServerUrlDefinition.builder()

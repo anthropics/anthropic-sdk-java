@@ -36,6 +36,7 @@ private constructor(
     private val cacheCreation: JsonField<BetaCacheCreation>,
     private val cacheCreationInputTokens: JsonField<Long>,
     private val cacheReadInputTokens: JsonField<Long>,
+    private val fallbackCredit: JsonField<BetaFallbackCreditUsage>,
     private val inferenceGeo: JsonField<String>,
     private val inputTokens: JsonField<Long>,
     private val iterations: JsonField<List<Iteration>>,
@@ -58,6 +59,9 @@ private constructor(
         @JsonProperty("cache_read_input_tokens")
         @ExcludeMissing
         cacheReadInputTokens: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("fallback_credit")
+        @ExcludeMissing
+        fallbackCredit: JsonField<BetaFallbackCreditUsage> = JsonMissing.of(),
         @JsonProperty("inference_geo")
         @ExcludeMissing
         inferenceGeo: JsonField<String> = JsonMissing.of(),
@@ -84,6 +88,7 @@ private constructor(
         cacheCreation,
         cacheCreationInputTokens,
         cacheReadInputTokens,
+        fallbackCredit,
         inferenceGeo,
         inputTokens,
         iterations,
@@ -120,6 +125,15 @@ private constructor(
      */
     fun cacheReadInputTokens(): Optional<Long> =
         cacheReadInputTokens.getOptional("cache_read_input_tokens")
+
+    /**
+     * Outcome of the ``fallback_credit_token`` presented on this request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun fallbackCredit(): Optional<BetaFallbackCreditUsage> =
+        fallbackCredit.getOptional("fallback_credit")
 
     /**
      * The geographic region where inference was performed for this request.
@@ -229,6 +243,15 @@ private constructor(
     fun _cacheReadInputTokens(): JsonField<Long> = cacheReadInputTokens
 
     /**
+     * Returns the raw JSON value of [fallbackCredit].
+     *
+     * Unlike [fallbackCredit], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("fallback_credit")
+    @ExcludeMissing
+    fun _fallbackCredit(): JsonField<BetaFallbackCreditUsage> = fallbackCredit
+
+    /**
      * Returns the raw JSON value of [inferenceGeo].
      *
      * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected type.
@@ -319,6 +342,7 @@ private constructor(
          * .cacheCreation()
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
+         * .fallbackCredit()
          * .inferenceGeo()
          * .inputTokens()
          * .iterations()
@@ -338,6 +362,7 @@ private constructor(
         private var cacheCreation: JsonField<BetaCacheCreation>? = null
         private var cacheCreationInputTokens: JsonField<Long>? = null
         private var cacheReadInputTokens: JsonField<Long>? = null
+        private var fallbackCredit: JsonField<BetaFallbackCreditUsage>? = null
         private var inferenceGeo: JsonField<String>? = null
         private var inputTokens: JsonField<Long>? = null
         private var iterations: JsonField<MutableList<Iteration>>? = null
@@ -353,6 +378,7 @@ private constructor(
             cacheCreation = betaUsage.cacheCreation
             cacheCreationInputTokens = betaUsage.cacheCreationInputTokens
             cacheReadInputTokens = betaUsage.cacheReadInputTokens
+            fallbackCredit = betaUsage.fallbackCredit
             inferenceGeo = betaUsage.inferenceGeo
             inputTokens = betaUsage.inputTokens
             iterations =
@@ -442,6 +468,25 @@ private constructor(
          */
         fun cacheReadInputTokens(cacheReadInputTokens: JsonField<Long>) = apply {
             this.cacheReadInputTokens = cacheReadInputTokens
+        }
+
+        /** Outcome of the ``fallback_credit_token`` presented on this request. */
+        fun fallbackCredit(fallbackCredit: BetaFallbackCreditUsage?) =
+            fallbackCredit(JsonField.ofNullable(fallbackCredit))
+
+        /** Alias for calling [Builder.fallbackCredit] with `fallbackCredit.orElse(null)`. */
+        fun fallbackCredit(fallbackCredit: Optional<BetaFallbackCreditUsage>) =
+            fallbackCredit(fallbackCredit.getOrNull())
+
+        /**
+         * Sets [Builder.fallbackCredit] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.fallbackCredit] with a well-typed
+         * [BetaFallbackCreditUsage] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun fallbackCredit(fallbackCredit: JsonField<BetaFallbackCreditUsage>) = apply {
+            this.fallbackCredit = fallbackCredit
         }
 
         /** The geographic region where inference was performed for this request. */
@@ -649,6 +694,7 @@ private constructor(
          * .cacheCreation()
          * .cacheCreationInputTokens()
          * .cacheReadInputTokens()
+         * .fallbackCredit()
          * .inferenceGeo()
          * .inputTokens()
          * .iterations()
@@ -666,6 +712,7 @@ private constructor(
                 checkRequired("cacheCreation", cacheCreation),
                 checkRequired("cacheCreationInputTokens", cacheCreationInputTokens),
                 checkRequired("cacheReadInputTokens", cacheReadInputTokens),
+                checkRequired("fallbackCredit", fallbackCredit),
                 checkRequired("inferenceGeo", inferenceGeo),
                 checkRequired("inputTokens", inputTokens),
                 checkRequired("iterations", iterations).map { it.toImmutable() },
@@ -696,6 +743,7 @@ private constructor(
         cacheCreation().ifPresent { it.validate() }
         cacheCreationInputTokens()
         cacheReadInputTokens()
+        fallbackCredit().ifPresent { it.validate() }
         inferenceGeo()
         inputTokens()
         iterations().ifPresent { it.forEach { it.validate() } }
@@ -725,6 +773,7 @@ private constructor(
         (cacheCreation.asKnown().getOrNull()?.validity() ?: 0) +
             (if (cacheCreationInputTokens.asKnown().isPresent) 1 else 0) +
             (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
+            (fallbackCredit.asKnown().getOrNull()?.validity() ?: 0) +
             (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
             (iterations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
@@ -1356,6 +1405,7 @@ private constructor(
             cacheCreation == other.cacheCreation &&
             cacheCreationInputTokens == other.cacheCreationInputTokens &&
             cacheReadInputTokens == other.cacheReadInputTokens &&
+            fallbackCredit == other.fallbackCredit &&
             inferenceGeo == other.inferenceGeo &&
             inputTokens == other.inputTokens &&
             iterations == other.iterations &&
@@ -1372,6 +1422,7 @@ private constructor(
             cacheCreation,
             cacheCreationInputTokens,
             cacheReadInputTokens,
+            fallbackCredit,
             inferenceGeo,
             inputTokens,
             iterations,
@@ -1387,5 +1438,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaUsage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, inferenceGeo=$inferenceGeo, inputTokens=$inputTokens, iterations=$iterations, outputTokens=$outputTokens, outputTokensDetails=$outputTokensDetails, serverToolUse=$serverToolUse, serviceTier=$serviceTier, speed=$speed, additionalProperties=$additionalProperties}"
+        "BetaUsage{cacheCreation=$cacheCreation, cacheCreationInputTokens=$cacheCreationInputTokens, cacheReadInputTokens=$cacheReadInputTokens, fallbackCredit=$fallbackCredit, inferenceGeo=$inferenceGeo, inputTokens=$inputTokens, iterations=$iterations, outputTokens=$outputTokens, outputTokensDetails=$outputTokensDetails, serverToolUse=$serverToolUse, serviceTier=$serviceTier, speed=$speed, additionalProperties=$additionalProperties}"
 }

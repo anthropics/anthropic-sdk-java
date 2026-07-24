@@ -38,6 +38,7 @@ internal class StructuredMessageTest {
         private val MODEL = Model.CLAUDE_SONNET_4_5
         private val USAGE =
             BetaUsage.builder()
+                .fallbackCredit(null)
                 .cacheCreation(null)
                 .cacheCreationInputTokens(null)
                 .cacheReadInputTokens(null)

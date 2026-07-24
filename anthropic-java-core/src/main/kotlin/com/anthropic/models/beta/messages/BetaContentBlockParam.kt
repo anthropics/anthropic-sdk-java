@@ -46,6 +46,8 @@ private constructor(
     private val containerUpload: BetaContainerUploadBlockParam? = null,
     private val compaction: BetaCompactionBlockParam? = null,
     private val midConvSystem: BetaMidConversationSystemBlockParam? = null,
+    private val toolAddition: BetaRequestToolAdditionBlock? = null,
+    private val toolRemoval: BetaRequestToolRemovalBlock? = null,
     private val fallback: BetaFallbackBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
@@ -135,6 +137,22 @@ private constructor(
         Optional.ofNullable(midConvSystem)
 
     /**
+     * Mid-conversation directive to surface a declared tool.
+     *
+     * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+     * offered to the model from this point in the conversation onward.
+     */
+    fun toolAddition(): Optional<BetaRequestToolAdditionBlock> = Optional.ofNullable(toolAddition)
+
+    /**
+     * Mid-conversation directive to withdraw a tool.
+     *
+     * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is no
+     * longer offered to the model from this point in the conversation onward.
+     */
+    fun toolRemoval(): Optional<BetaRequestToolRemovalBlock> = Optional.ofNullable(toolRemoval)
+
+    /**
      * A `fallback` block echoed back from a prior response.
      *
      * Accepted in `messages[].content` and not rendered into the prompt; not validated against the
@@ -190,6 +208,10 @@ private constructor(
     fun isCompaction(): Boolean = compaction != null
 
     fun isMidConvSystem(): Boolean = midConvSystem != null
+
+    fun isToolAddition(): Boolean = toolAddition != null
+
+    fun isToolRemoval(): Boolean = toolRemoval != null
 
     fun isFallback(): Boolean = fallback != null
 
@@ -277,6 +299,22 @@ private constructor(
         midConvSystem.getOrThrow("midConvSystem")
 
     /**
+     * Mid-conversation directive to surface a declared tool.
+     *
+     * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+     * offered to the model from this point in the conversation onward.
+     */
+    fun asToolAddition(): BetaRequestToolAdditionBlock = toolAddition.getOrThrow("toolAddition")
+
+    /**
+     * Mid-conversation directive to withdraw a tool.
+     *
+     * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is no
+     * longer offered to the model from this point in the conversation onward.
+     */
+    fun asToolRemoval(): BetaRequestToolRemovalBlock = toolRemoval.getOrThrow("toolRemoval")
+
+    /**
      * A `fallback` block echoed back from a prior response.
      *
      * Accepted in `messages[].content` and not rendered into the prompt; not validated against the
@@ -348,6 +386,8 @@ private constructor(
             containerUpload != null -> visitor.visitContainerUpload(containerUpload)
             compaction != null -> visitor.visitCompaction(compaction)
             midConvSystem != null -> visitor.visitMidConvSystem(midConvSystem)
+            toolAddition != null -> visitor.visitToolAddition(toolAddition)
+            toolRemoval != null -> visitor.visitToolRemoval(toolRemoval)
             fallback != null -> visitor.visitFallback(fallback)
             else -> visitor.unknown(_json)
         }
@@ -472,6 +512,14 @@ private constructor(
                     midConvSystem.validate()
                 }
 
+                override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock) {
+                    toolAddition.validate()
+                }
+
+                override fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) {
+                    toolRemoval.validate()
+                }
+
                 override fun visitFallback(fallback: BetaFallbackBlockParam) {
                     fallback.validate()
                 }
@@ -565,6 +613,12 @@ private constructor(
                     midConvSystem: BetaMidConversationSystemBlockParam
                 ) = midConvSystem.validity()
 
+                override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock) =
+                    toolAddition.validity()
+
+                override fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
+                    toolRemoval.validity()
+
                 override fun visitFallback(fallback: BetaFallbackBlockParam) = fallback.validity()
 
                 override fun unknown(json: JsonValue?) = 0
@@ -598,6 +652,8 @@ private constructor(
             containerUpload == other.containerUpload &&
             compaction == other.compaction &&
             midConvSystem == other.midConvSystem &&
+            toolAddition == other.toolAddition &&
+            toolRemoval == other.toolRemoval &&
             fallback == other.fallback
     }
 
@@ -624,6 +680,8 @@ private constructor(
             containerUpload,
             compaction,
             midConvSystem,
+            toolAddition,
+            toolRemoval,
             fallback,
         )
 
@@ -657,6 +715,8 @@ private constructor(
             containerUpload != null -> "BetaContentBlockParam{containerUpload=$containerUpload}"
             compaction != null -> "BetaContentBlockParam{compaction=$compaction}"
             midConvSystem != null -> "BetaContentBlockParam{midConvSystem=$midConvSystem}"
+            toolAddition != null -> "BetaContentBlockParam{toolAddition=$toolAddition}"
+            toolRemoval != null -> "BetaContentBlockParam{toolRemoval=$toolRemoval}"
             fallback != null -> "BetaContentBlockParam{fallback=$fallback}"
             _json != null -> "BetaContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaContentBlockParam")
@@ -780,6 +840,26 @@ private constructor(
             BetaContentBlockParam(midConvSystem = midConvSystem)
 
         /**
+         * Mid-conversation directive to surface a declared tool.
+         *
+         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+         * offered to the model from this point in the conversation onward.
+         */
+        @JvmStatic
+        fun ofToolAddition(toolAddition: BetaRequestToolAdditionBlock) =
+            BetaContentBlockParam(toolAddition = toolAddition)
+
+        /**
+         * Mid-conversation directive to withdraw a tool.
+         *
+         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+         * no longer offered to the model from this point in the conversation onward.
+         */
+        @JvmStatic
+        fun ofToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
+            BetaContentBlockParam(toolRemoval = toolRemoval)
+
+        /**
          * A `fallback` block echoed back from a prior response.
          *
          * Accepted in `messages[].content` and not rendered into the prompt; not validated against
@@ -880,6 +960,22 @@ private constructor(
          * conversation, rather than only via the top-level `system` parameter.
          */
         fun visitMidConvSystem(midConvSystem: BetaMidConversationSystemBlockParam): T
+
+        /**
+         * Mid-conversation directive to surface a declared tool.
+         *
+         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+         * offered to the model from this point in the conversation onward.
+         */
+        fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock): T
+
+        /**
+         * Mid-conversation directive to withdraw a tool.
+         *
+         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+         * no longer offered to the model from this point in the conversation onward.
+         */
+        fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock): T
 
         /**
          * A `fallback` block echoed back from a prior response.
@@ -1047,6 +1143,16 @@ private constructor(
                         ?.let { BetaContentBlockParam(midConvSystem = it, _json = json) }
                         ?: BetaContentBlockParam(_json = json)
                 }
+                "tool_addition" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaRequestToolAdditionBlock>())
+                        ?.let { BetaContentBlockParam(toolAddition = it, _json = json) }
+                        ?: BetaContentBlockParam(_json = json)
+                }
+                "tool_removal" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaRequestToolRemovalBlock>())
+                        ?.let { BetaContentBlockParam(toolRemoval = it, _json = json) }
+                        ?: BetaContentBlockParam(_json = json)
+                }
                 "fallback" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaFallbackBlockParam>())?.let {
                         BetaContentBlockParam(fallback = it, _json = json)
@@ -1093,6 +1199,8 @@ private constructor(
                 value.containerUpload != null -> generator.writeObject(value.containerUpload)
                 value.compaction != null -> generator.writeObject(value.compaction)
                 value.midConvSystem != null -> generator.writeObject(value.midConvSystem)
+                value.toolAddition != null -> generator.writeObject(value.toolAddition)
+                value.toolRemoval != null -> generator.writeObject(value.toolRemoval)
                 value.fallback != null -> generator.writeObject(value.fallback)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaContentBlockParam")

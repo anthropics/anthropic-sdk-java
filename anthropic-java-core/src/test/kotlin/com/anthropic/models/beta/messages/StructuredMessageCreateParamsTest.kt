@@ -61,6 +61,7 @@ internal class StructuredMessageCreateParamsTest {
                         .cacheCreation(null)
                         .cacheCreationInputTokens(null)
                         .cacheReadInputTokens(null)
+                        .fallbackCredit(null)
                         .inferenceGeo("inference_geo")
                         .inputTokens(LONG)
                         .iterations(null)
@@ -91,8 +92,10 @@ internal class StructuredMessageCreateParamsTest {
         private val CONTAINER_PARAMS = BetaContainerParams.builder().build()
         private val NULLABLE_CONTEXT_MAN_CONFIG = null
         private val NULLABLE_DIAGNOSTICS = null
-        private val FALLBACK_PARAM =
-            BetaFallbackParam.builder().model(Model.CLAUDE_OPUS_4_8).build()
+        private val NULLABLE_FALLBACK_CREDIT_TOKEN = null
+        private val FALLBACK_CREDIT_TOKEN_PARAM =
+            BetaFallbackCreditTokenParam.builder().token(STRING).build()
+        private val NULLABLE_FALLBACKS = null
 
         private val MCP_SERVER =
             BetaRequestMcpServerUrlDefinition.builder().name(STRING).url(STRING).build()
@@ -202,13 +205,16 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("diagnostics", NULLABLE_DIAGNOSTICS),
                 DelegationWriteTestCase("diagnostics", OPTIONAL),
                 DelegationWriteTestCase("diagnostics", JSON_FIELD),
-                DelegationWriteTestCase("fallbackCreditToken", STRING),
+                DelegationWriteTestCase("fallbackCreditToken", NULLABLE_FALLBACK_CREDIT_TOKEN),
                 DelegationWriteTestCase("fallbackCreditToken", OPTIONAL),
                 DelegationWriteTestCase("fallbackCreditToken", JSON_FIELD),
-                DelegationWriteTestCase("fallbacks", LIST),
+                DelegationWriteTestCase("fallbackCreditToken", STRING),
+                DelegationWriteTestCase("fallbackCreditToken", FALLBACK_CREDIT_TOKEN_PARAM),
+                DelegationWriteTestCase("fallbacks", NULLABLE_FALLBACKS),
                 DelegationWriteTestCase("fallbacks", OPTIONAL),
                 DelegationWriteTestCase("fallbacks", JSON_FIELD),
-                DelegationWriteTestCase("addFallback", FALLBACK_PARAM),
+                DelegationWriteTestCase("fallbacksOfFallbackParams", LIST),
+                DelegationWriteTestCase("fallbacksDefault"),
                 DelegationWriteTestCase("mcpServers", LIST),
                 DelegationWriteTestCase("mcpServers", JSON_FIELD),
                 DelegationWriteTestCase("addMcpServer", MCP_SERVER),

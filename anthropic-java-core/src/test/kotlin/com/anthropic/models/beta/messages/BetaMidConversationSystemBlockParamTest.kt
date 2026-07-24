@@ -41,23 +41,25 @@ internal class BetaMidConversationSystemBlockParamTest {
 
         assertThat(betaMidConversationSystemBlockParam.content())
             .containsExactly(
-                BetaTextBlockParam.builder()
-                    .text("x")
-                    .cacheControl(
-                        BetaCacheControlEphemeral.builder()
-                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
-                            .build()
-                    )
-                    .addCitation(
-                        BetaCitationCharLocationParam.builder()
-                            .citedText("The grass is green. The sky is blue.")
-                            .documentIndex(0L)
-                            .documentTitle("x")
-                            .endCharIndex(0L)
-                            .startCharIndex(0L)
-                            .build()
-                    )
-                    .build()
+                BetaMidConversationSystemBlockParam.Content.ofText(
+                    BetaTextBlockParam.builder()
+                        .text("x")
+                        .cacheControl(
+                            BetaCacheControlEphemeral.builder()
+                                .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                .build()
+                        )
+                        .addCitation(
+                            BetaCitationCharLocationParam.builder()
+                                .citedText("The grass is green. The sky is blue.")
+                                .documentIndex(0L)
+                                .documentTitle("x")
+                                .endCharIndex(0L)
+                                .startCharIndex(0L)
+                                .build()
+                        )
+                        .build()
+                )
             )
         assertThat(betaMidConversationSystemBlockParam.cacheControl())
             .contains(
