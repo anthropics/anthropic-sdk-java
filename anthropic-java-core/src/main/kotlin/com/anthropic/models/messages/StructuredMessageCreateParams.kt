@@ -50,6 +50,7 @@ internal constructor(
         private var outputConfigSet: Boolean = false
 
         @JvmSynthetic
+        @Deprecated("Use the wrap overload that accepts effort parameter")
         internal fun wrap(
             outputType: Class<T>,
             paramsBuilder: MessageCreateParams.Builder,
@@ -58,7 +59,20 @@ internal constructor(
             this.outputType = outputType
             this.paramsBuilder = paramsBuilder
             // Convert the class to a JSON schema and apply it to the delegate `Builder`.
-            outputConfig(outputType, localValidation)
+            outputConfig(outputType, effort = null, localValidation = localValidation)
+        }
+
+        @JvmSynthetic
+        internal fun wrap(
+            outputType: Class<T>,
+            paramsBuilder: MessageCreateParams.Builder,
+            effort: OutputConfig.Effort?,
+            localValidation: JsonSchemaLocalValidation,
+        ) = apply {
+            this.outputType = outputType
+            this.paramsBuilder = paramsBuilder
+            // Convert the class to a JSON schema and apply it to the delegate `Builder`.
+            outputConfig(outputType, effort, localValidation)
         }
 
         /** Injects a given `MessageCreateParams.Builder`. For use only when testing. */
@@ -190,11 +204,16 @@ internal constructor(
          *
          * Unlike the beta version, this GA version does NOT auto-inject any beta header.
          *
+         * @param outputType The class from which the JSON schema will be derived.
+         * @param effort Optional effort level for the model's output. Controls how much effort the
+         *   model puts into its response.
+         * @param localValidation Whether to validate the derived JSON schema locally.
          * @see MessageCreateParams.Builder.outputConfig
          */
         @JvmOverloads
         fun outputConfig(
             outputType: Class<T>,
+            effort: OutputConfig.Effort? = null,
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
         ) = apply {
             if (outputConfigSet) {
@@ -204,7 +223,9 @@ internal constructor(
             }
             this.outputType = outputType
             val format = outputFormatFromClass(outputType, localValidation)
-            paramsBuilder.outputConfig(OutputConfig.builder().format(format).build())
+            val builder = OutputConfig.builder().format(format)
+            effort?.let { builder.effort(it) }
+            paramsBuilder.outputConfig(builder.build())
             // GA version: NO beta header injection
             outputConfigSet = true
         }

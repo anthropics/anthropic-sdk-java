@@ -330,6 +330,36 @@ internal class StructuredMessageCreateParamsTest {
     }
 
     @Test
+    fun `outputConfig with class preserves effort`() {
+        val params =
+            MessageCreateParams.builder()
+                .maxTokens(1024)
+                .model(Model.CLAUDE_SONNET_4_5)
+                .addUserMessage("test")
+                .outputConfig(X::class.java, OutputConfig.Effort.HIGH)
+                .build()
+
+        val outputConfig = params.rawParams.outputConfig().get()
+        assertThat(outputConfig.effort().get()).isEqualTo(OutputConfig.Effort.HIGH)
+        assertThat(outputConfig.format()).isPresent
+    }
+
+    @Test
+    fun `outputConfig with class without effort leaves effort unset`() {
+        val params =
+            MessageCreateParams.builder()
+                .maxTokens(1024)
+                .model(Model.CLAUDE_SONNET_4_5)
+                .addUserMessage("test")
+                .outputConfig(X::class.java)
+                .build()
+
+        val outputConfig = params.rawParams.outputConfig().get()
+        assertThat(outputConfig.effort()).isEmpty
+        assertThat(outputConfig.format()).isPresent
+    }
+
+    @Test
     fun `GA version does not inject beta header`() {
         // Verify that the GA version does NOT add any beta header
         val builder =
