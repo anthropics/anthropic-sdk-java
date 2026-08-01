@@ -33,7 +33,7 @@ private constructor(
 ) : HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
-        var modifiedRequest = maybeAddIdempotencyHeader(request)
+        var modifiedRequest = prepareRequest(request)
 
         // Don't send the current retry count in the headers if the caller set their own value.
         val shouldSendRetryCount =
@@ -59,7 +59,7 @@ private constructor(
 
                     response
                 } catch (throwable: Throwable) {
-                    if (++retries > maxRetries || !shouldRetry(throwable)) {
+                    if (++retries > maxRetries || !shouldRetry(throwable, modifiedRequest)) {
                         throw throwable
                     }
 
@@ -77,7 +77,7 @@ private constructor(
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> {
-        val modifiedRequest = maybeAddIdempotencyHeader(request)
+        val modifiedRequest = prepareRequest(request)
 
         // Don't send the current retry count in the headers if the caller set their own value.
         val shouldSendRetryCount =
@@ -108,7 +108,9 @@ private constructor(
                                 return CompletableFuture.completedFuture(response)
                             }
                         } else {
-                            if (++retries > maxRetries || !shouldRetry(throwable!!)) {
+                            if (++retries > maxRetries ||
+                                !shouldRetry(throwable!!, requestWithRetryCount)
+                            ) {
                                 val failedFuture = CompletableFuture<HttpResponse>()
                                 failedFuture.completeExceptionally(throwable)
                                 return failedFuture
@@ -147,6 +149,25 @@ private constructor(
 
     private fun idempotencyKey(): String = "stainless-java-retry-${UUID.randomUUID()}"
 
+    /**
+     * Attach a stable idempotency header before the first attempt so retries reuse the same key.
+     *
+     * For [POST /v1/sessions/{id}/events][isSessionEventsMutation], always attach
+     * [IDEMPOTENCY_KEY_HEADER] (unless the caller already set it). Transport failures for that path
+     * are still not retried until the API documents server-side dedup for the header; the key
+     * remains useful for status-code retries and for future server support.
+     */
+    private fun prepareRequest(request: HttpRequest): HttpRequest {
+        var modified = maybeAddIdempotencyHeader(request)
+        if (isSessionEventsMutation(modified) &&
+            !modified.headers.names().contains(IDEMPOTENCY_KEY_HEADER)
+        ) {
+            modified =
+                modified.toBuilder().putHeader(IDEMPOTENCY_KEY_HEADER, idempotencyKey()).build()
+        }
+        return modified
+    }
+
     private fun maybeAddIdempotencyHeader(request: HttpRequest): HttpRequest {
         if (idempotencyHeader == null || request.headers.names().contains(idempotencyHeader)) {
             return request
@@ -157,6 +178,23 @@ private constructor(
             // Set a header to uniquely identify the request when retried.
             .putHeader(idempotencyHeader, idempotencyKey())
             .build()
+    }
+
+    /**
+     * `POST /v1/sessions/{session_id}/events` appends user/system turns. A timed-out client request
+     * that still landed server-side must not be retried blindly or the session sees a duplicated
+     * turn (see github.com/anthropics/anthropic-sdk-java/issues/370).
+     */
+    private fun isSessionEventsMutation(request: HttpRequest): Boolean {
+        if (request.method != HttpMethod.POST) {
+            return false
+        }
+        val segments = request.pathSegments
+        // Path is ["v1", "sessions", "{session_id}", "events"] (optional trailing segments ignored).
+        return segments.size >= 4 &&
+            segments[0] == "v1" &&
+            segments[1] == "sessions" &&
+            segments[3] == "events"
     }
 
     private fun shouldRetry(response: HttpResponse): Boolean {
@@ -181,11 +219,21 @@ private constructor(
         }
     }
 
-    private fun shouldRetry(throwable: Throwable): Boolean =
-        // Only retry known retryable exceptions, other exceptions are not intended to be retried.
-        throwable is IOException ||
-            throwable is AnthropicIoException ||
-            throwable is AnthropicRetryableException
+    private fun shouldRetry(throwable: Throwable, request: HttpRequest): Boolean {
+        // Explicitly marked retryable failures always retry.
+        if (throwable is AnthropicRetryableException) {
+            return true
+        }
+        if (throwable !is IOException && throwable !is AnthropicIoException) {
+            return false
+        }
+        // Timed-out-but-landed session event sends would duplicate user turns if retried.
+        // Refuse transport retries for that path; status-code retries still apply above.
+        if (isSessionEventsMutation(request)) {
+            return false
+        }
+        return true
+    }
 
     private fun getRetryBackoffDuration(retries: Int, response: HttpResponse?): Duration {
         // About the Retry-After header:
@@ -228,6 +276,9 @@ private constructor(
     }
 
     companion object {
+
+        /** Standard request-idempotency header attached to session event mutations. */
+        internal const val IDEMPOTENCY_KEY_HEADER = "Idempotency-Key"
 
         @JvmStatic fun builder() = Builder()
     }

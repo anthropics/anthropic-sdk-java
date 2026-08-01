@@ -8,6 +8,7 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.Sleeper
 import com.anthropic.errors.AnthropicRetryableException
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.findAll
 import com.github.tomakehurst.wiremock.client.WireMock.matching
 import com.github.tomakehurst.wiremock.client.WireMock.ok
 import com.github.tomakehurst.wiremock.client.WireMock.post
@@ -20,6 +21,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import com.github.tomakehurst.wiremock.stubbing.Scenario
+import java.io.IOException
 import java.io.InputStream
 import java.time.Clock
 import java.time.Duration
@@ -27,7 +29,9 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ExecutionException
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.junit.jupiter.params.ParameterizedTest
@@ -152,6 +156,200 @@ internal class RetryingHttpClientTest {
         assertThat(response.statusCode()).isEqualTo(200)
         verify(1, postRequestedFor(urlPathEqualTo("/something")))
         assertThat(sleeper.durations).isEmpty()
+        assertNoResponseLeaks()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun execute_sessionEventsSend_attachesIdempotencyKey(async: Boolean) {
+        stubFor(
+            post(urlPathEqualTo("/v1/sessions/sesn_test/events"))
+                .withHeader(
+                    RetryingHttpClient.IDEMPOTENCY_KEY_HEADER,
+                    matching("stainless-java-retry-.+"),
+                )
+                .willReturn(ok())
+        )
+        val sleeper = RecordingSleeper()
+        val retryingClient = retryingHttpClientBuilder(sleeper).maxRetries(2).build()
+
+        val response = retryingClient.execute(sessionEventsSendRequest(), async)
+
+        assertThat(response.statusCode()).isEqualTo(200)
+        verify(1, postRequestedFor(urlPathEqualTo("/v1/sessions/sesn_test/events")))
+        assertThat(sleeper.durations).isEmpty()
+        assertNoResponseLeaks()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun execute_sessionEventsSend_preservesCallerIdempotencyKey(async: Boolean) {
+        stubFor(
+            post(urlPathEqualTo("/v1/sessions/sesn_test/events"))
+                .withHeader(RetryingHttpClient.IDEMPOTENCY_KEY_HEADER, equalTo("caller-key-1"))
+                .willReturn(ok())
+        )
+        val sleeper = RecordingSleeper()
+        val retryingClient = retryingHttpClientBuilder(sleeper).maxRetries(2).build()
+
+        val response =
+            retryingClient.execute(
+                sessionEventsSendRequest()
+                    .toBuilder()
+                    .putHeader(RetryingHttpClient.IDEMPOTENCY_KEY_HEADER, "caller-key-1")
+                    .build(),
+                async,
+            )
+
+        assertThat(response.statusCode()).isEqualTo(200)
+        verify(
+            1,
+            postRequestedFor(urlPathEqualTo("/v1/sessions/sesn_test/events"))
+                .withHeader(RetryingHttpClient.IDEMPOTENCY_KEY_HEADER, equalTo("caller-key-1")),
+        )
+        assertNoResponseLeaks()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun execute_sessionEventsSend_reusesIdempotencyKeyOnStatusRetry(async: Boolean) {
+        stubFor(
+            post(urlPathEqualTo("/v1/sessions/sesn_test/events"))
+                .inScenario("session-events-status-retry")
+                .whenScenarioStateIs(Scenario.STARTED)
+                .willReturn(serviceUnavailable())
+                .willSetStateTo("RETRY")
+        )
+        stubFor(
+            post(urlPathEqualTo("/v1/sessions/sesn_test/events"))
+                .inScenario("session-events-status-retry")
+                .whenScenarioStateIs("RETRY")
+                .willReturn(ok())
+                .willSetStateTo("COMPLETED")
+        )
+        val sleeper = RecordingSleeper()
+        val retryingClient = retryingHttpClientBuilder(sleeper).maxRetries(2).build()
+
+        val response = retryingClient.execute(sessionEventsSendRequest(), async)
+
+        assertThat(response.statusCode()).isEqualTo(200)
+        verify(2, postRequestedFor(urlPathEqualTo("/v1/sessions/sesn_test/events")))
+        // Both attempts must share one Idempotency-Key (same value, not regenerated per attempt).
+        val keys =
+            findAll(postRequestedFor(urlPathEqualTo("/v1/sessions/sesn_test/events")))
+                .map { it.getHeader(RetryingHttpClient.IDEMPOTENCY_KEY_HEADER) }
+                .distinct()
+        assertThat(keys).hasSize(1)
+        assertThat(keys[0]).matches("stainless-java-retry-.+")
+        assertThat(sleeper.durations).hasSize(1)
+        assertNoResponseLeaks()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun execute_sessionEventsSend_doesNotRetryTransportFailure(async: Boolean) {
+        var callCount = 0
+        val failingHttpClient =
+            object : HttpClient {
+                override fun execute(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse {
+                    callCount++
+                    throw IOException("simulated client timeout after request may have landed")
+                }
+
+                override fun executeAsync(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): CompletableFuture<HttpResponse> {
+                    callCount++
+                    val future = CompletableFuture<HttpResponse>()
+                    future.completeExceptionally(
+                        IOException("simulated client timeout after request may have landed")
+                    )
+                    return future
+                }
+
+                override fun close() {}
+            }
+        val sleeper = RecordingSleeper()
+        val retryingClient =
+            RetryingHttpClient.builder()
+                .httpClient(failingHttpClient)
+                .maxRetries(3)
+                .sleeper(sleeper)
+                .build()
+
+        if (async) {
+            assertThatThrownBy { retryingClient.executeAsync(sessionEventsSendRequest()).get() }
+                .isInstanceOf(ExecutionException::class.java)
+                .hasCauseInstanceOf(IOException::class.java)
+        } else {
+            assertThatThrownBy { retryingClient.execute(sessionEventsSendRequest()) }
+                .isInstanceOf(IOException::class.java)
+        }
+
+        // One attempt only — retrying would risk a duplicated session user turn.
+        assertThat(callCount).isEqualTo(1)
+        assertThat(sleeper.durations).isEmpty()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun execute_otherPost_retriesTransportFailure(async: Boolean) {
+        stubFor(post(urlPathEqualTo("/v1/messages")).willReturn(ok()))
+
+        var callCount = 0
+        val flakyHttpClient =
+            object : HttpClient {
+                override fun execute(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse {
+                    callCount++
+                    if (callCount == 1) {
+                        throw IOException("transient network blip")
+                    }
+                    return httpClient.execute(request, requestOptions)
+                }
+
+                override fun executeAsync(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): CompletableFuture<HttpResponse> {
+                    callCount++
+                    if (callCount == 1) {
+                        val future = CompletableFuture<HttpResponse>()
+                        future.completeExceptionally(IOException("transient network blip"))
+                        return future
+                    }
+                    return httpClient.executeAsync(request, requestOptions)
+                }
+
+                override fun close() = httpClient.close()
+            }
+        val sleeper = RecordingSleeper()
+        val retryingClient =
+            RetryingHttpClient.builder()
+                .httpClient(flakyHttpClient)
+                .maxRetries(2)
+                .sleeper(sleeper)
+                .build()
+
+        val response =
+            retryingClient.execute(
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(baseUrl)
+                    .addPathSegments("v1", "messages")
+                    .build(),
+                async,
+            )
+
+        assertThat(response.statusCode()).isEqualTo(200)
+        assertThat(callCount).isEqualTo(2)
+        assertThat(sleeper.durations).hasSize(1)
         assertNoResponseLeaks()
     }
 
@@ -502,6 +700,13 @@ internal class RetryingHttpClientTest {
         sleeper: RecordingSleeper,
         clock: Clock = Clock.systemUTC(),
     ) = RetryingHttpClient.builder().httpClient(httpClient).sleeper(sleeper).clock(clock)
+
+    private fun sessionEventsSendRequest(): HttpRequest =
+        HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(baseUrl)
+            .addPathSegments("v1", "sessions", "sesn_test", "events")
+            .build()
 
     private fun HttpClient.execute(request: HttpRequest, async: Boolean): HttpResponse =
         if (async) executeAsync(request).get() else execute(request)
