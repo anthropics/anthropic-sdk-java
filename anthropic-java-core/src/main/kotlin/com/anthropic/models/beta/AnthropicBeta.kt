@@ -86,6 +86,10 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val AGENT_MEMORY_2026_07_22 = of("agent-memory-2026-07-22")
 
+        @JvmField
+        val MID_CONVERSATION_TOOL_CHANGES_2026_07_01 =
+            of("mid-conversation-tool-changes-2026-07-01")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
     }
 
@@ -123,6 +127,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         FALLBACK_CREDIT_2026_06_01,
         FALLBACK_CREDIT_2026_07_01,
         AGENT_MEMORY_2026_07_22,
+        MID_CONVERSATION_TOOL_CHANGES_2026_07_01,
     }
 
     /**
@@ -167,6 +172,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         FALLBACK_CREDIT_2026_06_01,
         FALLBACK_CREDIT_2026_07_01,
         AGENT_MEMORY_2026_07_22,
+        MID_CONVERSATION_TOOL_CHANGES_2026_07_01,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -215,6 +221,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             FALLBACK_CREDIT_2026_06_01 -> Value.FALLBACK_CREDIT_2026_06_01
             FALLBACK_CREDIT_2026_07_01 -> Value.FALLBACK_CREDIT_2026_07_01
             AGENT_MEMORY_2026_07_22 -> Value.AGENT_MEMORY_2026_07_22
+            MID_CONVERSATION_TOOL_CHANGES_2026_07_01 ->
+                Value.MID_CONVERSATION_TOOL_CHANGES_2026_07_01
             else -> Value._UNKNOWN
         }
 
@@ -261,6 +269,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             FALLBACK_CREDIT_2026_06_01 -> Known.FALLBACK_CREDIT_2026_06_01
             FALLBACK_CREDIT_2026_07_01 -> Known.FALLBACK_CREDIT_2026_07_01
             AGENT_MEMORY_2026_07_22 -> Known.AGENT_MEMORY_2026_07_22
+            MID_CONVERSATION_TOOL_CHANGES_2026_07_01 ->
+                Known.MID_CONVERSATION_TOOL_CHANGES_2026_07_01
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 
