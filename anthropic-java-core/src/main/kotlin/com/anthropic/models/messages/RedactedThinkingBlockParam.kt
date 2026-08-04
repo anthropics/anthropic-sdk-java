@@ -30,6 +30,9 @@ private constructor(
     ) : this(data, type, mutableMapOf())
 
     /**
+     * The `data` value of this redacted thinking block, exactly as returned by the API in a
+     * previous response. Opaque and encrypted; pass it back unchanged.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -92,6 +95,10 @@ private constructor(
             additionalProperties = redactedThinkingBlockParam.additionalProperties.toMutableMap()
         }
 
+        /**
+         * The `data` value of this redacted thinking block, exactly as returned by the API in a
+         * previous response. Opaque and encrypted; pass it back unchanged.
+         */
         fun data(data: String) = data(JsonField.of(data))
 
         /**
