@@ -50,6 +50,9 @@ private constructor(
     fun estimatedTokens(): Optional<Long> = estimatedTokens.getOptional("estimated_tokens")
 
     /**
+     * The incremental `thinking` text for this content block. Concatenate the `thinking` values of
+     * successive `thinking_delta` events to assemble the block's full `thinking` value.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -158,6 +161,10 @@ private constructor(
             this.estimatedTokens = estimatedTokens
         }
 
+        /**
+         * The incremental `thinking` text for this content block. Concatenate the `thinking` values
+         * of successive `thinking_delta` events to assemble the block's full `thinking` value.
+         */
         fun thinking(thinking: String) = thinking(JsonField.of(thinking))
 
         /**

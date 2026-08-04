@@ -33,6 +33,16 @@ private constructor(
         BetaRedactedThinkingBlockParam.builder().data(_data()).build()
 
     /**
+     * The contents of this redacted thinking block, returned when portions of the model's thinking
+     * were safety-redacted. This field is opaque and encrypted, with no readable content.
+     *
+     * Pass `redacted_thinking` blocks back to the API unchanged when continuing a multi-turn
+     * conversation.
+     *
+     * See
+     * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking#redacted-thinking-blocks)
+     * for details.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -95,6 +105,18 @@ private constructor(
             additionalProperties = betaRedactedThinkingBlock.additionalProperties.toMutableMap()
         }
 
+        /**
+         * The contents of this redacted thinking block, returned when portions of the model's
+         * thinking were safety-redacted. This field is opaque and encrypted, with no readable
+         * content.
+         *
+         * Pass `redacted_thinking` blocks back to the API unchanged when continuing a multi-turn
+         * conversation.
+         *
+         * See
+         * [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking#redacted-thinking-blocks)
+         * for details.
+         */
         fun data(data: String) = data(JsonField.of(data))
 
         /**
