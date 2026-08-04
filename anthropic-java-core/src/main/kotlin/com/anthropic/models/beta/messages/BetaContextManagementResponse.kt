@@ -224,6 +224,19 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun clearedInputTokens(): Long =
+            accept(
+                object : Visitor<Long> {
+                    override fun visitClearToolUses20250919(
+                        clearToolUses20250919: BetaClearToolUses20250919EditResponse
+                    ): Long = clearToolUses20250919.clearedInputTokens()
+
+                    override fun visitClearThinking20251015(
+                        clearThinking20251015: BetaClearThinking20251015EditResponse
+                    ): Long = clearThinking20251015.clearedInputTokens()
+                }
+            )
+
         fun clearToolUses20250919(): Optional<BetaClearToolUses20250919EditResponse> =
             Optional.ofNullable(clearToolUses20250919)
 

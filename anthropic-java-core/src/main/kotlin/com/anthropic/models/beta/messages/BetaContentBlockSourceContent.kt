@@ -27,6 +27,19 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun cacheControl(): Optional<BetaCacheControlEphemeral> =
+        accept(
+            object : Visitor<Optional<BetaCacheControlEphemeral>> {
+                override fun visitText(
+                    text: BetaTextBlockParam
+                ): Optional<BetaCacheControlEphemeral> = text.cacheControl()
+
+                override fun visitImage(
+                    image: BetaImageBlockParam
+                ): Optional<BetaCacheControlEphemeral> = image.cacheControl()
+            }
+        )
+
     fun text(): Optional<BetaTextBlockParam> = Optional.ofNullable(text)
 
     fun image(): Optional<BetaImageBlockParam> = Optional.ofNullable(image)

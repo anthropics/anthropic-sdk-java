@@ -33,6 +33,23 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun disableParallelToolUse(): Optional<Boolean> =
+        accept(
+            object : Visitor<Optional<Boolean>> {
+                override fun visitAuto(auto: BetaToolChoiceAuto): Optional<Boolean> =
+                    auto.disableParallelToolUse()
+
+                override fun visitAny(any: BetaToolChoiceAny): Optional<Boolean> =
+                    any.disableParallelToolUse()
+
+                override fun visitTool(tool: BetaToolChoiceTool): Optional<Boolean> =
+                    tool.disableParallelToolUse()
+
+                override fun visitNone(none: BetaToolChoiceNone): Optional<Boolean> =
+                    Optional.empty()
+            }
+        )
+
     /** The model will automatically decide whether to use tools. */
     fun auto(): Optional<BetaToolChoiceAuto> = Optional.ofNullable(auto)
 

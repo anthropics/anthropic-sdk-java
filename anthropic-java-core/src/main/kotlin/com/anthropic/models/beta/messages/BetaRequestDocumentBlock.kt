@@ -459,6 +459,26 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun data(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitBase64(base64: BetaBase64PdfSource): Optional<String> =
+                        Optional.of(base64.data())
+
+                    override fun visitText(text: BetaPlainTextSource): Optional<String> =
+                        Optional.of(text.data())
+
+                    override fun visitContent(content: BetaContentBlockSource): Optional<String> =
+                        Optional.empty()
+
+                    override fun visitUrl(url: BetaUrlPdfSource): Optional<String> =
+                        Optional.empty()
+
+                    override fun visitFile(file: BetaFileDocumentSource): Optional<String> =
+                        Optional.empty()
+                }
+            )
+
         fun base64(): Optional<BetaBase64PdfSource> = Optional.ofNullable(base64)
 
         fun text(): Optional<BetaPlainTextSource> = Optional.ofNullable(text)

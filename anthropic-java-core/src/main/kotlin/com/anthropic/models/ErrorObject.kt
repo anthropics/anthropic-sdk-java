@@ -34,6 +34,39 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun message(): String =
+        accept(
+            object : Visitor<String> {
+                override fun visitInvalidRequestError(
+                    invalidRequestError: InvalidRequestError
+                ): String = invalidRequestError.message()
+
+                override fun visitAuthenticationError(
+                    authenticationError: AuthenticationError
+                ): String = authenticationError.message()
+
+                override fun visitBillingError(billingError: BillingError): String =
+                    billingError.message()
+
+                override fun visitPermissionError(permissionError: PermissionError): String =
+                    permissionError.message()
+
+                override fun visitNotFoundError(notFoundError: NotFoundError): String =
+                    notFoundError.message()
+
+                override fun visitRateLimitError(rateLimitError: RateLimitError): String =
+                    rateLimitError.message()
+
+                override fun visitTimeoutError(timeoutError: GatewayTimeoutError): String =
+                    timeoutError.message()
+
+                override fun visitApiError(apiError: ApiErrorObject): String = apiError.message()
+
+                override fun visitOverloadedError(overloadedError: OverloadedError): String =
+                    overloadedError.message()
+            }
+        )
+
     fun invalidRequestError(): Optional<InvalidRequestError> =
         Optional.ofNullable(invalidRequestError)
 

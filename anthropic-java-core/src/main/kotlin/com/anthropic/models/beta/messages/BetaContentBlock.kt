@@ -130,6 +130,138 @@ private constructor(
             }
         )
 
+    fun id(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitText(text: BetaTextBlock): Optional<String> = Optional.empty()
+
+                override fun visitThinking(thinking: BetaThinkingBlock): Optional<String> =
+                    Optional.empty()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: BetaRedactedThinkingBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolUse(toolUse: BetaToolUseBlock): Optional<String> =
+                    Optional.of(toolUse.id())
+
+                override fun visitServerToolUse(
+                    serverToolUse: BetaServerToolUseBlock
+                ): Optional<String> = Optional.of(serverToolUse.id())
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: BetaWebSearchToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: BetaWebFetchToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAdvisorToolResult(
+                    advisorToolResult: BetaAdvisorToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: BetaCodeExecutionToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: BetaToolSearchToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock): Optional<String> =
+                    Optional.of(mcpToolUse.id())
+
+                override fun visitMcpToolResult(
+                    mcpToolResult: BetaMcpToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitContainerUpload(
+                    containerUpload: BetaContainerUploadBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitCompaction(compaction: BetaCompactionBlock): Optional<String> =
+                    Optional.empty()
+
+                override fun visitFallback(fallback: BetaFallbackBlock): Optional<String> =
+                    Optional.empty()
+            }
+        )
+
+    fun toolUseId(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitText(text: BetaTextBlock): Optional<String> = Optional.empty()
+
+                override fun visitThinking(thinking: BetaThinkingBlock): Optional<String> =
+                    Optional.empty()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: BetaRedactedThinkingBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolUse(toolUse: BetaToolUseBlock): Optional<String> =
+                    Optional.empty()
+
+                override fun visitServerToolUse(
+                    serverToolUse: BetaServerToolUseBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: BetaWebSearchToolResultBlock
+                ): Optional<String> = Optional.of(webSearchToolResult.toolUseId())
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: BetaWebFetchToolResultBlock
+                ): Optional<String> = Optional.of(webFetchToolResult.toolUseId())
+
+                override fun visitAdvisorToolResult(
+                    advisorToolResult: BetaAdvisorToolResultBlock
+                ): Optional<String> = Optional.of(advisorToolResult.toolUseId())
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: BetaCodeExecutionToolResultBlock
+                ): Optional<String> = Optional.of(codeExecutionToolResult.toolUseId())
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
+                ): Optional<String> = Optional.of(bashCodeExecutionToolResult.toolUseId())
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock
+                ): Optional<String> = Optional.of(textEditorCodeExecutionToolResult.toolUseId())
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: BetaToolSearchToolResultBlock
+                ): Optional<String> = Optional.of(toolSearchToolResult.toolUseId())
+
+                override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock): Optional<String> =
+                    Optional.empty()
+
+                override fun visitMcpToolResult(
+                    mcpToolResult: BetaMcpToolResultBlock
+                ): Optional<String> = Optional.of(mcpToolResult.toolUseId())
+
+                override fun visitContainerUpload(
+                    containerUpload: BetaContainerUploadBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitCompaction(compaction: BetaCompactionBlock): Optional<String> =
+                    Optional.empty()
+
+                override fun visitFallback(fallback: BetaFallbackBlock): Optional<String> =
+                    Optional.empty()
+            }
+        )
+
     fun text(): Optional<BetaTextBlock> = Optional.ofNullable(text)
 
     fun thinking(): Optional<BetaThinkingBlock> = Optional.ofNullable(thinking)

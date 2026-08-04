@@ -1779,6 +1779,23 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun mountPath(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitGitHubRepository(
+                        githubRepository: BetaManagedAgentsGitHubRepositoryResourceParams
+                    ): Optional<String> = githubRepository.mountPath()
+
+                    override fun visitFile(
+                        file: BetaManagedAgentsFileResourceParams
+                    ): Optional<String> = file.mountPath()
+
+                    override fun visitMemoryStore(
+                        memoryStore: BetaManagedAgentsMemoryStoreResourceParam
+                    ): Optional<String> = Optional.empty()
+                }
+            )
+
         /** Mount a GitHub repository into the session's container. */
         fun githubRepository(): Optional<BetaManagedAgentsGitHubRepositoryResourceParams> =
             Optional.ofNullable(githubRepository)

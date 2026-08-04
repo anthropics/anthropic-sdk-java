@@ -451,6 +451,23 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun cacheControl(): Optional<BetaCacheControlEphemeral> =
+            accept(
+                object : Visitor<Optional<BetaCacheControlEphemeral>> {
+                    override fun visitText(
+                        text: BetaTextBlockParam
+                    ): Optional<BetaCacheControlEphemeral> = text.cacheControl()
+
+                    override fun visitToolAddition(
+                        toolAddition: BetaRequestToolAdditionBlock
+                    ): Optional<BetaCacheControlEphemeral> = toolAddition.cacheControl()
+
+                    override fun visitToolRemoval(
+                        toolRemoval: BetaRequestToolRemovalBlock
+                    ): Optional<BetaCacheControlEphemeral> = toolRemoval.cacheControl()
+                }
+            )
+
         fun text(): Optional<BetaTextBlockParam> = Optional.ofNullable(text)
 
         /**

@@ -50,6 +50,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -106,6 +107,1368 @@ private constructor(
     private val systemMessage: BetaManagedAgentsSystemMessageEvent? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun id(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<String> = Optional.of(userMessage.id())
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<String> = Optional.of(userInterrupt.id())
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<String> = Optional.of(userToolConfirmation.id())
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<String> = Optional.of(userCustomToolResult.id())
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<String> = Optional.of(agentCustomToolUse.id())
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<String> = Optional.of(agentMessage.id())
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<String> = Optional.of(agentThinking.id())
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<String> = Optional.of(agentMcpToolUse.id())
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<String> = Optional.of(agentMcpToolResult.id())
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<String> = Optional.of(agentToolUse.id())
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<String> = Optional.of(agentToolResult.id())
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<String> = Optional.of(agentThreadMessageReceived.id())
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<String> = Optional.of(agentThreadMessageSent.id())
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<String> = Optional.of(agentThreadContextCompacted.id())
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<String> = Optional.of(sessionError.id())
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<String> = Optional.of(sessionStatusRescheduled.id())
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<String> = Optional.of(sessionStatusRunning.id())
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<String> = Optional.of(sessionStatusIdle.id())
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<String> = Optional.of(sessionStatusTerminated.id())
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<String> = Optional.of(sessionThreadCreated.id())
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<String> = Optional.of(spanOutcomeEvaluationStart.id())
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<String> = Optional.of(spanOutcomeEvaluationEnd.id())
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<String> = Optional.of(spanModelRequestStart.id())
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<String> = Optional.of(spanModelRequestEnd.id())
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<String> = Optional.of(spanOutcomeEvaluationOngoing.id())
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<String> = Optional.of(userDefineOutcome.id())
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<String> = Optional.of(sessionDeleted.id())
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusRunning.id())
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusIdle.id())
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusTerminated.id())
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<String> = Optional.of(userToolResult.id())
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusRescheduled.id())
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<String> = Optional.of(sessionUpdated.id())
+
+                override fun visitEventStart(
+                    eventStart: BetaManagedAgentsStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventDelta(
+                    eventDelta: BetaManagedAgentsDeltaEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<String> = Optional.of(systemMessage.id())
+            }
+        )
+
+    fun processedAt(): Optional<OffsetDateTime> =
+        accept(
+            object : Visitor<Optional<OffsetDateTime>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<OffsetDateTime> = userMessage.processedAt()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<OffsetDateTime> = userInterrupt.processedAt()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<OffsetDateTime> = userToolConfirmation.processedAt()
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<OffsetDateTime> = userCustomToolResult.processedAt()
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<OffsetDateTime> = Optional.of(agentCustomToolUse.processedAt())
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<OffsetDateTime> = Optional.of(agentMessage.processedAt())
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<OffsetDateTime> = Optional.of(agentThinking.processedAt())
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<OffsetDateTime> = Optional.of(agentMcpToolUse.processedAt())
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<OffsetDateTime> = Optional.of(agentMcpToolResult.processedAt())
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<OffsetDateTime> = Optional.of(agentToolUse.processedAt())
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<OffsetDateTime> = Optional.of(agentToolResult.processedAt())
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<OffsetDateTime> = Optional.of(agentThreadMessageReceived.processedAt())
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<OffsetDateTime> = Optional.of(agentThreadMessageSent.processedAt())
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<OffsetDateTime> = Optional.of(agentThreadContextCompacted.processedAt())
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionError.processedAt())
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionStatusRescheduled.processedAt())
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionStatusRunning.processedAt())
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionStatusIdle.processedAt())
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionStatusTerminated.processedAt())
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionThreadCreated.processedAt())
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<OffsetDateTime> = Optional.of(spanOutcomeEvaluationStart.processedAt())
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<OffsetDateTime> = Optional.of(spanOutcomeEvaluationEnd.processedAt())
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<OffsetDateTime> = Optional.of(spanModelRequestStart.processedAt())
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<OffsetDateTime> = Optional.of(spanModelRequestEnd.processedAt())
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<OffsetDateTime> =
+                    Optional.of(spanOutcomeEvaluationOngoing.processedAt())
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<OffsetDateTime> = Optional.of(userDefineOutcome.processedAt())
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionDeleted.processedAt())
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionThreadStatusRunning.processedAt())
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionThreadStatusIdle.processedAt())
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<OffsetDateTime> =
+                    Optional.of(sessionThreadStatusTerminated.processedAt())
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<OffsetDateTime> = userToolResult.processedAt()
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<OffsetDateTime> =
+                    Optional.of(sessionThreadStatusRescheduled.processedAt())
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionUpdated.processedAt())
+
+                override fun visitEventStart(
+                    eventStart: BetaManagedAgentsStartEvent
+                ): Optional<OffsetDateTime> = Optional.empty()
+
+                override fun visitEventDelta(
+                    eventDelta: BetaManagedAgentsDeltaEvent
+                ): Optional<OffsetDateTime> = Optional.empty()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<OffsetDateTime> = systemMessage.processedAt()
+            }
+        )
+
+    fun sessionThreadId(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<String> = userInterrupt.sessionThreadId()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<String> = userToolConfirmation.sessionThreadId()
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<String> = userCustomToolResult.sessionThreadId()
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<String> = agentCustomToolUse.sessionThreadId()
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<String> = agentMcpToolUse.sessionThreadId()
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<String> = agentToolUse.sessionThreadId()
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<String> = Optional.of(sessionThreadCreated.sessionThreadId())
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusRunning.sessionThreadId())
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusIdle.sessionThreadId())
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusTerminated.sessionThreadId())
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<String> = userToolResult.sessionThreadId()
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusRescheduled.sessionThreadId())
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventStart(
+                    eventStart: BetaManagedAgentsStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventDelta(
+                    eventDelta: BetaManagedAgentsDeltaEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun toolUseId(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<String> = Optional.of(userToolConfirmation.toolUseId())
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<String> = Optional.of(agentToolResult.toolUseId())
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<String> = Optional.of(userToolResult.toolUseId())
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventStart(
+                    eventStart: BetaManagedAgentsStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventDelta(
+                    eventDelta: BetaManagedAgentsDeltaEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun isError(): Optional<Boolean> =
+        accept(
+            object : Visitor<Optional<Boolean>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<Boolean> = userCustomToolResult.isError()
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<Boolean> = agentMcpToolResult.isError()
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<Boolean> = agentToolResult.isError()
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<Boolean> = spanModelRequestEnd.isError()
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<Boolean> = userToolResult.isError()
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitEventStart(
+                    eventStart: BetaManagedAgentsStartEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitEventDelta(
+                    eventDelta: BetaManagedAgentsDeltaEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<Boolean> = Optional.empty()
+            }
+        )
+
+    fun name(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<String> = Optional.of(agentCustomToolUse.name())
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<String> = Optional.of(agentMcpToolUse.name())
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<String> = Optional.of(agentToolUse.name())
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventStart(
+                    eventStart: BetaManagedAgentsStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventDelta(
+                    eventDelta: BetaManagedAgentsDeltaEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun agentName(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<String> = Optional.of(sessionThreadCreated.agentName())
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusRunning.agentName())
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusIdle.agentName())
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusTerminated.agentName())
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<String> = Optional.of(sessionThreadStatusRescheduled.agentName())
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventStart(
+                    eventStart: BetaManagedAgentsStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventDelta(
+                    eventDelta: BetaManagedAgentsDeltaEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun iteration(): Optional<Int> =
+        accept(
+            object : Visitor<Optional<Int>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<Int> = Optional.of(spanOutcomeEvaluationStart.iteration())
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<Int> = Optional.of(spanOutcomeEvaluationEnd.iteration())
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<Int> = Optional.of(spanOutcomeEvaluationOngoing.iteration())
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitEventStart(
+                    eventStart: BetaManagedAgentsStartEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitEventDelta(
+                    eventDelta: BetaManagedAgentsDeltaEvent
+                ): Optional<Int> = Optional.empty()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<Int> = Optional.empty()
+            }
+        )
+
+    fun outcomeId(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<String> = Optional.of(spanOutcomeEvaluationStart.outcomeId())
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<String> = Optional.of(spanOutcomeEvaluationEnd.outcomeId())
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<String> = Optional.of(spanOutcomeEvaluationOngoing.outcomeId())
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<String> = Optional.of(userDefineOutcome.outcomeId())
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventStart(
+                    eventStart: BetaManagedAgentsStartEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitEventDelta(
+                    eventDelta: BetaManagedAgentsDeltaEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<String> = Optional.empty()
+            }
+        )
 
     /** A user message event in the session conversation. */
     fun userMessage(): Optional<BetaManagedAgentsUserMessageEvent> =

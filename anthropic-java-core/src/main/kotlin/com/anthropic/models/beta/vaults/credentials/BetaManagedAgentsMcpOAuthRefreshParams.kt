@@ -453,6 +453,23 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun clientSecret(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitNone(
+                        none: BetaManagedAgentsTokenEndpointAuthNoneParam
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitClientSecretBasic(
+                        clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicParam
+                    ): Optional<String> = Optional.of(clientSecretBasic.clientSecret())
+
+                    override fun visitClientSecretPost(
+                        clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostParam
+                    ): Optional<String> = Optional.of(clientSecretPost.clientSecret())
+                }
+            )
+
         /** Token endpoint requires no client authentication. */
         fun none(): Optional<BetaManagedAgentsTokenEndpointAuthNoneParam> =
             Optional.ofNullable(none)

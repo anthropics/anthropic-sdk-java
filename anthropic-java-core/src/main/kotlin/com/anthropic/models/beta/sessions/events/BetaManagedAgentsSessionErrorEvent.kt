@@ -352,6 +352,78 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun message(): String =
+            accept(
+                object : Visitor<String> {
+                    override fun visitUnknown(unknown: BetaManagedAgentsUnknownError): String =
+                        unknown.message()
+
+                    override fun visitModelOverloaded(
+                        modelOverloaded: BetaManagedAgentsModelOverloadedError
+                    ): String = modelOverloaded.message()
+
+                    override fun visitModelRateLimited(
+                        modelRateLimited: BetaManagedAgentsModelRateLimitedError
+                    ): String = modelRateLimited.message()
+
+                    override fun visitModelRequestFailed(
+                        modelRequestFailed: BetaManagedAgentsModelRequestFailedError
+                    ): String = modelRequestFailed.message()
+
+                    override fun visitMcpConnectionFailed(
+                        mcpConnectionFailed: BetaManagedAgentsMcpConnectionFailedError
+                    ): String = mcpConnectionFailed.message()
+
+                    override fun visitMcpAuthenticationFailed(
+                        mcpAuthenticationFailed: BetaManagedAgentsMcpAuthenticationFailedError
+                    ): String = mcpAuthenticationFailed.message()
+
+                    override fun visitBilling(billing: BetaManagedAgentsBillingError): String =
+                        billing.message()
+
+                    override fun visitCredentialHostUnreachable(
+                        credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
+                    ): String = credentialHostUnreachable.message()
+                }
+            )
+
+        fun mcpServerName(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitUnknown(
+                        unknown: BetaManagedAgentsUnknownError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitModelOverloaded(
+                        modelOverloaded: BetaManagedAgentsModelOverloadedError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitModelRateLimited(
+                        modelRateLimited: BetaManagedAgentsModelRateLimitedError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitModelRequestFailed(
+                        modelRequestFailed: BetaManagedAgentsModelRequestFailedError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitMcpConnectionFailed(
+                        mcpConnectionFailed: BetaManagedAgentsMcpConnectionFailedError
+                    ): Optional<String> = Optional.of(mcpConnectionFailed.mcpServerName())
+
+                    override fun visitMcpAuthenticationFailed(
+                        mcpAuthenticationFailed: BetaManagedAgentsMcpAuthenticationFailedError
+                    ): Optional<String> = Optional.of(mcpAuthenticationFailed.mcpServerName())
+
+                    override fun visitBilling(
+                        billing: BetaManagedAgentsBillingError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitCredentialHostUnreachable(
+                        credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
+                    ): Optional<String> = Optional.empty()
+                }
+            )
+
         /**
          * An unknown or unexpected error occurred during session execution. A fallback variant;
          * clients that don't recognize a new error code can match on `retry_status` and `message`

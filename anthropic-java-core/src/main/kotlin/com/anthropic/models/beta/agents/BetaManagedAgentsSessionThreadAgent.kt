@@ -589,6 +589,30 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun skillId(): String =
+            accept(
+                object : Visitor<String> {
+                    override fun visitAnthropic(
+                        anthropic: BetaManagedAgentsAnthropicSkill
+                    ): String = anthropic.skillId()
+
+                    override fun visitCustom(custom: BetaManagedAgentsCustomSkill): String =
+                        custom.skillId()
+                }
+            )
+
+        fun version(): String =
+            accept(
+                object : Visitor<String> {
+                    override fun visitAnthropic(
+                        anthropic: BetaManagedAgentsAnthropicSkill
+                    ): String = anthropic.version()
+
+                    override fun visitCustom(custom: BetaManagedAgentsCustomSkill): String =
+                        custom.version()
+                }
+            )
+
         /** A resolved Anthropic-managed skill. */
         fun anthropic(): Optional<BetaManagedAgentsAnthropicSkill> = Optional.ofNullable(anthropic)
 

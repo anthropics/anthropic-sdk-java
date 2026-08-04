@@ -34,6 +34,35 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun message(): String =
+        accept(
+            object : Visitor<String> {
+                override fun visitInvalidRequest(invalidRequest: BetaInvalidRequestError): String =
+                    invalidRequest.message()
+
+                override fun visitAuthentication(authentication: BetaAuthenticationError): String =
+                    authentication.message()
+
+                override fun visitBilling(billing: BetaBillingError): String = billing.message()
+
+                override fun visitPermission(permission: BetaPermissionError): String =
+                    permission.message()
+
+                override fun visitNotFound(notFound: BetaNotFoundError): String = notFound.message()
+
+                override fun visitRateLimit(rateLimit: BetaRateLimitError): String =
+                    rateLimit.message()
+
+                override fun visitTimeout(timeout: BetaGatewayTimeoutError): String =
+                    timeout.message()
+
+                override fun visitApi(api: BetaApiError): String = api.message()
+
+                override fun visitOverloaded(overloaded: BetaOverloadedError): String =
+                    overloaded.message()
+            }
+        )
+
     fun invalidRequest(): Optional<BetaInvalidRequestError> = Optional.ofNullable(invalidRequest)
 
     fun authentication(): Optional<BetaAuthenticationError> = Optional.ofNullable(authentication)

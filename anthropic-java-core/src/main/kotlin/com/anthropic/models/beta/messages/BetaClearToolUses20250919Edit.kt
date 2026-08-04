@@ -659,6 +659,17 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun value(): Long =
+            accept(
+                object : Visitor<Long> {
+                    override fun visitInputTokens(inputTokens: BetaInputTokensTrigger): Long =
+                        inputTokens.value()
+
+                    override fun visitToolUses(toolUses: BetaToolUsesTrigger): Long =
+                        toolUses.value()
+                }
+            )
+
         fun inputTokens(): Optional<BetaInputTokensTrigger> = Optional.ofNullable(inputTokens)
 
         fun toolUses(): Optional<BetaToolUsesTrigger> = Optional.ofNullable(toolUses)
