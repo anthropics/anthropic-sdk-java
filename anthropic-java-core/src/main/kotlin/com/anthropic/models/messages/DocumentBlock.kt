@@ -325,6 +325,15 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun data(): String =
+            accept(
+                object : Visitor<String> {
+                    override fun visitBase64(base64: Base64PdfSource): String = base64.data()
+
+                    override fun visitText(text: PlainTextSource): String = text.data()
+                }
+            )
+
         fun base64(): Optional<Base64PdfSource> = Optional.ofNullable(base64)
 
         fun text(): Optional<PlainTextSource> = Optional.ofNullable(text)

@@ -313,6 +313,23 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun stopReason(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitBetaAdvisorToolResultError(
+                        betaAdvisorToolResultError: BetaAdvisorToolResultError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitBetaAdvisorResultBlock(
+                        betaAdvisorResultBlock: BetaAdvisorResultBlock
+                    ): Optional<String> = betaAdvisorResultBlock.stopReason()
+
+                    override fun visitBetaAdvisorRedactedResultBlock(
+                        betaAdvisorRedactedResultBlock: BetaAdvisorRedactedResultBlock
+                    ): Optional<String> = betaAdvisorRedactedResultBlock.stopReason()
+                }
+            )
+
         fun betaAdvisorToolResultError(): Optional<BetaAdvisorToolResultError> =
             Optional.ofNullable(betaAdvisorToolResultError)
 

@@ -13,6 +13,7 @@ import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -621,6 +622,123 @@ private constructor(
         private val fallbackMessage: BetaFallbackMessageIterationUsage? = null,
         private val _json: JsonValue? = null,
     ) {
+
+        fun cacheCreation(): Optional<BetaCacheCreation> =
+            accept(
+                object : Visitor<Optional<BetaCacheCreation>> {
+                    override fun visitMessage(
+                        message: BetaMessageIterationUsage
+                    ): Optional<BetaCacheCreation> = message.cacheCreation()
+
+                    override fun visitCompaction(
+                        compaction: BetaCompactionIterationUsage
+                    ): Optional<BetaCacheCreation> = compaction.cacheCreation()
+
+                    override fun visitAdvisorMessage(
+                        advisorMessage: BetaAdvisorMessageIterationUsage
+                    ): Optional<BetaCacheCreation> = advisorMessage.cacheCreation()
+
+                    override fun visitFallbackMessage(
+                        fallbackMessage: BetaFallbackMessageIterationUsage
+                    ): Optional<BetaCacheCreation> = fallbackMessage.cacheCreation()
+                }
+            )
+
+        fun cacheCreationInputTokens(): Long =
+            accept(
+                object : Visitor<Long> {
+                    override fun visitMessage(message: BetaMessageIterationUsage): Long =
+                        message.cacheCreationInputTokens()
+
+                    override fun visitCompaction(compaction: BetaCompactionIterationUsage): Long =
+                        compaction.cacheCreationInputTokens()
+
+                    override fun visitAdvisorMessage(
+                        advisorMessage: BetaAdvisorMessageIterationUsage
+                    ): Long = advisorMessage.cacheCreationInputTokens()
+
+                    override fun visitFallbackMessage(
+                        fallbackMessage: BetaFallbackMessageIterationUsage
+                    ): Long = fallbackMessage.cacheCreationInputTokens()
+                }
+            )
+
+        fun cacheReadInputTokens(): Long =
+            accept(
+                object : Visitor<Long> {
+                    override fun visitMessage(message: BetaMessageIterationUsage): Long =
+                        message.cacheReadInputTokens()
+
+                    override fun visitCompaction(compaction: BetaCompactionIterationUsage): Long =
+                        compaction.cacheReadInputTokens()
+
+                    override fun visitAdvisorMessage(
+                        advisorMessage: BetaAdvisorMessageIterationUsage
+                    ): Long = advisorMessage.cacheReadInputTokens()
+
+                    override fun visitFallbackMessage(
+                        fallbackMessage: BetaFallbackMessageIterationUsage
+                    ): Long = fallbackMessage.cacheReadInputTokens()
+                }
+            )
+
+        fun inputTokens(): Long =
+            accept(
+                object : Visitor<Long> {
+                    override fun visitMessage(message: BetaMessageIterationUsage): Long =
+                        message.inputTokens()
+
+                    override fun visitCompaction(compaction: BetaCompactionIterationUsage): Long =
+                        compaction.inputTokens()
+
+                    override fun visitAdvisorMessage(
+                        advisorMessage: BetaAdvisorMessageIterationUsage
+                    ): Long = advisorMessage.inputTokens()
+
+                    override fun visitFallbackMessage(
+                        fallbackMessage: BetaFallbackMessageIterationUsage
+                    ): Long = fallbackMessage.inputTokens()
+                }
+            )
+
+        fun model(): Optional<Model> =
+            accept(
+                object : Visitor<Optional<Model>> {
+                    override fun visitMessage(message: BetaMessageIterationUsage): Optional<Model> =
+                        Optional.of(message.model())
+
+                    override fun visitCompaction(
+                        compaction: BetaCompactionIterationUsage
+                    ): Optional<Model> = Optional.empty()
+
+                    override fun visitAdvisorMessage(
+                        advisorMessage: BetaAdvisorMessageIterationUsage
+                    ): Optional<Model> = Optional.of(advisorMessage.model())
+
+                    override fun visitFallbackMessage(
+                        fallbackMessage: BetaFallbackMessageIterationUsage
+                    ): Optional<Model> = Optional.of(fallbackMessage.model())
+                }
+            )
+
+        fun outputTokens(): Long =
+            accept(
+                object : Visitor<Long> {
+                    override fun visitMessage(message: BetaMessageIterationUsage): Long =
+                        message.outputTokens()
+
+                    override fun visitCompaction(compaction: BetaCompactionIterationUsage): Long =
+                        compaction.outputTokens()
+
+                    override fun visitAdvisorMessage(
+                        advisorMessage: BetaAdvisorMessageIterationUsage
+                    ): Long = advisorMessage.outputTokens()
+
+                    override fun visitFallbackMessage(
+                        fallbackMessage: BetaFallbackMessageIterationUsage
+                    ): Long = fallbackMessage.outputTokens()
+                }
+            )
 
         /** Token usage for a sampling iteration. */
         fun message(): Optional<BetaMessageIterationUsage> = Optional.ofNullable(message)

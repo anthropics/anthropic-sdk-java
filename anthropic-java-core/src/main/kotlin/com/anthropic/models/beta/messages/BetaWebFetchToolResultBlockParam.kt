@@ -658,6 +658,22 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun toolId(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitDirect(direct: BetaDirectCaller): Optional<String> =
+                        Optional.empty()
+
+                    override fun visitCodeExecution20250825(
+                        codeExecution20250825: BetaServerToolCaller
+                    ): Optional<String> = Optional.of(codeExecution20250825.toolId())
+
+                    override fun visitCodeExecution20260120(
+                        codeExecution20260120: BetaServerToolCaller20260120
+                    ): Optional<String> = Optional.of(codeExecution20260120.toolId())
+                }
+            )
+
         /** Tool invocation directly from the model. */
         fun direct(): Optional<BetaDirectCaller> = Optional.ofNullable(direct)
 

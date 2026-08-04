@@ -30,6 +30,156 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun citedText(): String =
+        accept(
+            object : Visitor<String> {
+                override fun visitCharLocation(
+                    charLocation: BetaCitationCharLocationParam
+                ): String = charLocation.citedText()
+
+                override fun visitPageLocation(
+                    pageLocation: BetaCitationPageLocationParam
+                ): String = pageLocation.citedText()
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: BetaCitationContentBlockLocationParam
+                ): String = contentBlockLocation.citedText()
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: BetaCitationWebSearchResultLocationParam
+                ): String = webSearchResultLocation.citedText()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: BetaCitationSearchResultLocationParam
+                ): String = searchResultLocation.citedText()
+            }
+        )
+
+    fun documentIndex(): Optional<Long> =
+        accept(
+            object : Visitor<Optional<Long>> {
+                override fun visitCharLocation(
+                    charLocation: BetaCitationCharLocationParam
+                ): Optional<Long> = Optional.of(charLocation.documentIndex())
+
+                override fun visitPageLocation(
+                    pageLocation: BetaCitationPageLocationParam
+                ): Optional<Long> = Optional.of(pageLocation.documentIndex())
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: BetaCitationContentBlockLocationParam
+                ): Optional<Long> = Optional.of(contentBlockLocation.documentIndex())
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: BetaCitationWebSearchResultLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: BetaCitationSearchResultLocationParam
+                ): Optional<Long> = Optional.empty()
+            }
+        )
+
+    fun documentTitle(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitCharLocation(
+                    charLocation: BetaCitationCharLocationParam
+                ): Optional<String> = charLocation.documentTitle()
+
+                override fun visitPageLocation(
+                    pageLocation: BetaCitationPageLocationParam
+                ): Optional<String> = pageLocation.documentTitle()
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: BetaCitationContentBlockLocationParam
+                ): Optional<String> = contentBlockLocation.documentTitle()
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: BetaCitationWebSearchResultLocationParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: BetaCitationSearchResultLocationParam
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun endBlockIndex(): Optional<Long> =
+        accept(
+            object : Visitor<Optional<Long>> {
+                override fun visitCharLocation(
+                    charLocation: BetaCitationCharLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitPageLocation(
+                    pageLocation: BetaCitationPageLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: BetaCitationContentBlockLocationParam
+                ): Optional<Long> = Optional.of(contentBlockLocation.endBlockIndex())
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: BetaCitationWebSearchResultLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: BetaCitationSearchResultLocationParam
+                ): Optional<Long> = Optional.of(searchResultLocation.endBlockIndex())
+            }
+        )
+
+    fun startBlockIndex(): Optional<Long> =
+        accept(
+            object : Visitor<Optional<Long>> {
+                override fun visitCharLocation(
+                    charLocation: BetaCitationCharLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitPageLocation(
+                    pageLocation: BetaCitationPageLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: BetaCitationContentBlockLocationParam
+                ): Optional<Long> = Optional.of(contentBlockLocation.startBlockIndex())
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: BetaCitationWebSearchResultLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: BetaCitationSearchResultLocationParam
+                ): Optional<Long> = Optional.of(searchResultLocation.startBlockIndex())
+            }
+        )
+
+    fun title(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitCharLocation(
+                    charLocation: BetaCitationCharLocationParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitPageLocation(
+                    pageLocation: BetaCitationPageLocationParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: BetaCitationContentBlockLocationParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: BetaCitationWebSearchResultLocationParam
+                ): Optional<String> = webSearchResultLocation.title()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: BetaCitationSearchResultLocationParam
+                ): Optional<String> = searchResultLocation.title()
+            }
+        )
+
     fun charLocation(): Optional<BetaCitationCharLocationParam> = Optional.ofNullable(charLocation)
 
     fun pageLocation(): Optional<BetaCitationPageLocationParam> = Optional.ofNullable(pageLocation)

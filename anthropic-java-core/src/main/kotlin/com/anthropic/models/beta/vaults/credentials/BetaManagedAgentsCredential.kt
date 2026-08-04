@@ -551,6 +551,23 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun mcpServerUrl(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitMcpOAuth(
+                        mcpOAuth: BetaManagedAgentsMcpOAuthAuthResponse
+                    ): Optional<String> = Optional.of(mcpOAuth.mcpServerUrl())
+
+                    override fun visitStaticBearer(
+                        staticBearer: BetaManagedAgentsStaticBearerAuthResponse
+                    ): Optional<String> = Optional.of(staticBearer.mcpServerUrl())
+
+                    override fun visitEnvironmentVariable(
+                        environmentVariable: BetaManagedAgentsEnvironmentVariableAuthResponse
+                    ): Optional<String> = Optional.empty()
+                }
+            )
+
         /** OAuth credential details for an MCP server. */
         fun mcpOAuth(): Optional<BetaManagedAgentsMcpOAuthAuthResponse> =
             Optional.ofNullable(mcpOAuth)

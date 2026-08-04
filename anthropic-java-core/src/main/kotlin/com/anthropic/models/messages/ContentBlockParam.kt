@@ -44,6 +44,273 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun cacheControl(): Optional<CacheControlEphemeral> =
+        accept(
+            object : Visitor<Optional<CacheControlEphemeral>> {
+                override fun visitText(text: TextBlockParam): Optional<CacheControlEphemeral> =
+                    text.cacheControl()
+
+                override fun visitImage(image: ImageBlockParam): Optional<CacheControlEphemeral> =
+                    image.cacheControl()
+
+                override fun visitDocument(
+                    document: DocumentBlockParam
+                ): Optional<CacheControlEphemeral> = document.cacheControl()
+
+                override fun visitSearchResult(
+                    searchResult: SearchResultBlockParam
+                ): Optional<CacheControlEphemeral> = searchResult.cacheControl()
+
+                override fun visitThinking(
+                    thinking: ThinkingBlockParam
+                ): Optional<CacheControlEphemeral> = Optional.empty()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: RedactedThinkingBlockParam
+                ): Optional<CacheControlEphemeral> = Optional.empty()
+
+                override fun visitToolUse(
+                    toolUse: ToolUseBlockParam
+                ): Optional<CacheControlEphemeral> = toolUse.cacheControl()
+
+                override fun visitToolResult(
+                    toolResult: ToolResultBlockParam
+                ): Optional<CacheControlEphemeral> = toolResult.cacheControl()
+
+                override fun visitServerToolUse(
+                    serverToolUse: ServerToolUseBlockParam
+                ): Optional<CacheControlEphemeral> = serverToolUse.cacheControl()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlockParam
+                ): Optional<CacheControlEphemeral> = webSearchToolResult.cacheControl()
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: WebFetchToolResultBlockParam
+                ): Optional<CacheControlEphemeral> = webFetchToolResult.cacheControl()
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
+                ): Optional<CacheControlEphemeral> = codeExecutionToolResult.cacheControl()
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
+                ): Optional<CacheControlEphemeral> = bashCodeExecutionToolResult.cacheControl()
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
+                ): Optional<CacheControlEphemeral> =
+                    textEditorCodeExecutionToolResult.cacheControl()
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: ToolSearchToolResultBlockParam
+                ): Optional<CacheControlEphemeral> = toolSearchToolResult.cacheControl()
+
+                override fun visitContainerUpload(
+                    containerUpload: ContainerUploadBlockParam
+                ): Optional<CacheControlEphemeral> = containerUpload.cacheControl()
+
+                override fun visitMidConvSystem(
+                    midConvSystem: MidConversationSystemBlockParam
+                ): Optional<CacheControlEphemeral> = midConvSystem.cacheControl()
+            }
+        )
+
+    fun title(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitText(text: TextBlockParam): Optional<String> = Optional.empty()
+
+                override fun visitImage(image: ImageBlockParam): Optional<String> = Optional.empty()
+
+                override fun visitDocument(document: DocumentBlockParam): Optional<String> =
+                    document.title()
+
+                override fun visitSearchResult(
+                    searchResult: SearchResultBlockParam
+                ): Optional<String> = Optional.of(searchResult.title())
+
+                override fun visitThinking(thinking: ThinkingBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: RedactedThinkingBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolUse(toolUse: ToolUseBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitToolResult(toolResult: ToolResultBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitServerToolUse(
+                    serverToolUse: ServerToolUseBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: WebFetchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: ToolSearchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitContainerUpload(
+                    containerUpload: ContainerUploadBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitMidConvSystem(
+                    midConvSystem: MidConversationSystemBlockParam
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun id(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitText(text: TextBlockParam): Optional<String> = Optional.empty()
+
+                override fun visitImage(image: ImageBlockParam): Optional<String> = Optional.empty()
+
+                override fun visitDocument(document: DocumentBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitSearchResult(
+                    searchResult: SearchResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitThinking(thinking: ThinkingBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: RedactedThinkingBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolUse(toolUse: ToolUseBlockParam): Optional<String> =
+                    Optional.of(toolUse.id())
+
+                override fun visitToolResult(toolResult: ToolResultBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitServerToolUse(
+                    serverToolUse: ServerToolUseBlockParam
+                ): Optional<String> = Optional.of(serverToolUse.id())
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: WebFetchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: ToolSearchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitContainerUpload(
+                    containerUpload: ContainerUploadBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitMidConvSystem(
+                    midConvSystem: MidConversationSystemBlockParam
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun toolUseId(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitText(text: TextBlockParam): Optional<String> = Optional.empty()
+
+                override fun visitImage(image: ImageBlockParam): Optional<String> = Optional.empty()
+
+                override fun visitDocument(document: DocumentBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitSearchResult(
+                    searchResult: SearchResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitThinking(thinking: ThinkingBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: RedactedThinkingBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolUse(toolUse: ToolUseBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitToolResult(toolResult: ToolResultBlockParam): Optional<String> =
+                    Optional.of(toolResult.toolUseId())
+
+                override fun visitServerToolUse(
+                    serverToolUse: ServerToolUseBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlockParam
+                ): Optional<String> = Optional.of(webSearchToolResult.toolUseId())
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: WebFetchToolResultBlockParam
+                ): Optional<String> = Optional.of(webFetchToolResult.toolUseId())
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.of(codeExecutionToolResult.toolUseId())
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.of(bashCodeExecutionToolResult.toolUseId())
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.of(textEditorCodeExecutionToolResult.toolUseId())
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: ToolSearchToolResultBlockParam
+                ): Optional<String> = Optional.of(toolSearchToolResult.toolUseId())
+
+                override fun visitContainerUpload(
+                    containerUpload: ContainerUploadBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitMidConvSystem(
+                    midConvSystem: MidConversationSystemBlockParam
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
     /** Regular text content. */
     fun text(): Optional<TextBlockParam> = Optional.ofNullable(text)
 

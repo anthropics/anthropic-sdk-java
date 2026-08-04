@@ -31,6 +31,17 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun path(): String =
+        accept(
+            object : Visitor<String> {
+                override fun visitMemory(memory: BetaManagedAgentsMemory): String = memory.path()
+
+                override fun visitMemoryPrefix(
+                    memoryPrefix: BetaManagedAgentsMemoryPrefix
+                ): String = memoryPrefix.path()
+            }
+        )
+
     /**
      * A `memory` object: a single text document at a hierarchical path inside a memory store. The
      * `content` field is populated when `view=full` and `null` when `view=basic`; the

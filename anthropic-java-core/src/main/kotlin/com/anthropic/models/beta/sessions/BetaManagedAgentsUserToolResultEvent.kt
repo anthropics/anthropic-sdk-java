@@ -791,6 +791,25 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun title(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitText(text: BetaManagedAgentsTextBlock): Optional<String> =
+                        Optional.empty()
+
+                    override fun visitImage(image: BetaManagedAgentsImageBlock): Optional<String> =
+                        Optional.empty()
+
+                    override fun visitDocument(
+                        document: BetaManagedAgentsDocumentBlock
+                    ): Optional<String> = document.title()
+
+                    override fun visitSearchResult(
+                        searchResult: BetaManagedAgentsSearchResultBlock
+                    ): Optional<String> = Optional.of(searchResult.title())
+                }
+            )
+
         /** Regular text content. */
         fun text(): Optional<BetaManagedAgentsTextBlock> = Optional.ofNullable(text)
 

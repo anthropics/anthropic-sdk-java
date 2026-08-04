@@ -100,6 +100,104 @@ private constructor(
             }
         )
 
+    fun id(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitText(text: TextBlock): Optional<String> = Optional.empty()
+
+                override fun visitThinking(thinking: ThinkingBlock): Optional<String> =
+                    Optional.empty()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: RedactedThinkingBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolUse(toolUse: ToolUseBlock): Optional<String> =
+                    Optional.of(toolUse.id())
+
+                override fun visitServerToolUse(
+                    serverToolUse: ServerToolUseBlock
+                ): Optional<String> = Optional.of(serverToolUse.id())
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: WebFetchToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: CodeExecutionToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: ToolSearchToolResultBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitContainerUpload(
+                    containerUpload: ContainerUploadBlock
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun toolUseId(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitText(text: TextBlock): Optional<String> = Optional.empty()
+
+                override fun visitThinking(thinking: ThinkingBlock): Optional<String> =
+                    Optional.empty()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: RedactedThinkingBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolUse(toolUse: ToolUseBlock): Optional<String> =
+                    Optional.empty()
+
+                override fun visitServerToolUse(
+                    serverToolUse: ServerToolUseBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlock
+                ): Optional<String> = Optional.of(webSearchToolResult.toolUseId())
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: WebFetchToolResultBlock
+                ): Optional<String> = Optional.of(webFetchToolResult.toolUseId())
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: CodeExecutionToolResultBlock
+                ): Optional<String> = Optional.of(codeExecutionToolResult.toolUseId())
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlock
+                ): Optional<String> = Optional.of(bashCodeExecutionToolResult.toolUseId())
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlock
+                ): Optional<String> = Optional.of(textEditorCodeExecutionToolResult.toolUseId())
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: ToolSearchToolResultBlock
+                ): Optional<String> = Optional.of(toolSearchToolResult.toolUseId())
+
+                override fun visitContainerUpload(
+                    containerUpload: ContainerUploadBlock
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
     fun text(): Optional<TextBlock> = Optional.ofNullable(text)
 
     fun thinking(): Optional<ThinkingBlock> = Optional.ofNullable(thinking)

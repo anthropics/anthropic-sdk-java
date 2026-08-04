@@ -31,6 +31,32 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun index(): Optional<Long> =
+        accept(
+            object : Visitor<Optional<Long>> {
+                override fun visitMessageStart(messageStart: RawMessageStartEvent): Optional<Long> =
+                    Optional.empty()
+
+                override fun visitMessageDelta(messageDelta: RawMessageDeltaEvent): Optional<Long> =
+                    Optional.empty()
+
+                override fun visitMessageStop(messageStop: RawMessageStopEvent): Optional<Long> =
+                    Optional.empty()
+
+                override fun visitContentBlockStart(
+                    contentBlockStart: RawContentBlockStartEvent
+                ): Optional<Long> = Optional.of(contentBlockStart.index())
+
+                override fun visitContentBlockDelta(
+                    contentBlockDelta: RawContentBlockDeltaEvent
+                ): Optional<Long> = Optional.of(contentBlockDelta.index())
+
+                override fun visitContentBlockStop(
+                    contentBlockStop: RawContentBlockStopEvent
+                ): Optional<Long> = Optional.of(contentBlockStop.index())
+            }
+        )
+
     fun messageStart(): Optional<RawMessageStartEvent> = Optional.ofNullable(messageStart)
 
     fun messageDelta(): Optional<RawMessageDeltaEvent> = Optional.ofNullable(messageDelta)

@@ -548,6 +548,54 @@ private constructor(
             private val _json: JsonValue? = null,
         ) {
 
+            fun cacheControl(): Optional<BetaCacheControlEphemeral> =
+                accept(
+                    object : Visitor<Optional<BetaCacheControlEphemeral>> {
+                        override fun visitText(
+                            text: BetaTextBlockParam
+                        ): Optional<BetaCacheControlEphemeral> = text.cacheControl()
+
+                        override fun visitImage(
+                            image: BetaImageBlockParam
+                        ): Optional<BetaCacheControlEphemeral> = image.cacheControl()
+
+                        override fun visitSearchResult(
+                            searchResult: BetaSearchResultBlockParam
+                        ): Optional<BetaCacheControlEphemeral> = searchResult.cacheControl()
+
+                        override fun visitDocument(
+                            document: BetaRequestDocumentBlock
+                        ): Optional<BetaCacheControlEphemeral> = document.cacheControl()
+
+                        override fun visitToolReference(
+                            toolReference: BetaToolReferenceBlockParam
+                        ): Optional<BetaCacheControlEphemeral> = toolReference.cacheControl()
+                    }
+                )
+
+            fun title(): Optional<String> =
+                accept(
+                    object : Visitor<Optional<String>> {
+                        override fun visitText(text: BetaTextBlockParam): Optional<String> =
+                            Optional.empty()
+
+                        override fun visitImage(image: BetaImageBlockParam): Optional<String> =
+                            Optional.empty()
+
+                        override fun visitSearchResult(
+                            searchResult: BetaSearchResultBlockParam
+                        ): Optional<String> = Optional.of(searchResult.title())
+
+                        override fun visitDocument(
+                            document: BetaRequestDocumentBlock
+                        ): Optional<String> = document.title()
+
+                        override fun visitToolReference(
+                            toolReference: BetaToolReferenceBlockParam
+                        ): Optional<String> = Optional.empty()
+                    }
+                )
+
             fun text(): Optional<BetaTextBlockParam> = Optional.ofNullable(text)
 
             fun image(): Optional<BetaImageBlockParam> = Optional.ofNullable(image)

@@ -547,6 +547,53 @@ private constructor(
             private val _json: JsonValue? = null,
         ) {
 
+            fun cacheControl(): Optional<CacheControlEphemeral> =
+                accept(
+                    object : Visitor<Optional<CacheControlEphemeral>> {
+                        override fun visitText(
+                            text: TextBlockParam
+                        ): Optional<CacheControlEphemeral> = text.cacheControl()
+
+                        override fun visitImage(
+                            image: ImageBlockParam
+                        ): Optional<CacheControlEphemeral> = image.cacheControl()
+
+                        override fun visitSearchResult(
+                            searchResult: SearchResultBlockParam
+                        ): Optional<CacheControlEphemeral> = searchResult.cacheControl()
+
+                        override fun visitDocument(
+                            document: DocumentBlockParam
+                        ): Optional<CacheControlEphemeral> = document.cacheControl()
+
+                        override fun visitToolReference(
+                            toolReference: ToolReferenceBlockParam
+                        ): Optional<CacheControlEphemeral> = toolReference.cacheControl()
+                    }
+                )
+
+            fun title(): Optional<String> =
+                accept(
+                    object : Visitor<Optional<String>> {
+                        override fun visitText(text: TextBlockParam): Optional<String> =
+                            Optional.empty()
+
+                        override fun visitImage(image: ImageBlockParam): Optional<String> =
+                            Optional.empty()
+
+                        override fun visitSearchResult(
+                            searchResult: SearchResultBlockParam
+                        ): Optional<String> = Optional.of(searchResult.title())
+
+                        override fun visitDocument(document: DocumentBlockParam): Optional<String> =
+                            document.title()
+
+                        override fun visitToolReference(
+                            toolReference: ToolReferenceBlockParam
+                        ): Optional<String> = Optional.empty()
+                    }
+                )
+
             fun text(): Optional<TextBlockParam> = Optional.ofNullable(text)
 
             fun image(): Optional<ImageBlockParam> = Optional.ofNullable(image)

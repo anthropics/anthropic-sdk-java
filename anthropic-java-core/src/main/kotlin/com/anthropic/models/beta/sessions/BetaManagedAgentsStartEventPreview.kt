@@ -27,6 +27,19 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun id(): String =
+        accept(
+            object : Visitor<String> {
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessagePreview
+                ): String = agentMessage.id()
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingPreview
+                ): String = agentThinking.id()
+            }
+        )
+
     fun agentMessage(): Optional<BetaManagedAgentsAgentMessagePreview> =
         Optional.ofNullable(agentMessage)
 

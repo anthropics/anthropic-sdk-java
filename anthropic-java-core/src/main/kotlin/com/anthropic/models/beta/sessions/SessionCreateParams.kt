@@ -1197,6 +1197,39 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun id(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitString(string: String): Optional<String> = Optional.empty()
+
+                    override fun visitBetaManagedAgentsAgentParams(
+                        betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
+                    ): Optional<String> = Optional.of(betaManagedAgentsAgentParams.id())
+
+                    override fun visitBetaManagedAgentsAgentWithOverridesParams(
+                        betaManagedAgentsAgentWithOverridesParams:
+                            BetaManagedAgentsAgentWithOverridesParams
+                    ): Optional<String> =
+                        Optional.of(betaManagedAgentsAgentWithOverridesParams.id())
+                }
+            )
+
+        fun version(): Optional<Int> =
+            accept(
+                object : Visitor<Optional<Int>> {
+                    override fun visitString(string: String): Optional<Int> = Optional.empty()
+
+                    override fun visitBetaManagedAgentsAgentParams(
+                        betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
+                    ): Optional<Int> = betaManagedAgentsAgentParams.version()
+
+                    override fun visitBetaManagedAgentsAgentWithOverridesParams(
+                        betaManagedAgentsAgentWithOverridesParams:
+                            BetaManagedAgentsAgentWithOverridesParams
+                    ): Optional<Int> = betaManagedAgentsAgentWithOverridesParams.version()
+                }
+            )
+
         fun string(): Optional<String> = Optional.ofNullable(string)
 
         /**
@@ -1884,6 +1917,23 @@ private constructor(
         private val memoryStore: BetaManagedAgentsMemoryStoreResourceParam? = null,
         private val _json: JsonValue? = null,
     ) {
+
+        fun mountPath(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitGitHubRepository(
+                        githubRepository: BetaManagedAgentsGitHubRepositoryResourceParams
+                    ): Optional<String> = githubRepository.mountPath()
+
+                    override fun visitFile(
+                        file: BetaManagedAgentsFileResourceParams
+                    ): Optional<String> = file.mountPath()
+
+                    override fun visitMemoryStore(
+                        memoryStore: BetaManagedAgentsMemoryStoreResourceParam
+                    ): Optional<String> = Optional.empty()
+                }
+            )
 
         /** Mount a GitHub repository into the session's container. */
         fun githubRepository(): Optional<BetaManagedAgentsGitHubRepositoryResourceParams> =

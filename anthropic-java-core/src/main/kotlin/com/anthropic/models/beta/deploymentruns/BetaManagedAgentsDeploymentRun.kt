@@ -907,6 +907,75 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun message(): String =
+            accept(
+                object : Visitor<String> {
+                    override fun visitEnvironmentArchived(
+                        environmentArchived: BetaManagedAgentsEnvironmentArchivedRunError
+                    ): String = environmentArchived.message()
+
+                    override fun visitAgentArchived(
+                        agentArchived: BetaManagedAgentsAgentArchivedRunError
+                    ): String = agentArchived.message()
+
+                    override fun visitEnvironmentNotFound(
+                        environmentNotFound: BetaManagedAgentsEnvironmentNotFoundRunError
+                    ): String = environmentNotFound.message()
+
+                    override fun visitVaultNotFound(
+                        vaultNotFound: BetaManagedAgentsVaultNotFoundRunError
+                    ): String = vaultNotFound.message()
+
+                    override fun visitVaultArchived(
+                        vaultArchived: BetaManagedAgentsVaultArchivedRunError
+                    ): String = vaultArchived.message()
+
+                    override fun visitFileNotFound(
+                        fileNotFound: BetaManagedAgentsFileNotFoundRunError
+                    ): String = fileNotFound.message()
+
+                    override fun visitMemoryStoreArchived(
+                        memoryStoreArchived: BetaManagedAgentsMemoryStoreArchivedRunError
+                    ): String = memoryStoreArchived.message()
+
+                    override fun visitSkillNotFound(
+                        skillNotFound: BetaManagedAgentsSkillNotFoundRunError
+                    ): String = skillNotFound.message()
+
+                    override fun visitSessionResourceNotFound(
+                        sessionResourceNotFound: BetaManagedAgentsSessionResourceNotFoundRunError
+                    ): String = sessionResourceNotFound.message()
+
+                    override fun visitWorkspaceArchived(
+                        workspaceArchived: BetaManagedAgentsWorkspaceArchivedRunError
+                    ): String = workspaceArchived.message()
+
+                    override fun visitOrganizationDisabled(
+                        organizationDisabled: BetaManagedAgentsOrganizationDisabledRunError
+                    ): String = organizationDisabled.message()
+
+                    override fun visitSessionRateLimited(
+                        sessionRateLimited: BetaManagedAgentsSessionRateLimitedRunError
+                    ): String = sessionRateLimited.message()
+
+                    override fun visitSessionCreationRejected(
+                        sessionCreationRejected: BetaManagedAgentsSessionCreationRejectedRunError
+                    ): String = sessionCreationRejected.message()
+
+                    override fun visitUnknown(unknown: BetaManagedAgentsUnknownRunError): String =
+                        unknown.message()
+
+                    override fun visitSelfHostedResourcesUnsupported(
+                        selfHostedResourcesUnsupported:
+                            BetaManagedAgentsSelfHostedResourcesUnsupportedRunError
+                    ): String = selfHostedResourcesUnsupported.message()
+
+                    override fun visitMcpEgressBlocked(
+                        mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedRunError
+                    ): String = mcpEgressBlocked.message()
+                }
+            )
+
         /** The deployment's environment was archived. */
         fun environmentArchived(): Optional<BetaManagedAgentsEnvironmentArchivedRunError> =
             Optional.ofNullable(environmentArchived)
