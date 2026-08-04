@@ -31,6 +31,62 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun content(): Optional<List<BetaCodeExecutionOutputBlockParam>> =
+        accept(
+            object : Visitor<Optional<List<BetaCodeExecutionOutputBlockParam>>> {
+                override fun visitErrorParam(
+                    errorParam: BetaCodeExecutionToolResultErrorParam
+                ): Optional<List<BetaCodeExecutionOutputBlockParam>> = Optional.empty()
+
+                override fun visitResultBlockParam(
+                    resultBlockParam: BetaCodeExecutionResultBlockParam
+                ): Optional<List<BetaCodeExecutionOutputBlockParam>> =
+                    Optional.of(resultBlockParam.content())
+
+                override fun visitEncryptedCodeExecutionResultBlockParam(
+                    encryptedCodeExecutionResultBlockParam:
+                        BetaEncryptedCodeExecutionResultBlockParam
+                ): Optional<List<BetaCodeExecutionOutputBlockParam>> =
+                    Optional.of(encryptedCodeExecutionResultBlockParam.content())
+            }
+        )
+
+    fun returnCode(): Optional<Long> =
+        accept(
+            object : Visitor<Optional<Long>> {
+                override fun visitErrorParam(
+                    errorParam: BetaCodeExecutionToolResultErrorParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitResultBlockParam(
+                    resultBlockParam: BetaCodeExecutionResultBlockParam
+                ): Optional<Long> = Optional.of(resultBlockParam.returnCode())
+
+                override fun visitEncryptedCodeExecutionResultBlockParam(
+                    encryptedCodeExecutionResultBlockParam:
+                        BetaEncryptedCodeExecutionResultBlockParam
+                ): Optional<Long> = Optional.of(encryptedCodeExecutionResultBlockParam.returnCode())
+            }
+        )
+
+    fun stderr(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitErrorParam(
+                    errorParam: BetaCodeExecutionToolResultErrorParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitResultBlockParam(
+                    resultBlockParam: BetaCodeExecutionResultBlockParam
+                ): Optional<String> = Optional.of(resultBlockParam.stderr())
+
+                override fun visitEncryptedCodeExecutionResultBlockParam(
+                    encryptedCodeExecutionResultBlockParam:
+                        BetaEncryptedCodeExecutionResultBlockParam
+                ): Optional<String> = Optional.of(encryptedCodeExecutionResultBlockParam.stderr())
+            }
+        )
+
     fun errorParam(): Optional<BetaCodeExecutionToolResultErrorParam> =
         Optional.ofNullable(errorParam)
 

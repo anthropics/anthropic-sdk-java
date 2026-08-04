@@ -344,6 +344,27 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun data(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitBase64(
+                        base64: BetaManagedAgentsBase64DocumentSource
+                    ): Optional<String> = Optional.of(base64.data())
+
+                    override fun visitText(
+                        text: BetaManagedAgentsPlainTextDocumentSource
+                    ): Optional<String> = Optional.of(text.data())
+
+                    override fun visitUrl(
+                        url: BetaManagedAgentsUrlDocumentSource
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitFile(
+                        file: BetaManagedAgentsFileDocumentSource
+                    ): Optional<String> = Optional.empty()
+                }
+            )
+
         /** Base64-encoded document data. */
         fun base64(): Optional<BetaManagedAgentsBase64DocumentSource> = Optional.ofNullable(base64)
 

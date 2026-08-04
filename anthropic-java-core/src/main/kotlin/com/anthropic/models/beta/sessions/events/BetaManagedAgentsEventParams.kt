@@ -33,6 +33,72 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun toolUseId(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEventParams
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEventParams
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEventParams
+                ): Optional<String> = Optional.of(userToolConfirmation.toolUseId())
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
+                ): Optional<String> = Optional.empty()
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEventParams
+                ): Optional<String> = Optional.of(userToolResult.toolUseId())
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEventParams
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun isError(): Optional<Boolean> =
+        accept(
+            object : Visitor<Optional<Boolean>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEventParams
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEventParams
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEventParams
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
+                ): Optional<Boolean> = userCustomToolResult.isError()
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEventParams
+                ): Optional<Boolean> = userToolResult.isError()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEventParams
+                ): Optional<Boolean> = Optional.empty()
+            }
+        )
+
     /** Parameters for sending a user message to the session. */
     fun userMessage(): Optional<BetaManagedAgentsUserMessageEventParams> =
         Optional.ofNullable(userMessage)

@@ -30,6 +30,154 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun citedText(): String =
+        accept(
+            object : Visitor<String> {
+                override fun visitCharLocation(charLocation: CitationCharLocationParam): String =
+                    charLocation.citedText()
+
+                override fun visitPageLocation(pageLocation: CitationPageLocationParam): String =
+                    pageLocation.citedText()
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: CitationContentBlockLocationParam
+                ): String = contentBlockLocation.citedText()
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: CitationWebSearchResultLocationParam
+                ): String = webSearchResultLocation.citedText()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: CitationSearchResultLocationParam
+                ): String = searchResultLocation.citedText()
+            }
+        )
+
+    fun documentIndex(): Optional<Long> =
+        accept(
+            object : Visitor<Optional<Long>> {
+                override fun visitCharLocation(
+                    charLocation: CitationCharLocationParam
+                ): Optional<Long> = Optional.of(charLocation.documentIndex())
+
+                override fun visitPageLocation(
+                    pageLocation: CitationPageLocationParam
+                ): Optional<Long> = Optional.of(pageLocation.documentIndex())
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: CitationContentBlockLocationParam
+                ): Optional<Long> = Optional.of(contentBlockLocation.documentIndex())
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: CitationWebSearchResultLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: CitationSearchResultLocationParam
+                ): Optional<Long> = Optional.empty()
+            }
+        )
+
+    fun documentTitle(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitCharLocation(
+                    charLocation: CitationCharLocationParam
+                ): Optional<String> = charLocation.documentTitle()
+
+                override fun visitPageLocation(
+                    pageLocation: CitationPageLocationParam
+                ): Optional<String> = pageLocation.documentTitle()
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: CitationContentBlockLocationParam
+                ): Optional<String> = contentBlockLocation.documentTitle()
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: CitationWebSearchResultLocationParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: CitationSearchResultLocationParam
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun endBlockIndex(): Optional<Long> =
+        accept(
+            object : Visitor<Optional<Long>> {
+                override fun visitCharLocation(
+                    charLocation: CitationCharLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitPageLocation(
+                    pageLocation: CitationPageLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: CitationContentBlockLocationParam
+                ): Optional<Long> = Optional.of(contentBlockLocation.endBlockIndex())
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: CitationWebSearchResultLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: CitationSearchResultLocationParam
+                ): Optional<Long> = Optional.of(searchResultLocation.endBlockIndex())
+            }
+        )
+
+    fun startBlockIndex(): Optional<Long> =
+        accept(
+            object : Visitor<Optional<Long>> {
+                override fun visitCharLocation(
+                    charLocation: CitationCharLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitPageLocation(
+                    pageLocation: CitationPageLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: CitationContentBlockLocationParam
+                ): Optional<Long> = Optional.of(contentBlockLocation.startBlockIndex())
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: CitationWebSearchResultLocationParam
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: CitationSearchResultLocationParam
+                ): Optional<Long> = Optional.of(searchResultLocation.startBlockIndex())
+            }
+        )
+
+    fun title(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitCharLocation(
+                    charLocation: CitationCharLocationParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitPageLocation(
+                    pageLocation: CitationPageLocationParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitContentBlockLocation(
+                    contentBlockLocation: CitationContentBlockLocationParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebSearchResultLocation(
+                    webSearchResultLocation: CitationWebSearchResultLocationParam
+                ): Optional<String> = webSearchResultLocation.title()
+
+                override fun visitSearchResultLocation(
+                    searchResultLocation: CitationSearchResultLocationParam
+                ): Optional<String> = searchResultLocation.title()
+            }
+        )
+
     fun charLocation(): Optional<CitationCharLocationParam> = Optional.ofNullable(charLocation)
 
     fun pageLocation(): Optional<CitationPageLocationParam> = Optional.ofNullable(pageLocation)

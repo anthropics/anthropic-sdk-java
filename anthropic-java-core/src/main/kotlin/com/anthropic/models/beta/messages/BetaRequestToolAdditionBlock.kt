@@ -318,6 +318,40 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun name(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitReference(
+                        reference: BetaToolChangeToolReference
+                    ): Optional<String> = Optional.of(reference.name())
+
+                    override fun visitMcpToolReference(
+                        mcpToolReference: BetaToolChangeMcpToolReference
+                    ): Optional<String> = Optional.of(mcpToolReference.name())
+
+                    override fun visitMcpToolsetReference(
+                        mcpToolsetReference: BetaToolChangeMcpToolsetReference
+                    ): Optional<String> = Optional.empty()
+                }
+            )
+
+        fun serverName(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitReference(
+                        reference: BetaToolChangeToolReference
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitMcpToolReference(
+                        mcpToolReference: BetaToolChangeMcpToolReference
+                    ): Optional<String> = Optional.of(mcpToolReference.serverName())
+
+                    override fun visitMcpToolsetReference(
+                        mcpToolsetReference: BetaToolChangeMcpToolsetReference
+                    ): Optional<String> = Optional.of(mcpToolsetReference.serverName())
+                }
+            )
+
         /**
          * Reference to a single tool the caller declared directly in ``tools[]``. Does not accept
          * the composed ``{server}_{name}`` form the server assigns to MCP-resolved tools — use

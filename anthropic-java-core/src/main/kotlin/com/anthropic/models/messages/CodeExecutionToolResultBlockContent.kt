@@ -29,6 +29,56 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun content(): Optional<List<CodeExecutionOutputBlock>> =
+        accept(
+            object : Visitor<Optional<List<CodeExecutionOutputBlock>>> {
+                override fun visitError(
+                    error: CodeExecutionToolResultError
+                ): Optional<List<CodeExecutionOutputBlock>> = Optional.empty()
+
+                override fun visitResultBlock(
+                    resultBlock: CodeExecutionResultBlock
+                ): Optional<List<CodeExecutionOutputBlock>> = Optional.of(resultBlock.content())
+
+                override fun visitEncryptedCodeExecutionResultBlock(
+                    encryptedCodeExecutionResultBlock: EncryptedCodeExecutionResultBlock
+                ): Optional<List<CodeExecutionOutputBlock>> =
+                    Optional.of(encryptedCodeExecutionResultBlock.content())
+            }
+        )
+
+    fun returnCode(): Optional<Long> =
+        accept(
+            object : Visitor<Optional<Long>> {
+                override fun visitError(error: CodeExecutionToolResultError): Optional<Long> =
+                    Optional.empty()
+
+                override fun visitResultBlock(
+                    resultBlock: CodeExecutionResultBlock
+                ): Optional<Long> = Optional.of(resultBlock.returnCode())
+
+                override fun visitEncryptedCodeExecutionResultBlock(
+                    encryptedCodeExecutionResultBlock: EncryptedCodeExecutionResultBlock
+                ): Optional<Long> = Optional.of(encryptedCodeExecutionResultBlock.returnCode())
+            }
+        )
+
+    fun stderr(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitError(error: CodeExecutionToolResultError): Optional<String> =
+                    Optional.empty()
+
+                override fun visitResultBlock(
+                    resultBlock: CodeExecutionResultBlock
+                ): Optional<String> = Optional.of(resultBlock.stderr())
+
+                override fun visitEncryptedCodeExecutionResultBlock(
+                    encryptedCodeExecutionResultBlock: EncryptedCodeExecutionResultBlock
+                ): Optional<String> = Optional.of(encryptedCodeExecutionResultBlock.stderr())
+            }
+        )
+
     fun error(): Optional<CodeExecutionToolResultError> = Optional.ofNullable(error)
 
     fun resultBlock(): Optional<CodeExecutionResultBlock> = Optional.ofNullable(resultBlock)

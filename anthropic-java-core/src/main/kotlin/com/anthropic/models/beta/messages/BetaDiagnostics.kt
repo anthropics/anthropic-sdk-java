@@ -315,6 +315,35 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun cacheMissedInputTokens(): Optional<Long> =
+            accept(
+                object : Visitor<Optional<Long>> {
+                    override fun visitModelChanged(
+                        modelChanged: BetaCacheMissModelChanged
+                    ): Optional<Long> = Optional.of(modelChanged.cacheMissedInputTokens())
+
+                    override fun visitSystemChanged(
+                        systemChanged: BetaCacheMissSystemChanged
+                    ): Optional<Long> = Optional.of(systemChanged.cacheMissedInputTokens())
+
+                    override fun visitToolsChanged(
+                        toolsChanged: BetaCacheMissToolsChanged
+                    ): Optional<Long> = Optional.of(toolsChanged.cacheMissedInputTokens())
+
+                    override fun visitMessagesChanged(
+                        messagesChanged: BetaCacheMissMessagesChanged
+                    ): Optional<Long> = Optional.of(messagesChanged.cacheMissedInputTokens())
+
+                    override fun visitPreviousMessageNotFound(
+                        previousMessageNotFound: BetaCacheMissPreviousMessageNotFound
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitUnavailable(
+                        unavailable: BetaCacheMissUnavailable
+                    ): Optional<Long> = Optional.empty()
+                }
+            )
+
         fun modelChanged(): Optional<BetaCacheMissModelChanged> = Optional.ofNullable(modelChanged)
 
         fun systemChanged(): Optional<BetaCacheMissSystemChanged> =

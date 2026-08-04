@@ -31,6 +31,34 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun path(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitView(view: BetaMemoryTool20250818ViewCommand): Optional<String> =
+                    Optional.of(view.path())
+
+                override fun visitCreate(
+                    create: BetaMemoryTool20250818CreateCommand
+                ): Optional<String> = Optional.of(create.path())
+
+                override fun visitStrReplace(
+                    strReplace: BetaMemoryTool20250818StrReplaceCommand
+                ): Optional<String> = Optional.of(strReplace.path())
+
+                override fun visitInsert(
+                    insert: BetaMemoryTool20250818InsertCommand
+                ): Optional<String> = Optional.of(insert.path())
+
+                override fun visitDelete(
+                    delete: BetaMemoryTool20250818DeleteCommand
+                ): Optional<String> = Optional.of(delete.path())
+
+                override fun visitRename(
+                    rename: BetaMemoryTool20250818RenameCommand
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
     fun view(): Optional<BetaMemoryTool20250818ViewCommand> = Optional.ofNullable(view)
 
     fun create(): Optional<BetaMemoryTool20250818CreateCommand> = Optional.ofNullable(create)

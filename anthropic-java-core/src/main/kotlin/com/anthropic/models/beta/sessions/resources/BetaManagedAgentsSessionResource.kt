@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -28,6 +29,72 @@ private constructor(
     private val memoryStore: BetaManagedAgentsMemoryStoreResource? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun id(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitGitHubRepository(
+                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
+                ): Optional<String> = Optional.of(githubRepository.id())
+
+                override fun visitFile(file: BetaManagedAgentsFileResource): Optional<String> =
+                    Optional.of(file.id())
+
+                override fun visitMemoryStore(
+                    memoryStore: BetaManagedAgentsMemoryStoreResource
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun createdAt(): Optional<OffsetDateTime> =
+        accept(
+            object : Visitor<Optional<OffsetDateTime>> {
+                override fun visitGitHubRepository(
+                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
+                ): Optional<OffsetDateTime> = Optional.of(githubRepository.createdAt())
+
+                override fun visitFile(
+                    file: BetaManagedAgentsFileResource
+                ): Optional<OffsetDateTime> = Optional.of(file.createdAt())
+
+                override fun visitMemoryStore(
+                    memoryStore: BetaManagedAgentsMemoryStoreResource
+                ): Optional<OffsetDateTime> = Optional.empty()
+            }
+        )
+
+    fun mountPath(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitGitHubRepository(
+                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
+                ): Optional<String> = Optional.of(githubRepository.mountPath())
+
+                override fun visitFile(file: BetaManagedAgentsFileResource): Optional<String> =
+                    Optional.of(file.mountPath())
+
+                override fun visitMemoryStore(
+                    memoryStore: BetaManagedAgentsMemoryStoreResource
+                ): Optional<String> = memoryStore.mountPath()
+            }
+        )
+
+    fun updatedAt(): Optional<OffsetDateTime> =
+        accept(
+            object : Visitor<Optional<OffsetDateTime>> {
+                override fun visitGitHubRepository(
+                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
+                ): Optional<OffsetDateTime> = Optional.of(githubRepository.updatedAt())
+
+                override fun visitFile(
+                    file: BetaManagedAgentsFileResource
+                ): Optional<OffsetDateTime> = Optional.of(file.updatedAt())
+
+                override fun visitMemoryStore(
+                    memoryStore: BetaManagedAgentsMemoryStoreResource
+                ): Optional<OffsetDateTime> = Optional.empty()
+            }
+        )
 
     fun githubRepository(): Optional<BetaManagedAgentsGitHubRepositoryResource> =
         Optional.ofNullable(githubRepository)

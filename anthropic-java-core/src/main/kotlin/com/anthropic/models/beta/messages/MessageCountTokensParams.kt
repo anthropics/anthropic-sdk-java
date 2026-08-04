@@ -3118,6 +3118,1418 @@ private constructor(
         private val _json: JsonValue? = null,
     ) {
 
+        fun cacheControl(): Optional<BetaCacheControlEphemeral> =
+            accept(
+                object : Visitor<Optional<BetaCacheControlEphemeral>> {
+                    override fun visitBeta(beta: BetaTool): Optional<BetaCacheControlEphemeral> =
+                        beta.cacheControl()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<BetaCacheControlEphemeral> = betaToolBash20241022.cacheControl()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<BetaCacheControlEphemeral> = betaToolBash20250124.cacheControl()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaCodeExecutionTool20250522.cacheControl()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaCodeExecutionTool20250825.cacheControl()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaCodeExecutionTool20260120.cacheControl()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaCodeExecutionTool20260521.cacheControl()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaToolComputerUse20241022.cacheControl()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<BetaCacheControlEphemeral> = betaMemoryTool20250818.cacheControl()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaToolComputerUse20250124.cacheControl()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaToolTextEditor20241022.cacheControl()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaToolComputerUse20251124.cacheControl()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaToolTextEditor20250124.cacheControl()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaToolTextEditor20250429.cacheControl()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaToolTextEditor20250728.cacheControl()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaWebSearchTool20250305.cacheControl()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<BetaCacheControlEphemeral> = betaWebFetchTool20250910.cacheControl()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaWebSearchTool20260209.cacheControl()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<BetaCacheControlEphemeral> = betaWebFetchTool20260209.cacheControl()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<BetaCacheControlEphemeral> = betaWebFetchTool20260309.cacheControl()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaWebSearchTool20260318.cacheControl()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<BetaCacheControlEphemeral> = betaWebFetchTool20260318.cacheControl()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<BetaCacheControlEphemeral> = betaAdvisorTool20260301.cacheControl()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaToolSearchToolBm25_20251119.cacheControl()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaToolSearchToolRegex20251119.cacheControl()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<BetaCacheControlEphemeral> = betaMcpToolset.cacheControl()
+                }
+            )
+
+        fun deferLoading(): Optional<Boolean> =
+            accept(
+                object : Visitor<Optional<Boolean>> {
+                    override fun visitBeta(beta: BetaTool): Optional<Boolean> = beta.deferLoading()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<Boolean> = betaToolBash20241022.deferLoading()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<Boolean> = betaToolBash20250124.deferLoading()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<Boolean> = betaCodeExecutionTool20250522.deferLoading()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<Boolean> = betaCodeExecutionTool20250825.deferLoading()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<Boolean> = betaCodeExecutionTool20260120.deferLoading()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<Boolean> = betaCodeExecutionTool20260521.deferLoading()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<Boolean> = betaToolComputerUse20241022.deferLoading()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<Boolean> = betaMemoryTool20250818.deferLoading()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<Boolean> = betaToolComputerUse20250124.deferLoading()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<Boolean> = betaToolTextEditor20241022.deferLoading()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Boolean> = betaToolComputerUse20251124.deferLoading()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<Boolean> = betaToolTextEditor20250124.deferLoading()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<Boolean> = betaToolTextEditor20250429.deferLoading()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<Boolean> = betaToolTextEditor20250728.deferLoading()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<Boolean> = betaWebSearchTool20250305.deferLoading()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<Boolean> = betaWebFetchTool20250910.deferLoading()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<Boolean> = betaWebSearchTool20260209.deferLoading()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<Boolean> = betaWebFetchTool20260209.deferLoading()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<Boolean> = betaWebFetchTool20260309.deferLoading()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<Boolean> = betaWebSearchTool20260318.deferLoading()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<Boolean> = betaWebFetchTool20260318.deferLoading()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<Boolean> = betaAdvisorTool20260301.deferLoading()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<Boolean> = betaToolSearchToolBm25_20251119.deferLoading()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<Boolean> = betaToolSearchToolRegex20251119.deferLoading()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<Boolean> = Optional.empty()
+                }
+            )
+
+        fun strict(): Optional<Boolean> =
+            accept(
+                object : Visitor<Optional<Boolean>> {
+                    override fun visitBeta(beta: BetaTool): Optional<Boolean> = beta.strict()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<Boolean> = betaToolBash20241022.strict()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<Boolean> = betaToolBash20250124.strict()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<Boolean> = betaCodeExecutionTool20250522.strict()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<Boolean> = betaCodeExecutionTool20250825.strict()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<Boolean> = betaCodeExecutionTool20260120.strict()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<Boolean> = betaCodeExecutionTool20260521.strict()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<Boolean> = betaToolComputerUse20241022.strict()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<Boolean> = betaMemoryTool20250818.strict()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<Boolean> = betaToolComputerUse20250124.strict()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<Boolean> = betaToolTextEditor20241022.strict()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Boolean> = betaToolComputerUse20251124.strict()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<Boolean> = betaToolTextEditor20250124.strict()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<Boolean> = betaToolTextEditor20250429.strict()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<Boolean> = betaToolTextEditor20250728.strict()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<Boolean> = betaWebSearchTool20250305.strict()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<Boolean> = betaWebFetchTool20250910.strict()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<Boolean> = betaWebSearchTool20260209.strict()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<Boolean> = betaWebFetchTool20260209.strict()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<Boolean> = betaWebFetchTool20260309.strict()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<Boolean> = betaWebSearchTool20260318.strict()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<Boolean> = betaWebFetchTool20260318.strict()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<Boolean> = betaAdvisorTool20260301.strict()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<Boolean> = betaToolSearchToolBm25_20251119.strict()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<Boolean> = betaToolSearchToolRegex20251119.strict()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<Boolean> = Optional.empty()
+                }
+            )
+
+        fun displayHeightPx(): Optional<Long> =
+            accept(
+                object : Visitor<Optional<Long>> {
+                    override fun visitBeta(beta: BetaTool): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<Long> = Optional.of(betaToolComputerUse20241022.displayHeightPx())
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<Long> = Optional.of(betaToolComputerUse20250124.displayHeightPx())
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Long> = Optional.of(betaToolComputerUse20251124.displayHeightPx())
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<Long> = Optional.empty()
+                }
+            )
+
+        fun displayWidthPx(): Optional<Long> =
+            accept(
+                object : Visitor<Optional<Long>> {
+                    override fun visitBeta(beta: BetaTool): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<Long> = Optional.of(betaToolComputerUse20241022.displayWidthPx())
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<Long> = Optional.of(betaToolComputerUse20250124.displayWidthPx())
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Long> = Optional.of(betaToolComputerUse20251124.displayWidthPx())
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<Long> = Optional.empty()
+                }
+            )
+
+        fun displayNumber(): Optional<Long> =
+            accept(
+                object : Visitor<Optional<Long>> {
+                    override fun visitBeta(beta: BetaTool): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<Long> = betaToolComputerUse20241022.displayNumber()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<Long> = betaToolComputerUse20250124.displayNumber()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Long> = betaToolComputerUse20251124.displayNumber()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<Long> = Optional.empty()
+                }
+            )
+
+        fun allowedDomains(): Optional<List<String>> =
+            accept(
+                object : Visitor<Optional<List<String>>> {
+                    override fun visitBeta(beta: BetaTool): Optional<List<String>> =
+                        Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<List<String>> = betaWebSearchTool20250305.allowedDomains()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<List<String>> = betaWebFetchTool20250910.allowedDomains()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<List<String>> = betaWebSearchTool20260209.allowedDomains()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<List<String>> = betaWebFetchTool20260209.allowedDomains()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<List<String>> = betaWebFetchTool20260309.allowedDomains()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<List<String>> = betaWebSearchTool20260318.allowedDomains()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<List<String>> = betaWebFetchTool20260318.allowedDomains()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<List<String>> = Optional.empty()
+                }
+            )
+
+        fun blockedDomains(): Optional<List<String>> =
+            accept(
+                object : Visitor<Optional<List<String>>> {
+                    override fun visitBeta(beta: BetaTool): Optional<List<String>> =
+                        Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<List<String>> = betaWebSearchTool20250305.blockedDomains()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<List<String>> = betaWebFetchTool20250910.blockedDomains()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<List<String>> = betaWebSearchTool20260209.blockedDomains()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<List<String>> = betaWebFetchTool20260209.blockedDomains()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<List<String>> = betaWebFetchTool20260309.blockedDomains()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<List<String>> = betaWebSearchTool20260318.blockedDomains()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<List<String>> = betaWebFetchTool20260318.blockedDomains()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<List<String>> = Optional.empty()
+                }
+            )
+
+        fun maxUses(): Optional<Long> =
+            accept(
+                object : Visitor<Optional<Long>> {
+                    override fun visitBeta(beta: BetaTool): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<Long> = betaWebSearchTool20250305.maxUses()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<Long> = betaWebFetchTool20250910.maxUses()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<Long> = betaWebSearchTool20260209.maxUses()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<Long> = betaWebFetchTool20260209.maxUses()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<Long> = betaWebFetchTool20260309.maxUses()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<Long> = betaWebSearchTool20260318.maxUses()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<Long> = betaWebFetchTool20260318.maxUses()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<Long> = betaAdvisorTool20260301.maxUses()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<Long> = Optional.empty()
+                }
+            )
+
+        fun userLocation(): Optional<BetaUserLocation> =
+            accept(
+                object : Visitor<Optional<BetaUserLocation>> {
+                    override fun visitBeta(beta: BetaTool): Optional<BetaUserLocation> =
+                        Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<BetaUserLocation> = betaWebSearchTool20250305.userLocation()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<BetaUserLocation> = betaWebSearchTool20260209.userLocation()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<BetaUserLocation> = betaWebSearchTool20260318.userLocation()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<BetaUserLocation> = Optional.empty()
+                }
+            )
+
+        fun citations(): Optional<BetaCitationsConfigParam> =
+            accept(
+                object : Visitor<Optional<BetaCitationsConfigParam>> {
+                    override fun visitBeta(beta: BetaTool): Optional<BetaCitationsConfigParam> =
+                        Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<BetaCitationsConfigParam> = betaWebFetchTool20250910.citations()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<BetaCitationsConfigParam> = betaWebFetchTool20260209.citations()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<BetaCitationsConfigParam> = betaWebFetchTool20260309.citations()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<BetaCitationsConfigParam> = betaWebFetchTool20260318.citations()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+                }
+            )
+
+        fun maxContentTokens(): Optional<Long> =
+            accept(
+                object : Visitor<Optional<Long>> {
+                    override fun visitBeta(beta: BetaTool): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<Long> = betaWebFetchTool20250910.maxContentTokens()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<Long> = betaWebFetchTool20260209.maxContentTokens()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<Long> = betaWebFetchTool20260309.maxContentTokens()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<Long> = betaWebFetchTool20260318.maxContentTokens()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<Long> = Optional.empty()
+                }
+            )
+
+        fun useCache(): Optional<Boolean> =
+            accept(
+                object : Visitor<Optional<Boolean>> {
+                    override fun visitBeta(beta: BetaTool): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<Boolean> = betaWebFetchTool20260309.useCache()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<Boolean> = betaWebFetchTool20260318.useCache()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<Boolean> = Optional.empty()
+                }
+            )
+
         fun beta(): Optional<BetaTool> = Optional.ofNullable(beta)
 
         fun betaToolBash20241022(): Optional<BetaToolBash20241022> =

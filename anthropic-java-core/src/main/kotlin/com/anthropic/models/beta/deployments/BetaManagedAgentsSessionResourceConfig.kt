@@ -29,6 +29,23 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun mountPath(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitGitHubRepository(
+                    githubRepository: BetaManagedAgentsGitHubRepositoryResourceConfig
+                ): Optional<String> = githubRepository.mountPath()
+
+                override fun visitFile(
+                    file: BetaManagedAgentsFileResourceConfig
+                ): Optional<String> = file.mountPath()
+
+                override fun visitMemoryStore(
+                    memoryStore: BetaManagedAgentsMemoryStoreResourceConfig
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
     /**
      * A GitHub repository mounted into each session's container. The authorization token is
      * write-only and never returned.

@@ -46,6 +46,52 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    fun message(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitInvalidRequest(
+                    invalidRequest: BetaInvalidRequestError
+                ): Optional<String> = Optional.of(invalidRequest.message())
+
+                override fun visitAuthentication(
+                    authentication: BetaAuthenticationError
+                ): Optional<String> = Optional.of(authentication.message())
+
+                override fun visitBilling(billing: BetaBillingError): Optional<String> =
+                    Optional.of(billing.message())
+
+                override fun visitPermission(permission: BetaPermissionError): Optional<String> =
+                    Optional.of(permission.message())
+
+                override fun visitNotFound(notFound: BetaNotFoundError): Optional<String> =
+                    Optional.of(notFound.message())
+
+                override fun visitRateLimit(rateLimit: BetaRateLimitError): Optional<String> =
+                    Optional.of(rateLimit.message())
+
+                override fun visitTimeout(timeout: BetaGatewayTimeoutError): Optional<String> =
+                    Optional.of(timeout.message())
+
+                override fun visitApi(api: BetaApiError): Optional<String> =
+                    Optional.of(api.message())
+
+                override fun visitOverloaded(overloaded: BetaOverloadedError): Optional<String> =
+                    Optional.of(overloaded.message())
+
+                override fun visitMemoryPreconditionFailed(
+                    memoryPreconditionFailed: BetaManagedAgentsMemoryPreconditionFailedError
+                ): Optional<String> = memoryPreconditionFailed.message()
+
+                override fun visitMemoryPathConflict(
+                    memoryPathConflict: BetaManagedAgentsMemoryPathConflictError
+                ): Optional<String> = memoryPathConflict.message()
+
+                override fun visitConflict(
+                    conflict: BetaManagedAgentsConflictError
+                ): Optional<String> = conflict.message()
+            }
+        )
+
     fun invalidRequest(): Optional<BetaInvalidRequestError> = Optional.ofNullable(invalidRequest)
 
     fun authentication(): Optional<BetaAuthenticationError> = Optional.ofNullable(authentication)
