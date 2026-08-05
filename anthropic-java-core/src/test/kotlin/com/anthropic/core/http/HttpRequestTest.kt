@@ -197,6 +197,26 @@ internal class HttpRequestTest {
             expectedUrl =
                 "https://api.example.com/v1/users/123?include=profile&include=settings&format=json",
         ),
+        PATH_SEGMENT_WITH_SPACE(
+            HttpRequest.builder()
+                .method(HttpMethod.GET)
+                .baseUrl("https://api.example.com")
+                .addPathSegments("v1", "models", "a b")
+                .build(),
+            // A path segment is not form-encoded, so a space is "%20". "+" would address a
+            // resource whose name contains a literal plus.
+            expectedUrl = "https://api.example.com/v1/models/a%20b",
+        ),
+        PATH_SEGMENT_WITH_RESERVED_CHARS(
+            HttpRequest.builder()
+                .method(HttpMethod.GET)
+                .baseUrl("https://api.example.com")
+                .addPathSegments("v1", "models", "a/b@c")
+                .build(),
+            // Guards against loosening: a segment must never be able to introduce a new path
+            // segment or a userinfo component.
+            expectedUrl = "https://api.example.com/v1/models/a%2Fb%40c",
+        ),
     }
 
     @ParameterizedTest
@@ -206,4 +226,5 @@ internal class HttpRequestTest {
 
         assertThat(actualUrl).isEqualTo(testCase.expectedUrl)
     }
+
 }

@@ -23,7 +23,7 @@ private constructor(
             if (!endsWith("/")) {
                 append("/")
             }
-            append(URLEncoder.encode(segment, "UTF-8"))
+            append(encodePathSegment(segment))
         }
 
         if (queryParams.isEmpty()) {
@@ -63,6 +63,20 @@ private constructor(
 
     companion object {
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Encodes one path segment.
+         *
+         * [URLEncoder] implements `application/x-www-form-urlencoded`, which is the right encoding
+         * for a query string but differs from an RFC 3986 path segment in one way that reaches the
+         * wire: a space becomes `+`, which a path reader sees as a literal plus rather than as a
+         * space, so `"a b"` currently addresses a resource named `a+b`.
+         *
+         * Query parameter encoding is deliberately left alone, since `URLEncoder` is correct there.
+         */
+        private fun encodePathSegment(segment: String): String {
+            return URLEncoder.encode(segment, "UTF-8").replace("+", "%20")
+        }
     }
 
     class Builder internal constructor() {
