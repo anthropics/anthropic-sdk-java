@@ -68,13 +68,23 @@ private constructor(
          * Encodes one path segment.
          *
          * [URLEncoder] implements `application/x-www-form-urlencoded`, which is the right encoding
-         * for a query string but differs from an RFC 3986 path segment in one way that reaches the
-         * wire: a space becomes `+`, which a path reader sees as a literal plus rather than as a
-         * space, so `"a b"` currently addresses a resource named `a+b`.
+         * for a query string but differs from an RFC 3986 path segment in two ways that reach the
+         * wire:
+         * - A space becomes `+`, which a path reader sees as a literal plus rather than as a space,
+         *   so `"a b"` addresses a resource named `a+b`.
+         * - `.` is in its safe set, so a segment of `"."` or `".."` passes through unencoded and URI
+         *   normalization then resolves it away, changing which path the request is sent to. A
+         *   parameter identifies a resource; it should not be able to move the request. These are
+         *   rejected rather than encoded, matching the Python SDK, whose `path_template` raises for
+         *   dot-segments, and the TypeScript SDK, whose `path` tagged template throws.
          *
          * Query parameter encoding is deliberately left alone, since `URLEncoder` is correct there.
          */
         private fun encodePathSegment(segment: String): String {
+            require(segment != "." && segment != "..") {
+                "Path segment must not be \".\" or \"..\", but got \"$segment\". Such a segment is " +
+                    "resolved away by URI normalization and would change the request's path."
+            }
             return URLEncoder.encode(segment, "UTF-8").replace("+", "%20")
         }
     }

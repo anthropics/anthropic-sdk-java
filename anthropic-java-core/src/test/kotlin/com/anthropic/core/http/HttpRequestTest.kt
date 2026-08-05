@@ -2,9 +2,11 @@ package com.anthropic.core.http
 
 import java.io.OutputStream
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class HttpRequestTest {
 
@@ -227,4 +229,20 @@ internal class HttpRequestTest {
         assertThat(actualUrl).isEqualTo(testCase.expectedUrl)
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = [".", ".."])
+    fun urlRejectsDotSegments(segment: String) {
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.GET)
+                .baseUrl("https://api.example.com")
+                .addPathSegments("v1", "messages", segment, "results")
+                .build()
+
+        // Without this, URI normalization resolves the segment away and the request is sent to
+        // "https://api.example.com/v1/messages/results" instead.
+        assertThatThrownBy { request.url() }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessageContaining(segment)
+    }
 }
