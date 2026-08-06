@@ -77,6 +77,12 @@ internal constructor(
     /** @see BetaContentBlock.compaction */
     fun compaction(): Optional<BetaCompactionBlock> = rawContentBlock.compaction()
 
+    /** @see BetaContentBlock.id */
+    fun id(): Optional<String> = rawContentBlock.id()
+
+    /** @see BetaContentBlock.toolUseId */
+    fun toolUseId(): Optional<String> = rawContentBlock.toolUseId()
+
     /** @see BetaContentBlock.fallback */
     fun fallback(): Optional<BetaFallbackBlock> = rawContentBlock.fallback()
 
