@@ -5,6 +5,8 @@ package com.anthropic.models.beta.sessions
 import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.BetaCurrency
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import kotlin.jvm.optionals.getOrNull
@@ -19,6 +21,17 @@ internal class SessionCreateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .agent("agent_011CZkYpogX7uDKUyvBTophP")
             .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
+            .budget(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .maxListCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .build()
+            )
             .addUserMessageInitialEvent(
                 listOf(
                     BetaManagedAgentsUserMessageEventParams.Content.ofText(
@@ -53,6 +66,17 @@ internal class SessionCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .agent("agent_011CZkYpogX7uDKUyvBTophP")
                 .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
+                .budget(
+                    BetaManagedAgentsBudgetLimit.builder()
+                        .maxListCost(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                        .build()
+                )
                 .addUserMessageInitialEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
@@ -107,6 +131,17 @@ internal class SessionCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .agent("agent_011CZkYpogX7uDKUyvBTophP")
                 .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
+                .budget(
+                    BetaManagedAgentsBudgetLimit.builder()
+                        .maxListCost(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                        .build()
+                )
                 .addUserMessageInitialEvent(
                     listOf(
                         BetaManagedAgentsUserMessageEventParams.Content.ofText(
@@ -138,6 +173,18 @@ internal class SessionCreateParamsTest {
         assertThat(body.agent())
             .isEqualTo(SessionCreateParams.Agent.ofString("agent_011CZkYpogX7uDKUyvBTophP"))
         assertThat(body.environmentId()).isEqualTo("env_011CZkZ9X2dpNyB7HsEFoRfW")
+        assertThat(body.budget())
+            .contains(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .maxListCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .build()
+            )
         assertThat(body.initialEvents().getOrNull())
             .containsExactly(
                 SessionCreateParams.InitialEvent.ofUserMessage(

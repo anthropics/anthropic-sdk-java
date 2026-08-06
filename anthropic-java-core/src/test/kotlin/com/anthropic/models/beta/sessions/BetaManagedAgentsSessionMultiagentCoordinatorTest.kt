@@ -43,6 +43,7 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                                         .type(BetaManagedAgentsEffortLow.Type.LOW)
                                         .build()
                                 )
+                                .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
@@ -100,69 +101,78 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
 
         assertThat(betaManagedAgentsSessionMultiagentCoordinator.agents())
             .containsExactly(
-                BetaManagedAgentsSessionThreadAgent.builder()
-                    .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                    .description("A focused research subagent.")
-                    .addMcpServer(
-                        BetaManagedAgentsMcpServerUrlDefinition.builder()
-                            .name("example-mcp")
-                            .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
-                            .url("https://example-server.modelcontextprotocol.io/sse")
-                            .build()
-                    )
-                    .model(
-                        BetaManagedAgentsModelConfig.builder()
-                            .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
-                            .effort(
-                                BetaManagedAgentsEffortLow.builder()
-                                    .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                    .build()
-                            )
-                            .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
-                            .build()
-                    )
-                    .name("Researcher")
-                    .addSkill(
-                        BetaManagedAgentsAnthropicSkill.builder()
-                            .skillId("xlsx")
-                            .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
-                            .version("1")
-                            .build()
-                    )
-                    .system(
-                        "You are a research subagent that gathers and summarises sources for the coordinating agent."
-                    )
-                    .addTool(
-                        BetaManagedAgentsAgentToolset20260401.builder()
-                            .addConfig(
-                                BetaManagedAgentsAgentToolConfig.builder()
-                                    .enabled(true)
-                                    .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
-                                    .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                            .type(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                            .defaultConfig(
-                                BetaManagedAgentsAgentToolsetDefaultConfig.builder()
-                                    .enabled(true)
-                                    .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAskPolicy.builder()
-                                            .type(BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK)
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsAgentToolset20260401.Type.AGENT_TOOLSET_20260401)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
-                    .version(1)
-                    .build()
+                BetaManagedAgentsSessionMultiagentCoordinator.Agent.ofAgent(
+                    BetaManagedAgentsSessionThreadAgent.builder()
+                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                        .description("A focused research subagent.")
+                        .addMcpServer(
+                            BetaManagedAgentsMcpServerUrlDefinition.builder()
+                                .name("example-mcp")
+                                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
+                                .url("https://example-server.modelcontextprotocol.io/sse")
+                                .build()
+                        )
+                        .model(
+                            BetaManagedAgentsModelConfig.builder()
+                                .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                .effort(
+                                    BetaManagedAgentsEffortLow.builder()
+                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
+                                        .build()
+                                )
+                                .inferenceGeo("inference_geo")
+                                .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
+                                .build()
+                        )
+                        .name("Researcher")
+                        .addSkill(
+                            BetaManagedAgentsAnthropicSkill.builder()
+                                .skillId("xlsx")
+                                .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
+                                .version("1")
+                                .build()
+                        )
+                        .system(
+                            "You are a research subagent that gathers and summarises sources for the coordinating agent."
+                        )
+                        .addTool(
+                            BetaManagedAgentsAgentToolset20260401.builder()
+                                .addConfig(
+                                    BetaManagedAgentsAgentToolConfig.builder()
+                                        .enabled(true)
+                                        .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
+                                        .permissionPolicy(
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                                .type(
+                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                        .ALWAYS_ALLOW
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .defaultConfig(
+                                    BetaManagedAgentsAgentToolsetDefaultConfig.builder()
+                                        .enabled(true)
+                                        .permissionPolicy(
+                                            BetaManagedAgentsAlwaysAskPolicy.builder()
+                                                .type(
+                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .type(
+                                    BetaManagedAgentsAgentToolset20260401.Type
+                                        .AGENT_TOOLSET_20260401
+                                )
+                                .build()
+                        )
+                        .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
+                        .version(1)
+                        .build()
+                )
             )
         assertThat(betaManagedAgentsSessionMultiagentCoordinator.type())
             .isEqualTo(BetaManagedAgentsSessionMultiagentCoordinator.Type.COORDINATOR)
@@ -192,6 +202,7 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                                         .type(BetaManagedAgentsEffortLow.Type.LOW)
                                         .build()
                                 )
+                                .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )

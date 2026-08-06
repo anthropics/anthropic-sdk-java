@@ -7,7 +7,9 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.sessions.BetaManagedAgentsCacheCreationUsage
+import com.anthropic.models.beta.sessions.BetaManagedAgentsServerToolUsage
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -21,15 +23,21 @@ import kotlin.jvm.optionals.getOrNull
 class BetaManagedAgentsSessionThreadUsage
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val activeSeconds: JsonField<Double>,
     private val cacheCreation: JsonField<BetaManagedAgentsCacheCreationUsage>,
     private val cacheReadInputTokens: JsonField<Int>,
     private val inputTokens: JsonField<Int>,
+    private val listCost: JsonField<BetaMonetaryAmount>,
     private val outputTokens: JsonField<Int>,
+    private val serverToolUse: JsonField<BetaManagedAgentsServerToolUsage>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
+        @JsonProperty("active_seconds")
+        @ExcludeMissing
+        activeSeconds: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("cache_creation")
         @ExcludeMissing
         cacheCreation: JsonField<BetaManagedAgentsCacheCreationUsage> = JsonMissing.of(),
@@ -39,10 +47,35 @@ private constructor(
         @JsonProperty("input_tokens")
         @ExcludeMissing
         inputTokens: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("list_cost")
+        @ExcludeMissing
+        listCost: JsonField<BetaMonetaryAmount> = JsonMissing.of(),
         @JsonProperty("output_tokens")
         @ExcludeMissing
         outputTokens: JsonField<Int> = JsonMissing.of(),
-    ) : this(cacheCreation, cacheReadInputTokens, inputTokens, outputTokens, mutableMapOf())
+        @JsonProperty("server_tool_use")
+        @ExcludeMissing
+        serverToolUse: JsonField<BetaManagedAgentsServerToolUsage> = JsonMissing.of(),
+    ) : this(
+        activeSeconds,
+        cacheCreation,
+        cacheReadInputTokens,
+        inputTokens,
+        listCost,
+        outputTokens,
+        serverToolUse,
+        mutableMapOf(),
+    )
+
+    /**
+     * Cumulative time in seconds this thread spent in running status. Equal to
+     * `stats.active_seconds`; surfaced here so a thread's usage carries every quantity its cost is
+     * priced on.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun activeSeconds(): Optional<Double> = activeSeconds.getOptional("active_seconds")
 
     /**
      * Prompt-cache creation token usage broken down by cache lifetime.
@@ -71,12 +104,38 @@ private constructor(
     fun inputTokens(): Optional<Int> = inputTokens.getOptional("input_tokens")
 
     /**
+     * A monetary amount in a specific currency.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun listCost(): Optional<BetaMonetaryAmount> = listCost.getOptional("list_cost")
+
+    /**
      * Total output tokens generated across all turns.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun outputTokens(): Optional<Int> = outputTokens.getOptional("output_tokens")
+
+    /**
+     * Cumulative count of server-executed tool invocations, broken down by tool.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun serverToolUse(): Optional<BetaManagedAgentsServerToolUsage> =
+        serverToolUse.getOptional("server_tool_use")
+
+    /**
+     * Returns the raw JSON value of [activeSeconds].
+     *
+     * Unlike [activeSeconds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("active_seconds")
+    @ExcludeMissing
+    fun _activeSeconds(): JsonField<Double> = activeSeconds
 
     /**
      * Returns the raw JSON value of [cacheCreation].
@@ -105,6 +164,15 @@ private constructor(
     @JsonProperty("input_tokens") @ExcludeMissing fun _inputTokens(): JsonField<Int> = inputTokens
 
     /**
+     * Returns the raw JSON value of [listCost].
+     *
+     * Unlike [listCost], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("list_cost")
+    @ExcludeMissing
+    fun _listCost(): JsonField<BetaMonetaryAmount> = listCost
+
+    /**
      * Returns the raw JSON value of [outputTokens].
      *
      * Unlike [outputTokens], this method doesn't throw if the JSON field has an unexpected type.
@@ -112,6 +180,15 @@ private constructor(
     @JsonProperty("output_tokens")
     @ExcludeMissing
     fun _outputTokens(): JsonField<Int> = outputTokens
+
+    /**
+     * Returns the raw JSON value of [serverToolUse].
+     *
+     * Unlike [serverToolUse], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("server_tool_use")
+    @ExcludeMissing
+    fun _serverToolUse(): JsonField<BetaManagedAgentsServerToolUsage> = serverToolUse
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -137,22 +214,46 @@ private constructor(
     /** A builder for [BetaManagedAgentsSessionThreadUsage]. */
     class Builder internal constructor() {
 
+        private var activeSeconds: JsonField<Double> = JsonMissing.of()
         private var cacheCreation: JsonField<BetaManagedAgentsCacheCreationUsage> = JsonMissing.of()
         private var cacheReadInputTokens: JsonField<Int> = JsonMissing.of()
         private var inputTokens: JsonField<Int> = JsonMissing.of()
+        private var listCost: JsonField<BetaMonetaryAmount> = JsonMissing.of()
         private var outputTokens: JsonField<Int> = JsonMissing.of()
+        private var serverToolUse: JsonField<BetaManagedAgentsServerToolUsage> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(
             betaManagedAgentsSessionThreadUsage: BetaManagedAgentsSessionThreadUsage
         ) = apply {
+            activeSeconds = betaManagedAgentsSessionThreadUsage.activeSeconds
             cacheCreation = betaManagedAgentsSessionThreadUsage.cacheCreation
             cacheReadInputTokens = betaManagedAgentsSessionThreadUsage.cacheReadInputTokens
             inputTokens = betaManagedAgentsSessionThreadUsage.inputTokens
+            listCost = betaManagedAgentsSessionThreadUsage.listCost
             outputTokens = betaManagedAgentsSessionThreadUsage.outputTokens
+            serverToolUse = betaManagedAgentsSessionThreadUsage.serverToolUse
             additionalProperties =
                 betaManagedAgentsSessionThreadUsage.additionalProperties.toMutableMap()
+        }
+
+        /**
+         * Cumulative time in seconds this thread spent in running status. Equal to
+         * `stats.active_seconds`; surfaced here so a thread's usage carries every quantity its cost
+         * is priced on.
+         */
+        fun activeSeconds(activeSeconds: Double) = activeSeconds(JsonField.of(activeSeconds))
+
+        /**
+         * Sets [Builder.activeSeconds] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.activeSeconds] with a well-typed [Double] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun activeSeconds(activeSeconds: JsonField<Double>) = apply {
+            this.activeSeconds = activeSeconds
         }
 
         /** Prompt-cache creation token usage broken down by cache lifetime. */
@@ -196,6 +297,21 @@ private constructor(
          */
         fun inputTokens(inputTokens: JsonField<Int>) = apply { this.inputTokens = inputTokens }
 
+        /** A monetary amount in a specific currency. */
+        fun listCost(listCost: BetaMonetaryAmount?) = listCost(JsonField.ofNullable(listCost))
+
+        /** Alias for calling [Builder.listCost] with `listCost.orElse(null)`. */
+        fun listCost(listCost: Optional<BetaMonetaryAmount>) = listCost(listCost.getOrNull())
+
+        /**
+         * Sets [Builder.listCost] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.listCost] with a well-typed [BetaMonetaryAmount] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun listCost(listCost: JsonField<BetaMonetaryAmount>) = apply { this.listCost = listCost }
+
         /** Total output tokens generated across all turns. */
         fun outputTokens(outputTokens: Int) = outputTokens(JsonField.of(outputTokens))
 
@@ -207,6 +323,25 @@ private constructor(
          * value.
          */
         fun outputTokens(outputTokens: JsonField<Int>) = apply { this.outputTokens = outputTokens }
+
+        /** Cumulative count of server-executed tool invocations, broken down by tool. */
+        fun serverToolUse(serverToolUse: BetaManagedAgentsServerToolUsage?) =
+            serverToolUse(JsonField.ofNullable(serverToolUse))
+
+        /** Alias for calling [Builder.serverToolUse] with `serverToolUse.orElse(null)`. */
+        fun serverToolUse(serverToolUse: Optional<BetaManagedAgentsServerToolUsage>) =
+            serverToolUse(serverToolUse.getOrNull())
+
+        /**
+         * Sets [Builder.serverToolUse] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.serverToolUse] with a well-typed
+         * [BetaManagedAgentsServerToolUsage] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun serverToolUse(serverToolUse: JsonField<BetaManagedAgentsServerToolUsage>) = apply {
+            this.serverToolUse = serverToolUse
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -234,10 +369,13 @@ private constructor(
          */
         fun build(): BetaManagedAgentsSessionThreadUsage =
             BetaManagedAgentsSessionThreadUsage(
+                activeSeconds,
                 cacheCreation,
                 cacheReadInputTokens,
                 inputTokens,
+                listCost,
                 outputTokens,
+                serverToolUse,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -257,10 +395,13 @@ private constructor(
             return@apply
         }
 
+        activeSeconds()
         cacheCreation().ifPresent { it.validate() }
         cacheReadInputTokens()
         inputTokens()
+        listCost().ifPresent { it.validate() }
         outputTokens()
+        serverToolUse().ifPresent { it.validate() }
         validated = true
     }
 
@@ -279,10 +420,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (cacheCreation.asKnown().getOrNull()?.validity() ?: 0) +
+        (if (activeSeconds.asKnown().isPresent) 1 else 0) +
+            (cacheCreation.asKnown().getOrNull()?.validity() ?: 0) +
             (if (cacheReadInputTokens.asKnown().isPresent) 1 else 0) +
             (if (inputTokens.asKnown().isPresent) 1 else 0) +
-            (if (outputTokens.asKnown().isPresent) 1 else 0)
+            (listCost.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (outputTokens.asKnown().isPresent) 1 else 0) +
+            (serverToolUse.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -290,19 +434,25 @@ private constructor(
         }
 
         return other is BetaManagedAgentsSessionThreadUsage &&
+            activeSeconds == other.activeSeconds &&
             cacheCreation == other.cacheCreation &&
             cacheReadInputTokens == other.cacheReadInputTokens &&
             inputTokens == other.inputTokens &&
+            listCost == other.listCost &&
             outputTokens == other.outputTokens &&
+            serverToolUse == other.serverToolUse &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
         Objects.hash(
+            activeSeconds,
             cacheCreation,
             cacheReadInputTokens,
             inputTokens,
+            listCost,
             outputTokens,
+            serverToolUse,
             additionalProperties,
         )
     }
@@ -310,5 +460,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsSessionThreadUsage{cacheCreation=$cacheCreation, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, outputTokens=$outputTokens, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsSessionThreadUsage{activeSeconds=$activeSeconds, cacheCreation=$cacheCreation, cacheReadInputTokens=$cacheReadInputTokens, inputTokens=$inputTokens, listCost=$listCost, outputTokens=$outputTokens, serverToolUse=$serverToolUse, additionalProperties=$additionalProperties}"
 }

@@ -67,6 +67,7 @@ private constructor(
     private val memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData? = null,
     private val memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData? = null,
     private val memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData? = null,
+    private val sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -244,6 +245,10 @@ private constructor(
                 override fun visitMemoryStoreDeleted(
                     memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
                 ): String = memoryStoreDeleted.id()
+
+                override fun visitSessionBudgetReached(
+                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
+                ): String = sessionBudgetReached.id()
             }
         )
 
@@ -421,6 +426,10 @@ private constructor(
                 override fun visitMemoryStoreDeleted(
                     memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
                 ): String = memoryStoreDeleted.organizationId()
+
+                override fun visitSessionBudgetReached(
+                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
+                ): String = sessionBudgetReached.organizationId()
             }
         )
 
@@ -598,6 +607,10 @@ private constructor(
                 override fun visitMemoryStoreDeleted(
                     memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
                 ): String = memoryStoreDeleted.workspaceId()
+
+                override fun visitSessionBudgetReached(
+                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
+                ): String = sessionBudgetReached.workspaceId()
             }
         )
 
@@ -774,6 +787,10 @@ private constructor(
 
                 override fun visitMemoryStoreDeleted(
                     memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionBudgetReached(
+                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
                 ): Optional<String> = Optional.empty()
             }
         )
@@ -952,6 +969,10 @@ private constructor(
                 override fun visitMemoryStoreDeleted(
                     memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
                 ): Optional<String> = Optional.empty()
+
+                override fun visitSessionBudgetReached(
+                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
+                ): Optional<String> = Optional.empty()
             }
         )
 
@@ -1085,6 +1106,9 @@ private constructor(
     fun memoryStoreDeleted(): Optional<BetaWebhookMemoryStoreDeletedEventData> =
         Optional.ofNullable(memoryStoreDeleted)
 
+    fun sessionBudgetReached(): Optional<BetaWebhookSessionBudgetReachedEventData> =
+        Optional.ofNullable(sessionBudgetReached)
+
     fun isSessionCreated(): Boolean = sessionCreated != null
 
     fun isSessionPending(): Boolean = sessionPending != null
@@ -1170,6 +1194,8 @@ private constructor(
     fun isMemoryStoreArchived(): Boolean = memoryStoreArchived != null
 
     fun isMemoryStoreDeleted(): Boolean = memoryStoreDeleted != null
+
+    fun isSessionBudgetReached(): Boolean = sessionBudgetReached != null
 
     fun asSessionCreated(): BetaWebhookSessionCreatedEventData =
         sessionCreated.getOrThrow("sessionCreated")
@@ -1294,6 +1320,9 @@ private constructor(
     fun asMemoryStoreDeleted(): BetaWebhookMemoryStoreDeletedEventData =
         memoryStoreDeleted.getOrThrow("memoryStoreDeleted")
 
+    fun asSessionBudgetReached(): BetaWebhookSessionBudgetReachedEventData =
+        sessionBudgetReached.getOrThrow("sessionBudgetReached")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -1381,6 +1410,7 @@ private constructor(
             memoryStoreCreated != null -> visitor.visitMemoryStoreCreated(memoryStoreCreated)
             memoryStoreArchived != null -> visitor.visitMemoryStoreArchived(memoryStoreArchived)
             memoryStoreDeleted != null -> visitor.visitMemoryStoreDeleted(memoryStoreDeleted)
+            sessionBudgetReached != null -> visitor.visitSessionBudgetReached(sessionBudgetReached)
             else -> visitor.unknown(_json)
         }
 
@@ -1642,6 +1672,12 @@ private constructor(
                 ) {
                     memoryStoreDeleted.validate()
                 }
+
+                override fun visitSessionBudgetReached(
+                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
+                ) {
+                    sessionBudgetReached.validate()
+                }
             }
         )
         validated = true
@@ -1828,6 +1864,10 @@ private constructor(
                     memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
                 ) = memoryStoreDeleted.validity()
 
+                override fun visitSessionBudgetReached(
+                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
+                ) = sessionBudgetReached.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -1880,7 +1920,8 @@ private constructor(
             environmentDeleted == other.environmentDeleted &&
             memoryStoreCreated == other.memoryStoreCreated &&
             memoryStoreArchived == other.memoryStoreArchived &&
-            memoryStoreDeleted == other.memoryStoreDeleted
+            memoryStoreDeleted == other.memoryStoreDeleted &&
+            sessionBudgetReached == other.sessionBudgetReached
     }
 
     override fun hashCode(): Int =
@@ -1928,6 +1969,7 @@ private constructor(
             memoryStoreCreated,
             memoryStoreArchived,
             memoryStoreDeleted,
+            sessionBudgetReached,
         )
 
     override fun toString(): String =
@@ -2003,6 +2045,8 @@ private constructor(
                 "BetaWebhookEventData{memoryStoreArchived=$memoryStoreArchived}"
             memoryStoreDeleted != null ->
                 "BetaWebhookEventData{memoryStoreDeleted=$memoryStoreDeleted}"
+            sessionBudgetReached != null ->
+                "BetaWebhookEventData{sessionBudgetReached=$sessionBudgetReached}"
             _json != null -> "BetaWebhookEventData{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaWebhookEventData")
         }
@@ -2191,6 +2235,10 @@ private constructor(
         @JvmStatic
         fun ofMemoryStoreDeleted(memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData) =
             BetaWebhookEventData(memoryStoreDeleted = memoryStoreDeleted)
+
+        @JvmStatic
+        fun ofSessionBudgetReached(sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData) =
+            BetaWebhookEventData(sessionBudgetReached = sessionBudgetReached)
     }
 
     /**
@@ -2316,6 +2364,10 @@ private constructor(
         ): T
 
         fun visitMemoryStoreDeleted(memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData): T
+
+        fun visitSessionBudgetReached(
+            sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
+        ): T
 
         /**
          * Maps an unknown variant of [BetaWebhookEventData] to a value of type [T].
@@ -2662,6 +2714,14 @@ private constructor(
                         ?.let { BetaWebhookEventData(memoryStoreDeleted = it, _json = json) }
                         ?: BetaWebhookEventData(_json = json)
                 }
+                "session.budget_reached" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaWebhookSessionBudgetReachedEventData>(),
+                        )
+                        ?.let { BetaWebhookEventData(sessionBudgetReached = it, _json = json) }
+                        ?: BetaWebhookEventData(_json = json)
+                }
             }
 
             return BetaWebhookEventData(_json = json)
@@ -2735,6 +2795,8 @@ private constructor(
                 value.memoryStoreArchived != null ->
                     generator.writeObject(value.memoryStoreArchived)
                 value.memoryStoreDeleted != null -> generator.writeObject(value.memoryStoreDeleted)
+                value.sessionBudgetReached != null ->
+                    generator.writeObject(value.sessionBudgetReached)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaWebhookEventData")
             }

@@ -2,6 +2,8 @@
 
 package com.anthropic.models.beta.sessions
 
+import com.anthropic.core.BaseDeserializer
+import com.anthropic.core.BaseSerializer
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -9,31 +11,39 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
+import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.agents.BetaManagedAgentsAdvisor
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentReference
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.ObjectCodec
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Resolved coordinator topology with a concrete agent roster. */
 class BetaManagedAgentsMultiagent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val agents: JsonField<List<BetaManagedAgentsAgentReference>>,
+    private val agents: JsonField<List<Agent>>,
     private val type: JsonField<Type>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("agents")
-        @ExcludeMissing
-        agents: JsonField<List<BetaManagedAgentsAgentReference>> = JsonMissing.of(),
+        @JsonProperty("agents") @ExcludeMissing agents: JsonField<List<Agent>> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
     ) : this(agents, type, mutableMapOf())
 
@@ -43,7 +53,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun agents(): List<BetaManagedAgentsAgentReference> = agents.getRequired("agents")
+    fun agents(): List<Agent> = agents.getRequired("agents")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -56,9 +66,7 @@ private constructor(
      *
      * Unlike [agents], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("agents")
-    @ExcludeMissing
-    fun _agents(): JsonField<List<BetaManagedAgentsAgentReference>> = agents
+    @JsonProperty("agents") @ExcludeMissing fun _agents(): JsonField<List<Agent>> = agents
 
     /**
      * Returns the raw JSON value of [type].
@@ -96,7 +104,7 @@ private constructor(
     /** A builder for [BetaManagedAgentsMultiagent]. */
     class Builder internal constructor() {
 
-        private var agents: JsonField<MutableList<BetaManagedAgentsAgentReference>>? = null
+        private var agents: JsonField<MutableList<Agent>>? = null
         private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -113,30 +121,53 @@ private constructor(
         /**
          * Agents the coordinator may spawn as session threads, each resolved to a specific version.
          */
-        fun agents(agents: List<BetaManagedAgentsAgentReference>) = agents(JsonField.of(agents))
+        fun agents(agents: List<Agent>) = agents(JsonField.of(agents))
 
         /**
          * Sets [Builder.agents] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.agents] with a well-typed
-         * `List<BetaManagedAgentsAgentReference>` value instead. This method is primarily for
-         * setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.agents] with a well-typed `List<Agent>` value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun agents(agents: JsonField<List<BetaManagedAgentsAgentReference>>) = apply {
+        fun agents(agents: JsonField<List<Agent>>) = apply {
             this.agents = agents.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [BetaManagedAgentsAgentReference] to [agents].
+         * Adds a single [Agent] to [agents].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addAgent(agent: BetaManagedAgentsAgentReference) = apply {
+        fun addAgent(agent: Agent) = apply {
             agents =
                 (agents ?: JsonField.of(mutableListOf())).also {
                     checkKnown("agents", it).add(agent)
                 }
         }
+
+        /** Alias for calling [addAgent] with `Agent.ofAgent(agent)`. */
+        fun addAgent(agent: BetaManagedAgentsAgentReference) = addAgent(Agent.ofAgent(agent))
+
+        /** Alias for calling [addAgent] with `Agent.ofAdvisor(advisor)`. */
+        fun addAgent(advisor: BetaManagedAgentsAdvisor) = addAgent(Agent.ofAdvisor(advisor))
+
+        /**
+         * Alias for calling [addAgent] with the following:
+         * ```java
+         * BetaManagedAgentsAdvisor.builder()
+         *     .type(BetaManagedAgentsAdvisor.Type.ADVISOR)
+         *     .model(model)
+         *     .build()
+         * ```
+         */
+        fun addAdvisorAgent(model: String) =
+            addAgent(
+                BetaManagedAgentsAdvisor.builder()
+                    .type(BetaManagedAgentsAdvisor.Type.ADVISOR)
+                    .model(model)
+                    .build()
+            )
 
         fun type(type: Type) = type(JsonField.of(type))
 
@@ -225,6 +256,230 @@ private constructor(
     internal fun validity(): Int =
         (agents.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
+
+    /** A resolved multiagent roster entry. */
+    @JsonDeserialize(using = Agent.Deserializer::class)
+    @JsonSerialize(using = Agent.Serializer::class)
+    class Agent
+    private constructor(
+        private val agent: BetaManagedAgentsAgentReference? = null,
+        private val advisor: BetaManagedAgentsAdvisor? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        /** A resolved agent reference with a concrete version. */
+        fun agent(): Optional<BetaManagedAgentsAgentReference> = Optional.ofNullable(agent)
+
+        /**
+         * Platform advisor roster entry: a model the session's primary thread may consult mid-turn.
+         */
+        fun advisor(): Optional<BetaManagedAgentsAdvisor> = Optional.ofNullable(advisor)
+
+        fun isAgent(): Boolean = agent != null
+
+        fun isAdvisor(): Boolean = advisor != null
+
+        /** A resolved agent reference with a concrete version. */
+        fun asAgent(): BetaManagedAgentsAgentReference = agent.getOrThrow("agent")
+
+        /**
+         * Platform advisor roster entry: a model the session's primary thread may consult mid-turn.
+         */
+        fun asAdvisor(): BetaManagedAgentsAdvisor = advisor.getOrThrow("advisor")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import com.anthropic.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = agent.accept(new Agent.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitAgent(BetaManagedAgentsAgentReference agent) {
+         *         return Optional.of(agent.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws AnthropicInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                agent != null -> visitor.visitAgent(agent)
+                advisor != null -> visitor.visitAdvisor(advisor)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Agent = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitAgent(agent: BetaManagedAgentsAgentReference) {
+                        agent.validate()
+                    }
+
+                    override fun visitAdvisor(advisor: BetaManagedAgentsAdvisor) {
+                        advisor.validate()
+                    }
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitAgent(agent: BetaManagedAgentsAgentReference) =
+                        agent.validity()
+
+                    override fun visitAdvisor(advisor: BetaManagedAgentsAdvisor) =
+                        advisor.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Agent && agent == other.agent && advisor == other.advisor
+        }
+
+        override fun hashCode(): Int = Objects.hash(agent, advisor)
+
+        override fun toString(): String =
+            when {
+                agent != null -> "Agent{agent=$agent}"
+                advisor != null -> "Agent{advisor=$advisor}"
+                _json != null -> "Agent{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Agent")
+            }
+
+        companion object {
+
+            /** A resolved agent reference with a concrete version. */
+            @JvmStatic fun ofAgent(agent: BetaManagedAgentsAgentReference) = Agent(agent = agent)
+
+            /**
+             * Platform advisor roster entry: a model the session's primary thread may consult
+             * mid-turn.
+             */
+            @JvmStatic fun ofAdvisor(advisor: BetaManagedAgentsAdvisor) = Agent(advisor = advisor)
+        }
+
+        /** An interface that defines how to map each variant of [Agent] to a value of type [T]. */
+        interface Visitor<out T> {
+
+            /** A resolved agent reference with a concrete version. */
+            fun visitAgent(agent: BetaManagedAgentsAgentReference): T
+
+            /**
+             * Platform advisor roster entry: a model the session's primary thread may consult
+             * mid-turn.
+             */
+            fun visitAdvisor(advisor: BetaManagedAgentsAdvisor): T
+
+            /**
+             * Maps an unknown variant of [Agent] to a value of type [T].
+             *
+             * An instance of [Agent] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown Agent: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<Agent>(Agent::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): Agent {
+                val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+
+                when (type) {
+                    "agent" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsAgentReference>(),
+                            )
+                            ?.let { Agent(agent = it, _json = json) } ?: Agent(_json = json)
+                    }
+                    "advisor" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsAdvisor>())
+                            ?.let { Agent(advisor = it, _json = json) } ?: Agent(_json = json)
+                    }
+                }
+
+                return Agent(_json = json)
+            }
+        }
+
+        internal class Serializer : BaseSerializer<Agent>(Agent::class) {
+
+            override fun serialize(
+                value: Agent,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.agent != null -> generator.writeObject(value.agent)
+                    value.advisor != null -> generator.writeObject(value.advisor)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid Agent")
+                }
+            }
+        }
+    }
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

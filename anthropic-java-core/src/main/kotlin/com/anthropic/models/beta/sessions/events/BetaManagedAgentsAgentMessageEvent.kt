@@ -2,6 +2,8 @@
 
 package com.anthropic.models.beta.sessions.events
 
+import com.anthropic.core.BaseDeserializer
+import com.anthropic.core.BaseSerializer
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -9,15 +11,24 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
+import com.anthropic.core.getOrThrow
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.ObjectCodec
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** An agent response event in the session conversation. */
@@ -25,7 +36,7 @@ class BetaManagedAgentsAgentMessageEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
-    private val content: JsonField<List<BetaManagedAgentsTextBlock>>,
+    private val content: JsonField<List<Content>>,
     private val processedAt: JsonField<OffsetDateTime>,
     private val type: JsonField<Type>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -36,7 +47,7 @@ private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("content")
         @ExcludeMissing
-        content: JsonField<List<BetaManagedAgentsTextBlock>> = JsonMissing.of(),
+        content: JsonField<List<Content>> = JsonMissing.of(),
         @JsonProperty("processed_at")
         @ExcludeMissing
         processedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -57,7 +68,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun content(): List<BetaManagedAgentsTextBlock> = content.getRequired("content")
+    fun content(): List<Content> = content.getRequired("content")
 
     /**
      * A timestamp in RFC 3339 format
@@ -85,9 +96,7 @@ private constructor(
      *
      * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("content")
-    @ExcludeMissing
-    fun _content(): JsonField<List<BetaManagedAgentsTextBlock>> = content
+    @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<List<Content>> = content
 
     /**
      * Returns the raw JSON value of [processedAt].
@@ -138,7 +147,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var content: JsonField<MutableList<BetaManagedAgentsTextBlock>>? = null
+        private var content: JsonField<MutableList<Content>>? = null
         private var processedAt: JsonField<OffsetDateTime>? = null
         private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -169,30 +178,54 @@ private constructor(
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         /** Array of text blocks comprising the agent response. */
-        fun content(content: List<BetaManagedAgentsTextBlock>) = content(JsonField.of(content))
+        fun content(content: List<Content>) = content(JsonField.of(content))
 
         /**
          * Sets [Builder.content] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.content] with a well-typed
-         * `List<BetaManagedAgentsTextBlock>` value instead. This method is primarily for setting
-         * the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.content] with a well-typed `List<Content>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun content(content: JsonField<List<BetaManagedAgentsTextBlock>>) = apply {
+        fun content(content: JsonField<List<Content>>) = apply {
             this.content = content.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [BetaManagedAgentsTextBlock] to [Builder.content].
+         * Adds a single [Content] to [Builder.content].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addContent(content: BetaManagedAgentsTextBlock) = apply {
+        fun addContent(content: Content) = apply {
             this.content =
                 (this.content ?: JsonField.of(mutableListOf())).also {
                     checkKnown("content", it).add(content)
                 }
         }
+
+        /** Alias for calling [addContent] with `Content.ofText(text)`. */
+        fun addContent(text: BetaManagedAgentsTextBlock) = addContent(Content.ofText(text))
+
+        /**
+         * Alias for calling [addContent] with the following:
+         * ```java
+         * BetaManagedAgentsTextBlock.builder()
+         *     .type(BetaManagedAgentsTextBlock.Type.TEXT)
+         *     .text(text)
+         *     .build()
+         * ```
+         */
+        fun addTextContent(text: String) =
+            addContent(
+                BetaManagedAgentsTextBlock.builder()
+                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                    .text(text)
+                    .build()
+            )
+
+        /** Alias for calling [addContent] with `Content.ofRedacted(redacted)`. */
+        fun addContent(redacted: BetaManagedAgentsRedactedBlock) =
+            addContent(Content.ofRedacted(redacted))
 
         /** A timestamp in RFC 3339 format */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
@@ -303,6 +336,222 @@ private constructor(
             (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
+
+    /** Content block in an agent message. */
+    @JsonDeserialize(using = Content.Deserializer::class)
+    @JsonSerialize(using = Content.Serializer::class)
+    class Content
+    private constructor(
+        private val text: BetaManagedAgentsTextBlock? = null,
+        private val redacted: BetaManagedAgentsRedactedBlock? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        /** Regular text content. */
+        fun text(): Optional<BetaManagedAgentsTextBlock> = Optional.ofNullable(text)
+
+        /** Placeholder for content withheld by Anthropic model policy. */
+        fun redacted(): Optional<BetaManagedAgentsRedactedBlock> = Optional.ofNullable(redacted)
+
+        fun isText(): Boolean = text != null
+
+        fun isRedacted(): Boolean = redacted != null
+
+        /** Regular text content. */
+        fun asText(): BetaManagedAgentsTextBlock = text.getOrThrow("text")
+
+        /** Placeholder for content withheld by Anthropic model policy. */
+        fun asRedacted(): BetaManagedAgentsRedactedBlock = redacted.getOrThrow("redacted")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import com.anthropic.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = content.accept(new Content.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitText(BetaManagedAgentsTextBlock text) {
+         *         return Optional.of(text.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws AnthropicInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                text != null -> visitor.visitText(text)
+                redacted != null -> visitor.visitRedacted(redacted)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Content = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitText(text: BetaManagedAgentsTextBlock) {
+                        text.validate()
+                    }
+
+                    override fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock) {
+                        redacted.validate()
+                    }
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitText(text: BetaManagedAgentsTextBlock) = text.validity()
+
+                    override fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock) =
+                        redacted.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Content && text == other.text && redacted == other.redacted
+        }
+
+        override fun hashCode(): Int = Objects.hash(text, redacted)
+
+        override fun toString(): String =
+            when {
+                text != null -> "Content{text=$text}"
+                redacted != null -> "Content{redacted=$redacted}"
+                _json != null -> "Content{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Content")
+            }
+
+        companion object {
+
+            /** Regular text content. */
+            @JvmStatic fun ofText(text: BetaManagedAgentsTextBlock) = Content(text = text)
+
+            /** Placeholder for content withheld by Anthropic model policy. */
+            @JvmStatic
+            fun ofRedacted(redacted: BetaManagedAgentsRedactedBlock) = Content(redacted = redacted)
+        }
+
+        /**
+         * An interface that defines how to map each variant of [Content] to a value of type [T].
+         */
+        interface Visitor<out T> {
+
+            /** Regular text content. */
+            fun visitText(text: BetaManagedAgentsTextBlock): T
+
+            /** Placeholder for content withheld by Anthropic model policy. */
+            fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock): T
+
+            /**
+             * Maps an unknown variant of [Content] to a value of type [T].
+             *
+             * An instance of [Content] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown Content: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<Content>(Content::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): Content {
+                val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+
+                when (type) {
+                    "text" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsTextBlock>())
+                            ?.let { Content(text = it, _json = json) } ?: Content(_json = json)
+                    }
+                    "redacted" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsRedactedBlock>(),
+                            )
+                            ?.let { Content(redacted = it, _json = json) } ?: Content(_json = json)
+                    }
+                }
+
+                return Content(_json = json)
+            }
+        }
+
+        internal class Serializer : BaseSerializer<Content>(Content::class) {
+
+            override fun serialize(
+                value: Content,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.text != null -> generator.writeObject(value.text)
+                    value.redacted != null -> generator.writeObject(value.redacted)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid Content")
+                }
+            }
+        }
+    }
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

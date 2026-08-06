@@ -450,6 +450,13 @@ private constructor(
             data(BetaWebhookEventData.ofMemoryStoreDeleted(memoryStoreDeleted))
 
         /**
+         * Alias for calling [data] with
+         * `BetaWebhookEventData.ofSessionBudgetReached(sessionBudgetReached)`.
+         */
+        fun data(sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData) =
+            data(BetaWebhookEventData.ofSessionBudgetReached(sessionBudgetReached))
+
+        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the

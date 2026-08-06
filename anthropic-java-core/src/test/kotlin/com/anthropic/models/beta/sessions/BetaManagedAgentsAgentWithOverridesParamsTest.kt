@@ -39,6 +39,7 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW
                         )
+                        .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
@@ -103,6 +104,7 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                                     .BetaManagedAgentsEffortLevel
                                     .LOW
                             )
+                            .inferenceGeo("inference_geo")
                             .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                             .build()
                     )
@@ -288,6 +290,7 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW
                         )
+                        .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )

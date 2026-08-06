@@ -62,18 +62,24 @@ class BetaManagedAgentsEventAccumulator private constructor() {
             if (fragment.type() != BetaManagedAgentsDeltaContent.Type.CONTENT_DELTA) {
                 return event
             }
+            val fragmentText = fragment.content()._text().asString().getOrNull() ?: return event
             val content = message.content().toMutableList()
             val index = fragment.index().getOrNull() ?: 0L
             when {
                 index < 0L || index > content.size -> return event
-                index == content.size.toLong() -> content.add(fragment.content())
+                index == content.size.toLong() ->
+                    content.add(
+                        BetaManagedAgentsAgentMessageEvent.Content.ofText(fragment.content())
+                    )
                 else -> {
                     val i = index.toInt()
+                    // Only text entries grow by delta; a `redacted` one cannot be merged.
+                    val existing = content[i].text().getOrNull() ?: return event
+                    val existingText = existing._text().asString().getOrNull() ?: return event
                     content[i] =
-                        content[i]
-                            .toBuilder()
-                            .text(content[i].text() + fragment.content().text())
-                            .build()
+                        BetaManagedAgentsAgentMessageEvent.Content.ofText(
+                            existing.toBuilder().text(existingText + fragmentText).build()
+                        )
                 }
             }
             agentMessages[delta.eventId()] = message.toBuilder().content(content).build()
@@ -105,6 +111,6 @@ class BetaManagedAgentsEventAccumulator private constructor() {
     /** The joined text of the snapshot with the given event id, or empty if unknown. */
     fun agentMessageText(eventId: String): Optional<String> =
         Optional.ofNullable(agentMessages[eventId]).map { message ->
-            message.content().joinToString("") { it.text() }
+            message.content().mapNotNull { it.text().getOrNull()?.text() }.joinToString("")
         }
 }

@@ -25,6 +25,7 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
         assertThat(betaManagedAgentsMultiagentRosterEntryParams.string()).contains(string)
         assertThat(betaManagedAgentsMultiagentRosterEntryParams.agent()).isEmpty
         assertThat(betaManagedAgentsMultiagentRosterEntryParams.self()).isEmpty
+        assertThat(betaManagedAgentsMultiagentRosterEntryParams.advisor()).isEmpty
     }
 
     @Test
@@ -58,6 +59,7 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
         assertThat(betaManagedAgentsMultiagentRosterEntryParams.string()).isEmpty
         assertThat(betaManagedAgentsMultiagentRosterEntryParams.agent()).contains(agent)
         assertThat(betaManagedAgentsMultiagentRosterEntryParams.self()).isEmpty
+        assertThat(betaManagedAgentsMultiagentRosterEntryParams.advisor()).isEmpty
     }
 
     @Test
@@ -95,6 +97,7 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
         assertThat(betaManagedAgentsMultiagentRosterEntryParams.string()).isEmpty
         assertThat(betaManagedAgentsMultiagentRosterEntryParams.agent()).isEmpty
         assertThat(betaManagedAgentsMultiagentRosterEntryParams.self()).contains(self)
+        assertThat(betaManagedAgentsMultiagentRosterEntryParams.advisor()).isEmpty
     }
 
     @Test
@@ -104,6 +107,44 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
             BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
                 BetaManagedAgentsMultiagentSelfParams.builder()
                     .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
+                    .build()
+            )
+
+        val roundtrippedBetaManagedAgentsMultiagentRosterEntryParams =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaManagedAgentsMultiagentRosterEntryParams),
+                jacksonTypeRef<BetaManagedAgentsMultiagentRosterEntryParams>(),
+            )
+
+        assertThat(roundtrippedBetaManagedAgentsMultiagentRosterEntryParams)
+            .isEqualTo(betaManagedAgentsMultiagentRosterEntryParams)
+    }
+
+    @Test
+    fun ofAdvisor() {
+        val advisor =
+            BetaManagedAgentsAdvisorParams.builder()
+                .model("claude-fable-5")
+                .type(BetaManagedAgentsAdvisorParams.Type.ADVISOR)
+                .build()
+
+        val betaManagedAgentsMultiagentRosterEntryParams =
+            BetaManagedAgentsMultiagentRosterEntryParams.ofAdvisor(advisor)
+
+        assertThat(betaManagedAgentsMultiagentRosterEntryParams.string()).isEmpty
+        assertThat(betaManagedAgentsMultiagentRosterEntryParams.agent()).isEmpty
+        assertThat(betaManagedAgentsMultiagentRosterEntryParams.self()).isEmpty
+        assertThat(betaManagedAgentsMultiagentRosterEntryParams.advisor()).contains(advisor)
+    }
+
+    @Test
+    fun ofAdvisorRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaManagedAgentsMultiagentRosterEntryParams =
+            BetaManagedAgentsMultiagentRosterEntryParams.ofAdvisor(
+                BetaManagedAgentsAdvisorParams.builder()
+                    .model("claude-fable-5")
+                    .type(BetaManagedAgentsAdvisorParams.Type.ADVISOR)
                     .build()
             )
 
