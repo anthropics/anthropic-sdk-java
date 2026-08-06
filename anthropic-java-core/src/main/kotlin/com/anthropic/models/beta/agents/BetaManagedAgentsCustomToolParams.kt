@@ -46,7 +46,6 @@ private constructor(
 
     /**
      * Description of what the tool does, shown to the agent to help it decide when to use the tool.
-     * 1-4096 characters.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -157,7 +156,7 @@ private constructor(
 
         /**
          * Description of what the tool does, shown to the agent to help it decide when to use the
-         * tool. 1-4096 characters.
+         * tool.
          */
         fun description(description: String) = description(JsonField.of(description))
 
