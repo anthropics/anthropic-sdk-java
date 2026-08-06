@@ -64,6 +64,12 @@ internal constructor(
     /** @see ContentBlock.containerUpload */
     fun containerUpload(): Optional<ContainerUploadBlock> = rawContentBlock.containerUpload()
 
+    /** @see ContentBlock.id */
+    fun id(): Optional<String> = rawContentBlock.id()
+
+    /** @see ContentBlock.toolUseId */
+    fun toolUseId(): Optional<String> = rawContentBlock.toolUseId()
+
     /** @see ContentBlock.isText */
     fun isText(): Boolean = text().isPresent
 
