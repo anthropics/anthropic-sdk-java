@@ -36,7 +36,6 @@ private constructor(
                 "claude-opus-4-0" to 8_192,
                 "anthropic.claude-opus-4-20250514-v1:0" to 8_192,
                 "claude-opus-4@20250514" to 8_192,
-                "claude-opus-4-1-20250805" to 8192,
                 "anthropic.claude-opus-4-1-20250805-v1:0" to 8192,
                 "claude-opus-4-1@20250805" to 8192,
             )
