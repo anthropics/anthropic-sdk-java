@@ -5,6 +5,9 @@ package com.anthropic.models.beta.deployments
 import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.BetaCurrency
+import com.anthropic.models.beta.BetaMonetaryAmount
+import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsFileResourceParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
@@ -31,6 +34,17 @@ internal class DeploymentCreateParamsTest {
                 )
             )
             .name("x")
+            .budget(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .maxListCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .build()
+            )
             .description("description")
             .metadata(
                 DeploymentCreateParams.Metadata.builder()
@@ -73,6 +87,17 @@ internal class DeploymentCreateParamsTest {
                     )
                 )
                 .name("x")
+                .budget(
+                    BetaManagedAgentsBudgetLimit.builder()
+                        .maxListCost(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                        .build()
+                )
                 .description("description")
                 .metadata(
                     DeploymentCreateParams.Metadata.builder()
@@ -146,6 +171,17 @@ internal class DeploymentCreateParamsTest {
                     )
                 )
                 .name("x")
+                .budget(
+                    BetaManagedAgentsBudgetLimit.builder()
+                        .maxListCost(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                        .build()
+                )
                 .description("description")
                 .metadata(
                     DeploymentCreateParams.Metadata.builder()
@@ -183,6 +219,18 @@ internal class DeploymentCreateParamsTest {
                 )
             )
         assertThat(body.name()).isEqualTo("x")
+        assertThat(body.budget())
+            .contains(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .maxListCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .build()
+            )
         assertThat(body.description()).contains("description")
         assertThat(body.metadata())
             .contains(

@@ -15,12 +15,7 @@ internal class BetaManagedAgentsAgentMessageEventTest {
         val betaManagedAgentsAgentMessageEvent =
             BetaManagedAgentsAgentMessageEvent.builder()
                 .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
-                .addContent(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Let me look up order #1234 for you.")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
-                )
+                .addTextContent("Let me look up order #1234 for you.")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                 .build()
@@ -29,10 +24,12 @@ internal class BetaManagedAgentsAgentMessageEventTest {
             .isEqualTo("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
         assertThat(betaManagedAgentsAgentMessageEvent.content())
             .containsExactly(
-                BetaManagedAgentsTextBlock.builder()
-                    .text("Let me look up order #1234 for you.")
-                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                    .build()
+                BetaManagedAgentsAgentMessageEvent.Content.ofText(
+                    BetaManagedAgentsTextBlock.builder()
+                        .text("Let me look up order #1234 for you.")
+                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                        .build()
+                )
             )
         assertThat(betaManagedAgentsAgentMessageEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -46,12 +43,7 @@ internal class BetaManagedAgentsAgentMessageEventTest {
         val betaManagedAgentsAgentMessageEvent =
             BetaManagedAgentsAgentMessageEvent.builder()
                 .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
-                .addContent(
-                    BetaManagedAgentsTextBlock.builder()
-                        .text("Let me look up order #1234 for you.")
-                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                        .build()
-                )
+                .addTextContent("Let me look up order #1234 for you.")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                 .build()

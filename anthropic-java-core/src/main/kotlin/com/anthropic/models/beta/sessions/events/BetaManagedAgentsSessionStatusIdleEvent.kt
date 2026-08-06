@@ -232,6 +232,10 @@ private constructor(
         fun stopReason(retriesExhausted: BetaManagedAgentsSessionRetriesExhausted) =
             stopReason(StopReason.ofRetriesExhausted(retriesExhausted))
 
+        /** Alias for calling [stopReason] with `StopReason.ofBudgetReached(budgetReached)`. */
+        fun stopReason(budgetReached: BetaManagedAgentsSessionBudgetReached) =
+            stopReason(StopReason.ofBudgetReached(budgetReached))
+
         fun type(type: Type) = type(JsonField.of(type))
 
         /**
@@ -336,6 +340,7 @@ private constructor(
         private val endTurn: BetaManagedAgentsSessionEndTurn? = null,
         private val requiresAction: BetaManagedAgentsSessionRequiresAction? = null,
         private val retriesExhausted: BetaManagedAgentsSessionRetriesExhausted? = null,
+        private val budgetReached: BetaManagedAgentsSessionBudgetReached? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -356,11 +361,22 @@ private constructor(
         fun retriesExhausted(): Optional<BetaManagedAgentsSessionRetriesExhausted> =
             Optional.ofNullable(retriesExhausted)
 
+        /**
+         * The agent stopped because the session's tracked list cost reached its budget, or because
+         * its usage includes a model with no list price (which the budget cannot measure). Raise
+         * the budget to continue — or, if raising is rejected because a model has no list price,
+         * remove the budget.
+         */
+        fun budgetReached(): Optional<BetaManagedAgentsSessionBudgetReached> =
+            Optional.ofNullable(budgetReached)
+
         fun isEndTurn(): Boolean = endTurn != null
 
         fun isRequiresAction(): Boolean = requiresAction != null
 
         fun isRetriesExhausted(): Boolean = retriesExhausted != null
+
+        fun isBudgetReached(): Boolean = budgetReached != null
 
         /** The agent completed its turn naturally and is ready for the next user message. */
         fun asEndTurn(): BetaManagedAgentsSessionEndTurn = endTurn.getOrThrow("endTurn")
@@ -378,6 +394,15 @@ private constructor(
          */
         fun asRetriesExhausted(): BetaManagedAgentsSessionRetriesExhausted =
             retriesExhausted.getOrThrow("retriesExhausted")
+
+        /**
+         * The agent stopped because the session's tracked list cost reached its budget, or because
+         * its usage includes a model with no list price (which the budget cannot measure). Raise
+         * the budget to continue — or, if raising is rejected because a model has no list price,
+         * remove the budget.
+         */
+        fun asBudgetReached(): BetaManagedAgentsSessionBudgetReached =
+            budgetReached.getOrThrow("budgetReached")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -415,6 +440,7 @@ private constructor(
                 endTurn != null -> visitor.visitEndTurn(endTurn)
                 requiresAction != null -> visitor.visitRequiresAction(requiresAction)
                 retriesExhausted != null -> visitor.visitRetriesExhausted(retriesExhausted)
+                budgetReached != null -> visitor.visitBudgetReached(budgetReached)
                 else -> visitor.unknown(_json)
             }
 
@@ -451,6 +477,12 @@ private constructor(
                     ) {
                         retriesExhausted.validate()
                     }
+
+                    override fun visitBudgetReached(
+                        budgetReached: BetaManagedAgentsSessionBudgetReached
+                    ) {
+                        budgetReached.validate()
+                    }
                 }
             )
             validated = true
@@ -485,6 +517,10 @@ private constructor(
                         retriesExhausted: BetaManagedAgentsSessionRetriesExhausted
                     ) = retriesExhausted.validity()
 
+                    override fun visitBudgetReached(
+                        budgetReached: BetaManagedAgentsSessionBudgetReached
+                    ) = budgetReached.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -497,16 +533,19 @@ private constructor(
             return other is StopReason &&
                 endTurn == other.endTurn &&
                 requiresAction == other.requiresAction &&
-                retriesExhausted == other.retriesExhausted
+                retriesExhausted == other.retriesExhausted &&
+                budgetReached == other.budgetReached
         }
 
-        override fun hashCode(): Int = Objects.hash(endTurn, requiresAction, retriesExhausted)
+        override fun hashCode(): Int =
+            Objects.hash(endTurn, requiresAction, retriesExhausted, budgetReached)
 
         override fun toString(): String =
             when {
                 endTurn != null -> "StopReason{endTurn=$endTurn}"
                 requiresAction != null -> "StopReason{requiresAction=$requiresAction}"
                 retriesExhausted != null -> "StopReason{retriesExhausted=$retriesExhausted}"
+                budgetReached != null -> "StopReason{budgetReached=$budgetReached}"
                 _json != null -> "StopReason{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid StopReason")
             }
@@ -533,6 +572,16 @@ private constructor(
             @JvmStatic
             fun ofRetriesExhausted(retriesExhausted: BetaManagedAgentsSessionRetriesExhausted) =
                 StopReason(retriesExhausted = retriesExhausted)
+
+            /**
+             * The agent stopped because the session's tracked list cost reached its budget, or
+             * because its usage includes a model with no list price (which the budget cannot
+             * measure). Raise the budget to continue — or, if raising is rejected because a model
+             * has no list price, remove the budget.
+             */
+            @JvmStatic
+            fun ofBudgetReached(budgetReached: BetaManagedAgentsSessionBudgetReached) =
+                StopReason(budgetReached = budgetReached)
         }
 
         /**
@@ -555,6 +604,14 @@ private constructor(
              * escalated to `retry_status: 'exhausted'`.
              */
             fun visitRetriesExhausted(retriesExhausted: BetaManagedAgentsSessionRetriesExhausted): T
+
+            /**
+             * The agent stopped because the session's tracked list cost reached its budget, or
+             * because its usage includes a model with no list price (which the budget cannot
+             * measure). Raise the budget to continue — or, if raising is rejected because a model
+             * has no list price, remove the budget.
+             */
+            fun visitBudgetReached(budgetReached: BetaManagedAgentsSessionBudgetReached): T
 
             /**
              * Maps an unknown variant of [StopReason] to a value of type [T].
@@ -602,6 +659,14 @@ private constructor(
                             ?.let { StopReason(retriesExhausted = it, _json = json) }
                             ?: StopReason(_json = json)
                     }
+                    "budget_reached" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsSessionBudgetReached>(),
+                            )
+                            ?.let { StopReason(budgetReached = it, _json = json) }
+                            ?: StopReason(_json = json)
+                    }
                 }
 
                 return StopReason(_json = json)
@@ -619,6 +684,7 @@ private constructor(
                     value.endTurn != null -> generator.writeObject(value.endTurn)
                     value.requiresAction != null -> generator.writeObject(value.requiresAction)
                     value.retriesExhausted != null -> generator.writeObject(value.retriesExhausted)
+                    value.budgetReached != null -> generator.writeObject(value.budgetReached)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid StopReason")
                 }

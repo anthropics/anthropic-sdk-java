@@ -174,6 +174,7 @@ internal class AgentServiceAsyncTest {
                                     .BetaManagedAgentsEffortLevel
                                     .LOW
                             )
+                            .inferenceGeo("inference_geo")
                             .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                             .build()
                     )

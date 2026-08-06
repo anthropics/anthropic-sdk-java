@@ -4,6 +4,8 @@ package com.anthropic.models.beta.sessions
 
 import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.BetaCurrency
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
@@ -49,6 +51,7 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                         .type(BetaManagedAgentsEffortLow.Type.LOW)
                                         .build()
                                 )
+                                .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
@@ -77,6 +80,7 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                                         .type(BetaManagedAgentsEffortLow.Type.LOW)
                                                         .build()
                                                 )
+                                                .inferenceGeo("inference_geo")
                                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                                 .build()
                                         )
@@ -201,6 +205,17 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                         .version(1)
                         .build()
                 )
+                .budget(
+                    BetaManagedAgentsBudgetLimit.builder()
+                        .maxListCost(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                        .build()
+                )
                 .metadata(
                     BetaManagedAgentsSessionUpdatedEvent.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -234,6 +249,7 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                     .type(BetaManagedAgentsEffortLow.Type.LOW)
                                     .build()
                             )
+                            .inferenceGeo("inference_geo")
                             .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                             .build()
                     )
@@ -260,6 +276,7 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                                     .type(BetaManagedAgentsEffortLow.Type.LOW)
                                                     .build()
                                             )
+                                            .inferenceGeo("inference_geo")
                                             .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                             .build()
                                     )
@@ -370,6 +387,18 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                     .version(1)
                     .build()
             )
+        assertThat(betaManagedAgentsSessionUpdatedEvent.budget())
+            .contains(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .maxListCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .build()
+            )
         assertThat(betaManagedAgentsSessionUpdatedEvent.metadata())
             .contains(
                 BetaManagedAgentsSessionUpdatedEvent.Metadata.builder()
@@ -406,6 +435,7 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                         .type(BetaManagedAgentsEffortLow.Type.LOW)
                                         .build()
                                 )
+                                .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
@@ -434,6 +464,7 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                                         .type(BetaManagedAgentsEffortLow.Type.LOW)
                                                         .build()
                                                 )
+                                                .inferenceGeo("inference_geo")
                                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                                 .build()
                                         )
@@ -556,6 +587,17 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                         )
                         .type(BetaManagedAgentsSessionAgent.Type.AGENT)
                         .version(1)
+                        .build()
+                )
+                .budget(
+                    BetaManagedAgentsBudgetLimit.builder()
+                        .maxListCost(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
                         .build()
                 )
                 .metadata(

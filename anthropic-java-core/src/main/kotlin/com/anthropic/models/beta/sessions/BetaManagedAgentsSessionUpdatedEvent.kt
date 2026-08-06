@@ -10,6 +10,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -32,6 +33,7 @@ private constructor(
     private val processedAt: JsonField<OffsetDateTime>,
     private val type: JsonField<Type>,
     private val agent: JsonField<BetaManagedAgentsSessionAgent>,
+    private val budget: JsonField<BetaManagedAgentsBudgetLimit>,
     private val metadata: JsonField<Metadata>,
     private val title: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -47,9 +49,12 @@ private constructor(
         @JsonProperty("agent")
         @ExcludeMissing
         agent: JsonField<BetaManagedAgentsSessionAgent> = JsonMissing.of(),
+        @JsonProperty("budget")
+        @ExcludeMissing
+        budget: JsonField<BetaManagedAgentsBudgetLimit> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
         @JsonProperty("title") @ExcludeMissing title: JsonField<String> = JsonMissing.of(),
-    ) : this(id, processedAt, type, agent, metadata, title, mutableMapOf())
+    ) : this(id, processedAt, type, agent, budget, metadata, title, mutableMapOf())
 
     /**
      * Unique identifier for this event.
@@ -81,6 +86,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun agent(): Optional<BetaManagedAgentsSessionAgent> = agent.getOptional("agent")
+
+    /**
+     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
+     * reaches `max_list_cost`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun budget(): Optional<BetaManagedAgentsBudgetLimit> = budget.getOptional("budget")
 
     /**
      * The session's full metadata bag after the update. Present when the update set non-empty
@@ -132,6 +146,15 @@ private constructor(
     fun _agent(): JsonField<BetaManagedAgentsSessionAgent> = agent
 
     /**
+     * Returns the raw JSON value of [budget].
+     *
+     * Unlike [budget], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("budget")
+    @ExcludeMissing
+    fun _budget(): JsonField<BetaManagedAgentsBudgetLimit> = budget
+
+    /**
      * Returns the raw JSON value of [metadata].
      *
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -180,6 +203,7 @@ private constructor(
         private var processedAt: JsonField<OffsetDateTime>? = null
         private var type: JsonField<Type>? = null
         private var agent: JsonField<BetaManagedAgentsSessionAgent> = JsonMissing.of()
+        private var budget: JsonField<BetaManagedAgentsBudgetLimit> = JsonMissing.of()
         private var metadata: JsonField<Metadata> = JsonMissing.of()
         private var title: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -192,6 +216,7 @@ private constructor(
             processedAt = betaManagedAgentsSessionUpdatedEvent.processedAt
             type = betaManagedAgentsSessionUpdatedEvent.type
             agent = betaManagedAgentsSessionUpdatedEvent.agent
+            budget = betaManagedAgentsSessionUpdatedEvent.budget
             metadata = betaManagedAgentsSessionUpdatedEvent.metadata
             title = betaManagedAgentsSessionUpdatedEvent.title
             additionalProperties =
@@ -250,6 +275,41 @@ private constructor(
          * yet supported value.
          */
         fun agent(agent: JsonField<BetaManagedAgentsSessionAgent>) = apply { this.agent = agent }
+
+        /**
+         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
+         * cost reaches `max_list_cost`.
+         */
+        fun budget(budget: BetaManagedAgentsBudgetLimit?) = budget(JsonField.ofNullable(budget))
+
+        /** Alias for calling [Builder.budget] with `budget.orElse(null)`. */
+        fun budget(budget: Optional<BetaManagedAgentsBudgetLimit>) = budget(budget.getOrNull())
+
+        /**
+         * Sets [Builder.budget] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.budget] with a well-typed [BetaManagedAgentsBudgetLimit]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun budget(budget: JsonField<BetaManagedAgentsBudgetLimit>) = apply { this.budget = budget }
+
+        /**
+         * Alias for calling [budget] with the following:
+         * ```java
+         * BetaManagedAgentsBudgetLimit.builder()
+         *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+         *     .maxListCost(maxListCost)
+         *     .build()
+         * ```
+         */
+        fun limitBudget(maxListCost: BetaMonetaryAmount) =
+            budget(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .maxListCost(maxListCost)
+                    .build()
+            )
 
         /**
          * The session's full metadata bag after the update. Present when the update set non-empty
@@ -319,6 +379,7 @@ private constructor(
                 checkRequired("processedAt", processedAt),
                 checkRequired("type", type),
                 agent,
+                budget,
                 metadata,
                 title,
                 additionalProperties.toMutableMap(),
@@ -344,6 +405,7 @@ private constructor(
         processedAt()
         type().validate()
         agent().ifPresent { it.validate() }
+        budget().ifPresent { it.validate() }
         metadata().ifPresent { it.validate() }
         title()
         validated = true
@@ -368,6 +430,7 @@ private constructor(
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (agent.asKnown().getOrNull()?.validity() ?: 0) +
+            (budget.asKnown().getOrNull()?.validity() ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (title.asKnown().isPresent) 1 else 0)
 
@@ -623,17 +686,18 @@ private constructor(
             processedAt == other.processedAt &&
             type == other.type &&
             agent == other.agent &&
+            budget == other.budget &&
             metadata == other.metadata &&
             title == other.title &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, processedAt, type, agent, metadata, title, additionalProperties)
+        Objects.hash(id, processedAt, type, agent, budget, metadata, title, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsSessionUpdatedEvent{id=$id, processedAt=$processedAt, type=$type, agent=$agent, metadata=$metadata, title=$title, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsSessionUpdatedEvent{id=$id, processedAt=$processedAt, type=$type, agent=$agent, budget=$budget, metadata=$metadata, title=$title, additionalProperties=$additionalProperties}"
 }

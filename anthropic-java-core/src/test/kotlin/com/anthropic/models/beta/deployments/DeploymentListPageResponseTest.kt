@@ -3,7 +3,10 @@
 package com.anthropic.models.beta.deployments
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.BetaCurrency
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentReference
+import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
@@ -74,6 +77,17 @@ internal class DeploymentListPageResponseTest {
                         .type(BetaManagedAgentsDeployment.Type.DEPLOYMENT)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+                        .budget(
+                            BetaManagedAgentsBudgetLimit.builder()
+                                .maxListCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
+                                .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                                .build()
+                        )
                         .build()
                 )
                 .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
@@ -136,6 +150,17 @@ internal class DeploymentListPageResponseTest {
                     .type(BetaManagedAgentsDeployment.Type.DEPLOYMENT)
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+                    .budget(
+                        BetaManagedAgentsBudgetLimit.builder()
+                            .maxListCost(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
+                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                            .build()
+                    )
                     .build()
             )
         assertThat(deploymentListPageResponse.nextPage())
@@ -205,6 +230,17 @@ internal class DeploymentListPageResponseTest {
                         .type(BetaManagedAgentsDeployment.Type.DEPLOYMENT)
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
+                        .budget(
+                            BetaManagedAgentsBudgetLimit.builder()
+                                .maxListCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
+                                .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                                .build()
+                        )
                         .build()
                 )
                 .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")

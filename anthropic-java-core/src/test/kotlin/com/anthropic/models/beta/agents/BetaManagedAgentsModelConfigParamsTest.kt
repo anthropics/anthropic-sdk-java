@@ -15,6 +15,7 @@ internal class BetaManagedAgentsModelConfigParamsTest {
             BetaManagedAgentsModelConfigParams.builder()
                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
                 .effort(BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW)
+                .inferenceGeo("inference_geo")
                 .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                 .build()
 
@@ -26,6 +27,7 @@ internal class BetaManagedAgentsModelConfigParamsTest {
                     BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW
                 )
             )
+        assertThat(betaManagedAgentsModelConfigParams.inferenceGeo()).contains("inference_geo")
         assertThat(betaManagedAgentsModelConfigParams.speed())
             .contains(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
     }
@@ -37,6 +39,7 @@ internal class BetaManagedAgentsModelConfigParamsTest {
             BetaManagedAgentsModelConfigParams.builder()
                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
                 .effort(BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW)
+                .inferenceGeo("inference_geo")
                 .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                 .build()
 

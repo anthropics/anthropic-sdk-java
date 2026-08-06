@@ -7,7 +7,9 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUsageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.fasterxml.jackson.core.JsonGenerator
@@ -70,6 +72,7 @@ private constructor(
         null,
     private val sessionUpdated: BetaManagedAgentsSessionUpdatedEvent? = null,
     private val systemMessage: BetaManagedAgentsSystemMessageEvent? = null,
+    private val sessionUsage: BetaManagedAgentsSessionUsageEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -213,6 +216,10 @@ private constructor(
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
                 ): String = systemMessage.id()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
+                ): String = sessionUsage.id()
             }
         )
 
@@ -359,6 +366,10 @@ private constructor(
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
                 ): Optional<OffsetDateTime> = systemMessage.processedAt()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
+                ): Optional<OffsetDateTime> = Optional.of(sessionUsage.processedAt())
             }
         )
 
@@ -501,6 +512,10 @@ private constructor(
 
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<String> = Optional.empty()
             }
         )
@@ -645,6 +660,10 @@ private constructor(
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
                 ): Optional<String> = Optional.empty()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
+                ): Optional<String> = Optional.empty()
             }
         )
 
@@ -787,6 +806,10 @@ private constructor(
 
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<Boolean> = Optional.empty()
             }
         )
@@ -931,6 +954,10 @@ private constructor(
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
                 ): Optional<String> = Optional.empty()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
+                ): Optional<String> = Optional.empty()
             }
         )
 
@@ -1073,6 +1100,10 @@ private constructor(
 
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<String> = Optional.empty()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<String> = Optional.empty()
             }
         )
@@ -1217,6 +1248,10 @@ private constructor(
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
                 ): Optional<Int> = Optional.empty()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
+                ): Optional<Int> = Optional.empty()
             }
         )
 
@@ -1360,6 +1395,157 @@ private constructor(
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
                 ): Optional<String> = Optional.empty()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
+    fun budget(): Optional<BetaManagedAgentsBudgetLimit> =
+        accept(
+            object : Visitor<Optional<BetaManagedAgentsBudgetLimit>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = sessionUpdated.budget()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = Optional.empty()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
+                ): Optional<BetaManagedAgentsBudgetLimit> = sessionUsage.budget()
             }
         )
 
@@ -1555,6 +1741,10 @@ private constructor(
     fun systemMessage(): Optional<BetaManagedAgentsSystemMessageEvent> =
         Optional.ofNullable(systemMessage)
 
+    /** Periodic snapshot of the session's cumulative usage and tracked list cost. */
+    fun sessionUsage(): Optional<BetaManagedAgentsSessionUsageEvent> =
+        Optional.ofNullable(sessionUsage)
+
     fun isUserMessage(): Boolean = userMessage != null
 
     fun isUserInterrupt(): Boolean = userInterrupt != null
@@ -1622,6 +1812,8 @@ private constructor(
     fun isSessionUpdated(): Boolean = sessionUpdated != null
 
     fun isSystemMessage(): Boolean = systemMessage != null
+
+    fun isSessionUsage(): Boolean = sessionUsage != null
 
     /** A user message event in the session conversation. */
     fun asUserMessage(): BetaManagedAgentsUserMessageEvent = userMessage.getOrThrow("userMessage")
@@ -1811,6 +2003,10 @@ private constructor(
     fun asSystemMessage(): BetaManagedAgentsSystemMessageEvent =
         systemMessage.getOrThrow("systemMessage")
 
+    /** Periodic snapshot of the session's cumulative usage and tracked list cost. */
+    fun asSessionUsage(): BetaManagedAgentsSessionUsageEvent =
+        sessionUsage.getOrThrow("sessionUsage")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -1891,6 +2087,7 @@ private constructor(
                 visitor.visitSessionThreadStatusRescheduled(sessionThreadStatusRescheduled)
             sessionUpdated != null -> visitor.visitSessionUpdated(sessionUpdated)
             systemMessage != null -> visitor.visitSystemMessage(systemMessage)
+            sessionUsage != null -> visitor.visitSessionUsage(sessionUsage)
             else -> visitor.unknown(_json)
         }
 
@@ -2108,6 +2305,10 @@ private constructor(
                 ) {
                     systemMessage.validate()
                 }
+
+                override fun visitSessionUsage(sessionUsage: BetaManagedAgentsSessionUsageEvent) {
+                    sessionUsage.validate()
+                }
             }
         )
         validated = true
@@ -2264,6 +2465,9 @@ private constructor(
                     systemMessage: BetaManagedAgentsSystemMessageEvent
                 ) = systemMessage.validity()
 
+                override fun visitSessionUsage(sessionUsage: BetaManagedAgentsSessionUsageEvent) =
+                    sessionUsage.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -2307,7 +2511,8 @@ private constructor(
             userToolResult == other.userToolResult &&
             sessionThreadStatusRescheduled == other.sessionThreadStatusRescheduled &&
             sessionUpdated == other.sessionUpdated &&
-            systemMessage == other.systemMessage
+            systemMessage == other.systemMessage &&
+            sessionUsage == other.sessionUsage
     }
 
     override fun hashCode(): Int =
@@ -2346,6 +2551,7 @@ private constructor(
             sessionThreadStatusRescheduled,
             sessionUpdated,
             systemMessage,
+            sessionUsage,
         )
 
     override fun toString(): String =
@@ -2411,6 +2617,7 @@ private constructor(
             sessionUpdated != null ->
                 "BetaManagedAgentsSessionEvent{sessionUpdated=$sessionUpdated}"
             systemMessage != null -> "BetaManagedAgentsSessionEvent{systemMessage=$systemMessage}"
+            sessionUsage != null -> "BetaManagedAgentsSessionEvent{sessionUsage=$sessionUsage}"
             _json != null -> "BetaManagedAgentsSessionEvent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaManagedAgentsSessionEvent")
         }
@@ -2667,6 +2874,11 @@ private constructor(
         @JvmStatic
         fun ofSystemMessage(systemMessage: BetaManagedAgentsSystemMessageEvent) =
             BetaManagedAgentsSessionEvent(systemMessage = systemMessage)
+
+        /** Periodic snapshot of the session's cumulative usage and tracked list cost. */
+        @JvmStatic
+        fun ofSessionUsage(sessionUsage: BetaManagedAgentsSessionUsageEvent) =
+            BetaManagedAgentsSessionEvent(sessionUsage = sessionUsage)
     }
 
     /**
@@ -2867,6 +3079,9 @@ private constructor(
          * the session as a `role: "system"` turn.
          */
         fun visitSystemMessage(systemMessage: BetaManagedAgentsSystemMessageEvent): T
+
+        /** Periodic snapshot of the session's cumulative usage and tracked list cost. */
+        fun visitSessionUsage(sessionUsage: BetaManagedAgentsSessionUsageEvent): T
 
         /**
          * Maps an unknown variant of [BetaManagedAgentsSessionEvent] to a value of type [T].
@@ -3215,6 +3430,14 @@ private constructor(
                         ?.let { BetaManagedAgentsSessionEvent(systemMessage = it, _json = json) }
                         ?: BetaManagedAgentsSessionEvent(_json = json)
                 }
+                "session.usage" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsSessionUsageEvent>(),
+                        )
+                        ?.let { BetaManagedAgentsSessionEvent(sessionUsage = it, _json = json) }
+                        ?: BetaManagedAgentsSessionEvent(_json = json)
+                }
             }
 
             return BetaManagedAgentsSessionEvent(_json = json)
@@ -3282,6 +3505,7 @@ private constructor(
                     generator.writeObject(value.sessionThreadStatusRescheduled)
                 value.sessionUpdated != null -> generator.writeObject(value.sessionUpdated)
                 value.systemMessage != null -> generator.writeObject(value.systemMessage)
+                value.sessionUsage != null -> generator.writeObject(value.sessionUsage)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsSessionEvent")
             }

@@ -27,6 +27,7 @@ private constructor(
     private val string: String? = null,
     private val agent: BetaManagedAgentsAgentParams? = null,
     private val self: BetaManagedAgentsMultiagentSelfParams? = null,
+    private val advisor: BetaManagedAgentsAdvisorParams? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -44,11 +45,19 @@ private constructor(
      */
     fun self(): Optional<BetaManagedAgentsMultiagentSelfParams> = Optional.ofNullable(self)
 
+    /**
+     * Platform advisor roster entry: a model the session's primary thread may consult mid-turn. At
+     * most one per roster; the entry occupies the roster name `anthropic.advisor`.
+     */
+    fun advisor(): Optional<BetaManagedAgentsAdvisorParams> = Optional.ofNullable(advisor)
+
     fun isString(): Boolean = string != null
 
     fun isAgent(): Boolean = agent != null
 
     fun isSelf(): Boolean = self != null
+
+    fun isAdvisor(): Boolean = advisor != null
 
     fun asString(): String = string.getOrThrow("string")
 
@@ -63,6 +72,12 @@ private constructor(
      * to a concrete agent reference.
      */
     fun asSelf(): BetaManagedAgentsMultiagentSelfParams = self.getOrThrow("self")
+
+    /**
+     * Platform advisor roster entry: a model the session's primary thread may consult mid-turn. At
+     * most one per roster; the entry occupies the roster name `anthropic.advisor`.
+     */
+    fun asAdvisor(): BetaManagedAgentsAdvisorParams = advisor.getOrThrow("advisor")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -100,6 +115,7 @@ private constructor(
             string != null -> visitor.visitString(string)
             agent != null -> visitor.visitAgent(agent)
             self != null -> visitor.visitSelf(self)
+            advisor != null -> visitor.visitAdvisor(advisor)
             else -> visitor.unknown(_json)
         }
 
@@ -128,6 +144,10 @@ private constructor(
 
                 override fun visitSelf(self: BetaManagedAgentsMultiagentSelfParams) {
                     self.validate()
+                }
+
+                override fun visitAdvisor(advisor: BetaManagedAgentsAdvisorParams) {
+                    advisor.validate()
                 }
             }
         )
@@ -158,6 +178,9 @@ private constructor(
                 override fun visitSelf(self: BetaManagedAgentsMultiagentSelfParams) =
                     self.validity()
 
+                override fun visitAdvisor(advisor: BetaManagedAgentsAdvisorParams) =
+                    advisor.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -170,16 +193,18 @@ private constructor(
         return other is BetaManagedAgentsMultiagentRosterEntryParams &&
             string == other.string &&
             agent == other.agent &&
-            self == other.self
+            self == other.self &&
+            advisor == other.advisor
     }
 
-    override fun hashCode(): Int = Objects.hash(string, agent, self)
+    override fun hashCode(): Int = Objects.hash(string, agent, self, advisor)
 
     override fun toString(): String =
         when {
             string != null -> "BetaManagedAgentsMultiagentRosterEntryParams{string=$string}"
             agent != null -> "BetaManagedAgentsMultiagentRosterEntryParams{agent=$agent}"
             self != null -> "BetaManagedAgentsMultiagentRosterEntryParams{self=$self}"
+            advisor != null -> "BetaManagedAgentsMultiagentRosterEntryParams{advisor=$advisor}"
             _json != null -> "BetaManagedAgentsMultiagentRosterEntryParams{_unknown=$_json}"
             else ->
                 throw IllegalStateException("Invalid BetaManagedAgentsMultiagentRosterEntryParams")
@@ -205,6 +230,14 @@ private constructor(
         @JvmStatic
         fun ofSelf(self: BetaManagedAgentsMultiagentSelfParams) =
             BetaManagedAgentsMultiagentRosterEntryParams(self = self)
+
+        /**
+         * Platform advisor roster entry: a model the session's primary thread may consult mid-turn.
+         * At most one per roster; the entry occupies the roster name `anthropic.advisor`.
+         */
+        @JvmStatic
+        fun ofAdvisor(advisor: BetaManagedAgentsAdvisorParams) =
+            BetaManagedAgentsMultiagentRosterEntryParams(advisor = advisor)
     }
 
     /**
@@ -226,6 +259,12 @@ private constructor(
          * server-side to a concrete agent reference.
          */
         fun visitSelf(self: BetaManagedAgentsMultiagentSelfParams): T
+
+        /**
+         * Platform advisor roster entry: a model the session's primary thread may consult mid-turn.
+         * At most one per roster; the entry occupies the roster name `anthropic.advisor`.
+         */
+        fun visitAdvisor(advisor: BetaManagedAgentsAdvisorParams): T
 
         /**
          * Maps an unknown variant of [BetaManagedAgentsMultiagentRosterEntryParams] to a value of
@@ -270,6 +309,13 @@ private constructor(
                                     _json = json,
                                 )
                             },
+                        tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsAdvisorParams>())
+                            ?.let {
+                                BetaManagedAgentsMultiagentRosterEntryParams(
+                                    advisor = it,
+                                    _json = json,
+                                )
+                            },
                         tryDeserialize(node, jacksonTypeRef<String>())?.let {
                             BetaManagedAgentsMultiagentRosterEntryParams(string = it, _json = json)
                         },
@@ -303,6 +349,7 @@ private constructor(
                 value.string != null -> generator.writeObject(value.string)
                 value.agent != null -> generator.writeObject(value.agent)
                 value.self != null -> generator.writeObject(value.self)
+                value.advisor != null -> generator.writeObject(value.advisor)
                 value._json != null -> generator.writeObject(value._json)
                 else ->
                     throw IllegalStateException(

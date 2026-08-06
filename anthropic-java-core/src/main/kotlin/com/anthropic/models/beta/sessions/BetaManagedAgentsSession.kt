@@ -11,6 +11,7 @@ import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsFileResource
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsGitHubRepositoryResource
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsMemoryStoreResource
@@ -32,6 +33,7 @@ private constructor(
     private val id: JsonField<String>,
     private val agent: JsonField<BetaManagedAgentsSessionAgent>,
     private val archivedAt: JsonField<OffsetDateTime>,
+    private val budget: JsonField<BetaManagedAgentsBudgetLimit>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val environmentId: JsonField<String>,
     private val metadata: JsonField<Metadata>,
@@ -57,6 +59,9 @@ private constructor(
         @JsonProperty("archived_at")
         @ExcludeMissing
         archivedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("budget")
+        @ExcludeMissing
+        budget: JsonField<BetaManagedAgentsBudgetLimit> = JsonMissing.of(),
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -93,6 +98,7 @@ private constructor(
         id,
         agent,
         archivedAt,
+        budget,
         createdAt,
         environmentId,
         metadata,
@@ -131,6 +137,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
+
+    /**
+     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
+     * reaches `max_list_cost`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun budget(): Optional<BetaManagedAgentsBudgetLimit> = budget.getOptional("budget")
 
     /**
      * A timestamp in RFC 3339 format
@@ -251,6 +266,15 @@ private constructor(
     @JsonProperty("archived_at")
     @ExcludeMissing
     fun _archivedAt(): JsonField<OffsetDateTime> = archivedAt
+
+    /**
+     * Returns the raw JSON value of [budget].
+     *
+     * Unlike [budget], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("budget")
+    @ExcludeMissing
+    fun _budget(): JsonField<BetaManagedAgentsBudgetLimit> = budget
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -383,6 +407,7 @@ private constructor(
          * .id()
          * .agent()
          * .archivedAt()
+         * .budget()
          * .createdAt()
          * .environmentId()
          * .metadata()
@@ -406,6 +431,7 @@ private constructor(
         private var id: JsonField<String>? = null
         private var agent: JsonField<BetaManagedAgentsSessionAgent>? = null
         private var archivedAt: JsonField<OffsetDateTime>? = null
+        private var budget: JsonField<BetaManagedAgentsBudgetLimit>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var environmentId: JsonField<String>? = null
         private var metadata: JsonField<Metadata>? = null
@@ -428,6 +454,7 @@ private constructor(
             id = betaManagedAgentsSession.id
             agent = betaManagedAgentsSession.agent
             archivedAt = betaManagedAgentsSession.archivedAt
+            budget = betaManagedAgentsSession.budget
             createdAt = betaManagedAgentsSession.createdAt
             environmentId = betaManagedAgentsSession.environmentId
             metadata = betaManagedAgentsSession.metadata
@@ -494,6 +521,41 @@ private constructor(
         fun archivedAt(archivedAt: JsonField<OffsetDateTime>) = apply {
             this.archivedAt = archivedAt
         }
+
+        /**
+         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
+         * cost reaches `max_list_cost`.
+         */
+        fun budget(budget: BetaManagedAgentsBudgetLimit?) = budget(JsonField.ofNullable(budget))
+
+        /** Alias for calling [Builder.budget] with `budget.orElse(null)`. */
+        fun budget(budget: Optional<BetaManagedAgentsBudgetLimit>) = budget(budget.getOrNull())
+
+        /**
+         * Sets [Builder.budget] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.budget] with a well-typed [BetaManagedAgentsBudgetLimit]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun budget(budget: JsonField<BetaManagedAgentsBudgetLimit>) = apply { this.budget = budget }
+
+        /**
+         * Alias for calling [budget] with the following:
+         * ```java
+         * BetaManagedAgentsBudgetLimit.builder()
+         *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+         *     .maxListCost(maxListCost)
+         *     .build()
+         * ```
+         */
+        fun limitBudget(maxListCost: BetaMonetaryAmount) =
+            budget(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .maxListCost(maxListCost)
+                    .build()
+            )
 
         /** A timestamp in RFC 3339 format */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
@@ -765,6 +827,7 @@ private constructor(
          * .id()
          * .agent()
          * .archivedAt()
+         * .budget()
          * .createdAt()
          * .environmentId()
          * .metadata()
@@ -786,6 +849,7 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("agent", agent),
                 checkRequired("archivedAt", archivedAt),
+                checkRequired("budget", budget),
                 checkRequired("createdAt", createdAt),
                 checkRequired("environmentId", environmentId),
                 checkRequired("metadata", metadata),
@@ -821,6 +885,7 @@ private constructor(
         id()
         agent().validate()
         archivedAt()
+        budget().ifPresent { it.validate() }
         createdAt()
         environmentId()
         metadata().validate()
@@ -855,6 +920,7 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (agent.asKnown().getOrNull()?.validity() ?: 0) +
             (if (archivedAt.asKnown().isPresent) 1 else 0) +
+            (budget.asKnown().getOrNull()?.validity() ?: 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (environmentId.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1265,6 +1331,7 @@ private constructor(
             id == other.id &&
             agent == other.agent &&
             archivedAt == other.archivedAt &&
+            budget == other.budget &&
             createdAt == other.createdAt &&
             environmentId == other.environmentId &&
             metadata == other.metadata &&
@@ -1286,6 +1353,7 @@ private constructor(
             id,
             agent,
             archivedAt,
+            budget,
             createdAt,
             environmentId,
             metadata,
@@ -1306,5 +1374,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsSession{id=$id, agent=$agent, archivedAt=$archivedAt, createdAt=$createdAt, environmentId=$environmentId, metadata=$metadata, outcomeEvaluations=$outcomeEvaluations, resources=$resources, stats=$stats, status=$status, title=$title, type=$type, updatedAt=$updatedAt, usage=$usage, vaultIds=$vaultIds, deploymentId=$deploymentId, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsSession{id=$id, agent=$agent, archivedAt=$archivedAt, budget=$budget, createdAt=$createdAt, environmentId=$environmentId, metadata=$metadata, outcomeEvaluations=$outcomeEvaluations, resources=$resources, stats=$stats, status=$status, title=$title, type=$type, updatedAt=$updatedAt, usage=$usage, vaultIds=$vaultIds, deploymentId=$deploymentId, additionalProperties=$additionalProperties}"
 }

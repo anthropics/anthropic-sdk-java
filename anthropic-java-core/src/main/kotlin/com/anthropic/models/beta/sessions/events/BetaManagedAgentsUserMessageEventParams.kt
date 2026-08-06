@@ -325,6 +325,10 @@ private constructor(
                     .build()
             )
 
+        /** Alias for calling [addContent] with `Content.ofRedacted(redacted)`. */
+        fun addContent(redacted: BetaManagedAgentsRedactedBlock) =
+            addContent(Content.ofRedacted(redacted))
+
         fun type(type: Type) = type(JsonField.of(type))
 
         /**
@@ -421,6 +425,7 @@ private constructor(
         private val text: BetaManagedAgentsTextBlock? = null,
         private val image: BetaManagedAgentsImageBlock? = null,
         private val document: BetaManagedAgentsDocumentBlock? = null,
+        private val redacted: BetaManagedAgentsRedactedBlock? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -436,11 +441,16 @@ private constructor(
          */
         fun document(): Optional<BetaManagedAgentsDocumentBlock> = Optional.ofNullable(document)
 
+        /** Placeholder for content withheld by Anthropic model policy. */
+        fun redacted(): Optional<BetaManagedAgentsRedactedBlock> = Optional.ofNullable(redacted)
+
         fun isText(): Boolean = text != null
 
         fun isImage(): Boolean = image != null
 
         fun isDocument(): Boolean = document != null
+
+        fun isRedacted(): Boolean = redacted != null
 
         /** Regular text content. */
         fun asText(): BetaManagedAgentsTextBlock = text.getOrThrow("text")
@@ -453,6 +463,9 @@ private constructor(
          * via a URL.
          */
         fun asDocument(): BetaManagedAgentsDocumentBlock = document.getOrThrow("document")
+
+        /** Placeholder for content withheld by Anthropic model policy. */
+        fun asRedacted(): BetaManagedAgentsRedactedBlock = redacted.getOrThrow("redacted")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -490,6 +503,7 @@ private constructor(
                 text != null -> visitor.visitText(text)
                 image != null -> visitor.visitImage(image)
                 document != null -> visitor.visitDocument(document)
+                redacted != null -> visitor.visitRedacted(redacted)
                 else -> visitor.unknown(_json)
             }
 
@@ -522,6 +536,10 @@ private constructor(
                     override fun visitDocument(document: BetaManagedAgentsDocumentBlock) {
                         document.validate()
                     }
+
+                    override fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock) {
+                        redacted.validate()
+                    }
                 }
             )
             validated = true
@@ -552,6 +570,9 @@ private constructor(
                     override fun visitDocument(document: BetaManagedAgentsDocumentBlock) =
                         document.validity()
 
+                    override fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock) =
+                        redacted.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -564,16 +585,18 @@ private constructor(
             return other is Content &&
                 text == other.text &&
                 image == other.image &&
-                document == other.document
+                document == other.document &&
+                redacted == other.redacted
         }
 
-        override fun hashCode(): Int = Objects.hash(text, image, document)
+        override fun hashCode(): Int = Objects.hash(text, image, document, redacted)
 
         override fun toString(): String =
             when {
                 text != null -> "Content{text=$text}"
                 image != null -> "Content{image=$image}"
                 document != null -> "Content{document=$document}"
+                redacted != null -> "Content{redacted=$redacted}"
                 _json != null -> "Content{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Content")
             }
@@ -592,6 +615,10 @@ private constructor(
              */
             @JvmStatic
             fun ofDocument(document: BetaManagedAgentsDocumentBlock) = Content(document = document)
+
+            /** Placeholder for content withheld by Anthropic model policy. */
+            @JvmStatic
+            fun ofRedacted(redacted: BetaManagedAgentsRedactedBlock) = Content(redacted = redacted)
         }
 
         /**
@@ -610,6 +637,9 @@ private constructor(
              * reference via a URL.
              */
             fun visitDocument(document: BetaManagedAgentsDocumentBlock): T
+
+            /** Placeholder for content withheld by Anthropic model policy. */
+            fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock): T
 
             /**
              * Maps an unknown variant of [Content] to a value of type [T].
@@ -648,6 +678,13 @@ private constructor(
                             )
                             ?.let { Content(document = it, _json = json) } ?: Content(_json = json)
                     }
+                    "redacted" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsRedactedBlock>(),
+                            )
+                            ?.let { Content(redacted = it, _json = json) } ?: Content(_json = json)
+                    }
                 }
 
                 return Content(_json = json)
@@ -665,6 +702,7 @@ private constructor(
                     value.text != null -> generator.writeObject(value.text)
                     value.image != null -> generator.writeObject(value.image)
                     value.document != null -> generator.writeObject(value.document)
+                    value.redacted != null -> generator.writeObject(value.redacted)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Content")
                 }

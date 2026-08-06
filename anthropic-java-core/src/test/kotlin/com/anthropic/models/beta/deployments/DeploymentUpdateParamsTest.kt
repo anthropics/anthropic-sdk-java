@@ -5,6 +5,9 @@ package com.anthropic.models.beta.deployments
 import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.BetaCurrency
+import com.anthropic.models.beta.BetaMonetaryAmount
+import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsFileResourceParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
@@ -20,6 +23,17 @@ internal class DeploymentUpdateParamsTest {
             .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .agent("string")
+            .budget(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .maxListCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .build()
+            )
             .description("description")
             .environmentId("environment_id")
             .addUserMessageInitialEvent(
@@ -73,6 +87,17 @@ internal class DeploymentUpdateParamsTest {
                 .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .agent("string")
+                .budget(
+                    BetaManagedAgentsBudgetLimit.builder()
+                        .maxListCost(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                        .build()
+                )
                 .description("description")
                 .environmentId("environment_id")
                 .addUserMessageInitialEvent(
@@ -133,6 +158,17 @@ internal class DeploymentUpdateParamsTest {
                 .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .agent("string")
+                .budget(
+                    BetaManagedAgentsBudgetLimit.builder()
+                        .maxListCost(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
+                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                        .build()
+                )
                 .description("description")
                 .environmentId("environment_id")
                 .addUserMessageInitialEvent(
@@ -171,6 +207,18 @@ internal class DeploymentUpdateParamsTest {
         val body = params._body()
 
         assertThat(body.agent()).contains(DeploymentUpdateParams.Agent.ofString("string"))
+        assertThat(body.budget())
+            .contains(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .maxListCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .build()
+            )
         assertThat(body.description()).contains("description")
         assertThat(body.environmentId()).contains("environment_id")
         assertThat(body.initialEvents().getOrNull())
