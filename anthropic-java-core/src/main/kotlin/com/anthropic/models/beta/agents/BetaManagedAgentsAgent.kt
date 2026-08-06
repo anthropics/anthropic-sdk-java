@@ -544,7 +544,7 @@ private constructor(
          *     .build()
          * ```
          */
-        fun coordinatorMultiagent(agents: List<BetaManagedAgentsAgentReference>) =
+        fun coordinatorMultiagent(agents: List<BetaManagedAgentsMultiagent.Agent>) =
             multiagent(
                 BetaManagedAgentsMultiagent.builder()
                     .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)

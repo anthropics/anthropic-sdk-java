@@ -2,18 +2,29 @@
 
 package com.anthropic.models.beta.sessions.threads
 
+import com.anthropic.core.BaseDeserializer
+import com.anthropic.core.BaseSerializer
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
+import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.agents.BetaManagedAgentsAdvisor
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.core.ObjectCodec
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
@@ -28,7 +39,7 @@ class BetaManagedAgentsSessionThread
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
-    private val agent: JsonField<BetaManagedAgentsSessionThreadAgent>,
+    private val agent: JsonField<Agent>,
     private val archivedAt: JsonField<OffsetDateTime>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val parentThreadId: JsonField<String>,
@@ -44,9 +55,7 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("agent")
-        @ExcludeMissing
-        agent: JsonField<BetaManagedAgentsSessionThreadAgent> = JsonMissing.of(),
+        @JsonProperty("agent") @ExcludeMissing agent: JsonField<Agent> = JsonMissing.of(),
         @JsonProperty("archived_at")
         @ExcludeMissing
         archivedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -94,13 +103,12 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * Resolved `agent` definition for a single `session_thread`. Snapshot of the agent at thread
-     * creation time. The multiagent roster is not repeated here; read it from `Session.agent`.
+     * A session-resolved multiagent roster entry.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun agent(): BetaManagedAgentsSessionThreadAgent = agent.getRequired("agent")
+    fun agent(): Agent = agent.getRequired("agent")
 
     /**
      * A timestamp in RFC 3339 format
@@ -184,9 +192,7 @@ private constructor(
      *
      * Unlike [agent], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("agent")
-    @ExcludeMissing
-    fun _agent(): JsonField<BetaManagedAgentsSessionThreadAgent> = agent
+    @JsonProperty("agent") @ExcludeMissing fun _agent(): JsonField<Agent> = agent
 
     /**
      * Returns the raw JSON value of [archivedAt].
@@ -305,7 +311,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var agent: JsonField<BetaManagedAgentsSessionThreadAgent>? = null
+        private var agent: JsonField<Agent>? = null
         private var archivedAt: JsonField<OffsetDateTime>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var parentThreadId: JsonField<String>? = null
@@ -345,23 +351,39 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /**
-         * Resolved `agent` definition for a single `session_thread`. Snapshot of the agent at
-         * thread creation time. The multiagent roster is not repeated here; read it from
-         * `Session.agent`.
-         */
-        fun agent(agent: BetaManagedAgentsSessionThreadAgent) = agent(JsonField.of(agent))
+        /** A session-resolved multiagent roster entry. */
+        fun agent(agent: Agent) = agent(JsonField.of(agent))
 
         /**
          * Sets [Builder.agent] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.agent] with a well-typed
-         * [BetaManagedAgentsSessionThreadAgent] value instead. This method is primarily for setting
-         * the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.agent] with a well-typed [Agent] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun agent(agent: JsonField<BetaManagedAgentsSessionThreadAgent>) = apply {
-            this.agent = agent
-        }
+        fun agent(agent: JsonField<Agent>) = apply { this.agent = agent }
+
+        /** Alias for calling [Builder.agent] with `Agent.ofAgent(agent)`. */
+        fun agent(agent: BetaManagedAgentsSessionThreadAgent) = agent(Agent.ofAgent(agent))
+
+        /** Alias for calling [agent] with `Agent.ofAdvisor(advisor)`. */
+        fun agent(advisor: BetaManagedAgentsAdvisor) = agent(Agent.ofAdvisor(advisor))
+
+        /**
+         * Alias for calling [agent] with the following:
+         * ```java
+         * BetaManagedAgentsAdvisor.builder()
+         *     .type(BetaManagedAgentsAdvisor.Type.ADVISOR)
+         *     .model(model)
+         *     .build()
+         * ```
+         */
+        fun advisorAgent(model: String) =
+            agent(
+                BetaManagedAgentsAdvisor.builder()
+                    .type(BetaManagedAgentsAdvisor.Type.ADVISOR)
+                    .model(model)
+                    .build()
+            )
 
         /** A timestamp in RFC 3339 format */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
@@ -606,6 +628,247 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (usage.asKnown().getOrNull()?.validity() ?: 0)
+
+    /** A session-resolved multiagent roster entry. */
+    @JsonDeserialize(using = Agent.Deserializer::class)
+    @JsonSerialize(using = Agent.Serializer::class)
+    class Agent
+    private constructor(
+        private val agent: BetaManagedAgentsSessionThreadAgent? = null,
+        private val advisor: BetaManagedAgentsAdvisor? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        /**
+         * Resolved `agent` definition for a single `session_thread`. Snapshot of the agent at
+         * thread creation time. The multiagent roster is not repeated here; read it from
+         * `Session.agent`.
+         */
+        fun agent(): Optional<BetaManagedAgentsSessionThreadAgent> = Optional.ofNullable(agent)
+
+        /**
+         * Platform advisor roster entry: a model the session's primary thread may consult mid-turn.
+         */
+        fun advisor(): Optional<BetaManagedAgentsAdvisor> = Optional.ofNullable(advisor)
+
+        fun isAgent(): Boolean = agent != null
+
+        fun isAdvisor(): Boolean = advisor != null
+
+        /**
+         * Resolved `agent` definition for a single `session_thread`. Snapshot of the agent at
+         * thread creation time. The multiagent roster is not repeated here; read it from
+         * `Session.agent`.
+         */
+        fun asAgent(): BetaManagedAgentsSessionThreadAgent = agent.getOrThrow("agent")
+
+        /**
+         * Platform advisor roster entry: a model the session's primary thread may consult mid-turn.
+         */
+        fun asAdvisor(): BetaManagedAgentsAdvisor = advisor.getOrThrow("advisor")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import com.anthropic.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = agent.accept(new Agent.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitAgent(BetaManagedAgentsSessionThreadAgent agent) {
+         *         return Optional.of(agent.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws AnthropicInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                agent != null -> visitor.visitAgent(agent)
+                advisor != null -> visitor.visitAdvisor(advisor)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Agent = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitAgent(agent: BetaManagedAgentsSessionThreadAgent) {
+                        agent.validate()
+                    }
+
+                    override fun visitAdvisor(advisor: BetaManagedAgentsAdvisor) {
+                        advisor.validate()
+                    }
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitAgent(agent: BetaManagedAgentsSessionThreadAgent) =
+                        agent.validity()
+
+                    override fun visitAdvisor(advisor: BetaManagedAgentsAdvisor) =
+                        advisor.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Agent && agent == other.agent && advisor == other.advisor
+        }
+
+        override fun hashCode(): Int = Objects.hash(agent, advisor)
+
+        override fun toString(): String =
+            when {
+                agent != null -> "Agent{agent=$agent}"
+                advisor != null -> "Agent{advisor=$advisor}"
+                _json != null -> "Agent{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Agent")
+            }
+
+        companion object {
+
+            /**
+             * Resolved `agent` definition for a single `session_thread`. Snapshot of the agent at
+             * thread creation time. The multiagent roster is not repeated here; read it from
+             * `Session.agent`.
+             */
+            @JvmStatic
+            fun ofAgent(agent: BetaManagedAgentsSessionThreadAgent) = Agent(agent = agent)
+
+            /**
+             * Platform advisor roster entry: a model the session's primary thread may consult
+             * mid-turn.
+             */
+            @JvmStatic fun ofAdvisor(advisor: BetaManagedAgentsAdvisor) = Agent(advisor = advisor)
+        }
+
+        /** An interface that defines how to map each variant of [Agent] to a value of type [T]. */
+        interface Visitor<out T> {
+
+            /**
+             * Resolved `agent` definition for a single `session_thread`. Snapshot of the agent at
+             * thread creation time. The multiagent roster is not repeated here; read it from
+             * `Session.agent`.
+             */
+            fun visitAgent(agent: BetaManagedAgentsSessionThreadAgent): T
+
+            /**
+             * Platform advisor roster entry: a model the session's primary thread may consult
+             * mid-turn.
+             */
+            fun visitAdvisor(advisor: BetaManagedAgentsAdvisor): T
+
+            /**
+             * Maps an unknown variant of [Agent] to a value of type [T].
+             *
+             * An instance of [Agent] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
+             *
+             * @throws AnthropicInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw AnthropicInvalidDataException("Unknown Agent: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<Agent>(Agent::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): Agent {
+                val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+
+                when (type) {
+                    "agent" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsSessionThreadAgent>(),
+                            )
+                            ?.let { Agent(agent = it, _json = json) } ?: Agent(_json = json)
+                    }
+                    "advisor" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsAdvisor>())
+                            ?.let { Agent(advisor = it, _json = json) } ?: Agent(_json = json)
+                    }
+                }
+
+                return Agent(_json = json)
+            }
+        }
+
+        internal class Serializer : BaseSerializer<Agent>(Agent::class) {
+
+            override fun serialize(
+                value: Agent,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.agent != null -> generator.writeObject(value.agent)
+                    value.advisor != null -> generator.writeObject(value.advisor)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid Agent")
+                }
+            }
+        }
+    }
 
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

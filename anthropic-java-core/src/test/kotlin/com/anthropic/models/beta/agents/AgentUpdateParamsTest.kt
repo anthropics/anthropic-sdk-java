@@ -36,6 +36,7 @@ internal class AgentUpdateParamsTest {
                     .effort(
                         BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW
                     )
+                    .inferenceGeo("inference_geo")
                     .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                     .build()
             )
@@ -126,6 +127,7 @@ internal class AgentUpdateParamsTest {
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW
                         )
+                        .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
@@ -225,6 +227,7 @@ internal class AgentUpdateParamsTest {
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW
                         )
+                        .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
@@ -307,6 +310,7 @@ internal class AgentUpdateParamsTest {
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW
                         )
+                        .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )

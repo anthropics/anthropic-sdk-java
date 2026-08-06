@@ -5,6 +5,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentMessageEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsStreamSessionEvents
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -117,8 +118,8 @@ internal class BetaManagedAgentsEventAccumulatorTest {
 
         val content = accumulator.agentMessages().getValue("evt_1").content()
         assertThat(content).hasSize(2)
-        assertThat(content[0].text()).isEqualTo("Hello")
-        assertThat(content[1].text()).isEqualTo("World")
+        assertThat(content[0].text().getOrNull()?.text()).isEqualTo("Hello")
+        assertThat(content[1].text().getOrNull()?.text()).isEqualTo("World")
         assertThat(accumulator.agentMessageText("evt_1")).contains("HelloWorld")
     }
 
@@ -165,6 +166,49 @@ internal class BetaManagedAgentsEventAccumulatorTest {
         )
 
         assertThat(accumulator.agentMessages().getValue("evt_1").content()).isEmpty()
+    }
+
+    @Test
+    fun fragmentWithoutTextIsNoOp() {
+        val accumulator = BetaManagedAgentsEventAccumulator.create()
+
+        // A non-text payload deserializes to a text block with `text` unset.
+        feed(
+            accumulator,
+            eventStart("evt_1"),
+            sseEvent(
+                """{"type":"event_delta","event_id":"evt_1","delta":{"type":"content_delta","index":0,"content":{"type":"redacted"}}}"""
+            ),
+        )
+
+        assertThat(accumulator.agentMessages().getValue("evt_1").content()).isEmpty()
+        assertThat(accumulator.agentMessageText("evt_1")).contains("")
+
+        // Three at one index, so a merge reads back a builder-set value, not a deserialized one.
+        feed(
+            accumulator,
+            eventDelta("evt_1", "af", 0),
+            eventDelta("evt_1", "te", 0),
+            eventDelta("evt_1", "r", 0),
+        )
+
+        assertThat(accumulator.agentMessageText("evt_1")).contains("after")
+    }
+
+    @Test
+    fun emptyTextFragmentStillApplies() {
+        val accumulator = BetaManagedAgentsEventAccumulator.create()
+
+        // An empty string is present, unlike an absent `text`, so it opens an entry as usual.
+        feed(
+            accumulator,
+            eventStart("evt_1"),
+            eventDelta("evt_1", "", 0),
+            eventDelta("evt_1", "x", 0),
+        )
+
+        assertThat(accumulator.agentMessages().getValue("evt_1").content()).hasSize(1)
+        assertThat(accumulator.agentMessageText("evt_1")).contains("x")
     }
 
     @Test

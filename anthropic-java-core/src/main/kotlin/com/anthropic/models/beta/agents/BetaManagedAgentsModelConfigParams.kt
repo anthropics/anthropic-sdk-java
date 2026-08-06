@@ -35,6 +35,7 @@ class BetaManagedAgentsModelConfigParams
 private constructor(
     private val id: JsonField<BetaManagedAgentsModel>,
     private val effort: JsonField<Effort>,
+    private val inferenceGeo: JsonField<String>,
     private val speed: JsonField<Speed>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -45,8 +46,11 @@ private constructor(
         @ExcludeMissing
         id: JsonField<BetaManagedAgentsModel> = JsonMissing.of(),
         @JsonProperty("effort") @ExcludeMissing effort: JsonField<Effort> = JsonMissing.of(),
+        @JsonProperty("inference_geo")
+        @ExcludeMissing
+        inferenceGeo: JsonField<String> = JsonMissing.of(),
         @JsonProperty("speed") @ExcludeMissing speed: JsonField<Speed> = JsonMissing.of(),
-    ) : this(id, effort, speed, mutableMapOf())
+    ) : this(id, effort, inferenceGeo, speed, mutableMapOf())
 
     /**
      * The model that will power your agent.
@@ -70,6 +74,16 @@ private constructor(
     fun effort(): Optional<Effort> = effort.getOptional("effort")
 
     /**
+     * Geographic region for model inference. When unset, requests fall through to the workspace's
+     * default_inference_geo. On update, `model` is whole-object replacement — omitting
+     * inference_geo clears it.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun inferenceGeo(): Optional<String> = inferenceGeo.getOptional("inference_geo")
+
+    /**
      * Inference speed mode. `fast` provides significantly faster output token generation at premium
      * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
      *
@@ -91,6 +105,15 @@ private constructor(
      * Unlike [effort], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("effort") @ExcludeMissing fun _effort(): JsonField<Effort> = effort
+
+    /**
+     * Returns the raw JSON value of [inferenceGeo].
+     *
+     * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("inference_geo")
+    @ExcludeMissing
+    fun _inferenceGeo(): JsonField<String> = inferenceGeo
 
     /**
      * Returns the raw JSON value of [speed].
@@ -130,6 +153,7 @@ private constructor(
 
         private var id: JsonField<BetaManagedAgentsModel>? = null
         private var effort: JsonField<Effort> = JsonMissing.of()
+        private var inferenceGeo: JsonField<String> = JsonMissing.of()
         private var speed: JsonField<Speed> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -138,6 +162,7 @@ private constructor(
             apply {
                 id = betaManagedAgentsModelConfigParams.id
                 effort = betaManagedAgentsModelConfigParams.effort
+                inferenceGeo = betaManagedAgentsModelConfigParams.inferenceGeo
                 speed = betaManagedAgentsModelConfigParams.speed
                 additionalProperties =
                     betaManagedAgentsModelConfigParams.additionalProperties.toMutableMap()
@@ -230,6 +255,27 @@ private constructor(
             effort(Effort.ofBetaManagedAgentsEffortMax(betaManagedAgentsEffortMax))
 
         /**
+         * Geographic region for model inference. When unset, requests fall through to the
+         * workspace's default_inference_geo. On update, `model` is whole-object replacement —
+         * omitting inference_geo clears it.
+         */
+        fun inferenceGeo(inferenceGeo: String?) = inferenceGeo(JsonField.ofNullable(inferenceGeo))
+
+        /** Alias for calling [Builder.inferenceGeo] with `inferenceGeo.orElse(null)`. */
+        fun inferenceGeo(inferenceGeo: Optional<String>) = inferenceGeo(inferenceGeo.getOrNull())
+
+        /**
+         * Sets [Builder.inferenceGeo] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inferenceGeo] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun inferenceGeo(inferenceGeo: JsonField<String>) = apply {
+            this.inferenceGeo = inferenceGeo
+        }
+
+        /**
          * Inference speed mode. `fast` provides significantly faster output token generation at
          * premium pricing. Not all models support `fast`; invalid combinations are rejected at
          * create time.
@@ -282,6 +328,7 @@ private constructor(
             BetaManagedAgentsModelConfigParams(
                 checkRequired("id", id),
                 effort,
+                inferenceGeo,
                 speed,
                 additionalProperties.toMutableMap(),
             )
@@ -304,6 +351,7 @@ private constructor(
 
         id()
         effort().ifPresent { it.validate() }
+        inferenceGeo()
         speed().ifPresent { it.validate() }
         validated = true
     }
@@ -325,6 +373,7 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (effort.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
             (speed.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
@@ -1078,14 +1127,17 @@ private constructor(
         return other is BetaManagedAgentsModelConfigParams &&
             id == other.id &&
             effort == other.effort &&
+            inferenceGeo == other.inferenceGeo &&
             speed == other.speed &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, effort, speed, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(id, effort, inferenceGeo, speed, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsModelConfigParams{id=$id, effort=$effort, speed=$speed, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsModelConfigParams{id=$id, effort=$effort, inferenceGeo=$inferenceGeo, speed=$speed, additionalProperties=$additionalProperties}"
 }

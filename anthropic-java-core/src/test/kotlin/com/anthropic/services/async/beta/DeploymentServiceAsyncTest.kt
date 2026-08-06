@@ -6,6 +6,8 @@ import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.core.JsonValue
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.BetaCurrency
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.deployments.BetaManagedAgentsScheduleParams
 import com.anthropic.models.beta.deployments.DeploymentArchiveParams
 import com.anthropic.models.beta.deployments.DeploymentCreateParams
@@ -14,6 +16,7 @@ import com.anthropic.models.beta.deployments.DeploymentRetrieveParams
 import com.anthropic.models.beta.deployments.DeploymentRunParams
 import com.anthropic.models.beta.deployments.DeploymentUnpauseParams
 import com.anthropic.models.beta.deployments.DeploymentUpdateParams
+import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsFileResourceParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
@@ -50,6 +53,17 @@ internal class DeploymentServiceAsyncTest {
                         )
                     )
                     .name("x")
+                    .budget(
+                        BetaManagedAgentsBudgetLimit.builder()
+                            .maxListCost(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
+                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                            .build()
+                    )
                     .description("description")
                     .metadata(
                         DeploymentCreateParams.Metadata.builder()
@@ -115,6 +129,17 @@ internal class DeploymentServiceAsyncTest {
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .agent("string")
+                    .budget(
+                        BetaManagedAgentsBudgetLimit.builder()
+                            .maxListCost(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
+                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                            .build()
+                    )
                     .description("description")
                     .environmentId("environment_id")
                     .addUserMessageInitialEvent(

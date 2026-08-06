@@ -11,6 +11,7 @@ import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsAdvisorParams
 import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentParams
 import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentRosterEntryParams
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -177,6 +178,13 @@ private constructor(
          */
         fun addAgent(self: BetaManagedAgentsMultiagentSelfParams) =
             addAgent(BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(self))
+
+        /**
+         * Alias for calling [addAgent] with
+         * `BetaManagedAgentsMultiagentRosterEntryParams.ofAdvisor(advisor)`.
+         */
+        fun addAgent(advisor: BetaManagedAgentsAdvisorParams) =
+            addAgent(BetaManagedAgentsMultiagentRosterEntryParams.ofAdvisor(advisor))
 
         fun type(type: Type) = type(JsonField.of(type))
 

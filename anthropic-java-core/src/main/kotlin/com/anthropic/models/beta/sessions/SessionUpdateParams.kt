@@ -13,6 +13,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -48,6 +49,15 @@ private constructor(
     fun agent(): Optional<BetaManagedAgentsSessionAgentUpdate> = body.agent()
 
     /**
+     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
+     * reaches `max_list_cost`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun budget(): Optional<BetaManagedAgentsBudgetLimit> = body.budget()
+
+    /**
      * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the field
      * to preserve.
      *
@@ -79,6 +89,13 @@ private constructor(
      * Unlike [agent], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _agent(): JsonField<BetaManagedAgentsSessionAgentUpdate> = body._agent()
+
+    /**
+     * Returns the raw JSON value of [budget].
+     *
+     * Unlike [budget], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _budget(): JsonField<BetaManagedAgentsBudgetLimit> = body._budget()
 
     /**
      * Returns the raw JSON value of [metadata].
@@ -172,9 +189,11 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [agent]
+         * - [budget]
          * - [metadata]
          * - [title]
          * - [vaultIds]
+         * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -195,6 +214,35 @@ private constructor(
         fun agent(agent: JsonField<BetaManagedAgentsSessionAgentUpdate>) = apply {
             body.agent(agent)
         }
+
+        /**
+         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
+         * cost reaches `max_list_cost`.
+         */
+        fun budget(budget: BetaManagedAgentsBudgetLimit?) = apply { body.budget(budget) }
+
+        /** Alias for calling [Builder.budget] with `budget.orElse(null)`. */
+        fun budget(budget: Optional<BetaManagedAgentsBudgetLimit>) = budget(budget.getOrNull())
+
+        /**
+         * Sets [Builder.budget] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.budget] with a well-typed [BetaManagedAgentsBudgetLimit]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun budget(budget: JsonField<BetaManagedAgentsBudgetLimit>) = apply { body.budget(budget) }
+
+        /**
+         * Alias for calling [budget] with the following:
+         * ```java
+         * BetaManagedAgentsBudgetLimit.builder()
+         *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+         *     .maxListCost(maxListCost)
+         *     .build()
+         * ```
+         */
+        fun limitBudget(maxListCost: BetaMonetaryAmount) = apply { body.limitBudget(maxListCost) }
 
         /**
          * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the
@@ -405,6 +453,7 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val agent: JsonField<BetaManagedAgentsSessionAgentUpdate>,
+        private val budget: JsonField<BetaManagedAgentsBudgetLimit>,
         private val metadata: JsonField<Metadata>,
         private val title: JsonField<String>,
         private val vaultIds: JsonField<List<String>>,
@@ -416,6 +465,9 @@ private constructor(
             @JsonProperty("agent")
             @ExcludeMissing
             agent: JsonField<BetaManagedAgentsSessionAgentUpdate> = JsonMissing.of(),
+            @JsonProperty("budget")
+            @ExcludeMissing
+            budget: JsonField<BetaManagedAgentsBudgetLimit> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -423,7 +475,7 @@ private constructor(
             @JsonProperty("vault_ids")
             @ExcludeMissing
             vaultIds: JsonField<List<String>> = JsonMissing.of(),
-        ) : this(agent, metadata, title, vaultIds, mutableMapOf())
+        ) : this(agent, budget, metadata, title, vaultIds, mutableMapOf())
 
         /**
          * Mid-session agent configuration update. Only `tools` and `mcp_servers` are updatable.
@@ -434,6 +486,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun agent(): Optional<BetaManagedAgentsSessionAgentUpdate> = agent.getOptional("agent")
+
+        /**
+         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
+         * cost reaches `max_list_cost`.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun budget(): Optional<BetaManagedAgentsBudgetLimit> = budget.getOptional("budget")
 
         /**
          * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the
@@ -469,6 +530,15 @@ private constructor(
         @JsonProperty("agent")
         @ExcludeMissing
         fun _agent(): JsonField<BetaManagedAgentsSessionAgentUpdate> = agent
+
+        /**
+         * Returns the raw JSON value of [budget].
+         *
+         * Unlike [budget], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("budget")
+        @ExcludeMissing
+        fun _budget(): JsonField<BetaManagedAgentsBudgetLimit> = budget
 
         /**
          * Returns the raw JSON value of [metadata].
@@ -515,6 +585,7 @@ private constructor(
         class Builder internal constructor() {
 
             private var agent: JsonField<BetaManagedAgentsSessionAgentUpdate> = JsonMissing.of()
+            private var budget: JsonField<BetaManagedAgentsBudgetLimit> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var title: JsonField<String> = JsonMissing.of()
             private var vaultIds: JsonField<MutableList<String>>? = null
@@ -523,6 +594,7 @@ private constructor(
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 agent = body.agent
+                budget = body.budget
                 metadata = body.metadata
                 title = body.title
                 vaultIds = body.vaultIds.map { it.toMutableList() }.takeUnless { it.isMissing() }
@@ -546,6 +618,43 @@ private constructor(
             fun agent(agent: JsonField<BetaManagedAgentsSessionAgentUpdate>) = apply {
                 this.agent = agent
             }
+
+            /**
+             * A hard spend ceiling. The session stops issuing new model requests once the tracked
+             * list cost reaches `max_list_cost`.
+             */
+            fun budget(budget: BetaManagedAgentsBudgetLimit?) = budget(JsonField.ofNullable(budget))
+
+            /** Alias for calling [Builder.budget] with `budget.orElse(null)`. */
+            fun budget(budget: Optional<BetaManagedAgentsBudgetLimit>) = budget(budget.getOrNull())
+
+            /**
+             * Sets [Builder.budget] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.budget] with a well-typed
+             * [BetaManagedAgentsBudgetLimit] value instead. This method is primarily for setting
+             * the field to an undocumented or not yet supported value.
+             */
+            fun budget(budget: JsonField<BetaManagedAgentsBudgetLimit>) = apply {
+                this.budget = budget
+            }
+
+            /**
+             * Alias for calling [budget] with the following:
+             * ```java
+             * BetaManagedAgentsBudgetLimit.builder()
+             *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+             *     .maxListCost(maxListCost)
+             *     .build()
+             * ```
+             */
+            fun limitBudget(maxListCost: BetaMonetaryAmount) =
+                budget(
+                    BetaManagedAgentsBudgetLimit.builder()
+                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                        .maxListCost(maxListCost)
+                        .build()
+                )
 
             /**
              * Metadata patch. Set a key to a string to upsert it, or to null to delete it. Omit the
@@ -636,6 +745,7 @@ private constructor(
             fun build(): Body =
                 Body(
                     agent,
+                    budget,
                     metadata,
                     title,
                     (vaultIds ?: JsonMissing.of()).map { it.toImmutable() },
@@ -660,6 +770,7 @@ private constructor(
             }
 
             agent().ifPresent { it.validate() }
+            budget().ifPresent { it.validate() }
             metadata().ifPresent { it.validate() }
             title()
             vaultIds()
@@ -683,6 +794,7 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (agent.asKnown().getOrNull()?.validity() ?: 0) +
+                (budget.asKnown().getOrNull()?.validity() ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (title.asKnown().isPresent) 1 else 0) +
                 (vaultIds.asKnown().getOrNull()?.size ?: 0)
@@ -694,6 +806,7 @@ private constructor(
 
             return other is Body &&
                 agent == other.agent &&
+                budget == other.budget &&
                 metadata == other.metadata &&
                 title == other.title &&
                 vaultIds == other.vaultIds &&
@@ -701,13 +814,13 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(agent, metadata, title, vaultIds, additionalProperties)
+            Objects.hash(agent, budget, metadata, title, vaultIds, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{agent=$agent, metadata=$metadata, title=$title, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
+            "Body{agent=$agent, budget=$budget, metadata=$metadata, title=$title, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
     }
 
     /**

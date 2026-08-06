@@ -19,6 +19,7 @@ internal class BetaManagedAgentsModelConfigTest {
                         .type(BetaManagedAgentsEffortLow.Type.LOW)
                         .build()
                 )
+                .inferenceGeo("inference_geo")
                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                 .build()
 
@@ -32,6 +33,7 @@ internal class BetaManagedAgentsModelConfigTest {
                         .build()
                 )
             )
+        assertThat(betaManagedAgentsModelConfig.inferenceGeo()).contains("inference_geo")
         assertThat(betaManagedAgentsModelConfig.speed())
             .contains(BetaManagedAgentsModelConfig.Speed.STANDARD)
     }
@@ -47,6 +49,7 @@ internal class BetaManagedAgentsModelConfigTest {
                         .type(BetaManagedAgentsEffortLow.Type.LOW)
                         .build()
                 )
+                .inferenceGeo("inference_geo")
                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                 .build()
 

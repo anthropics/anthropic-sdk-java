@@ -3,6 +3,8 @@
 package com.anthropic.models.beta.sessions
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.BetaCurrency
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,6 +15,7 @@ internal class BetaManagedAgentsSessionUsageTest {
     fun create() {
         val betaManagedAgentsSessionUsage =
             BetaManagedAgentsSessionUsage.builder()
+                .activeSeconds(0.0)
                 .cacheCreation(
                     BetaManagedAgentsCacheCreationUsage.builder()
                         .ephemeral1hInputTokens(0)
@@ -21,9 +24,19 @@ internal class BetaManagedAgentsSessionUsageTest {
                 )
                 .cacheReadInputTokens(0)
                 .inputTokens(0)
+                .listCost(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
                 .outputTokens(0)
+                .serverToolUse(
+                    BetaManagedAgentsServerToolUsage.builder()
+                        .webFetchRequests(0)
+                        .webSearchRequests(3)
+                        .build()
+                )
                 .build()
 
+        assertThat(betaManagedAgentsSessionUsage.activeSeconds()).contains(0.0)
         assertThat(betaManagedAgentsSessionUsage.cacheCreation())
             .contains(
                 BetaManagedAgentsCacheCreationUsage.builder()
@@ -33,7 +46,18 @@ internal class BetaManagedAgentsSessionUsageTest {
             )
         assertThat(betaManagedAgentsSessionUsage.cacheReadInputTokens()).contains(0)
         assertThat(betaManagedAgentsSessionUsage.inputTokens()).contains(0)
+        assertThat(betaManagedAgentsSessionUsage.listCost())
+            .contains(
+                BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+            )
         assertThat(betaManagedAgentsSessionUsage.outputTokens()).contains(0)
+        assertThat(betaManagedAgentsSessionUsage.serverToolUse())
+            .contains(
+                BetaManagedAgentsServerToolUsage.builder()
+                    .webFetchRequests(0)
+                    .webSearchRequests(3)
+                    .build()
+            )
     }
 
     @Test
@@ -41,6 +65,7 @@ internal class BetaManagedAgentsSessionUsageTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionUsage =
             BetaManagedAgentsSessionUsage.builder()
+                .activeSeconds(0.0)
                 .cacheCreation(
                     BetaManagedAgentsCacheCreationUsage.builder()
                         .ephemeral1hInputTokens(0)
@@ -49,7 +74,16 @@ internal class BetaManagedAgentsSessionUsageTest {
                 )
                 .cacheReadInputTokens(0)
                 .inputTokens(0)
+                .listCost(
+                    BetaMonetaryAmount.builder().amount("2500").currency(BetaCurrency.USD).build()
+                )
                 .outputTokens(0)
+                .serverToolUse(
+                    BetaManagedAgentsServerToolUsage.builder()
+                        .webFetchRequests(0)
+                        .webSearchRequests(3)
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionUsage =

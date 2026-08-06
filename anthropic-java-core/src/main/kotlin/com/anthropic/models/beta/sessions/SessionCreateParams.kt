@@ -18,6 +18,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserDefineOutcomeEventParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -64,6 +65,15 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun environmentId(): String = body.environmentId()
+
+    /**
+     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
+     * reaches `max_list_cost`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun budget(): Optional<BetaManagedAgentsBudgetLimit> = body.budget()
 
     /**
      * Initial events to send to the `session` at creation, processed in order. Supports
@@ -120,6 +130,13 @@ private constructor(
      * Unlike [environmentId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _environmentId(): JsonField<String> = body._environmentId()
+
+    /**
+     * Returns the raw JSON value of [budget].
+     *
+     * Unlike [budget], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _budget(): JsonField<BetaManagedAgentsBudgetLimit> = body._budget()
 
     /**
      * Returns the raw JSON value of [initialEvents].
@@ -227,9 +244,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [agent]
          * - [environmentId]
+         * - [budget]
          * - [initialEvents]
          * - [metadata]
-         * - [resources]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -280,6 +297,32 @@ private constructor(
         fun environmentId(environmentId: JsonField<String>) = apply {
             body.environmentId(environmentId)
         }
+
+        /**
+         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
+         * cost reaches `max_list_cost`.
+         */
+        fun budget(budget: BetaManagedAgentsBudgetLimit) = apply { body.budget(budget) }
+
+        /**
+         * Sets [Builder.budget] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.budget] with a well-typed [BetaManagedAgentsBudgetLimit]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun budget(budget: JsonField<BetaManagedAgentsBudgetLimit>) = apply { body.budget(budget) }
+
+        /**
+         * Alias for calling [budget] with the following:
+         * ```java
+         * BetaManagedAgentsBudgetLimit.builder()
+         *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+         *     .maxListCost(maxListCost)
+         *     .build()
+         * ```
+         */
+        fun limitBudget(maxListCost: BetaMonetaryAmount) = apply { body.limitBudget(maxListCost) }
 
         /**
          * Initial events to send to the `session` at creation, processed in order. Supports
@@ -599,6 +642,7 @@ private constructor(
     private constructor(
         private val agent: JsonField<Agent>,
         private val environmentId: JsonField<String>,
+        private val budget: JsonField<BetaManagedAgentsBudgetLimit>,
         private val initialEvents: JsonField<List<InitialEvent>>,
         private val metadata: JsonField<Metadata>,
         private val resources: JsonField<List<Resource>>,
@@ -613,6 +657,9 @@ private constructor(
             @JsonProperty("environment_id")
             @ExcludeMissing
             environmentId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("budget")
+            @ExcludeMissing
+            budget: JsonField<BetaManagedAgentsBudgetLimit> = JsonMissing.of(),
             @JsonProperty("initial_events")
             @ExcludeMissing
             initialEvents: JsonField<List<InitialEvent>> = JsonMissing.of(),
@@ -629,6 +676,7 @@ private constructor(
         ) : this(
             agent,
             environmentId,
+            budget,
             initialEvents,
             metadata,
             resources,
@@ -653,6 +701,15 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun environmentId(): String = environmentId.getRequired("environment_id")
+
+        /**
+         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
+         * cost reaches `max_list_cost`.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun budget(): Optional<BetaManagedAgentsBudgetLimit> = budget.getOptional("budget")
 
         /**
          * Initial events to send to the `session` at creation, processed in order. Supports
@@ -713,6 +770,15 @@ private constructor(
         @JsonProperty("environment_id")
         @ExcludeMissing
         fun _environmentId(): JsonField<String> = environmentId
+
+        /**
+         * Returns the raw JSON value of [budget].
+         *
+         * Unlike [budget], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("budget")
+        @ExcludeMissing
+        fun _budget(): JsonField<BetaManagedAgentsBudgetLimit> = budget
 
         /**
          * Returns the raw JSON value of [initialEvents].
@@ -787,6 +853,7 @@ private constructor(
 
             private var agent: JsonField<Agent>? = null
             private var environmentId: JsonField<String>? = null
+            private var budget: JsonField<BetaManagedAgentsBudgetLimit> = JsonMissing.of()
             private var initialEvents: JsonField<MutableList<InitialEvent>>? = null
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var resources: JsonField<MutableList<Resource>>? = null
@@ -798,6 +865,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 agent = body.agent
                 environmentId = body.environmentId
+                budget = body.budget
                 initialEvents =
                     body.initialEvents.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 metadata = body.metadata
@@ -858,6 +926,40 @@ private constructor(
             fun environmentId(environmentId: JsonField<String>) = apply {
                 this.environmentId = environmentId
             }
+
+            /**
+             * A hard spend ceiling. The session stops issuing new model requests once the tracked
+             * list cost reaches `max_list_cost`.
+             */
+            fun budget(budget: BetaManagedAgentsBudgetLimit) = budget(JsonField.of(budget))
+
+            /**
+             * Sets [Builder.budget] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.budget] with a well-typed
+             * [BetaManagedAgentsBudgetLimit] value instead. This method is primarily for setting
+             * the field to an undocumented or not yet supported value.
+             */
+            fun budget(budget: JsonField<BetaManagedAgentsBudgetLimit>) = apply {
+                this.budget = budget
+            }
+
+            /**
+             * Alias for calling [budget] with the following:
+             * ```java
+             * BetaManagedAgentsBudgetLimit.builder()
+             *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+             *     .maxListCost(maxListCost)
+             *     .build()
+             * ```
+             */
+            fun limitBudget(maxListCost: BetaMonetaryAmount) =
+                budget(
+                    BetaManagedAgentsBudgetLimit.builder()
+                        .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                        .maxListCost(maxListCost)
+                        .build()
+                )
 
             /**
              * Initial events to send to the `session` at creation, processed in order. Supports
@@ -1087,6 +1189,7 @@ private constructor(
                 Body(
                     checkRequired("agent", agent),
                     checkRequired("environmentId", environmentId),
+                    budget,
                     (initialEvents ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
                     (resources ?: JsonMissing.of()).map { it.toImmutable() },
@@ -1114,6 +1217,7 @@ private constructor(
 
             agent().validate()
             environmentId()
+            budget().ifPresent { it.validate() }
             initialEvents().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
             resources().ifPresent { it.forEach { it.validate() } }
@@ -1140,6 +1244,7 @@ private constructor(
         internal fun validity(): Int =
             (agent.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (environmentId.asKnown().isPresent) 1 else 0) +
+                (budget.asKnown().getOrNull()?.validity() ?: 0) +
                 (initialEvents.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (resources.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
@@ -1154,6 +1259,7 @@ private constructor(
             return other is Body &&
                 agent == other.agent &&
                 environmentId == other.environmentId &&
+                budget == other.budget &&
                 initialEvents == other.initialEvents &&
                 metadata == other.metadata &&
                 resources == other.resources &&
@@ -1166,6 +1272,7 @@ private constructor(
             Objects.hash(
                 agent,
                 environmentId,
+                budget,
                 initialEvents,
                 metadata,
                 resources,
@@ -1178,7 +1285,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{agent=$agent, environmentId=$environmentId, initialEvents=$initialEvents, metadata=$metadata, resources=$resources, title=$title, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
+            "Body{agent=$agent, environmentId=$environmentId, budget=$budget, initialEvents=$initialEvents, metadata=$metadata, resources=$resources, title=$title, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
     }
 
     /**

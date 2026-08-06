@@ -175,6 +175,13 @@ private constructor(
         fun addAgent(self: BetaManagedAgentsMultiagentSelfParams) =
             addAgent(BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(self))
 
+        /**
+         * Alias for calling [addAgent] with
+         * `BetaManagedAgentsMultiagentRosterEntryParams.ofAdvisor(advisor)`.
+         */
+        fun addAgent(advisor: BetaManagedAgentsAdvisorParams) =
+            addAgent(BetaManagedAgentsMultiagentRosterEntryParams.ofAdvisor(advisor))
+
         fun type(type: Type) = type(JsonField.of(type))
 
         /**

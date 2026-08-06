@@ -3,6 +3,8 @@
 package com.anthropic.models.beta.sessions
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.BetaCurrency
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
@@ -51,6 +53,7 @@ internal class SessionListPageResponseTest {
                                                 .type(BetaManagedAgentsEffortLow.Type.LOW)
                                                 .build()
                                         )
+                                        .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                         .build()
                                 )
@@ -87,6 +90,7 @@ internal class SessionListPageResponseTest {
                                                                 )
                                                                 .build()
                                                         )
+                                                        .inferenceGeo("inference_geo")
                                                         .speed(
                                                             BetaManagedAgentsModelConfig.Speed
                                                                 .STANDARD
@@ -223,6 +227,17 @@ internal class SessionListPageResponseTest {
                                 .build()
                         )
                         .archivedAt(null)
+                        .budget(
+                            BetaManagedAgentsBudgetLimit.builder()
+                                .maxListCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
+                                .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                                .build()
+                        )
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                         .metadata(BetaManagedAgentsSession.Metadata.builder().build())
@@ -275,6 +290,7 @@ internal class SessionListPageResponseTest {
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .usage(
                             BetaManagedAgentsSessionUsage.builder()
+                                .activeSeconds(0.0)
                                 .cacheCreation(
                                     BetaManagedAgentsCacheCreationUsage.builder()
                                         .ephemeral1hInputTokens(0)
@@ -283,7 +299,19 @@ internal class SessionListPageResponseTest {
                                 )
                                 .cacheReadInputTokens(0)
                                 .inputTokens(0)
+                                .listCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
                                 .outputTokens(0)
+                                .serverToolUse(
+                                    BetaManagedAgentsServerToolUsage.builder()
+                                        .webFetchRequests(0)
+                                        .webSearchRequests(3)
+                                        .build()
+                                )
                                 .build()
                         )
                         .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
@@ -317,6 +345,7 @@ internal class SessionListPageResponseTest {
                                             .type(BetaManagedAgentsEffortLow.Type.LOW)
                                             .build()
                                     )
+                                    .inferenceGeo("inference_geo")
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                     .build()
                             )
@@ -348,6 +377,7 @@ internal class SessionListPageResponseTest {
                                                             )
                                                             .build()
                                                     )
+                                                    .inferenceGeo("inference_geo")
                                                     .speed(
                                                         BetaManagedAgentsModelConfig.Speed.STANDARD
                                                     )
@@ -479,6 +509,17 @@ internal class SessionListPageResponseTest {
                             .build()
                     )
                     .archivedAt(null)
+                    .budget(
+                        BetaManagedAgentsBudgetLimit.builder()
+                            .maxListCost(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
+                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                            .build()
+                    )
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .metadata(BetaManagedAgentsSession.Metadata.builder().build())
@@ -528,6 +569,7 @@ internal class SessionListPageResponseTest {
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .usage(
                         BetaManagedAgentsSessionUsage.builder()
+                            .activeSeconds(0.0)
                             .cacheCreation(
                                 BetaManagedAgentsCacheCreationUsage.builder()
                                     .ephemeral1hInputTokens(0)
@@ -536,7 +578,19 @@ internal class SessionListPageResponseTest {
                             )
                             .cacheReadInputTokens(0)
                             .inputTokens(0)
+                            .listCost(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
                             .outputTokens(0)
+                            .serverToolUse(
+                                BetaManagedAgentsServerToolUsage.builder()
+                                    .webFetchRequests(0)
+                                    .webSearchRequests(3)
+                                    .build()
+                            )
                             .build()
                     )
                     .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
@@ -576,6 +630,7 @@ internal class SessionListPageResponseTest {
                                                 .type(BetaManagedAgentsEffortLow.Type.LOW)
                                                 .build()
                                         )
+                                        .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                         .build()
                                 )
@@ -612,6 +667,7 @@ internal class SessionListPageResponseTest {
                                                                 )
                                                                 .build()
                                                         )
+                                                        .inferenceGeo("inference_geo")
                                                         .speed(
                                                             BetaManagedAgentsModelConfig.Speed
                                                                 .STANDARD
@@ -748,6 +804,17 @@ internal class SessionListPageResponseTest {
                                 .build()
                         )
                         .archivedAt(null)
+                        .budget(
+                            BetaManagedAgentsBudgetLimit.builder()
+                                .maxListCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
+                                .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                                .build()
+                        )
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                         .metadata(BetaManagedAgentsSession.Metadata.builder().build())
@@ -800,6 +867,7 @@ internal class SessionListPageResponseTest {
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .usage(
                             BetaManagedAgentsSessionUsage.builder()
+                                .activeSeconds(0.0)
                                 .cacheCreation(
                                     BetaManagedAgentsCacheCreationUsage.builder()
                                         .ephemeral1hInputTokens(0)
@@ -808,7 +876,19 @@ internal class SessionListPageResponseTest {
                                 )
                                 .cacheReadInputTokens(0)
                                 .inputTokens(0)
+                                .listCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
                                 .outputTokens(0)
+                                .serverToolUse(
+                                    BetaManagedAgentsServerToolUsage.builder()
+                                        .webFetchRequests(0)
+                                        .webSearchRequests(3)
+                                        .build()
+                                )
                                 .build()
                         )
                         .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
@@ -840,6 +920,7 @@ internal class SessionListPageResponseTest {
                                             .type(BetaManagedAgentsEffortLow.Type.LOW)
                                             .build()
                                     )
+                                    .inferenceGeo("inference_geo")
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                     .build()
                             )
@@ -871,6 +952,7 @@ internal class SessionListPageResponseTest {
                                                             )
                                                             .build()
                                                     )
+                                                    .inferenceGeo("inference_geo")
                                                     .speed(
                                                         BetaManagedAgentsModelConfig.Speed.STANDARD
                                                     )
@@ -1002,6 +1084,17 @@ internal class SessionListPageResponseTest {
                             .build()
                     )
                     .archivedAt(null)
+                    .budget(
+                        BetaManagedAgentsBudgetLimit.builder()
+                            .maxListCost(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
+                            .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                            .build()
+                    )
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .metadata(BetaManagedAgentsSession.Metadata.builder().build())
@@ -1051,6 +1144,7 @@ internal class SessionListPageResponseTest {
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .usage(
                         BetaManagedAgentsSessionUsage.builder()
+                            .activeSeconds(0.0)
                             .cacheCreation(
                                 BetaManagedAgentsCacheCreationUsage.builder()
                                     .ephemeral1hInputTokens(0)
@@ -1059,7 +1153,19 @@ internal class SessionListPageResponseTest {
                             )
                             .cacheReadInputTokens(0)
                             .inputTokens(0)
+                            .listCost(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
                             .outputTokens(0)
+                            .serverToolUse(
+                                BetaManagedAgentsServerToolUsage.builder()
+                                    .webFetchRequests(0)
+                                    .webSearchRequests(3)
+                                    .build()
+                            )
                             .build()
                     )
                     .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
@@ -1095,6 +1201,7 @@ internal class SessionListPageResponseTest {
                                                 .type(BetaManagedAgentsEffortLow.Type.LOW)
                                                 .build()
                                         )
+                                        .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                         .build()
                                 )
@@ -1131,6 +1238,7 @@ internal class SessionListPageResponseTest {
                                                                 )
                                                                 .build()
                                                         )
+                                                        .inferenceGeo("inference_geo")
                                                         .speed(
                                                             BetaManagedAgentsModelConfig.Speed
                                                                 .STANDARD
@@ -1267,6 +1375,17 @@ internal class SessionListPageResponseTest {
                                 .build()
                         )
                         .archivedAt(null)
+                        .budget(
+                            BetaManagedAgentsBudgetLimit.builder()
+                                .maxListCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
+                                .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                                .build()
+                        )
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                         .metadata(BetaManagedAgentsSession.Metadata.builder().build())
@@ -1319,6 +1438,7 @@ internal class SessionListPageResponseTest {
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .usage(
                             BetaManagedAgentsSessionUsage.builder()
+                                .activeSeconds(0.0)
                                 .cacheCreation(
                                     BetaManagedAgentsCacheCreationUsage.builder()
                                         .ephemeral1hInputTokens(0)
@@ -1327,7 +1447,19 @@ internal class SessionListPageResponseTest {
                                 )
                                 .cacheReadInputTokens(0)
                                 .inputTokens(0)
+                                .listCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
                                 .outputTokens(0)
+                                .serverToolUse(
+                                    BetaManagedAgentsServerToolUsage.builder()
+                                        .webFetchRequests(0)
+                                        .webSearchRequests(3)
+                                        .build()
+                                )
                                 .build()
                         )
                         .addVaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")

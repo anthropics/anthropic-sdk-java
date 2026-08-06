@@ -11,7 +11,9 @@ import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentReference
+import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -46,6 +48,7 @@ private constructor(
     private val type: JsonField<Type>,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val vaultIds: JsonField<List<String>>,
+    private val budget: JsonField<BetaManagedAgentsBudgetLimit>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -91,6 +94,9 @@ private constructor(
         @JsonProperty("vault_ids")
         @ExcludeMissing
         vaultIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("budget")
+        @ExcludeMissing
+        budget: JsonField<BetaManagedAgentsBudgetLimit> = JsonMissing.of(),
     ) : this(
         id,
         agent,
@@ -108,6 +114,7 @@ private constructor(
         type,
         updatedAt,
         vaultIds,
+        budget,
         mutableMapOf(),
     )
 
@@ -242,6 +249,15 @@ private constructor(
     fun vaultIds(): List<String> = vaultIds.getRequired("vault_ids")
 
     /**
+     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
+     * reaches `max_list_cost`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun budget(): Optional<BetaManagedAgentsBudgetLimit> = budget.getOptional("budget")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -373,6 +389,15 @@ private constructor(
      */
     @JsonProperty("vault_ids") @ExcludeMissing fun _vaultIds(): JsonField<List<String>> = vaultIds
 
+    /**
+     * Returns the raw JSON value of [budget].
+     *
+     * Unlike [budget], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("budget")
+    @ExcludeMissing
+    fun _budget(): JsonField<BetaManagedAgentsBudgetLimit> = budget
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -435,6 +460,7 @@ private constructor(
         private var type: JsonField<Type>? = null
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var vaultIds: JsonField<MutableList<String>>? = null
+        private var budget: JsonField<BetaManagedAgentsBudgetLimit> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -464,6 +490,7 @@ private constructor(
                 betaManagedAgentsDeployment.vaultIds
                     .map { it.toMutableList() }
                     .takeUnless { it.isMissing() }
+            budget = betaManagedAgentsDeployment.budget
             additionalProperties = betaManagedAgentsDeployment.additionalProperties.toMutableMap()
         }
 
@@ -1054,6 +1081,41 @@ private constructor(
                 }
         }
 
+        /**
+         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
+         * cost reaches `max_list_cost`.
+         */
+        fun budget(budget: BetaManagedAgentsBudgetLimit?) = budget(JsonField.ofNullable(budget))
+
+        /** Alias for calling [Builder.budget] with `budget.orElse(null)`. */
+        fun budget(budget: Optional<BetaManagedAgentsBudgetLimit>) = budget(budget.getOrNull())
+
+        /**
+         * Sets [Builder.budget] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.budget] with a well-typed [BetaManagedAgentsBudgetLimit]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun budget(budget: JsonField<BetaManagedAgentsBudgetLimit>) = apply { this.budget = budget }
+
+        /**
+         * Alias for calling [budget] with the following:
+         * ```java
+         * BetaManagedAgentsBudgetLimit.builder()
+         *     .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+         *     .maxListCost(maxListCost)
+         *     .build()
+         * ```
+         */
+        fun limitBudget(maxListCost: BetaMonetaryAmount) =
+            budget(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .maxListCost(maxListCost)
+                    .build()
+            )
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -1118,6 +1180,7 @@ private constructor(
                 checkRequired("type", type),
                 checkRequired("updatedAt", updatedAt),
                 checkRequired("vaultIds", vaultIds).map { it.toImmutable() },
+                budget,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -1153,6 +1216,7 @@ private constructor(
         type().validate()
         updatedAt()
         vaultIds()
+        budget().ifPresent { it.validate() }
         validated = true
     }
 
@@ -1186,7 +1250,8 @@ private constructor(
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
-            (vaultIds.asKnown().getOrNull()?.size ?: 0)
+            (vaultIds.asKnown().getOrNull()?.size ?: 0) +
+            (budget.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Arbitrary key-value metadata. Maximum 16 pairs. */
     class Metadata
@@ -1449,6 +1514,7 @@ private constructor(
             type == other.type &&
             updatedAt == other.updatedAt &&
             vaultIds == other.vaultIds &&
+            budget == other.budget &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1470,6 +1536,7 @@ private constructor(
             type,
             updatedAt,
             vaultIds,
+            budget,
             additionalProperties,
         )
     }
@@ -1477,5 +1544,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsDeployment{id=$id, agent=$agent, archivedAt=$archivedAt, createdAt=$createdAt, description=$description, environmentId=$environmentId, initialEvents=$initialEvents, metadata=$metadata, name=$name, pausedReason=$pausedReason, resources=$resources, schedule=$schedule, status=$status, type=$type, updatedAt=$updatedAt, vaultIds=$vaultIds, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsDeployment{id=$id, agent=$agent, archivedAt=$archivedAt, createdAt=$createdAt, description=$description, environmentId=$environmentId, initialEvents=$initialEvents, metadata=$metadata, name=$name, pausedReason=$pausedReason, resources=$resources, schedule=$schedule, status=$status, type=$type, updatedAt=$updatedAt, vaultIds=$vaultIds, budget=$budget, additionalProperties=$additionalProperties}"
 }

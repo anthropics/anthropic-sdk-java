@@ -26,12 +26,7 @@ internal class EventListPageResponseTest {
                 .addData(
                     BetaManagedAgentsAgentMessageEvent.builder()
                         .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
-                        .addContent(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Let me look up order #1234 for you.")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
-                        )
+                        .addTextContent("Let me look up order #1234 for you.")
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                         .build()
@@ -52,12 +47,7 @@ internal class EventListPageResponseTest {
                 BetaManagedAgentsSessionEvent.ofAgentMessage(
                     BetaManagedAgentsAgentMessageEvent.builder()
                         .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
-                        .addContent(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Let me look up order #1234 for you.")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
-                        )
+                        .addTextContent("Let me look up order #1234 for you.")
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                         .build()
@@ -87,12 +77,7 @@ internal class EventListPageResponseTest {
                     BetaManagedAgentsSessionEvent.ofAgentMessage(
                         BetaManagedAgentsAgentMessageEvent.builder()
                             .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
-                            .addContent(
-                                BetaManagedAgentsTextBlock.builder()
-                                    .text("Let me look up order #1234 for you.")
-                                    .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                    .build()
-                            )
+                            .addTextContent("Let me look up order #1234 for you.")
                             .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                             .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                             .build()
@@ -113,12 +98,7 @@ internal class EventListPageResponseTest {
                 BetaManagedAgentsSessionEvent.ofAgentMessage(
                     BetaManagedAgentsAgentMessageEvent.builder()
                         .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
-                        .addContent(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Let me look up order #1234 for you.")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
-                        )
+                        .addTextContent("Let me look up order #1234 for you.")
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                         .build()
@@ -142,12 +122,7 @@ internal class EventListPageResponseTest {
                 .addData(
                     BetaManagedAgentsAgentMessageEvent.builder()
                         .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
-                        .addContent(
-                            BetaManagedAgentsTextBlock.builder()
-                                .text("Let me look up order #1234 for you.")
-                                .type(BetaManagedAgentsTextBlock.Type.TEXT)
-                                .build()
-                        )
+                        .addTextContent("Let me look up order #1234 for you.")
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                         .build()

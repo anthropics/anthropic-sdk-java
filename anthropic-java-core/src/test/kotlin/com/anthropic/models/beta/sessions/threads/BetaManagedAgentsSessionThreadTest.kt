@@ -3,6 +3,8 @@
 package com.anthropic.models.beta.sessions.threads
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.BetaCurrency
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
@@ -15,6 +17,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsCacheCreationUsage
+import com.anthropic.models.beta.sessions.BetaManagedAgentsServerToolUsage
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -46,6 +49,7 @@ internal class BetaManagedAgentsSessionThreadTest {
                                         .type(BetaManagedAgentsEffortLow.Type.LOW)
                                         .build()
                                 )
+                                .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
@@ -114,6 +118,7 @@ internal class BetaManagedAgentsSessionThreadTest {
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .usage(
                     BetaManagedAgentsSessionThreadUsage.builder()
+                        .activeSeconds(0.0)
                         .cacheCreation(
                             BetaManagedAgentsCacheCreationUsage.builder()
                                 .ephemeral1hInputTokens(0)
@@ -122,7 +127,19 @@ internal class BetaManagedAgentsSessionThreadTest {
                         )
                         .cacheReadInputTokens(0)
                         .inputTokens(0)
+                        .listCost(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
                         .outputTokens(0)
+                        .serverToolUse(
+                            BetaManagedAgentsServerToolUsage.builder()
+                                .webFetchRequests(0)
+                                .webSearchRequests(3)
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -130,69 +147,78 @@ internal class BetaManagedAgentsSessionThreadTest {
         assertThat(betaManagedAgentsSessionThread.id()).isEqualTo("sthr_011CZkZVWa6oIjw0rgXZpnBt")
         assertThat(betaManagedAgentsSessionThread.agent())
             .isEqualTo(
-                BetaManagedAgentsSessionThreadAgent.builder()
-                    .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                    .description("A focused research subagent.")
-                    .addMcpServer(
-                        BetaManagedAgentsMcpServerUrlDefinition.builder()
-                            .name("example-mcp")
-                            .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
-                            .url("https://example-server.modelcontextprotocol.io/sse")
-                            .build()
-                    )
-                    .model(
-                        BetaManagedAgentsModelConfig.builder()
-                            .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
-                            .effort(
-                                BetaManagedAgentsEffortLow.builder()
-                                    .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                    .build()
-                            )
-                            .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
-                            .build()
-                    )
-                    .name("Researcher")
-                    .addSkill(
-                        BetaManagedAgentsAnthropicSkill.builder()
-                            .skillId("xlsx")
-                            .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
-                            .version("1")
-                            .build()
-                    )
-                    .system(
-                        "You are a research subagent that gathers and summarises sources for the coordinating agent."
-                    )
-                    .addTool(
-                        BetaManagedAgentsAgentToolset20260401.builder()
-                            .addConfig(
-                                BetaManagedAgentsAgentToolConfig.builder()
-                                    .enabled(true)
-                                    .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
-                                    .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                            .type(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                            .defaultConfig(
-                                BetaManagedAgentsAgentToolsetDefaultConfig.builder()
-                                    .enabled(true)
-                                    .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAskPolicy.builder()
-                                            .type(BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK)
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                            .type(BetaManagedAgentsAgentToolset20260401.Type.AGENT_TOOLSET_20260401)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
-                    .version(1)
-                    .build()
+                BetaManagedAgentsSessionThread.Agent.ofAgent(
+                    BetaManagedAgentsSessionThreadAgent.builder()
+                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                        .description("A focused research subagent.")
+                        .addMcpServer(
+                            BetaManagedAgentsMcpServerUrlDefinition.builder()
+                                .name("example-mcp")
+                                .type(BetaManagedAgentsMcpServerUrlDefinition.Type.URL)
+                                .url("https://example-server.modelcontextprotocol.io/sse")
+                                .build()
+                        )
+                        .model(
+                            BetaManagedAgentsModelConfig.builder()
+                                .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                .effort(
+                                    BetaManagedAgentsEffortLow.builder()
+                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
+                                        .build()
+                                )
+                                .inferenceGeo("inference_geo")
+                                .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
+                                .build()
+                        )
+                        .name("Researcher")
+                        .addSkill(
+                            BetaManagedAgentsAnthropicSkill.builder()
+                                .skillId("xlsx")
+                                .type(BetaManagedAgentsAnthropicSkill.Type.ANTHROPIC)
+                                .version("1")
+                                .build()
+                        )
+                        .system(
+                            "You are a research subagent that gathers and summarises sources for the coordinating agent."
+                        )
+                        .addTool(
+                            BetaManagedAgentsAgentToolset20260401.builder()
+                                .addConfig(
+                                    BetaManagedAgentsAgentToolConfig.builder()
+                                        .enabled(true)
+                                        .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
+                                        .permissionPolicy(
+                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
+                                                .type(
+                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                        .ALWAYS_ALLOW
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .defaultConfig(
+                                    BetaManagedAgentsAgentToolsetDefaultConfig.builder()
+                                        .enabled(true)
+                                        .permissionPolicy(
+                                            BetaManagedAgentsAlwaysAskPolicy.builder()
+                                                .type(
+                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .type(
+                                    BetaManagedAgentsAgentToolset20260401.Type
+                                        .AGENT_TOOLSET_20260401
+                                )
+                                .build()
+                        )
+                        .type(BetaManagedAgentsSessionThreadAgent.Type.AGENT)
+                        .version(1)
+                        .build()
+                )
             )
         assertThat(betaManagedAgentsSessionThread.archivedAt()).isEmpty
         assertThat(betaManagedAgentsSessionThread.createdAt())
@@ -217,6 +243,7 @@ internal class BetaManagedAgentsSessionThreadTest {
         assertThat(betaManagedAgentsSessionThread.usage())
             .contains(
                 BetaManagedAgentsSessionThreadUsage.builder()
+                    .activeSeconds(0.0)
                     .cacheCreation(
                         BetaManagedAgentsCacheCreationUsage.builder()
                             .ephemeral1hInputTokens(0)
@@ -225,7 +252,19 @@ internal class BetaManagedAgentsSessionThreadTest {
                     )
                     .cacheReadInputTokens(0)
                     .inputTokens(0)
+                    .listCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
                     .outputTokens(0)
+                    .serverToolUse(
+                        BetaManagedAgentsServerToolUsage.builder()
+                            .webFetchRequests(0)
+                            .webSearchRequests(3)
+                            .build()
+                    )
                     .build()
             )
     }
@@ -255,6 +294,7 @@ internal class BetaManagedAgentsSessionThreadTest {
                                         .type(BetaManagedAgentsEffortLow.Type.LOW)
                                         .build()
                                 )
+                                .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
@@ -323,6 +363,7 @@ internal class BetaManagedAgentsSessionThreadTest {
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .usage(
                     BetaManagedAgentsSessionThreadUsage.builder()
+                        .activeSeconds(0.0)
                         .cacheCreation(
                             BetaManagedAgentsCacheCreationUsage.builder()
                                 .ephemeral1hInputTokens(0)
@@ -331,7 +372,19 @@ internal class BetaManagedAgentsSessionThreadTest {
                         )
                         .cacheReadInputTokens(0)
                         .inputTokens(0)
+                        .listCost(
+                            BetaMonetaryAmount.builder()
+                                .amount("2500")
+                                .currency(BetaCurrency.USD)
+                                .build()
+                        )
                         .outputTokens(0)
+                        .serverToolUse(
+                            BetaManagedAgentsServerToolUsage.builder()
+                                .webFetchRequests(0)
+                                .webSearchRequests(3)
+                                .build()
+                        )
                         .build()
                 )
                 .build()

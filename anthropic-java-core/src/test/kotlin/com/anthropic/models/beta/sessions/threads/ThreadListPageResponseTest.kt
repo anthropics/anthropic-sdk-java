@@ -3,6 +3,8 @@
 package com.anthropic.models.beta.sessions.threads
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.BetaCurrency
+import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
@@ -15,6 +17,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsCacheCreationUsage
+import com.anthropic.models.beta.sessions.BetaManagedAgentsServerToolUsage
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
@@ -49,6 +52,7 @@ internal class ThreadListPageResponseTest {
                                                 .type(BetaManagedAgentsEffortLow.Type.LOW)
                                                 .build()
                                         )
+                                        .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                         .build()
                                 )
@@ -118,6 +122,7 @@ internal class ThreadListPageResponseTest {
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .usage(
                             BetaManagedAgentsSessionThreadUsage.builder()
+                                .activeSeconds(0.0)
                                 .cacheCreation(
                                     BetaManagedAgentsCacheCreationUsage.builder()
                                         .ephemeral1hInputTokens(0)
@@ -126,7 +131,19 @@ internal class ThreadListPageResponseTest {
                                 )
                                 .cacheReadInputTokens(0)
                                 .inputTokens(0)
+                                .listCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
                                 .outputTokens(0)
+                                .serverToolUse(
+                                    BetaManagedAgentsServerToolUsage.builder()
+                                        .webFetchRequests(0)
+                                        .webSearchRequests(3)
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -157,6 +174,7 @@ internal class ThreadListPageResponseTest {
                                             .type(BetaManagedAgentsEffortLow.Type.LOW)
                                             .build()
                                     )
+                                    .inferenceGeo("inference_geo")
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                     .build()
                             )
@@ -226,6 +244,7 @@ internal class ThreadListPageResponseTest {
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .usage(
                         BetaManagedAgentsSessionThreadUsage.builder()
+                            .activeSeconds(0.0)
                             .cacheCreation(
                                 BetaManagedAgentsCacheCreationUsage.builder()
                                     .ephemeral1hInputTokens(0)
@@ -234,7 +253,19 @@ internal class ThreadListPageResponseTest {
                             )
                             .cacheReadInputTokens(0)
                             .inputTokens(0)
+                            .listCost(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
                             .outputTokens(0)
+                            .serverToolUse(
+                                BetaManagedAgentsServerToolUsage.builder()
+                                    .webFetchRequests(0)
+                                    .webSearchRequests(3)
+                                    .build()
+                            )
                             .build()
                     )
                     .build()
@@ -271,6 +302,7 @@ internal class ThreadListPageResponseTest {
                                                 .type(BetaManagedAgentsEffortLow.Type.LOW)
                                                 .build()
                                         )
+                                        .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                         .build()
                                 )
@@ -340,6 +372,7 @@ internal class ThreadListPageResponseTest {
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .usage(
                             BetaManagedAgentsSessionThreadUsage.builder()
+                                .activeSeconds(0.0)
                                 .cacheCreation(
                                     BetaManagedAgentsCacheCreationUsage.builder()
                                         .ephemeral1hInputTokens(0)
@@ -348,7 +381,19 @@ internal class ThreadListPageResponseTest {
                                 )
                                 .cacheReadInputTokens(0)
                                 .inputTokens(0)
+                                .listCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
                                 .outputTokens(0)
+                                .serverToolUse(
+                                    BetaManagedAgentsServerToolUsage.builder()
+                                        .webFetchRequests(0)
+                                        .webSearchRequests(3)
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -378,6 +423,7 @@ internal class ThreadListPageResponseTest {
                                             .type(BetaManagedAgentsEffortLow.Type.LOW)
                                             .build()
                                     )
+                                    .inferenceGeo("inference_geo")
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                     .build()
                             )
@@ -447,6 +493,7 @@ internal class ThreadListPageResponseTest {
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .usage(
                         BetaManagedAgentsSessionThreadUsage.builder()
+                            .activeSeconds(0.0)
                             .cacheCreation(
                                 BetaManagedAgentsCacheCreationUsage.builder()
                                     .ephemeral1hInputTokens(0)
@@ -455,7 +502,19 @@ internal class ThreadListPageResponseTest {
                             )
                             .cacheReadInputTokens(0)
                             .inputTokens(0)
+                            .listCost(
+                                BetaMonetaryAmount.builder()
+                                    .amount("2500")
+                                    .currency(BetaCurrency.USD)
+                                    .build()
+                            )
                             .outputTokens(0)
+                            .serverToolUse(
+                                BetaManagedAgentsServerToolUsage.builder()
+                                    .webFetchRequests(0)
+                                    .webSearchRequests(3)
+                                    .build()
+                            )
                             .build()
                     )
                     .build()
@@ -489,6 +548,7 @@ internal class ThreadListPageResponseTest {
                                                 .type(BetaManagedAgentsEffortLow.Type.LOW)
                                                 .build()
                                         )
+                                        .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                         .build()
                                 )
@@ -558,6 +618,7 @@ internal class ThreadListPageResponseTest {
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .usage(
                             BetaManagedAgentsSessionThreadUsage.builder()
+                                .activeSeconds(0.0)
                                 .cacheCreation(
                                     BetaManagedAgentsCacheCreationUsage.builder()
                                         .ephemeral1hInputTokens(0)
@@ -566,7 +627,19 @@ internal class ThreadListPageResponseTest {
                                 )
                                 .cacheReadInputTokens(0)
                                 .inputTokens(0)
+                                .listCost(
+                                    BetaMonetaryAmount.builder()
+                                        .amount("2500")
+                                        .currency(BetaCurrency.USD)
+                                        .build()
+                                )
                                 .outputTokens(0)
+                                .serverToolUse(
+                                    BetaManagedAgentsServerToolUsage.builder()
+                                        .webFetchRequests(0)
+                                        .webSearchRequests(3)
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()

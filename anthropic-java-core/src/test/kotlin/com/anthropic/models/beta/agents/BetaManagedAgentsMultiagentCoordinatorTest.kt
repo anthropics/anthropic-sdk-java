@@ -25,11 +25,13 @@ internal class BetaManagedAgentsMultiagentCoordinatorTest {
 
         assertThat(betaManagedAgentsMultiagentCoordinator.agents())
             .containsExactly(
-                BetaManagedAgentsAgentReference.builder()
-                    .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                    .type(BetaManagedAgentsAgentReference.Type.AGENT)
-                    .version(1)
-                    .build()
+                BetaManagedAgentsMultiagentCoordinator.Agent.ofAgent(
+                    BetaManagedAgentsAgentReference.builder()
+                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                        .version(1)
+                        .build()
+                )
             )
         assertThat(betaManagedAgentsMultiagentCoordinator.type())
             .isEqualTo(BetaManagedAgentsMultiagentCoordinator.Type.COORDINATOR)
