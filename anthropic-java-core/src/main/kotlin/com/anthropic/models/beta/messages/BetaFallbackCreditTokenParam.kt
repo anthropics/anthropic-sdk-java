@@ -98,6 +98,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaFallbackCreditTokenParam] with the required [token]
+         * set to the given value.
+         */
+        @JvmStatic fun of(token: String) = builder().token(token).build()
     }
 
     /** A builder for [BetaFallbackCreditTokenParam]. */

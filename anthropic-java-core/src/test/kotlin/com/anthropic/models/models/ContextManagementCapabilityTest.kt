@@ -13,18 +13,18 @@ internal class ContextManagementCapabilityTest {
     fun create() {
         val contextManagementCapability =
             ContextManagementCapability.builder()
-                .clearThinking20251015(CapabilitySupport.builder().supported(true).build())
-                .clearToolUses20250919(CapabilitySupport.builder().supported(true).build())
-                .compact20260112(CapabilitySupport.builder().supported(true).build())
+                .clearThinking20251015(CapabilitySupport.of(true))
+                .clearToolUses20250919(CapabilitySupport.of(true))
+                .compact20260112(CapabilitySupport.of(true))
                 .supported(true)
                 .build()
 
         assertThat(contextManagementCapability.clearThinking20251015())
-            .contains(CapabilitySupport.builder().supported(true).build())
+            .contains(CapabilitySupport.of(true))
         assertThat(contextManagementCapability.clearToolUses20250919())
-            .contains(CapabilitySupport.builder().supported(true).build())
+            .contains(CapabilitySupport.of(true))
         assertThat(contextManagementCapability.compact20260112())
-            .contains(CapabilitySupport.builder().supported(true).build())
+            .contains(CapabilitySupport.of(true))
         assertThat(contextManagementCapability.supported()).isEqualTo(true)
     }
 
@@ -33,9 +33,9 @@ internal class ContextManagementCapabilityTest {
         val jsonMapper = jsonMapper()
         val contextManagementCapability =
             ContextManagementCapability.builder()
-                .clearThinking20251015(CapabilitySupport.builder().supported(true).build())
-                .clearToolUses20250919(CapabilitySupport.builder().supported(true).build())
-                .compact20260112(CapabilitySupport.builder().supported(true).build())
+                .clearThinking20251015(CapabilitySupport.of(true))
+                .clearToolUses20250919(CapabilitySupport.of(true))
+                .compact20260112(CapabilitySupport.of(true))
                 .supported(true)
                 .build()
 

@@ -79,6 +79,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaToolReferenceBlock] with the required [toolName]
+         * set to the given value.
+         */
+        @JvmStatic fun of(toolName: String) = builder().toolName(toolName).build()
     }
 
     /** A builder for [BetaToolReferenceBlock]. */

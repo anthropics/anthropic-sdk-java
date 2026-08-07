@@ -42,9 +42,9 @@ internal class BetaToolSearchToolRegex20251119Test {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaToolSearchToolRegex20251119 =
-            BetaToolSearchToolRegex20251119.builder()
-                .type(BetaToolSearchToolRegex20251119.Type.TOOL_SEARCH_TOOL_REGEX_20251119)
-                .build()
+            BetaToolSearchToolRegex20251119.of(
+                BetaToolSearchToolRegex20251119.Type.TOOL_SEARCH_TOOL_REGEX_20251119
+            )
 
         val betaToolSearchToolRegex20251119 =
             baseBetaToolSearchToolRegex20251119

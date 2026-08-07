@@ -538,17 +538,41 @@ private constructor(
             fun ofNone(none: BetaManagedAgentsTokenEndpointAuthNoneResponse) =
                 TokenEndpointAuth(none = none)
 
+            /**
+             * Returns an immutable instance of [TokenEndpointAuth] whose [ofNone] variant is built
+             * from the given required [type].
+             */
+            @JvmStatic
+            fun ofNone(type: BetaManagedAgentsTokenEndpointAuthNoneResponse.Type) =
+                ofNone(BetaManagedAgentsTokenEndpointAuthNoneResponse.of(type))
+
             /** Token endpoint uses HTTP Basic authentication with client credentials. */
             @JvmStatic
             fun ofClientSecretBasic(
                 clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicResponse
             ) = TokenEndpointAuth(clientSecretBasic = clientSecretBasic)
 
+            /**
+             * Returns an immutable instance of [TokenEndpointAuth] whose [ofClientSecretBasic]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofClientSecretBasic(type: BetaManagedAgentsTokenEndpointAuthBasicResponse.Type) =
+                ofClientSecretBasic(BetaManagedAgentsTokenEndpointAuthBasicResponse.of(type))
+
             /** Token endpoint uses POST body authentication with client credentials. */
             @JvmStatic
             fun ofClientSecretPost(
                 clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostResponse
             ) = TokenEndpointAuth(clientSecretPost = clientSecretPost)
+
+            /**
+             * Returns an immutable instance of [TokenEndpointAuth] whose [ofClientSecretPost]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofClientSecretPost(type: BetaManagedAgentsTokenEndpointAuthPostResponse.Type) =
+                ofClientSecretPost(BetaManagedAgentsTokenEndpointAuthPostResponse.of(type))
         }
 
         /**

@@ -12,9 +12,9 @@ internal class BetaManagedAgentsSessionRetriesExhaustedTest {
     @Test
     fun create() {
         val betaManagedAgentsSessionRetriesExhausted =
-            BetaManagedAgentsSessionRetriesExhausted.builder()
-                .type(BetaManagedAgentsSessionRetriesExhausted.Type.RETRIES_EXHAUSTED)
-                .build()
+            BetaManagedAgentsSessionRetriesExhausted.of(
+                BetaManagedAgentsSessionRetriesExhausted.Type.RETRIES_EXHAUSTED
+            )
 
         assertThat(betaManagedAgentsSessionRetriesExhausted.type())
             .isEqualTo(BetaManagedAgentsSessionRetriesExhausted.Type.RETRIES_EXHAUSTED)
@@ -24,9 +24,9 @@ internal class BetaManagedAgentsSessionRetriesExhaustedTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionRetriesExhausted =
-            BetaManagedAgentsSessionRetriesExhausted.builder()
-                .type(BetaManagedAgentsSessionRetriesExhausted.Type.RETRIES_EXHAUSTED)
-                .build()
+            BetaManagedAgentsSessionRetriesExhausted.of(
+                BetaManagedAgentsSessionRetriesExhausted.Type.RETRIES_EXHAUSTED
+            )
 
         val roundtrippedBetaManagedAgentsSessionRetriesExhausted =
             jsonMapper.readValue(

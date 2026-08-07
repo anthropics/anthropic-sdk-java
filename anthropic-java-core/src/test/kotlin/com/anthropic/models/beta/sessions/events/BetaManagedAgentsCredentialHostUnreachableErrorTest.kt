@@ -16,9 +16,9 @@ internal class BetaManagedAgentsCredentialHostUnreachableErrorTest {
                 .credentialId("credential_id")
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(
                     BetaManagedAgentsCredentialHostUnreachableError.Type
@@ -33,9 +33,7 @@ internal class BetaManagedAgentsCredentialHostUnreachableErrorTest {
         assertThat(betaManagedAgentsCredentialHostUnreachableError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsCredentialHostUnreachableError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                 )
             )
         assertThat(betaManagedAgentsCredentialHostUnreachableError.type())
@@ -54,9 +52,9 @@ internal class BetaManagedAgentsCredentialHostUnreachableErrorTest {
                 .credentialId("credential_id")
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(
                     BetaManagedAgentsCredentialHostUnreachableError.Type

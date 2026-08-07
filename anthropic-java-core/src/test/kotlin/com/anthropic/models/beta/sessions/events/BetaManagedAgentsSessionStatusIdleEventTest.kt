@@ -17,9 +17,9 @@ internal class BetaManagedAgentsSessionStatusIdleEventTest {
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .stopReason(
-                    BetaManagedAgentsSessionEndTurn.builder()
-                        .type(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-                        .build()
+                    BetaManagedAgentsSessionEndTurn.of(
+                        BetaManagedAgentsSessionEndTurn.Type.END_TURN
+                    )
                 )
                 .type(BetaManagedAgentsSessionStatusIdleEvent.Type.SESSION_STATUS_IDLE)
                 .build()
@@ -30,9 +30,7 @@ internal class BetaManagedAgentsSessionStatusIdleEventTest {
         assertThat(betaManagedAgentsSessionStatusIdleEvent.stopReason())
             .isEqualTo(
                 BetaManagedAgentsSessionStatusIdleEvent.StopReason.ofEndTurn(
-                    BetaManagedAgentsSessionEndTurn.builder()
-                        .type(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-                        .build()
+                    BetaManagedAgentsSessionEndTurn.Type.END_TURN
                 )
             )
         assertThat(betaManagedAgentsSessionStatusIdleEvent.type())
@@ -47,9 +45,9 @@ internal class BetaManagedAgentsSessionStatusIdleEventTest {
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .stopReason(
-                    BetaManagedAgentsSessionEndTurn.builder()
-                        .type(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-                        .build()
+                    BetaManagedAgentsSessionEndTurn.of(
+                        BetaManagedAgentsSessionEndTurn.Type.END_TURN
+                    )
                 )
                 .type(BetaManagedAgentsSessionStatusIdleEvent.Type.SESSION_STATUS_IDLE)
                 .build()

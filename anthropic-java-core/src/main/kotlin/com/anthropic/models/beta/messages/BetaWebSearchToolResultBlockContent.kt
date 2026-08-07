@@ -181,6 +181,14 @@ private constructor(
         fun ofError(error: BetaWebSearchToolResultError) =
             BetaWebSearchToolResultBlockContent(error = error)
 
+        /**
+         * Returns an immutable instance of [BetaWebSearchToolResultBlockContent] whose [ofError]
+         * variant is built from the given required [errorCode].
+         */
+        @JvmStatic
+        fun ofError(errorCode: BetaWebSearchToolResultErrorCode) =
+            ofError(BetaWebSearchToolResultError.of(errorCode))
+
         @JvmStatic
         fun ofResultBlocks(resultBlocks: List<BetaWebSearchResultBlock>) =
             BetaWebSearchToolResultBlockContent(resultBlocks = resultBlocks.toImmutable())

@@ -11,7 +11,7 @@ internal class BetaRawContentBlockStopEventTest {
 
     @Test
     fun create() {
-        val betaRawContentBlockStopEvent = BetaRawContentBlockStopEvent.builder().index(0L).build()
+        val betaRawContentBlockStopEvent = BetaRawContentBlockStopEvent.of(0L)
 
         assertThat(betaRawContentBlockStopEvent.index()).isEqualTo(0L)
     }
@@ -19,7 +19,7 @@ internal class BetaRawContentBlockStopEventTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaRawContentBlockStopEvent = BetaRawContentBlockStopEvent.builder().index(0L).build()
+        val betaRawContentBlockStopEvent = BetaRawContentBlockStopEvent.of(0L)
 
         val roundtrippedBetaRawContentBlockStopEvent =
             jsonMapper.readValue(

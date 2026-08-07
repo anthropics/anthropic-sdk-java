@@ -13,14 +13,14 @@ internal class BashCodeExecutionResultBlockTest {
     fun create() {
         val bashCodeExecutionResultBlock =
             BashCodeExecutionResultBlock.builder()
-                .addContent(BashCodeExecutionOutputBlock.builder().fileId("file_id").build())
+                .addContent(BashCodeExecutionOutputBlock.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")
                 .build()
 
         assertThat(bashCodeExecutionResultBlock.content())
-            .containsExactly(BashCodeExecutionOutputBlock.builder().fileId("file_id").build())
+            .containsExactly(BashCodeExecutionOutputBlock.of("file_id"))
         assertThat(bashCodeExecutionResultBlock.returnCode()).isEqualTo(0L)
         assertThat(bashCodeExecutionResultBlock.stderr()).isEqualTo("stderr")
         assertThat(bashCodeExecutionResultBlock.stdout()).isEqualTo("stdout")
@@ -31,7 +31,7 @@ internal class BashCodeExecutionResultBlockTest {
         val jsonMapper = jsonMapper()
         val bashCodeExecutionResultBlock =
             BashCodeExecutionResultBlock.builder()
-                .addContent(BashCodeExecutionOutputBlock.builder().fileId("file_id").build())
+                .addContent(BashCodeExecutionOutputBlock.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")

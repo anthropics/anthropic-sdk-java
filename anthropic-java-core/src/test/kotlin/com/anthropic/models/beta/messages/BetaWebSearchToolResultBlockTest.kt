@@ -14,9 +14,9 @@ internal class BetaWebSearchToolResultBlockTest {
         val betaWebSearchToolResultBlock =
             BetaWebSearchToolResultBlock.builder()
                 .content(
-                    BetaWebSearchToolResultError.builder()
-                        .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaWebSearchToolResultError.of(
+                        BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .caller(BetaDirectCaller.builder().build())
@@ -25,9 +25,7 @@ internal class BetaWebSearchToolResultBlockTest {
         assertThat(betaWebSearchToolResultBlock.content())
             .isEqualTo(
                 BetaWebSearchToolResultBlockContent.ofError(
-                    BetaWebSearchToolResultError.builder()
-                        .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
         assertThat(betaWebSearchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
@@ -43,9 +41,9 @@ internal class BetaWebSearchToolResultBlockTest {
         val betaWebSearchToolResultBlock =
             BetaWebSearchToolResultBlock.builder()
                 .content(
-                    BetaWebSearchToolResultError.builder()
-                        .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaWebSearchToolResultError.of(
+                        BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .caller(BetaDirectCaller.builder().build())

@@ -13,19 +13,14 @@ internal class DocumentBlockTest {
     fun create() {
         val documentBlock =
             DocumentBlock.builder()
-                .citations(CitationsConfig.builder().enabled(true).build())
+                .citations(CitationsConfig.of(true))
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .title("title")
                 .build()
 
-        assertThat(documentBlock.citations())
-            .contains(CitationsConfig.builder().enabled(true).build())
+        assertThat(documentBlock.citations()).contains(CitationsConfig.of(true))
         assertThat(documentBlock.source())
-            .isEqualTo(
-                DocumentBlock.Source.ofBase64(
-                    Base64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
-                )
-            )
+            .isEqualTo(DocumentBlock.Source.ofBase64("U3RhaW5sZXNzIHJvY2tz"))
         assertThat(documentBlock.title()).contains("title")
     }
 
@@ -34,7 +29,7 @@ internal class DocumentBlockTest {
         val jsonMapper = jsonMapper()
         val documentBlock =
             DocumentBlock.builder()
-                .citations(CitationsConfig.builder().enabled(true).build())
+                .citations(CitationsConfig.of(true))
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .title("title")
                 .build()

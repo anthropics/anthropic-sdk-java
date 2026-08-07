@@ -15,7 +15,7 @@ internal class BetaWebFetchBlockTest {
             BetaWebFetchBlock.builder()
                 .content(
                     BetaDocumentBlock.builder()
-                        .citations(BetaCitationConfig.builder().enabled(true).build())
+                        .citations(BetaCitationConfig.of(true))
                         .base64Source("U3RhaW5sZXNzIHJvY2tz")
                         .title("title")
                         .build()
@@ -27,7 +27,7 @@ internal class BetaWebFetchBlockTest {
         assertThat(betaWebFetchBlock.content())
             .isEqualTo(
                 BetaDocumentBlock.builder()
-                    .citations(BetaCitationConfig.builder().enabled(true).build())
+                    .citations(BetaCitationConfig.of(true))
                     .base64Source("U3RhaW5sZXNzIHJvY2tz")
                     .title("title")
                     .build()
@@ -43,7 +43,7 @@ internal class BetaWebFetchBlockTest {
             BetaWebFetchBlock.builder()
                 .content(
                     BetaDocumentBlock.builder()
-                        .citations(BetaCitationConfig.builder().enabled(true).build())
+                        .citations(BetaCitationConfig.of(true))
                         .base64Source("U3RhaW5sZXNzIHJvY2tz")
                         .title("title")
                         .build()

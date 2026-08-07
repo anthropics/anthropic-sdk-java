@@ -11,7 +11,7 @@ internal class BetaNotFoundErrorTest {
 
     @Test
     fun create() {
-        val betaNotFoundError = BetaNotFoundError.builder().message("message").build()
+        val betaNotFoundError = BetaNotFoundError.of("message")
 
         assertThat(betaNotFoundError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class BetaNotFoundErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaNotFoundError = BetaNotFoundError.builder().message("message").build()
+        val betaNotFoundError = BetaNotFoundError.of("message")
 
         val roundtrippedBetaNotFoundError =
             jsonMapper.readValue(

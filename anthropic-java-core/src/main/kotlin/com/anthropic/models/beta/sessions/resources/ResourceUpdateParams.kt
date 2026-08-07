@@ -377,6 +377,14 @@ private constructor(
              * ```
              */
             @JvmStatic fun builder() = Builder()
+
+            /**
+             * Returns an immutable instance of [Body] with the required [authorizationToken] set to
+             * the given value.
+             */
+            @JvmStatic
+            fun of(authorizationToken: String) =
+                builder().authorizationToken(authorizationToken).build()
         }
 
         /** A builder for [Body]. */

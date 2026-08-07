@@ -84,6 +84,13 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [CodeExecutionToolResultError] with the required
+         * [errorCode] set to the given value.
+         */
+        @JvmStatic
+        fun of(errorCode: CodeExecutionToolResultErrorCode) = builder().errorCode(errorCode).build()
     }
 
     /** A builder for [CodeExecutionToolResultError]. */

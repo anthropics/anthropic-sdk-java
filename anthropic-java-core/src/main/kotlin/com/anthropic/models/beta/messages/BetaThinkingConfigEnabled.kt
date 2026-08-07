@@ -111,6 +111,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaThinkingConfigEnabled] with the required
+         * [budgetTokens] set to the given value.
+         */
+        @JvmStatic fun of(budgetTokens: Long) = builder().budgetTokens(budgetTokens).build()
     }
 
     /** A builder for [BetaThinkingConfigEnabled]. */

@@ -13,14 +13,14 @@ internal class CodeExecutionResultBlockTest {
     fun create() {
         val codeExecutionResultBlock =
             CodeExecutionResultBlock.builder()
-                .addContent(CodeExecutionOutputBlock.builder().fileId("file_id").build())
+                .addContent(CodeExecutionOutputBlock.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")
                 .build()
 
         assertThat(codeExecutionResultBlock.content())
-            .containsExactly(CodeExecutionOutputBlock.builder().fileId("file_id").build())
+            .containsExactly(CodeExecutionOutputBlock.of("file_id"))
         assertThat(codeExecutionResultBlock.returnCode()).isEqualTo(0L)
         assertThat(codeExecutionResultBlock.stderr()).isEqualTo("stderr")
         assertThat(codeExecutionResultBlock.stdout()).isEqualTo("stdout")
@@ -31,7 +31,7 @@ internal class CodeExecutionResultBlockTest {
         val jsonMapper = jsonMapper()
         val codeExecutionResultBlock =
             CodeExecutionResultBlock.builder()
-                .addContent(CodeExecutionOutputBlock.builder().fileId("file_id").build())
+                .addContent(CodeExecutionOutputBlock.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")

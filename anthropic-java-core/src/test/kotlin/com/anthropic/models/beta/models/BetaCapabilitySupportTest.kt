@@ -11,7 +11,7 @@ internal class BetaCapabilitySupportTest {
 
     @Test
     fun create() {
-        val betaCapabilitySupport = BetaCapabilitySupport.builder().supported(true).build()
+        val betaCapabilitySupport = BetaCapabilitySupport.of(true)
 
         assertThat(betaCapabilitySupport.supported()).isEqualTo(true)
     }
@@ -19,7 +19,7 @@ internal class BetaCapabilitySupportTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaCapabilitySupport = BetaCapabilitySupport.builder().supported(true).build()
+        val betaCapabilitySupport = BetaCapabilitySupport.of(true)
 
         val roundtrippedBetaCapabilitySupport =
             jsonMapper.readValue(

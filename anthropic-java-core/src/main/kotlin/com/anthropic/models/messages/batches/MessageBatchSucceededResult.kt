@@ -78,6 +78,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [MessageBatchSucceededResult] with the required
+         * [message] set to the given value.
+         */
+        @JvmStatic fun of(message: Message) = builder().message(message).build()
     }
 
     /** A builder for [MessageBatchSucceededResult]. */

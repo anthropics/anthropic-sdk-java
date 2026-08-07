@@ -221,15 +221,54 @@ private constructor(
         fun ofGitHubRepository(githubRepository: BetaManagedAgentsGitHubRepositoryResourceConfig) =
             BetaManagedAgentsSessionResourceConfig(githubRepository = githubRepository)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsSessionResourceConfig] whose
+         * [ofGitHubRepository] variant is built from the given required [url].
+         */
+        @JvmStatic
+        fun ofGitHubRepository(url: String) =
+            ofGitHubRepository(
+                BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
+                    .type(BetaManagedAgentsGitHubRepositoryResourceConfig.Type.GITHUB_REPOSITORY)
+                    .url(url)
+                    .build()
+            )
+
         /** A file mounted into each session's container. */
         @JvmStatic
         fun ofFile(file: BetaManagedAgentsFileResourceConfig) =
             BetaManagedAgentsSessionResourceConfig(file = file)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsSessionResourceConfig] whose [ofFile]
+         * variant is built from the given required [fileId].
+         */
+        @JvmStatic
+        fun ofFile(fileId: String) =
+            ofFile(
+                BetaManagedAgentsFileResourceConfig.builder()
+                    .type(BetaManagedAgentsFileResourceConfig.Type.FILE)
+                    .fileId(fileId)
+                    .build()
+            )
+
         /** A memory store attached to each session created from this deployment. */
         @JvmStatic
         fun ofMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResourceConfig) =
             BetaManagedAgentsSessionResourceConfig(memoryStore = memoryStore)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsSessionResourceConfig] whose
+         * [ofMemoryStore] variant is built from the given required [memoryStoreId].
+         */
+        @JvmStatic
+        fun ofMemoryStore(memoryStoreId: String) =
+            ofMemoryStore(
+                BetaManagedAgentsMemoryStoreResourceConfig.builder()
+                    .type(BetaManagedAgentsMemoryStoreResourceConfig.Type.MEMORY_STORE)
+                    .memoryStoreId(memoryStoreId)
+                    .build()
+            )
     }
 
     /**

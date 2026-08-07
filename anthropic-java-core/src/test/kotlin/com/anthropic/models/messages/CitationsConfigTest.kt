@@ -11,7 +11,7 @@ internal class CitationsConfigTest {
 
     @Test
     fun create() {
-        val citationsConfig = CitationsConfig.builder().enabled(true).build()
+        val citationsConfig = CitationsConfig.of(true)
 
         assertThat(citationsConfig.enabled()).isEqualTo(true)
     }
@@ -19,7 +19,7 @@ internal class CitationsConfigTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val citationsConfig = CitationsConfig.builder().enabled(true).build()
+        val citationsConfig = CitationsConfig.of(true)
 
         val roundtrippedCitationsConfig =
             jsonMapper.readValue(

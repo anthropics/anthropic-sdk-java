@@ -166,8 +166,21 @@ private constructor(
 
         @JvmStatic fun ofText(text: BetaTextBlockParam) = BetaContentBlockSourceContent(text = text)
 
+        /**
+         * Returns an immutable instance of [BetaContentBlockSourceContent] whose [ofText] variant
+         * is built from the given required [text].
+         */
+        @JvmStatic fun ofText(text: String) = ofText(BetaTextBlockParam.of(text))
+
         @JvmStatic
         fun ofImage(image: BetaImageBlockParam) = BetaContentBlockSourceContent(image = image)
+
+        /**
+         * Returns an immutable instance of [BetaContentBlockSourceContent] whose [ofImage] variant
+         * is built from the given required [source].
+         */
+        @JvmStatic
+        fun ofImage(source: BetaImageBlockParam.Source) = ofImage(BetaImageBlockParam.of(source))
     }
 
     /**

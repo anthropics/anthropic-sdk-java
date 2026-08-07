@@ -15,7 +15,7 @@ internal class WebFetchBlockTest {
             WebFetchBlock.builder()
                 .content(
                     DocumentBlock.builder()
-                        .citations(CitationsConfig.builder().enabled(true).build())
+                        .citations(CitationsConfig.of(true))
                         .base64Source("U3RhaW5sZXNzIHJvY2tz")
                         .title("title")
                         .build()
@@ -27,7 +27,7 @@ internal class WebFetchBlockTest {
         assertThat(webFetchBlock.content())
             .isEqualTo(
                 DocumentBlock.builder()
-                    .citations(CitationsConfig.builder().enabled(true).build())
+                    .citations(CitationsConfig.of(true))
                     .base64Source("U3RhaW5sZXNzIHJvY2tz")
                     .title("title")
                     .build()
@@ -43,7 +43,7 @@ internal class WebFetchBlockTest {
             WebFetchBlock.builder()
                 .content(
                     DocumentBlock.builder()
-                        .citations(CitationsConfig.builder().enabled(true).build())
+                        .citations(CitationsConfig.of(true))
                         .base64Source("U3RhaW5sZXNzIHJvY2tz")
                         .title("title")
                         .build()

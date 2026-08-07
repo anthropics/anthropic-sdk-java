@@ -11,7 +11,7 @@ internal class BetaContainerUploadBlockTest {
 
     @Test
     fun create() {
-        val betaContainerUploadBlock = BetaContainerUploadBlock.builder().fileId("file_id").build()
+        val betaContainerUploadBlock = BetaContainerUploadBlock.of("file_id")
 
         assertThat(betaContainerUploadBlock.fileId()).isEqualTo("file_id")
     }
@@ -19,7 +19,7 @@ internal class BetaContainerUploadBlockTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaContainerUploadBlock = BetaContainerUploadBlock.builder().fileId("file_id").build()
+        val betaContainerUploadBlock = BetaContainerUploadBlock.of("file_id")
 
         val roundtrippedBetaContainerUploadBlock =
             jsonMapper.readValue(

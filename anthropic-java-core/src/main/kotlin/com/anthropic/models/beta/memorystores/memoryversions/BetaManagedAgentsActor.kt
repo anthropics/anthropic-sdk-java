@@ -196,12 +196,51 @@ private constructor(
         fun ofSession(session: BetaManagedAgentsSessionActor) =
             BetaManagedAgentsActor(session = session)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsActor] whose [ofSession] variant is
+         * built from the given required [sessionId].
+         */
+        @JvmStatic
+        fun ofSession(sessionId: String) =
+            ofSession(
+                BetaManagedAgentsSessionActor.builder()
+                    .type(BetaManagedAgentsSessionActor.Type.SESSION_ACTOR)
+                    .sessionId(sessionId)
+                    .build()
+            )
+
         /** Attribution for a write made directly via the public API (outside of any session). */
         @JvmStatic fun ofApi(api: BetaManagedAgentsApiActor) = BetaManagedAgentsActor(api = api)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsActor] whose [ofApi] variant is built
+         * from the given required [apiKeyId].
+         */
+        @JvmStatic
+        fun ofApi(apiKeyId: String) =
+            ofApi(
+                BetaManagedAgentsApiActor.builder()
+                    .type(BetaManagedAgentsApiActor.Type.API_ACTOR)
+                    .apiKeyId(apiKeyId)
+                    .build()
+            )
 
         /** Attribution for a write made by a human user through the Anthropic Console. */
         @JvmStatic
         fun ofUser(user: BetaManagedAgentsUserActor) = BetaManagedAgentsActor(user = user)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsActor] whose [ofUser] variant is built
+         * from the given required [userId].
+         */
+        @JvmStatic
+        fun ofUser(userId: String) =
+            ofUser(
+                BetaManagedAgentsUserActor.builder()
+                    .type(BetaManagedAgentsUserActor.Type.USER_ACTOR)
+                    .userId(userId)
+                    .build()
+            )
     }
 
     /**

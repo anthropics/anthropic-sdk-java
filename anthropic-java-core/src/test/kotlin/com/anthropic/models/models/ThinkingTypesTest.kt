@@ -13,14 +13,12 @@ internal class ThinkingTypesTest {
     fun create() {
         val thinkingTypes =
             ThinkingTypes.builder()
-                .adaptive(CapabilitySupport.builder().supported(true).build())
-                .enabled(CapabilitySupport.builder().supported(true).build())
+                .adaptive(CapabilitySupport.of(true))
+                .enabled(CapabilitySupport.of(true))
                 .build()
 
-        assertThat(thinkingTypes.adaptive())
-            .isEqualTo(CapabilitySupport.builder().supported(true).build())
-        assertThat(thinkingTypes.enabled())
-            .isEqualTo(CapabilitySupport.builder().supported(true).build())
+        assertThat(thinkingTypes.adaptive()).isEqualTo(CapabilitySupport.of(true))
+        assertThat(thinkingTypes.enabled()).isEqualTo(CapabilitySupport.of(true))
     }
 
     @Test
@@ -28,8 +26,8 @@ internal class ThinkingTypesTest {
         val jsonMapper = jsonMapper()
         val thinkingTypes =
             ThinkingTypes.builder()
-                .adaptive(CapabilitySupport.builder().supported(true).build())
-                .enabled(CapabilitySupport.builder().supported(true).build())
+                .adaptive(CapabilitySupport.of(true))
+                .enabled(CapabilitySupport.of(true))
                 .build()
 
         val roundtrippedThinkingTypes =

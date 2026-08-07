@@ -114,6 +114,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaFallbackCreditNotApplied] with the required
+         * [reason] set to the given value.
+         */
+        @JvmStatic fun of(reason: Reason) = builder().reason(reason).build()
     }
 
     /** A builder for [BetaFallbackCreditNotApplied]. */

@@ -25,7 +25,7 @@ internal class BetaManagedAgentsErrorTest {
 
     @Test
     fun ofInvalidRequest() {
-        val invalidRequest = BetaInvalidRequestError.builder().message("message").build()
+        val invalidRequest = BetaInvalidRequestError.of("message")
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofInvalidRequest(invalidRequest)
 
@@ -47,9 +47,7 @@ internal class BetaManagedAgentsErrorTest {
     fun ofInvalidRequestRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsError =
-            BetaManagedAgentsError.ofInvalidRequest(
-                BetaInvalidRequestError.builder().message("message").build()
-            )
+            BetaManagedAgentsError.ofInvalidRequest(BetaInvalidRequestError.of("message"))
 
         val roundtrippedBetaManagedAgentsError =
             jsonMapper.readValue(
@@ -62,7 +60,7 @@ internal class BetaManagedAgentsErrorTest {
 
     @Test
     fun ofAuthentication() {
-        val authentication = BetaAuthenticationError.builder().message("message").build()
+        val authentication = BetaAuthenticationError.of("message")
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofAuthentication(authentication)
 
@@ -84,9 +82,7 @@ internal class BetaManagedAgentsErrorTest {
     fun ofAuthenticationRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsError =
-            BetaManagedAgentsError.ofAuthentication(
-                BetaAuthenticationError.builder().message("message").build()
-            )
+            BetaManagedAgentsError.ofAuthentication(BetaAuthenticationError.of("message"))
 
         val roundtrippedBetaManagedAgentsError =
             jsonMapper.readValue(
@@ -99,7 +95,7 @@ internal class BetaManagedAgentsErrorTest {
 
     @Test
     fun ofBilling() {
-        val billing = BetaBillingError.builder().message("message").build()
+        val billing = BetaBillingError.of("message")
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofBilling(billing)
 
@@ -121,7 +117,7 @@ internal class BetaManagedAgentsErrorTest {
     fun ofBillingRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsError =
-            BetaManagedAgentsError.ofBilling(BetaBillingError.builder().message("message").build())
+            BetaManagedAgentsError.ofBilling(BetaBillingError.of("message"))
 
         val roundtrippedBetaManagedAgentsError =
             jsonMapper.readValue(
@@ -134,7 +130,7 @@ internal class BetaManagedAgentsErrorTest {
 
     @Test
     fun ofPermission() {
-        val permission = BetaPermissionError.builder().message("message").build()
+        val permission = BetaPermissionError.of("message")
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofPermission(permission)
 
@@ -156,9 +152,7 @@ internal class BetaManagedAgentsErrorTest {
     fun ofPermissionRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsError =
-            BetaManagedAgentsError.ofPermission(
-                BetaPermissionError.builder().message("message").build()
-            )
+            BetaManagedAgentsError.ofPermission(BetaPermissionError.of("message"))
 
         val roundtrippedBetaManagedAgentsError =
             jsonMapper.readValue(
@@ -171,7 +165,7 @@ internal class BetaManagedAgentsErrorTest {
 
     @Test
     fun ofNotFound() {
-        val notFound = BetaNotFoundError.builder().message("message").build()
+        val notFound = BetaNotFoundError.of("message")
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofNotFound(notFound)
 
@@ -193,9 +187,7 @@ internal class BetaManagedAgentsErrorTest {
     fun ofNotFoundRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsError =
-            BetaManagedAgentsError.ofNotFound(
-                BetaNotFoundError.builder().message("message").build()
-            )
+            BetaManagedAgentsError.ofNotFound(BetaNotFoundError.of("message"))
 
         val roundtrippedBetaManagedAgentsError =
             jsonMapper.readValue(
@@ -208,7 +200,7 @@ internal class BetaManagedAgentsErrorTest {
 
     @Test
     fun ofRateLimit() {
-        val rateLimit = BetaRateLimitError.builder().message("message").build()
+        val rateLimit = BetaRateLimitError.of("message")
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofRateLimit(rateLimit)
 
@@ -230,9 +222,7 @@ internal class BetaManagedAgentsErrorTest {
     fun ofRateLimitRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsError =
-            BetaManagedAgentsError.ofRateLimit(
-                BetaRateLimitError.builder().message("message").build()
-            )
+            BetaManagedAgentsError.ofRateLimit(BetaRateLimitError.of("message"))
 
         val roundtrippedBetaManagedAgentsError =
             jsonMapper.readValue(
@@ -245,7 +235,7 @@ internal class BetaManagedAgentsErrorTest {
 
     @Test
     fun ofTimeout() {
-        val timeout = BetaGatewayTimeoutError.builder().message("message").build()
+        val timeout = BetaGatewayTimeoutError.of("message")
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofTimeout(timeout)
 
@@ -267,9 +257,7 @@ internal class BetaManagedAgentsErrorTest {
     fun ofTimeoutRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsError =
-            BetaManagedAgentsError.ofTimeout(
-                BetaGatewayTimeoutError.builder().message("message").build()
-            )
+            BetaManagedAgentsError.ofTimeout(BetaGatewayTimeoutError.of("message"))
 
         val roundtrippedBetaManagedAgentsError =
             jsonMapper.readValue(
@@ -282,7 +270,7 @@ internal class BetaManagedAgentsErrorTest {
 
     @Test
     fun ofApi() {
-        val api = BetaApiError.builder().message("message").build()
+        val api = BetaApiError.of("message")
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofApi(api)
 
@@ -303,8 +291,7 @@ internal class BetaManagedAgentsErrorTest {
     @Test
     fun ofApiRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsError =
-            BetaManagedAgentsError.ofApi(BetaApiError.builder().message("message").build())
+        val betaManagedAgentsError = BetaManagedAgentsError.ofApi(BetaApiError.of("message"))
 
         val roundtrippedBetaManagedAgentsError =
             jsonMapper.readValue(
@@ -317,7 +304,7 @@ internal class BetaManagedAgentsErrorTest {
 
     @Test
     fun ofOverloaded() {
-        val overloaded = BetaOverloadedError.builder().message("message").build()
+        val overloaded = BetaOverloadedError.of("message")
 
         val betaManagedAgentsError = BetaManagedAgentsError.ofOverloaded(overloaded)
 
@@ -339,9 +326,7 @@ internal class BetaManagedAgentsErrorTest {
     fun ofOverloadedRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsError =
-            BetaManagedAgentsError.ofOverloaded(
-                BetaOverloadedError.builder().message("message").build()
-            )
+            BetaManagedAgentsError.ofOverloaded(BetaOverloadedError.of("message"))
 
         val roundtrippedBetaManagedAgentsError =
             jsonMapper.readValue(

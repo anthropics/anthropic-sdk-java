@@ -14,9 +14,9 @@ internal class BetaCodeExecutionToolResultBlockTest {
         val betaCodeExecutionToolResultBlock =
             BetaCodeExecutionToolResultBlock.builder()
                 .content(
-                    BetaCodeExecutionToolResultError.builder()
-                        .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaCodeExecutionToolResultError.of(
+                        BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -24,9 +24,7 @@ internal class BetaCodeExecutionToolResultBlockTest {
         assertThat(betaCodeExecutionToolResultBlock.content())
             .isEqualTo(
                 BetaCodeExecutionToolResultBlockContent.ofError(
-                    BetaCodeExecutionToolResultError.builder()
-                        .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
         assertThat(betaCodeExecutionToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
@@ -38,9 +36,9 @@ internal class BetaCodeExecutionToolResultBlockTest {
         val betaCodeExecutionToolResultBlock =
             BetaCodeExecutionToolResultBlock.builder()
                 .content(
-                    BetaCodeExecutionToolResultError.builder()
-                        .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaCodeExecutionToolResultError.of(
+                        BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()

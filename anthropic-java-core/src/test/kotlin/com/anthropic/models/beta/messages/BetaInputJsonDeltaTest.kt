@@ -11,7 +11,7 @@ internal class BetaInputJsonDeltaTest {
 
     @Test
     fun create() {
-        val betaInputJsonDelta = BetaInputJsonDelta.builder().partialJson("partial_json").build()
+        val betaInputJsonDelta = BetaInputJsonDelta.of("partial_json")
 
         assertThat(betaInputJsonDelta.partialJson()).isEqualTo("partial_json")
     }
@@ -19,7 +19,7 @@ internal class BetaInputJsonDeltaTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaInputJsonDelta = BetaInputJsonDelta.builder().partialJson("partial_json").build()
+        val betaInputJsonDelta = BetaInputJsonDelta.of("partial_json")
 
         val roundtrippedBetaInputJsonDelta =
             jsonMapper.readValue(

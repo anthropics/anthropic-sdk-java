@@ -20,12 +20,9 @@ internal class BetaManagedAgentsEnvironmentVariableAuthResponseTest {
                         .build()
                 )
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.builder()
-                        .type(
-                            BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type
-                                .UNRESTRICTED
-                        )
-                        .build()
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.of(
+                        BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type.UNRESTRICTED
+                    )
                 )
                 .secretName("secret_name")
                 .type(BetaManagedAgentsEnvironmentVariableAuthResponse.Type.ENVIRONMENT_VARIABLE)
@@ -38,12 +35,7 @@ internal class BetaManagedAgentsEnvironmentVariableAuthResponseTest {
         assertThat(betaManagedAgentsEnvironmentVariableAuthResponse.networking())
             .isEqualTo(
                 BetaManagedAgentsEnvironmentVariableAuthResponse.Networking.ofUnrestricted(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.builder()
-                        .type(
-                            BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type
-                                .UNRESTRICTED
-                        )
-                        .build()
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type.UNRESTRICTED
                 )
             )
         assertThat(betaManagedAgentsEnvironmentVariableAuthResponse.secretName())
@@ -64,12 +56,9 @@ internal class BetaManagedAgentsEnvironmentVariableAuthResponseTest {
                         .build()
                 )
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.builder()
-                        .type(
-                            BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type
-                                .UNRESTRICTED
-                        )
-                        .build()
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.of(
+                        BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type.UNRESTRICTED
+                    )
                 )
                 .secretName("secret_name")
                 .type(BetaManagedAgentsEnvironmentVariableAuthResponse.Type.ENVIRONMENT_VARIABLE)

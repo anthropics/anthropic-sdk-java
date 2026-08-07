@@ -13,18 +13,12 @@ internal class BetaMessageTokensCountTest {
     fun create() {
         val betaMessageTokensCount =
             BetaMessageTokensCount.builder()
-                .contextManagement(
-                    BetaCountTokensContextManagementResponse.builder()
-                        .originalInputTokens(0L)
-                        .build()
-                )
+                .contextManagement(BetaCountTokensContextManagementResponse.of(0L))
                 .inputTokens(2095L)
                 .build()
 
         assertThat(betaMessageTokensCount.contextManagement())
-            .contains(
-                BetaCountTokensContextManagementResponse.builder().originalInputTokens(0L).build()
-            )
+            .contains(BetaCountTokensContextManagementResponse.of(0L))
         assertThat(betaMessageTokensCount.inputTokens()).isEqualTo(2095L)
     }
 
@@ -33,11 +27,7 @@ internal class BetaMessageTokensCountTest {
         val jsonMapper = jsonMapper()
         val betaMessageTokensCount =
             BetaMessageTokensCount.builder()
-                .contextManagement(
-                    BetaCountTokensContextManagementResponse.builder()
-                        .originalInputTokens(0L)
-                        .build()
-                )
+                .contextManagement(BetaCountTokensContextManagementResponse.of(0L))
                 .inputTokens(2095L)
                 .build()
 

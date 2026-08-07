@@ -182,6 +182,13 @@ private constructor(
         @JvmStatic
         fun ofEnabled(enabled: ThinkingConfigEnabled) = ThinkingConfigParam(enabled = enabled)
 
+        /**
+         * Returns an immutable instance of [ThinkingConfigParam] whose [ofEnabled] variant is built
+         * from the given required [budgetTokens].
+         */
+        @JvmStatic
+        fun ofEnabled(budgetTokens: Long) = ofEnabled(ThinkingConfigEnabled.of(budgetTokens))
+
         @JvmStatic
         fun ofDisabled(disabled: ThinkingConfigDisabled) = ThinkingConfigParam(disabled = disabled)
 

@@ -735,6 +735,14 @@ private constructor(
         fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) =
             BetaContentBlock(redactedThinking = redactedThinking)
 
+        /**
+         * Returns an immutable instance of [BetaContentBlock] whose [ofRedactedThinking] variant is
+         * built from the given required [data].
+         */
+        @JvmStatic
+        fun ofRedactedThinking(data: String) =
+            ofRedactedThinking(BetaRedactedThinkingBlock.of(data))
+
         @JvmStatic fun ofToolUse(toolUse: BetaToolUseBlock) = BetaContentBlock(toolUse = toolUse)
 
         @JvmStatic
@@ -783,6 +791,14 @@ private constructor(
         @JvmStatic
         fun ofContainerUpload(containerUpload: BetaContainerUploadBlock) =
             BetaContentBlock(containerUpload = containerUpload)
+
+        /**
+         * Returns an immutable instance of [BetaContentBlock] whose [ofContainerUpload] variant is
+         * built from the given required [fileId].
+         */
+        @JvmStatic
+        fun ofContainerUpload(fileId: String) =
+            ofContainerUpload(BetaContainerUploadBlock.of(fileId))
 
         /**
          * A compaction block returned when autocompact is triggered.

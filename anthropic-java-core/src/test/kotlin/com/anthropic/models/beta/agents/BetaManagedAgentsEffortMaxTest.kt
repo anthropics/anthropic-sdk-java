@@ -12,7 +12,7 @@ internal class BetaManagedAgentsEffortMaxTest {
     @Test
     fun create() {
         val betaManagedAgentsEffortMax =
-            BetaManagedAgentsEffortMax.builder().type(BetaManagedAgentsEffortMax.Type.MAX).build()
+            BetaManagedAgentsEffortMax.of(BetaManagedAgentsEffortMax.Type.MAX)
 
         assertThat(betaManagedAgentsEffortMax.type()).isEqualTo(BetaManagedAgentsEffortMax.Type.MAX)
     }
@@ -21,7 +21,7 @@ internal class BetaManagedAgentsEffortMaxTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsEffortMax =
-            BetaManagedAgentsEffortMax.builder().type(BetaManagedAgentsEffortMax.Type.MAX).build()
+            BetaManagedAgentsEffortMax.of(BetaManagedAgentsEffortMax.Type.MAX)
 
         val roundtrippedBetaManagedAgentsEffortMax =
             jsonMapper.readValue(

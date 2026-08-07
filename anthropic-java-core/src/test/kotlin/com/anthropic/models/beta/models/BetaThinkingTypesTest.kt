@@ -13,14 +13,12 @@ internal class BetaThinkingTypesTest {
     fun create() {
         val betaThinkingTypes =
             BetaThinkingTypes.builder()
-                .adaptive(BetaCapabilitySupport.builder().supported(true).build())
-                .enabled(BetaCapabilitySupport.builder().supported(true).build())
+                .adaptive(BetaCapabilitySupport.of(true))
+                .enabled(BetaCapabilitySupport.of(true))
                 .build()
 
-        assertThat(betaThinkingTypes.adaptive())
-            .isEqualTo(BetaCapabilitySupport.builder().supported(true).build())
-        assertThat(betaThinkingTypes.enabled())
-            .isEqualTo(BetaCapabilitySupport.builder().supported(true).build())
+        assertThat(betaThinkingTypes.adaptive()).isEqualTo(BetaCapabilitySupport.of(true))
+        assertThat(betaThinkingTypes.enabled()).isEqualTo(BetaCapabilitySupport.of(true))
     }
 
     @Test
@@ -28,8 +26,8 @@ internal class BetaThinkingTypesTest {
         val jsonMapper = jsonMapper()
         val betaThinkingTypes =
             BetaThinkingTypes.builder()
-                .adaptive(BetaCapabilitySupport.builder().supported(true).build())
-                .enabled(BetaCapabilitySupport.builder().supported(true).build())
+                .adaptive(BetaCapabilitySupport.of(true))
+                .enabled(BetaCapabilitySupport.of(true))
                 .build()
 
         val roundtrippedBetaThinkingTypes =

@@ -7,6 +7,7 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSystemMessageEventParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserDefineOutcomeEventParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
@@ -228,6 +229,19 @@ private constructor(
             BetaManagedAgentsDeploymentInitialEventParams(userMessage = userMessage)
 
         /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentInitialEventParams] whose
+         * [ofUserMessage] variant is built from the given required [content].
+         */
+        @JvmStatic
+        fun ofUserMessage(content: List<BetaManagedAgentsUserMessageEventParams.Content>) =
+            ofUserMessage(
+                BetaManagedAgentsUserMessageEventParams.builder()
+                    .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
+                    .content(content)
+                    .build()
+            )
+
+        /**
          * Parameters for defining an outcome the agent should work toward. The agent begins work on
          * receipt.
          */
@@ -245,6 +259,19 @@ private constructor(
         @JvmStatic
         fun ofSystemMessage(systemMessage: BetaManagedAgentsSystemMessageEventParams) =
             BetaManagedAgentsDeploymentInitialEventParams(systemMessage = systemMessage)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentInitialEventParams] whose
+         * [ofSystemMessage] variant is built from the given required [content].
+         */
+        @JvmStatic
+        fun ofSystemMessage(content: List<BetaManagedAgentsSystemContentBlock>) =
+            ofSystemMessage(
+                BetaManagedAgentsSystemMessageEventParams.builder()
+                    .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+                    .content(content)
+                    .build()
+            )
     }
 
     /**

@@ -164,6 +164,14 @@ private constructor(
         @JvmStatic
         fun ofRequestError(requestError: WebSearchToolRequestError) =
             WebSearchToolResultBlockParamContent(requestError = requestError)
+
+        /**
+         * Returns an immutable instance of [WebSearchToolResultBlockParamContent] whose
+         * [ofRequestError] variant is built from the given required [errorCode].
+         */
+        @JvmStatic
+        fun ofRequestError(errorCode: WebSearchToolResultErrorCode) =
+            ofRequestError(WebSearchToolRequestError.of(errorCode))
     }
 
     /**

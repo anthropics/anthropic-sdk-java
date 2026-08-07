@@ -1408,9 +1408,25 @@ private constructor(
         fun ofSearchToolBm25_20251119(searchToolBm25_20251119: ToolSearchToolBm25_20251119) =
             ToolUnion(searchToolBm25_20251119 = searchToolBm25_20251119)
 
+        /**
+         * Returns an immutable instance of [ToolUnion] whose [ofSearchToolBm25_20251119] variant is
+         * built from the given required [type].
+         */
+        @JvmStatic
+        fun ofSearchToolBm25_20251119(type: ToolSearchToolBm25_20251119.Type) =
+            ofSearchToolBm25_20251119(ToolSearchToolBm25_20251119.of(type))
+
         @JvmStatic
         fun ofSearchToolRegex20251119(searchToolRegex20251119: ToolSearchToolRegex20251119) =
             ToolUnion(searchToolRegex20251119 = searchToolRegex20251119)
+
+        /**
+         * Returns an immutable instance of [ToolUnion] whose [ofSearchToolRegex20251119] variant is
+         * built from the given required [type].
+         */
+        @JvmStatic
+        fun ofSearchToolRegex20251119(type: ToolSearchToolRegex20251119.Type) =
+            ofSearchToolRegex20251119(ToolSearchToolRegex20251119.of(type))
     }
 
     /** An interface that defines how to map each variant of [ToolUnion] to a value of type [T]. */

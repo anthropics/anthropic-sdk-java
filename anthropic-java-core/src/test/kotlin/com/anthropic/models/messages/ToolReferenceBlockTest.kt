@@ -11,7 +11,7 @@ internal class ToolReferenceBlockTest {
 
     @Test
     fun create() {
-        val toolReferenceBlock = ToolReferenceBlock.builder().toolName("tool_name").build()
+        val toolReferenceBlock = ToolReferenceBlock.of("tool_name")
 
         assertThat(toolReferenceBlock.toolName()).isEqualTo("tool_name")
     }
@@ -19,7 +19,7 @@ internal class ToolReferenceBlockTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val toolReferenceBlock = ToolReferenceBlock.builder().toolName("tool_name").build()
+        val toolReferenceBlock = ToolReferenceBlock.of("tool_name")
 
         val roundtrippedToolReferenceBlock =
             jsonMapper.readValue(

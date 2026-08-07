@@ -25,11 +25,7 @@ internal class BetaRequestDocumentBlockTest {
                 .build()
 
         assertThat(betaRequestDocumentBlock.source())
-            .isEqualTo(
-                BetaRequestDocumentBlock.Source.ofBase64(
-                    BetaBase64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
-                )
-            )
+            .isEqualTo(BetaRequestDocumentBlock.Source.ofBase64("U3RhaW5sZXNzIHJvY2tz"))
         assertThat(betaRequestDocumentBlock.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()

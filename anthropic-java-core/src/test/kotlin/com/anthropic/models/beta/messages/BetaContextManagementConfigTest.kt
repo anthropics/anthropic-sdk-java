@@ -16,10 +16,10 @@ internal class BetaContextManagementConfigTest {
             BetaContextManagementConfig.builder()
                 .addEdit(
                     BetaClearToolUses20250919Edit.builder()
-                        .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                        .clearAtLeast(BetaInputTokensClearAtLeast.of(0L))
                         .clearToolInputs(true)
                         .addExcludeTool("string")
-                        .keep(BetaToolUsesKeep.builder().value(0L).build())
+                        .keep(BetaToolUsesKeep.of(0L))
                         .inputTokensTrigger(1L)
                         .build()
                 )
@@ -29,10 +29,10 @@ internal class BetaContextManagementConfigTest {
             .containsExactly(
                 BetaContextManagementConfig.Edit.ofClearToolUses20250919(
                     BetaClearToolUses20250919Edit.builder()
-                        .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                        .clearAtLeast(BetaInputTokensClearAtLeast.of(0L))
                         .clearToolInputs(true)
                         .addExcludeTool("string")
-                        .keep(BetaToolUsesKeep.builder().value(0L).build())
+                        .keep(BetaToolUsesKeep.of(0L))
                         .inputTokensTrigger(1L)
                         .build()
                 )
@@ -49,10 +49,10 @@ internal class BetaContextManagementConfigTest {
                 .addEdit(
                     BetaContextManagementConfig.Edit.ofClearToolUses20250919(
                         BetaClearToolUses20250919Edit.builder()
-                            .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                            .clearAtLeast(BetaInputTokensClearAtLeast.of(0L))
                             .clearToolInputs(true)
                             .addExcludeTool("string")
-                            .keep(BetaToolUsesKeep.builder().value(0L).build())
+                            .keep(BetaToolUsesKeep.of(0L))
                             .inputTokensTrigger(1L)
                             .build()
                     )
@@ -63,10 +63,10 @@ internal class BetaContextManagementConfigTest {
             .containsExactly(
                 BetaContextManagementConfig.Edit.ofClearToolUses20250919(
                     BetaClearToolUses20250919Edit.builder()
-                        .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                        .clearAtLeast(BetaInputTokensClearAtLeast.of(0L))
                         .clearToolInputs(true)
                         .addExcludeTool("string")
-                        .keep(BetaToolUsesKeep.builder().value(0L).build())
+                        .keep(BetaToolUsesKeep.of(0L))
                         .inputTokensTrigger(1L)
                         .build()
                 )
@@ -80,10 +80,10 @@ internal class BetaContextManagementConfigTest {
             BetaContextManagementConfig.builder()
                 .addEdit(
                     BetaClearToolUses20250919Edit.builder()
-                        .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                        .clearAtLeast(BetaInputTokensClearAtLeast.of(0L))
                         .clearToolInputs(true)
                         .addExcludeTool("string")
-                        .keep(BetaToolUsesKeep.builder().value(0L).build())
+                        .keep(BetaToolUsesKeep.of(0L))
                         .inputTokensTrigger(1L)
                         .build()
                 )

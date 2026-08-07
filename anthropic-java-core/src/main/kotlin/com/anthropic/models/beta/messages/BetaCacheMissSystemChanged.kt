@@ -85,6 +85,14 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaCacheMissSystemChanged] with the required
+         * [cacheMissedInputTokens] set to the given value.
+         */
+        @JvmStatic
+        fun of(cacheMissedInputTokens: Long) =
+            builder().cacheMissedInputTokens(cacheMissedInputTokens).build()
     }
 
     /** A builder for [BetaCacheMissSystemChanged]. */

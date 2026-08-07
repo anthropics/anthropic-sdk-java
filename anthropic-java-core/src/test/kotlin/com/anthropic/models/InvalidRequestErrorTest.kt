@@ -11,7 +11,7 @@ internal class InvalidRequestErrorTest {
 
     @Test
     fun create() {
-        val invalidRequestError = InvalidRequestError.builder().message("message").build()
+        val invalidRequestError = InvalidRequestError.of("message")
 
         assertThat(invalidRequestError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class InvalidRequestErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val invalidRequestError = InvalidRequestError.builder().message("message").build()
+        val invalidRequestError = InvalidRequestError.of("message")
 
         val roundtrippedInvalidRequestError =
             jsonMapper.readValue(

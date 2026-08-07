@@ -11,7 +11,7 @@ internal class BetaPlainTextSourceTest {
 
     @Test
     fun create() {
-        val betaPlainTextSource = BetaPlainTextSource.builder().data("data").build()
+        val betaPlainTextSource = BetaPlainTextSource.of("data")
 
         assertThat(betaPlainTextSource.data()).isEqualTo("data")
     }
@@ -19,7 +19,7 @@ internal class BetaPlainTextSourceTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaPlainTextSource = BetaPlainTextSource.builder().data("data").build()
+        val betaPlainTextSource = BetaPlainTextSource.of("data")
 
         val roundtrippedBetaPlainTextSource =
             jsonMapper.readValue(

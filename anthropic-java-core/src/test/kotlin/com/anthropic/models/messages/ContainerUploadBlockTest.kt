@@ -11,7 +11,7 @@ internal class ContainerUploadBlockTest {
 
     @Test
     fun create() {
-        val containerUploadBlock = ContainerUploadBlock.builder().fileId("file_id").build()
+        val containerUploadBlock = ContainerUploadBlock.of("file_id")
 
         assertThat(containerUploadBlock.fileId()).isEqualTo("file_id")
     }
@@ -19,7 +19,7 @@ internal class ContainerUploadBlockTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val containerUploadBlock = ContainerUploadBlock.builder().fileId("file_id").build()
+        val containerUploadBlock = ContainerUploadBlock.of("file_id")
 
         val roundtrippedContainerUploadBlock =
             jsonMapper.readValue(

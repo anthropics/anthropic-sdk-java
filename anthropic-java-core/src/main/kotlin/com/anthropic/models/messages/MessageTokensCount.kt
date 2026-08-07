@@ -67,6 +67,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [MessageTokensCount] with the required [inputTokens] set
+         * to the given value.
+         */
+        @JvmStatic fun of(inputTokens: Long) = builder().inputTokens(inputTokens).build()
     }
 
     /** A builder for [MessageTokensCount]. */

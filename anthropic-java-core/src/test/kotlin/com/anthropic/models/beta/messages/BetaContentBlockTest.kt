@@ -127,7 +127,7 @@ internal class BetaContentBlockTest {
 
     @Test
     fun ofRedactedThinking() {
-        val redactedThinking = BetaRedactedThinkingBlock.builder().data("data").build()
+        val redactedThinking = BetaRedactedThinkingBlock.of("data")
 
         val betaContentBlock = BetaContentBlock.ofRedactedThinking(redactedThinking)
 
@@ -154,9 +154,7 @@ internal class BetaContentBlockTest {
     fun ofRedactedThinkingRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaContentBlock =
-            BetaContentBlock.ofRedactedThinking(
-                BetaRedactedThinkingBlock.builder().data("data").build()
-            )
+            BetaContentBlock.ofRedactedThinking(BetaRedactedThinkingBlock.of("data"))
 
         val roundtrippedBetaContentBlock =
             jsonMapper.readValue(
@@ -278,9 +276,9 @@ internal class BetaContentBlockTest {
         val webSearchToolResult =
             BetaWebSearchToolResultBlock.builder()
                 .content(
-                    BetaWebSearchToolResultError.builder()
-                        .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaWebSearchToolResultError.of(
+                        BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .caller(BetaDirectCaller.builder().build())
@@ -314,9 +312,9 @@ internal class BetaContentBlockTest {
             BetaContentBlock.ofWebSearchToolResult(
                 BetaWebSearchToolResultBlock.builder()
                     .content(
-                        BetaWebSearchToolResultError.builder()
-                            .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        BetaWebSearchToolResultError.of(
+                            BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .caller(BetaDirectCaller.builder().build())
@@ -337,9 +335,9 @@ internal class BetaContentBlockTest {
         val webFetchToolResult =
             BetaWebFetchToolResultBlock.builder()
                 .content(
-                    BetaWebFetchToolResultErrorBlock.builder()
-                        .errorCode(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaWebFetchToolResultErrorBlock.of(
+                        BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .caller(BetaDirectCaller.builder().build())
@@ -373,9 +371,9 @@ internal class BetaContentBlockTest {
             BetaContentBlock.ofWebFetchToolResult(
                 BetaWebFetchToolResultBlock.builder()
                     .content(
-                        BetaWebFetchToolResultErrorBlock.builder()
-                            .errorCode(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        BetaWebFetchToolResultErrorBlock.of(
+                            BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .caller(BetaDirectCaller.builder().build())
@@ -396,9 +394,9 @@ internal class BetaContentBlockTest {
         val advisorToolResult =
             BetaAdvisorToolResultBlock.builder()
                 .content(
-                    BetaAdvisorToolResultError.builder()
-                        .errorCode(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
-                        .build()
+                    BetaAdvisorToolResultError.of(
+                        BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -431,9 +429,9 @@ internal class BetaContentBlockTest {
             BetaContentBlock.ofAdvisorToolResult(
                 BetaAdvisorToolResultBlock.builder()
                     .content(
-                        BetaAdvisorToolResultError.builder()
-                            .errorCode(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
-                            .build()
+                        BetaAdvisorToolResultError.of(
+                            BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .build()
@@ -453,9 +451,9 @@ internal class BetaContentBlockTest {
         val codeExecutionToolResult =
             BetaCodeExecutionToolResultBlock.builder()
                 .content(
-                    BetaCodeExecutionToolResultError.builder()
-                        .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaCodeExecutionToolResultError.of(
+                        BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -488,9 +486,9 @@ internal class BetaContentBlockTest {
             BetaContentBlock.ofCodeExecutionToolResult(
                 BetaCodeExecutionToolResultBlock.builder()
                     .content(
-                        BetaCodeExecutionToolResultError.builder()
-                            .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        BetaCodeExecutionToolResultError.of(
+                            BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .build()
@@ -510,11 +508,9 @@ internal class BetaContentBlockTest {
         val bashCodeExecutionToolResult =
             BetaBashCodeExecutionToolResultBlock.builder()
                 .content(
-                    BetaBashCodeExecutionToolResultError.builder()
-                        .errorCode(
-                            BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
-                        )
-                        .build()
+                    BetaBashCodeExecutionToolResultError.of(
+                        BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -549,11 +545,9 @@ internal class BetaContentBlockTest {
             BetaContentBlock.ofBashCodeExecutionToolResult(
                 BetaBashCodeExecutionToolResultBlock.builder()
                     .content(
-                        BetaBashCodeExecutionToolResultError.builder()
-                            .errorCode(
-                                BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
-                            )
-                            .build()
+                        BetaBashCodeExecutionToolResultError.of(
+                            BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .build()
@@ -799,7 +793,7 @@ internal class BetaContentBlockTest {
 
     @Test
     fun ofContainerUpload() {
-        val containerUpload = BetaContainerUploadBlock.builder().fileId("file_id").build()
+        val containerUpload = BetaContainerUploadBlock.of("file_id")
 
         val betaContentBlock = BetaContentBlock.ofContainerUpload(containerUpload)
 
@@ -826,9 +820,7 @@ internal class BetaContentBlockTest {
     fun ofContainerUploadRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaContentBlock =
-            BetaContentBlock.ofContainerUpload(
-                BetaContainerUploadBlock.builder().fileId("file_id").build()
-            )
+            BetaContentBlock.ofContainerUpload(BetaContainerUploadBlock.of("file_id"))
 
         val roundtrippedBetaContentBlock =
             jsonMapper.readValue(
@@ -892,13 +884,9 @@ internal class BetaContentBlockTest {
     fun ofFallback() {
         val fallback =
             BetaFallbackBlock.builder()
-                .from(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
-                .to(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
-                .trigger(
-                    BetaFallbackRefusalTrigger.builder()
-                        .category(BetaFallbackRefusalTrigger.Category.CYBER)
-                        .build()
-                )
+                .from(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5))
+                .to(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5))
+                .trigger(BetaFallbackRefusalTrigger.of(BetaFallbackRefusalTrigger.Category.CYBER))
                 .build()
 
         val betaContentBlock = BetaContentBlock.ofFallback(fallback)
@@ -928,12 +916,10 @@ internal class BetaContentBlockTest {
         val betaContentBlock =
             BetaContentBlock.ofFallback(
                 BetaFallbackBlock.builder()
-                    .from(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
-                    .to(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
+                    .from(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5))
+                    .to(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5))
                     .trigger(
-                        BetaFallbackRefusalTrigger.builder()
-                            .category(BetaFallbackRefusalTrigger.Category.CYBER)
-                            .build()
+                        BetaFallbackRefusalTrigger.of(BetaFallbackRefusalTrigger.Category.CYBER)
                     )
                     .build()
             )

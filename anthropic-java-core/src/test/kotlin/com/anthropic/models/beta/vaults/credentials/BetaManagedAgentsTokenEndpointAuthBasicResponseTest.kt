@@ -12,9 +12,9 @@ internal class BetaManagedAgentsTokenEndpointAuthBasicResponseTest {
     @Test
     fun create() {
         val betaManagedAgentsTokenEndpointAuthBasicResponse =
-            BetaManagedAgentsTokenEndpointAuthBasicResponse.builder()
-                .type(BetaManagedAgentsTokenEndpointAuthBasicResponse.Type.CLIENT_SECRET_BASIC)
-                .build()
+            BetaManagedAgentsTokenEndpointAuthBasicResponse.of(
+                BetaManagedAgentsTokenEndpointAuthBasicResponse.Type.CLIENT_SECRET_BASIC
+            )
 
         assertThat(betaManagedAgentsTokenEndpointAuthBasicResponse.type())
             .isEqualTo(BetaManagedAgentsTokenEndpointAuthBasicResponse.Type.CLIENT_SECRET_BASIC)
@@ -24,9 +24,9 @@ internal class BetaManagedAgentsTokenEndpointAuthBasicResponseTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsTokenEndpointAuthBasicResponse =
-            BetaManagedAgentsTokenEndpointAuthBasicResponse.builder()
-                .type(BetaManagedAgentsTokenEndpointAuthBasicResponse.Type.CLIENT_SECRET_BASIC)
-                .build()
+            BetaManagedAgentsTokenEndpointAuthBasicResponse.of(
+                BetaManagedAgentsTokenEndpointAuthBasicResponse.Type.CLIENT_SECRET_BASIC
+            )
 
         val roundtrippedBetaManagedAgentsTokenEndpointAuthBasicResponse =
             jsonMapper.readValue(

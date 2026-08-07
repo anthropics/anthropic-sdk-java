@@ -44,9 +44,9 @@ internal class BetaManagedAgentsDeploymentTest {
                 .metadata(BetaManagedAgentsDeployment.Metadata.builder().build())
                 .name("Daily order report")
                 .pausedReason(
-                    BetaManagedAgentsManualDeploymentPausedReason.builder()
-                        .type(BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL)
-                        .build()
+                    BetaManagedAgentsManualDeploymentPausedReason.of(
+                        BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL
+                    )
                 )
                 .addResource(
                     BetaManagedAgentsGitHubRepositoryResourceConfig.builder()
@@ -116,9 +116,7 @@ internal class BetaManagedAgentsDeploymentTest {
         assertThat(betaManagedAgentsDeployment.pausedReason())
             .contains(
                 BetaManagedAgentsDeploymentPausedReason.ofManual(
-                    BetaManagedAgentsManualDeploymentPausedReason.builder()
-                        .type(BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL)
-                        .build()
+                    BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL
                 )
             )
         assertThat(betaManagedAgentsDeployment.resources())
@@ -197,9 +195,9 @@ internal class BetaManagedAgentsDeploymentTest {
                 .metadata(BetaManagedAgentsDeployment.Metadata.builder().build())
                 .name("Daily order report")
                 .pausedReason(
-                    BetaManagedAgentsManualDeploymentPausedReason.builder()
-                        .type(BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL)
-                        .build()
+                    BetaManagedAgentsManualDeploymentPausedReason.of(
+                        BetaManagedAgentsManualDeploymentPausedReason.Type.MANUAL
+                    )
                 )
                 .addResource(
                     BetaManagedAgentsGitHubRepositoryResourceConfig.builder()

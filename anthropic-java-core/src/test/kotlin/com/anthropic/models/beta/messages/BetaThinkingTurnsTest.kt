@@ -11,7 +11,7 @@ internal class BetaThinkingTurnsTest {
 
     @Test
     fun create() {
-        val betaThinkingTurns = BetaThinkingTurns.builder().value(1L).build()
+        val betaThinkingTurns = BetaThinkingTurns.of(1L)
 
         assertThat(betaThinkingTurns.value()).isEqualTo(1L)
     }
@@ -19,7 +19,7 @@ internal class BetaThinkingTurnsTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaThinkingTurns = BetaThinkingTurns.builder().value(1L).build()
+        val betaThinkingTurns = BetaThinkingTurns.of(1L)
 
         val roundtrippedBetaThinkingTurns =
             jsonMapper.readValue(

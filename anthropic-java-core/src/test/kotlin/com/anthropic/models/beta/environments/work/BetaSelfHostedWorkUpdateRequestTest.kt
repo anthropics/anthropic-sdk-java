@@ -13,13 +13,11 @@ internal class BetaSelfHostedWorkUpdateRequestTest {
     @Test
     fun create() {
         val betaSelfHostedWorkUpdateRequest =
-            BetaSelfHostedWorkUpdateRequest.builder()
-                .metadata(
-                    BetaSelfHostedWorkUpdateRequest.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .build()
+            BetaSelfHostedWorkUpdateRequest.of(
+                BetaSelfHostedWorkUpdateRequest.Metadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                    .build()
+            )
 
         assertThat(betaSelfHostedWorkUpdateRequest.metadata())
             .isEqualTo(
@@ -33,13 +31,11 @@ internal class BetaSelfHostedWorkUpdateRequestTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaSelfHostedWorkUpdateRequest =
-            BetaSelfHostedWorkUpdateRequest.builder()
-                .metadata(
-                    BetaSelfHostedWorkUpdateRequest.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .build()
+            BetaSelfHostedWorkUpdateRequest.of(
+                BetaSelfHostedWorkUpdateRequest.Metadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                    .build()
+            )
 
         val roundtrippedBetaSelfHostedWorkUpdateRequest =
             jsonMapper.readValue(

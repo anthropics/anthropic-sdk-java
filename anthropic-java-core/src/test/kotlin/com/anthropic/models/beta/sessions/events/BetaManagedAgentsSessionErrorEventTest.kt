@@ -19,9 +19,9 @@ internal class BetaManagedAgentsSessionErrorEventTest {
                     BetaManagedAgentsUnknownError.builder()
                         .message("message")
                         .retryStatus(
-                            BetaManagedAgentsRetryStatusRetrying.builder()
-                                .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                                .build()
+                            BetaManagedAgentsRetryStatusRetrying.of(
+                                BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                            )
                         )
                         .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                         .build()
@@ -37,9 +37,9 @@ internal class BetaManagedAgentsSessionErrorEventTest {
                     BetaManagedAgentsUnknownError.builder()
                         .message("message")
                         .retryStatus(
-                            BetaManagedAgentsRetryStatusRetrying.builder()
-                                .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                                .build()
+                            BetaManagedAgentsRetryStatusRetrying.of(
+                                BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                            )
                         )
                         .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                         .build()
@@ -61,9 +61,9 @@ internal class BetaManagedAgentsSessionErrorEventTest {
                     BetaManagedAgentsUnknownError.builder()
                         .message("message")
                         .retryStatus(
-                            BetaManagedAgentsRetryStatusRetrying.builder()
-                                .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                                .build()
+                            BetaManagedAgentsRetryStatusRetrying.of(
+                                BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                            )
                         )
                         .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                         .build()

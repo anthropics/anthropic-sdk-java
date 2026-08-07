@@ -11,7 +11,7 @@ internal class BetaCitationConfigTest {
 
     @Test
     fun create() {
-        val betaCitationConfig = BetaCitationConfig.builder().enabled(true).build()
+        val betaCitationConfig = BetaCitationConfig.of(true)
 
         assertThat(betaCitationConfig.enabled()).isEqualTo(true)
     }
@@ -19,7 +19,7 @@ internal class BetaCitationConfigTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaCitationConfig = BetaCitationConfig.builder().enabled(true).build()
+        val betaCitationConfig = BetaCitationConfig.of(true)
 
         val roundtrippedBetaCitationConfig =
             jsonMapper.readValue(

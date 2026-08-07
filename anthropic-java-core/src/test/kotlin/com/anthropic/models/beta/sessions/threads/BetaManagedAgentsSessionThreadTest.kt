@@ -45,9 +45,9 @@ internal class BetaManagedAgentsSessionThreadTest {
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                 .effort(
-                                    BetaManagedAgentsEffortLow.builder()
-                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                        .build()
+                                    BetaManagedAgentsEffortLow.of(
+                                        BetaManagedAgentsEffortLow.Type.LOW
+                                    )
                                 )
                                 .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -71,12 +71,9 @@ internal class BetaManagedAgentsSessionThreadTest {
                                         .enabled(true)
                                         .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                            )
                                         )
                                         .build()
                                 )
@@ -84,11 +81,9 @@ internal class BetaManagedAgentsSessionThreadTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAskPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAskPolicy.of(
+                                                BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
+                                            )
                                         )
                                         .build()
                                 )
@@ -162,9 +157,9 @@ internal class BetaManagedAgentsSessionThreadTest {
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                 .effort(
-                                    BetaManagedAgentsEffortLow.builder()
-                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                        .build()
+                                    BetaManagedAgentsEffortLow.of(
+                                        BetaManagedAgentsEffortLow.Type.LOW
+                                    )
                                 )
                                 .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -188,12 +183,9 @@ internal class BetaManagedAgentsSessionThreadTest {
                                         .enabled(true)
                                         .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                            )
                                         )
                                         .build()
                                 )
@@ -201,11 +193,9 @@ internal class BetaManagedAgentsSessionThreadTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAskPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAskPolicy.of(
+                                                BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
+                                            )
                                         )
                                         .build()
                                 )
@@ -290,9 +280,9 @@ internal class BetaManagedAgentsSessionThreadTest {
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                 .effort(
-                                    BetaManagedAgentsEffortLow.builder()
-                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                        .build()
+                                    BetaManagedAgentsEffortLow.of(
+                                        BetaManagedAgentsEffortLow.Type.LOW
+                                    )
                                 )
                                 .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -316,12 +306,9 @@ internal class BetaManagedAgentsSessionThreadTest {
                                         .enabled(true)
                                         .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                            )
                                         )
                                         .build()
                                 )
@@ -329,11 +316,9 @@ internal class BetaManagedAgentsSessionThreadTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAskPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAskPolicy.of(
+                                                BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
+                                            )
                                         )
                                         .build()
                                 )

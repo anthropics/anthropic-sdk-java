@@ -11,7 +11,7 @@ internal class BetaOverloadedErrorTest {
 
     @Test
     fun create() {
-        val betaOverloadedError = BetaOverloadedError.builder().message("message").build()
+        val betaOverloadedError = BetaOverloadedError.of("message")
 
         assertThat(betaOverloadedError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class BetaOverloadedErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaOverloadedError = BetaOverloadedError.builder().message("message").build()
+        val betaOverloadedError = BetaOverloadedError.of("message")
 
         val roundtrippedBetaOverloadedError =
             jsonMapper.readValue(

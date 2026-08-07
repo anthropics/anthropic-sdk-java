@@ -11,8 +11,7 @@ internal class BetaManagedAgentsSearchResultCitationsTest {
 
     @Test
     fun create() {
-        val betaManagedAgentsSearchResultCitations =
-            BetaManagedAgentsSearchResultCitations.builder().enabled(true).build()
+        val betaManagedAgentsSearchResultCitations = BetaManagedAgentsSearchResultCitations.of(true)
 
         assertThat(betaManagedAgentsSearchResultCitations.enabled()).isEqualTo(true)
     }
@@ -20,8 +19,7 @@ internal class BetaManagedAgentsSearchResultCitationsTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaManagedAgentsSearchResultCitations =
-            BetaManagedAgentsSearchResultCitations.builder().enabled(true).build()
+        val betaManagedAgentsSearchResultCitations = BetaManagedAgentsSearchResultCitations.of(true)
 
         val roundtrippedBetaManagedAgentsSearchResultCitations =
             jsonMapper.readValue(

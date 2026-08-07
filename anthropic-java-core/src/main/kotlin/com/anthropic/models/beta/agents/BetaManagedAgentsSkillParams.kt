@@ -191,10 +191,36 @@ private constructor(
         fun ofAnthropic(anthropic: BetaManagedAgentsAnthropicSkillParams) =
             BetaManagedAgentsSkillParams(anthropic = anthropic)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsSkillParams] whose [ofAnthropic]
+         * variant is built from the given required [skillId].
+         */
+        @JvmStatic
+        fun ofAnthropic(skillId: String) =
+            ofAnthropic(
+                BetaManagedAgentsAnthropicSkillParams.builder()
+                    .type(BetaManagedAgentsAnthropicSkillParams.Type.ANTHROPIC)
+                    .skillId(skillId)
+                    .build()
+            )
+
         /** A user-created custom skill. */
         @JvmStatic
         fun ofCustom(custom: BetaManagedAgentsCustomSkillParams) =
             BetaManagedAgentsSkillParams(custom = custom)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsSkillParams] whose [ofCustom] variant
+         * is built from the given required [skillId].
+         */
+        @JvmStatic
+        fun ofCustom(skillId: String) =
+            ofCustom(
+                BetaManagedAgentsCustomSkillParams.builder()
+                    .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
+                    .skillId(skillId)
+                    .build()
+            )
     }
 
     /**

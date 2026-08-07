@@ -7,6 +7,8 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.ErrorResponse
+import com.anthropic.models.messages.Message
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -197,8 +199,22 @@ private constructor(
         fun ofSucceeded(succeeded: MessageBatchSucceededResult) =
             MessageBatchResult(succeeded = succeeded)
 
+        /**
+         * Returns an immutable instance of [MessageBatchResult] whose [ofSucceeded] variant is
+         * built from the given required [message].
+         */
+        @JvmStatic
+        fun ofSucceeded(message: Message) = ofSucceeded(MessageBatchSucceededResult.of(message))
+
         @JvmStatic
         fun ofErrored(errored: MessageBatchErroredResult) = MessageBatchResult(errored = errored)
+
+        /**
+         * Returns an immutable instance of [MessageBatchResult] whose [ofErrored] variant is built
+         * from the given required [error].
+         */
+        @JvmStatic
+        fun ofErrored(error: ErrorResponse) = ofErrored(MessageBatchErroredResult.of(error))
 
         @JvmStatic
         fun ofCanceled(canceled: MessageBatchCanceledResult) =

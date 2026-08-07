@@ -11,7 +11,7 @@ internal class UrlPdfSourceTest {
 
     @Test
     fun create() {
-        val urlPdfSource = UrlPdfSource.builder().url("url").build()
+        val urlPdfSource = UrlPdfSource.of("url")
 
         assertThat(urlPdfSource.url()).isEqualTo("url")
     }
@@ -19,7 +19,7 @@ internal class UrlPdfSourceTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val urlPdfSource = UrlPdfSource.builder().url("url").build()
+        val urlPdfSource = UrlPdfSource.of("url")
 
         val roundtrippedUrlPdfSource =
             jsonMapper.readValue(

@@ -17,9 +17,9 @@ internal class BetaManagedAgentsCredentialNetworkingParamsTest {
     @Test
     fun ofUnrestricted() {
         val unrestricted =
-            BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder()
-                .type(BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED)
-                .build()
+            BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(
+                BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
+            )
 
         val betaManagedAgentsCredentialNetworkingParams =
             BetaManagedAgentsCredentialNetworkingParams.ofUnrestricted(unrestricted)
@@ -34,9 +34,9 @@ internal class BetaManagedAgentsCredentialNetworkingParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsCredentialNetworkingParams =
             BetaManagedAgentsCredentialNetworkingParams.ofUnrestricted(
-                BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder()
-                    .type(BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED)
-                    .build()
+                BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
+                )
             )
 
         val roundtrippedBetaManagedAgentsCredentialNetworkingParams =

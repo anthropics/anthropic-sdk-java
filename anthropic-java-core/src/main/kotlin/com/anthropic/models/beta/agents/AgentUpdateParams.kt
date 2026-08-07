@@ -1764,6 +1764,14 @@ private constructor(
             fun ofBetaManagedAgentsModelConfigParams(
                 betaManagedAgentsModelConfigParams: BetaManagedAgentsModelConfigParams
             ) = Model(betaManagedAgentsModelConfigParams = betaManagedAgentsModelConfigParams)
+
+            /**
+             * Returns an immutable instance of [Model] whose [ofBetaManagedAgentsModelConfigParams]
+             * variant is built from the given required [id].
+             */
+            @JvmStatic
+            fun ofBetaManagedAgentsModelConfigParams(id: BetaManagedAgentsModel) =
+                ofBetaManagedAgentsModelConfigParams(BetaManagedAgentsModelConfigParams.of(id))
         }
 
         /** An interface that defines how to map each variant of [Model] to a value of type [T]. */
@@ -2043,10 +2051,31 @@ private constructor(
                 agentToolset20260401: BetaManagedAgentsAgentToolset20260401Params
             ) = Tool(agentToolset20260401 = agentToolset20260401)
 
+            /**
+             * Returns an immutable instance of [Tool] whose [ofAgentToolset20260401] variant is
+             * built from the given required [type].
+             */
+            @JvmStatic
+            fun ofAgentToolset20260401(type: BetaManagedAgentsAgentToolset20260401Params.Type) =
+                ofAgentToolset20260401(BetaManagedAgentsAgentToolset20260401Params.of(type))
+
             /** Configuration for tools from an MCP server defined in `mcp_servers`. */
             @JvmStatic
             fun ofMcpToolset(mcpToolset: BetaManagedAgentsMcpToolsetParams) =
                 Tool(mcpToolset = mcpToolset)
+
+            /**
+             * Returns an immutable instance of [Tool] whose [ofMcpToolset] variant is built from
+             * the given required [mcpServerName].
+             */
+            @JvmStatic
+            fun ofMcpToolset(mcpServerName: String) =
+                ofMcpToolset(
+                    BetaManagedAgentsMcpToolsetParams.builder()
+                        .type(BetaManagedAgentsMcpToolsetParams.Type.MCP_TOOLSET)
+                        .mcpServerName(mcpServerName)
+                        .build()
+                )
 
             /**
              * A custom tool that is executed by the API client rather than the agent. When the

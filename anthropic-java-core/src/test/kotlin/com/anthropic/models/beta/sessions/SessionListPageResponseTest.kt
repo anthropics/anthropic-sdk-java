@@ -49,9 +49,9 @@ internal class SessionListPageResponseTest {
                                     BetaManagedAgentsModelConfig.builder()
                                         .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                         .effort(
-                                            BetaManagedAgentsEffortLow.builder()
-                                                .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                                .build()
+                                            BetaManagedAgentsEffortLow.of(
+                                                BetaManagedAgentsEffortLow.Type.LOW
+                                            )
                                         )
                                         .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -83,12 +83,9 @@ internal class SessionListPageResponseTest {
                                                             BetaManagedAgentsModel.CLAUDE_SONNET_4_6
                                                         )
                                                         .effort(
-                                                            BetaManagedAgentsEffortLow.builder()
-                                                                .type(
-                                                                    BetaManagedAgentsEffortLow.Type
-                                                                        .LOW
-                                                                )
-                                                                .build()
+                                                            BetaManagedAgentsEffortLow.of(
+                                                                BetaManagedAgentsEffortLow.Type.LOW
+                                                            )
                                                         )
                                                         .inferenceGeo("inference_geo")
                                                         .speed(
@@ -124,13 +121,11 @@ internal class SessionListPageResponseTest {
                                                                 )
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAllowPolicy
-                                                                        .builder()
-                                                                        .type(
+                                                                        .of(
                                                                             BetaManagedAgentsAlwaysAllowPolicy
                                                                                 .Type
                                                                                 .ALWAYS_ALLOW
                                                                         )
-                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
@@ -140,13 +135,11 @@ internal class SessionListPageResponseTest {
                                                                 .enabled(true)
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAskPolicy
-                                                                        .builder()
-                                                                        .type(
+                                                                        .of(
                                                                             BetaManagedAgentsAlwaysAskPolicy
                                                                                 .Type
                                                                                 .ALWAYS_ASK
                                                                         )
-                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
@@ -194,12 +187,10 @@ internal class SessionListPageResponseTest {
                                                 .enabled(true)
                                                 .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                        .type(
-                                                            BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                                .ALWAYS_ALLOW
-                                                        )
-                                                        .build()
+                                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                            .ALWAYS_ALLOW
+                                                    )
                                                 )
                                                 .build()
                                         )
@@ -207,12 +198,10 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                                 .enabled(true)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAskPolicy.builder()
-                                                        .type(
-                                                            BetaManagedAgentsAlwaysAskPolicy.Type
-                                                                .ALWAYS_ASK
-                                                        )
-                                                        .build()
+                                                    BetaManagedAgentsAlwaysAskPolicy.of(
+                                                        BetaManagedAgentsAlwaysAskPolicy.Type
+                                                            .ALWAYS_ASK
+                                                    )
                                                 )
                                                 .build()
                                         )
@@ -341,9 +330,9 @@ internal class SessionListPageResponseTest {
                                 BetaManagedAgentsModelConfig.builder()
                                     .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                     .effort(
-                                        BetaManagedAgentsEffortLow.builder()
-                                            .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                            .build()
+                                        BetaManagedAgentsEffortLow.of(
+                                            BetaManagedAgentsEffortLow.Type.LOW
+                                        )
                                     )
                                     .inferenceGeo("inference_geo")
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -371,11 +360,9 @@ internal class SessionListPageResponseTest {
                                                 BetaManagedAgentsModelConfig.builder()
                                                     .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                                     .effort(
-                                                        BetaManagedAgentsEffortLow.builder()
-                                                            .type(
-                                                                BetaManagedAgentsEffortLow.Type.LOW
-                                                            )
-                                                            .build()
+                                                        BetaManagedAgentsEffortLow.of(
+                                                            BetaManagedAgentsEffortLow.Type.LOW
+                                                        )
                                                     )
                                                     .inferenceGeo("inference_geo")
                                                     .speed(
@@ -409,13 +396,11 @@ internal class SessionListPageResponseTest {
                                                             )
                                                             .permissionPolicy(
                                                                 BetaManagedAgentsAlwaysAllowPolicy
-                                                                    .builder()
-                                                                    .type(
+                                                                    .of(
                                                                         BetaManagedAgentsAlwaysAllowPolicy
                                                                             .Type
                                                                             .ALWAYS_ALLOW
                                                                     )
-                                                                    .build()
                                                             )
                                                             .build()
                                                     )
@@ -424,14 +409,11 @@ internal class SessionListPageResponseTest {
                                                             .builder()
                                                             .enabled(true)
                                                             .permissionPolicy(
-                                                                BetaManagedAgentsAlwaysAskPolicy
-                                                                    .builder()
-                                                                    .type(
-                                                                        BetaManagedAgentsAlwaysAskPolicy
-                                                                            .Type
-                                                                            .ALWAYS_ASK
-                                                                    )
-                                                                    .build()
+                                                                BetaManagedAgentsAlwaysAskPolicy.of(
+                                                                    BetaManagedAgentsAlwaysAskPolicy
+                                                                        .Type
+                                                                        .ALWAYS_ASK
+                                                                )
                                                             )
                                                             .build()
                                                     )
@@ -476,12 +458,10 @@ internal class SessionListPageResponseTest {
                                             .enabled(true)
                                             .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                    .type(
-                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                            .ALWAYS_ALLOW
-                                                    )
-                                                    .build()
+                                                BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                        .ALWAYS_ALLOW
+                                                )
                                             )
                                             .build()
                                     )
@@ -489,12 +469,9 @@ internal class SessionListPageResponseTest {
                                         BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAskPolicy.builder()
-                                                    .type(
-                                                        BetaManagedAgentsAlwaysAskPolicy.Type
-                                                            .ALWAYS_ASK
-                                                    )
-                                                    .build()
+                                                BetaManagedAgentsAlwaysAskPolicy.of(
+                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
+                                                )
                                             )
                                             .build()
                                     )
@@ -626,9 +603,9 @@ internal class SessionListPageResponseTest {
                                     BetaManagedAgentsModelConfig.builder()
                                         .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                         .effort(
-                                            BetaManagedAgentsEffortLow.builder()
-                                                .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                                .build()
+                                            BetaManagedAgentsEffortLow.of(
+                                                BetaManagedAgentsEffortLow.Type.LOW
+                                            )
                                         )
                                         .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -660,12 +637,9 @@ internal class SessionListPageResponseTest {
                                                             BetaManagedAgentsModel.CLAUDE_SONNET_4_6
                                                         )
                                                         .effort(
-                                                            BetaManagedAgentsEffortLow.builder()
-                                                                .type(
-                                                                    BetaManagedAgentsEffortLow.Type
-                                                                        .LOW
-                                                                )
-                                                                .build()
+                                                            BetaManagedAgentsEffortLow.of(
+                                                                BetaManagedAgentsEffortLow.Type.LOW
+                                                            )
                                                         )
                                                         .inferenceGeo("inference_geo")
                                                         .speed(
@@ -701,13 +675,11 @@ internal class SessionListPageResponseTest {
                                                                 )
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAllowPolicy
-                                                                        .builder()
-                                                                        .type(
+                                                                        .of(
                                                                             BetaManagedAgentsAlwaysAllowPolicy
                                                                                 .Type
                                                                                 .ALWAYS_ALLOW
                                                                         )
-                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
@@ -717,13 +689,11 @@ internal class SessionListPageResponseTest {
                                                                 .enabled(true)
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAskPolicy
-                                                                        .builder()
-                                                                        .type(
+                                                                        .of(
                                                                             BetaManagedAgentsAlwaysAskPolicy
                                                                                 .Type
                                                                                 .ALWAYS_ASK
                                                                         )
-                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
@@ -771,12 +741,10 @@ internal class SessionListPageResponseTest {
                                                 .enabled(true)
                                                 .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                        .type(
-                                                            BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                                .ALWAYS_ALLOW
-                                                        )
-                                                        .build()
+                                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                            .ALWAYS_ALLOW
+                                                    )
                                                 )
                                                 .build()
                                         )
@@ -784,12 +752,10 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                                 .enabled(true)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAskPolicy.builder()
-                                                        .type(
-                                                            BetaManagedAgentsAlwaysAskPolicy.Type
-                                                                .ALWAYS_ASK
-                                                        )
-                                                        .build()
+                                                    BetaManagedAgentsAlwaysAskPolicy.of(
+                                                        BetaManagedAgentsAlwaysAskPolicy.Type
+                                                            .ALWAYS_ASK
+                                                    )
                                                 )
                                                 .build()
                                         )
@@ -916,9 +882,9 @@ internal class SessionListPageResponseTest {
                                 BetaManagedAgentsModelConfig.builder()
                                     .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                     .effort(
-                                        BetaManagedAgentsEffortLow.builder()
-                                            .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                            .build()
+                                        BetaManagedAgentsEffortLow.of(
+                                            BetaManagedAgentsEffortLow.Type.LOW
+                                        )
                                     )
                                     .inferenceGeo("inference_geo")
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -946,11 +912,9 @@ internal class SessionListPageResponseTest {
                                                 BetaManagedAgentsModelConfig.builder()
                                                     .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                                     .effort(
-                                                        BetaManagedAgentsEffortLow.builder()
-                                                            .type(
-                                                                BetaManagedAgentsEffortLow.Type.LOW
-                                                            )
-                                                            .build()
+                                                        BetaManagedAgentsEffortLow.of(
+                                                            BetaManagedAgentsEffortLow.Type.LOW
+                                                        )
                                                     )
                                                     .inferenceGeo("inference_geo")
                                                     .speed(
@@ -984,13 +948,11 @@ internal class SessionListPageResponseTest {
                                                             )
                                                             .permissionPolicy(
                                                                 BetaManagedAgentsAlwaysAllowPolicy
-                                                                    .builder()
-                                                                    .type(
+                                                                    .of(
                                                                         BetaManagedAgentsAlwaysAllowPolicy
                                                                             .Type
                                                                             .ALWAYS_ALLOW
                                                                     )
-                                                                    .build()
                                                             )
                                                             .build()
                                                     )
@@ -999,14 +961,11 @@ internal class SessionListPageResponseTest {
                                                             .builder()
                                                             .enabled(true)
                                                             .permissionPolicy(
-                                                                BetaManagedAgentsAlwaysAskPolicy
-                                                                    .builder()
-                                                                    .type(
-                                                                        BetaManagedAgentsAlwaysAskPolicy
-                                                                            .Type
-                                                                            .ALWAYS_ASK
-                                                                    )
-                                                                    .build()
+                                                                BetaManagedAgentsAlwaysAskPolicy.of(
+                                                                    BetaManagedAgentsAlwaysAskPolicy
+                                                                        .Type
+                                                                        .ALWAYS_ASK
+                                                                )
                                                             )
                                                             .build()
                                                     )
@@ -1051,12 +1010,10 @@ internal class SessionListPageResponseTest {
                                             .enabled(true)
                                             .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                    .type(
-                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                            .ALWAYS_ALLOW
-                                                    )
-                                                    .build()
+                                                BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                        .ALWAYS_ALLOW
+                                                )
                                             )
                                             .build()
                                     )
@@ -1064,12 +1021,9 @@ internal class SessionListPageResponseTest {
                                         BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAskPolicy.builder()
-                                                    .type(
-                                                        BetaManagedAgentsAlwaysAskPolicy.Type
-                                                            .ALWAYS_ASK
-                                                    )
-                                                    .build()
+                                                BetaManagedAgentsAlwaysAskPolicy.of(
+                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
+                                                )
                                             )
                                             .build()
                                     )
@@ -1197,9 +1151,9 @@ internal class SessionListPageResponseTest {
                                     BetaManagedAgentsModelConfig.builder()
                                         .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                         .effort(
-                                            BetaManagedAgentsEffortLow.builder()
-                                                .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                                .build()
+                                            BetaManagedAgentsEffortLow.of(
+                                                BetaManagedAgentsEffortLow.Type.LOW
+                                            )
                                         )
                                         .inferenceGeo("inference_geo")
                                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -1231,12 +1185,9 @@ internal class SessionListPageResponseTest {
                                                             BetaManagedAgentsModel.CLAUDE_SONNET_4_6
                                                         )
                                                         .effort(
-                                                            BetaManagedAgentsEffortLow.builder()
-                                                                .type(
-                                                                    BetaManagedAgentsEffortLow.Type
-                                                                        .LOW
-                                                                )
-                                                                .build()
+                                                            BetaManagedAgentsEffortLow.of(
+                                                                BetaManagedAgentsEffortLow.Type.LOW
+                                                            )
                                                         )
                                                         .inferenceGeo("inference_geo")
                                                         .speed(
@@ -1272,13 +1223,11 @@ internal class SessionListPageResponseTest {
                                                                 )
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAllowPolicy
-                                                                        .builder()
-                                                                        .type(
+                                                                        .of(
                                                                             BetaManagedAgentsAlwaysAllowPolicy
                                                                                 .Type
                                                                                 .ALWAYS_ALLOW
                                                                         )
-                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
@@ -1288,13 +1237,11 @@ internal class SessionListPageResponseTest {
                                                                 .enabled(true)
                                                                 .permissionPolicy(
                                                                     BetaManagedAgentsAlwaysAskPolicy
-                                                                        .builder()
-                                                                        .type(
+                                                                        .of(
                                                                             BetaManagedAgentsAlwaysAskPolicy
                                                                                 .Type
                                                                                 .ALWAYS_ASK
                                                                         )
-                                                                        .build()
                                                                 )
                                                                 .build()
                                                         )
@@ -1342,12 +1289,10 @@ internal class SessionListPageResponseTest {
                                                 .enabled(true)
                                                 .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                        .type(
-                                                            BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                                .ALWAYS_ALLOW
-                                                        )
-                                                        .build()
+                                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                            .ALWAYS_ALLOW
+                                                    )
                                                 )
                                                 .build()
                                         )
@@ -1355,12 +1300,10 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                                 .enabled(true)
                                                 .permissionPolicy(
-                                                    BetaManagedAgentsAlwaysAskPolicy.builder()
-                                                        .type(
-                                                            BetaManagedAgentsAlwaysAskPolicy.Type
-                                                                .ALWAYS_ASK
-                                                        )
-                                                        .build()
+                                                    BetaManagedAgentsAlwaysAskPolicy.of(
+                                                        BetaManagedAgentsAlwaysAskPolicy.Type
+                                                            .ALWAYS_ASK
+                                                    )
                                                 )
                                                 .build()
                                         )

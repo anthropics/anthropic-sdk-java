@@ -11,7 +11,7 @@ internal class SignatureDeltaTest {
 
     @Test
     fun create() {
-        val signatureDelta = SignatureDelta.builder().signature("signature").build()
+        val signatureDelta = SignatureDelta.of("signature")
 
         assertThat(signatureDelta.signature()).isEqualTo("signature")
     }
@@ -19,7 +19,7 @@ internal class SignatureDeltaTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val signatureDelta = SignatureDelta.builder().signature("signature").build()
+        val signatureDelta = SignatureDelta.of("signature")
 
         val roundtrippedSignatureDelta =
             jsonMapper.readValue(

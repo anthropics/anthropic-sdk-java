@@ -221,13 +221,34 @@ private constructor(
 
         @JvmStatic fun ofText(text: BetaTextDelta) = BetaRawContentBlockDelta(text = text)
 
+        /**
+         * Returns an immutable instance of [BetaRawContentBlockDelta] whose [ofText] variant is
+         * built from the given required [text].
+         */
+        @JvmStatic fun ofText(text: String) = ofText(BetaTextDelta.of(text))
+
         @JvmStatic
         fun ofInputJson(inputJson: BetaInputJsonDelta) =
             BetaRawContentBlockDelta(inputJson = inputJson)
 
+        /**
+         * Returns an immutable instance of [BetaRawContentBlockDelta] whose [ofInputJson] variant
+         * is built from the given required [partialJson].
+         */
+        @JvmStatic
+        fun ofInputJson(partialJson: String) = ofInputJson(BetaInputJsonDelta.of(partialJson))
+
         @JvmStatic
         fun ofCitations(citations: BetaCitationsDelta) =
             BetaRawContentBlockDelta(citations = citations)
+
+        /**
+         * Returns an immutable instance of [BetaRawContentBlockDelta] whose [ofCitations] variant
+         * is built from the given required [citation].
+         */
+        @JvmStatic
+        fun ofCitations(citation: BetaCitationsDelta.Citation) =
+            ofCitations(BetaCitationsDelta.of(citation))
 
         @JvmStatic
         fun ofThinking(thinking: BetaThinkingDelta) = BetaRawContentBlockDelta(thinking = thinking)
@@ -235,6 +256,13 @@ private constructor(
         @JvmStatic
         fun ofSignature(signature: BetaSignatureDelta) =
             BetaRawContentBlockDelta(signature = signature)
+
+        /**
+         * Returns an immutable instance of [BetaRawContentBlockDelta] whose [ofSignature] variant
+         * is built from the given required [signature].
+         */
+        @JvmStatic
+        fun ofSignature(signature: String) = ofSignature(BetaSignatureDelta.of(signature))
 
         @JvmStatic
         fun ofCompaction(compaction: BetaCompactionContentBlockDelta) =

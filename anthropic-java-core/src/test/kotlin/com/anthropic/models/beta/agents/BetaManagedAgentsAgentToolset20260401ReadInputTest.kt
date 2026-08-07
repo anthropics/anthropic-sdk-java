@@ -27,7 +27,7 @@ internal class BetaManagedAgentsAgentToolset20260401ReadInputTest {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaManagedAgentsAgentToolset20260401ReadInput =
-            BetaManagedAgentsAgentToolset20260401ReadInput.builder().filePath("file_path").build()
+            BetaManagedAgentsAgentToolset20260401ReadInput.of("file_path")
 
         val betaManagedAgentsAgentToolset20260401ReadInput =
             baseBetaManagedAgentsAgentToolset20260401ReadInput

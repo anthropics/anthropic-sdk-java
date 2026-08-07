@@ -640,6 +640,14 @@ private constructor(
             fun ofEndTurn(endTurn: BetaManagedAgentsSessionEndTurn) = StopReason(endTurn = endTurn)
 
             /**
+             * Returns an immutable instance of [StopReason] whose [ofEndTurn] variant is built from
+             * the given required [type].
+             */
+            @JvmStatic
+            fun ofEndTurn(type: BetaManagedAgentsSessionEndTurn.Type) =
+                ofEndTurn(BetaManagedAgentsSessionEndTurn.of(type))
+
+            /**
              * The agent is idle waiting on one or more blocking user-input events (tool
              * confirmation, custom tool result, etc.). Resolving all of them transitions the
              * session back to running.
@@ -647,6 +655,19 @@ private constructor(
             @JvmStatic
             fun ofRequiresAction(requiresAction: BetaManagedAgentsSessionRequiresAction) =
                 StopReason(requiresAction = requiresAction)
+
+            /**
+             * Returns an immutable instance of [StopReason] whose [ofRequiresAction] variant is
+             * built from the given required [eventIds].
+             */
+            @JvmStatic
+            fun ofRequiresAction(eventIds: List<String>) =
+                ofRequiresAction(
+                    BetaManagedAgentsSessionRequiresAction.builder()
+                        .type(BetaManagedAgentsSessionRequiresAction.Type.REQUIRES_ACTION)
+                        .eventIds(eventIds)
+                        .build()
+                )
 
             /**
              * The turn ended because repeated errors exhausted the retry budget or an error
@@ -657,6 +678,14 @@ private constructor(
                 StopReason(retriesExhausted = retriesExhausted)
 
             /**
+             * Returns an immutable instance of [StopReason] whose [ofRetriesExhausted] variant is
+             * built from the given required [type].
+             */
+            @JvmStatic
+            fun ofRetriesExhausted(type: BetaManagedAgentsSessionRetriesExhausted.Type) =
+                ofRetriesExhausted(BetaManagedAgentsSessionRetriesExhausted.of(type))
+
+            /**
              * The agent stopped because the session's tracked list cost reached its budget, or
              * because its usage includes a model with no list price (which the budget cannot
              * measure). Raise the budget to continue — or, if raising is rejected because a model
@@ -665,6 +694,14 @@ private constructor(
             @JvmStatic
             fun ofBudgetReached(budgetReached: BetaManagedAgentsSessionBudgetReached) =
                 StopReason(budgetReached = budgetReached)
+
+            /**
+             * Returns an immutable instance of [StopReason] whose [ofBudgetReached] variant is
+             * built from the given required [type].
+             */
+            @JvmStatic
+            fun ofBudgetReached(type: BetaManagedAgentsSessionBudgetReached.Type) =
+                ofBudgetReached(BetaManagedAgentsSessionBudgetReached.of(type))
         }
 
         /**

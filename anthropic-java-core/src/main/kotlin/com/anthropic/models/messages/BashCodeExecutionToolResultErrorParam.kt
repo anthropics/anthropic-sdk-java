@@ -82,6 +82,14 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BashCodeExecutionToolResultErrorParam] with the
+         * required [errorCode] set to the given value.
+         */
+        @JvmStatic
+        fun of(errorCode: BashCodeExecutionToolResultErrorCode) =
+            builder().errorCode(errorCode).build()
     }
 
     /** A builder for [BashCodeExecutionToolResultErrorParam]. */

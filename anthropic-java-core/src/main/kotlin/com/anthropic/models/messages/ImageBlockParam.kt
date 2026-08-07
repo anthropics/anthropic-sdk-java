@@ -109,6 +109,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [ImageBlockParam] with the required [source] set to the
+         * given value.
+         */
+        @JvmStatic fun of(source: Source) = builder().source(source).build()
     }
 
     /** A builder for [ImageBlockParam]. */
@@ -408,6 +414,12 @@ private constructor(
             @JvmStatic fun ofBase64(base64: Base64ImageSource) = Source(base64 = base64)
 
             @JvmStatic fun ofUrl(url: UrlImageSource) = Source(url = url)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofUrl] variant is built from the
+             * given required [url].
+             */
+            @JvmStatic fun ofUrl(url: String) = ofUrl(UrlImageSource.of(url))
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

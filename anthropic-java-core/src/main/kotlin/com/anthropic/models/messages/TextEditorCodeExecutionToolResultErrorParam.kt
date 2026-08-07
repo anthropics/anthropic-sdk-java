@@ -103,6 +103,14 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [TextEditorCodeExecutionToolResultErrorParam] with the
+         * required [errorCode] set to the given value.
+         */
+        @JvmStatic
+        fun of(errorCode: TextEditorCodeExecutionToolResultErrorCode) =
+            builder().errorCode(errorCode).build()
     }
 
     /** A builder for [TextEditorCodeExecutionToolResultErrorParam]. */

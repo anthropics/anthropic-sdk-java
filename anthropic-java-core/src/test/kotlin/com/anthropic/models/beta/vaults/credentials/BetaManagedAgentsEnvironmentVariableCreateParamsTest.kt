@@ -14,12 +14,9 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
         val betaManagedAgentsEnvironmentVariableCreateParams =
             BetaManagedAgentsEnvironmentVariableCreateParams.builder()
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder()
-                        .type(
-                            BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type
-                                .UNRESTRICTED
-                        )
-                        .build()
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(
+                        BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
+                    )
                 )
                 .secretName("x")
                 .secretValue("x")
@@ -35,12 +32,7 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
         assertThat(betaManagedAgentsEnvironmentVariableCreateParams.networking())
             .isEqualTo(
                 BetaManagedAgentsCredentialNetworkingParams.ofUnrestricted(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder()
-                        .type(
-                            BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type
-                                .UNRESTRICTED
-                        )
-                        .build()
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
                 )
             )
         assertThat(betaManagedAgentsEnvironmentVariableCreateParams.secretName()).isEqualTo("x")
@@ -59,12 +51,9 @@ internal class BetaManagedAgentsEnvironmentVariableCreateParamsTest {
         val betaManagedAgentsEnvironmentVariableCreateParams =
             BetaManagedAgentsEnvironmentVariableCreateParams.builder()
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder()
-                        .type(
-                            BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type
-                                .UNRESTRICTED
-                        )
-                        .build()
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(
+                        BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
+                    )
                 )
                 .secretName("x")
                 .secretValue("x")

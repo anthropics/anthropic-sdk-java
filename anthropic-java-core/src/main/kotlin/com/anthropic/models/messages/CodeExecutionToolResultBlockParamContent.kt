@@ -250,6 +250,14 @@ private constructor(
         fun ofErrorParam(errorParam: CodeExecutionToolResultErrorParam) =
             CodeExecutionToolResultBlockParamContent(errorParam = errorParam)
 
+        /**
+         * Returns an immutable instance of [CodeExecutionToolResultBlockParamContent] whose
+         * [ofErrorParam] variant is built from the given required [errorCode].
+         */
+        @JvmStatic
+        fun ofErrorParam(errorCode: CodeExecutionToolResultErrorCode) =
+            ofErrorParam(CodeExecutionToolResultErrorParam.of(errorCode))
+
         @JvmStatic
         fun ofResultBlockParam(resultBlockParam: CodeExecutionResultBlockParam) =
             CodeExecutionToolResultBlockParamContent(resultBlockParam = resultBlockParam)

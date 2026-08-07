@@ -632,6 +632,17 @@ private constructor(
                         textEditorCodeExecutionCreateResultBlock
                 )
 
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofTextEditorCodeExecutionCreateResultBlock] variant is built from the given required
+             * [isFileUpdate].
+             */
+            @JvmStatic
+            fun ofTextEditorCodeExecutionCreateResultBlock(isFileUpdate: Boolean) =
+                ofTextEditorCodeExecutionCreateResultBlock(
+                    TextEditorCodeExecutionCreateResultBlock.of(isFileUpdate)
+                )
+
             @JvmStatic
             fun ofTextEditorCodeExecutionStrReplaceResultBlock(
                 textEditorCodeExecutionStrReplaceResultBlock:

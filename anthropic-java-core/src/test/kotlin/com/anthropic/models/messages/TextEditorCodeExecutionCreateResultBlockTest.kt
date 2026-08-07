@@ -12,7 +12,7 @@ internal class TextEditorCodeExecutionCreateResultBlockTest {
     @Test
     fun create() {
         val textEditorCodeExecutionCreateResultBlock =
-            TextEditorCodeExecutionCreateResultBlock.builder().isFileUpdate(true).build()
+            TextEditorCodeExecutionCreateResultBlock.of(true)
 
         assertThat(textEditorCodeExecutionCreateResultBlock.isFileUpdate()).isEqualTo(true)
     }
@@ -21,7 +21,7 @@ internal class TextEditorCodeExecutionCreateResultBlockTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val textEditorCodeExecutionCreateResultBlock =
-            TextEditorCodeExecutionCreateResultBlock.builder().isFileUpdate(true).build()
+            TextEditorCodeExecutionCreateResultBlock.of(true)
 
         val roundtrippedTextEditorCodeExecutionCreateResultBlock =
             jsonMapper.readValue(

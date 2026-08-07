@@ -18,9 +18,9 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
                         .enabled(true)
                         .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )
@@ -28,9 +28,9 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                         .enabled(true)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )
@@ -43,9 +43,9 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
                     .enabled(true)
                     .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                     .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                            .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                            .build()
+                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                        )
                     )
                     .build()
             )
@@ -54,9 +54,9 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
                 BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                     .enabled(true)
                     .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                            .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                            .build()
+                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                        )
                     )
                     .build()
             )
@@ -74,9 +74,9 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
                         .enabled(true)
                         .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )
@@ -84,9 +84,9 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                         .enabled(true)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )

@@ -87,9 +87,9 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
     @Test
     fun ofSelf() {
         val self =
-            BetaManagedAgentsMultiagentSelfParams.builder()
-                .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
-                .build()
+            BetaManagedAgentsMultiagentSelfParams.of(
+                BetaManagedAgentsMultiagentSelfParams.Type.SELF
+            )
 
         val betaManagedAgentsMultiagentRosterEntryParams =
             BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(self)
@@ -105,9 +105,9 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMultiagentRosterEntryParams =
             BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                BetaManagedAgentsMultiagentSelfParams.builder()
-                    .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
-                    .build()
+                BetaManagedAgentsMultiagentSelfParams.of(
+                    BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                )
             )
 
         val roundtrippedBetaManagedAgentsMultiagentRosterEntryParams =

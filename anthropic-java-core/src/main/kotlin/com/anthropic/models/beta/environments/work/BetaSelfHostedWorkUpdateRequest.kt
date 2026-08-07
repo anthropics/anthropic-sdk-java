@@ -70,6 +70,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaSelfHostedWorkUpdateRequest] with the required
+         * [metadata] set to the given value.
+         */
+        @JvmStatic fun of(metadata: Metadata) = builder().metadata(metadata).build()
     }
 
     /** A builder for [BetaSelfHostedWorkUpdateRequest]. */

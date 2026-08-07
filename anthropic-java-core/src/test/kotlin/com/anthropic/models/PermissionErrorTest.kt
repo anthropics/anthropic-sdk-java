@@ -11,7 +11,7 @@ internal class PermissionErrorTest {
 
     @Test
     fun create() {
-        val permissionError = PermissionError.builder().message("message").build()
+        val permissionError = PermissionError.of("message")
 
         assertThat(permissionError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class PermissionErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val permissionError = PermissionError.builder().message("message").build()
+        val permissionError = PermissionError.of("message")
 
         val roundtrippedPermissionError =
             jsonMapper.readValue(

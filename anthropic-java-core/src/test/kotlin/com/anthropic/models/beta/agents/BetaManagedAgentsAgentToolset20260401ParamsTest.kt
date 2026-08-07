@@ -20,9 +20,9 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
                         .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                         .enabled(true)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )
@@ -30,9 +30,9 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
                     BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                         .enabled(true)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )
@@ -46,9 +46,9 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
                     .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                     .enabled(true)
                     .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                            .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                            .build()
+                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                        )
                     )
                     .build()
             )
@@ -57,9 +57,9 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                     .enabled(true)
                     .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                            .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                            .build()
+                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                        )
                     )
                     .build()
             )
@@ -68,9 +68,9 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaManagedAgentsAgentToolset20260401Params =
-            BetaManagedAgentsAgentToolset20260401Params.builder()
-                .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
-                .build()
+            BetaManagedAgentsAgentToolset20260401Params.of(
+                BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
+            )
 
         val betaManagedAgentsAgentToolset20260401Params =
             baseBetaManagedAgentsAgentToolset20260401Params
@@ -80,9 +80,9 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
                         .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                         .enabled(true)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )
@@ -94,9 +94,9 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
                     .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                     .enabled(true)
                     .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                            .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                            .build()
+                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                        )
                     )
                     .build()
             )
@@ -113,9 +113,9 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
                         .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                         .enabled(true)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )
@@ -123,9 +123,9 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
                     BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                         .enabled(true)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )

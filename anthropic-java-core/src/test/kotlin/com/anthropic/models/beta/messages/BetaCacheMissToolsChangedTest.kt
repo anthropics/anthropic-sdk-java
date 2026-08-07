@@ -11,8 +11,7 @@ internal class BetaCacheMissToolsChangedTest {
 
     @Test
     fun create() {
-        val betaCacheMissToolsChanged =
-            BetaCacheMissToolsChanged.builder().cacheMissedInputTokens(0L).build()
+        val betaCacheMissToolsChanged = BetaCacheMissToolsChanged.of(0L)
 
         assertThat(betaCacheMissToolsChanged.cacheMissedInputTokens()).isEqualTo(0L)
     }
@@ -20,8 +19,7 @@ internal class BetaCacheMissToolsChangedTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaCacheMissToolsChanged =
-            BetaCacheMissToolsChanged.builder().cacheMissedInputTokens(0L).build()
+        val betaCacheMissToolsChanged = BetaCacheMissToolsChanged.of(0L)
 
         val roundtrippedBetaCacheMissToolsChanged =
             jsonMapper.readValue(

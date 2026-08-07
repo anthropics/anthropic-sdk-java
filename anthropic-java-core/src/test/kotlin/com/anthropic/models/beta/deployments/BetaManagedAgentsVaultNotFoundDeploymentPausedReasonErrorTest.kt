@@ -12,12 +12,9 @@ internal class BetaManagedAgentsVaultNotFoundDeploymentPausedReasonErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsVaultNotFoundDeploymentPausedReasonError =
-            BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.Type
-                        .VAULT_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.Type.VAULT_NOT_FOUND_ERROR
+            )
 
         assertThat(betaManagedAgentsVaultNotFoundDeploymentPausedReasonError.type())
             .isEqualTo(
@@ -29,12 +26,9 @@ internal class BetaManagedAgentsVaultNotFoundDeploymentPausedReasonErrorTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsVaultNotFoundDeploymentPausedReasonError =
-            BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.Type
-                        .VAULT_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.Type.VAULT_NOT_FOUND_ERROR
+            )
 
         val roundtrippedBetaManagedAgentsVaultNotFoundDeploymentPausedReasonError =
             jsonMapper.readValue(

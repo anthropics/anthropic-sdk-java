@@ -279,6 +279,14 @@ private constructor(
         fun ofMessageStart(messageStart: BetaRawMessageStartEvent) =
             BetaRawMessageStreamEvent(messageStart = messageStart)
 
+        /**
+         * Returns an immutable instance of [BetaRawMessageStreamEvent] whose [ofMessageStart]
+         * variant is built from the given required [message].
+         */
+        @JvmStatic
+        fun ofMessageStart(message: BetaMessage) =
+            ofMessageStart(BetaRawMessageStartEvent.of(message))
+
         @JvmStatic
         fun ofMessageDelta(messageDelta: BetaRawMessageDeltaEvent) =
             BetaRawMessageStreamEvent(messageDelta = messageDelta)
@@ -298,6 +306,14 @@ private constructor(
         @JvmStatic
         fun ofContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent) =
             BetaRawMessageStreamEvent(contentBlockStop = contentBlockStop)
+
+        /**
+         * Returns an immutable instance of [BetaRawMessageStreamEvent] whose [ofContentBlockStop]
+         * variant is built from the given required [index].
+         */
+        @JvmStatic
+        fun ofContentBlockStop(index: Long) =
+            ofContentBlockStop(BetaRawContentBlockStopEvent.of(index))
     }
 
     /**

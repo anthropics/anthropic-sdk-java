@@ -24,9 +24,9 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
                         .refreshToken("x")
                         .tokenEndpoint("x")
                         .tokenEndpointAuth(
-                            BetaManagedAgentsTokenEndpointAuthNoneParam.builder()
-                                .type(BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE)
-                                .build()
+                            BetaManagedAgentsTokenEndpointAuthNoneParam.of(
+                                BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
+                            )
                         )
                         .resource("x")
                         .scope("x")
@@ -47,9 +47,9 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
                     .refreshToken("x")
                     .tokenEndpoint("x")
                     .tokenEndpointAuth(
-                        BetaManagedAgentsTokenEndpointAuthNoneParam.builder()
-                            .type(BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE)
-                            .build()
+                        BetaManagedAgentsTokenEndpointAuthNoneParam.of(
+                            BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
+                        )
                     )
                     .resource("x")
                     .scope("x")
@@ -72,9 +72,9 @@ internal class BetaManagedAgentsMcpOAuthCreateParamsTest {
                         .refreshToken("x")
                         .tokenEndpoint("x")
                         .tokenEndpointAuth(
-                            BetaManagedAgentsTokenEndpointAuthNoneParam.builder()
-                                .type(BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE)
-                                .build()
+                            BetaManagedAgentsTokenEndpointAuthNoneParam.of(
+                                BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
+                            )
                         )
                         .resource("x")
                         .scope("x")

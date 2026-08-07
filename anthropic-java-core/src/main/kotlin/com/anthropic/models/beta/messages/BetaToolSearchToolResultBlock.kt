@@ -461,6 +461,19 @@ private constructor(
             fun ofBetaToolSearchToolSearchResultBlock(
                 betaToolSearchToolSearchResultBlock: BetaToolSearchToolSearchResultBlock
             ) = Content(betaToolSearchToolSearchResultBlock = betaToolSearchToolSearchResultBlock)
+
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofBetaToolSearchToolSearchResultBlock] variant is built from the given required
+             * [toolReferences].
+             */
+            @JvmStatic
+            fun ofBetaToolSearchToolSearchResultBlock(
+                toolReferences: List<BetaToolReferenceBlock>
+            ) =
+                ofBetaToolSearchToolSearchResultBlock(
+                    BetaToolSearchToolSearchResultBlock.of(toolReferences)
+                )
         }
 
         /**

@@ -86,6 +86,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaTextEditorCodeExecutionCreateResultBlock] with the
+         * required [isFileUpdate] set to the given value.
+         */
+        @JvmStatic fun of(isFileUpdate: Boolean) = builder().isFileUpdate(isFileUpdate).build()
     }
 
     /** A builder for [BetaTextEditorCodeExecutionCreateResultBlock]. */

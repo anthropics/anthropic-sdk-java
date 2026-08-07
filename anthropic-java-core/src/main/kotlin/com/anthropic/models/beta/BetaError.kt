@@ -313,25 +313,83 @@ private constructor(
         fun ofInvalidRequest(invalidRequest: BetaInvalidRequestError) =
             BetaError(invalidRequest = invalidRequest)
 
+        /**
+         * Returns an immutable instance of [BetaError] whose [ofInvalidRequest] variant is built
+         * from the given required [message].
+         */
+        @JvmStatic
+        fun ofInvalidRequest(message: String) =
+            ofInvalidRequest(BetaInvalidRequestError.of(message))
+
         @JvmStatic
         fun ofAuthentication(authentication: BetaAuthenticationError) =
             BetaError(authentication = authentication)
 
+        /**
+         * Returns an immutable instance of [BetaError] whose [ofAuthentication] variant is built
+         * from the given required [message].
+         */
+        @JvmStatic
+        fun ofAuthentication(message: String) =
+            ofAuthentication(BetaAuthenticationError.of(message))
+
         @JvmStatic fun ofBilling(billing: BetaBillingError) = BetaError(billing = billing)
+
+        /**
+         * Returns an immutable instance of [BetaError] whose [ofBilling] variant is built from the
+         * given required [message].
+         */
+        @JvmStatic fun ofBilling(message: String) = ofBilling(BetaBillingError.of(message))
 
         @JvmStatic
         fun ofPermission(permission: BetaPermissionError) = BetaError(permission = permission)
 
+        /**
+         * Returns an immutable instance of [BetaError] whose [ofPermission] variant is built from
+         * the given required [message].
+         */
+        @JvmStatic fun ofPermission(message: String) = ofPermission(BetaPermissionError.of(message))
+
         @JvmStatic fun ofNotFound(notFound: BetaNotFoundError) = BetaError(notFound = notFound)
+
+        /**
+         * Returns an immutable instance of [BetaError] whose [ofNotFound] variant is built from the
+         * given required [message].
+         */
+        @JvmStatic fun ofNotFound(message: String) = ofNotFound(BetaNotFoundError.of(message))
 
         @JvmStatic fun ofRateLimit(rateLimit: BetaRateLimitError) = BetaError(rateLimit = rateLimit)
 
+        /**
+         * Returns an immutable instance of [BetaError] whose [ofRateLimit] variant is built from
+         * the given required [message].
+         */
+        @JvmStatic fun ofRateLimit(message: String) = ofRateLimit(BetaRateLimitError.of(message))
+
         @JvmStatic fun ofTimeout(timeout: BetaGatewayTimeoutError) = BetaError(timeout = timeout)
+
+        /**
+         * Returns an immutable instance of [BetaError] whose [ofTimeout] variant is built from the
+         * given required [message].
+         */
+        @JvmStatic fun ofTimeout(message: String) = ofTimeout(BetaGatewayTimeoutError.of(message))
 
         @JvmStatic fun ofApi(api: BetaApiError) = BetaError(api = api)
 
+        /**
+         * Returns an immutable instance of [BetaError] whose [ofApi] variant is built from the
+         * given required [message].
+         */
+        @JvmStatic fun ofApi(message: String) = ofApi(BetaApiError.of(message))
+
         @JvmStatic
         fun ofOverloaded(overloaded: BetaOverloadedError) = BetaError(overloaded = overloaded)
+
+        /**
+         * Returns an immutable instance of [BetaError] whose [ofOverloaded] variant is built from
+         * the given required [message].
+         */
+        @JvmStatic fun ofOverloaded(message: String) = ofOverloaded(BetaOverloadedError.of(message))
     }
 
     /** An interface that defines how to map each variant of [BetaError] to a value of type [T]. */

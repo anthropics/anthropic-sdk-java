@@ -13,25 +13,20 @@ internal class BetaEffortCapabilityTest {
     fun create() {
         val betaEffortCapability =
             BetaEffortCapability.builder()
-                .high(BetaCapabilitySupport.builder().supported(true).build())
-                .low(BetaCapabilitySupport.builder().supported(true).build())
-                .max(BetaCapabilitySupport.builder().supported(true).build())
-                .medium(BetaCapabilitySupport.builder().supported(true).build())
+                .high(BetaCapabilitySupport.of(true))
+                .low(BetaCapabilitySupport.of(true))
+                .max(BetaCapabilitySupport.of(true))
+                .medium(BetaCapabilitySupport.of(true))
                 .supported(true)
-                .xhigh(BetaCapabilitySupport.builder().supported(true).build())
+                .xhigh(BetaCapabilitySupport.of(true))
                 .build()
 
-        assertThat(betaEffortCapability.high())
-            .isEqualTo(BetaCapabilitySupport.builder().supported(true).build())
-        assertThat(betaEffortCapability.low())
-            .isEqualTo(BetaCapabilitySupport.builder().supported(true).build())
-        assertThat(betaEffortCapability.max())
-            .isEqualTo(BetaCapabilitySupport.builder().supported(true).build())
-        assertThat(betaEffortCapability.medium())
-            .isEqualTo(BetaCapabilitySupport.builder().supported(true).build())
+        assertThat(betaEffortCapability.high()).isEqualTo(BetaCapabilitySupport.of(true))
+        assertThat(betaEffortCapability.low()).isEqualTo(BetaCapabilitySupport.of(true))
+        assertThat(betaEffortCapability.max()).isEqualTo(BetaCapabilitySupport.of(true))
+        assertThat(betaEffortCapability.medium()).isEqualTo(BetaCapabilitySupport.of(true))
         assertThat(betaEffortCapability.supported()).isEqualTo(true)
-        assertThat(betaEffortCapability.xhigh())
-            .contains(BetaCapabilitySupport.builder().supported(true).build())
+        assertThat(betaEffortCapability.xhigh()).contains(BetaCapabilitySupport.of(true))
     }
 
     @Test
@@ -39,12 +34,12 @@ internal class BetaEffortCapabilityTest {
         val jsonMapper = jsonMapper()
         val betaEffortCapability =
             BetaEffortCapability.builder()
-                .high(BetaCapabilitySupport.builder().supported(true).build())
-                .low(BetaCapabilitySupport.builder().supported(true).build())
-                .max(BetaCapabilitySupport.builder().supported(true).build())
-                .medium(BetaCapabilitySupport.builder().supported(true).build())
+                .high(BetaCapabilitySupport.of(true))
+                .low(BetaCapabilitySupport.of(true))
+                .max(BetaCapabilitySupport.of(true))
+                .medium(BetaCapabilitySupport.of(true))
                 .supported(true)
-                .xhigh(BetaCapabilitySupport.builder().supported(true).build())
+                .xhigh(BetaCapabilitySupport.of(true))
                 .build()
 
         val roundtrippedBetaEffortCapability =

@@ -15,9 +15,9 @@ internal class BetaManagedAgentsModelOverloadedErrorTest {
             BetaManagedAgentsModelOverloadedError.builder()
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(BetaManagedAgentsModelOverloadedError.Type.MODEL_OVERLOADED_ERROR)
                 .build()
@@ -26,9 +26,7 @@ internal class BetaManagedAgentsModelOverloadedErrorTest {
         assertThat(betaManagedAgentsModelOverloadedError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsModelOverloadedError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                 )
             )
         assertThat(betaManagedAgentsModelOverloadedError.type())
@@ -42,9 +40,9 @@ internal class BetaManagedAgentsModelOverloadedErrorTest {
             BetaManagedAgentsModelOverloadedError.builder()
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(BetaManagedAgentsModelOverloadedError.Type.MODEL_OVERLOADED_ERROR)
                 .build()

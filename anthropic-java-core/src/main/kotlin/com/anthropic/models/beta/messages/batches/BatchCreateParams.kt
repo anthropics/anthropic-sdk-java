@@ -447,6 +447,12 @@ private constructor(
              * ```
              */
             @JvmStatic fun builder() = Builder()
+
+            /**
+             * Returns an immutable instance of [Body] with the required [requests] set to the given
+             * value.
+             */
+            @JvmStatic fun of(requests: List<Request>) = builder().requests(requests).build()
         }
 
         /** A builder for [Body]. */
@@ -3397,6 +3403,15 @@ private constructor(
                         FallbackCreditToken(
                             betaFallbackCreditTokenParam = betaFallbackCreditTokenParam
                         )
+
+                    /**
+                     * Returns an immutable instance of [FallbackCreditToken] whose
+                     * [ofBetaFallbackCreditTokenParam] variant is built from the given required
+                     * [token].
+                     */
+                    @JvmStatic
+                    fun ofBetaFallbackCreditTokenParam(token: String) =
+                        ofBetaFallbackCreditTokenParam(BetaFallbackCreditTokenParam.of(token))
                 }
 
                 /**

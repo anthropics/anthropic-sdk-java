@@ -11,7 +11,7 @@ internal class NotFoundErrorTest {
 
     @Test
     fun create() {
-        val notFoundError = NotFoundError.builder().message("message").build()
+        val notFoundError = NotFoundError.of("message")
 
         assertThat(notFoundError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class NotFoundErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val notFoundError = NotFoundError.builder().message("message").build()
+        val notFoundError = NotFoundError.of("message")
 
         val roundtrippedNotFoundError =
             jsonMapper.readValue(

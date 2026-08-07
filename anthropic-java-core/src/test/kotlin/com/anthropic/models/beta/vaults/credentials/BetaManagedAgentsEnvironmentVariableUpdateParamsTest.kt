@@ -21,12 +21,9 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
                         .build()
                 )
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder()
-                        .type(
-                            BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type
-                                .UNRESTRICTED
-                        )
-                        .build()
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(
+                        BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
+                    )
                 )
                 .secretValue("x")
                 .build()
@@ -43,12 +40,7 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
         assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.networking())
             .contains(
                 BetaManagedAgentsCredentialNetworkingParams.ofUnrestricted(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder()
-                        .type(
-                            BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type
-                                .UNRESTRICTED
-                        )
-                        .build()
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
                 )
             )
         assertThat(betaManagedAgentsEnvironmentVariableUpdateParams.secretValue()).contains("x")
@@ -67,12 +59,9 @@ internal class BetaManagedAgentsEnvironmentVariableUpdateParamsTest {
                         .build()
                 )
                 .networking(
-                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.builder()
-                        .type(
-                            BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type
-                                .UNRESTRICTED
-                        )
-                        .build()
+                    BetaManagedAgentsUnrestrictedCredentialNetworkingParams.of(
+                        BetaManagedAgentsUnrestrictedCredentialNetworkingParams.Type.UNRESTRICTED
+                    )
                 )
                 .secretValue("x")
                 .build()

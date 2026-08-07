@@ -36,9 +36,9 @@ internal class ToolSearchToolRegex20251119Test {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseToolSearchToolRegex20251119 =
-            ToolSearchToolRegex20251119.builder()
-                .type(ToolSearchToolRegex20251119.Type.TOOL_SEARCH_TOOL_REGEX_20251119)
-                .build()
+            ToolSearchToolRegex20251119.of(
+                ToolSearchToolRegex20251119.Type.TOOL_SEARCH_TOOL_REGEX_20251119
+            )
 
         val toolSearchToolRegex20251119 =
             baseToolSearchToolRegex20251119

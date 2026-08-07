@@ -105,6 +105,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaContainerUploadBlockParam] with the required
+         * [fileId] set to the given value.
+         */
+        @JvmStatic fun of(fileId: String) = builder().fileId(fileId).build()
     }
 
     /** A builder for [BetaContainerUploadBlockParam]. */

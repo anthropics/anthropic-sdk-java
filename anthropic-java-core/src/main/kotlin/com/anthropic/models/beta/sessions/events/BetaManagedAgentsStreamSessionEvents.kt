@@ -12,6 +12,7 @@ import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUsageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsStartEvent
+import com.anthropic.models.beta.sessions.BetaManagedAgentsStartEventPreview
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
 import com.fasterxml.jackson.core.JsonGenerator
@@ -2787,6 +2788,19 @@ private constructor(
         fun ofUserInterrupt(userInterrupt: BetaManagedAgentsUserInterruptEvent) =
             BetaManagedAgentsStreamSessionEvents(userInterrupt = userInterrupt)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsStreamSessionEvents] whose
+         * [ofUserInterrupt] variant is built from the given required [id].
+         */
+        @JvmStatic
+        fun ofUserInterrupt(id: String) =
+            ofUserInterrupt(
+                BetaManagedAgentsUserInterruptEvent.builder()
+                    .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
+                    .id(id)
+                    .build()
+            )
+
         /** A tool confirmation event that approves or denies a pending tool execution. */
         @JvmStatic
         fun ofUserToolConfirmation(
@@ -3049,6 +3063,19 @@ private constructor(
         @JvmStatic
         fun ofEventStart(eventStart: BetaManagedAgentsStartEvent) =
             BetaManagedAgentsStreamSessionEvents(eventStart = eventStart)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsStreamSessionEvents] whose
+         * [ofEventStart] variant is built from the given required [event].
+         */
+        @JvmStatic
+        fun ofEventStart(event: BetaManagedAgentsStartEventPreview) =
+            ofEventStart(
+                BetaManagedAgentsStartEvent.builder()
+                    .type(BetaManagedAgentsStartEvent.Type.EVENT_START)
+                    .event(event)
+                    .build()
+            )
 
         /**
          * An incremental update to an event that is still being streamed. Deltas are best-effort

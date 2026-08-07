@@ -79,6 +79,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [ThinkingDelta] with the required [thinking] set to the
+         * given value.
+         */
+        @JvmStatic fun of(thinking: String) = builder().thinking(thinking).build()
     }
 
     /** A builder for [ThinkingDelta]. */

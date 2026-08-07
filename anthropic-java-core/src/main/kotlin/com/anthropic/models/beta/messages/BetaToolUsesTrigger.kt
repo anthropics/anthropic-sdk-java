@@ -76,6 +76,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaToolUsesTrigger] with the required [value] set to
+         * the given value.
+         */
+        @JvmStatic fun of(value: Long) = builder().value(value).build()
     }
 
     /** A builder for [BetaToolUsesTrigger]. */

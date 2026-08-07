@@ -11,7 +11,7 @@ internal class CapabilitySupportTest {
 
     @Test
     fun create() {
-        val capabilitySupport = CapabilitySupport.builder().supported(true).build()
+        val capabilitySupport = CapabilitySupport.of(true)
 
         assertThat(capabilitySupport.supported()).isEqualTo(true)
     }
@@ -19,7 +19,7 @@ internal class CapabilitySupportTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val capabilitySupport = CapabilitySupport.builder().supported(true).build()
+        val capabilitySupport = CapabilitySupport.of(true)
 
         val roundtrippedCapabilitySupport =
             jsonMapper.readValue(

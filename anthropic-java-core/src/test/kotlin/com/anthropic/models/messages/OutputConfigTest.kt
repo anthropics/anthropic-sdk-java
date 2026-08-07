@@ -16,26 +16,22 @@ internal class OutputConfigTest {
             OutputConfig.builder()
                 .effort(OutputConfig.Effort.LOW)
                 .format(
-                    JsonOutputFormat.builder()
-                        .schema(
-                            JsonOutputFormat.Schema.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                .build()
-                        )
-                        .build()
+                    JsonOutputFormat.of(
+                        JsonOutputFormat.Schema.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                 )
                 .build()
 
         assertThat(outputConfig.effort()).contains(OutputConfig.Effort.LOW)
         assertThat(outputConfig.format())
             .contains(
-                JsonOutputFormat.builder()
-                    .schema(
-                        JsonOutputFormat.Schema.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("bar"))
-                            .build()
-                    )
-                    .build()
+                JsonOutputFormat.of(
+                    JsonOutputFormat.Schema.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
             )
     }
 
@@ -46,13 +42,11 @@ internal class OutputConfigTest {
             OutputConfig.builder()
                 .effort(OutputConfig.Effort.LOW)
                 .format(
-                    JsonOutputFormat.builder()
-                        .schema(
-                            JsonOutputFormat.Schema.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                .build()
-                        )
-                        .build()
+                    JsonOutputFormat.of(
+                        JsonOutputFormat.Schema.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                 )
                 .build()
 

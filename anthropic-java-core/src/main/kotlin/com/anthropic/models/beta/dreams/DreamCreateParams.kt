@@ -871,6 +871,14 @@ private constructor(
             @JvmStatic
             fun ofBetaDreamModelConfigParam(betaDreamModelConfigParam: BetaDreamModelConfigParam) =
                 Model(betaDreamModelConfigParam = betaDreamModelConfigParam)
+
+            /**
+             * Returns an immutable instance of [Model] whose [ofBetaDreamModelConfigParam] variant
+             * is built from the given required [id].
+             */
+            @JvmStatic
+            fun ofBetaDreamModelConfigParam(id: String) =
+                ofBetaDreamModelConfigParam(BetaDreamModelConfigParam.of(id))
         }
 
         /** An interface that defines how to map each variant of [Model] to a value of type [T]. */

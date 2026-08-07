@@ -90,6 +90,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [ContentBlockSource] with the required [content] set to
+         * the given value.
+         */
+        @JvmStatic fun of(content: Content) = builder().content(content).build()
     }
 
     /** A builder for [ContentBlockSource]. */

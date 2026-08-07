@@ -641,6 +641,17 @@ private constructor(
                         betaTextEditorCodeExecutionCreateResultBlock
                 )
 
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofBetaTextEditorCodeExecutionCreateResultBlock] variant is built from the given
+             * required [isFileUpdate].
+             */
+            @JvmStatic
+            fun ofBetaTextEditorCodeExecutionCreateResultBlock(isFileUpdate: Boolean) =
+                ofBetaTextEditorCodeExecutionCreateResultBlock(
+                    BetaTextEditorCodeExecutionCreateResultBlock.of(isFileUpdate)
+                )
+
             @JvmStatic
             fun ofBetaTextEditorCodeExecutionStrReplaceResultBlock(
                 betaTextEditorCodeExecutionStrReplaceResultBlock:

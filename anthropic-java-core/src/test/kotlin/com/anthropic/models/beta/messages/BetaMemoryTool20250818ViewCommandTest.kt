@@ -27,7 +27,7 @@ internal class BetaMemoryTool20250818ViewCommandTest {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaMemoryTool20250818ViewCommand =
-            BetaMemoryTool20250818ViewCommand.builder().path("/memories").build()
+            BetaMemoryTool20250818ViewCommand.of("/memories")
 
         val betaMemoryTool20250818ViewCommand =
             baseBetaMemoryTool20250818ViewCommand

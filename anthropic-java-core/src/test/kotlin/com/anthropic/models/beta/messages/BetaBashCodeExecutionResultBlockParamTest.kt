@@ -13,18 +13,14 @@ internal class BetaBashCodeExecutionResultBlockParamTest {
     fun create() {
         val betaBashCodeExecutionResultBlockParam =
             BetaBashCodeExecutionResultBlockParam.builder()
-                .addContent(
-                    BetaBashCodeExecutionOutputBlockParam.builder().fileId("file_id").build()
-                )
+                .addContent(BetaBashCodeExecutionOutputBlockParam.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")
                 .build()
 
         assertThat(betaBashCodeExecutionResultBlockParam.content())
-            .containsExactly(
-                BetaBashCodeExecutionOutputBlockParam.builder().fileId("file_id").build()
-            )
+            .containsExactly(BetaBashCodeExecutionOutputBlockParam.of("file_id"))
         assertThat(betaBashCodeExecutionResultBlockParam.returnCode()).isEqualTo(0L)
         assertThat(betaBashCodeExecutionResultBlockParam.stderr()).isEqualTo("stderr")
         assertThat(betaBashCodeExecutionResultBlockParam.stdout()).isEqualTo("stdout")
@@ -35,9 +31,7 @@ internal class BetaBashCodeExecutionResultBlockParamTest {
         val jsonMapper = jsonMapper()
         val betaBashCodeExecutionResultBlockParam =
             BetaBashCodeExecutionResultBlockParam.builder()
-                .addContent(
-                    BetaBashCodeExecutionOutputBlockParam.builder().fileId("file_id").build()
-                )
+                .addContent(BetaBashCodeExecutionOutputBlockParam.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")

@@ -81,6 +81,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaMemoryTool20250818DeleteCommand] with the required
+         * [path] set to the given value.
+         */
+        @JvmStatic fun of(path: String) = builder().path(path).build()
     }
 
     /** A builder for [BetaMemoryTool20250818DeleteCommand]. */
