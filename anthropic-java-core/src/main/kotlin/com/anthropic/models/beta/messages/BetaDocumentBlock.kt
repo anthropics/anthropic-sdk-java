@@ -464,7 +464,19 @@ private constructor(
 
             @JvmStatic fun ofBase64(base64: BetaBase64PdfSource) = Source(base64 = base64)
 
+            /**
+             * Returns an immutable instance of [Source] whose [ofBase64] variant is built from the
+             * given required [data].
+             */
+            @JvmStatic fun ofBase64(data: String) = ofBase64(BetaBase64PdfSource.of(data))
+
             @JvmStatic fun ofText(text: BetaPlainTextSource) = Source(text = text)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofText] variant is built from the
+             * given required [data].
+             */
+            @JvmStatic fun ofText(data: String) = ofText(BetaPlainTextSource.of(data))
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

@@ -185,6 +185,13 @@ private constructor(
         fun ofEnabled(enabled: BetaThinkingConfigEnabled) =
             BetaThinkingConfigParam(enabled = enabled)
 
+        /**
+         * Returns an immutable instance of [BetaThinkingConfigParam] whose [ofEnabled] variant is
+         * built from the given required [budgetTokens].
+         */
+        @JvmStatic
+        fun ofEnabled(budgetTokens: Long) = ofEnabled(BetaThinkingConfigEnabled.of(budgetTokens))
+
         @JvmStatic
         fun ofDisabled(disabled: BetaThinkingConfigDisabled) =
             BetaThinkingConfigParam(disabled = disabled)

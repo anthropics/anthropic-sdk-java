@@ -15,9 +15,9 @@ internal class BetaManagedAgentsModelRequestFailedErrorTest {
             BetaManagedAgentsModelRequestFailedError.builder()
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(BetaManagedAgentsModelRequestFailedError.Type.MODEL_REQUEST_FAILED_ERROR)
                 .build()
@@ -26,9 +26,7 @@ internal class BetaManagedAgentsModelRequestFailedErrorTest {
         assertThat(betaManagedAgentsModelRequestFailedError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsModelRequestFailedError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                 )
             )
         assertThat(betaManagedAgentsModelRequestFailedError.type())
@@ -42,9 +40,9 @@ internal class BetaManagedAgentsModelRequestFailedErrorTest {
             BetaManagedAgentsModelRequestFailedError.builder()
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(BetaManagedAgentsModelRequestFailedError.Type.MODEL_REQUEST_FAILED_ERROR)
                 .build()

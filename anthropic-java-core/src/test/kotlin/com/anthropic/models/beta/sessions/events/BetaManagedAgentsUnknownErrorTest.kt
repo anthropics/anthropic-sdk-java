@@ -15,9 +15,9 @@ internal class BetaManagedAgentsUnknownErrorTest {
             BetaManagedAgentsUnknownError.builder()
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                 .build()
@@ -26,9 +26,7 @@ internal class BetaManagedAgentsUnknownErrorTest {
         assertThat(betaManagedAgentsUnknownError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsUnknownError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                 )
             )
         assertThat(betaManagedAgentsUnknownError.type())
@@ -42,9 +40,9 @@ internal class BetaManagedAgentsUnknownErrorTest {
             BetaManagedAgentsUnknownError.builder()
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                 .build()

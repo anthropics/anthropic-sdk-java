@@ -14,11 +14,9 @@ internal class BetaBashCodeExecutionToolResultBlockParamTest {
         val betaBashCodeExecutionToolResultBlockParam =
             BetaBashCodeExecutionToolResultBlockParam.builder()
                 .content(
-                    BetaBashCodeExecutionToolResultErrorParam.builder()
-                        .errorCode(
-                            BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
-                        )
-                        .build()
+                    BetaBashCodeExecutionToolResultErrorParam.of(
+                        BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -32,12 +30,7 @@ internal class BetaBashCodeExecutionToolResultBlockParamTest {
             .isEqualTo(
                 BetaBashCodeExecutionToolResultBlockParam.Content
                     .ofBetaBashCodeExecutionToolResultErrorParam(
-                        BetaBashCodeExecutionToolResultErrorParam.builder()
-                            .errorCode(
-                                BetaBashCodeExecutionToolResultErrorParam.ErrorCode
-                                    .INVALID_TOOL_INPUT
-                            )
-                            .build()
+                        BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
                     )
             )
         assertThat(betaBashCodeExecutionToolResultBlockParam.toolUseId())
@@ -56,11 +49,9 @@ internal class BetaBashCodeExecutionToolResultBlockParamTest {
         val betaBashCodeExecutionToolResultBlockParam =
             BetaBashCodeExecutionToolResultBlockParam.builder()
                 .content(
-                    BetaBashCodeExecutionToolResultErrorParam.builder()
-                        .errorCode(
-                            BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
-                        )
-                        .build()
+                    BetaBashCodeExecutionToolResultErrorParam.of(
+                        BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(

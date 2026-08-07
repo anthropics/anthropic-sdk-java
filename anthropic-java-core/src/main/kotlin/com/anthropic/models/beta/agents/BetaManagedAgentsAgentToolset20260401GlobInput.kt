@@ -89,6 +89,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsAgentToolset20260401GlobInput] with
+         * the required [pattern] set to the given value.
+         */
+        @JvmStatic fun of(pattern: String) = builder().pattern(pattern).build()
     }
 
     /** A builder for [BetaManagedAgentsAgentToolset20260401GlobInput]. */

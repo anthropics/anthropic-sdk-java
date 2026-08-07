@@ -14,25 +14,15 @@ internal class BetaFallbackBlockTest {
     fun create() {
         val betaFallbackBlock =
             BetaFallbackBlock.builder()
-                .from(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
-                .to(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
-                .trigger(
-                    BetaFallbackRefusalTrigger.builder()
-                        .category(BetaFallbackRefusalTrigger.Category.CYBER)
-                        .build()
-                )
+                .from(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5))
+                .to(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5))
+                .trigger(BetaFallbackRefusalTrigger.of(BetaFallbackRefusalTrigger.Category.CYBER))
                 .build()
 
-        assertThat(betaFallbackBlock.from())
-            .isEqualTo(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
-        assertThat(betaFallbackBlock.to())
-            .isEqualTo(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
+        assertThat(betaFallbackBlock.from()).isEqualTo(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5))
+        assertThat(betaFallbackBlock.to()).isEqualTo(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5))
         assertThat(betaFallbackBlock.trigger())
-            .isEqualTo(
-                BetaFallbackRefusalTrigger.builder()
-                    .category(BetaFallbackRefusalTrigger.Category.CYBER)
-                    .build()
-            )
+            .isEqualTo(BetaFallbackRefusalTrigger.of(BetaFallbackRefusalTrigger.Category.CYBER))
     }
 
     @Test
@@ -40,13 +30,9 @@ internal class BetaFallbackBlockTest {
         val jsonMapper = jsonMapper()
         val betaFallbackBlock =
             BetaFallbackBlock.builder()
-                .from(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
-                .to(BetaFallbackInfo.builder().model(Model.CLAUDE_SONNET_5).build())
-                .trigger(
-                    BetaFallbackRefusalTrigger.builder()
-                        .category(BetaFallbackRefusalTrigger.Category.CYBER)
-                        .build()
-                )
+                .from(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5))
+                .to(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5))
+                .trigger(BetaFallbackRefusalTrigger.of(BetaFallbackRefusalTrigger.Category.CYBER))
                 .build()
 
         val roundtrippedBetaFallbackBlock =

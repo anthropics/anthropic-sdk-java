@@ -105,6 +105,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [ToolChoiceTool] with the required [name] set to the
+         * given value.
+         */
+        @JvmStatic fun of(name: String) = builder().name(name).build()
     }
 
     /** A builder for [ToolChoiceTool]. */

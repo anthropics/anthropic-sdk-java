@@ -11,7 +11,7 @@ internal class AuthenticationErrorTest {
 
     @Test
     fun create() {
-        val authenticationError = AuthenticationError.builder().message("message").build()
+        val authenticationError = AuthenticationError.of("message")
 
         assertThat(authenticationError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class AuthenticationErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val authenticationError = AuthenticationError.builder().message("message").build()
+        val authenticationError = AuthenticationError.of("message")
 
         val roundtrippedAuthenticationError =
             jsonMapper.readValue(

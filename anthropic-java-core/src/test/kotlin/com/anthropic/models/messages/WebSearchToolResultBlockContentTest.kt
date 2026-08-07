@@ -16,10 +16,7 @@ internal class WebSearchToolResultBlockContentTest {
 
     @Test
     fun ofError() {
-        val error =
-            WebSearchToolResultError.builder()
-                .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+        val error = WebSearchToolResultError.of(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
 
         val webSearchToolResultBlockContent = WebSearchToolResultBlockContent.ofError(error)
 
@@ -32,9 +29,7 @@ internal class WebSearchToolResultBlockContentTest {
         val jsonMapper = jsonMapper()
         val webSearchToolResultBlockContent =
             WebSearchToolResultBlockContent.ofError(
-                WebSearchToolResultError.builder()
-                    .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                    .build()
+                WebSearchToolResultError.of(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
             )
 
         val roundtrippedWebSearchToolResultBlockContent =

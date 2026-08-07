@@ -22,9 +22,9 @@ internal class BetaManagedAgentsMcpOAuthAuthResponseTest {
                         .clientId("client_id")
                         .tokenEndpoint("token_endpoint")
                         .tokenEndpointAuth(
-                            BetaManagedAgentsTokenEndpointAuthNoneResponse.builder()
-                                .type(BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE)
-                                .build()
+                            BetaManagedAgentsTokenEndpointAuthNoneResponse.of(
+                                BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE
+                            )
                         )
                         .resource("resource")
                         .scope("scope")
@@ -43,9 +43,9 @@ internal class BetaManagedAgentsMcpOAuthAuthResponseTest {
                     .clientId("client_id")
                     .tokenEndpoint("token_endpoint")
                     .tokenEndpointAuth(
-                        BetaManagedAgentsTokenEndpointAuthNoneResponse.builder()
-                            .type(BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE)
-                            .build()
+                        BetaManagedAgentsTokenEndpointAuthNoneResponse.of(
+                            BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE
+                        )
                     )
                     .resource("resource")
                     .scope("scope")
@@ -66,9 +66,9 @@ internal class BetaManagedAgentsMcpOAuthAuthResponseTest {
                         .clientId("client_id")
                         .tokenEndpoint("token_endpoint")
                         .tokenEndpointAuth(
-                            BetaManagedAgentsTokenEndpointAuthNoneResponse.builder()
-                                .type(BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE)
-                                .build()
+                            BetaManagedAgentsTokenEndpointAuthNoneResponse.of(
+                                BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE
+                            )
                         )
                         .resource("resource")
                         .scope("scope")

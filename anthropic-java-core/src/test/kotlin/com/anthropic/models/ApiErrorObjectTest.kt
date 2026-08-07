@@ -11,7 +11,7 @@ internal class ApiErrorObjectTest {
 
     @Test
     fun create() {
-        val apiErrorObject = ApiErrorObject.builder().message("message").build()
+        val apiErrorObject = ApiErrorObject.of("message")
 
         assertThat(apiErrorObject.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class ApiErrorObjectTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val apiErrorObject = ApiErrorObject.builder().message("message").build()
+        val apiErrorObject = ApiErrorObject.of("message")
 
         val roundtrippedApiErrorObject =
             jsonMapper.readValue(

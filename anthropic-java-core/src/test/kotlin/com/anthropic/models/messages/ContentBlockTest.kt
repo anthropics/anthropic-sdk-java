@@ -115,7 +115,7 @@ internal class ContentBlockTest {
 
     @Test
     fun ofRedactedThinking() {
-        val redactedThinking = RedactedThinkingBlock.builder().data("data").build()
+        val redactedThinking = RedactedThinkingBlock.of("data")
 
         val contentBlock = ContentBlock.ofRedactedThinking(redactedThinking)
 
@@ -136,8 +136,7 @@ internal class ContentBlockTest {
     @Test
     fun ofRedactedThinkingRoundtrip() {
         val jsonMapper = jsonMapper()
-        val contentBlock =
-            ContentBlock.ofRedactedThinking(RedactedThinkingBlock.builder().data("data").build())
+        val contentBlock = ContentBlock.ofRedactedThinking(RedactedThinkingBlock.of("data"))
 
         val roundtrippedContentBlock =
             jsonMapper.readValue(
@@ -266,9 +265,7 @@ internal class ContentBlockTest {
             WebSearchToolResultBlock.builder()
                 .caller(DirectCaller.builder().build())
                 .content(
-                    WebSearchToolResultError.builder()
-                        .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebSearchToolResultError.of(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -297,9 +294,7 @@ internal class ContentBlockTest {
                 WebSearchToolResultBlock.builder()
                     .caller(DirectCaller.builder().build())
                     .content(
-                        WebSearchToolResultError.builder()
-                            .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        WebSearchToolResultError.of(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .build()
@@ -320,9 +315,7 @@ internal class ContentBlockTest {
             WebFetchToolResultBlock.builder()
                 .caller(DirectCaller.builder().build())
                 .content(
-                    WebFetchToolResultErrorBlock.builder()
-                        .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebFetchToolResultErrorBlock.of(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -351,9 +344,9 @@ internal class ContentBlockTest {
                 WebFetchToolResultBlock.builder()
                     .caller(DirectCaller.builder().build())
                     .content(
-                        WebFetchToolResultErrorBlock.builder()
-                            .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        WebFetchToolResultErrorBlock.of(
+                            WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .build()
@@ -373,9 +366,9 @@ internal class ContentBlockTest {
         val codeExecutionToolResult =
             CodeExecutionToolResultBlock.builder()
                 .content(
-                    CodeExecutionToolResultError.builder()
-                        .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    CodeExecutionToolResultError.of(
+                        CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -403,9 +396,9 @@ internal class ContentBlockTest {
             ContentBlock.ofCodeExecutionToolResult(
                 CodeExecutionToolResultBlock.builder()
                     .content(
-                        CodeExecutionToolResultError.builder()
-                            .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        CodeExecutionToolResultError.of(
+                            CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .build()
@@ -425,9 +418,9 @@ internal class ContentBlockTest {
         val bashCodeExecutionToolResult =
             BashCodeExecutionToolResultBlock.builder()
                 .content(
-                    BashCodeExecutionToolResultError.builder()
-                        .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BashCodeExecutionToolResultError.of(
+                        BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -455,9 +448,9 @@ internal class ContentBlockTest {
             ContentBlock.ofBashCodeExecutionToolResult(
                 BashCodeExecutionToolResultBlock.builder()
                     .content(
-                        BashCodeExecutionToolResultError.builder()
-                            .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        BashCodeExecutionToolResultError.of(
+                            BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .build()
@@ -586,7 +579,7 @@ internal class ContentBlockTest {
 
     @Test
     fun ofContainerUpload() {
-        val containerUpload = ContainerUploadBlock.builder().fileId("file_id").build()
+        val containerUpload = ContainerUploadBlock.of("file_id")
 
         val contentBlock = ContentBlock.ofContainerUpload(containerUpload)
 
@@ -607,8 +600,7 @@ internal class ContentBlockTest {
     @Test
     fun ofContainerUploadRoundtrip() {
         val jsonMapper = jsonMapper()
-        val contentBlock =
-            ContentBlock.ofContainerUpload(ContainerUploadBlock.builder().fileId("file_id").build())
+        val contentBlock = ContentBlock.ofContainerUpload(ContainerUploadBlock.of("file_id"))
 
         val roundtrippedContentBlock =
             jsonMapper.readValue(

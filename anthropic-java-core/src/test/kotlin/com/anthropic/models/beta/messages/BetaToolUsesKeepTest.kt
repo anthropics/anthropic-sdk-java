@@ -11,7 +11,7 @@ internal class BetaToolUsesKeepTest {
 
     @Test
     fun create() {
-        val betaToolUsesKeep = BetaToolUsesKeep.builder().value(0L).build()
+        val betaToolUsesKeep = BetaToolUsesKeep.of(0L)
 
         assertThat(betaToolUsesKeep.value()).isEqualTo(0L)
     }
@@ -19,7 +19,7 @@ internal class BetaToolUsesKeepTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaToolUsesKeep = BetaToolUsesKeep.builder().value(0L).build()
+        val betaToolUsesKeep = BetaToolUsesKeep.of(0L)
 
         val roundtrippedBetaToolUsesKeep =
             jsonMapper.readValue(

@@ -176,6 +176,14 @@ private constructor(
         fun ofError(error: WebSearchToolResultError) =
             WebSearchToolResultBlockContent(error = error)
 
+        /**
+         * Returns an immutable instance of [WebSearchToolResultBlockContent] whose [ofError]
+         * variant is built from the given required [errorCode].
+         */
+        @JvmStatic
+        fun ofError(errorCode: WebSearchToolResultErrorCode) =
+            ofError(WebSearchToolResultError.of(errorCode))
+
         @JvmStatic
         fun ofResultBlocks(resultBlocks: List<WebSearchResultBlock>) =
             WebSearchToolResultBlockContent(resultBlocks = resultBlocks.toImmutable())

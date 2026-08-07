@@ -71,6 +71,14 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaCountTokensContextManagementResponse] with the
+         * required [originalInputTokens] set to the given value.
+         */
+        @JvmStatic
+        fun of(originalInputTokens: Long) =
+            builder().originalInputTokens(originalInputTokens).build()
     }
 
     /** A builder for [BetaCountTokensContextManagementResponse]. */

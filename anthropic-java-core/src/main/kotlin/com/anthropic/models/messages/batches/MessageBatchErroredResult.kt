@@ -78,6 +78,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [MessageBatchErroredResult] with the required [error]
+         * set to the given value.
+         */
+        @JvmStatic fun of(error: ErrorResponse) = builder().error(error).build()
     }
 
     /** A builder for [MessageBatchErroredResult]. */

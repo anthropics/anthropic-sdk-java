@@ -338,6 +338,12 @@ private constructor(
              * ```
              */
             @JvmStatic fun builder() = Builder()
+
+            /**
+             * Returns an immutable instance of [Body] with the required [file] set to the given
+             * value.
+             */
+            @JvmStatic fun of(file: InputStream) = builder().file(file).build()
         }
 
         /** A builder for [Body]. */

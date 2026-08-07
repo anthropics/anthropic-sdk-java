@@ -70,6 +70,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsSessionRetriesExhausted] with the
+         * required [type] set to the given value.
+         */
+        @JvmStatic fun of(type: Type) = builder().type(type).build()
     }
 
     /** A builder for [BetaManagedAgentsSessionRetriesExhausted]. */

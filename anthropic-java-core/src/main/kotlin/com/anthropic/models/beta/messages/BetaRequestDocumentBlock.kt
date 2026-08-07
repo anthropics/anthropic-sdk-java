@@ -159,6 +159,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaRequestDocumentBlock] with the required [source]
+         * set to the given value.
+         */
+        @JvmStatic fun of(source: Source) = builder().source(source).build()
     }
 
     /** A builder for [BetaRequestDocumentBlock]. */
@@ -654,13 +660,45 @@ private constructor(
 
             @JvmStatic fun ofBase64(base64: BetaBase64PdfSource) = Source(base64 = base64)
 
+            /**
+             * Returns an immutable instance of [Source] whose [ofBase64] variant is built from the
+             * given required [data].
+             */
+            @JvmStatic fun ofBase64(data: String) = ofBase64(BetaBase64PdfSource.of(data))
+
             @JvmStatic fun ofText(text: BetaPlainTextSource) = Source(text = text)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofText] variant is built from the
+             * given required [data].
+             */
+            @JvmStatic fun ofText(data: String) = ofText(BetaPlainTextSource.of(data))
 
             @JvmStatic fun ofContent(content: BetaContentBlockSource) = Source(content = content)
 
+            /**
+             * Returns an immutable instance of [Source] whose [ofContent] variant is built from the
+             * given required [content].
+             */
+            @JvmStatic
+            fun ofContent(content: BetaContentBlockSource.Content) =
+                ofContent(BetaContentBlockSource.of(content))
+
             @JvmStatic fun ofUrl(url: BetaUrlPdfSource) = Source(url = url)
 
+            /**
+             * Returns an immutable instance of [Source] whose [ofUrl] variant is built from the
+             * given required [url].
+             */
+            @JvmStatic fun ofUrl(url: String) = ofUrl(BetaUrlPdfSource.of(url))
+
             @JvmStatic fun ofFile(file: BetaFileDocumentSource) = Source(file = file)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofFile] variant is built from the
+             * given required [fileId].
+             */
+            @JvmStatic fun ofFile(fileId: String) = ofFile(BetaFileDocumentSource.of(fileId))
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

@@ -27,9 +27,7 @@ internal class BetaFallbackCreditNotAppliedTest {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaFallbackCreditNotApplied =
-            BetaFallbackCreditNotApplied.builder()
-                .reason(BetaFallbackCreditNotApplied.Reason.BODY_MISMATCH)
-                .build()
+            BetaFallbackCreditNotApplied.of(BetaFallbackCreditNotApplied.Reason.BODY_MISMATCH)
 
         val betaFallbackCreditNotApplied =
             baseBetaFallbackCreditNotApplied.toBuilder().addRemoveToRedeem("string").build()

@@ -11,7 +11,7 @@ internal class BetaApiErrorTest {
 
     @Test
     fun create() {
-        val betaApiError = BetaApiError.builder().message("message").build()
+        val betaApiError = BetaApiError.of("message")
 
         assertThat(betaApiError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class BetaApiErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaApiError = BetaApiError.builder().message("message").build()
+        val betaApiError = BetaApiError.of("message")
 
         val roundtrippedBetaApiError =
             jsonMapper.readValue(

@@ -820,6 +820,14 @@ private constructor(
             fun ofRedactedThinking(redactedThinking: RedactedThinkingBlock) =
                 ContentBlock(redactedThinking = redactedThinking)
 
+            /**
+             * Returns an immutable instance of [ContentBlock] whose [ofRedactedThinking] variant is
+             * built from the given required [data].
+             */
+            @JvmStatic
+            fun ofRedactedThinking(data: String) =
+                ofRedactedThinking(RedactedThinkingBlock.of(data))
+
             @JvmStatic fun ofToolUse(toolUse: ToolUseBlock) = ContentBlock(toolUse = toolUse)
 
             @JvmStatic
@@ -856,6 +864,14 @@ private constructor(
             @JvmStatic
             fun ofContainerUpload(containerUpload: ContainerUploadBlock) =
                 ContentBlock(containerUpload = containerUpload)
+
+            /**
+             * Returns an immutable instance of [ContentBlock] whose [ofContainerUpload] variant is
+             * built from the given required [fileId].
+             */
+            @JvmStatic
+            fun ofContainerUpload(fileId: String) =
+                ofContainerUpload(ContainerUploadBlock.of(fileId))
         }
 
         /**

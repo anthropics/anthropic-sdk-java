@@ -12,12 +12,10 @@ internal class BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonErrorTe
     @Test
     fun create() {
         val betaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError =
-            BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.Type
-                        .ENVIRONMENT_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.Type
+                    .ENVIRONMENT_NOT_FOUND_ERROR
+            )
 
         assertThat(betaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.type())
             .isEqualTo(
@@ -30,12 +28,10 @@ internal class BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonErrorTe
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError =
-            BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.Type
-                        .ENVIRONMENT_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.Type
+                    .ENVIRONMENT_NOT_FOUND_ERROR
+            )
 
         val roundtrippedBetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError =
             jsonMapper.readValue(

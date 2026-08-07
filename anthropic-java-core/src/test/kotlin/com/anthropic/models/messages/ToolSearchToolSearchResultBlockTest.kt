@@ -13,11 +13,11 @@ internal class ToolSearchToolSearchResultBlockTest {
     fun create() {
         val toolSearchToolSearchResultBlock =
             ToolSearchToolSearchResultBlock.builder()
-                .addToolReference(ToolReferenceBlock.builder().toolName("tool_name").build())
+                .addToolReference(ToolReferenceBlock.of("tool_name"))
                 .build()
 
         assertThat(toolSearchToolSearchResultBlock.toolReferences())
-            .containsExactly(ToolReferenceBlock.builder().toolName("tool_name").build())
+            .containsExactly(ToolReferenceBlock.of("tool_name"))
     }
 
     @Test
@@ -25,7 +25,7 @@ internal class ToolSearchToolSearchResultBlockTest {
         val jsonMapper = jsonMapper()
         val toolSearchToolSearchResultBlock =
             ToolSearchToolSearchResultBlock.builder()
-                .addToolReference(ToolReferenceBlock.builder().toolName("tool_name").build())
+                .addToolReference(ToolReferenceBlock.of("tool_name"))
                 .build()
 
         val roundtrippedToolSearchToolSearchResultBlock =

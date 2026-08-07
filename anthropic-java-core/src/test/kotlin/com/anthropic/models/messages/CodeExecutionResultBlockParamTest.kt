@@ -13,14 +13,14 @@ internal class CodeExecutionResultBlockParamTest {
     fun create() {
         val codeExecutionResultBlockParam =
             CodeExecutionResultBlockParam.builder()
-                .addContent(CodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+                .addContent(CodeExecutionOutputBlockParam.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")
                 .build()
 
         assertThat(codeExecutionResultBlockParam.content())
-            .containsExactly(CodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+            .containsExactly(CodeExecutionOutputBlockParam.of("file_id"))
         assertThat(codeExecutionResultBlockParam.returnCode()).isEqualTo(0L)
         assertThat(codeExecutionResultBlockParam.stderr()).isEqualTo("stderr")
         assertThat(codeExecutionResultBlockParam.stdout()).isEqualTo("stdout")
@@ -31,7 +31,7 @@ internal class CodeExecutionResultBlockParamTest {
         val jsonMapper = jsonMapper()
         val codeExecutionResultBlockParam =
             CodeExecutionResultBlockParam.builder()
-                .addContent(CodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+                .addContent(CodeExecutionOutputBlockParam.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")

@@ -110,6 +110,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaImageBlockParam] with the required [source] set to
+         * the given value.
+         */
+        @JvmStatic fun of(source: Source) = builder().source(source).build()
     }
 
     /** A builder for [BetaImageBlockParam]. */
@@ -442,7 +448,19 @@ private constructor(
 
             @JvmStatic fun ofUrl(url: BetaUrlImageSource) = Source(url = url)
 
+            /**
+             * Returns an immutable instance of [Source] whose [ofUrl] variant is built from the
+             * given required [url].
+             */
+            @JvmStatic fun ofUrl(url: String) = ofUrl(BetaUrlImageSource.of(url))
+
             @JvmStatic fun ofFile(file: BetaFileImageSource) = Source(file = file)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofFile] variant is built from the
+             * given required [fileId].
+             */
+            @JvmStatic fun ofFile(fileId: String) = ofFile(BetaFileImageSource.of(fileId))
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

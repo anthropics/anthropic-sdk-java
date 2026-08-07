@@ -37,8 +37,123 @@ internal class BetaMessageBatchResultTest {
     @Test
     fun ofSucceeded() {
         val succeeded =
-            BetaMessageBatchSucceededResult.builder()
-                .message(
+            BetaMessageBatchSucceededResult.of(
+                BetaMessage.builder()
+                    .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                    .container(
+                        BetaContainer.builder()
+                            .id("container_011CpZohnwH4vuy7gazohgSP")
+                            .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addSkill(
+                                BetaSkill.builder()
+                                    .skillId("pdf")
+                                    .type(BetaSkill.Type.ANTHROPIC)
+                                    .version("latest")
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .addContent(
+                        BetaTextBlock.builder()
+                            .addCitation(
+                                BetaCitationCharLocation.builder()
+                                    .citedText("The grass is green. The sky is blue.")
+                                    .documentIndex(0L)
+                                    .documentTitle("My Document")
+                                    .endCharIndex(0L)
+                                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
+                                    .startCharIndex(0L)
+                                    .build()
+                            )
+                            .text("Hi! My name is Claude.")
+                            .build()
+                    )
+                    .contextManagement(
+                        BetaContextManagementResponse.builder()
+                            .addAppliedEdit(
+                                BetaClearToolUses20250919EditResponse.builder()
+                                    .clearedInputTokens(0L)
+                                    .clearedToolUses(0L)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
+                    .model(Model.CLAUDE_OPUS_4_6)
+                    .stopDetails(
+                        BetaRefusalStopDetails.builder()
+                            .category(BetaRefusalStopDetails.Category.CYBER)
+                            .explanation(
+                                "This request was declined because it conflicts with Anthropic's Usage Policy."
+                            )
+                            .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
+                            .fallbackHasPrefillClaim(true)
+                            .recommendedModel("claude-sonnet-4-6")
+                            .build()
+                    )
+                    .stopReason(BetaStopReason.END_TURN)
+                    .stopSequence(null)
+                    .usage(
+                        BetaUsage.builder()
+                            .cacheCreation(
+                                BetaCacheCreation.builder()
+                                    .ephemeral1hInputTokens(0L)
+                                    .ephemeral5mInputTokens(0L)
+                                    .build()
+                            )
+                            .cacheCreationInputTokens(2051L)
+                            .cacheReadInputTokens(2051L)
+                            .fallbackCredit(
+                                BetaFallbackCreditUsage.builder()
+                                    .status(BetaFallbackCreditRedeemed.builder().build())
+                                    .build()
+                            )
+                            .inferenceGeo("global")
+                            .inputTokens(2095L)
+                            .addIteration(
+                                BetaMessageIterationUsage.builder()
+                                    .cacheCreation(
+                                        BetaCacheCreation.builder()
+                                            .ephemeral1hInputTokens(0L)
+                                            .ephemeral5mInputTokens(0L)
+                                            .build()
+                                    )
+                                    .cacheCreationInputTokens(0L)
+                                    .cacheReadInputTokens(0L)
+                                    .inputTokens(0L)
+                                    .model(Model.CLAUDE_SONNET_5)
+                                    .outputTokens(0L)
+                                    .build()
+                            )
+                            .outputTokens(503L)
+                            .outputTokensDetails(BetaOutputTokensDetails.of(0L))
+                            .serverToolUse(
+                                BetaServerToolUsage.builder()
+                                    .webFetchRequests(2L)
+                                    .webSearchRequests(0L)
+                                    .build()
+                            )
+                            .serviceTier(BetaUsage.ServiceTier.STANDARD)
+                            .speed(BetaUsage.Speed.STANDARD)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val betaMessageBatchResult = BetaMessageBatchResult.ofSucceeded(succeeded)
+
+        assertThat(betaMessageBatchResult.succeeded()).contains(succeeded)
+        assertThat(betaMessageBatchResult.errored()).isEmpty
+        assertThat(betaMessageBatchResult.canceled()).isEmpty
+        assertThat(betaMessageBatchResult.expired()).isEmpty
+    }
+
+    @Test
+    fun ofSucceededRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaMessageBatchResult =
+            BetaMessageBatchResult.ofSucceeded(
+                BetaMessageBatchSucceededResult.of(
                     BetaMessage.builder()
                         .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                         .container(
@@ -129,9 +244,7 @@ internal class BetaMessageBatchResultTest {
                                         .build()
                                 )
                                 .outputTokens(503L)
-                                .outputTokensDetails(
-                                    BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
-                                )
+                                .outputTokensDetails(BetaOutputTokensDetails.of(0L))
                                 .serverToolUse(
                                     BetaServerToolUsage.builder()
                                         .webFetchRequests(2L)
@@ -144,129 +257,6 @@ internal class BetaMessageBatchResultTest {
                         )
                         .build()
                 )
-                .build()
-
-        val betaMessageBatchResult = BetaMessageBatchResult.ofSucceeded(succeeded)
-
-        assertThat(betaMessageBatchResult.succeeded()).contains(succeeded)
-        assertThat(betaMessageBatchResult.errored()).isEmpty
-        assertThat(betaMessageBatchResult.canceled()).isEmpty
-        assertThat(betaMessageBatchResult.expired()).isEmpty
-    }
-
-    @Test
-    fun ofSucceededRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val betaMessageBatchResult =
-            BetaMessageBatchResult.ofSucceeded(
-                BetaMessageBatchSucceededResult.builder()
-                    .message(
-                        BetaMessage.builder()
-                            .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
-                            .container(
-                                BetaContainer.builder()
-                                    .id("container_011CpZohnwH4vuy7gazohgSP")
-                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                                    .addSkill(
-                                        BetaSkill.builder()
-                                            .skillId("pdf")
-                                            .type(BetaSkill.Type.ANTHROPIC)
-                                            .version("latest")
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                            .addContent(
-                                BetaTextBlock.builder()
-                                    .addCitation(
-                                        BetaCitationCharLocation.builder()
-                                            .citedText("The grass is green. The sky is blue.")
-                                            .documentIndex(0L)
-                                            .documentTitle("My Document")
-                                            .endCharIndex(0L)
-                                            .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                            .startCharIndex(0L)
-                                            .build()
-                                    )
-                                    .text("Hi! My name is Claude.")
-                                    .build()
-                            )
-                            .contextManagement(
-                                BetaContextManagementResponse.builder()
-                                    .addAppliedEdit(
-                                        BetaClearToolUses20250919EditResponse.builder()
-                                            .clearedInputTokens(0L)
-                                            .clearedToolUses(0L)
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                            .diagnostics(
-                                BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build()
-                            )
-                            .model(Model.CLAUDE_OPUS_4_6)
-                            .stopDetails(
-                                BetaRefusalStopDetails.builder()
-                                    .category(BetaRefusalStopDetails.Category.CYBER)
-                                    .explanation(
-                                        "This request was declined because it conflicts with Anthropic's Usage Policy."
-                                    )
-                                    .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
-                                    .fallbackHasPrefillClaim(true)
-                                    .recommendedModel("claude-sonnet-4-6")
-                                    .build()
-                            )
-                            .stopReason(BetaStopReason.END_TURN)
-                            .stopSequence(null)
-                            .usage(
-                                BetaUsage.builder()
-                                    .cacheCreation(
-                                        BetaCacheCreation.builder()
-                                            .ephemeral1hInputTokens(0L)
-                                            .ephemeral5mInputTokens(0L)
-                                            .build()
-                                    )
-                                    .cacheCreationInputTokens(2051L)
-                                    .cacheReadInputTokens(2051L)
-                                    .fallbackCredit(
-                                        BetaFallbackCreditUsage.builder()
-                                            .status(BetaFallbackCreditRedeemed.builder().build())
-                                            .build()
-                                    )
-                                    .inferenceGeo("global")
-                                    .inputTokens(2095L)
-                                    .addIteration(
-                                        BetaMessageIterationUsage.builder()
-                                            .cacheCreation(
-                                                BetaCacheCreation.builder()
-                                                    .ephemeral1hInputTokens(0L)
-                                                    .ephemeral5mInputTokens(0L)
-                                                    .build()
-                                            )
-                                            .cacheCreationInputTokens(0L)
-                                            .cacheReadInputTokens(0L)
-                                            .inputTokens(0L)
-                                            .model(Model.CLAUDE_SONNET_5)
-                                            .outputTokens(0L)
-                                            .build()
-                                    )
-                                    .outputTokens(503L)
-                                    .outputTokensDetails(
-                                        BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
-                                    )
-                                    .serverToolUse(
-                                        BetaServerToolUsage.builder()
-                                            .webFetchRequests(2L)
-                                            .webSearchRequests(0L)
-                                            .build()
-                                    )
-                                    .serviceTier(BetaUsage.ServiceTier.STANDARD)
-                                    .speed(BetaUsage.Speed.STANDARD)
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .build()
             )
 
         val roundtrippedBetaMessageBatchResult =
@@ -281,14 +271,12 @@ internal class BetaMessageBatchResultTest {
     @Test
     fun ofErrored() {
         val errored =
-            BetaMessageBatchErroredResult.builder()
-                .error(
-                    BetaErrorResponse.builder()
-                        .invalidRequestError("message")
-                        .requestId("request_id")
-                        .build()
-                )
-                .build()
+            BetaMessageBatchErroredResult.of(
+                BetaErrorResponse.builder()
+                    .invalidRequestError("message")
+                    .requestId("request_id")
+                    .build()
+            )
 
         val betaMessageBatchResult = BetaMessageBatchResult.ofErrored(errored)
 
@@ -303,14 +291,12 @@ internal class BetaMessageBatchResultTest {
         val jsonMapper = jsonMapper()
         val betaMessageBatchResult =
             BetaMessageBatchResult.ofErrored(
-                BetaMessageBatchErroredResult.builder()
-                    .error(
-                        BetaErrorResponse.builder()
-                            .invalidRequestError("message")
-                            .requestId("request_id")
-                            .build()
-                    )
-                    .build()
+                BetaMessageBatchErroredResult.of(
+                    BetaErrorResponse.builder()
+                        .invalidRequestError("message")
+                        .requestId("request_id")
+                        .build()
+                )
             )
 
         val roundtrippedBetaMessageBatchResult =

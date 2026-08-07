@@ -22,11 +22,7 @@ internal class BetaRequestToolRemovalBlockTest {
                 .build()
 
         assertThat(betaRequestToolRemovalBlock.tool())
-            .isEqualTo(
-                BetaRequestToolRemovalBlock.Tool.ofReference(
-                    BetaToolChangeToolReference.builder().name("name").build()
-                )
-            )
+            .isEqualTo(BetaRequestToolRemovalBlock.Tool.ofReference("name"))
         assertThat(betaRequestToolRemovalBlock.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()

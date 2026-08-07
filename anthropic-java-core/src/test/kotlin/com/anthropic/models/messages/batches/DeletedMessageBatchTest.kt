@@ -11,8 +11,7 @@ internal class DeletedMessageBatchTest {
 
     @Test
     fun create() {
-        val deletedMessageBatch =
-            DeletedMessageBatch.builder().id("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF").build()
+        val deletedMessageBatch = DeletedMessageBatch.of("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
 
         assertThat(deletedMessageBatch.id()).isEqualTo("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
     }
@@ -20,8 +19,7 @@ internal class DeletedMessageBatchTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val deletedMessageBatch =
-            DeletedMessageBatch.builder().id("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF").build()
+        val deletedMessageBatch = DeletedMessageBatch.of("msgbatch_013Zva2CMHLNnXjNJJKqJ2EF")
 
         val roundtrippedDeletedMessageBatch =
             jsonMapper.readValue(

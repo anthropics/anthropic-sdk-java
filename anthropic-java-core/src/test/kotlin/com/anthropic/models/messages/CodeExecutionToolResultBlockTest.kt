@@ -14,9 +14,9 @@ internal class CodeExecutionToolResultBlockTest {
         val codeExecutionToolResultBlock =
             CodeExecutionToolResultBlock.builder()
                 .content(
-                    CodeExecutionToolResultError.builder()
-                        .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    CodeExecutionToolResultError.of(
+                        CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -24,9 +24,7 @@ internal class CodeExecutionToolResultBlockTest {
         assertThat(codeExecutionToolResultBlock.content())
             .isEqualTo(
                 CodeExecutionToolResultBlockContent.ofError(
-                    CodeExecutionToolResultError.builder()
-                        .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
         assertThat(codeExecutionToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
@@ -38,9 +36,9 @@ internal class CodeExecutionToolResultBlockTest {
         val codeExecutionToolResultBlock =
             CodeExecutionToolResultBlock.builder()
                 .content(
-                    CodeExecutionToolResultError.builder()
-                        .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    CodeExecutionToolResultError.of(
+                        CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()

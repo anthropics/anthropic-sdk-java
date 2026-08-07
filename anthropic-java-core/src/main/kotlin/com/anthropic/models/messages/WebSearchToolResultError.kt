@@ -81,6 +81,13 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [WebSearchToolResultError] with the required [errorCode]
+         * set to the given value.
+         */
+        @JvmStatic
+        fun of(errorCode: WebSearchToolResultErrorCode) = builder().errorCode(errorCode).build()
     }
 
     /** A builder for [WebSearchToolResultError]. */

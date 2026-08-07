@@ -91,6 +91,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [DeploymentListPageResponse] with the required [data]
+         * set to the given value.
+         */
+        @JvmStatic fun of(data: List<BetaManagedAgentsDeployment>) = builder().data(data).build()
     }
 
     /** A builder for [DeploymentListPageResponse]. */

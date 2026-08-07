@@ -11,7 +11,7 @@ internal class RedactedThinkingBlockParamTest {
 
     @Test
     fun create() {
-        val redactedThinkingBlockParam = RedactedThinkingBlockParam.builder().data("data").build()
+        val redactedThinkingBlockParam = RedactedThinkingBlockParam.of("data")
 
         assertThat(redactedThinkingBlockParam.data()).isEqualTo("data")
     }
@@ -19,7 +19,7 @@ internal class RedactedThinkingBlockParamTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val redactedThinkingBlockParam = RedactedThinkingBlockParam.builder().data("data").build()
+        val redactedThinkingBlockParam = RedactedThinkingBlockParam.of("data")
 
         val roundtrippedRedactedThinkingBlockParam =
             jsonMapper.readValue(

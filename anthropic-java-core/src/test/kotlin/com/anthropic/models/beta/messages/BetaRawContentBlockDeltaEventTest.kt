@@ -15,9 +15,7 @@ internal class BetaRawContentBlockDeltaEventTest {
             BetaRawContentBlockDeltaEvent.builder().textDelta("text").index(0L).build()
 
         assertThat(betaRawContentBlockDeltaEvent.delta())
-            .isEqualTo(
-                BetaRawContentBlockDelta.ofText(BetaTextDelta.builder().text("text").build())
-            )
+            .isEqualTo(BetaRawContentBlockDelta.ofText("text"))
         assertThat(betaRawContentBlockDeltaEvent.index()).isEqualTo(0L)
     }
 

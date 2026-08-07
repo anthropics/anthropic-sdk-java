@@ -11,7 +11,7 @@ internal class BetaToolReferenceBlockTest {
 
     @Test
     fun create() {
-        val betaToolReferenceBlock = BetaToolReferenceBlock.builder().toolName("tool_name").build()
+        val betaToolReferenceBlock = BetaToolReferenceBlock.of("tool_name")
 
         assertThat(betaToolReferenceBlock.toolName()).isEqualTo("tool_name")
     }
@@ -19,7 +19,7 @@ internal class BetaToolReferenceBlockTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaToolReferenceBlock = BetaToolReferenceBlock.builder().toolName("tool_name").build()
+        val betaToolReferenceBlock = BetaToolReferenceBlock.of("tool_name")
 
         val roundtrippedBetaToolReferenceBlock =
             jsonMapper.readValue(

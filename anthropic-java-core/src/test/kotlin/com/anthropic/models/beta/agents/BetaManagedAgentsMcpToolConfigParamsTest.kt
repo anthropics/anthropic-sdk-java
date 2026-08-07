@@ -16,9 +16,9 @@ internal class BetaManagedAgentsMcpToolConfigParamsTest {
                 .name("x")
                 .enabled(true)
                 .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                        .build()
+                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    )
                 )
                 .build()
 
@@ -27,9 +27,7 @@ internal class BetaManagedAgentsMcpToolConfigParamsTest {
         assertThat(betaManagedAgentsMcpToolConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsMcpToolConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                        .build()
+                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                 )
             )
     }
@@ -42,9 +40,9 @@ internal class BetaManagedAgentsMcpToolConfigParamsTest {
                 .name("x")
                 .enabled(true)
                 .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                        .build()
+                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    )
                 )
                 .build()
 

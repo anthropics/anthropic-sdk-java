@@ -165,6 +165,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [ToolSearchToolRegex20251119] with the required [type]
+         * set to the given value.
+         */
+        @JvmStatic fun of(type: Type) = builder().type(type).build()
     }
 
     /** A builder for [ToolSearchToolRegex20251119]. */

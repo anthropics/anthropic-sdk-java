@@ -411,6 +411,19 @@ private constructor(
              * mid-turn.
              */
             @JvmStatic fun ofAdvisor(advisor: BetaManagedAgentsAdvisor) = Agent(advisor = advisor)
+
+            /**
+             * Returns an immutable instance of [Agent] whose [ofAdvisor] variant is built from the
+             * given required [model].
+             */
+            @JvmStatic
+            fun ofAdvisor(model: String) =
+                ofAdvisor(
+                    BetaManagedAgentsAdvisor.builder()
+                        .type(BetaManagedAgentsAdvisor.Type.ADVISOR)
+                        .model(model)
+                        .build()
+                )
         }
 
         /** An interface that defines how to map each variant of [Agent] to a value of type [T]. */

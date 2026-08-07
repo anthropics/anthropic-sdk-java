@@ -144,6 +144,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaToolResultBlockParam] with the required [toolUseId]
+         * set to the given value.
+         */
+        @JvmStatic fun of(toolUseId: String) = builder().toolUseId(toolUseId).build()
     }
 
     /** A builder for [BetaToolResultBlockParam]. */
@@ -786,7 +792,21 @@ private constructor(
 
                 @JvmStatic fun ofText(text: BetaTextBlockParam) = Block(text = text)
 
+                /**
+                 * Returns an immutable instance of [Block] whose [ofText] variant is built from the
+                 * given required [text].
+                 */
+                @JvmStatic fun ofText(text: String) = ofText(BetaTextBlockParam.of(text))
+
                 @JvmStatic fun ofImage(image: BetaImageBlockParam) = Block(image = image)
+
+                /**
+                 * Returns an immutable instance of [Block] whose [ofImage] variant is built from
+                 * the given required [source].
+                 */
+                @JvmStatic
+                fun ofImage(source: BetaImageBlockParam.Source) =
+                    ofImage(BetaImageBlockParam.of(source))
 
                 @JvmStatic
                 fun ofSearchResult(searchResult: BetaSearchResultBlockParam) =
@@ -795,10 +815,26 @@ private constructor(
                 @JvmStatic
                 fun ofDocument(document: BetaRequestDocumentBlock) = Block(document = document)
 
+                /**
+                 * Returns an immutable instance of [Block] whose [ofDocument] variant is built from
+                 * the given required [source].
+                 */
+                @JvmStatic
+                fun ofDocument(source: BetaRequestDocumentBlock.Source) =
+                    ofDocument(BetaRequestDocumentBlock.of(source))
+
                 /** Tool reference block that can be included in tool_result content. */
                 @JvmStatic
                 fun ofToolReference(toolReference: BetaToolReferenceBlockParam) =
                     Block(toolReference = toolReference)
+
+                /**
+                 * Returns an immutable instance of [Block] whose [ofToolReference] variant is built
+                 * from the given required [toolName].
+                 */
+                @JvmStatic
+                fun ofToolReference(toolName: String) =
+                    ofToolReference(BetaToolReferenceBlockParam.of(toolName))
             }
 
             /**

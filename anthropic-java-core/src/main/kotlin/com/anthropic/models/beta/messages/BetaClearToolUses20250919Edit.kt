@@ -803,7 +803,20 @@ private constructor(
             fun ofInputTokens(inputTokens: BetaInputTokensTrigger) =
                 Trigger(inputTokens = inputTokens)
 
+            /**
+             * Returns an immutable instance of [Trigger] whose [ofInputTokens] variant is built
+             * from the given required [value].
+             */
+            @JvmStatic
+            fun ofInputTokens(value: Long) = ofInputTokens(BetaInputTokensTrigger.of(value))
+
             @JvmStatic fun ofToolUses(toolUses: BetaToolUsesTrigger) = Trigger(toolUses = toolUses)
+
+            /**
+             * Returns an immutable instance of [Trigger] whose [ofToolUses] variant is built from
+             * the given required [value].
+             */
+            @JvmStatic fun ofToolUses(value: Long) = ofToolUses(BetaToolUsesTrigger.of(value))
         }
 
         /**

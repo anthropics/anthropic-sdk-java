@@ -399,7 +399,7 @@ internal class BetaContentBlockParamTest {
 
     @Test
     fun ofRedactedThinking() {
-        val redactedThinking = BetaRedactedThinkingBlockParam.builder().data("data").build()
+        val redactedThinking = BetaRedactedThinkingBlockParam.of("data")
 
         val betaContentBlockParam = BetaContentBlockParam.ofRedactedThinking(redactedThinking)
 
@@ -433,9 +433,7 @@ internal class BetaContentBlockParamTest {
     fun ofRedactedThinkingRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaContentBlockParam =
-            BetaContentBlockParam.ofRedactedThinking(
-                BetaRedactedThinkingBlockParam.builder().data("data").build()
-            )
+            BetaContentBlockParam.ofRedactedThinking(BetaRedactedThinkingBlockParam.of("data"))
 
         val roundtrippedBetaContentBlockParam =
             jsonMapper.readValue(
@@ -761,9 +759,9 @@ internal class BetaContentBlockParamTest {
         val webFetchToolResult =
             BetaWebFetchToolResultBlockParam.builder()
                 .content(
-                    BetaWebFetchToolResultErrorBlockParam.builder()
-                        .errorCode(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaWebFetchToolResultErrorBlockParam.of(
+                        BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -809,9 +807,9 @@ internal class BetaContentBlockParamTest {
             BetaContentBlockParam.ofWebFetchToolResult(
                 BetaWebFetchToolResultBlockParam.builder()
                     .content(
-                        BetaWebFetchToolResultErrorBlockParam.builder()
-                            .errorCode(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        BetaWebFetchToolResultErrorBlockParam.of(
+                            BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .cacheControl(
@@ -837,9 +835,9 @@ internal class BetaContentBlockParamTest {
         val advisorToolResult =
             BetaAdvisorToolResultBlockParam.builder()
                 .content(
-                    BetaAdvisorToolResultErrorParam.builder()
-                        .errorCode(BetaAdvisorToolResultErrorParam.ErrorCode.MAX_USES_EXCEEDED)
-                        .build()
+                    BetaAdvisorToolResultErrorParam.of(
+                        BetaAdvisorToolResultErrorParam.ErrorCode.MAX_USES_EXCEEDED
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -884,9 +882,9 @@ internal class BetaContentBlockParamTest {
             BetaContentBlockParam.ofAdvisorToolResult(
                 BetaAdvisorToolResultBlockParam.builder()
                     .content(
-                        BetaAdvisorToolResultErrorParam.builder()
-                            .errorCode(BetaAdvisorToolResultErrorParam.ErrorCode.MAX_USES_EXCEEDED)
-                            .build()
+                        BetaAdvisorToolResultErrorParam.of(
+                            BetaAdvisorToolResultErrorParam.ErrorCode.MAX_USES_EXCEEDED
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .cacheControl(
@@ -911,9 +909,9 @@ internal class BetaContentBlockParamTest {
         val codeExecutionToolResult =
             BetaCodeExecutionToolResultBlockParam.builder()
                 .content(
-                    BetaCodeExecutionToolResultErrorParam.builder()
-                        .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaCodeExecutionToolResultErrorParam.of(
+                        BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -960,9 +958,9 @@ internal class BetaContentBlockParamTest {
             BetaContentBlockParam.ofCodeExecutionToolResult(
                 BetaCodeExecutionToolResultBlockParam.builder()
                     .content(
-                        BetaCodeExecutionToolResultErrorParam.builder()
-                            .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        BetaCodeExecutionToolResultErrorParam.of(
+                            BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .cacheControl(
@@ -987,11 +985,9 @@ internal class BetaContentBlockParamTest {
         val bashCodeExecutionToolResult =
             BetaBashCodeExecutionToolResultBlockParam.builder()
                 .content(
-                    BetaBashCodeExecutionToolResultErrorParam.builder()
-                        .errorCode(
-                            BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
-                        )
-                        .build()
+                    BetaBashCodeExecutionToolResultErrorParam.of(
+                        BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -1038,12 +1034,9 @@ internal class BetaContentBlockParamTest {
             BetaContentBlockParam.ofBashCodeExecutionToolResult(
                 BetaBashCodeExecutionToolResultBlockParam.builder()
                     .content(
-                        BetaBashCodeExecutionToolResultErrorParam.builder()
-                            .errorCode(
-                                BetaBashCodeExecutionToolResultErrorParam.ErrorCode
-                                    .INVALID_TOOL_INPUT
-                            )
-                            .build()
+                        BetaBashCodeExecutionToolResultErrorParam.of(
+                            BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .cacheControl(
@@ -1736,8 +1729,8 @@ internal class BetaContentBlockParamTest {
     fun ofFallback() {
         val fallback =
             BetaFallbackBlockParam.builder()
-                .from(BetaFallbackInfoParam.builder().model(Model.CLAUDE_SONNET_5).build())
-                .to(BetaFallbackInfoParam.builder().model(Model.CLAUDE_SONNET_5).build())
+                .from(BetaFallbackInfoParam.of(Model.CLAUDE_SONNET_5))
+                .to(BetaFallbackInfoParam.of(Model.CLAUDE_SONNET_5))
                 .trigger(JsonValue.from(mapOf<String, Any>()))
                 .build()
 
@@ -1775,8 +1768,8 @@ internal class BetaContentBlockParamTest {
         val betaContentBlockParam =
             BetaContentBlockParam.ofFallback(
                 BetaFallbackBlockParam.builder()
-                    .from(BetaFallbackInfoParam.builder().model(Model.CLAUDE_SONNET_5).build())
-                    .to(BetaFallbackInfoParam.builder().model(Model.CLAUDE_SONNET_5).build())
+                    .from(BetaFallbackInfoParam.of(Model.CLAUDE_SONNET_5))
+                    .to(BetaFallbackInfoParam.of(Model.CLAUDE_SONNET_5))
                     .trigger(JsonValue.from(mapOf<String, Any>()))
                     .build()
             )

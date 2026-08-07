@@ -13,13 +13,11 @@ internal class BetaJsonOutputFormatTest {
     @Test
     fun create() {
         val betaJsonOutputFormat =
-            BetaJsonOutputFormat.builder()
-                .schema(
-                    BetaJsonOutputFormat.Schema.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .build()
+            BetaJsonOutputFormat.of(
+                BetaJsonOutputFormat.Schema.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
 
         assertThat(betaJsonOutputFormat.schema())
             .isEqualTo(
@@ -33,13 +31,11 @@ internal class BetaJsonOutputFormatTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaJsonOutputFormat =
-            BetaJsonOutputFormat.builder()
-                .schema(
-                    BetaJsonOutputFormat.Schema.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .build()
+            BetaJsonOutputFormat.of(
+                BetaJsonOutputFormat.Schema.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
 
         val roundtrippedBetaJsonOutputFormat =
             jsonMapper.readValue(

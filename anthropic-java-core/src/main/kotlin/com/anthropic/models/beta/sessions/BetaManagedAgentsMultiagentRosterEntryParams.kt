@@ -232,6 +232,14 @@ private constructor(
             BetaManagedAgentsMultiagentRosterEntryParams(self = self)
 
         /**
+         * Returns an immutable instance of [BetaManagedAgentsMultiagentRosterEntryParams] whose
+         * [ofSelf] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofSelf(type: BetaManagedAgentsMultiagentSelfParams.Type) =
+            ofSelf(BetaManagedAgentsMultiagentSelfParams.of(type))
+
+        /**
          * Platform advisor roster entry: a model the session's primary thread may consult mid-turn.
          * At most one per roster; the entry occupies the roster name `anthropic.advisor`.
          */

@@ -476,6 +476,12 @@ private constructor(
              * ```
              */
             @JvmStatic fun builder() = Builder()
+
+            /**
+             * Returns an immutable instance of [Body] with the required [auth] set to the given
+             * value.
+             */
+            @JvmStatic fun of(auth: Auth) = builder().auth(auth).build()
         }
 
         /** A builder for [Body]. */

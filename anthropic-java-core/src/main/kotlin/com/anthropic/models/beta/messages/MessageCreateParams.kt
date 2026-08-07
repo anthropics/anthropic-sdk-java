@@ -4462,6 +4462,14 @@ private constructor(
             fun ofBetaFallbackCreditTokenParam(
                 betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam
             ) = FallbackCreditToken(betaFallbackCreditTokenParam = betaFallbackCreditTokenParam)
+
+            /**
+             * Returns an immutable instance of [FallbackCreditToken] whose
+             * [ofBetaFallbackCreditTokenParam] variant is built from the given required [token].
+             */
+            @JvmStatic
+            fun ofBetaFallbackCreditTokenParam(token: String) =
+                ofBetaFallbackCreditTokenParam(BetaFallbackCreditTokenParam.of(token))
         }
 
         /**

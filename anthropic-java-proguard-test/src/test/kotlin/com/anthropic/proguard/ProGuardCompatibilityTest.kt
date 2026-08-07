@@ -7,7 +7,6 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.models.messages.Base64ImageSource
 import com.anthropic.models.messages.BashCodeExecutionToolResultErrorCode
 import com.anthropic.models.messages.CodeExecutionToolResultBlockContent
-import com.anthropic.models.messages.CodeExecutionToolResultError
 import com.anthropic.models.messages.CodeExecutionToolResultErrorCode
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.reflect.full.memberFunctions
@@ -80,9 +79,7 @@ internal class ProGuardCompatibilityTest {
         val jsonMapper = jsonMapper()
         val codeExecutionToolResultBlockContent =
             CodeExecutionToolResultBlockContent.ofError(
-                CodeExecutionToolResultError.builder()
-                    .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                    .build()
+                CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
             )
 
         val roundtrippedCodeExecutionToolResultBlockContent =

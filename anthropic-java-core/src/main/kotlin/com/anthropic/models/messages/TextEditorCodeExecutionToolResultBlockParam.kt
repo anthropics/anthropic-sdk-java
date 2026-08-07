@@ -646,6 +646,19 @@ private constructor(
                         textEditorCodeExecutionToolResultErrorParam
                 )
 
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofTextEditorCodeExecutionToolResultErrorParam] variant is built from the given
+             * required [errorCode].
+             */
+            @JvmStatic
+            fun ofTextEditorCodeExecutionToolResultErrorParam(
+                errorCode: TextEditorCodeExecutionToolResultErrorCode
+            ) =
+                ofTextEditorCodeExecutionToolResultErrorParam(
+                    TextEditorCodeExecutionToolResultErrorParam.of(errorCode)
+                )
+
             @JvmStatic
             fun ofTextEditorCodeExecutionViewResultBlockParam(
                 textEditorCodeExecutionViewResultBlockParam:
@@ -664,6 +677,17 @@ private constructor(
                 Content(
                     textEditorCodeExecutionCreateResultBlockParam =
                         textEditorCodeExecutionCreateResultBlockParam
+                )
+
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofTextEditorCodeExecutionCreateResultBlockParam] variant is built from the given
+             * required [isFileUpdate].
+             */
+            @JvmStatic
+            fun ofTextEditorCodeExecutionCreateResultBlockParam(isFileUpdate: Boolean) =
+                ofTextEditorCodeExecutionCreateResultBlockParam(
+                    TextEditorCodeExecutionCreateResultBlockParam.of(isFileUpdate)
                 )
 
             @JvmStatic

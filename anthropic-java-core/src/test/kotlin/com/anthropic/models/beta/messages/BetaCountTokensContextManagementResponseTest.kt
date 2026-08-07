@@ -12,7 +12,7 @@ internal class BetaCountTokensContextManagementResponseTest {
     @Test
     fun create() {
         val betaCountTokensContextManagementResponse =
-            BetaCountTokensContextManagementResponse.builder().originalInputTokens(0L).build()
+            BetaCountTokensContextManagementResponse.of(0L)
 
         assertThat(betaCountTokensContextManagementResponse.originalInputTokens()).isEqualTo(0L)
     }
@@ -21,7 +21,7 @@ internal class BetaCountTokensContextManagementResponseTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaCountTokensContextManagementResponse =
-            BetaCountTokensContextManagementResponse.builder().originalInputTokens(0L).build()
+            BetaCountTokensContextManagementResponse.of(0L)
 
         val roundtrippedBetaCountTokensContextManagementResponse =
             jsonMapper.readValue(

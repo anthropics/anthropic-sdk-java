@@ -19,9 +19,9 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
                 .stopReason(
-                    BetaManagedAgentsSessionEndTurn.builder()
-                        .type(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-                        .build()
+                    BetaManagedAgentsSessionEndTurn.of(
+                        BetaManagedAgentsSessionEndTurn.Type.END_TURN
+                    )
                 )
                 .type(BetaManagedAgentsSessionThreadStatusIdleEvent.Type.SESSION_THREAD_STATUS_IDLE)
                 .build()
@@ -37,9 +37,7 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.stopReason())
             .isEqualTo(
                 BetaManagedAgentsSessionThreadStatusIdleEvent.StopReason.ofEndTurn(
-                    BetaManagedAgentsSessionEndTurn.builder()
-                        .type(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-                        .build()
+                    BetaManagedAgentsSessionEndTurn.Type.END_TURN
                 )
             )
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.type())
@@ -58,9 +56,9 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
                 .stopReason(
-                    BetaManagedAgentsSessionEndTurn.builder()
-                        .type(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-                        .build()
+                    BetaManagedAgentsSessionEndTurn.of(
+                        BetaManagedAgentsSessionEndTurn.Type.END_TURN
+                    )
                 )
                 .type(BetaManagedAgentsSessionThreadStatusIdleEvent.Type.SESSION_THREAD_STATUS_IDLE)
                 .build()

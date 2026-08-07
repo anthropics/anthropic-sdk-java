@@ -8,6 +8,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -2209,13 +2210,37 @@ private constructor(
         fun ofAdvisorTool20260301(advisorTool20260301: BetaAdvisorTool20260301) =
             BetaToolUnion(advisorTool20260301 = advisorTool20260301)
 
+        /**
+         * Returns an immutable instance of [BetaToolUnion] whose [ofAdvisorTool20260301] variant is
+         * built from the given required [model].
+         */
+        @JvmStatic
+        fun ofAdvisorTool20260301(model: Model) =
+            ofAdvisorTool20260301(BetaAdvisorTool20260301.of(model))
+
         @JvmStatic
         fun ofSearchToolBm25_20251119(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
             BetaToolUnion(searchToolBm25_20251119 = searchToolBm25_20251119)
 
+        /**
+         * Returns an immutable instance of [BetaToolUnion] whose [ofSearchToolBm25_20251119]
+         * variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofSearchToolBm25_20251119(type: BetaToolSearchToolBm25_20251119.Type) =
+            ofSearchToolBm25_20251119(BetaToolSearchToolBm25_20251119.of(type))
+
         @JvmStatic
         fun ofSearchToolRegex20251119(searchToolRegex20251119: BetaToolSearchToolRegex20251119) =
             BetaToolUnion(searchToolRegex20251119 = searchToolRegex20251119)
+
+        /**
+         * Returns an immutable instance of [BetaToolUnion] whose [ofSearchToolRegex20251119]
+         * variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofSearchToolRegex20251119(type: BetaToolSearchToolRegex20251119.Type) =
+            ofSearchToolRegex20251119(BetaToolSearchToolRegex20251119.of(type))
 
         /**
          * Configuration for a group of tools from an MCP server.
@@ -2225,6 +2250,13 @@ private constructor(
          */
         @JvmStatic
         fun ofMcpToolset(mcpToolset: BetaMcpToolset) = BetaToolUnion(mcpToolset = mcpToolset)
+
+        /**
+         * Returns an immutable instance of [BetaToolUnion] whose [ofMcpToolset] variant is built
+         * from the given required [mcpServerName].
+         */
+        @JvmStatic
+        fun ofMcpToolset(mcpServerName: String) = ofMcpToolset(BetaMcpToolset.of(mcpServerName))
     }
 
     /**

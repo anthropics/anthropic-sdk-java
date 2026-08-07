@@ -639,16 +639,50 @@ private constructor(
             fun ofNone(none: BetaManagedAgentsTokenEndpointAuthNoneParam) =
                 TokenEndpointAuth(none = none)
 
+            /**
+             * Returns an immutable instance of [TokenEndpointAuth] whose [ofNone] variant is built
+             * from the given required [type].
+             */
+            @JvmStatic
+            fun ofNone(type: BetaManagedAgentsTokenEndpointAuthNoneParam.Type) =
+                ofNone(BetaManagedAgentsTokenEndpointAuthNoneParam.of(type))
+
             /** Token endpoint uses HTTP Basic authentication with client credentials. */
             @JvmStatic
             fun ofClientSecretBasic(
                 clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicParam
             ) = TokenEndpointAuth(clientSecretBasic = clientSecretBasic)
 
+            /**
+             * Returns an immutable instance of [TokenEndpointAuth] whose [ofClientSecretBasic]
+             * variant is built from the given required [clientSecret].
+             */
+            @JvmStatic
+            fun ofClientSecretBasic(clientSecret: String) =
+                ofClientSecretBasic(
+                    BetaManagedAgentsTokenEndpointAuthBasicParam.builder()
+                        .type(BetaManagedAgentsTokenEndpointAuthBasicParam.Type.CLIENT_SECRET_BASIC)
+                        .clientSecret(clientSecret)
+                        .build()
+                )
+
             /** Token endpoint uses POST body authentication with client credentials. */
             @JvmStatic
             fun ofClientSecretPost(clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostParam) =
                 TokenEndpointAuth(clientSecretPost = clientSecretPost)
+
+            /**
+             * Returns an immutable instance of [TokenEndpointAuth] whose [ofClientSecretPost]
+             * variant is built from the given required [clientSecret].
+             */
+            @JvmStatic
+            fun ofClientSecretPost(clientSecret: String) =
+                ofClientSecretPost(
+                    BetaManagedAgentsTokenEndpointAuthPostParam.builder()
+                        .type(BetaManagedAgentsTokenEndpointAuthPostParam.Type.CLIENT_SECRET_POST)
+                        .clientSecret(clientSecret)
+                        .build()
+                )
         }
 
         /**

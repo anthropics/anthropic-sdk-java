@@ -11,8 +11,7 @@ internal class BetaRedactedThinkingBlockParamTest {
 
     @Test
     fun create() {
-        val betaRedactedThinkingBlockParam =
-            BetaRedactedThinkingBlockParam.builder().data("data").build()
+        val betaRedactedThinkingBlockParam = BetaRedactedThinkingBlockParam.of("data")
 
         assertThat(betaRedactedThinkingBlockParam.data()).isEqualTo("data")
     }
@@ -20,8 +19,7 @@ internal class BetaRedactedThinkingBlockParamTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaRedactedThinkingBlockParam =
-            BetaRedactedThinkingBlockParam.builder().data("data").build()
+        val betaRedactedThinkingBlockParam = BetaRedactedThinkingBlockParam.of("data")
 
         val roundtrippedBetaRedactedThinkingBlockParam =
             jsonMapper.readValue(

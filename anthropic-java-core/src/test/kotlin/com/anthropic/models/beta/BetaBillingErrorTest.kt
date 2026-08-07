@@ -11,7 +11,7 @@ internal class BetaBillingErrorTest {
 
     @Test
     fun create() {
-        val betaBillingError = BetaBillingError.builder().message("message").build()
+        val betaBillingError = BetaBillingError.of("message")
 
         assertThat(betaBillingError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class BetaBillingErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaBillingError = BetaBillingError.builder().message("message").build()
+        val betaBillingError = BetaBillingError.of("message")
 
         val roundtrippedBetaBillingError =
             jsonMapper.readValue(

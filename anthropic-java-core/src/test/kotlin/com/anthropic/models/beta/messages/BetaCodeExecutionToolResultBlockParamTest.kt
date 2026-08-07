@@ -14,9 +14,9 @@ internal class BetaCodeExecutionToolResultBlockParamTest {
         val betaCodeExecutionToolResultBlockParam =
             BetaCodeExecutionToolResultBlockParam.builder()
                 .content(
-                    BetaCodeExecutionToolResultErrorParam.builder()
-                        .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaCodeExecutionToolResultErrorParam.of(
+                        BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -29,9 +29,7 @@ internal class BetaCodeExecutionToolResultBlockParamTest {
         assertThat(betaCodeExecutionToolResultBlockParam.content())
             .isEqualTo(
                 BetaCodeExecutionToolResultBlockParamContent.ofErrorParam(
-                    BetaCodeExecutionToolResultErrorParam.builder()
-                        .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
         assertThat(betaCodeExecutionToolResultBlockParam.toolUseId())
@@ -50,9 +48,9 @@ internal class BetaCodeExecutionToolResultBlockParamTest {
         val betaCodeExecutionToolResultBlockParam =
             BetaCodeExecutionToolResultBlockParam.builder()
                 .content(
-                    BetaCodeExecutionToolResultErrorParam.builder()
-                        .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaCodeExecutionToolResultErrorParam.of(
+                        BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(

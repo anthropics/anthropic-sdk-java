@@ -11,7 +11,7 @@ internal class BetaPermissionErrorTest {
 
     @Test
     fun create() {
-        val betaPermissionError = BetaPermissionError.builder().message("message").build()
+        val betaPermissionError = BetaPermissionError.of("message")
 
         assertThat(betaPermissionError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class BetaPermissionErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaPermissionError = BetaPermissionError.builder().message("message").build()
+        val betaPermissionError = BetaPermissionError.of("message")
 
         val roundtrippedBetaPermissionError =
             jsonMapper.readValue(

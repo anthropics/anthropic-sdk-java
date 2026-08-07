@@ -101,6 +101,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaTokenTaskBudget] with the required [total] set to
+         * the given value.
+         */
+        @JvmStatic fun of(total: Long) = builder().total(total).build()
     }
 
     /** A builder for [BetaTokenTaskBudget]. */

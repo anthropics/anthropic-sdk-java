@@ -82,6 +82,13 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaWebFetchToolResultErrorBlockParam] with the
+         * required [errorCode] set to the given value.
+         */
+        @JvmStatic
+        fun of(errorCode: BetaWebFetchToolResultErrorCode) = builder().errorCode(errorCode).build()
     }
 
     /** A builder for [BetaWebFetchToolResultErrorBlockParam]. */

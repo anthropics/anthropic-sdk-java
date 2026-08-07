@@ -256,6 +256,12 @@ private constructor(
         fun ofView(view: BetaMemoryTool20250818ViewCommand) =
             BetaMemoryTool20250818Command(view = view)
 
+        /**
+         * Returns an immutable instance of [BetaMemoryTool20250818Command] whose [ofView] variant
+         * is built from the given required [path].
+         */
+        @JvmStatic fun ofView(path: String) = ofView(BetaMemoryTool20250818ViewCommand.of(path))
+
         @JvmStatic
         fun ofCreate(create: BetaMemoryTool20250818CreateCommand) =
             BetaMemoryTool20250818Command(create = create)
@@ -271,6 +277,13 @@ private constructor(
         @JvmStatic
         fun ofDelete(delete: BetaMemoryTool20250818DeleteCommand) =
             BetaMemoryTool20250818Command(delete = delete)
+
+        /**
+         * Returns an immutable instance of [BetaMemoryTool20250818Command] whose [ofDelete] variant
+         * is built from the given required [path].
+         */
+        @JvmStatic
+        fun ofDelete(path: String) = ofDelete(BetaMemoryTool20250818DeleteCommand.of(path))
 
         @JvmStatic
         fun ofRename(rename: BetaMemoryTool20250818RenameCommand) =

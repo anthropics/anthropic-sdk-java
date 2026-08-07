@@ -5361,15 +5361,39 @@ private constructor(
             fun ofBetaAdvisorTool20260301(betaAdvisorTool20260301: BetaAdvisorTool20260301) =
                 Tool(betaAdvisorTool20260301 = betaAdvisorTool20260301)
 
+            /**
+             * Returns an immutable instance of [Tool] whose [ofBetaAdvisorTool20260301] variant is
+             * built from the given required [model].
+             */
+            @JvmStatic
+            fun ofBetaAdvisorTool20260301(model: Model) =
+                ofBetaAdvisorTool20260301(BetaAdvisorTool20260301.of(model))
+
             @JvmStatic
             fun ofBetaToolSearchToolBm25_20251119(
                 betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
             ) = Tool(betaToolSearchToolBm25_20251119 = betaToolSearchToolBm25_20251119)
 
+            /**
+             * Returns an immutable instance of [Tool] whose [ofBetaToolSearchToolBm25_20251119]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofBetaToolSearchToolBm25_20251119(type: BetaToolSearchToolBm25_20251119.Type) =
+                ofBetaToolSearchToolBm25_20251119(BetaToolSearchToolBm25_20251119.of(type))
+
             @JvmStatic
             fun ofBetaToolSearchToolRegex20251119(
                 betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
             ) = Tool(betaToolSearchToolRegex20251119 = betaToolSearchToolRegex20251119)
+
+            /**
+             * Returns an immutable instance of [Tool] whose [ofBetaToolSearchToolRegex20251119]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofBetaToolSearchToolRegex20251119(type: BetaToolSearchToolRegex20251119.Type) =
+                ofBetaToolSearchToolRegex20251119(BetaToolSearchToolRegex20251119.of(type))
 
             /**
              * Configuration for a group of tools from an MCP server.
@@ -5380,6 +5404,14 @@ private constructor(
             @JvmStatic
             fun ofBetaMcpToolset(betaMcpToolset: BetaMcpToolset) =
                 Tool(betaMcpToolset = betaMcpToolset)
+
+            /**
+             * Returns an immutable instance of [Tool] whose [ofBetaMcpToolset] variant is built
+             * from the given required [mcpServerName].
+             */
+            @JvmStatic
+            fun ofBetaMcpToolset(mcpServerName: String) =
+                ofBetaMcpToolset(BetaMcpToolset.of(mcpServerName))
         }
 
         /** An interface that defines how to map each variant of [Tool] to a value of type [T]. */

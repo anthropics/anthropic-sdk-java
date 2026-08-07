@@ -53,9 +53,9 @@ internal class BetaManagedAgentsTriggerContextTest {
     @Test
     fun ofManual() {
         val manual =
-            BetaManagedAgentsManualTriggerContext.builder()
-                .type(BetaManagedAgentsManualTriggerContext.Type.MANUAL)
-                .build()
+            BetaManagedAgentsManualTriggerContext.of(
+                BetaManagedAgentsManualTriggerContext.Type.MANUAL
+            )
 
         val betaManagedAgentsTriggerContext = BetaManagedAgentsTriggerContext.ofManual(manual)
 
@@ -68,9 +68,9 @@ internal class BetaManagedAgentsTriggerContextTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsTriggerContext =
             BetaManagedAgentsTriggerContext.ofManual(
-                BetaManagedAgentsManualTriggerContext.builder()
-                    .type(BetaManagedAgentsManualTriggerContext.Type.MANUAL)
-                    .build()
+                BetaManagedAgentsManualTriggerContext.of(
+                    BetaManagedAgentsManualTriggerContext.Type.MANUAL
+                )
             )
 
         val roundtrippedBetaManagedAgentsTriggerContext =

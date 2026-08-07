@@ -35,9 +35,9 @@ internal class AgentCreateParamsTest {
                 BetaManagedAgentsMultiagentParams.builder()
                     .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
                     .addAgent(
-                        BetaManagedAgentsMultiagentSelfParams.builder()
-                            .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
-                            .build()
+                        BetaManagedAgentsMultiagentSelfParams.of(
+                            BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                        )
                     )
                     .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                     .build()
@@ -60,9 +60,9 @@ internal class AgentCreateParamsTest {
                             .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                             .enabled(true)
                             .permissionPolicy(
-                                BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                    .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                    .build()
+                                BetaManagedAgentsAlwaysAllowPolicy.of(
+                                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                )
                             )
                             .build()
                     )
@@ -70,9 +70,9 @@ internal class AgentCreateParamsTest {
                         BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                             .enabled(true)
                             .permissionPolicy(
-                                BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                    .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                    .build()
+                                BetaManagedAgentsAlwaysAllowPolicy.of(
+                                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                )
                             )
                             .build()
                     )
@@ -105,9 +105,9 @@ internal class AgentCreateParamsTest {
                     BetaManagedAgentsMultiagentParams.builder()
                         .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
                         .addAgent(
-                            BetaManagedAgentsMultiagentSelfParams.builder()
-                                .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
-                                .build()
+                            BetaManagedAgentsMultiagentSelfParams.of(
+                                BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                            )
                         )
                         .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                         .build()
@@ -132,9 +132,9 @@ internal class AgentCreateParamsTest {
                                 .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -142,9 +142,9 @@ internal class AgentCreateParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -197,9 +197,9 @@ internal class AgentCreateParamsTest {
                     BetaManagedAgentsMultiagentParams.builder()
                         .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
                         .addAgent(
-                            BetaManagedAgentsMultiagentSelfParams.builder()
-                                .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
-                                .build()
+                            BetaManagedAgentsMultiagentSelfParams.of(
+                                BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                            )
                         )
                         .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                         .build()
@@ -224,9 +224,9 @@ internal class AgentCreateParamsTest {
                                 .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -234,9 +234,9 @@ internal class AgentCreateParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -273,9 +273,9 @@ internal class AgentCreateParamsTest {
                 BetaManagedAgentsMultiagentParams.builder()
                     .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
                     .addAgent(
-                        BetaManagedAgentsMultiagentSelfParams.builder()
-                            .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
-                            .build()
+                        BetaManagedAgentsMultiagentSelfParams.of(
+                            BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                        )
                     )
                     .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
                     .build()
@@ -306,9 +306,9 @@ internal class AgentCreateParamsTest {
                                 .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -316,9 +316,9 @@ internal class AgentCreateParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )

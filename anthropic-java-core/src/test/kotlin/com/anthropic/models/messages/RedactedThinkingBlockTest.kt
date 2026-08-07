@@ -11,7 +11,7 @@ internal class RedactedThinkingBlockTest {
 
     @Test
     fun create() {
-        val redactedThinkingBlock = RedactedThinkingBlock.builder().data("data").build()
+        val redactedThinkingBlock = RedactedThinkingBlock.of("data")
 
         assertThat(redactedThinkingBlock.data()).isEqualTo("data")
     }
@@ -19,7 +19,7 @@ internal class RedactedThinkingBlockTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val redactedThinkingBlock = RedactedThinkingBlock.builder().data("data").build()
+        val redactedThinkingBlock = RedactedThinkingBlock.of("data")
 
         val roundtrippedRedactedThinkingBlock =
             jsonMapper.readValue(

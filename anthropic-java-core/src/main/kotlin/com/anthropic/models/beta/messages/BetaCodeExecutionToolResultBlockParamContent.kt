@@ -260,6 +260,14 @@ private constructor(
         fun ofErrorParam(errorParam: BetaCodeExecutionToolResultErrorParam) =
             BetaCodeExecutionToolResultBlockParamContent(errorParam = errorParam)
 
+        /**
+         * Returns an immutable instance of [BetaCodeExecutionToolResultBlockParamContent] whose
+         * [ofErrorParam] variant is built from the given required [errorCode].
+         */
+        @JvmStatic
+        fun ofErrorParam(errorCode: BetaCodeExecutionToolResultErrorCode) =
+            ofErrorParam(BetaCodeExecutionToolResultErrorParam.of(errorCode))
+
         @JvmStatic
         fun ofResultBlockParam(resultBlockParam: BetaCodeExecutionResultBlockParam) =
             BetaCodeExecutionToolResultBlockParamContent(resultBlockParam = resultBlockParam)

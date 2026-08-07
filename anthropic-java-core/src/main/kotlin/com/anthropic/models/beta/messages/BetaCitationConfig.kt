@@ -63,6 +63,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaCitationConfig] with the required [enabled] set to
+         * the given value.
+         */
+        @JvmStatic fun of(enabled: Boolean) = builder().enabled(enabled).build()
     }
 
     /** A builder for [BetaCitationConfig]. */

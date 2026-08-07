@@ -608,8 +608,34 @@ private constructor(
             /** Rubric referenced by a file uploaded via the Files API. */
             @JvmStatic fun ofFile(file: BetaManagedAgentsFileRubric) = Rubric(file = file)
 
+            /**
+             * Returns an immutable instance of [Rubric] whose [ofFile] variant is built from the
+             * given required [fileId].
+             */
+            @JvmStatic
+            fun ofFile(fileId: String) =
+                ofFile(
+                    BetaManagedAgentsFileRubric.builder()
+                        .type(BetaManagedAgentsFileRubric.Type.FILE)
+                        .fileId(fileId)
+                        .build()
+                )
+
             /** Rubric content provided inline as text. */
             @JvmStatic fun ofText(text: BetaManagedAgentsTextRubric) = Rubric(text = text)
+
+            /**
+             * Returns an immutable instance of [Rubric] whose [ofText] variant is built from the
+             * given required [content].
+             */
+            @JvmStatic
+            fun ofText(content: String) =
+                ofText(
+                    BetaManagedAgentsTextRubric.builder()
+                        .type(BetaManagedAgentsTextRubric.Type.TEXT)
+                        .content(content)
+                        .build()
+                )
         }
 
         /** An interface that defines how to map each variant of [Rubric] to a value of type [T]. */

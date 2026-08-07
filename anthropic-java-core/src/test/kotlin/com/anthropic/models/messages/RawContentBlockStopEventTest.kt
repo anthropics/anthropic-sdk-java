@@ -11,7 +11,7 @@ internal class RawContentBlockStopEventTest {
 
     @Test
     fun create() {
-        val rawContentBlockStopEvent = RawContentBlockStopEvent.builder().index(0L).build()
+        val rawContentBlockStopEvent = RawContentBlockStopEvent.of(0L)
 
         assertThat(rawContentBlockStopEvent.index()).isEqualTo(0L)
     }
@@ -19,7 +19,7 @@ internal class RawContentBlockStopEventTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val rawContentBlockStopEvent = RawContentBlockStopEvent.builder().index(0L).build()
+        val rawContentBlockStopEvent = RawContentBlockStopEvent.of(0L)
 
         val roundtrippedRawContentBlockStopEvent =
             jsonMapper.readValue(

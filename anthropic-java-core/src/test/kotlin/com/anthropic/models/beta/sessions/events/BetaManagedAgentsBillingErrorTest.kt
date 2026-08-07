@@ -15,9 +15,9 @@ internal class BetaManagedAgentsBillingErrorTest {
             BetaManagedAgentsBillingError.builder()
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(BetaManagedAgentsBillingError.Type.BILLING_ERROR)
                 .build()
@@ -26,9 +26,7 @@ internal class BetaManagedAgentsBillingErrorTest {
         assertThat(betaManagedAgentsBillingError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsBillingError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                 )
             )
         assertThat(betaManagedAgentsBillingError.type())
@@ -42,9 +40,9 @@ internal class BetaManagedAgentsBillingErrorTest {
             BetaManagedAgentsBillingError.builder()
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(BetaManagedAgentsBillingError.Type.BILLING_ERROR)
                 .build()

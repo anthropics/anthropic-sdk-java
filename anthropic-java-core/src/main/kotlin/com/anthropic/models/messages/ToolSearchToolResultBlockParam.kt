@@ -479,10 +479,31 @@ private constructor(
                 toolSearchToolResultErrorParam: ToolSearchToolResultErrorParam
             ) = Content(toolSearchToolResultErrorParam = toolSearchToolResultErrorParam)
 
+            /**
+             * Returns an immutable instance of [Content] whose [ofToolSearchToolResultErrorParam]
+             * variant is built from the given required [errorCode].
+             */
+            @JvmStatic
+            fun ofToolSearchToolResultErrorParam(errorCode: ToolSearchToolResultErrorCode) =
+                ofToolSearchToolResultErrorParam(ToolSearchToolResultErrorParam.of(errorCode))
+
             @JvmStatic
             fun ofToolSearchToolSearchResultBlockParam(
                 toolSearchToolSearchResultBlockParam: ToolSearchToolSearchResultBlockParam
             ) = Content(toolSearchToolSearchResultBlockParam = toolSearchToolSearchResultBlockParam)
+
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofToolSearchToolSearchResultBlockParam] variant is built from the given required
+             * [toolReferences].
+             */
+            @JvmStatic
+            fun ofToolSearchToolSearchResultBlockParam(
+                toolReferences: List<ToolReferenceBlockParam>
+            ) =
+                ofToolSearchToolSearchResultBlockParam(
+                    ToolSearchToolSearchResultBlockParam.of(toolReferences)
+                )
         }
 
         /**

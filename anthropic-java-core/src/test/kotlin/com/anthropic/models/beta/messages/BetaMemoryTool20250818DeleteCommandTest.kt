@@ -12,7 +12,7 @@ internal class BetaMemoryTool20250818DeleteCommandTest {
     @Test
     fun create() {
         val betaMemoryTool20250818DeleteCommand =
-            BetaMemoryTool20250818DeleteCommand.builder().path("/memories/old_file.txt").build()
+            BetaMemoryTool20250818DeleteCommand.of("/memories/old_file.txt")
 
         assertThat(betaMemoryTool20250818DeleteCommand.path()).isEqualTo("/memories/old_file.txt")
     }
@@ -21,7 +21,7 @@ internal class BetaMemoryTool20250818DeleteCommandTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaMemoryTool20250818DeleteCommand =
-            BetaMemoryTool20250818DeleteCommand.builder().path("/memories/old_file.txt").build()
+            BetaMemoryTool20250818DeleteCommand.of("/memories/old_file.txt")
 
         val roundtrippedBetaMemoryTool20250818DeleteCommand =
             jsonMapper.readValue(

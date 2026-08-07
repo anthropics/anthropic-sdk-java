@@ -16,9 +16,9 @@ internal class BetaManagedAgentsMcpAuthenticationFailedErrorTest {
                 .mcpServerName("mcp_server_name")
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(
                     BetaManagedAgentsMcpAuthenticationFailedError.Type
@@ -32,9 +32,7 @@ internal class BetaManagedAgentsMcpAuthenticationFailedErrorTest {
         assertThat(betaManagedAgentsMcpAuthenticationFailedError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsMcpAuthenticationFailedError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                 )
             )
         assertThat(betaManagedAgentsMcpAuthenticationFailedError.type())
@@ -51,9 +49,9 @@ internal class BetaManagedAgentsMcpAuthenticationFailedErrorTest {
                 .mcpServerName("mcp_server_name")
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(
                     BetaManagedAgentsMcpAuthenticationFailedError.Type

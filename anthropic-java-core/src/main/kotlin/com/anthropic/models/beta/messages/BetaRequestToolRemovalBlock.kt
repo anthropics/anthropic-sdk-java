@@ -120,6 +120,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaRequestToolRemovalBlock] with the required [tool]
+         * set to the given value.
+         */
+        @JvmStatic fun of(tool: Tool) = builder().tool(tool).build()
     }
 
     /** A builder for [BetaRequestToolRemovalBlock]. */
@@ -538,6 +544,13 @@ private constructor(
             fun ofReference(reference: BetaToolChangeToolReference) = Tool(reference = reference)
 
             /**
+             * Returns an immutable instance of [Tool] whose [ofReference] variant is built from the
+             * given required [name].
+             */
+            @JvmStatic
+            fun ofReference(name: String) = ofReference(BetaToolChangeToolReference.of(name))
+
+            /**
              * Reference to a single MCP tool by its server and remote name — the same
              * ``server_name``/``name`` pair ``mcp_tool_use`` carries.
              */
@@ -549,6 +562,14 @@ private constructor(
             @JvmStatic
             fun ofMcpToolsetReference(mcpToolsetReference: BetaToolChangeMcpToolsetReference) =
                 Tool(mcpToolsetReference = mcpToolsetReference)
+
+            /**
+             * Returns an immutable instance of [Tool] whose [ofMcpToolsetReference] variant is
+             * built from the given required [serverName].
+             */
+            @JvmStatic
+            fun ofMcpToolsetReference(serverName: String) =
+                ofMcpToolsetReference(BetaToolChangeMcpToolsetReference.of(serverName))
         }
 
         /** An interface that defines how to map each variant of [Tool] to a value of type [T]. */

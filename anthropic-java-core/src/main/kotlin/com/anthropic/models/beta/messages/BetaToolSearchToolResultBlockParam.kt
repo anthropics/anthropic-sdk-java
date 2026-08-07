@@ -502,6 +502,19 @@ private constructor(
                 betaToolSearchToolResultErrorParam: BetaToolSearchToolResultErrorParam
             ) = Content(betaToolSearchToolResultErrorParam = betaToolSearchToolResultErrorParam)
 
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofBetaToolSearchToolResultErrorParam] variant is built from the given required
+             * [errorCode].
+             */
+            @JvmStatic
+            fun ofBetaToolSearchToolResultErrorParam(
+                errorCode: BetaToolSearchToolResultErrorParam.ErrorCode
+            ) =
+                ofBetaToolSearchToolResultErrorParam(
+                    BetaToolSearchToolResultErrorParam.of(errorCode)
+                )
+
             @JvmStatic
             fun ofBetaToolSearchToolSearchResultBlockParam(
                 betaToolSearchToolSearchResultBlockParam: BetaToolSearchToolSearchResultBlockParam
@@ -509,6 +522,19 @@ private constructor(
                 Content(
                     betaToolSearchToolSearchResultBlockParam =
                         betaToolSearchToolSearchResultBlockParam
+                )
+
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofBetaToolSearchToolSearchResultBlockParam] variant is built from the given required
+             * [toolReferences].
+             */
+            @JvmStatic
+            fun ofBetaToolSearchToolSearchResultBlockParam(
+                toolReferences: List<BetaToolReferenceBlockParam>
+            ) =
+                ofBetaToolSearchToolSearchResultBlockParam(
+                    BetaToolSearchToolSearchResultBlockParam.of(toolReferences)
                 )
         }
 

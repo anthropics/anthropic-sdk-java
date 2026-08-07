@@ -17,12 +17,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofEnvironmentArchived() {
         val environmentArchived =
-            BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.Type
-                        .ENVIRONMENT_ARCHIVED_ERROR
-                )
-                .build()
+            BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.of(
+                BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.Type
+                    .ENVIRONMENT_ARCHIVED_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentArchived(environmentArchived)
@@ -50,12 +48,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentArchived(
-                BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.Type
-                            .ENVIRONMENT_ARCHIVED_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.of(
+                    BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.Type
+                        .ENVIRONMENT_ARCHIVED_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -71,12 +67,9 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofAgentArchived() {
         val agentArchived =
-            BetaManagedAgentsAgentArchivedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsAgentArchivedDeploymentPausedReasonError.Type
-                        .AGENT_ARCHIVED_ERROR
-                )
-                .build()
+            BetaManagedAgentsAgentArchivedDeploymentPausedReasonError.of(
+                BetaManagedAgentsAgentArchivedDeploymentPausedReasonError.Type.AGENT_ARCHIVED_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofAgentArchived(agentArchived)
@@ -104,12 +97,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofAgentArchived(
-                BetaManagedAgentsAgentArchivedDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsAgentArchivedDeploymentPausedReasonError.Type
-                            .AGENT_ARCHIVED_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsAgentArchivedDeploymentPausedReasonError.of(
+                    BetaManagedAgentsAgentArchivedDeploymentPausedReasonError.Type
+                        .AGENT_ARCHIVED_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -125,12 +116,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofEnvironmentNotFound() {
         val environmentNotFound =
-            BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.Type
-                        .ENVIRONMENT_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.Type
+                    .ENVIRONMENT_NOT_FOUND_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentNotFound(environmentNotFound)
@@ -158,12 +147,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentNotFound(
-                BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.Type
-                            .ENVIRONMENT_NOT_FOUND_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.of(
+                    BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.Type
+                        .ENVIRONMENT_NOT_FOUND_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -179,12 +166,9 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofVaultNotFound() {
         val vaultNotFound =
-            BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.Type
-                        .VAULT_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.Type.VAULT_NOT_FOUND_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofVaultNotFound(vaultNotFound)
@@ -212,12 +196,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofVaultNotFound(
-                BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.Type
-                            .VAULT_NOT_FOUND_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.of(
+                    BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.Type
+                        .VAULT_NOT_FOUND_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -233,12 +215,9 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofFileNotFound() {
         val fileNotFound =
-            BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.Type
-                        .FILE_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.Type.FILE_NOT_FOUND_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofFileNotFound(fileNotFound)
@@ -266,12 +245,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofFileNotFound(
-                BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.Type
-                            .FILE_NOT_FOUND_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.of(
+                    BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.Type
+                        .FILE_NOT_FOUND_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -287,12 +264,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofSessionResourceNotFound() {
         val sessionResourceNotFound =
-            BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.Type
-                        .SESSION_RESOURCE_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.Type
+                    .SESSION_RESOURCE_NOT_FOUND_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofSessionResourceNotFound(
@@ -322,12 +297,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofSessionResourceNotFound(
-                BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.Type
-                            .SESSION_RESOURCE_NOT_FOUND_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.of(
+                    BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.Type
+                        .SESSION_RESOURCE_NOT_FOUND_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -343,12 +316,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofWorkspaceArchived() {
         val workspaceArchived =
-            BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError.Type
-                        .WORKSPACE_ARCHIVED_ERROR
-                )
-                .build()
+            BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError.of(
+                BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError.Type
+                    .WORKSPACE_ARCHIVED_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofWorkspaceArchived(workspaceArchived)
@@ -376,12 +347,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofWorkspaceArchived(
-                BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError.Type
-                            .WORKSPACE_ARCHIVED_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError.of(
+                    BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError.Type
+                        .WORKSPACE_ARCHIVED_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -397,12 +366,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofOrganizationDisabled() {
         val organizationDisabled =
-            BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError.Type
-                        .ORGANIZATION_DISABLED_ERROR
-                )
-                .build()
+            BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError.of(
+                BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError.Type
+                    .ORGANIZATION_DISABLED_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofOrganizationDisabled(
@@ -432,12 +399,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofOrganizationDisabled(
-                BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError.Type
-                            .ORGANIZATION_DISABLED_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError.of(
+                    BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError.Type
+                        .ORGANIZATION_DISABLED_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -453,12 +418,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofMemoryStoreArchived() {
         val memoryStoreArchived =
-            BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.Type
-                        .MEMORY_STORE_ARCHIVED_ERROR
-                )
-                .build()
+            BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.of(
+                BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.Type
+                    .MEMORY_STORE_ARCHIVED_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofMemoryStoreArchived(memoryStoreArchived)
@@ -486,12 +449,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofMemoryStoreArchived(
-                BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.Type
-                            .MEMORY_STORE_ARCHIVED_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.of(
+                    BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.Type
+                        .MEMORY_STORE_ARCHIVED_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -507,12 +468,9 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofSkillNotFound() {
         val skillNotFound =
-            BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.Type
-                        .SKILL_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.Type.SKILL_NOT_FOUND_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofSkillNotFound(skillNotFound)
@@ -540,12 +498,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofSkillNotFound(
-                BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.Type
-                            .SKILL_NOT_FOUND_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.of(
+                    BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.Type
+                        .SKILL_NOT_FOUND_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -561,12 +517,9 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofVaultArchived() {
         val vaultArchived =
-            BetaManagedAgentsVaultArchivedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsVaultArchivedDeploymentPausedReasonError.Type
-                        .VAULT_ARCHIVED_ERROR
-                )
-                .build()
+            BetaManagedAgentsVaultArchivedDeploymentPausedReasonError.of(
+                BetaManagedAgentsVaultArchivedDeploymentPausedReasonError.Type.VAULT_ARCHIVED_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofVaultArchived(vaultArchived)
@@ -594,12 +547,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofVaultArchived(
-                BetaManagedAgentsVaultArchivedDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsVaultArchivedDeploymentPausedReasonError.Type
-                            .VAULT_ARCHIVED_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsVaultArchivedDeploymentPausedReasonError.of(
+                    BetaManagedAgentsVaultArchivedDeploymentPausedReasonError.Type
+                        .VAULT_ARCHIVED_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -615,9 +566,9 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofUnknown() {
         val unknown =
-            BetaManagedAgentsUnknownDeploymentPausedReasonError.builder()
-                .type(BetaManagedAgentsUnknownDeploymentPausedReasonError.Type.UNKNOWN_ERROR)
-                .build()
+            BetaManagedAgentsUnknownDeploymentPausedReasonError.of(
+                BetaManagedAgentsUnknownDeploymentPausedReasonError.Type.UNKNOWN_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofUnknown(unknown)
@@ -644,9 +595,9 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofUnknown(
-                BetaManagedAgentsUnknownDeploymentPausedReasonError.builder()
-                    .type(BetaManagedAgentsUnknownDeploymentPausedReasonError.Type.UNKNOWN_ERROR)
-                    .build()
+                BetaManagedAgentsUnknownDeploymentPausedReasonError.of(
+                    BetaManagedAgentsUnknownDeploymentPausedReasonError.Type.UNKNOWN_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -662,12 +613,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofSelfHostedResourcesUnsupported() {
         val selfHostedResourcesUnsupported =
-            BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.Type
-                        .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
-                )
-                .build()
+            BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.of(
+                BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.Type
+                    .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofSelfHostedResourcesUnsupported(
@@ -696,13 +645,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofSelfHostedResourcesUnsupported(
-                BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError
-                            .Type
-                            .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.of(
+                    BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.Type
+                        .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =
@@ -718,12 +664,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
     @Test
     fun ofMcpEgressBlocked() {
         val mcpEgressBlocked =
-            BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.Type
-                        .MCP_EGRESS_BLOCKED_ERROR
-                )
-                .build()
+            BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.of(
+                BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.Type
+                    .MCP_EGRESS_BLOCKED_ERROR
+            )
 
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofMcpEgressBlocked(mcpEgressBlocked)
@@ -751,12 +695,10 @@ internal class BetaManagedAgentsDeploymentPausedReasonErrorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeploymentPausedReasonError =
             BetaManagedAgentsDeploymentPausedReasonError.ofMcpEgressBlocked(
-                BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.builder()
-                    .type(
-                        BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.Type
-                            .MCP_EGRESS_BLOCKED_ERROR
-                    )
-                    .build()
+                BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.of(
+                    BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.Type
+                        .MCP_EGRESS_BLOCKED_ERROR
+                )
             )
 
         val roundtrippedBetaManagedAgentsDeploymentPausedReasonError =

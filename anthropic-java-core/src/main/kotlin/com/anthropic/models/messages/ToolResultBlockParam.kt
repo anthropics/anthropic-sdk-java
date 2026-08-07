@@ -143,6 +143,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [ToolResultBlockParam] with the required [toolUseId] set
+         * to the given value.
+         */
+        @JvmStatic fun of(toolUseId: String) = builder().toolUseId(toolUseId).build()
     }
 
     /** A builder for [ToolResultBlockParam]. */
@@ -779,7 +785,20 @@ private constructor(
 
                 @JvmStatic fun ofText(text: TextBlockParam) = Block(text = text)
 
+                /**
+                 * Returns an immutable instance of [Block] whose [ofText] variant is built from the
+                 * given required [text].
+                 */
+                @JvmStatic fun ofText(text: String) = ofText(TextBlockParam.of(text))
+
                 @JvmStatic fun ofImage(image: ImageBlockParam) = Block(image = image)
+
+                /**
+                 * Returns an immutable instance of [Block] whose [ofImage] variant is built from
+                 * the given required [source].
+                 */
+                @JvmStatic
+                fun ofImage(source: ImageBlockParam.Source) = ofImage(ImageBlockParam.of(source))
 
                 @JvmStatic
                 fun ofSearchResult(searchResult: SearchResultBlockParam) =
@@ -787,10 +806,26 @@ private constructor(
 
                 @JvmStatic fun ofDocument(document: DocumentBlockParam) = Block(document = document)
 
+                /**
+                 * Returns an immutable instance of [Block] whose [ofDocument] variant is built from
+                 * the given required [source].
+                 */
+                @JvmStatic
+                fun ofDocument(source: DocumentBlockParam.Source) =
+                    ofDocument(DocumentBlockParam.of(source))
+
                 /** Tool reference block that can be included in tool_result content. */
                 @JvmStatic
                 fun ofToolReference(toolReference: ToolReferenceBlockParam) =
                     Block(toolReference = toolReference)
+
+                /**
+                 * Returns an immutable instance of [Block] whose [ofToolReference] variant is built
+                 * from the given required [toolName].
+                 */
+                @JvmStatic
+                fun ofToolReference(toolName: String) =
+                    ofToolReference(ToolReferenceBlockParam.of(toolName))
             }
 
             /**

@@ -11,7 +11,7 @@ internal class BetaRateLimitErrorTest {
 
     @Test
     fun create() {
-        val betaRateLimitError = BetaRateLimitError.builder().message("message").build()
+        val betaRateLimitError = BetaRateLimitError.of("message")
 
         assertThat(betaRateLimitError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class BetaRateLimitErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaRateLimitError = BetaRateLimitError.builder().message("message").build()
+        val betaRateLimitError = BetaRateLimitError.of("message")
 
         val roundtrippedBetaRateLimitError =
             jsonMapper.readValue(

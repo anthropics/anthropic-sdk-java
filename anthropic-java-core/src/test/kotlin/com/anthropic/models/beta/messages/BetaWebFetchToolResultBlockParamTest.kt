@@ -14,9 +14,9 @@ internal class BetaWebFetchToolResultBlockParamTest {
         val betaWebFetchToolResultBlockParam =
             BetaWebFetchToolResultBlockParam.builder()
                 .content(
-                    BetaWebFetchToolResultErrorBlockParam.builder()
-                        .errorCode(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaWebFetchToolResultErrorBlockParam.of(
+                        BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -30,9 +30,7 @@ internal class BetaWebFetchToolResultBlockParamTest {
         assertThat(betaWebFetchToolResultBlockParam.content())
             .isEqualTo(
                 BetaWebFetchToolResultBlockParam.Content.ofBetaWebFetchToolResultErrorBlockParam(
-                    BetaWebFetchToolResultErrorBlockParam.builder()
-                        .errorCode(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
         assertThat(betaWebFetchToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
@@ -54,9 +52,9 @@ internal class BetaWebFetchToolResultBlockParamTest {
         val betaWebFetchToolResultBlockParam =
             BetaWebFetchToolResultBlockParam.builder()
                 .content(
-                    BetaWebFetchToolResultErrorBlockParam.builder()
-                        .errorCode(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BetaWebFetchToolResultErrorBlockParam.of(
+                        BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(

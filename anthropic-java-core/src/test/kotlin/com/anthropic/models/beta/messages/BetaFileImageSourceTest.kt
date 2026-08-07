@@ -11,7 +11,7 @@ internal class BetaFileImageSourceTest {
 
     @Test
     fun create() {
-        val betaFileImageSource = BetaFileImageSource.builder().fileId("file_id").build()
+        val betaFileImageSource = BetaFileImageSource.of("file_id")
 
         assertThat(betaFileImageSource.fileId()).isEqualTo("file_id")
     }
@@ -19,7 +19,7 @@ internal class BetaFileImageSourceTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaFileImageSource = BetaFileImageSource.builder().fileId("file_id").build()
+        val betaFileImageSource = BetaFileImageSource.of("file_id")
 
         val roundtrippedBetaFileImageSource =
             jsonMapper.readValue(

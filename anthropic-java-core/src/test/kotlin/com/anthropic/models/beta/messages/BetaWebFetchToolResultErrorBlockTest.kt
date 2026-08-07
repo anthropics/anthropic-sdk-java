@@ -12,9 +12,7 @@ internal class BetaWebFetchToolResultErrorBlockTest {
     @Test
     fun create() {
         val betaWebFetchToolResultErrorBlock =
-            BetaWebFetchToolResultErrorBlock.builder()
-                .errorCode(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            BetaWebFetchToolResultErrorBlock.of(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
 
         assertThat(betaWebFetchToolResultErrorBlock.errorCode())
             .isEqualTo(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
@@ -24,9 +22,7 @@ internal class BetaWebFetchToolResultErrorBlockTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaWebFetchToolResultErrorBlock =
-            BetaWebFetchToolResultErrorBlock.builder()
-                .errorCode(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            BetaWebFetchToolResultErrorBlock.of(BetaWebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
 
         val roundtrippedBetaWebFetchToolResultErrorBlock =
             jsonMapper.readValue(

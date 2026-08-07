@@ -11,8 +11,7 @@ internal class BashCodeExecutionOutputBlockTest {
 
     @Test
     fun create() {
-        val bashCodeExecutionOutputBlock =
-            BashCodeExecutionOutputBlock.builder().fileId("file_id").build()
+        val bashCodeExecutionOutputBlock = BashCodeExecutionOutputBlock.of("file_id")
 
         assertThat(bashCodeExecutionOutputBlock.fileId()).isEqualTo("file_id")
     }
@@ -20,8 +19,7 @@ internal class BashCodeExecutionOutputBlockTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val bashCodeExecutionOutputBlock =
-            BashCodeExecutionOutputBlock.builder().fileId("file_id").build()
+        val bashCodeExecutionOutputBlock = BashCodeExecutionOutputBlock.of("file_id")
 
         val roundtrippedBashCodeExecutionOutputBlock =
             jsonMapper.readValue(

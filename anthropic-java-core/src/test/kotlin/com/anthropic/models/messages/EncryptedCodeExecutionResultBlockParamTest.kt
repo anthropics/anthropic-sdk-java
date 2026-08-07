@@ -13,14 +13,14 @@ internal class EncryptedCodeExecutionResultBlockParamTest {
     fun create() {
         val encryptedCodeExecutionResultBlockParam =
             EncryptedCodeExecutionResultBlockParam.builder()
-                .addContent(CodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+                .addContent(CodeExecutionOutputBlockParam.of("file_id"))
                 .encryptedStdout("encrypted_stdout")
                 .returnCode(0L)
                 .stderr("stderr")
                 .build()
 
         assertThat(encryptedCodeExecutionResultBlockParam.content())
-            .containsExactly(CodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+            .containsExactly(CodeExecutionOutputBlockParam.of("file_id"))
         assertThat(encryptedCodeExecutionResultBlockParam.encryptedStdout())
             .isEqualTo("encrypted_stdout")
         assertThat(encryptedCodeExecutionResultBlockParam.returnCode()).isEqualTo(0L)
@@ -32,7 +32,7 @@ internal class EncryptedCodeExecutionResultBlockParamTest {
         val jsonMapper = jsonMapper()
         val encryptedCodeExecutionResultBlockParam =
             EncryptedCodeExecutionResultBlockParam.builder()
-                .addContent(CodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+                .addContent(CodeExecutionOutputBlockParam.of("file_id"))
                 .encryptedStdout("encrypted_stdout")
                 .returnCode(0L)
                 .stderr("stderr")

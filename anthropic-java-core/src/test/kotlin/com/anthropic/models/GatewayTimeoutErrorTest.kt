@@ -11,7 +11,7 @@ internal class GatewayTimeoutErrorTest {
 
     @Test
     fun create() {
-        val gatewayTimeoutError = GatewayTimeoutError.builder().message("message").build()
+        val gatewayTimeoutError = GatewayTimeoutError.of("message")
 
         assertThat(gatewayTimeoutError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class GatewayTimeoutErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val gatewayTimeoutError = GatewayTimeoutError.builder().message("message").build()
+        val gatewayTimeoutError = GatewayTimeoutError.of("message")
 
         val roundtrippedGatewayTimeoutError =
             jsonMapper.readValue(

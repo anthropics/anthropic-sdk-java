@@ -17,9 +17,9 @@ internal class BetaCodeExecutionToolResultBlockParamContentTest {
     @Test
     fun ofErrorParam() {
         val errorParam =
-            BetaCodeExecutionToolResultErrorParam.builder()
-                .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            BetaCodeExecutionToolResultErrorParam.of(
+                BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+            )
 
         val betaCodeExecutionToolResultBlockParamContent =
             BetaCodeExecutionToolResultBlockParamContent.ofErrorParam(errorParam)
@@ -38,9 +38,9 @@ internal class BetaCodeExecutionToolResultBlockParamContentTest {
         val jsonMapper = jsonMapper()
         val betaCodeExecutionToolResultBlockParamContent =
             BetaCodeExecutionToolResultBlockParamContent.ofErrorParam(
-                BetaCodeExecutionToolResultErrorParam.builder()
-                    .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                    .build()
+                BetaCodeExecutionToolResultErrorParam.of(
+                    BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                )
             )
 
         val roundtrippedBetaCodeExecutionToolResultBlockParamContent =
@@ -57,7 +57,7 @@ internal class BetaCodeExecutionToolResultBlockParamContentTest {
     fun ofResultBlockParam() {
         val resultBlockParam =
             BetaCodeExecutionResultBlockParam.builder()
-                .addContent(BetaCodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+                .addContent(BetaCodeExecutionOutputBlockParam.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")
@@ -82,9 +82,7 @@ internal class BetaCodeExecutionToolResultBlockParamContentTest {
         val betaCodeExecutionToolResultBlockParamContent =
             BetaCodeExecutionToolResultBlockParamContent.ofResultBlockParam(
                 BetaCodeExecutionResultBlockParam.builder()
-                    .addContent(
-                        BetaCodeExecutionOutputBlockParam.builder().fileId("file_id").build()
-                    )
+                    .addContent(BetaCodeExecutionOutputBlockParam.of("file_id"))
                     .returnCode(0L)
                     .stderr("stderr")
                     .stdout("stdout")
@@ -105,7 +103,7 @@ internal class BetaCodeExecutionToolResultBlockParamContentTest {
     fun ofEncryptedCodeExecutionResultBlockParam() {
         val encryptedCodeExecutionResultBlockParam =
             BetaEncryptedCodeExecutionResultBlockParam.builder()
-                .addContent(BetaCodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+                .addContent(BetaCodeExecutionOutputBlockParam.of("file_id"))
                 .encryptedStdout("encrypted_stdout")
                 .returnCode(0L)
                 .stderr("stderr")
@@ -131,9 +129,7 @@ internal class BetaCodeExecutionToolResultBlockParamContentTest {
         val betaCodeExecutionToolResultBlockParamContent =
             BetaCodeExecutionToolResultBlockParamContent.ofEncryptedCodeExecutionResultBlockParam(
                 BetaEncryptedCodeExecutionResultBlockParam.builder()
-                    .addContent(
-                        BetaCodeExecutionOutputBlockParam.builder().fileId("file_id").build()
-                    )
+                    .addContent(BetaCodeExecutionOutputBlockParam.of("file_id"))
                     .encryptedStdout("encrypted_stdout")
                     .returnCode(0L)
                     .stderr("stderr")

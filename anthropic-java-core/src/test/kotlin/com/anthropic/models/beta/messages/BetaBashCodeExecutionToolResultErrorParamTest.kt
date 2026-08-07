@@ -12,9 +12,9 @@ internal class BetaBashCodeExecutionToolResultErrorParamTest {
     @Test
     fun create() {
         val betaBashCodeExecutionToolResultErrorParam =
-            BetaBashCodeExecutionToolResultErrorParam.builder()
-                .errorCode(BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            BetaBashCodeExecutionToolResultErrorParam.of(
+                BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
+            )
 
         assertThat(betaBashCodeExecutionToolResultErrorParam.errorCode())
             .isEqualTo(BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT)
@@ -24,9 +24,9 @@ internal class BetaBashCodeExecutionToolResultErrorParamTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaBashCodeExecutionToolResultErrorParam =
-            BetaBashCodeExecutionToolResultErrorParam.builder()
-                .errorCode(BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            BetaBashCodeExecutionToolResultErrorParam.of(
+                BetaBashCodeExecutionToolResultErrorParam.ErrorCode.INVALID_TOOL_INPUT
+            )
 
         val roundtrippedBetaBashCodeExecutionToolResultErrorParam =
             jsonMapper.readValue(

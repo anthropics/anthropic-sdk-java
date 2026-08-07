@@ -61,9 +61,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                                 .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -71,9 +71,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -132,9 +132,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                                 .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -142,9 +142,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -193,11 +193,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                                     .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                            .type(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
-                                            .build()
+                                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                        )
                                     )
                                     .build()
                             )
@@ -205,11 +203,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                            .type(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
-                                            .build()
+                                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                        )
                                     )
                                     .build()
                             )
@@ -248,9 +244,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                                 .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -258,9 +254,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -312,9 +308,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                                 .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )
@@ -322,9 +318,9 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
-                                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                        .build()
+                                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                    )
                                 )
                                 .build()
                         )

@@ -103,6 +103,13 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaAdvisorRedactedResultBlockParam] with the required
+         * [encryptedContent] set to the given value.
+         */
+        @JvmStatic
+        fun of(encryptedContent: String) = builder().encryptedContent(encryptedContent).build()
     }
 
     /** A builder for [BetaAdvisorRedactedResultBlockParam]. */

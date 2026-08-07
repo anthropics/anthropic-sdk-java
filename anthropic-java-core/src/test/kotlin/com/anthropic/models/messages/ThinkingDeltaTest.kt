@@ -11,7 +11,7 @@ internal class ThinkingDeltaTest {
 
     @Test
     fun create() {
-        val thinkingDelta = ThinkingDelta.builder().thinking("thinking").build()
+        val thinkingDelta = ThinkingDelta.of("thinking")
 
         assertThat(thinkingDelta.thinking()).isEqualTo("thinking")
     }
@@ -19,7 +19,7 @@ internal class ThinkingDeltaTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val thinkingDelta = ThinkingDelta.builder().thinking("thinking").build()
+        val thinkingDelta = ThinkingDelta.of("thinking")
 
         val roundtrippedThinkingDelta =
             jsonMapper.readValue(

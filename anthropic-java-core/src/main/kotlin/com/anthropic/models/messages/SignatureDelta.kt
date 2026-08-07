@@ -80,6 +80,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [SignatureDelta] with the required [signature] set to
+         * the given value.
+         */
+        @JvmStatic fun of(signature: String) = builder().signature(signature).build()
     }
 
     /** A builder for [SignatureDelta]. */

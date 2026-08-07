@@ -11,7 +11,7 @@ internal class BetaFileScopeTest {
 
     @Test
     fun create() {
-        val betaFileScope = BetaFileScope.builder().id("id").build()
+        val betaFileScope = BetaFileScope.of("id")
 
         assertThat(betaFileScope.id()).isEqualTo("id")
     }
@@ -19,7 +19,7 @@ internal class BetaFileScopeTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaFileScope = BetaFileScope.builder().id("id").build()
+        val betaFileScope = BetaFileScope.of("id")
 
         val roundtrippedBetaFileScope =
             jsonMapper.readValue(

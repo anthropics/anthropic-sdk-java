@@ -84,6 +84,13 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaContextManagementResponse] with the required
+         * [appliedEdits] set to the given value.
+         */
+        @JvmStatic
+        fun of(appliedEdits: List<AppliedEdit>) = builder().appliedEdits(appliedEdits).build()
     }
 
     /** A builder for [BetaContextManagementResponse]. */

@@ -11,7 +11,7 @@ internal class BetaInputTokensTriggerTest {
 
     @Test
     fun create() {
-        val betaInputTokensTrigger = BetaInputTokensTrigger.builder().value(1L).build()
+        val betaInputTokensTrigger = BetaInputTokensTrigger.of(1L)
 
         assertThat(betaInputTokensTrigger.value()).isEqualTo(1L)
     }
@@ -19,7 +19,7 @@ internal class BetaInputTokensTriggerTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaInputTokensTrigger = BetaInputTokensTrigger.builder().value(1L).build()
+        val betaInputTokensTrigger = BetaInputTokensTrigger.of(1L)
 
         val roundtrippedBetaInputTokensTrigger =
             jsonMapper.readValue(

@@ -146,6 +146,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsModelConfigParams] with the required
+         * [id] set to the given value.
+         */
+        @JvmStatic fun of(id: BetaManagedAgentsModel) = builder().id(id).build()
     }
 
     /** A builder for [BetaManagedAgentsModelConfigParams]. */
@@ -671,11 +677,27 @@ private constructor(
                 betaManagedAgentsEffortLow: BetaManagedAgentsEffortLow
             ) = Effort(betaManagedAgentsEffortLow = betaManagedAgentsEffortLow)
 
+            /**
+             * Returns an immutable instance of [Effort] whose [ofBetaManagedAgentsEffortLow]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofBetaManagedAgentsEffortLow(type: BetaManagedAgentsEffortLow.Type) =
+                ofBetaManagedAgentsEffortLow(BetaManagedAgentsEffortLow.of(type))
+
             /** Medium effort. Balances latency and reasoning depth. */
             @JvmStatic
             fun ofBetaManagedAgentsEffortMedium(
                 betaManagedAgentsEffortMedium: BetaManagedAgentsEffortMedium
             ) = Effort(betaManagedAgentsEffortMedium = betaManagedAgentsEffortMedium)
+
+            /**
+             * Returns an immutable instance of [Effort] whose [ofBetaManagedAgentsEffortMedium]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofBetaManagedAgentsEffortMedium(type: BetaManagedAgentsEffortMedium.Type) =
+                ofBetaManagedAgentsEffortMedium(BetaManagedAgentsEffortMedium.of(type))
 
             /** High effort. Favors reasoning depth. */
             @JvmStatic
@@ -683,17 +705,41 @@ private constructor(
                 betaManagedAgentsEffortHigh: BetaManagedAgentsEffortHigh
             ) = Effort(betaManagedAgentsEffortHigh = betaManagedAgentsEffortHigh)
 
+            /**
+             * Returns an immutable instance of [Effort] whose [ofBetaManagedAgentsEffortHigh]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofBetaManagedAgentsEffortHigh(type: BetaManagedAgentsEffortHigh.Type) =
+                ofBetaManagedAgentsEffortHigh(BetaManagedAgentsEffortHigh.of(type))
+
             /** Extra-high effort. Not all models accept this level. */
             @JvmStatic
             fun ofBetaManagedAgentsEffortXhigh(
                 betaManagedAgentsEffortXhigh: BetaManagedAgentsEffortXhigh
             ) = Effort(betaManagedAgentsEffortXhigh = betaManagedAgentsEffortXhigh)
 
+            /**
+             * Returns an immutable instance of [Effort] whose [ofBetaManagedAgentsEffortXhigh]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofBetaManagedAgentsEffortXhigh(type: BetaManagedAgentsEffortXhigh.Type) =
+                ofBetaManagedAgentsEffortXhigh(BetaManagedAgentsEffortXhigh.of(type))
+
             /** Maximum effort. Favors reasoning depth over latency. */
             @JvmStatic
             fun ofBetaManagedAgentsEffortMax(
                 betaManagedAgentsEffortMax: BetaManagedAgentsEffortMax
             ) = Effort(betaManagedAgentsEffortMax = betaManagedAgentsEffortMax)
+
+            /**
+             * Returns an immutable instance of [Effort] whose [ofBetaManagedAgentsEffortMax]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofBetaManagedAgentsEffortMax(type: BetaManagedAgentsEffortMax.Type) =
+                ofBetaManagedAgentsEffortMax(BetaManagedAgentsEffortMax.of(type))
         }
 
         /** An interface that defines how to map each variant of [Effort] to a value of type [T]. */

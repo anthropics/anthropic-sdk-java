@@ -395,6 +395,12 @@ private constructor(
              * ```
              */
             @JvmStatic fun builder() = Builder()
+
+            /**
+             * Returns an immutable instance of [Body] with the required [files] set to the given
+             * value.
+             */
+            @JvmStatic fun of(files: List<InputStream>) = builder().files(files).build()
         }
 
         /** A builder for [Body]. */

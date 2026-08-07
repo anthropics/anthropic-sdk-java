@@ -455,6 +455,14 @@ private constructor(
                 RetryStatus(retrying = retrying)
 
             /**
+             * Returns an immutable instance of [RetryStatus] whose [ofRetrying] variant is built
+             * from the given required [type].
+             */
+            @JvmStatic
+            fun ofRetrying(type: BetaManagedAgentsRetryStatusRetrying.Type) =
+                ofRetrying(BetaManagedAgentsRetryStatusRetrying.of(type))
+
+            /**
              * This turn is dead; queued inputs are flushed and the session returns to idle. Client
              * may send a new prompt.
              */
@@ -463,11 +471,27 @@ private constructor(
                 RetryStatus(exhausted = exhausted)
 
             /**
+             * Returns an immutable instance of [RetryStatus] whose [ofExhausted] variant is built
+             * from the given required [type].
+             */
+            @JvmStatic
+            fun ofExhausted(type: BetaManagedAgentsRetryStatusExhausted.Type) =
+                ofExhausted(BetaManagedAgentsRetryStatusExhausted.of(type))
+
+            /**
              * The session encountered a terminal error and will transition to `terminated` state.
              */
             @JvmStatic
             fun ofTerminal(terminal: BetaManagedAgentsRetryStatusTerminal) =
                 RetryStatus(terminal = terminal)
+
+            /**
+             * Returns an immutable instance of [RetryStatus] whose [ofTerminal] variant is built
+             * from the given required [type].
+             */
+            @JvmStatic
+            fun ofTerminal(type: BetaManagedAgentsRetryStatusTerminal.Type) =
+                ofTerminal(BetaManagedAgentsRetryStatusTerminal.of(type))
         }
 
         /**

@@ -14,11 +14,9 @@ internal class BetaBashCodeExecutionToolResultBlockTest {
         val betaBashCodeExecutionToolResultBlock =
             BetaBashCodeExecutionToolResultBlock.builder()
                 .content(
-                    BetaBashCodeExecutionToolResultError.builder()
-                        .errorCode(
-                            BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
-                        )
-                        .build()
+                    BetaBashCodeExecutionToolResultError.of(
+                        BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -26,11 +24,7 @@ internal class BetaBashCodeExecutionToolResultBlockTest {
         assertThat(betaBashCodeExecutionToolResultBlock.content())
             .isEqualTo(
                 BetaBashCodeExecutionToolResultBlock.Content.ofBetaBashCodeExecutionToolResultError(
-                    BetaBashCodeExecutionToolResultError.builder()
-                        .errorCode(
-                            BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
-                        )
-                        .build()
+                    BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
                 )
             )
         assertThat(betaBashCodeExecutionToolResultBlock.toolUseId())
@@ -43,11 +37,9 @@ internal class BetaBashCodeExecutionToolResultBlockTest {
         val betaBashCodeExecutionToolResultBlock =
             BetaBashCodeExecutionToolResultBlock.builder()
                 .content(
-                    BetaBashCodeExecutionToolResultError.builder()
-                        .errorCode(
-                            BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
-                        )
-                        .build()
+                    BetaBashCodeExecutionToolResultError.of(
+                        BetaBashCodeExecutionToolResultError.ErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()

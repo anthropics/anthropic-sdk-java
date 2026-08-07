@@ -259,6 +259,19 @@ private constructor(
         @JvmStatic
         fun ofMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResource) =
             ResourceUpdateResponse(memoryStore = memoryStore)
+
+        /**
+         * Returns an immutable instance of [ResourceUpdateResponse] whose [ofMemoryStore] variant
+         * is built from the given required [memoryStoreId].
+         */
+        @JvmStatic
+        fun ofMemoryStore(memoryStoreId: String) =
+            ofMemoryStore(
+                BetaManagedAgentsMemoryStoreResource.builder()
+                    .type(BetaManagedAgentsMemoryStoreResource.Type.MEMORY_STORE)
+                    .memoryStoreId(memoryStoreId)
+                    .build()
+            )
     }
 
     /**

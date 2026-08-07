@@ -14,9 +14,9 @@ internal class CodeExecutionToolResultBlockParamTest {
         val codeExecutionToolResultBlockParam =
             CodeExecutionToolResultBlockParam.builder()
                 .content(
-                    CodeExecutionToolResultErrorParam.builder()
-                        .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    CodeExecutionToolResultErrorParam.of(
+                        CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -27,9 +27,7 @@ internal class CodeExecutionToolResultBlockParamTest {
         assertThat(codeExecutionToolResultBlockParam.content())
             .isEqualTo(
                 CodeExecutionToolResultBlockParamContent.ofErrorParam(
-                    CodeExecutionToolResultErrorParam.builder()
-                        .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
         assertThat(codeExecutionToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
@@ -43,9 +41,9 @@ internal class CodeExecutionToolResultBlockParamTest {
         val codeExecutionToolResultBlockParam =
             CodeExecutionToolResultBlockParam.builder()
                 .content(
-                    CodeExecutionToolResultErrorParam.builder()
-                        .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    CodeExecutionToolResultErrorParam.of(
+                        CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(

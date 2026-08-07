@@ -11,7 +11,7 @@ internal class BetaAuthenticationErrorTest {
 
     @Test
     fun create() {
-        val betaAuthenticationError = BetaAuthenticationError.builder().message("message").build()
+        val betaAuthenticationError = BetaAuthenticationError.of("message")
 
         assertThat(betaAuthenticationError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class BetaAuthenticationErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaAuthenticationError = BetaAuthenticationError.builder().message("message").build()
+        val betaAuthenticationError = BetaAuthenticationError.of("message")
 
         val roundtrippedBetaAuthenticationError =
             jsonMapper.readValue(

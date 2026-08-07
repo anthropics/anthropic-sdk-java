@@ -16,9 +16,9 @@ internal class BetaManagedAgentsMcpOAuthRefreshResponseTest {
                 .clientId("client_id")
                 .tokenEndpoint("token_endpoint")
                 .tokenEndpointAuth(
-                    BetaManagedAgentsTokenEndpointAuthNoneResponse.builder()
-                        .type(BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE)
-                        .build()
+                    BetaManagedAgentsTokenEndpointAuthNoneResponse.of(
+                        BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE
+                    )
                 )
                 .resource("resource")
                 .scope("scope")
@@ -30,9 +30,7 @@ internal class BetaManagedAgentsMcpOAuthRefreshResponseTest {
         assertThat(betaManagedAgentsMcpOAuthRefreshResponse.tokenEndpointAuth())
             .isEqualTo(
                 BetaManagedAgentsMcpOAuthRefreshResponse.TokenEndpointAuth.ofNone(
-                    BetaManagedAgentsTokenEndpointAuthNoneResponse.builder()
-                        .type(BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE)
-                        .build()
+                    BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE
                 )
             )
         assertThat(betaManagedAgentsMcpOAuthRefreshResponse.resource()).contains("resource")
@@ -47,9 +45,9 @@ internal class BetaManagedAgentsMcpOAuthRefreshResponseTest {
                 .clientId("client_id")
                 .tokenEndpoint("token_endpoint")
                 .tokenEndpointAuth(
-                    BetaManagedAgentsTokenEndpointAuthNoneResponse.builder()
-                        .type(BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE)
-                        .build()
+                    BetaManagedAgentsTokenEndpointAuthNoneResponse.of(
+                        BetaManagedAgentsTokenEndpointAuthNoneResponse.Type.NONE
+                    )
                 )
                 .resource("resource")
                 .scope("scope")

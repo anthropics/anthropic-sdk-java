@@ -24,70 +24,66 @@ internal class MessageBatchSucceededResultTest {
     @Test
     fun create() {
         val messageBatchSucceededResult =
-            MessageBatchSucceededResult.builder()
-                .message(
-                    Message.builder()
-                        .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
-                        .container(
-                            Container.builder()
-                                .id("container_011CpZohnwH4vuy7gazohgSP")
-                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                                .build()
-                        )
-                        .addContent(
-                            TextBlock.builder()
-                                .addCitation(
-                                    CitationCharLocation.builder()
-                                        .citedText("The grass is green. The sky is blue.")
-                                        .documentIndex(0L)
-                                        .documentTitle("My Document")
-                                        .endCharIndex(0L)
-                                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                        .startCharIndex(0L)
-                                        .build()
-                                )
-                                .text("Hi! My name is Claude.")
-                                .build()
-                        )
-                        .model(Model.CLAUDE_OPUS_4_6)
-                        .stopDetails(
-                            RefusalStopDetails.builder()
-                                .category(RefusalStopDetails.Category.CYBER)
-                                .explanation(
-                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
-                                )
-                                .build()
-                        )
-                        .stopReason(StopReason.END_TURN)
-                        .stopSequence(null)
-                        .usage(
-                            Usage.builder()
-                                .cacheCreation(
-                                    CacheCreation.builder()
-                                        .ephemeral1hInputTokens(0L)
-                                        .ephemeral5mInputTokens(0L)
-                                        .build()
-                                )
-                                .cacheCreationInputTokens(2051L)
-                                .cacheReadInputTokens(2051L)
-                                .inferenceGeo("global")
-                                .inputTokens(2095L)
-                                .outputTokens(503L)
-                                .outputTokensDetails(
-                                    OutputTokensDetails.builder().thinkingTokens(0L).build()
-                                )
-                                .serverToolUse(
-                                    ServerToolUsage.builder()
-                                        .webFetchRequests(2L)
-                                        .webSearchRequests(0L)
-                                        .build()
-                                )
-                                .serviceTier(Usage.ServiceTier.STANDARD)
-                                .build()
-                        )
-                        .build()
-                )
-                .build()
+            MessageBatchSucceededResult.of(
+                Message.builder()
+                    .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                    .container(
+                        Container.builder()
+                            .id("container_011CpZohnwH4vuy7gazohgSP")
+                            .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .addContent(
+                        TextBlock.builder()
+                            .addCitation(
+                                CitationCharLocation.builder()
+                                    .citedText("The grass is green. The sky is blue.")
+                                    .documentIndex(0L)
+                                    .documentTitle("My Document")
+                                    .endCharIndex(0L)
+                                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
+                                    .startCharIndex(0L)
+                                    .build()
+                            )
+                            .text("Hi! My name is Claude.")
+                            .build()
+                    )
+                    .model(Model.CLAUDE_OPUS_4_6)
+                    .stopDetails(
+                        RefusalStopDetails.builder()
+                            .category(RefusalStopDetails.Category.CYBER)
+                            .explanation(
+                                "This request was declined because it conflicts with Anthropic's Usage Policy."
+                            )
+                            .build()
+                    )
+                    .stopReason(StopReason.END_TURN)
+                    .stopSequence(null)
+                    .usage(
+                        Usage.builder()
+                            .cacheCreation(
+                                CacheCreation.builder()
+                                    .ephemeral1hInputTokens(0L)
+                                    .ephemeral5mInputTokens(0L)
+                                    .build()
+                            )
+                            .cacheCreationInputTokens(2051L)
+                            .cacheReadInputTokens(2051L)
+                            .inferenceGeo("global")
+                            .inputTokens(2095L)
+                            .outputTokens(503L)
+                            .outputTokensDetails(OutputTokensDetails.of(0L))
+                            .serverToolUse(
+                                ServerToolUsage.builder()
+                                    .webFetchRequests(2L)
+                                    .webSearchRequests(0L)
+                                    .build()
+                            )
+                            .serviceTier(Usage.ServiceTier.STANDARD)
+                            .build()
+                    )
+                    .build()
+            )
 
         assertThat(messageBatchSucceededResult.message())
             .isEqualTo(
@@ -138,9 +134,7 @@ internal class MessageBatchSucceededResultTest {
                             .inferenceGeo("global")
                             .inputTokens(2095L)
                             .outputTokens(503L)
-                            .outputTokensDetails(
-                                OutputTokensDetails.builder().thinkingTokens(0L).build()
-                            )
+                            .outputTokensDetails(OutputTokensDetails.of(0L))
                             .serverToolUse(
                                 ServerToolUsage.builder()
                                     .webFetchRequests(2L)
@@ -158,70 +152,66 @@ internal class MessageBatchSucceededResultTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val messageBatchSucceededResult =
-            MessageBatchSucceededResult.builder()
-                .message(
-                    Message.builder()
-                        .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
-                        .container(
-                            Container.builder()
-                                .id("container_011CpZohnwH4vuy7gazohgSP")
-                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                                .build()
-                        )
-                        .addContent(
-                            TextBlock.builder()
-                                .addCitation(
-                                    CitationCharLocation.builder()
-                                        .citedText("The grass is green. The sky is blue.")
-                                        .documentIndex(0L)
-                                        .documentTitle("My Document")
-                                        .endCharIndex(0L)
-                                        .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                        .startCharIndex(0L)
-                                        .build()
-                                )
-                                .text("Hi! My name is Claude.")
-                                .build()
-                        )
-                        .model(Model.CLAUDE_OPUS_4_6)
-                        .stopDetails(
-                            RefusalStopDetails.builder()
-                                .category(RefusalStopDetails.Category.CYBER)
-                                .explanation(
-                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
-                                )
-                                .build()
-                        )
-                        .stopReason(StopReason.END_TURN)
-                        .stopSequence(null)
-                        .usage(
-                            Usage.builder()
-                                .cacheCreation(
-                                    CacheCreation.builder()
-                                        .ephemeral1hInputTokens(0L)
-                                        .ephemeral5mInputTokens(0L)
-                                        .build()
-                                )
-                                .cacheCreationInputTokens(2051L)
-                                .cacheReadInputTokens(2051L)
-                                .inferenceGeo("global")
-                                .inputTokens(2095L)
-                                .outputTokens(503L)
-                                .outputTokensDetails(
-                                    OutputTokensDetails.builder().thinkingTokens(0L).build()
-                                )
-                                .serverToolUse(
-                                    ServerToolUsage.builder()
-                                        .webFetchRequests(2L)
-                                        .webSearchRequests(0L)
-                                        .build()
-                                )
-                                .serviceTier(Usage.ServiceTier.STANDARD)
-                                .build()
-                        )
-                        .build()
-                )
-                .build()
+            MessageBatchSucceededResult.of(
+                Message.builder()
+                    .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                    .container(
+                        Container.builder()
+                            .id("container_011CpZohnwH4vuy7gazohgSP")
+                            .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .addContent(
+                        TextBlock.builder()
+                            .addCitation(
+                                CitationCharLocation.builder()
+                                    .citedText("The grass is green. The sky is blue.")
+                                    .documentIndex(0L)
+                                    .documentTitle("My Document")
+                                    .endCharIndex(0L)
+                                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
+                                    .startCharIndex(0L)
+                                    .build()
+                            )
+                            .text("Hi! My name is Claude.")
+                            .build()
+                    )
+                    .model(Model.CLAUDE_OPUS_4_6)
+                    .stopDetails(
+                        RefusalStopDetails.builder()
+                            .category(RefusalStopDetails.Category.CYBER)
+                            .explanation(
+                                "This request was declined because it conflicts with Anthropic's Usage Policy."
+                            )
+                            .build()
+                    )
+                    .stopReason(StopReason.END_TURN)
+                    .stopSequence(null)
+                    .usage(
+                        Usage.builder()
+                            .cacheCreation(
+                                CacheCreation.builder()
+                                    .ephemeral1hInputTokens(0L)
+                                    .ephemeral5mInputTokens(0L)
+                                    .build()
+                            )
+                            .cacheCreationInputTokens(2051L)
+                            .cacheReadInputTokens(2051L)
+                            .inferenceGeo("global")
+                            .inputTokens(2095L)
+                            .outputTokens(503L)
+                            .outputTokensDetails(OutputTokensDetails.of(0L))
+                            .serverToolUse(
+                                ServerToolUsage.builder()
+                                    .webFetchRequests(2L)
+                                    .webSearchRequests(0L)
+                                    .build()
+                            )
+                            .serviceTier(Usage.ServiceTier.STANDARD)
+                            .build()
+                    )
+                    .build()
+            )
 
         val roundtrippedMessageBatchSucceededResult =
             jsonMapper.readValue(

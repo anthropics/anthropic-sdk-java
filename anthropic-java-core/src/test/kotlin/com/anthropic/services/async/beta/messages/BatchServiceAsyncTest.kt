@@ -81,15 +81,11 @@ internal class BatchServiceAsyncTest {
                                             .addEdit(
                                                 BetaClearToolUses20250919Edit.builder()
                                                     .clearAtLeast(
-                                                        BetaInputTokensClearAtLeast.builder()
-                                                            .value(0L)
-                                                            .build()
+                                                        BetaInputTokensClearAtLeast.of(0L)
                                                     )
                                                     .clearToolInputs(true)
                                                     .addExcludeTool("string")
-                                                    .keep(
-                                                        BetaToolUsesKeep.builder().value(0L).build()
-                                                    )
+                                                    .keep(BetaToolUsesKeep.of(0L))
                                                     .inputTokensTrigger(1L)
                                                     .build()
                                             )
@@ -125,16 +121,14 @@ internal class BatchServiceAsyncTest {
                                         BetaOutputConfig.builder()
                                             .effort(BetaOutputConfig.Effort.LOW)
                                             .format(
-                                                BetaJsonOutputFormat.builder()
-                                                    .schema(
-                                                        BetaJsonOutputFormat.Schema.builder()
-                                                            .putAdditionalProperty(
-                                                                "foo",
-                                                                JsonValue.from("bar"),
-                                                            )
-                                                            .build()
-                                                    )
-                                                    .build()
+                                                BetaJsonOutputFormat.of(
+                                                    BetaJsonOutputFormat.Schema.builder()
+                                                        .putAdditionalProperty(
+                                                            "foo",
+                                                            JsonValue.from("bar"),
+                                                        )
+                                                        .build()
+                                                )
                                             )
                                             .taskBudget(
                                                 BetaTokenTaskBudget.builder()
@@ -145,16 +139,11 @@ internal class BatchServiceAsyncTest {
                                             .build()
                                     )
                                     .outputFormat(
-                                        BetaJsonOutputFormat.builder()
-                                            .schema(
-                                                BetaJsonOutputFormat.Schema.builder()
-                                                    .putAdditionalProperty(
-                                                        "foo",
-                                                        JsonValue.from("bar"),
-                                                    )
-                                                    .build()
-                                            )
-                                            .build()
+                                        BetaJsonOutputFormat.of(
+                                            BetaJsonOutputFormat.Schema.builder()
+                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                                .build()
+                                        )
                                     )
                                     .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
                                     .speed(BatchCreateParams.Request.Params.Speed.STANDARD)

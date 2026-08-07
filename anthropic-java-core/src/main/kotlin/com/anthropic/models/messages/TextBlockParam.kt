@@ -120,6 +120,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [TextBlockParam] with the required [text] set to the
+         * given value.
+         */
+        @JvmStatic fun of(text: String) = builder().text(text).build()
     }
 
     /** A builder for [TextBlockParam]. */

@@ -775,8 +775,34 @@ private constructor(
             /** Regular text content. */
             @JvmStatic fun ofText(text: BetaManagedAgentsTextBlock) = Content(text = text)
 
+            /**
+             * Returns an immutable instance of [Content] whose [ofText] variant is built from the
+             * given required [text].
+             */
+            @JvmStatic
+            fun ofText(text: String) =
+                ofText(
+                    BetaManagedAgentsTextBlock.builder()
+                        .type(BetaManagedAgentsTextBlock.Type.TEXT)
+                        .text(text)
+                        .build()
+                )
+
             /** Image content specified directly as base64 data or as a reference via a URL. */
             @JvmStatic fun ofImage(image: BetaManagedAgentsImageBlock) = Content(image = image)
+
+            /**
+             * Returns an immutable instance of [Content] whose [ofImage] variant is built from the
+             * given required [source].
+             */
+            @JvmStatic
+            fun ofImage(source: BetaManagedAgentsImageBlock.Source) =
+                ofImage(
+                    BetaManagedAgentsImageBlock.builder()
+                        .type(BetaManagedAgentsImageBlock.Type.IMAGE)
+                        .source(source)
+                        .build()
+                )
 
             /**
              * Document content, either specified directly as base64 data, as text, or as a
@@ -785,9 +811,30 @@ private constructor(
             @JvmStatic
             fun ofDocument(document: BetaManagedAgentsDocumentBlock) = Content(document = document)
 
+            /**
+             * Returns an immutable instance of [Content] whose [ofDocument] variant is built from
+             * the given required [source].
+             */
+            @JvmStatic
+            fun ofDocument(source: BetaManagedAgentsDocumentBlock.Source) =
+                ofDocument(
+                    BetaManagedAgentsDocumentBlock.builder()
+                        .type(BetaManagedAgentsDocumentBlock.Type.DOCUMENT)
+                        .source(source)
+                        .build()
+                )
+
             /** Placeholder for content withheld by Anthropic model policy. */
             @JvmStatic
             fun ofRedacted(redacted: BetaManagedAgentsRedactedBlock) = Content(redacted = redacted)
+
+            /**
+             * Returns an immutable instance of [Content] whose [ofRedacted] variant is built from
+             * the given required [type].
+             */
+            @JvmStatic
+            fun ofRedacted(type: BetaManagedAgentsRedactedBlock.Type) =
+                ofRedacted(BetaManagedAgentsRedactedBlock.of(type))
         }
 
         /**

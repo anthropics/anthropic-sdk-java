@@ -164,7 +164,19 @@ private constructor(
 
         @JvmStatic fun ofText(text: TextBlockParam) = ContentBlockSourceContent(text = text)
 
+        /**
+         * Returns an immutable instance of [ContentBlockSourceContent] whose [ofText] variant is
+         * built from the given required [text].
+         */
+        @JvmStatic fun ofText(text: String) = ofText(TextBlockParam.of(text))
+
         @JvmStatic fun ofImage(image: ImageBlockParam) = ContentBlockSourceContent(image = image)
+
+        /**
+         * Returns an immutable instance of [ContentBlockSourceContent] whose [ofImage] variant is
+         * built from the given required [source].
+         */
+        @JvmStatic fun ofImage(source: ImageBlockParam.Source) = ofImage(ImageBlockParam.of(source))
     }
 
     /**

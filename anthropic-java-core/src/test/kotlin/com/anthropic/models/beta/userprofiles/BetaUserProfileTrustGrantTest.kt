@@ -12,9 +12,7 @@ internal class BetaUserProfileTrustGrantTest {
     @Test
     fun create() {
         val betaUserProfileTrustGrant =
-            BetaUserProfileTrustGrant.builder()
-                .status(BetaUserProfileTrustGrant.Status.ACTIVE)
-                .build()
+            BetaUserProfileTrustGrant.of(BetaUserProfileTrustGrant.Status.ACTIVE)
 
         assertThat(betaUserProfileTrustGrant.status())
             .isEqualTo(BetaUserProfileTrustGrant.Status.ACTIVE)
@@ -24,9 +22,7 @@ internal class BetaUserProfileTrustGrantTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaUserProfileTrustGrant =
-            BetaUserProfileTrustGrant.builder()
-                .status(BetaUserProfileTrustGrant.Status.ACTIVE)
-                .build()
+            BetaUserProfileTrustGrant.of(BetaUserProfileTrustGrant.Status.ACTIVE)
 
         val roundtrippedBetaUserProfileTrustGrant =
             jsonMapper.readValue(

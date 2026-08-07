@@ -11,7 +11,7 @@ internal class OutputTokensDetailsTest {
 
     @Test
     fun create() {
-        val outputTokensDetails = OutputTokensDetails.builder().thinkingTokens(0L).build()
+        val outputTokensDetails = OutputTokensDetails.of(0L)
 
         assertThat(outputTokensDetails.thinkingTokens()).isEqualTo(0L)
     }
@@ -19,7 +19,7 @@ internal class OutputTokensDetailsTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val outputTokensDetails = OutputTokensDetails.builder().thinkingTokens(0L).build()
+        val outputTokensDetails = OutputTokensDetails.of(0L)
 
         val roundtrippedOutputTokensDetails =
             jsonMapper.readValue(

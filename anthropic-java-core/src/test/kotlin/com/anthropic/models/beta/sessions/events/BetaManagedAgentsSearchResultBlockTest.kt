@@ -13,7 +13,7 @@ internal class BetaManagedAgentsSearchResultBlockTest {
     fun create() {
         val betaManagedAgentsSearchResultBlock =
             BetaManagedAgentsSearchResultBlock.builder()
-                .citations(BetaManagedAgentsSearchResultCitations.builder().enabled(true).build())
+                .citations(BetaManagedAgentsSearchResultCitations.of(true))
                 .addContent(
                     BetaManagedAgentsSearchResultContent.builder()
                         .text("x")
@@ -26,7 +26,7 @@ internal class BetaManagedAgentsSearchResultBlockTest {
                 .build()
 
         assertThat(betaManagedAgentsSearchResultBlock.citations())
-            .isEqualTo(BetaManagedAgentsSearchResultCitations.builder().enabled(true).build())
+            .isEqualTo(BetaManagedAgentsSearchResultCitations.of(true))
         assertThat(betaManagedAgentsSearchResultBlock.content())
             .containsExactly(
                 BetaManagedAgentsSearchResultContent.builder()
@@ -45,7 +45,7 @@ internal class BetaManagedAgentsSearchResultBlockTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSearchResultBlock =
             BetaManagedAgentsSearchResultBlock.builder()
-                .citations(BetaManagedAgentsSearchResultCitations.builder().enabled(true).build())
+                .citations(BetaManagedAgentsSearchResultCitations.of(true))
                 .addContent(
                     BetaManagedAgentsSearchResultContent.builder()
                         .text("x")

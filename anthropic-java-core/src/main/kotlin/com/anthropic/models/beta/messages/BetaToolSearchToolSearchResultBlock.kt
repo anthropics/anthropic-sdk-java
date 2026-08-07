@@ -90,6 +90,14 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaToolSearchToolSearchResultBlock] with the required
+         * [toolReferences] set to the given value.
+         */
+        @JvmStatic
+        fun of(toolReferences: List<BetaToolReferenceBlock>) =
+            builder().toolReferences(toolReferences).build()
     }
 
     /** A builder for [BetaToolSearchToolSearchResultBlock]. */

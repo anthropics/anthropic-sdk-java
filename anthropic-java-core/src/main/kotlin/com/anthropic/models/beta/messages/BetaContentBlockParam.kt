@@ -1214,8 +1214,21 @@ private constructor(
         /** Regular text content. */
         @JvmStatic fun ofText(text: BetaTextBlockParam) = BetaContentBlockParam(text = text)
 
+        /**
+         * Returns an immutable instance of [BetaContentBlockParam] whose [ofText] variant is built
+         * from the given required [text].
+         */
+        @JvmStatic fun ofText(text: String) = ofText(BetaTextBlockParam.of(text))
+
         /** Image content specified directly as base64 data or as a reference via a URL. */
         @JvmStatic fun ofImage(image: BetaImageBlockParam) = BetaContentBlockParam(image = image)
+
+        /**
+         * Returns an immutable instance of [BetaContentBlockParam] whose [ofImage] variant is built
+         * from the given required [source].
+         */
+        @JvmStatic
+        fun ofImage(source: BetaImageBlockParam.Source) = ofImage(BetaImageBlockParam.of(source))
 
         /**
          * Document content, either specified directly as base64 data, as text, or as a reference
@@ -1224,6 +1237,14 @@ private constructor(
         @JvmStatic
         fun ofDocument(document: BetaRequestDocumentBlock) =
             BetaContentBlockParam(document = document)
+
+        /**
+         * Returns an immutable instance of [BetaContentBlockParam] whose [ofDocument] variant is
+         * built from the given required [source].
+         */
+        @JvmStatic
+        fun ofDocument(source: BetaRequestDocumentBlock.Source) =
+            ofDocument(BetaRequestDocumentBlock.of(source))
 
         /** A search result block containing source, title, and content from search operations. */
         @JvmStatic
@@ -1240,6 +1261,14 @@ private constructor(
         fun ofRedactedThinking(redactedThinking: BetaRedactedThinkingBlockParam) =
             BetaContentBlockParam(redactedThinking = redactedThinking)
 
+        /**
+         * Returns an immutable instance of [BetaContentBlockParam] whose [ofRedactedThinking]
+         * variant is built from the given required [data].
+         */
+        @JvmStatic
+        fun ofRedactedThinking(data: String) =
+            ofRedactedThinking(BetaRedactedThinkingBlockParam.of(data))
+
         /** A block indicating a tool use by the model. */
         @JvmStatic
         fun ofToolUse(toolUse: BetaToolUseBlockParam) = BetaContentBlockParam(toolUse = toolUse)
@@ -1248,6 +1277,13 @@ private constructor(
         @JvmStatic
         fun ofToolResult(toolResult: BetaToolResultBlockParam) =
             BetaContentBlockParam(toolResult = toolResult)
+
+        /**
+         * Returns an immutable instance of [BetaContentBlockParam] whose [ofToolResult] variant is
+         * built from the given required [toolUseId].
+         */
+        @JvmStatic
+        fun ofToolResult(toolUseId: String) = ofToolResult(BetaToolResultBlockParam.of(toolUseId))
 
         @JvmStatic
         fun ofServerToolUse(serverToolUse: BetaServerToolUseBlockParam) =
@@ -1296,12 +1332,28 @@ private constructor(
             BetaContentBlockParam(mcpToolResult = mcpToolResult)
 
         /**
+         * Returns an immutable instance of [BetaContentBlockParam] whose [ofMcpToolResult] variant
+         * is built from the given required [toolUseId].
+         */
+        @JvmStatic
+        fun ofMcpToolResult(toolUseId: String) =
+            ofMcpToolResult(BetaRequestMcpToolResultBlockParam.of(toolUseId))
+
+        /**
          * A content block that represents a file to be uploaded to the container Files uploaded via
          * this block will be available in the container's input directory.
          */
         @JvmStatic
         fun ofContainerUpload(containerUpload: BetaContainerUploadBlockParam) =
             BetaContentBlockParam(containerUpload = containerUpload)
+
+        /**
+         * Returns an immutable instance of [BetaContentBlockParam] whose [ofContainerUpload]
+         * variant is built from the given required [fileId].
+         */
+        @JvmStatic
+        fun ofContainerUpload(fileId: String) =
+            ofContainerUpload(BetaContainerUploadBlockParam.of(fileId))
 
         /**
          * A compaction block containing summary of previous context.
@@ -1327,6 +1379,14 @@ private constructor(
             BetaContentBlockParam(midConvSystem = midConvSystem)
 
         /**
+         * Returns an immutable instance of [BetaContentBlockParam] whose [ofMidConvSystem] variant
+         * is built from the given required [content].
+         */
+        @JvmStatic
+        fun ofMidConvSystem(content: List<BetaMidConversationSystemBlockParam.Content>) =
+            ofMidConvSystem(BetaMidConversationSystemBlockParam.of(content))
+
+        /**
          * Mid-conversation directive to surface a declared tool.
          *
          * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
@@ -1337,6 +1397,14 @@ private constructor(
             BetaContentBlockParam(toolAddition = toolAddition)
 
         /**
+         * Returns an immutable instance of [BetaContentBlockParam] whose [ofToolAddition] variant
+         * is built from the given required [tool].
+         */
+        @JvmStatic
+        fun ofToolAddition(tool: BetaRequestToolAdditionBlock.Tool) =
+            ofToolAddition(BetaRequestToolAdditionBlock.of(tool))
+
+        /**
          * Mid-conversation directive to withdraw a tool.
          *
          * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
@@ -1345,6 +1413,14 @@ private constructor(
         @JvmStatic
         fun ofToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
             BetaContentBlockParam(toolRemoval = toolRemoval)
+
+        /**
+         * Returns an immutable instance of [BetaContentBlockParam] whose [ofToolRemoval] variant is
+         * built from the given required [tool].
+         */
+        @JvmStatic
+        fun ofToolRemoval(tool: BetaRequestToolRemovalBlock.Tool) =
+            ofToolRemoval(BetaRequestToolRemovalBlock.of(tool))
 
         /**
          * A `fallback` block echoed back from a prior response.

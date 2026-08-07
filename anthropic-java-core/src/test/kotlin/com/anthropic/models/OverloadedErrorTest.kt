@@ -11,7 +11,7 @@ internal class OverloadedErrorTest {
 
     @Test
     fun create() {
-        val overloadedError = OverloadedError.builder().message("message").build()
+        val overloadedError = OverloadedError.of("message")
 
         assertThat(overloadedError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class OverloadedErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val overloadedError = OverloadedError.builder().message("message").build()
+        val overloadedError = OverloadedError.of("message")
 
         val roundtrippedOverloadedError =
             jsonMapper.readValue(

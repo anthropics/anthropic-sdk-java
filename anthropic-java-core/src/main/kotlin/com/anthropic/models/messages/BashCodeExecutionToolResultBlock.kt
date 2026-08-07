@@ -452,6 +452,15 @@ private constructor(
                 bashCodeExecutionToolResultError: BashCodeExecutionToolResultError
             ) = Content(bashCodeExecutionToolResultError = bashCodeExecutionToolResultError)
 
+            /**
+             * Returns an immutable instance of [Content] whose [ofBashCodeExecutionToolResultError]
+             * variant is built from the given required [errorCode].
+             */
+            @JvmStatic
+            fun ofBashCodeExecutionToolResultError(
+                errorCode: BashCodeExecutionToolResultErrorCode
+            ) = ofBashCodeExecutionToolResultError(BashCodeExecutionToolResultError.of(errorCode))
+
             @JvmStatic
             fun ofBashCodeExecutionResultBlock(
                 bashCodeExecutionResultBlock: BashCodeExecutionResultBlock

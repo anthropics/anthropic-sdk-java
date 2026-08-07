@@ -17,12 +17,7 @@ internal class ErrorResponseTest {
                 .requestId("request_id")
                 .build()
 
-        assertThat(errorResponse.error())
-            .isEqualTo(
-                ErrorObject.ofInvalidRequestError(
-                    InvalidRequestError.builder().message("message").build()
-                )
-            )
+        assertThat(errorResponse.error()).isEqualTo(ErrorObject.ofInvalidRequestError("message"))
         assertThat(errorResponse.requestId()).contains("request_id")
     }
 

@@ -11,7 +11,7 @@ internal class BetaTextDeltaTest {
 
     @Test
     fun create() {
-        val betaTextDelta = BetaTextDelta.builder().text("text").build()
+        val betaTextDelta = BetaTextDelta.of("text")
 
         assertThat(betaTextDelta.text()).isEqualTo("text")
     }
@@ -19,7 +19,7 @@ internal class BetaTextDeltaTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaTextDelta = BetaTextDelta.builder().text("text").build()
+        val betaTextDelta = BetaTextDelta.of("text")
 
         val roundtrippedBetaTextDelta =
             jsonMapper.readValue(

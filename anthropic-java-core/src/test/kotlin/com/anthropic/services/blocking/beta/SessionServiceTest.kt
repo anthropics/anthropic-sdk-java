@@ -140,12 +140,10 @@ internal class SessionServiceTest {
                                             .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                    .type(
-                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                            .ALWAYS_ALLOW
-                                                    )
-                                                    .build()
+                                                BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                        .ALWAYS_ALLOW
+                                                )
                                             )
                                             .build()
                                     )
@@ -153,12 +151,10 @@ internal class SessionServiceTest {
                                         BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                    .type(
-                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                            .ALWAYS_ALLOW
-                                                    )
-                                                    .build()
+                                                BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                        .ALWAYS_ALLOW
+                                                )
                                             )
                                             .build()
                                     )

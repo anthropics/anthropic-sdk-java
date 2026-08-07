@@ -76,6 +76,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaServerToolCaller20260120] with the required
+         * [toolId] set to the given value.
+         */
+        @JvmStatic fun of(toolId: String) = builder().toolId(toolId).build()
     }
 
     /** A builder for [BetaServerToolCaller20260120]. */

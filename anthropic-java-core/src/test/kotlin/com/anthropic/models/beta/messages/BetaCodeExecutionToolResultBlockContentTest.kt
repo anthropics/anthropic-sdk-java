@@ -17,9 +17,9 @@ internal class BetaCodeExecutionToolResultBlockContentTest {
     @Test
     fun ofError() {
         val error =
-            BetaCodeExecutionToolResultError.builder()
-                .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            BetaCodeExecutionToolResultError.of(
+                BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+            )
 
         val betaCodeExecutionToolResultBlockContent =
             BetaCodeExecutionToolResultBlockContent.ofError(error)
@@ -35,9 +35,9 @@ internal class BetaCodeExecutionToolResultBlockContentTest {
         val jsonMapper = jsonMapper()
         val betaCodeExecutionToolResultBlockContent =
             BetaCodeExecutionToolResultBlockContent.ofError(
-                BetaCodeExecutionToolResultError.builder()
-                    .errorCode(BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                    .build()
+                BetaCodeExecutionToolResultError.of(
+                    BetaCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                )
             )
 
         val roundtrippedBetaCodeExecutionToolResultBlockContent =
@@ -54,7 +54,7 @@ internal class BetaCodeExecutionToolResultBlockContentTest {
     fun ofResultBlock() {
         val resultBlock =
             BetaCodeExecutionResultBlock.builder()
-                .addContent(BetaCodeExecutionOutputBlock.builder().fileId("file_id").build())
+                .addContent(BetaCodeExecutionOutputBlock.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")
@@ -75,7 +75,7 @@ internal class BetaCodeExecutionToolResultBlockContentTest {
         val betaCodeExecutionToolResultBlockContent =
             BetaCodeExecutionToolResultBlockContent.ofResultBlock(
                 BetaCodeExecutionResultBlock.builder()
-                    .addContent(BetaCodeExecutionOutputBlock.builder().fileId("file_id").build())
+                    .addContent(BetaCodeExecutionOutputBlock.of("file_id"))
                     .returnCode(0L)
                     .stderr("stderr")
                     .stdout("stdout")
@@ -96,7 +96,7 @@ internal class BetaCodeExecutionToolResultBlockContentTest {
     fun ofEncryptedCodeExecutionResultBlock() {
         val encryptedCodeExecutionResultBlock =
             BetaEncryptedCodeExecutionResultBlock.builder()
-                .addContent(BetaCodeExecutionOutputBlock.builder().fileId("file_id").build())
+                .addContent(BetaCodeExecutionOutputBlock.of("file_id"))
                 .encryptedStdout("encrypted_stdout")
                 .returnCode(0L)
                 .stderr("stderr")
@@ -119,7 +119,7 @@ internal class BetaCodeExecutionToolResultBlockContentTest {
         val betaCodeExecutionToolResultBlockContent =
             BetaCodeExecutionToolResultBlockContent.ofEncryptedCodeExecutionResultBlock(
                 BetaEncryptedCodeExecutionResultBlock.builder()
-                    .addContent(BetaCodeExecutionOutputBlock.builder().fileId("file_id").build())
+                    .addContent(BetaCodeExecutionOutputBlock.of("file_id"))
                     .encryptedStdout("encrypted_stdout")
                     .returnCode(0L)
                     .stderr("stderr")

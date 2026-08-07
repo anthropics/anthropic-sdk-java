@@ -461,6 +461,19 @@ private constructor(
                 betaBashCodeExecutionToolResultError: BetaBashCodeExecutionToolResultError
             ) = Content(betaBashCodeExecutionToolResultError = betaBashCodeExecutionToolResultError)
 
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofBetaBashCodeExecutionToolResultError] variant is built from the given required
+             * [errorCode].
+             */
+            @JvmStatic
+            fun ofBetaBashCodeExecutionToolResultError(
+                errorCode: BetaBashCodeExecutionToolResultError.ErrorCode
+            ) =
+                ofBetaBashCodeExecutionToolResultError(
+                    BetaBashCodeExecutionToolResultError.of(errorCode)
+                )
+
             @JvmStatic
             fun ofBetaBashCodeExecutionResultBlock(
                 betaBashCodeExecutionResultBlock: BetaBashCodeExecutionResultBlock

@@ -477,6 +477,13 @@ private constructor(
              * ```
              */
             @JvmStatic fun builder() = Builder()
+
+            /**
+             * Returns an immutable instance of [Body] with the required [events] set to the given
+             * value.
+             */
+            @JvmStatic
+            fun of(events: List<BetaManagedAgentsEventParams>) = builder().events(events).build()
         }
 
         /** A builder for [Body]. */

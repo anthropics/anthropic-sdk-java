@@ -11,8 +11,7 @@ internal class BetaToolChangeMcpToolsetReferenceTest {
 
     @Test
     fun create() {
-        val betaToolChangeMcpToolsetReference =
-            BetaToolChangeMcpToolsetReference.builder().serverName("server_name").build()
+        val betaToolChangeMcpToolsetReference = BetaToolChangeMcpToolsetReference.of("server_name")
 
         assertThat(betaToolChangeMcpToolsetReference.serverName()).isEqualTo("server_name")
     }
@@ -20,8 +19,7 @@ internal class BetaToolChangeMcpToolsetReferenceTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaToolChangeMcpToolsetReference =
-            BetaToolChangeMcpToolsetReference.builder().serverName("server_name").build()
+        val betaToolChangeMcpToolsetReference = BetaToolChangeMcpToolsetReference.of("server_name")
 
         val roundtrippedBetaToolChangeMcpToolsetReference =
             jsonMapper.readValue(

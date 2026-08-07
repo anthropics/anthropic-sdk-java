@@ -77,6 +77,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaRawMessageStartEvent] with the required [message]
+         * set to the given value.
+         */
+        @JvmStatic fun of(message: BetaMessage) = builder().message(message).build()
     }
 
     /** A builder for [BetaRawMessageStartEvent]. */

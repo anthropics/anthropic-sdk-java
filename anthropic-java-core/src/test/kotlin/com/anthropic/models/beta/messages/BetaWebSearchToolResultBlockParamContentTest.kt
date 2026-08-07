@@ -61,9 +61,7 @@ internal class BetaWebSearchToolResultBlockParamContentTest {
     @Test
     fun ofRequestError() {
         val requestError =
-            BetaWebSearchToolRequestError.builder()
-                .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            BetaWebSearchToolRequestError.of(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
 
         val betaWebSearchToolResultBlockParamContent =
             BetaWebSearchToolResultBlockParamContent.ofRequestError(requestError)
@@ -77,9 +75,9 @@ internal class BetaWebSearchToolResultBlockParamContentTest {
         val jsonMapper = jsonMapper()
         val betaWebSearchToolResultBlockParamContent =
             BetaWebSearchToolResultBlockParamContent.ofRequestError(
-                BetaWebSearchToolRequestError.builder()
-                    .errorCode(BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                    .build()
+                BetaWebSearchToolRequestError.of(
+                    BetaWebSearchToolResultErrorCode.INVALID_TOOL_INPUT
+                )
             )
 
         val roundtrippedBetaWebSearchToolResultBlockParamContent =

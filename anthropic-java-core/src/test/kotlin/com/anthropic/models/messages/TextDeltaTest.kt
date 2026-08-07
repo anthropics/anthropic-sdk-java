@@ -11,7 +11,7 @@ internal class TextDeltaTest {
 
     @Test
     fun create() {
-        val textDelta = TextDelta.builder().text("text").build()
+        val textDelta = TextDelta.of("text")
 
         assertThat(textDelta.text()).isEqualTo("text")
     }
@@ -19,7 +19,7 @@ internal class TextDeltaTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val textDelta = TextDelta.builder().text("text").build()
+        val textDelta = TextDelta.of("text")
 
         val roundtrippedTextDelta =
             jsonMapper.readValue(
