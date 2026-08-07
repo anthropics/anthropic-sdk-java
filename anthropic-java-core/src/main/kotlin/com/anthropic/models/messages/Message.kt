@@ -74,7 +74,9 @@ private constructor(
     fun toParam(): MessageParam =
         MessageParam.builder()
             .content(_content().map { MessageParam.Content.ofBlockParams(it.map { it.toParam() }) })
-            .role(_role())
+            .role(
+                _role().asString().map(MessageParam.Role::of).orElse(MessageParam.Role.ASSISTANT)
+            )
             .build()
 
     /**
