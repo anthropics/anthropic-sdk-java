@@ -223,6 +223,12 @@ private constructor(
         /** The model will use the specified tool with `tool_choice.name`. */
         @JvmStatic fun ofTool(tool: BetaToolChoiceTool) = BetaToolChoice(tool = tool)
 
+        /**
+         * Returns an immutable instance of [BetaToolChoice] whose [ofTool] variant is built from
+         * the given required [name].
+         */
+        @JvmStatic fun ofTool(name: String) = ofTool(BetaToolChoiceTool.of(name))
+
         /** The model will not be allowed to use tools. */
         @JvmStatic fun ofNone(none: BetaToolChoiceNone) = BetaToolChoice(none = none)
     }

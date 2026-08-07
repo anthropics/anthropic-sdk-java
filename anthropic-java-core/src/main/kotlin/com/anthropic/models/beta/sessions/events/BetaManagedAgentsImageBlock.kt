@@ -421,8 +421,34 @@ private constructor(
             /** Image referenced by URL. */
             @JvmStatic fun ofUrl(url: BetaManagedAgentsUrlImageSource) = Source(url = url)
 
+            /**
+             * Returns an immutable instance of [Source] whose [ofUrl] variant is built from the
+             * given required [url].
+             */
+            @JvmStatic
+            fun ofUrl(url: String) =
+                ofUrl(
+                    BetaManagedAgentsUrlImageSource.builder()
+                        .type(BetaManagedAgentsUrlImageSource.Type.URL)
+                        .url(url)
+                        .build()
+                )
+
             /** Image referenced by file ID. */
             @JvmStatic fun ofFile(file: BetaManagedAgentsFileImageSource) = Source(file = file)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofFile] variant is built from the
+             * given required [fileId].
+             */
+            @JvmStatic
+            fun ofFile(fileId: String) =
+                ofFile(
+                    BetaManagedAgentsFileImageSource.builder()
+                        .type(BetaManagedAgentsFileImageSource.Type.FILE)
+                        .fileId(fileId)
+                        .build()
+                )
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

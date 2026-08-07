@@ -12,9 +12,9 @@ internal class BetaManagedAgentsRetryStatusRetryingTest {
     @Test
     fun create() {
         val betaManagedAgentsRetryStatusRetrying =
-            BetaManagedAgentsRetryStatusRetrying.builder()
-                .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                .build()
+            BetaManagedAgentsRetryStatusRetrying.of(
+                BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+            )
 
         assertThat(betaManagedAgentsRetryStatusRetrying.type())
             .isEqualTo(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
@@ -24,9 +24,9 @@ internal class BetaManagedAgentsRetryStatusRetryingTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsRetryStatusRetrying =
-            BetaManagedAgentsRetryStatusRetrying.builder()
-                .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                .build()
+            BetaManagedAgentsRetryStatusRetrying.of(
+                BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+            )
 
         val roundtrippedBetaManagedAgentsRetryStatusRetrying =
             jsonMapper.readValue(

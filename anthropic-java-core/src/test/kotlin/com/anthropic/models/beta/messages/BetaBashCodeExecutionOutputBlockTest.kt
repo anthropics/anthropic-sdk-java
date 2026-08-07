@@ -11,8 +11,7 @@ internal class BetaBashCodeExecutionOutputBlockTest {
 
     @Test
     fun create() {
-        val betaBashCodeExecutionOutputBlock =
-            BetaBashCodeExecutionOutputBlock.builder().fileId("file_id").build()
+        val betaBashCodeExecutionOutputBlock = BetaBashCodeExecutionOutputBlock.of("file_id")
 
         assertThat(betaBashCodeExecutionOutputBlock.fileId()).isEqualTo("file_id")
     }
@@ -20,8 +19,7 @@ internal class BetaBashCodeExecutionOutputBlockTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaBashCodeExecutionOutputBlock =
-            BetaBashCodeExecutionOutputBlock.builder().fileId("file_id").build()
+        val betaBashCodeExecutionOutputBlock = BetaBashCodeExecutionOutputBlock.of("file_id")
 
         val roundtrippedBetaBashCodeExecutionOutputBlock =
             jsonMapper.readValue(

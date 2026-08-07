@@ -94,6 +94,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsAgentToolset20260401ReadInput] with
+         * the required [filePath] set to the given value.
+         */
+        @JvmStatic fun of(filePath: String) = builder().filePath(filePath).build()
     }
 
     /** A builder for [BetaManagedAgentsAgentToolset20260401ReadInput]. */

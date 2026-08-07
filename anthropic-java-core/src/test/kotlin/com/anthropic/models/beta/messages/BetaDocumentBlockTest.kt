@@ -13,19 +13,14 @@ internal class BetaDocumentBlockTest {
     fun create() {
         val betaDocumentBlock =
             BetaDocumentBlock.builder()
-                .citations(BetaCitationConfig.builder().enabled(true).build())
+                .citations(BetaCitationConfig.of(true))
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .title("title")
                 .build()
 
-        assertThat(betaDocumentBlock.citations())
-            .contains(BetaCitationConfig.builder().enabled(true).build())
+        assertThat(betaDocumentBlock.citations()).contains(BetaCitationConfig.of(true))
         assertThat(betaDocumentBlock.source())
-            .isEqualTo(
-                BetaDocumentBlock.Source.ofBase64(
-                    BetaBase64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
-                )
-            )
+            .isEqualTo(BetaDocumentBlock.Source.ofBase64("U3RhaW5sZXNzIHJvY2tz"))
         assertThat(betaDocumentBlock.title()).contains("title")
     }
 
@@ -34,7 +29,7 @@ internal class BetaDocumentBlockTest {
         val jsonMapper = jsonMapper()
         val betaDocumentBlock =
             BetaDocumentBlock.builder()
-                .citations(BetaCitationConfig.builder().enabled(true).build())
+                .citations(BetaCitationConfig.of(true))
                 .base64Source("U3RhaW5sZXNzIHJvY2tz")
                 .title("title")
                 .build()

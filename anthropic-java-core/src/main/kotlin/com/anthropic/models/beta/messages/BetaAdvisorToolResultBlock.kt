@@ -507,6 +507,14 @@ private constructor(
                 betaAdvisorToolResultError: BetaAdvisorToolResultError
             ) = Content(betaAdvisorToolResultError = betaAdvisorToolResultError)
 
+            /**
+             * Returns an immutable instance of [Content] whose [ofBetaAdvisorToolResultError]
+             * variant is built from the given required [errorCode].
+             */
+            @JvmStatic
+            fun ofBetaAdvisorToolResultError(errorCode: BetaAdvisorToolResultError.ErrorCode) =
+                ofBetaAdvisorToolResultError(BetaAdvisorToolResultError.of(errorCode))
+
             @JvmStatic
             fun ofBetaAdvisorResultBlock(betaAdvisorResultBlock: BetaAdvisorResultBlock) =
                 Content(betaAdvisorResultBlock = betaAdvisorResultBlock)

@@ -123,6 +123,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaMidConversationSystemBlockParam] with the required
+         * [content] set to the given value.
+         */
+        @JvmStatic fun of(content: List<Content>) = builder().content(content).build()
     }
 
     /** A builder for [BetaMidConversationSystemBlockParam]. */
@@ -641,6 +647,12 @@ private constructor(
             @JvmStatic fun ofText(text: BetaTextBlockParam) = Content(text = text)
 
             /**
+             * Returns an immutable instance of [Content] whose [ofText] variant is built from the
+             * given required [text].
+             */
+            @JvmStatic fun ofText(text: String) = ofText(BetaTextBlockParam.of(text))
+
+            /**
              * Mid-conversation directive to surface a declared tool.
              *
              * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it
@@ -651,6 +663,14 @@ private constructor(
                 Content(toolAddition = toolAddition)
 
             /**
+             * Returns an immutable instance of [Content] whose [ofToolAddition] variant is built
+             * from the given required [tool].
+             */
+            @JvmStatic
+            fun ofToolAddition(tool: BetaRequestToolAdditionBlock.Tool) =
+                ofToolAddition(BetaRequestToolAdditionBlock.of(tool))
+
+            /**
              * Mid-conversation directive to withdraw a tool.
              *
              * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it
@@ -659,6 +679,14 @@ private constructor(
             @JvmStatic
             fun ofToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
                 Content(toolRemoval = toolRemoval)
+
+            /**
+             * Returns an immutable instance of [Content] whose [ofToolRemoval] variant is built
+             * from the given required [tool].
+             */
+            @JvmStatic
+            fun ofToolRemoval(tool: BetaRequestToolRemovalBlock.Tool) =
+                ofToolRemoval(BetaRequestToolRemovalBlock.of(tool))
         }
 
         /**

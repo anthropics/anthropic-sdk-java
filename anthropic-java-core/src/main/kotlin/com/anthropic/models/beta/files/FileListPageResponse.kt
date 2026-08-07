@@ -122,6 +122,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [FileListPageResponse] with the required [data] set to
+         * the given value.
+         */
+        @JvmStatic fun of(data: List<FileMetadata>) = builder().data(data).build()
     }
 
     /** A builder for [FileListPageResponse]. */

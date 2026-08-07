@@ -655,6 +655,19 @@ private constructor(
                         betaTextEditorCodeExecutionToolResultErrorParam
                 )
 
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofBetaTextEditorCodeExecutionToolResultErrorParam] variant is built from the given
+             * required [errorCode].
+             */
+            @JvmStatic
+            fun ofBetaTextEditorCodeExecutionToolResultErrorParam(
+                errorCode: BetaTextEditorCodeExecutionToolResultErrorParam.ErrorCode
+            ) =
+                ofBetaTextEditorCodeExecutionToolResultErrorParam(
+                    BetaTextEditorCodeExecutionToolResultErrorParam.of(errorCode)
+                )
+
             @JvmStatic
             fun ofBetaTextEditorCodeExecutionViewResultBlockParam(
                 betaTextEditorCodeExecutionViewResultBlockParam:
@@ -673,6 +686,17 @@ private constructor(
                 Content(
                     betaTextEditorCodeExecutionCreateResultBlockParam =
                         betaTextEditorCodeExecutionCreateResultBlockParam
+                )
+
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofBetaTextEditorCodeExecutionCreateResultBlockParam] variant is built from the given
+             * required [isFileUpdate].
+             */
+            @JvmStatic
+            fun ofBetaTextEditorCodeExecutionCreateResultBlockParam(isFileUpdate: Boolean) =
+                ofBetaTextEditorCodeExecutionCreateResultBlockParam(
+                    BetaTextEditorCodeExecutionCreateResultBlockParam.of(isFileUpdate)
                 )
 
             @JvmStatic

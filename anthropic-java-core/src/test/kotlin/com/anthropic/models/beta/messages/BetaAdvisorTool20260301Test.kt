@@ -56,8 +56,7 @@ internal class BetaAdvisorTool20260301Test {
 
     @Test
     fun addToUnsetListsOnToBuilder() {
-        val baseBetaAdvisorTool20260301 =
-            BetaAdvisorTool20260301.builder().model(Model.CLAUDE_SONNET_5).build()
+        val baseBetaAdvisorTool20260301 = BetaAdvisorTool20260301.of(Model.CLAUDE_SONNET_5)
 
         val betaAdvisorTool20260301 =
             baseBetaAdvisorTool20260301

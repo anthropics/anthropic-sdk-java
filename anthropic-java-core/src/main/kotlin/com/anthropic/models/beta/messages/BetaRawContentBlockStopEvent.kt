@@ -76,6 +76,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaRawContentBlockStopEvent] with the required [index]
+         * set to the given value.
+         */
+        @JvmStatic fun of(index: Long) = builder().index(index).build()
     }
 
     /** A builder for [BetaRawContentBlockStopEvent]. */

@@ -48,7 +48,7 @@ internal class TextBlockParamTest {
 
     @Test
     fun addToUnsetListsOnToBuilder() {
-        val baseTextBlockParam = TextBlockParam.builder().text("x").build()
+        val baseTextBlockParam = TextBlockParam.of("x")
 
         val textBlockParam =
             baseTextBlockParam

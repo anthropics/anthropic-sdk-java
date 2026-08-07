@@ -54,7 +54,7 @@ internal class BetaTextBlockParamTest {
 
     @Test
     fun addToUnsetListsOnToBuilder() {
-        val baseBetaTextBlockParam = BetaTextBlockParam.builder().text("x").build()
+        val baseBetaTextBlockParam = BetaTextBlockParam.of("x")
 
         val betaTextBlockParam =
             baseBetaTextBlockParam

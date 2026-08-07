@@ -783,8 +783,20 @@ private constructor(
         /** Regular text content. */
         @JvmStatic fun ofText(text: TextBlockParam) = ContentBlockParam(text = text)
 
+        /**
+         * Returns an immutable instance of [ContentBlockParam] whose [ofText] variant is built from
+         * the given required [text].
+         */
+        @JvmStatic fun ofText(text: String) = ofText(TextBlockParam.of(text))
+
         /** Image content specified directly as base64 data or as a reference via a URL. */
         @JvmStatic fun ofImage(image: ImageBlockParam) = ContentBlockParam(image = image)
+
+        /**
+         * Returns an immutable instance of [ContentBlockParam] whose [ofImage] variant is built
+         * from the given required [source].
+         */
+        @JvmStatic fun ofImage(source: ImageBlockParam.Source) = ofImage(ImageBlockParam.of(source))
 
         /**
          * Document content, either specified directly as base64 data, as text, or as a reference
@@ -792,6 +804,14 @@ private constructor(
          */
         @JvmStatic
         fun ofDocument(document: DocumentBlockParam) = ContentBlockParam(document = document)
+
+        /**
+         * Returns an immutable instance of [ContentBlockParam] whose [ofDocument] variant is built
+         * from the given required [source].
+         */
+        @JvmStatic
+        fun ofDocument(source: DocumentBlockParam.Source) =
+            ofDocument(DocumentBlockParam.of(source))
 
         /** A search result block containing source, title, and content from search operations. */
         @JvmStatic
@@ -807,6 +827,14 @@ private constructor(
         fun ofRedactedThinking(redactedThinking: RedactedThinkingBlockParam) =
             ContentBlockParam(redactedThinking = redactedThinking)
 
+        /**
+         * Returns an immutable instance of [ContentBlockParam] whose [ofRedactedThinking] variant
+         * is built from the given required [data].
+         */
+        @JvmStatic
+        fun ofRedactedThinking(data: String) =
+            ofRedactedThinking(RedactedThinkingBlockParam.of(data))
+
         /** A block indicating a tool use by the model. */
         @JvmStatic fun ofToolUse(toolUse: ToolUseBlockParam) = ContentBlockParam(toolUse = toolUse)
 
@@ -814,6 +842,13 @@ private constructor(
         @JvmStatic
         fun ofToolResult(toolResult: ToolResultBlockParam) =
             ContentBlockParam(toolResult = toolResult)
+
+        /**
+         * Returns an immutable instance of [ContentBlockParam] whose [ofToolResult] variant is
+         * built from the given required [toolUseId].
+         */
+        @JvmStatic
+        fun ofToolResult(toolUseId: String) = ofToolResult(ToolResultBlockParam.of(toolUseId))
 
         @JvmStatic
         fun ofServerToolUse(serverToolUse: ServerToolUseBlockParam) =
@@ -854,6 +889,14 @@ private constructor(
             ContentBlockParam(containerUpload = containerUpload)
 
         /**
+         * Returns an immutable instance of [ContentBlockParam] whose [ofContainerUpload] variant is
+         * built from the given required [fileId].
+         */
+        @JvmStatic
+        fun ofContainerUpload(fileId: String) =
+            ofContainerUpload(ContainerUploadBlockParam.of(fileId))
+
+        /**
          * System instructions that appear mid-conversation.
          *
          * Use this block to provide or update system-level instructions at a specific point in the
@@ -862,6 +905,14 @@ private constructor(
         @JvmStatic
         fun ofMidConvSystem(midConvSystem: MidConversationSystemBlockParam) =
             ContentBlockParam(midConvSystem = midConvSystem)
+
+        /**
+         * Returns an immutable instance of [ContentBlockParam] whose [ofMidConvSystem] variant is
+         * built from the given required [content].
+         */
+        @JvmStatic
+        fun ofMidConvSystem(content: List<TextBlockParam>) =
+            ofMidConvSystem(MidConversationSystemBlockParam.of(content))
     }
 
     /**

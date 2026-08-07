@@ -11,7 +11,7 @@ internal class MessageTokensCountTest {
 
     @Test
     fun create() {
-        val messageTokensCount = MessageTokensCount.builder().inputTokens(2095L).build()
+        val messageTokensCount = MessageTokensCount.of(2095L)
 
         assertThat(messageTokensCount.inputTokens()).isEqualTo(2095L)
     }
@@ -19,7 +19,7 @@ internal class MessageTokensCountTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val messageTokensCount = MessageTokensCount.builder().inputTokens(2095L).build()
+        val messageTokensCount = MessageTokensCount.of(2095L)
 
         val roundtrippedMessageTokensCount =
             jsonMapper.readValue(

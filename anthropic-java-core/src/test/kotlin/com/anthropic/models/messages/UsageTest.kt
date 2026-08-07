@@ -24,7 +24,7 @@ internal class UsageTest {
                 .inferenceGeo("global")
                 .inputTokens(2095L)
                 .outputTokens(503L)
-                .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(0L).build())
+                .outputTokensDetails(OutputTokensDetails.of(0L))
                 .serverToolUse(
                     ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )
@@ -43,8 +43,7 @@ internal class UsageTest {
         assertThat(usage.inferenceGeo()).contains("global")
         assertThat(usage.inputTokens()).isEqualTo(2095L)
         assertThat(usage.outputTokens()).isEqualTo(503L)
-        assertThat(usage.outputTokensDetails())
-            .contains(OutputTokensDetails.builder().thinkingTokens(0L).build())
+        assertThat(usage.outputTokensDetails()).contains(OutputTokensDetails.of(0L))
         assertThat(usage.serverToolUse())
             .contains(ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build())
         assertThat(usage.serviceTier()).contains(Usage.ServiceTier.STANDARD)
@@ -66,7 +65,7 @@ internal class UsageTest {
                 .inferenceGeo("global")
                 .inputTokens(2095L)
                 .outputTokens(503L)
-                .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(0L).build())
+                .outputTokensDetails(OutputTokensDetails.of(0L))
                 .serverToolUse(
                     ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                 )

@@ -842,12 +842,28 @@ private constructor(
                 Auth(mcpOAuth = mcpOAuth)
 
             /**
+             * Returns an immutable instance of [Auth] whose [ofMcpOAuth] variant is built from the
+             * given required [type].
+             */
+            @JvmStatic
+            fun ofMcpOAuth(type: BetaManagedAgentsMcpOAuthUpdateParams.Type) =
+                ofMcpOAuth(BetaManagedAgentsMcpOAuthUpdateParams.of(type))
+
+            /**
              * Parameters for updating a static bearer token credential. The `mcp_server_url` is
              * immutable.
              */
             @JvmStatic
             fun ofStaticBearer(staticBearer: BetaManagedAgentsStaticBearerUpdateParams) =
                 Auth(staticBearer = staticBearer)
+
+            /**
+             * Returns an immutable instance of [Auth] whose [ofStaticBearer] variant is built from
+             * the given required [type].
+             */
+            @JvmStatic
+            fun ofStaticBearer(type: BetaManagedAgentsStaticBearerUpdateParams.Type) =
+                ofStaticBearer(BetaManagedAgentsStaticBearerUpdateParams.of(type))
 
             /**
              * Parameters for updating an environment variable credential. `secret_name` is
@@ -857,6 +873,14 @@ private constructor(
             fun ofEnvironmentVariable(
                 environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams
             ) = Auth(environmentVariable = environmentVariable)
+
+            /**
+             * Returns an immutable instance of [Auth] whose [ofEnvironmentVariable] variant is
+             * built from the given required [type].
+             */
+            @JvmStatic
+            fun ofEnvironmentVariable(type: BetaManagedAgentsEnvironmentVariableUpdateParams.Type) =
+                ofEnvironmentVariable(BetaManagedAgentsEnvironmentVariableUpdateParams.of(type))
         }
 
         /** An interface that defines how to map each variant of [Auth] to a value of type [T]. */

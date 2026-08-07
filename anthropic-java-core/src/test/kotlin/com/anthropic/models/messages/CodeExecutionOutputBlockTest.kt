@@ -11,7 +11,7 @@ internal class CodeExecutionOutputBlockTest {
 
     @Test
     fun create() {
-        val codeExecutionOutputBlock = CodeExecutionOutputBlock.builder().fileId("file_id").build()
+        val codeExecutionOutputBlock = CodeExecutionOutputBlock.of("file_id")
 
         assertThat(codeExecutionOutputBlock.fileId()).isEqualTo("file_id")
     }
@@ -19,7 +19,7 @@ internal class CodeExecutionOutputBlockTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val codeExecutionOutputBlock = CodeExecutionOutputBlock.builder().fileId("file_id").build()
+        val codeExecutionOutputBlock = CodeExecutionOutputBlock.of("file_id")
 
         val roundtrippedCodeExecutionOutputBlock =
             jsonMapper.readValue(

@@ -16,7 +16,7 @@ internal class BetaErrorTest {
 
     @Test
     fun ofInvalidRequest() {
-        val invalidRequest = BetaInvalidRequestError.builder().message("message").build()
+        val invalidRequest = BetaInvalidRequestError.of("message")
 
         val betaError = BetaError.ofInvalidRequest(invalidRequest)
 
@@ -34,8 +34,7 @@ internal class BetaErrorTest {
     @Test
     fun ofInvalidRequestRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaError =
-            BetaError.ofInvalidRequest(BetaInvalidRequestError.builder().message("message").build())
+        val betaError = BetaError.ofInvalidRequest(BetaInvalidRequestError.of("message"))
 
         val roundtrippedBetaError =
             jsonMapper.readValue(
@@ -48,7 +47,7 @@ internal class BetaErrorTest {
 
     @Test
     fun ofAuthentication() {
-        val authentication = BetaAuthenticationError.builder().message("message").build()
+        val authentication = BetaAuthenticationError.of("message")
 
         val betaError = BetaError.ofAuthentication(authentication)
 
@@ -66,8 +65,7 @@ internal class BetaErrorTest {
     @Test
     fun ofAuthenticationRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaError =
-            BetaError.ofAuthentication(BetaAuthenticationError.builder().message("message").build())
+        val betaError = BetaError.ofAuthentication(BetaAuthenticationError.of("message"))
 
         val roundtrippedBetaError =
             jsonMapper.readValue(
@@ -80,7 +78,7 @@ internal class BetaErrorTest {
 
     @Test
     fun ofBilling() {
-        val billing = BetaBillingError.builder().message("message").build()
+        val billing = BetaBillingError.of("message")
 
         val betaError = BetaError.ofBilling(billing)
 
@@ -98,7 +96,7 @@ internal class BetaErrorTest {
     @Test
     fun ofBillingRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaError = BetaError.ofBilling(BetaBillingError.builder().message("message").build())
+        val betaError = BetaError.ofBilling(BetaBillingError.of("message"))
 
         val roundtrippedBetaError =
             jsonMapper.readValue(
@@ -111,7 +109,7 @@ internal class BetaErrorTest {
 
     @Test
     fun ofPermission() {
-        val permission = BetaPermissionError.builder().message("message").build()
+        val permission = BetaPermissionError.of("message")
 
         val betaError = BetaError.ofPermission(permission)
 
@@ -129,8 +127,7 @@ internal class BetaErrorTest {
     @Test
     fun ofPermissionRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaError =
-            BetaError.ofPermission(BetaPermissionError.builder().message("message").build())
+        val betaError = BetaError.ofPermission(BetaPermissionError.of("message"))
 
         val roundtrippedBetaError =
             jsonMapper.readValue(
@@ -143,7 +140,7 @@ internal class BetaErrorTest {
 
     @Test
     fun ofNotFound() {
-        val notFound = BetaNotFoundError.builder().message("message").build()
+        val notFound = BetaNotFoundError.of("message")
 
         val betaError = BetaError.ofNotFound(notFound)
 
@@ -161,7 +158,7 @@ internal class BetaErrorTest {
     @Test
     fun ofNotFoundRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaError = BetaError.ofNotFound(BetaNotFoundError.builder().message("message").build())
+        val betaError = BetaError.ofNotFound(BetaNotFoundError.of("message"))
 
         val roundtrippedBetaError =
             jsonMapper.readValue(
@@ -174,7 +171,7 @@ internal class BetaErrorTest {
 
     @Test
     fun ofRateLimit() {
-        val rateLimit = BetaRateLimitError.builder().message("message").build()
+        val rateLimit = BetaRateLimitError.of("message")
 
         val betaError = BetaError.ofRateLimit(rateLimit)
 
@@ -192,8 +189,7 @@ internal class BetaErrorTest {
     @Test
     fun ofRateLimitRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaError =
-            BetaError.ofRateLimit(BetaRateLimitError.builder().message("message").build())
+        val betaError = BetaError.ofRateLimit(BetaRateLimitError.of("message"))
 
         val roundtrippedBetaError =
             jsonMapper.readValue(
@@ -206,7 +202,7 @@ internal class BetaErrorTest {
 
     @Test
     fun ofTimeout() {
-        val timeout = BetaGatewayTimeoutError.builder().message("message").build()
+        val timeout = BetaGatewayTimeoutError.of("message")
 
         val betaError = BetaError.ofTimeout(timeout)
 
@@ -224,8 +220,7 @@ internal class BetaErrorTest {
     @Test
     fun ofTimeoutRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaError =
-            BetaError.ofTimeout(BetaGatewayTimeoutError.builder().message("message").build())
+        val betaError = BetaError.ofTimeout(BetaGatewayTimeoutError.of("message"))
 
         val roundtrippedBetaError =
             jsonMapper.readValue(
@@ -238,7 +233,7 @@ internal class BetaErrorTest {
 
     @Test
     fun ofApi() {
-        val api = BetaApiError.builder().message("message").build()
+        val api = BetaApiError.of("message")
 
         val betaError = BetaError.ofApi(api)
 
@@ -256,7 +251,7 @@ internal class BetaErrorTest {
     @Test
     fun ofApiRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaError = BetaError.ofApi(BetaApiError.builder().message("message").build())
+        val betaError = BetaError.ofApi(BetaApiError.of("message"))
 
         val roundtrippedBetaError =
             jsonMapper.readValue(
@@ -269,7 +264,7 @@ internal class BetaErrorTest {
 
     @Test
     fun ofOverloaded() {
-        val overloaded = BetaOverloadedError.builder().message("message").build()
+        val overloaded = BetaOverloadedError.of("message")
 
         val betaError = BetaError.ofOverloaded(overloaded)
 
@@ -287,8 +282,7 @@ internal class BetaErrorTest {
     @Test
     fun ofOverloadedRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaError =
-            BetaError.ofOverloaded(BetaOverloadedError.builder().message("message").build())
+        val betaError = BetaError.ofOverloaded(BetaOverloadedError.of("message"))
 
         val roundtrippedBetaError =
             jsonMapper.readValue(

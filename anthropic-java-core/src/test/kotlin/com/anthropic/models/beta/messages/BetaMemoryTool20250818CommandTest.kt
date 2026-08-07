@@ -180,8 +180,7 @@ internal class BetaMemoryTool20250818CommandTest {
 
     @Test
     fun ofDelete() {
-        val delete =
-            BetaMemoryTool20250818DeleteCommand.builder().path("/memories/old_file.txt").build()
+        val delete = BetaMemoryTool20250818DeleteCommand.of("/memories/old_file.txt")
 
         val betaMemoryTool20250818Command = BetaMemoryTool20250818Command.ofDelete(delete)
 
@@ -198,7 +197,7 @@ internal class BetaMemoryTool20250818CommandTest {
         val jsonMapper = jsonMapper()
         val betaMemoryTool20250818Command =
             BetaMemoryTool20250818Command.ofDelete(
-                BetaMemoryTool20250818DeleteCommand.builder().path("/memories/old_file.txt").build()
+                BetaMemoryTool20250818DeleteCommand.of("/memories/old_file.txt")
             )
 
         val roundtrippedBetaMemoryTool20250818Command =

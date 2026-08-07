@@ -203,17 +203,50 @@ private constructor(
 
         @JvmStatic fun ofText(text: TextDelta) = RawContentBlockDelta(text = text)
 
+        /**
+         * Returns an immutable instance of [RawContentBlockDelta] whose [ofText] variant is built
+         * from the given required [text].
+         */
+        @JvmStatic fun ofText(text: String) = ofText(TextDelta.of(text))
+
         @JvmStatic
         fun ofInputJson(inputJson: InputJsonDelta) = RawContentBlockDelta(inputJson = inputJson)
+
+        /**
+         * Returns an immutable instance of [RawContentBlockDelta] whose [ofInputJson] variant is
+         * built from the given required [partialJson].
+         */
+        @JvmStatic
+        fun ofInputJson(partialJson: String) = ofInputJson(InputJsonDelta.of(partialJson))
 
         @JvmStatic
         fun ofCitations(citations: CitationsDelta) = RawContentBlockDelta(citations = citations)
 
+        /**
+         * Returns an immutable instance of [RawContentBlockDelta] whose [ofCitations] variant is
+         * built from the given required [citation].
+         */
+        @JvmStatic
+        fun ofCitations(citation: CitationsDelta.Citation) =
+            ofCitations(CitationsDelta.of(citation))
+
         @JvmStatic
         fun ofThinking(thinking: ThinkingDelta) = RawContentBlockDelta(thinking = thinking)
 
+        /**
+         * Returns an immutable instance of [RawContentBlockDelta] whose [ofThinking] variant is
+         * built from the given required [thinking].
+         */
+        @JvmStatic fun ofThinking(thinking: String) = ofThinking(ThinkingDelta.of(thinking))
+
         @JvmStatic
         fun ofSignature(signature: SignatureDelta) = RawContentBlockDelta(signature = signature)
+
+        /**
+         * Returns an immutable instance of [RawContentBlockDelta] whose [ofSignature] variant is
+         * built from the given required [signature].
+         */
+        @JvmStatic fun ofSignature(signature: String) = ofSignature(SignatureDelta.of(signature))
     }
 
     /**

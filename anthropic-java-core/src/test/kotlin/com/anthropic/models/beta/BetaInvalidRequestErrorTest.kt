@@ -11,7 +11,7 @@ internal class BetaInvalidRequestErrorTest {
 
     @Test
     fun create() {
-        val betaInvalidRequestError = BetaInvalidRequestError.builder().message("message").build()
+        val betaInvalidRequestError = BetaInvalidRequestError.of("message")
 
         assertThat(betaInvalidRequestError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class BetaInvalidRequestErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaInvalidRequestError = BetaInvalidRequestError.builder().message("message").build()
+        val betaInvalidRequestError = BetaInvalidRequestError.of("message")
 
         val roundtrippedBetaInvalidRequestError =
             jsonMapper.readValue(

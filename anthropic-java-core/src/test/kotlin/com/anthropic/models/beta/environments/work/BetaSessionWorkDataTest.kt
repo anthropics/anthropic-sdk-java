@@ -11,7 +11,7 @@ internal class BetaSessionWorkDataTest {
 
     @Test
     fun create() {
-        val betaSessionWorkData = BetaSessionWorkData.builder().id("id").build()
+        val betaSessionWorkData = BetaSessionWorkData.of("id")
 
         assertThat(betaSessionWorkData.id()).isEqualTo("id")
     }
@@ -19,7 +19,7 @@ internal class BetaSessionWorkDataTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaSessionWorkData = BetaSessionWorkData.builder().id("id").build()
+        val betaSessionWorkData = BetaSessionWorkData.of("id")
 
         val roundtrippedBetaSessionWorkData =
             jsonMapper.readValue(

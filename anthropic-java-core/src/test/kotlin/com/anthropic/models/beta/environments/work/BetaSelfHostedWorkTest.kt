@@ -17,7 +17,7 @@ internal class BetaSelfHostedWorkTest {
                 .id("id")
                 .acknowledgedAt("acknowledged_at")
                 .createdAt("created_at")
-                .data(BetaSessionWorkData.builder().id("id").build())
+                .data(BetaSessionWorkData.of("id"))
                 .environmentId("environment_id")
                 .latestHeartbeatAt("latest_heartbeat_at")
                 .metadata(
@@ -35,8 +35,7 @@ internal class BetaSelfHostedWorkTest {
         assertThat(betaSelfHostedWork.id()).isEqualTo("id")
         assertThat(betaSelfHostedWork.acknowledgedAt()).contains("acknowledged_at")
         assertThat(betaSelfHostedWork.createdAt()).isEqualTo("created_at")
-        assertThat(betaSelfHostedWork.data())
-            .isEqualTo(BetaSessionWorkData.builder().id("id").build())
+        assertThat(betaSelfHostedWork.data()).isEqualTo(BetaSessionWorkData.of("id"))
         assertThat(betaSelfHostedWork.environmentId()).isEqualTo("environment_id")
         assertThat(betaSelfHostedWork.latestHeartbeatAt()).contains("latest_heartbeat_at")
         assertThat(betaSelfHostedWork.metadata())
@@ -60,7 +59,7 @@ internal class BetaSelfHostedWorkTest {
                 .id("id")
                 .acknowledgedAt("acknowledged_at")
                 .createdAt("created_at")
-                .data(BetaSessionWorkData.builder().id("id").build())
+                .data(BetaSessionWorkData.of("id"))
                 .environmentId("environment_id")
                 .latestHeartbeatAt("latest_heartbeat_at")
                 .metadata(

@@ -12,9 +12,7 @@ internal class CodeExecutionToolResultErrorTest {
     @Test
     fun create() {
         val codeExecutionToolResultError =
-            CodeExecutionToolResultError.builder()
-                .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            CodeExecutionToolResultError.of(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
 
         assertThat(codeExecutionToolResultError.errorCode())
             .isEqualTo(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
@@ -24,9 +22,7 @@ internal class CodeExecutionToolResultErrorTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val codeExecutionToolResultError =
-            CodeExecutionToolResultError.builder()
-                .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            CodeExecutionToolResultError.of(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
 
         val roundtrippedCodeExecutionToolResultError =
             jsonMapper.readValue(

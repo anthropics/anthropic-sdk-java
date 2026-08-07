@@ -390,6 +390,13 @@ private constructor(
             fun ofBetaThinkingTurns(betaThinkingTurns: BetaThinkingTurns) =
                 Keep(betaThinkingTurns = betaThinkingTurns)
 
+            /**
+             * Returns an immutable instance of [Keep] whose [ofBetaThinkingTurns] variant is built
+             * from the given required [value].
+             */
+            @JvmStatic
+            fun ofBetaThinkingTurns(value: Long) = ofBetaThinkingTurns(BetaThinkingTurns.of(value))
+
             @JvmStatic
             fun ofBetaAllThinkingTurns(betaAllThinkingTurns: BetaAllThinkingTurns) =
                 Keep(betaAllThinkingTurns = betaAllThinkingTurns)

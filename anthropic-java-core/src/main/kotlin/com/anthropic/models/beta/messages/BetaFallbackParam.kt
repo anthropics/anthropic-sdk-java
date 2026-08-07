@@ -156,6 +156,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaFallbackParam] with the required [model] set to the
+         * given value.
+         */
+        @JvmStatic fun of(model: Model) = builder().model(model).build()
     }
 
     /** A builder for [BetaFallbackParam]. */
@@ -676,6 +682,14 @@ private constructor(
 
             @JvmStatic
             fun ofEnabled(enabled: BetaThinkingConfigEnabled) = Thinking(enabled = enabled)
+
+            /**
+             * Returns an immutable instance of [Thinking] whose [ofEnabled] variant is built from
+             * the given required [budgetTokens].
+             */
+            @JvmStatic
+            fun ofEnabled(budgetTokens: Long) =
+                ofEnabled(BetaThinkingConfigEnabled.of(budgetTokens))
 
             @JvmStatic
             fun ofDisabled(disabled: BetaThinkingConfigDisabled) = Thinking(disabled = disabled)

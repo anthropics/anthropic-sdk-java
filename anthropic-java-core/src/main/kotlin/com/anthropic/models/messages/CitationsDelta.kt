@@ -88,6 +88,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [CitationsDelta] with the required [citation] set to the
+         * given value.
+         */
+        @JvmStatic fun of(citation: Citation) = builder().citation(citation).build()
     }
 
     /** A builder for [CitationsDelta]. */

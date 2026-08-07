@@ -13,11 +13,11 @@ internal class BetaToolSearchToolSearchResultBlockTest {
     fun create() {
         val betaToolSearchToolSearchResultBlock =
             BetaToolSearchToolSearchResultBlock.builder()
-                .addToolReference(BetaToolReferenceBlock.builder().toolName("tool_name").build())
+                .addToolReference(BetaToolReferenceBlock.of("tool_name"))
                 .build()
 
         assertThat(betaToolSearchToolSearchResultBlock.toolReferences())
-            .containsExactly(BetaToolReferenceBlock.builder().toolName("tool_name").build())
+            .containsExactly(BetaToolReferenceBlock.of("tool_name"))
     }
 
     @Test
@@ -25,7 +25,7 @@ internal class BetaToolSearchToolSearchResultBlockTest {
         val jsonMapper = jsonMapper()
         val betaToolSearchToolSearchResultBlock =
             BetaToolSearchToolSearchResultBlock.builder()
-                .addToolReference(BetaToolReferenceBlock.builder().toolName("tool_name").build())
+                .addToolReference(BetaToolReferenceBlock.of("tool_name"))
                 .build()
 
         val roundtrippedBetaToolSearchToolSearchResultBlock =

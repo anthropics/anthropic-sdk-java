@@ -12,9 +12,9 @@ internal class BetaManagedAgentsSessionBudgetReachedTest {
     @Test
     fun create() {
         val betaManagedAgentsSessionBudgetReached =
-            BetaManagedAgentsSessionBudgetReached.builder()
-                .type(BetaManagedAgentsSessionBudgetReached.Type.BUDGET_REACHED)
-                .build()
+            BetaManagedAgentsSessionBudgetReached.of(
+                BetaManagedAgentsSessionBudgetReached.Type.BUDGET_REACHED
+            )
 
         assertThat(betaManagedAgentsSessionBudgetReached.type())
             .isEqualTo(BetaManagedAgentsSessionBudgetReached.Type.BUDGET_REACHED)
@@ -24,9 +24,9 @@ internal class BetaManagedAgentsSessionBudgetReachedTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionBudgetReached =
-            BetaManagedAgentsSessionBudgetReached.builder()
-                .type(BetaManagedAgentsSessionBudgetReached.Type.BUDGET_REACHED)
-                .build()
+            BetaManagedAgentsSessionBudgetReached.of(
+                BetaManagedAgentsSessionBudgetReached.Type.BUDGET_REACHED
+            )
 
         val roundtrippedBetaManagedAgentsSessionBudgetReached =
             jsonMapper.readValue(

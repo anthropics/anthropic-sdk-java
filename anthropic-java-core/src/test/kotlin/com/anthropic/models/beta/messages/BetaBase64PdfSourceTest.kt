@@ -11,7 +11,7 @@ internal class BetaBase64PdfSourceTest {
 
     @Test
     fun create() {
-        val betaBase64PdfSource = BetaBase64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
+        val betaBase64PdfSource = BetaBase64PdfSource.of("U3RhaW5sZXNzIHJvY2tz")
 
         assertThat(betaBase64PdfSource.data()).isEqualTo("U3RhaW5sZXNzIHJvY2tz")
     }
@@ -19,7 +19,7 @@ internal class BetaBase64PdfSourceTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaBase64PdfSource = BetaBase64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
+        val betaBase64PdfSource = BetaBase64PdfSource.of("U3RhaW5sZXNzIHJvY2tz")
 
         val roundtrippedBetaBase64PdfSource =
             jsonMapper.readValue(

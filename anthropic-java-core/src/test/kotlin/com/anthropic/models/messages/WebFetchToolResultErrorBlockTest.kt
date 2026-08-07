@@ -12,9 +12,7 @@ internal class WebFetchToolResultErrorBlockTest {
     @Test
     fun create() {
         val webFetchToolResultErrorBlock =
-            WebFetchToolResultErrorBlock.builder()
-                .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            WebFetchToolResultErrorBlock.of(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
 
         assertThat(webFetchToolResultErrorBlock.errorCode())
             .isEqualTo(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
@@ -24,9 +22,7 @@ internal class WebFetchToolResultErrorBlockTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val webFetchToolResultErrorBlock =
-            WebFetchToolResultErrorBlock.builder()
-                .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            WebFetchToolResultErrorBlock.of(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
 
         val roundtrippedWebFetchToolResultErrorBlock =
             jsonMapper.readValue(

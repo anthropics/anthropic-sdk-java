@@ -20,7 +20,7 @@ internal class FileMetadataTest {
                 .mimeType("application/pdf")
                 .sizeBytes(102400L)
                 .downloadable(false)
-                .scope(BetaFileScope.builder().id("id").build())
+                .scope(BetaFileScope.of("id"))
                 .build()
 
         assertThat(fileMetadata.id()).isEqualTo("file_011CNha8iCJcU1wXNR6q4V8w")
@@ -30,7 +30,7 @@ internal class FileMetadataTest {
         assertThat(fileMetadata.mimeType()).isEqualTo("application/pdf")
         assertThat(fileMetadata.sizeBytes()).isEqualTo(102400L)
         assertThat(fileMetadata.downloadable()).contains(false)
-        assertThat(fileMetadata.scope()).contains(BetaFileScope.builder().id("id").build())
+        assertThat(fileMetadata.scope()).contains(BetaFileScope.of("id"))
     }
 
     @Test
@@ -44,7 +44,7 @@ internal class FileMetadataTest {
                 .mimeType("application/pdf")
                 .sizeBytes(102400L)
                 .downloadable(false)
-                .scope(BetaFileScope.builder().id("id").build())
+                .scope(BetaFileScope.of("id"))
                 .build()
 
         val roundtrippedFileMetadata =

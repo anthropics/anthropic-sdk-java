@@ -145,6 +145,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaRequestMcpToolResultBlockParam] with the required
+         * [toolUseId] set to the given value.
+         */
+        @JvmStatic fun of(toolUseId: String) = builder().toolUseId(toolUseId).build()
     }
 
     /** A builder for [BetaRequestMcpToolResultBlockParam]. */

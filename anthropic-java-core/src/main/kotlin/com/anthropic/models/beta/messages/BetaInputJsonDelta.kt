@@ -80,6 +80,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaInputJsonDelta] with the required [partialJson] set
+         * to the given value.
+         */
+        @JvmStatic fun of(partialJson: String) = builder().partialJson(partialJson).build()
     }
 
     /** A builder for [BetaInputJsonDelta]. */

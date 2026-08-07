@@ -88,6 +88,18 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaDiagnostics] with the required [cacheMissReason]
+         * set to the given value.
+         */
+        @JvmStatic
+        fun of(cacheMissReason: CacheMissReason?) =
+            builder().cacheMissReason(cacheMissReason).build()
+
+        /** Alias for calling [of] with `cacheMissReason.orElse(null)`. */
+        @JvmStatic
+        fun of(cacheMissReason: Optional<CacheMissReason>) = of(cacheMissReason.getOrNull())
     }
 
     /** A builder for [BetaDiagnostics]. */
@@ -564,17 +576,49 @@ private constructor(
             fun ofModelChanged(modelChanged: BetaCacheMissModelChanged) =
                 CacheMissReason(modelChanged = modelChanged)
 
+            /**
+             * Returns an immutable instance of [CacheMissReason] whose [ofModelChanged] variant is
+             * built from the given required [cacheMissedInputTokens].
+             */
+            @JvmStatic
+            fun ofModelChanged(cacheMissedInputTokens: Long) =
+                ofModelChanged(BetaCacheMissModelChanged.of(cacheMissedInputTokens))
+
             @JvmStatic
             fun ofSystemChanged(systemChanged: BetaCacheMissSystemChanged) =
                 CacheMissReason(systemChanged = systemChanged)
+
+            /**
+             * Returns an immutable instance of [CacheMissReason] whose [ofSystemChanged] variant is
+             * built from the given required [cacheMissedInputTokens].
+             */
+            @JvmStatic
+            fun ofSystemChanged(cacheMissedInputTokens: Long) =
+                ofSystemChanged(BetaCacheMissSystemChanged.of(cacheMissedInputTokens))
 
             @JvmStatic
             fun ofToolsChanged(toolsChanged: BetaCacheMissToolsChanged) =
                 CacheMissReason(toolsChanged = toolsChanged)
 
+            /**
+             * Returns an immutable instance of [CacheMissReason] whose [ofToolsChanged] variant is
+             * built from the given required [cacheMissedInputTokens].
+             */
+            @JvmStatic
+            fun ofToolsChanged(cacheMissedInputTokens: Long) =
+                ofToolsChanged(BetaCacheMissToolsChanged.of(cacheMissedInputTokens))
+
             @JvmStatic
             fun ofMessagesChanged(messagesChanged: BetaCacheMissMessagesChanged) =
                 CacheMissReason(messagesChanged = messagesChanged)
+
+            /**
+             * Returns an immutable instance of [CacheMissReason] whose [ofMessagesChanged] variant
+             * is built from the given required [cacheMissedInputTokens].
+             */
+            @JvmStatic
+            fun ofMessagesChanged(cacheMissedInputTokens: Long) =
+                ofMessagesChanged(BetaCacheMissMessagesChanged.of(cacheMissedInputTokens))
 
             @JvmStatic
             fun ofPreviousMessageNotFound(

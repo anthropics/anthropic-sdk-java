@@ -16,9 +16,9 @@ internal class BetaManagedAgentsMultiagentCoordinatorParamsTest {
             BetaManagedAgentsMultiagentCoordinatorParams.builder()
                 .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
                 .addAgent(
-                    BetaManagedAgentsMultiagentSelfParams.builder()
-                        .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
-                        .build()
+                    BetaManagedAgentsMultiagentSelfParams.of(
+                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                    )
                 )
                 .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
                 .build()
@@ -29,9 +29,7 @@ internal class BetaManagedAgentsMultiagentCoordinatorParamsTest {
                     "agent_011CZkYqphY8vELVzwCUpqiQ"
                 ),
                 BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                    BetaManagedAgentsMultiagentSelfParams.builder()
-                        .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
-                        .build()
+                    BetaManagedAgentsMultiagentSelfParams.Type.SELF
                 ),
             )
         assertThat(betaManagedAgentsMultiagentCoordinatorParams.type())
@@ -45,9 +43,9 @@ internal class BetaManagedAgentsMultiagentCoordinatorParamsTest {
             BetaManagedAgentsMultiagentCoordinatorParams.builder()
                 .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
                 .addAgent(
-                    BetaManagedAgentsMultiagentSelfParams.builder()
-                        .type(BetaManagedAgentsMultiagentSelfParams.Type.SELF)
-                        .build()
+                    BetaManagedAgentsMultiagentSelfParams.of(
+                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                    )
                 )
                 .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
                 .build()

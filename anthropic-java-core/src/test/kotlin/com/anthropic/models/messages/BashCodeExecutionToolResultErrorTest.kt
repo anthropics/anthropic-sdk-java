@@ -12,9 +12,9 @@ internal class BashCodeExecutionToolResultErrorTest {
     @Test
     fun create() {
         val bashCodeExecutionToolResultError =
-            BashCodeExecutionToolResultError.builder()
-                .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            BashCodeExecutionToolResultError.of(
+                BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+            )
 
         assertThat(bashCodeExecutionToolResultError.errorCode())
             .isEqualTo(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
@@ -24,9 +24,9 @@ internal class BashCodeExecutionToolResultErrorTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val bashCodeExecutionToolResultError =
-            BashCodeExecutionToolResultError.builder()
-                .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            BashCodeExecutionToolResultError.of(
+                BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+            )
 
         val roundtrippedBashCodeExecutionToolResultError =
             jsonMapper.readValue(

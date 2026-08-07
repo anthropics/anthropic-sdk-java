@@ -102,9 +102,7 @@ internal class BetaMessageTest {
                                 .build()
                         )
                         .outputTokens(503L)
-                        .outputTokensDetails(
-                            BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
-                        )
+                        .outputTokensDetails(BetaOutputTokensDetails.of(0L))
                         .serverToolUse(
                             BetaServerToolUsage.builder()
                                 .webFetchRequests(2L)
@@ -212,9 +210,7 @@ internal class BetaMessageTest {
                             .build()
                     )
                     .outputTokens(503L)
-                    .outputTokensDetails(
-                        BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
-                    )
+                    .outputTokensDetails(BetaOutputTokensDetails.of(0L))
                     .serverToolUse(
                         BetaServerToolUsage.builder()
                             .webFetchRequests(2L)
@@ -319,9 +315,7 @@ internal class BetaMessageTest {
                                 .build()
                         )
                         .outputTokens(503L)
-                        .outputTokensDetails(
-                            BetaOutputTokensDetails.builder().thinkingTokens(0L).build()
-                        )
+                        .outputTokensDetails(BetaOutputTokensDetails.of(0L))
                         .serverToolUse(
                             BetaServerToolUsage.builder()
                                 .webFetchRequests(2L)

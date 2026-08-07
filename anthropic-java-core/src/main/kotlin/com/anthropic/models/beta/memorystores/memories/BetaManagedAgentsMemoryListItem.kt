@@ -218,6 +218,19 @@ private constructor(
         @JvmStatic
         fun ofMemoryPrefix(memoryPrefix: BetaManagedAgentsMemoryPrefix) =
             BetaManagedAgentsMemoryListItem(memoryPrefix = memoryPrefix)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsMemoryListItem] whose [ofMemoryPrefix]
+         * variant is built from the given required [path].
+         */
+        @JvmStatic
+        fun ofMemoryPrefix(path: String) =
+            ofMemoryPrefix(
+                BetaManagedAgentsMemoryPrefix.builder()
+                    .type(BetaManagedAgentsMemoryPrefix.Type.MEMORY_PREFIX)
+                    .path(path)
+                    .build()
+            )
     }
 
     /**

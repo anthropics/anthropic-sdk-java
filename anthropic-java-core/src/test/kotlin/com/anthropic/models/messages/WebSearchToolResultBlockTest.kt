@@ -15,9 +15,7 @@ internal class WebSearchToolResultBlockTest {
             WebSearchToolResultBlock.builder()
                 .caller(DirectCaller.builder().build())
                 .content(
-                    WebSearchToolResultError.builder()
-                        .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebSearchToolResultError.of(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -27,9 +25,7 @@ internal class WebSearchToolResultBlockTest {
         assertThat(webSearchToolResultBlock.content())
             .isEqualTo(
                 WebSearchToolResultBlockContent.ofError(
-                    WebSearchToolResultError.builder()
-                        .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebSearchToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
         assertThat(webSearchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
@@ -42,9 +38,7 @@ internal class WebSearchToolResultBlockTest {
             WebSearchToolResultBlock.builder()
                 .caller(DirectCaller.builder().build())
                 .content(
-                    WebSearchToolResultError.builder()
-                        .errorCode(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebSearchToolResultError.of(WebSearchToolResultErrorCode.INVALID_TOOL_INPUT)
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()

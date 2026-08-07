@@ -80,6 +80,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [JsonOutputFormat] with the required [schema] set to the
+         * given value.
+         */
+        @JvmStatic fun of(schema: Schema) = builder().schema(schema).build()
     }
 
     /** A builder for [JsonOutputFormat]. */

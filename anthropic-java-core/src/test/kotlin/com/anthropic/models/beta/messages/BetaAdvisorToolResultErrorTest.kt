@@ -12,9 +12,7 @@ internal class BetaAdvisorToolResultErrorTest {
     @Test
     fun create() {
         val betaAdvisorToolResultError =
-            BetaAdvisorToolResultError.builder()
-                .errorCode(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
-                .build()
+            BetaAdvisorToolResultError.of(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
 
         assertThat(betaAdvisorToolResultError.errorCode())
             .isEqualTo(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
@@ -24,9 +22,7 @@ internal class BetaAdvisorToolResultErrorTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaAdvisorToolResultError =
-            BetaAdvisorToolResultError.builder()
-                .errorCode(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
-                .build()
+            BetaAdvisorToolResultError.of(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
 
         val roundtrippedBetaAdvisorToolResultError =
             jsonMapper.readValue(

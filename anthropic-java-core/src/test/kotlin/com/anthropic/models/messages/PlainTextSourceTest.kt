@@ -11,7 +11,7 @@ internal class PlainTextSourceTest {
 
     @Test
     fun create() {
-        val plainTextSource = PlainTextSource.builder().data("data").build()
+        val plainTextSource = PlainTextSource.of("data")
 
         assertThat(plainTextSource.data()).isEqualTo("data")
     }
@@ -19,7 +19,7 @@ internal class PlainTextSourceTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val plainTextSource = PlainTextSource.builder().data("data").build()
+        val plainTextSource = PlainTextSource.of("data")
 
         val roundtrippedPlainTextSource =
             jsonMapper.readValue(

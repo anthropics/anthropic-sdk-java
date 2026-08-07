@@ -237,6 +237,14 @@ private constructor(
         fun ofError(error: BetaCodeExecutionToolResultError) =
             BetaCodeExecutionToolResultBlockContent(error = error)
 
+        /**
+         * Returns an immutable instance of [BetaCodeExecutionToolResultBlockContent] whose
+         * [ofError] variant is built from the given required [errorCode].
+         */
+        @JvmStatic
+        fun ofError(errorCode: BetaCodeExecutionToolResultErrorCode) =
+            ofError(BetaCodeExecutionToolResultError.of(errorCode))
+
         @JvmStatic
         fun ofResultBlock(resultBlock: BetaCodeExecutionResultBlock) =
             BetaCodeExecutionToolResultBlockContent(resultBlock = resultBlock)

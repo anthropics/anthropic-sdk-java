@@ -13,13 +13,11 @@ internal class JsonOutputFormatTest {
     @Test
     fun create() {
         val jsonOutputFormat =
-            JsonOutputFormat.builder()
-                .schema(
-                    JsonOutputFormat.Schema.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .build()
+            JsonOutputFormat.of(
+                JsonOutputFormat.Schema.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
 
         assertThat(jsonOutputFormat.schema())
             .isEqualTo(
@@ -33,13 +31,11 @@ internal class JsonOutputFormatTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val jsonOutputFormat =
-            JsonOutputFormat.builder()
-                .schema(
-                    JsonOutputFormat.Schema.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .build()
+            JsonOutputFormat.of(
+                JsonOutputFormat.Schema.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
 
         val roundtrippedJsonOutputFormat =
             jsonMapper.readValue(

@@ -373,6 +373,13 @@ private constructor(
              * ```
              */
             @JvmStatic fun builder() = Builder()
+
+            /**
+             * Returns an immutable instance of [Body] with the required [caCertificatePem] set to
+             * the given value.
+             */
+            @JvmStatic
+            fun of(caCertificatePem: String) = builder().caCertificatePem(caCertificatePem).build()
         }
 
         /** A builder for [Body]. */

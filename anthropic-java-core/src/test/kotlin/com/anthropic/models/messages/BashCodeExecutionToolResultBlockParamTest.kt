@@ -14,9 +14,9 @@ internal class BashCodeExecutionToolResultBlockParamTest {
         val bashCodeExecutionToolResultBlockParam =
             BashCodeExecutionToolResultBlockParam.builder()
                 .content(
-                    BashCodeExecutionToolResultErrorParam.builder()
-                        .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BashCodeExecutionToolResultErrorParam.of(
+                        BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -28,9 +28,7 @@ internal class BashCodeExecutionToolResultBlockParamTest {
             .isEqualTo(
                 BashCodeExecutionToolResultBlockParam.Content
                     .ofBashCodeExecutionToolResultErrorParam(
-                        BashCodeExecutionToolResultErrorParam.builder()
-                            .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
                     )
             )
         assertThat(bashCodeExecutionToolResultBlockParam.toolUseId())
@@ -45,9 +43,9 @@ internal class BashCodeExecutionToolResultBlockParamTest {
         val bashCodeExecutionToolResultBlockParam =
             BashCodeExecutionToolResultBlockParam.builder()
                 .content(
-                    BashCodeExecutionToolResultErrorParam.builder()
-                        .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BashCodeExecutionToolResultErrorParam.of(
+                        BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(

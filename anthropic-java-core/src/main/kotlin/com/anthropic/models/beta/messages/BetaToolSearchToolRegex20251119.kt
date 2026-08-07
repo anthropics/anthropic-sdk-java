@@ -167,6 +167,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaToolSearchToolRegex20251119] with the required
+         * [type] set to the given value.
+         */
+        @JvmStatic fun of(type: Type) = builder().type(type).build()
     }
 
     /** A builder for [BetaToolSearchToolRegex20251119]. */

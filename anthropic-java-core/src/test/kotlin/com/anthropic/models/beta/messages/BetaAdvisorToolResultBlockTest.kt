@@ -14,9 +14,9 @@ internal class BetaAdvisorToolResultBlockTest {
         val betaAdvisorToolResultBlock =
             BetaAdvisorToolResultBlock.builder()
                 .content(
-                    BetaAdvisorToolResultError.builder()
-                        .errorCode(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
-                        .build()
+                    BetaAdvisorToolResultError.of(
+                        BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -24,9 +24,7 @@ internal class BetaAdvisorToolResultBlockTest {
         assertThat(betaAdvisorToolResultBlock.content())
             .isEqualTo(
                 BetaAdvisorToolResultBlock.Content.ofBetaAdvisorToolResultError(
-                    BetaAdvisorToolResultError.builder()
-                        .errorCode(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
-                        .build()
+                    BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED
                 )
             )
         assertThat(betaAdvisorToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
@@ -38,9 +36,9 @@ internal class BetaAdvisorToolResultBlockTest {
         val betaAdvisorToolResultBlock =
             BetaAdvisorToolResultBlock.builder()
                 .content(
-                    BetaAdvisorToolResultError.builder()
-                        .errorCode(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
-                        .build()
+                    BetaAdvisorToolResultError.of(
+                        BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()

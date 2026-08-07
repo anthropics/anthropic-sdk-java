@@ -40,9 +40,7 @@ internal class RawMessageDeltaEventTest {
                         .cacheReadInputTokens(2051L)
                         .inputTokens(2095L)
                         .outputTokens(503L)
-                        .outputTokensDetails(
-                            OutputTokensDetails.builder().thinkingTokens(0L).build()
-                        )
+                        .outputTokensDetails(OutputTokensDetails.of(0L))
                         .serverToolUse(
                             ServerToolUsage.builder()
                                 .webFetchRequests(2L)
@@ -81,7 +79,7 @@ internal class RawMessageDeltaEventTest {
                     .cacheReadInputTokens(2051L)
                     .inputTokens(2095L)
                     .outputTokens(503L)
-                    .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(0L).build())
+                    .outputTokensDetails(OutputTokensDetails.of(0L))
                     .serverToolUse(
                         ServerToolUsage.builder().webFetchRequests(2L).webSearchRequests(0L).build()
                     )
@@ -120,9 +118,7 @@ internal class RawMessageDeltaEventTest {
                         .cacheReadInputTokens(2051L)
                         .inputTokens(2095L)
                         .outputTokens(503L)
-                        .outputTokensDetails(
-                            OutputTokensDetails.builder().thinkingTokens(0L).build()
-                        )
+                        .outputTokensDetails(OutputTokensDetails.of(0L))
                         .serverToolUse(
                             ServerToolUsage.builder()
                                 .webFetchRequests(2L)

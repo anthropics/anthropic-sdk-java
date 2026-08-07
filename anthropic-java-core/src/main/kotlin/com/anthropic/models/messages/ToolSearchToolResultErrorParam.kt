@@ -102,6 +102,13 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [ToolSearchToolResultErrorParam] with the required
+         * [errorCode] set to the given value.
+         */
+        @JvmStatic
+        fun of(errorCode: ToolSearchToolResultErrorCode) = builder().errorCode(errorCode).build()
     }
 
     /** A builder for [ToolSearchToolResultErrorParam]. */

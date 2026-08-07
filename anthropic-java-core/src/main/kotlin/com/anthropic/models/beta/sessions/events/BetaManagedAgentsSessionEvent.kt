@@ -2634,6 +2634,19 @@ private constructor(
         fun ofUserInterrupt(userInterrupt: BetaManagedAgentsUserInterruptEvent) =
             BetaManagedAgentsSessionEvent(userInterrupt = userInterrupt)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsSessionEvent] whose [ofUserInterrupt]
+         * variant is built from the given required [id].
+         */
+        @JvmStatic
+        fun ofUserInterrupt(id: String) =
+            ofUserInterrupt(
+                BetaManagedAgentsUserInterruptEvent.builder()
+                    .type(BetaManagedAgentsUserInterruptEvent.Type.USER_INTERRUPT)
+                    .id(id)
+                    .build()
+            )
+
         /** A tool confirmation event that approves or denies a pending tool execution. */
         @JvmStatic
         fun ofUserToolConfirmation(

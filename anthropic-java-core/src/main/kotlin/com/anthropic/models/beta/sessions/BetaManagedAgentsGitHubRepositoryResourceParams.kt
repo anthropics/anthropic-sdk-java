@@ -644,8 +644,34 @@ private constructor(
             @JvmStatic
             fun ofBranch(branch: BetaManagedAgentsBranchCheckout) = Checkout(branch = branch)
 
+            /**
+             * Returns an immutable instance of [Checkout] whose [ofBranch] variant is built from
+             * the given required [name].
+             */
+            @JvmStatic
+            fun ofBranch(name: String) =
+                ofBranch(
+                    BetaManagedAgentsBranchCheckout.builder()
+                        .type(BetaManagedAgentsBranchCheckout.Type.BRANCH)
+                        .name(name)
+                        .build()
+                )
+
             @JvmStatic
             fun ofCommit(commit: BetaManagedAgentsCommitCheckout) = Checkout(commit = commit)
+
+            /**
+             * Returns an immutable instance of [Checkout] whose [ofCommit] variant is built from
+             * the given required [sha].
+             */
+            @JvmStatic
+            fun ofCommit(sha: String) =
+                ofCommit(
+                    BetaManagedAgentsCommitCheckout.builder()
+                        .type(BetaManagedAgentsCommitCheckout.Type.COMMIT)
+                        .sha(sha)
+                        .build()
+                )
         }
 
         /**

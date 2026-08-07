@@ -43,11 +43,9 @@ internal class SessionUpdateParamsTest {
                                     .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                            .type(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
-                                            .build()
+                                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                        )
                                     )
                                     .build()
                             )
@@ -55,11 +53,9 @@ internal class SessionUpdateParamsTest {
                                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                            .type(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
-                                            .build()
+                                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                        )
                                     )
                                     .build()
                             )
@@ -124,12 +120,9 @@ internal class SessionUpdateParamsTest {
                                         .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                            )
                                         )
                                         .build()
                                 )
@@ -137,12 +130,9 @@ internal class SessionUpdateParamsTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                            )
                                         )
                                         .build()
                                 )
@@ -214,12 +204,9 @@ internal class SessionUpdateParamsTest {
                                         .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                            )
                                         )
                                         .build()
                                 )
@@ -227,12 +214,9 @@ internal class SessionUpdateParamsTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                            )
                                         )
                                         .build()
                                 )
@@ -283,11 +267,9 @@ internal class SessionUpdateParamsTest {
                                     .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                            .type(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
-                                            .build()
+                                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                        )
                                     )
                                     .build()
                             )
@@ -295,11 +277,9 @@ internal class SessionUpdateParamsTest {
                                 BetaManagedAgentsAgentToolsetDefaultConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
-                                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                            .type(
-                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                                            )
-                                            .build()
+                                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                        )
                                     )
                                     .build()
                             )

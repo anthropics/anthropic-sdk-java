@@ -23,11 +23,7 @@ internal class DocumentBlockParamTest {
                 .build()
 
         assertThat(documentBlockParam.source())
-            .isEqualTo(
-                DocumentBlockParam.Source.ofBase64(
-                    Base64PdfSource.builder().data("U3RhaW5sZXNzIHJvY2tz").build()
-                )
-            )
+            .isEqualTo(DocumentBlockParam.Source.ofBase64("U3RhaW5sZXNzIHJvY2tz"))
         assertThat(documentBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(documentBlockParam.citations())

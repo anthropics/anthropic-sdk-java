@@ -16,13 +16,11 @@ internal class BetaOutputConfigTest {
             BetaOutputConfig.builder()
                 .effort(BetaOutputConfig.Effort.LOW)
                 .format(
-                    BetaJsonOutputFormat.builder()
-                        .schema(
-                            BetaJsonOutputFormat.Schema.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                .build()
-                        )
-                        .build()
+                    BetaJsonOutputFormat.of(
+                        BetaJsonOutputFormat.Schema.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                 )
                 .taskBudget(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
                 .build()
@@ -30,13 +28,11 @@ internal class BetaOutputConfigTest {
         assertThat(betaOutputConfig.effort()).contains(BetaOutputConfig.Effort.LOW)
         assertThat(betaOutputConfig.format())
             .contains(
-                BetaJsonOutputFormat.builder()
-                    .schema(
-                        BetaJsonOutputFormat.Schema.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("bar"))
-                            .build()
-                    )
-                    .build()
+                BetaJsonOutputFormat.of(
+                    BetaJsonOutputFormat.Schema.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
             )
         assertThat(betaOutputConfig.taskBudget())
             .contains(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
@@ -49,13 +45,11 @@ internal class BetaOutputConfigTest {
             BetaOutputConfig.builder()
                 .effort(BetaOutputConfig.Effort.LOW)
                 .format(
-                    BetaJsonOutputFormat.builder()
-                        .schema(
-                            BetaJsonOutputFormat.Schema.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                .build()
-                        )
-                        .build()
+                    BetaJsonOutputFormat.of(
+                        BetaJsonOutputFormat.Schema.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                 )
                 .taskBudget(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
                 .build()

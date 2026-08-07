@@ -11,7 +11,7 @@ internal class ServerToolCallerTest {
 
     @Test
     fun create() {
-        val serverToolCaller = ServerToolCaller.builder().toolId("srvtoolu_SQfNkl1n_JR_").build()
+        val serverToolCaller = ServerToolCaller.of("srvtoolu_SQfNkl1n_JR_")
 
         assertThat(serverToolCaller.toolId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
     }
@@ -19,7 +19,7 @@ internal class ServerToolCallerTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val serverToolCaller = ServerToolCaller.builder().toolId("srvtoolu_SQfNkl1n_JR_").build()
+        val serverToolCaller = ServerToolCaller.of("srvtoolu_SQfNkl1n_JR_")
 
         val roundtrippedServerToolCaller =
             jsonMapper.readValue(

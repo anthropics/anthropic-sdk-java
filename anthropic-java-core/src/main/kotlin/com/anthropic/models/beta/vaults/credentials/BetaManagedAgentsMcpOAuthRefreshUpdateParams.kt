@@ -447,11 +447,27 @@ private constructor(
                 clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicUpdateParam
             ) = TokenEndpointAuth(clientSecretBasic = clientSecretBasic)
 
+            /**
+             * Returns an immutable instance of [TokenEndpointAuth] whose [ofClientSecretBasic]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofClientSecretBasic(type: BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.Type) =
+                ofClientSecretBasic(BetaManagedAgentsTokenEndpointAuthBasicUpdateParam.of(type))
+
             /** Updated POST body authentication parameters for the token endpoint. */
             @JvmStatic
             fun ofClientSecretPost(
                 clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostUpdateParam
             ) = TokenEndpointAuth(clientSecretPost = clientSecretPost)
+
+            /**
+             * Returns an immutable instance of [TokenEndpointAuth] whose [ofClientSecretPost]
+             * variant is built from the given required [type].
+             */
+            @JvmStatic
+            fun ofClientSecretPost(type: BetaManagedAgentsTokenEndpointAuthPostUpdateParam.Type) =
+                ofClientSecretPost(BetaManagedAgentsTokenEndpointAuthPostUpdateParam.of(type))
         }
 
         /**

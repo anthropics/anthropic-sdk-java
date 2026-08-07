@@ -515,6 +515,19 @@ private constructor(
                         betaBashCodeExecutionToolResultErrorParam
                 )
 
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofBetaBashCodeExecutionToolResultErrorParam] variant is built from the given
+             * required [errorCode].
+             */
+            @JvmStatic
+            fun ofBetaBashCodeExecutionToolResultErrorParam(
+                errorCode: BetaBashCodeExecutionToolResultErrorParam.ErrorCode
+            ) =
+                ofBetaBashCodeExecutionToolResultErrorParam(
+                    BetaBashCodeExecutionToolResultErrorParam.of(errorCode)
+                )
+
             @JvmStatic
             fun ofBetaBashCodeExecutionResultBlockParam(
                 betaBashCodeExecutionResultBlockParam: BetaBashCodeExecutionResultBlockParam

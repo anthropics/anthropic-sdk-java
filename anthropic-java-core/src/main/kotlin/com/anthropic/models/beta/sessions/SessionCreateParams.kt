@@ -1814,6 +1814,19 @@ private constructor(
                 InitialEvent(userMessage = userMessage)
 
             /**
+             * Returns an immutable instance of [InitialEvent] whose [ofUserMessage] variant is
+             * built from the given required [content].
+             */
+            @JvmStatic
+            fun ofUserMessage(content: List<BetaManagedAgentsUserMessageEventParams.Content>) =
+                ofUserMessage(
+                    BetaManagedAgentsUserMessageEventParams.builder()
+                        .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
+                        .content(content)
+                        .build()
+                )
+
+            /**
              * Parameters for defining an outcome the agent should work toward. The agent begins
              * work on receipt.
              */
@@ -2213,10 +2226,36 @@ private constructor(
             /** Mount a file uploaded via the Files API into the session. */
             @JvmStatic fun ofFile(file: BetaManagedAgentsFileResourceParams) = Resource(file = file)
 
+            /**
+             * Returns an immutable instance of [Resource] whose [ofFile] variant is built from the
+             * given required [fileId].
+             */
+            @JvmStatic
+            fun ofFile(fileId: String) =
+                ofFile(
+                    BetaManagedAgentsFileResourceParams.builder()
+                        .type(BetaManagedAgentsFileResourceParams.Type.FILE)
+                        .fileId(fileId)
+                        .build()
+                )
+
             /** Parameters for attaching a memory store to an agent session. */
             @JvmStatic
             fun ofMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResourceParam) =
                 Resource(memoryStore = memoryStore)
+
+            /**
+             * Returns an immutable instance of [Resource] whose [ofMemoryStore] variant is built
+             * from the given required [memoryStoreId].
+             */
+            @JvmStatic
+            fun ofMemoryStore(memoryStoreId: String) =
+                ofMemoryStore(
+                    BetaManagedAgentsMemoryStoreResourceParam.builder()
+                        .type(BetaManagedAgentsMemoryStoreResourceParam.Type.MEMORY_STORE)
+                        .memoryStoreId(memoryStoreId)
+                        .build()
+                )
         }
 
         /**

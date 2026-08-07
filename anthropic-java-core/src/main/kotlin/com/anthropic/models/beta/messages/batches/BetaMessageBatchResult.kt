@@ -7,6 +7,8 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.BetaErrorResponse
+import com.anthropic.models.beta.messages.BetaMessage
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -199,9 +201,24 @@ private constructor(
         fun ofSucceeded(succeeded: BetaMessageBatchSucceededResult) =
             BetaMessageBatchResult(succeeded = succeeded)
 
+        /**
+         * Returns an immutable instance of [BetaMessageBatchResult] whose [ofSucceeded] variant is
+         * built from the given required [message].
+         */
+        @JvmStatic
+        fun ofSucceeded(message: BetaMessage) =
+            ofSucceeded(BetaMessageBatchSucceededResult.of(message))
+
         @JvmStatic
         fun ofErrored(errored: BetaMessageBatchErroredResult) =
             BetaMessageBatchResult(errored = errored)
+
+        /**
+         * Returns an immutable instance of [BetaMessageBatchResult] whose [ofErrored] variant is
+         * built from the given required [error].
+         */
+        @JvmStatic
+        fun ofErrored(error: BetaErrorResponse) = ofErrored(BetaMessageBatchErroredResult.of(error))
 
         @JvmStatic
         fun ofCanceled(canceled: BetaMessageBatchCanceledResult) =

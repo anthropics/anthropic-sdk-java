@@ -18,8 +18,83 @@ internal class RawMessageStreamEventTest {
     @Test
     fun ofMessageStart() {
         val messageStart =
-            RawMessageStartEvent.builder()
-                .message(
+            RawMessageStartEvent.of(
+                Message.builder()
+                    .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
+                    .container(
+                        Container.builder()
+                            .id("container_011CpZohnwH4vuy7gazohgSP")
+                            .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .addContent(
+                        TextBlock.builder()
+                            .addCitation(
+                                CitationCharLocation.builder()
+                                    .citedText("The grass is green. The sky is blue.")
+                                    .documentIndex(0L)
+                                    .documentTitle("My Document")
+                                    .endCharIndex(0L)
+                                    .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
+                                    .startCharIndex(0L)
+                                    .build()
+                            )
+                            .text("Hi! My name is Claude.")
+                            .build()
+                    )
+                    .model(Model.CLAUDE_OPUS_4_6)
+                    .stopDetails(
+                        RefusalStopDetails.builder()
+                            .category(RefusalStopDetails.Category.CYBER)
+                            .explanation(
+                                "This request was declined because it conflicts with Anthropic's Usage Policy."
+                            )
+                            .build()
+                    )
+                    .stopReason(StopReason.END_TURN)
+                    .stopSequence(null)
+                    .usage(
+                        Usage.builder()
+                            .cacheCreation(
+                                CacheCreation.builder()
+                                    .ephemeral1hInputTokens(0L)
+                                    .ephemeral5mInputTokens(0L)
+                                    .build()
+                            )
+                            .cacheCreationInputTokens(2051L)
+                            .cacheReadInputTokens(2051L)
+                            .inferenceGeo("global")
+                            .inputTokens(2095L)
+                            .outputTokens(503L)
+                            .outputTokensDetails(OutputTokensDetails.of(0L))
+                            .serverToolUse(
+                                ServerToolUsage.builder()
+                                    .webFetchRequests(2L)
+                                    .webSearchRequests(0L)
+                                    .build()
+                            )
+                            .serviceTier(Usage.ServiceTier.STANDARD)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val rawMessageStreamEvent = RawMessageStreamEvent.ofMessageStart(messageStart)
+
+        assertThat(rawMessageStreamEvent.messageStart()).contains(messageStart)
+        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
+        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
+        assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
+        assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
+        assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
+    }
+
+    @Test
+    fun ofMessageStartRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val rawMessageStreamEvent =
+            RawMessageStreamEvent.ofMessageStart(
+                RawMessageStartEvent.of(
                     Message.builder()
                         .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
                         .container(
@@ -67,9 +142,7 @@ internal class RawMessageStreamEventTest {
                                 .inferenceGeo("global")
                                 .inputTokens(2095L)
                                 .outputTokens(503L)
-                                .outputTokensDetails(
-                                    OutputTokensDetails.builder().thinkingTokens(0L).build()
-                                )
+                                .outputTokensDetails(OutputTokensDetails.of(0L))
                                 .serverToolUse(
                                     ServerToolUsage.builder()
                                         .webFetchRequests(2L)
@@ -81,87 +154,6 @@ internal class RawMessageStreamEventTest {
                         )
                         .build()
                 )
-                .build()
-
-        val rawMessageStreamEvent = RawMessageStreamEvent.ofMessageStart(messageStart)
-
-        assertThat(rawMessageStreamEvent.messageStart()).contains(messageStart)
-        assertThat(rawMessageStreamEvent.messageDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.messageStop()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStart()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockDelta()).isEmpty
-        assertThat(rawMessageStreamEvent.contentBlockStop()).isEmpty
-    }
-
-    @Test
-    fun ofMessageStartRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val rawMessageStreamEvent =
-            RawMessageStreamEvent.ofMessageStart(
-                RawMessageStartEvent.builder()
-                    .message(
-                        Message.builder()
-                            .id("msg_013Zva2CMHLNnXjNJJKqJ2EF")
-                            .container(
-                                Container.builder()
-                                    .id("container_011CpZohnwH4vuy7gazohgSP")
-                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                                    .build()
-                            )
-                            .addContent(
-                                TextBlock.builder()
-                                    .addCitation(
-                                        CitationCharLocation.builder()
-                                            .citedText("The grass is green. The sky is blue.")
-                                            .documentIndex(0L)
-                                            .documentTitle("My Document")
-                                            .endCharIndex(0L)
-                                            .fileId("file_011CNha8iCJcU1wXNR6q4V8w")
-                                            .startCharIndex(0L)
-                                            .build()
-                                    )
-                                    .text("Hi! My name is Claude.")
-                                    .build()
-                            )
-                            .model(Model.CLAUDE_OPUS_4_6)
-                            .stopDetails(
-                                RefusalStopDetails.builder()
-                                    .category(RefusalStopDetails.Category.CYBER)
-                                    .explanation(
-                                        "This request was declined because it conflicts with Anthropic's Usage Policy."
-                                    )
-                                    .build()
-                            )
-                            .stopReason(StopReason.END_TURN)
-                            .stopSequence(null)
-                            .usage(
-                                Usage.builder()
-                                    .cacheCreation(
-                                        CacheCreation.builder()
-                                            .ephemeral1hInputTokens(0L)
-                                            .ephemeral5mInputTokens(0L)
-                                            .build()
-                                    )
-                                    .cacheCreationInputTokens(2051L)
-                                    .cacheReadInputTokens(2051L)
-                                    .inferenceGeo("global")
-                                    .inputTokens(2095L)
-                                    .outputTokens(503L)
-                                    .outputTokensDetails(
-                                        OutputTokensDetails.builder().thinkingTokens(0L).build()
-                                    )
-                                    .serverToolUse(
-                                        ServerToolUsage.builder()
-                                            .webFetchRequests(2L)
-                                            .webSearchRequests(0L)
-                                            .build()
-                                    )
-                                    .serviceTier(Usage.ServiceTier.STANDARD)
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .build()
             )
 
         val roundtrippedRawMessageStreamEvent =
@@ -203,9 +195,7 @@ internal class RawMessageStreamEventTest {
                         .cacheReadInputTokens(2051L)
                         .inputTokens(2095L)
                         .outputTokens(503L)
-                        .outputTokensDetails(
-                            OutputTokensDetails.builder().thinkingTokens(0L).build()
-                        )
+                        .outputTokensDetails(OutputTokensDetails.of(0L))
                         .serverToolUse(
                             ServerToolUsage.builder()
                                 .webFetchRequests(2L)
@@ -258,9 +248,7 @@ internal class RawMessageStreamEventTest {
                             .cacheReadInputTokens(2051L)
                             .inputTokens(2095L)
                             .outputTokens(503L)
-                            .outputTokensDetails(
-                                OutputTokensDetails.builder().thinkingTokens(0L).build()
-                            )
+                            .outputTokensDetails(OutputTokensDetails.of(0L))
                             .serverToolUse(
                                 ServerToolUsage.builder()
                                     .webFetchRequests(2L)
@@ -410,7 +398,7 @@ internal class RawMessageStreamEventTest {
 
     @Test
     fun ofContentBlockStop() {
-        val contentBlockStop = RawContentBlockStopEvent.builder().index(0L).build()
+        val contentBlockStop = RawContentBlockStopEvent.of(0L)
 
         val rawMessageStreamEvent = RawMessageStreamEvent.ofContentBlockStop(contentBlockStop)
 
@@ -426,9 +414,7 @@ internal class RawMessageStreamEventTest {
     fun ofContentBlockStopRoundtrip() {
         val jsonMapper = jsonMapper()
         val rawMessageStreamEvent =
-            RawMessageStreamEvent.ofContentBlockStop(
-                RawContentBlockStopEvent.builder().index(0L).build()
-            )
+            RawMessageStreamEvent.ofContentBlockStop(RawContentBlockStopEvent.of(0L))
 
         val roundtrippedRawMessageStreamEvent =
             jsonMapper.readValue(

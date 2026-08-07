@@ -12,12 +12,9 @@ internal class BetaManagedAgentsFileNotFoundDeploymentPausedReasonErrorTest {
     @Test
     fun create() {
         val betaManagedAgentsFileNotFoundDeploymentPausedReasonError =
-            BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.Type
-                        .FILE_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.Type.FILE_NOT_FOUND_ERROR
+            )
 
         assertThat(betaManagedAgentsFileNotFoundDeploymentPausedReasonError.type())
             .isEqualTo(
@@ -29,12 +26,9 @@ internal class BetaManagedAgentsFileNotFoundDeploymentPausedReasonErrorTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsFileNotFoundDeploymentPausedReasonError =
-            BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.Type
-                        .FILE_NOT_FOUND_ERROR
-                )
-                .build()
+            BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.of(
+                BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.Type.FILE_NOT_FOUND_ERROR
+            )
 
         val roundtrippedBetaManagedAgentsFileNotFoundDeploymentPausedReasonError =
             jsonMapper.readValue(

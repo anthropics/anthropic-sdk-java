@@ -89,6 +89,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [PlainTextSource] with the required [data] set to the
+         * given value.
+         */
+        @JvmStatic fun of(data: String) = builder().data(data).build()
     }
 
     /** A builder for [PlainTextSource]. */

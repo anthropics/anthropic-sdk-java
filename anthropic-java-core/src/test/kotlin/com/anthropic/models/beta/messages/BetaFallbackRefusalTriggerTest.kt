@@ -12,9 +12,7 @@ internal class BetaFallbackRefusalTriggerTest {
     @Test
     fun create() {
         val betaFallbackRefusalTrigger =
-            BetaFallbackRefusalTrigger.builder()
-                .category(BetaFallbackRefusalTrigger.Category.CYBER)
-                .build()
+            BetaFallbackRefusalTrigger.of(BetaFallbackRefusalTrigger.Category.CYBER)
 
         assertThat(betaFallbackRefusalTrigger.category())
             .contains(BetaFallbackRefusalTrigger.Category.CYBER)
@@ -24,9 +22,7 @@ internal class BetaFallbackRefusalTriggerTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaFallbackRefusalTrigger =
-            BetaFallbackRefusalTrigger.builder()
-                .category(BetaFallbackRefusalTrigger.Category.CYBER)
-                .build()
+            BetaFallbackRefusalTrigger.of(BetaFallbackRefusalTrigger.Category.CYBER)
 
         val roundtrippedBetaFallbackRefusalTrigger =
             jsonMapper.readValue(

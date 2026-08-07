@@ -67,6 +67,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaUserProfileTrustGrant] with the required [status]
+         * set to the given value.
+         */
+        @JvmStatic fun of(status: Status) = builder().status(status).build()
     }
 
     /** A builder for [BetaUserProfileTrustGrant]. */

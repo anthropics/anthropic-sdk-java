@@ -12,12 +12,10 @@ internal class BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonErrorTest 
     @Test
     fun create() {
         val betaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError =
-            BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.Type
-                        .MCP_EGRESS_BLOCKED_ERROR
-                )
-                .build()
+            BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.of(
+                BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.Type
+                    .MCP_EGRESS_BLOCKED_ERROR
+            )
 
         assertThat(betaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.type())
             .isEqualTo(
@@ -30,12 +28,10 @@ internal class BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonErrorTest 
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError =
-            BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.Type
-                        .MCP_EGRESS_BLOCKED_ERROR
-                )
-                .build()
+            BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.of(
+                BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.Type
+                    .MCP_EGRESS_BLOCKED_ERROR
+            )
 
         val roundtrippedBetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError =
             jsonMapper.readValue(

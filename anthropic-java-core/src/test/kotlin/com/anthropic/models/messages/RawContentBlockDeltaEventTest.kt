@@ -14,8 +14,7 @@ internal class RawContentBlockDeltaEventTest {
         val rawContentBlockDeltaEvent =
             RawContentBlockDeltaEvent.builder().textDelta("text").index(0L).build()
 
-        assertThat(rawContentBlockDeltaEvent.delta())
-            .isEqualTo(RawContentBlockDelta.ofText(TextDelta.builder().text("text").build()))
+        assertThat(rawContentBlockDeltaEvent.delta()).isEqualTo(RawContentBlockDelta.ofText("text"))
         assertThat(rawContentBlockDeltaEvent.index()).isEqualTo(0L)
     }
 

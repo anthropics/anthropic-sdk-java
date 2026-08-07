@@ -11,7 +11,7 @@ internal class BetaGatewayTimeoutErrorTest {
 
     @Test
     fun create() {
-        val betaGatewayTimeoutError = BetaGatewayTimeoutError.builder().message("message").build()
+        val betaGatewayTimeoutError = BetaGatewayTimeoutError.of("message")
 
         assertThat(betaGatewayTimeoutError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class BetaGatewayTimeoutErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaGatewayTimeoutError = BetaGatewayTimeoutError.builder().message("message").build()
+        val betaGatewayTimeoutError = BetaGatewayTimeoutError.of("message")
 
         val roundtrippedBetaGatewayTimeoutError =
             jsonMapper.readValue(

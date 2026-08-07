@@ -236,6 +236,14 @@ private constructor(
         fun ofError(error: CodeExecutionToolResultError) =
             CodeExecutionToolResultBlockContent(error = error)
 
+        /**
+         * Returns an immutable instance of [CodeExecutionToolResultBlockContent] whose [ofError]
+         * variant is built from the given required [errorCode].
+         */
+        @JvmStatic
+        fun ofError(errorCode: CodeExecutionToolResultErrorCode) =
+            ofError(CodeExecutionToolResultError.of(errorCode))
+
         @JvmStatic
         fun ofResultBlock(resultBlock: CodeExecutionResultBlock) =
             CodeExecutionToolResultBlockContent(resultBlock = resultBlock)

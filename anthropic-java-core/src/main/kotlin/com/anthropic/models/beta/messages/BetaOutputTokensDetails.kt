@@ -75,6 +75,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaOutputTokensDetails] with the required
+         * [thinkingTokens] set to the given value.
+         */
+        @JvmStatic fun of(thinkingTokens: Long) = builder().thinkingTokens(thinkingTokens).build()
     }
 
     /** A builder for [BetaOutputTokensDetails]. */

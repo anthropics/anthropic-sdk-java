@@ -498,10 +498,32 @@ private constructor(
                 unrestricted: BetaManagedAgentsUnrestrictedCredentialNetworkingResponse
             ) = Networking(unrestricted = unrestricted)
 
+            /**
+             * Returns an immutable instance of [Networking] whose [ofUnrestricted] variant is built
+             * from the given required [type].
+             */
+            @JvmStatic
+            fun ofUnrestricted(
+                type: BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.Type
+            ) = ofUnrestricted(BetaManagedAgentsUnrestrictedCredentialNetworkingResponse.of(type))
+
             /** The secret is substituted only on requests to the listed hosts. */
             @JvmStatic
             fun ofLimited(limited: BetaManagedAgentsLimitedCredentialNetworkingResponse) =
                 Networking(limited = limited)
+
+            /**
+             * Returns an immutable instance of [Networking] whose [ofLimited] variant is built from
+             * the given required [allowedHosts].
+             */
+            @JvmStatic
+            fun ofLimited(allowedHosts: List<String>) =
+                ofLimited(
+                    BetaManagedAgentsLimitedCredentialNetworkingResponse.builder()
+                        .type(BetaManagedAgentsLimitedCredentialNetworkingResponse.Type.LIMITED)
+                        .allowedHosts(allowedHosts)
+                        .build()
+                )
         }
 
         /**

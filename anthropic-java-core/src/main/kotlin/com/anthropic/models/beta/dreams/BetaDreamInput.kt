@@ -164,9 +164,35 @@ private constructor(
         fun ofMemoryStore(memoryStore: BetaDreamMemoryStoreInput) =
             BetaDreamInput(memoryStore = memoryStore)
 
+        /**
+         * Returns an immutable instance of [BetaDreamInput] whose [ofMemoryStore] variant is built
+         * from the given required [memoryStoreId].
+         */
+        @JvmStatic
+        fun ofMemoryStore(memoryStoreId: String) =
+            ofMemoryStore(
+                BetaDreamMemoryStoreInput.builder()
+                    .type(BetaDreamMemoryStoreInput.Type.MEMORY_STORE)
+                    .memoryStoreId(memoryStoreId)
+                    .build()
+            )
+
         /** Input session transcripts the dream reads. */
         @JvmStatic
         fun ofSessions(sessions: BetaDreamSessionsInput) = BetaDreamInput(sessions = sessions)
+
+        /**
+         * Returns an immutable instance of [BetaDreamInput] whose [ofSessions] variant is built
+         * from the given required [sessionIds].
+         */
+        @JvmStatic
+        fun ofSessions(sessionIds: List<String>) =
+            ofSessions(
+                BetaDreamSessionsInput.builder()
+                    .type(BetaDreamSessionsInput.Type.SESSIONS)
+                    .sessionIds(sessionIds)
+                    .build()
+            )
     }
 
     /**

@@ -11,7 +11,7 @@ internal class BetaUrlPdfSourceTest {
 
     @Test
     fun create() {
-        val betaUrlPdfSource = BetaUrlPdfSource.builder().url("url").build()
+        val betaUrlPdfSource = BetaUrlPdfSource.of("url")
 
         assertThat(betaUrlPdfSource.url()).isEqualTo("url")
     }
@@ -19,7 +19,7 @@ internal class BetaUrlPdfSourceTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaUrlPdfSource = BetaUrlPdfSource.builder().url("url").build()
+        val betaUrlPdfSource = BetaUrlPdfSource.of("url")
 
         val roundtrippedBetaUrlPdfSource =
             jsonMapper.readValue(

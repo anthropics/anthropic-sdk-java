@@ -19,7 +19,7 @@ internal class BetaSelfHostedWorkListResponseTest {
                         .id("id")
                         .acknowledgedAt("acknowledged_at")
                         .createdAt("created_at")
-                        .data(BetaSessionWorkData.builder().id("id").build())
+                        .data(BetaSessionWorkData.of("id"))
                         .environmentId("environment_id")
                         .latestHeartbeatAt("latest_heartbeat_at")
                         .metadata(
@@ -43,7 +43,7 @@ internal class BetaSelfHostedWorkListResponseTest {
                     .id("id")
                     .acknowledgedAt("acknowledged_at")
                     .createdAt("created_at")
-                    .data(BetaSessionWorkData.builder().id("id").build())
+                    .data(BetaSessionWorkData.of("id"))
                     .environmentId("environment_id")
                     .latestHeartbeatAt("latest_heartbeat_at")
                     .metadata(
@@ -71,7 +71,7 @@ internal class BetaSelfHostedWorkListResponseTest {
                         .id("id")
                         .acknowledgedAt("acknowledged_at")
                         .createdAt("created_at")
-                        .data(BetaSessionWorkData.builder().id("id").build())
+                        .data(BetaSessionWorkData.of("id"))
                         .environmentId("environment_id")
                         .latestHeartbeatAt("latest_heartbeat_at")
                         .metadata(

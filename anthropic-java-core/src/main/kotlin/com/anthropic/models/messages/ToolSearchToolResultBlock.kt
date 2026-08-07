@@ -452,6 +452,16 @@ private constructor(
             fun ofToolSearchToolSearchResultBlock(
                 toolSearchToolSearchResultBlock: ToolSearchToolSearchResultBlock
             ) = Content(toolSearchToolSearchResultBlock = toolSearchToolSearchResultBlock)
+
+            /**
+             * Returns an immutable instance of [Content] whose [ofToolSearchToolSearchResultBlock]
+             * variant is built from the given required [toolReferences].
+             */
+            @JvmStatic
+            fun ofToolSearchToolSearchResultBlock(toolReferences: List<ToolReferenceBlock>) =
+                ofToolSearchToolSearchResultBlock(
+                    ToolSearchToolSearchResultBlock.of(toolReferences)
+                )
         }
 
         /**

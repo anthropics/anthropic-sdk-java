@@ -324,34 +324,96 @@ private constructor(
         fun ofInvalidRequestError(invalidRequestError: InvalidRequestError) =
             ErrorObject(invalidRequestError = invalidRequestError)
 
+        /**
+         * Returns an immutable instance of [ErrorObject] whose [ofInvalidRequestError] variant is
+         * built from the given required [message].
+         */
+        @JvmStatic
+        fun ofInvalidRequestError(message: String) =
+            ofInvalidRequestError(InvalidRequestError.of(message))
+
         @JvmStatic
         fun ofAuthenticationError(authenticationError: AuthenticationError) =
             ErrorObject(authenticationError = authenticationError)
 
+        /**
+         * Returns an immutable instance of [ErrorObject] whose [ofAuthenticationError] variant is
+         * built from the given required [message].
+         */
+        @JvmStatic
+        fun ofAuthenticationError(message: String) =
+            ofAuthenticationError(AuthenticationError.of(message))
+
         @JvmStatic
         fun ofBillingError(billingError: BillingError) = ErrorObject(billingError = billingError)
+
+        /**
+         * Returns an immutable instance of [ErrorObject] whose [ofBillingError] variant is built
+         * from the given required [message].
+         */
+        @JvmStatic fun ofBillingError(message: String) = ofBillingError(BillingError.of(message))
 
         @JvmStatic
         fun ofPermissionError(permissionError: PermissionError) =
             ErrorObject(permissionError = permissionError)
 
+        /**
+         * Returns an immutable instance of [ErrorObject] whose [ofPermissionError] variant is built
+         * from the given required [message].
+         */
+        @JvmStatic
+        fun ofPermissionError(message: String) = ofPermissionError(PermissionError.of(message))
+
         @JvmStatic
         fun ofNotFoundError(notFoundError: NotFoundError) =
             ErrorObject(notFoundError = notFoundError)
+
+        /**
+         * Returns an immutable instance of [ErrorObject] whose [ofNotFoundError] variant is built
+         * from the given required [message].
+         */
+        @JvmStatic fun ofNotFoundError(message: String) = ofNotFoundError(NotFoundError.of(message))
 
         @JvmStatic
         fun ofRateLimitError(rateLimitError: RateLimitError) =
             ErrorObject(rateLimitError = rateLimitError)
 
+        /**
+         * Returns an immutable instance of [ErrorObject] whose [ofRateLimitError] variant is built
+         * from the given required [message].
+         */
+        @JvmStatic
+        fun ofRateLimitError(message: String) = ofRateLimitError(RateLimitError.of(message))
+
         @JvmStatic
         fun ofTimeoutError(timeoutError: GatewayTimeoutError) =
             ErrorObject(timeoutError = timeoutError)
 
+        /**
+         * Returns an immutable instance of [ErrorObject] whose [ofTimeoutError] variant is built
+         * from the given required [message].
+         */
+        @JvmStatic
+        fun ofTimeoutError(message: String) = ofTimeoutError(GatewayTimeoutError.of(message))
+
         @JvmStatic fun ofApiError(apiError: ApiErrorObject) = ErrorObject(apiError = apiError)
+
+        /**
+         * Returns an immutable instance of [ErrorObject] whose [ofApiError] variant is built from
+         * the given required [message].
+         */
+        @JvmStatic fun ofApiError(message: String) = ofApiError(ApiErrorObject.of(message))
 
         @JvmStatic
         fun ofOverloadedError(overloadedError: OverloadedError) =
             ErrorObject(overloadedError = overloadedError)
+
+        /**
+         * Returns an immutable instance of [ErrorObject] whose [ofOverloadedError] variant is built
+         * from the given required [message].
+         */
+        @JvmStatic
+        fun ofOverloadedError(message: String) = ofOverloadedError(OverloadedError.of(message))
     }
 
     /**

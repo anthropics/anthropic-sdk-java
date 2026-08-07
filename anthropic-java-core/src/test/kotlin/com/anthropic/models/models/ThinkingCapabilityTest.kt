@@ -16,8 +16,8 @@ internal class ThinkingCapabilityTest {
                 .supported(true)
                 .types(
                     ThinkingTypes.builder()
-                        .adaptive(CapabilitySupport.builder().supported(true).build())
-                        .enabled(CapabilitySupport.builder().supported(true).build())
+                        .adaptive(CapabilitySupport.of(true))
+                        .enabled(CapabilitySupport.of(true))
                         .build()
                 )
                 .build()
@@ -26,8 +26,8 @@ internal class ThinkingCapabilityTest {
         assertThat(thinkingCapability.types())
             .isEqualTo(
                 ThinkingTypes.builder()
-                    .adaptive(CapabilitySupport.builder().supported(true).build())
-                    .enabled(CapabilitySupport.builder().supported(true).build())
+                    .adaptive(CapabilitySupport.of(true))
+                    .enabled(CapabilitySupport.of(true))
                     .build()
             )
     }
@@ -40,8 +40,8 @@ internal class ThinkingCapabilityTest {
                 .supported(true)
                 .types(
                     ThinkingTypes.builder()
-                        .adaptive(CapabilitySupport.builder().supported(true).build())
-                        .enabled(CapabilitySupport.builder().supported(true).build())
+                        .adaptive(CapabilitySupport.of(true))
+                        .enabled(CapabilitySupport.of(true))
                         .build()
                 )
                 .build()

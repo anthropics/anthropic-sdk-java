@@ -406,45 +406,127 @@ private constructor(
         fun ofInvalidRequest(invalidRequest: BetaInvalidRequestError) =
             BetaManagedAgentsError(invalidRequest = invalidRequest)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofInvalidRequest]
+         * variant is built from the given required [message].
+         */
+        @JvmStatic
+        fun ofInvalidRequest(message: String) =
+            ofInvalidRequest(BetaInvalidRequestError.of(message))
+
         @JvmStatic
         fun ofAuthentication(authentication: BetaAuthenticationError) =
             BetaManagedAgentsError(authentication = authentication)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofAuthentication]
+         * variant is built from the given required [message].
+         */
+        @JvmStatic
+        fun ofAuthentication(message: String) =
+            ofAuthentication(BetaAuthenticationError.of(message))
+
         @JvmStatic
         fun ofBilling(billing: BetaBillingError) = BetaManagedAgentsError(billing = billing)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofBilling] variant is
+         * built from the given required [message].
+         */
+        @JvmStatic fun ofBilling(message: String) = ofBilling(BetaBillingError.of(message))
 
         @JvmStatic
         fun ofPermission(permission: BetaPermissionError) =
             BetaManagedAgentsError(permission = permission)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofPermission] variant is
+         * built from the given required [message].
+         */
+        @JvmStatic fun ofPermission(message: String) = ofPermission(BetaPermissionError.of(message))
+
         @JvmStatic
         fun ofNotFound(notFound: BetaNotFoundError) = BetaManagedAgentsError(notFound = notFound)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofNotFound] variant is
+         * built from the given required [message].
+         */
+        @JvmStatic fun ofNotFound(message: String) = ofNotFound(BetaNotFoundError.of(message))
 
         @JvmStatic
         fun ofRateLimit(rateLimit: BetaRateLimitError) =
             BetaManagedAgentsError(rateLimit = rateLimit)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofRateLimit] variant is
+         * built from the given required [message].
+         */
+        @JvmStatic fun ofRateLimit(message: String) = ofRateLimit(BetaRateLimitError.of(message))
+
         @JvmStatic
         fun ofTimeout(timeout: BetaGatewayTimeoutError) = BetaManagedAgentsError(timeout = timeout)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofTimeout] variant is
+         * built from the given required [message].
+         */
+        @JvmStatic fun ofTimeout(message: String) = ofTimeout(BetaGatewayTimeoutError.of(message))
+
         @JvmStatic fun ofApi(api: BetaApiError) = BetaManagedAgentsError(api = api)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofApi] variant is built
+         * from the given required [message].
+         */
+        @JvmStatic fun ofApi(message: String) = ofApi(BetaApiError.of(message))
 
         @JvmStatic
         fun ofOverloaded(overloaded: BetaOverloadedError) =
             BetaManagedAgentsError(overloaded = overloaded)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofOverloaded] variant is
+         * built from the given required [message].
+         */
+        @JvmStatic fun ofOverloaded(message: String) = ofOverloaded(BetaOverloadedError.of(message))
 
         @JvmStatic
         fun ofMemoryPreconditionFailed(
             memoryPreconditionFailed: BetaManagedAgentsMemoryPreconditionFailedError
         ) = BetaManagedAgentsError(memoryPreconditionFailed = memoryPreconditionFailed)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose
+         * [ofMemoryPreconditionFailed] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofMemoryPreconditionFailed(type: BetaManagedAgentsMemoryPreconditionFailedError.Type) =
+            ofMemoryPreconditionFailed(BetaManagedAgentsMemoryPreconditionFailedError.of(type))
+
         @JvmStatic
         fun ofMemoryPathConflict(memoryPathConflict: BetaManagedAgentsMemoryPathConflictError) =
             BetaManagedAgentsError(memoryPathConflict = memoryPathConflict)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofMemoryPathConflict]
+         * variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofMemoryPathConflict(type: BetaManagedAgentsMemoryPathConflictError.Type) =
+            ofMemoryPathConflict(BetaManagedAgentsMemoryPathConflictError.of(type))
+
         @JvmStatic
         fun ofConflict(conflict: BetaManagedAgentsConflictError) =
             BetaManagedAgentsError(conflict = conflict)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsError] whose [ofConflict] variant is
+         * built from the given required [type].
+         */
+        @JvmStatic
+        fun ofConflict(type: BetaManagedAgentsConflictError.Type) =
+            ofConflict(BetaManagedAgentsConflictError.of(type))
     }
 
     /**

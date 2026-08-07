@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -166,10 +167,31 @@ private constructor(
         fun ofSchedule(schedule: BetaManagedAgentsScheduleTriggerContext) =
             BetaManagedAgentsTriggerContext(schedule = schedule)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsTriggerContext] whose [ofSchedule]
+         * variant is built from the given required [scheduledAt].
+         */
+        @JvmStatic
+        fun ofSchedule(scheduledAt: OffsetDateTime) =
+            ofSchedule(
+                BetaManagedAgentsScheduleTriggerContext.builder()
+                    .type(BetaManagedAgentsScheduleTriggerContext.Type.SCHEDULE)
+                    .scheduledAt(scheduledAt)
+                    .build()
+            )
+
         /** The run was started manually by creating a session directly against the deployment. */
         @JvmStatic
         fun ofManual(manual: BetaManagedAgentsManualTriggerContext) =
             BetaManagedAgentsTriggerContext(manual = manual)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsTriggerContext] whose [ofManual]
+         * variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofManual(type: BetaManagedAgentsManualTriggerContext.Type) =
+            ofManual(BetaManagedAgentsManualTriggerContext.of(type))
     }
 
     /**

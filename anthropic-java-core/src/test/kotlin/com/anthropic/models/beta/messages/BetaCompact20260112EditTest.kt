@@ -15,13 +15,12 @@ internal class BetaCompact20260112EditTest {
             BetaCompact20260112Edit.builder()
                 .instructions("instructions")
                 .pauseAfterCompaction(true)
-                .trigger(BetaInputTokensTrigger.builder().value(1L).build())
+                .trigger(BetaInputTokensTrigger.of(1L))
                 .build()
 
         assertThat(betaCompact20260112Edit.instructions()).contains("instructions")
         assertThat(betaCompact20260112Edit.pauseAfterCompaction()).contains(true)
-        assertThat(betaCompact20260112Edit.trigger())
-            .contains(BetaInputTokensTrigger.builder().value(1L).build())
+        assertThat(betaCompact20260112Edit.trigger()).contains(BetaInputTokensTrigger.of(1L))
     }
 
     @Test
@@ -31,7 +30,7 @@ internal class BetaCompact20260112EditTest {
             BetaCompact20260112Edit.builder()
                 .instructions("instructions")
                 .pauseAfterCompaction(true)
-                .trigger(BetaInputTokensTrigger.builder().value(1L).build())
+                .trigger(BetaInputTokensTrigger.of(1L))
                 .build()
 
         val roundtrippedBetaCompact20260112Edit =

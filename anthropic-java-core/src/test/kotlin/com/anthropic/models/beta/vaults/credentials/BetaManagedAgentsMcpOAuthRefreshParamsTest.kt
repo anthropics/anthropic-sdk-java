@@ -17,9 +17,9 @@ internal class BetaManagedAgentsMcpOAuthRefreshParamsTest {
                 .refreshToken("x")
                 .tokenEndpoint("x")
                 .tokenEndpointAuth(
-                    BetaManagedAgentsTokenEndpointAuthNoneParam.builder()
-                        .type(BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE)
-                        .build()
+                    BetaManagedAgentsTokenEndpointAuthNoneParam.of(
+                        BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
+                    )
                 )
                 .resource("x")
                 .scope("x")
@@ -31,9 +31,7 @@ internal class BetaManagedAgentsMcpOAuthRefreshParamsTest {
         assertThat(betaManagedAgentsMcpOAuthRefreshParams.tokenEndpointAuth())
             .isEqualTo(
                 BetaManagedAgentsMcpOAuthRefreshParams.TokenEndpointAuth.ofNone(
-                    BetaManagedAgentsTokenEndpointAuthNoneParam.builder()
-                        .type(BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE)
-                        .build()
+                    BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
                 )
             )
         assertThat(betaManagedAgentsMcpOAuthRefreshParams.resource()).contains("x")
@@ -49,9 +47,9 @@ internal class BetaManagedAgentsMcpOAuthRefreshParamsTest {
                 .refreshToken("x")
                 .tokenEndpoint("x")
                 .tokenEndpointAuth(
-                    BetaManagedAgentsTokenEndpointAuthNoneParam.builder()
-                        .type(BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE)
-                        .build()
+                    BetaManagedAgentsTokenEndpointAuthNoneParam.of(
+                        BetaManagedAgentsTokenEndpointAuthNoneParam.Type.NONE
+                    )
                 )
                 .resource("x")
                 .scope("x")

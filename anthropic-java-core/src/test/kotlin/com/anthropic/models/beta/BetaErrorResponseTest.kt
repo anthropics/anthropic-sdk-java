@@ -17,12 +17,7 @@ internal class BetaErrorResponseTest {
                 .requestId("request_id")
                 .build()
 
-        assertThat(betaErrorResponse.error())
-            .isEqualTo(
-                BetaError.ofInvalidRequest(
-                    BetaInvalidRequestError.builder().message("message").build()
-                )
-            )
+        assertThat(betaErrorResponse.error()).isEqualTo(BetaError.ofInvalidRequest("message"))
         assertThat(betaErrorResponse.requestId()).contains("request_id")
     }
 

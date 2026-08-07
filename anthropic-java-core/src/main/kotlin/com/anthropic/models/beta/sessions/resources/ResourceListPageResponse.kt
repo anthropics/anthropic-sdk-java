@@ -91,6 +91,13 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [ResourceListPageResponse] with the required [data] set
+         * to the given value.
+         */
+        @JvmStatic
+        fun of(data: List<BetaManagedAgentsSessionResource>) = builder().data(data).build()
     }
 
     /** A builder for [ResourceListPageResponse]. */

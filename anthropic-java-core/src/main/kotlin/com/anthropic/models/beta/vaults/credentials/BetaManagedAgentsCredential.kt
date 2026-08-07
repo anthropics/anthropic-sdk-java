@@ -736,10 +736,36 @@ private constructor(
             fun ofMcpOAuth(mcpOAuth: BetaManagedAgentsMcpOAuthAuthResponse) =
                 Auth(mcpOAuth = mcpOAuth)
 
+            /**
+             * Returns an immutable instance of [Auth] whose [ofMcpOAuth] variant is built from the
+             * given required [mcpServerUrl].
+             */
+            @JvmStatic
+            fun ofMcpOAuth(mcpServerUrl: String) =
+                ofMcpOAuth(
+                    BetaManagedAgentsMcpOAuthAuthResponse.builder()
+                        .type(BetaManagedAgentsMcpOAuthAuthResponse.Type.MCP_OAUTH)
+                        .mcpServerUrl(mcpServerUrl)
+                        .build()
+                )
+
             /** Static bearer token credential details for an MCP server. */
             @JvmStatic
             fun ofStaticBearer(staticBearer: BetaManagedAgentsStaticBearerAuthResponse) =
                 Auth(staticBearer = staticBearer)
+
+            /**
+             * Returns an immutable instance of [Auth] whose [ofStaticBearer] variant is built from
+             * the given required [mcpServerUrl].
+             */
+            @JvmStatic
+            fun ofStaticBearer(mcpServerUrl: String) =
+                ofStaticBearer(
+                    BetaManagedAgentsStaticBearerAuthResponse.builder()
+                        .type(BetaManagedAgentsStaticBearerAuthResponse.Type.STATIC_BEARER)
+                        .mcpServerUrl(mcpServerUrl)
+                        .build()
+                )
 
             /** Environment variable credential details. The secret value is never returned. */
             @JvmStatic

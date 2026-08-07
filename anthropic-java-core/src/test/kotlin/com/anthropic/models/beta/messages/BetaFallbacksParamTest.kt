@@ -26,13 +26,11 @@ internal class BetaFallbacksParamTest {
                         BetaOutputConfig.builder()
                             .effort(BetaOutputConfig.Effort.LOW)
                             .format(
-                                BetaJsonOutputFormat.builder()
-                                    .schema(
-                                        BetaJsonOutputFormat.Schema.builder()
-                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                            .build()
-                                    )
-                                    .build()
+                                BetaJsonOutputFormat.of(
+                                    BetaJsonOutputFormat.Schema.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                        .build()
+                                )
                             )
                             .taskBudget(
                                 BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
@@ -68,13 +66,11 @@ internal class BetaFallbacksParamTest {
                             BetaOutputConfig.builder()
                                 .effort(BetaOutputConfig.Effort.LOW)
                                 .format(
-                                    BetaJsonOutputFormat.builder()
-                                        .schema(
-                                            BetaJsonOutputFormat.Schema.builder()
-                                                .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                                .build()
-                                        )
-                                        .build()
+                                    BetaJsonOutputFormat.of(
+                                        BetaJsonOutputFormat.Schema.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                            .build()
+                                    )
                                 )
                                 .taskBudget(
                                     BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()

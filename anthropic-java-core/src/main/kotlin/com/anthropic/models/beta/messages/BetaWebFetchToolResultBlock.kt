@@ -539,6 +539,14 @@ private constructor(
                 betaWebFetchToolResultErrorBlock: BetaWebFetchToolResultErrorBlock
             ) = Content(betaWebFetchToolResultErrorBlock = betaWebFetchToolResultErrorBlock)
 
+            /**
+             * Returns an immutable instance of [Content] whose [ofBetaWebFetchToolResultErrorBlock]
+             * variant is built from the given required [errorCode].
+             */
+            @JvmStatic
+            fun ofBetaWebFetchToolResultErrorBlock(errorCode: BetaWebFetchToolResultErrorCode) =
+                ofBetaWebFetchToolResultErrorBlock(BetaWebFetchToolResultErrorBlock.of(errorCode))
+
             @JvmStatic
             fun ofBetaWebFetchBlock(betaWebFetchBlock: BetaWebFetchBlock) =
                 Content(betaWebFetchBlock = betaWebFetchBlock)
@@ -819,9 +827,25 @@ private constructor(
             fun ofCodeExecution20250825(codeExecution20250825: BetaServerToolCaller) =
                 Caller(codeExecution20250825 = codeExecution20250825)
 
+            /**
+             * Returns an immutable instance of [Caller] whose [ofCodeExecution20250825] variant is
+             * built from the given required [toolId].
+             */
+            @JvmStatic
+            fun ofCodeExecution20250825(toolId: String) =
+                ofCodeExecution20250825(BetaServerToolCaller.of(toolId))
+
             @JvmStatic
             fun ofCodeExecution20260120(codeExecution20260120: BetaServerToolCaller20260120) =
                 Caller(codeExecution20260120 = codeExecution20260120)
+
+            /**
+             * Returns an immutable instance of [Caller] whose [ofCodeExecution20260120] variant is
+             * built from the given required [toolId].
+             */
+            @JvmStatic
+            fun ofCodeExecution20260120(toolId: String) =
+                ofCodeExecution20260120(BetaServerToolCaller20260120.of(toolId))
         }
 
         /** An interface that defines how to map each variant of [Caller] to a value of type [T]. */

@@ -11,7 +11,7 @@ internal class RateLimitErrorTest {
 
     @Test
     fun create() {
-        val rateLimitError = RateLimitError.builder().message("message").build()
+        val rateLimitError = RateLimitError.of("message")
 
         assertThat(rateLimitError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class RateLimitErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val rateLimitError = RateLimitError.builder().message("message").build()
+        val rateLimitError = RateLimitError.of("message")
 
         val roundtrippedRateLimitError =
             jsonMapper.readValue(

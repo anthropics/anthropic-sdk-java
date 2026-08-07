@@ -166,10 +166,31 @@ private constructor(
         fun ofManual(manual: BetaManagedAgentsManualDeploymentPausedReason) =
             BetaManagedAgentsDeploymentPausedReason(manual = manual)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReason] whose
+         * [ofManual] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofManual(type: BetaManagedAgentsManualDeploymentPausedReason.Type) =
+            ofManual(BetaManagedAgentsManualDeploymentPausedReason.of(type))
+
         /** A scheduled fire recorded a failed run whose error auto-pauses the deployment. */
         @JvmStatic
         fun ofError(error: BetaManagedAgentsErrorDeploymentPausedReason) =
             BetaManagedAgentsDeploymentPausedReason(error = error)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReason] whose
+         * [ofError] variant is built from the given required [error].
+         */
+        @JvmStatic
+        fun ofError(error: BetaManagedAgentsDeploymentPausedReasonError) =
+            ofError(
+                BetaManagedAgentsErrorDeploymentPausedReason.builder()
+                    .type(BetaManagedAgentsErrorDeploymentPausedReason.Type.ERROR)
+                    .error(error)
+                    .build()
+            )
     }
 
     /**

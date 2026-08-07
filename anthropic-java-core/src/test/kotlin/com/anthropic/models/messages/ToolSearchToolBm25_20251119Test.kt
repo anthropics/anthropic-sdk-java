@@ -36,9 +36,9 @@ internal class ToolSearchToolBm25_20251119Test {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseToolSearchToolBm25_20251119 =
-            ToolSearchToolBm25_20251119.builder()
-                .type(ToolSearchToolBm25_20251119.Type.TOOL_SEARCH_TOOL_BM25_20251119)
-                .build()
+            ToolSearchToolBm25_20251119.of(
+                ToolSearchToolBm25_20251119.Type.TOOL_SEARCH_TOOL_BM25_20251119
+            )
 
         val toolSearchToolBm25_20251119 =
             baseToolSearchToolBm25_20251119

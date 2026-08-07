@@ -16,9 +16,9 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
                 .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                 .enabled(true)
                 .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                        .build()
+                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    )
                 )
                 .build()
 
@@ -28,9 +28,7 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
         assertThat(betaManagedAgentsAgentToolConfigParams.permissionPolicy())
             .contains(
                 BetaManagedAgentsAgentToolConfigParams.PermissionPolicy.ofAlwaysAllow(
-                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                        .build()
+                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                 )
             )
     }
@@ -43,9 +41,9 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
                 .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
                 .enabled(true)
                 .permissionPolicy(
-                    BetaManagedAgentsAlwaysAllowPolicy.builder()
-                        .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                        .build()
+                    BetaManagedAgentsAlwaysAllowPolicy.of(
+                        BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                    )
                 )
                 .build()
 

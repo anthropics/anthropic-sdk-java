@@ -16,7 +16,7 @@ internal class BetaRawContentBlockDeltaTest {
 
     @Test
     fun ofText() {
-        val text = BetaTextDelta.builder().text("text").build()
+        val text = BetaTextDelta.of("text")
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofText(text)
 
@@ -31,8 +31,7 @@ internal class BetaRawContentBlockDeltaTest {
     @Test
     fun ofTextRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaRawContentBlockDelta =
-            BetaRawContentBlockDelta.ofText(BetaTextDelta.builder().text("text").build())
+        val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofText(BetaTextDelta.of("text"))
 
         val roundtrippedBetaRawContentBlockDelta =
             jsonMapper.readValue(
@@ -45,7 +44,7 @@ internal class BetaRawContentBlockDeltaTest {
 
     @Test
     fun ofInputJson() {
-        val inputJson = BetaInputJsonDelta.builder().partialJson("partial_json").build()
+        val inputJson = BetaInputJsonDelta.of("partial_json")
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofInputJson(inputJson)
 
@@ -61,9 +60,7 @@ internal class BetaRawContentBlockDeltaTest {
     fun ofInputJsonRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaRawContentBlockDelta =
-            BetaRawContentBlockDelta.ofInputJson(
-                BetaInputJsonDelta.builder().partialJson("partial_json").build()
-            )
+            BetaRawContentBlockDelta.ofInputJson(BetaInputJsonDelta.of("partial_json"))
 
         val roundtrippedBetaRawContentBlockDelta =
             jsonMapper.readValue(
@@ -161,7 +158,7 @@ internal class BetaRawContentBlockDeltaTest {
 
     @Test
     fun ofSignature() {
-        val signature = BetaSignatureDelta.builder().signature("signature").build()
+        val signature = BetaSignatureDelta.of("signature")
 
         val betaRawContentBlockDelta = BetaRawContentBlockDelta.ofSignature(signature)
 
@@ -177,9 +174,7 @@ internal class BetaRawContentBlockDeltaTest {
     fun ofSignatureRoundtrip() {
         val jsonMapper = jsonMapper()
         val betaRawContentBlockDelta =
-            BetaRawContentBlockDelta.ofSignature(
-                BetaSignatureDelta.builder().signature("signature").build()
-            )
+            BetaRawContentBlockDelta.ofSignature(BetaSignatureDelta.of("signature"))
 
         val roundtrippedBetaRawContentBlockDelta =
             jsonMapper.readValue(

@@ -114,6 +114,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [MidConversationSystemBlockParam] with the required
+         * [content] set to the given value.
+         */
+        @JvmStatic fun of(content: List<TextBlockParam>) = builder().content(content).build()
     }
 
     /** A builder for [MidConversationSystemBlockParam]. */

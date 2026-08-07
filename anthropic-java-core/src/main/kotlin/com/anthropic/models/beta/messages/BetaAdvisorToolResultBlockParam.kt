@@ -537,15 +537,43 @@ private constructor(
                 betaAdvisorToolResultErrorParam: BetaAdvisorToolResultErrorParam
             ) = Content(betaAdvisorToolResultErrorParam = betaAdvisorToolResultErrorParam)
 
+            /**
+             * Returns an immutable instance of [Content] whose [ofBetaAdvisorToolResultErrorParam]
+             * variant is built from the given required [errorCode].
+             */
+            @JvmStatic
+            fun ofBetaAdvisorToolResultErrorParam(
+                errorCode: BetaAdvisorToolResultErrorParam.ErrorCode
+            ) = ofBetaAdvisorToolResultErrorParam(BetaAdvisorToolResultErrorParam.of(errorCode))
+
             @JvmStatic
             fun ofBetaAdvisorResultBlockParam(
                 betaAdvisorResultBlockParam: BetaAdvisorResultBlockParam
             ) = Content(betaAdvisorResultBlockParam = betaAdvisorResultBlockParam)
 
+            /**
+             * Returns an immutable instance of [Content] whose [ofBetaAdvisorResultBlockParam]
+             * variant is built from the given required [text].
+             */
+            @JvmStatic
+            fun ofBetaAdvisorResultBlockParam(text: String) =
+                ofBetaAdvisorResultBlockParam(BetaAdvisorResultBlockParam.of(text))
+
             @JvmStatic
             fun ofBetaAdvisorRedactedResultBlockParam(
                 betaAdvisorRedactedResultBlockParam: BetaAdvisorRedactedResultBlockParam
             ) = Content(betaAdvisorRedactedResultBlockParam = betaAdvisorRedactedResultBlockParam)
+
+            /**
+             * Returns an immutable instance of [Content] whose
+             * [ofBetaAdvisorRedactedResultBlockParam] variant is built from the given required
+             * [encryptedContent].
+             */
+            @JvmStatic
+            fun ofBetaAdvisorRedactedResultBlockParam(encryptedContent: String) =
+                ofBetaAdvisorRedactedResultBlockParam(
+                    BetaAdvisorRedactedResultBlockParam.of(encryptedContent)
+                )
         }
 
         /**

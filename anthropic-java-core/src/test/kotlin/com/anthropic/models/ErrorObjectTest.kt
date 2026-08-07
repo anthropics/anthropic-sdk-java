@@ -16,7 +16,7 @@ internal class ErrorObjectTest {
 
     @Test
     fun ofInvalidRequestError() {
-        val invalidRequestError = InvalidRequestError.builder().message("message").build()
+        val invalidRequestError = InvalidRequestError.of("message")
 
         val errorObject = ErrorObject.ofInvalidRequestError(invalidRequestError)
 
@@ -34,10 +34,7 @@ internal class ErrorObjectTest {
     @Test
     fun ofInvalidRequestErrorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val errorObject =
-            ErrorObject.ofInvalidRequestError(
-                InvalidRequestError.builder().message("message").build()
-            )
+        val errorObject = ErrorObject.ofInvalidRequestError(InvalidRequestError.of("message"))
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(
@@ -50,7 +47,7 @@ internal class ErrorObjectTest {
 
     @Test
     fun ofAuthenticationError() {
-        val authenticationError = AuthenticationError.builder().message("message").build()
+        val authenticationError = AuthenticationError.of("message")
 
         val errorObject = ErrorObject.ofAuthenticationError(authenticationError)
 
@@ -68,10 +65,7 @@ internal class ErrorObjectTest {
     @Test
     fun ofAuthenticationErrorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val errorObject =
-            ErrorObject.ofAuthenticationError(
-                AuthenticationError.builder().message("message").build()
-            )
+        val errorObject = ErrorObject.ofAuthenticationError(AuthenticationError.of("message"))
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(
@@ -84,7 +78,7 @@ internal class ErrorObjectTest {
 
     @Test
     fun ofBillingError() {
-        val billingError = BillingError.builder().message("message").build()
+        val billingError = BillingError.of("message")
 
         val errorObject = ErrorObject.ofBillingError(billingError)
 
@@ -102,8 +96,7 @@ internal class ErrorObjectTest {
     @Test
     fun ofBillingErrorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val errorObject =
-            ErrorObject.ofBillingError(BillingError.builder().message("message").build())
+        val errorObject = ErrorObject.ofBillingError(BillingError.of("message"))
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(
@@ -116,7 +109,7 @@ internal class ErrorObjectTest {
 
     @Test
     fun ofPermissionError() {
-        val permissionError = PermissionError.builder().message("message").build()
+        val permissionError = PermissionError.of("message")
 
         val errorObject = ErrorObject.ofPermissionError(permissionError)
 
@@ -134,8 +127,7 @@ internal class ErrorObjectTest {
     @Test
     fun ofPermissionErrorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val errorObject =
-            ErrorObject.ofPermissionError(PermissionError.builder().message("message").build())
+        val errorObject = ErrorObject.ofPermissionError(PermissionError.of("message"))
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(
@@ -148,7 +140,7 @@ internal class ErrorObjectTest {
 
     @Test
     fun ofNotFoundError() {
-        val notFoundError = NotFoundError.builder().message("message").build()
+        val notFoundError = NotFoundError.of("message")
 
         val errorObject = ErrorObject.ofNotFoundError(notFoundError)
 
@@ -166,8 +158,7 @@ internal class ErrorObjectTest {
     @Test
     fun ofNotFoundErrorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val errorObject =
-            ErrorObject.ofNotFoundError(NotFoundError.builder().message("message").build())
+        val errorObject = ErrorObject.ofNotFoundError(NotFoundError.of("message"))
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(
@@ -180,7 +171,7 @@ internal class ErrorObjectTest {
 
     @Test
     fun ofRateLimitError() {
-        val rateLimitError = RateLimitError.builder().message("message").build()
+        val rateLimitError = RateLimitError.of("message")
 
         val errorObject = ErrorObject.ofRateLimitError(rateLimitError)
 
@@ -198,8 +189,7 @@ internal class ErrorObjectTest {
     @Test
     fun ofRateLimitErrorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val errorObject =
-            ErrorObject.ofRateLimitError(RateLimitError.builder().message("message").build())
+        val errorObject = ErrorObject.ofRateLimitError(RateLimitError.of("message"))
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(
@@ -212,7 +202,7 @@ internal class ErrorObjectTest {
 
     @Test
     fun ofTimeoutError() {
-        val timeoutError = GatewayTimeoutError.builder().message("message").build()
+        val timeoutError = GatewayTimeoutError.of("message")
 
         val errorObject = ErrorObject.ofTimeoutError(timeoutError)
 
@@ -230,8 +220,7 @@ internal class ErrorObjectTest {
     @Test
     fun ofTimeoutErrorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val errorObject =
-            ErrorObject.ofTimeoutError(GatewayTimeoutError.builder().message("message").build())
+        val errorObject = ErrorObject.ofTimeoutError(GatewayTimeoutError.of("message"))
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(
@@ -244,7 +233,7 @@ internal class ErrorObjectTest {
 
     @Test
     fun ofApiError() {
-        val apiError = ApiErrorObject.builder().message("message").build()
+        val apiError = ApiErrorObject.of("message")
 
         val errorObject = ErrorObject.ofApiError(apiError)
 
@@ -262,8 +251,7 @@ internal class ErrorObjectTest {
     @Test
     fun ofApiErrorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val errorObject =
-            ErrorObject.ofApiError(ApiErrorObject.builder().message("message").build())
+        val errorObject = ErrorObject.ofApiError(ApiErrorObject.of("message"))
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(
@@ -276,7 +264,7 @@ internal class ErrorObjectTest {
 
     @Test
     fun ofOverloadedError() {
-        val overloadedError = OverloadedError.builder().message("message").build()
+        val overloadedError = OverloadedError.of("message")
 
         val errorObject = ErrorObject.ofOverloadedError(overloadedError)
 
@@ -294,8 +282,7 @@ internal class ErrorObjectTest {
     @Test
     fun ofOverloadedErrorRoundtrip() {
         val jsonMapper = jsonMapper()
-        val errorObject =
-            ErrorObject.ofOverloadedError(OverloadedError.builder().message("message").build())
+        val errorObject = ErrorObject.ofOverloadedError(OverloadedError.of("message"))
 
         val roundtrippedErrorObject =
             jsonMapper.readValue(

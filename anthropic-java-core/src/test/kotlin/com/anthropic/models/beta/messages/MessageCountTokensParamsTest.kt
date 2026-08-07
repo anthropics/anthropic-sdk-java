@@ -28,10 +28,10 @@ internal class MessageCountTokensParamsTest {
                 BetaContextManagementConfig.builder()
                     .addEdit(
                         BetaClearToolUses20250919Edit.builder()
-                            .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                            .clearAtLeast(BetaInputTokensClearAtLeast.of(0L))
                             .clearToolInputs(true)
                             .addExcludeTool("string")
-                            .keep(BetaToolUsesKeep.builder().value(0L).build())
+                            .keep(BetaToolUsesKeep.of(0L))
                             .inputTokensTrigger(1L)
                             .build()
                     )
@@ -54,25 +54,21 @@ internal class MessageCountTokensParamsTest {
                 BetaOutputConfig.builder()
                     .effort(BetaOutputConfig.Effort.LOW)
                     .format(
-                        BetaJsonOutputFormat.builder()
-                            .schema(
-                                BetaJsonOutputFormat.Schema.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .build()
+                        BetaJsonOutputFormat.of(
+                            BetaJsonOutputFormat.Schema.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                     )
                     .taskBudget(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
                     .build()
             )
             .outputFormat(
-                BetaJsonOutputFormat.builder()
-                    .schema(
-                        BetaJsonOutputFormat.Schema.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("bar"))
-                            .build()
-                    )
-                    .build()
+                BetaJsonOutputFormat.of(
+                    BetaJsonOutputFormat.Schema.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
             )
             .speed(MessageCountTokensParams.Speed.STANDARD)
             .systemOfBetaTextBlockParams(
@@ -154,12 +150,10 @@ internal class MessageCountTokensParamsTest {
                     BetaContextManagementConfig.builder()
                         .addEdit(
                             BetaClearToolUses20250919Edit.builder()
-                                .clearAtLeast(
-                                    BetaInputTokensClearAtLeast.builder().value(0L).build()
-                                )
+                                .clearAtLeast(BetaInputTokensClearAtLeast.of(0L))
                                 .clearToolInputs(true)
                                 .addExcludeTool("string")
-                                .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                .keep(BetaToolUsesKeep.of(0L))
                                 .inputTokensTrigger(1L)
                                 .build()
                         )
@@ -182,13 +176,11 @@ internal class MessageCountTokensParamsTest {
                     BetaOutputConfig.builder()
                         .effort(BetaOutputConfig.Effort.LOW)
                         .format(
-                            BetaJsonOutputFormat.builder()
-                                .schema(
-                                    BetaJsonOutputFormat.Schema.builder()
-                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                        .build()
-                                )
-                                .build()
+                            BetaJsonOutputFormat.of(
+                                BetaJsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
                         )
                         .taskBudget(
                             BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
@@ -196,13 +188,11 @@ internal class MessageCountTokensParamsTest {
                         .build()
                 )
                 .outputFormat(
-                    BetaJsonOutputFormat.builder()
-                        .schema(
-                            BetaJsonOutputFormat.Schema.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                .build()
-                        )
-                        .build()
+                    BetaJsonOutputFormat.of(
+                        BetaJsonOutputFormat.Schema.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                 )
                 .speed(MessageCountTokensParams.Speed.STANDARD)
                 .systemOfBetaTextBlockParams(
@@ -307,12 +297,10 @@ internal class MessageCountTokensParamsTest {
                     BetaContextManagementConfig.builder()
                         .addEdit(
                             BetaClearToolUses20250919Edit.builder()
-                                .clearAtLeast(
-                                    BetaInputTokensClearAtLeast.builder().value(0L).build()
-                                )
+                                .clearAtLeast(BetaInputTokensClearAtLeast.of(0L))
                                 .clearToolInputs(true)
                                 .addExcludeTool("string")
-                                .keep(BetaToolUsesKeep.builder().value(0L).build())
+                                .keep(BetaToolUsesKeep.of(0L))
                                 .inputTokensTrigger(1L)
                                 .build()
                         )
@@ -335,13 +323,11 @@ internal class MessageCountTokensParamsTest {
                     BetaOutputConfig.builder()
                         .effort(BetaOutputConfig.Effort.LOW)
                         .format(
-                            BetaJsonOutputFormat.builder()
-                                .schema(
-                                    BetaJsonOutputFormat.Schema.builder()
-                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                        .build()
-                                )
-                                .build()
+                            BetaJsonOutputFormat.of(
+                                BetaJsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
                         )
                         .taskBudget(
                             BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build()
@@ -349,13 +335,11 @@ internal class MessageCountTokensParamsTest {
                         .build()
                 )
                 .outputFormat(
-                    BetaJsonOutputFormat.builder()
-                        .schema(
-                            BetaJsonOutputFormat.Schema.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                .build()
-                        )
-                        .build()
+                    BetaJsonOutputFormat.of(
+                        BetaJsonOutputFormat.Schema.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                 )
                 .speed(MessageCountTokensParams.Speed.STANDARD)
                 .systemOfBetaTextBlockParams(
@@ -440,10 +424,10 @@ internal class MessageCountTokensParamsTest {
                 BetaContextManagementConfig.builder()
                     .addEdit(
                         BetaClearToolUses20250919Edit.builder()
-                            .clearAtLeast(BetaInputTokensClearAtLeast.builder().value(0L).build())
+                            .clearAtLeast(BetaInputTokensClearAtLeast.of(0L))
                             .clearToolInputs(true)
                             .addExcludeTool("string")
-                            .keep(BetaToolUsesKeep.builder().value(0L).build())
+                            .keep(BetaToolUsesKeep.of(0L))
                             .inputTokensTrigger(1L)
                             .build()
                     )
@@ -468,26 +452,22 @@ internal class MessageCountTokensParamsTest {
                 BetaOutputConfig.builder()
                     .effort(BetaOutputConfig.Effort.LOW)
                     .format(
-                        BetaJsonOutputFormat.builder()
-                            .schema(
-                                BetaJsonOutputFormat.Schema.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .build()
+                        BetaJsonOutputFormat.of(
+                            BetaJsonOutputFormat.Schema.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                     )
                     .taskBudget(BetaTokenTaskBudget.builder().total(1024L).remaining(0L).build())
                     .build()
             )
         assertThat(body.outputFormat())
             .contains(
-                BetaJsonOutputFormat.builder()
-                    .schema(
-                        BetaJsonOutputFormat.Schema.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("bar"))
-                            .build()
-                    )
-                    .build()
+                BetaJsonOutputFormat.of(
+                    BetaJsonOutputFormat.Schema.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
             )
         assertThat(body.speed()).contains(MessageCountTokensParams.Speed.STANDARD)
         assertThat(body.system())

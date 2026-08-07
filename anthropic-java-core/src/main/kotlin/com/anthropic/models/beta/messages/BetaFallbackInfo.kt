@@ -73,6 +73,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaFallbackInfo] with the required [model] set to the
+         * given value.
+         */
+        @JvmStatic fun of(model: Model) = builder().model(model).build()
     }
 
     /** A builder for [BetaFallbackInfo]. */

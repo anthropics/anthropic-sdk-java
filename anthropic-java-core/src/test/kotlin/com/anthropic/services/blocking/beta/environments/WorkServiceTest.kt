@@ -60,13 +60,11 @@ internal class WorkServiceTest {
                     .workId("work_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .betaSelfHostedWorkUpdateRequest(
-                        BetaSelfHostedWorkUpdateRequest.builder()
-                            .metadata(
-                                BetaSelfHostedWorkUpdateRequest.Metadata.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                                    .build()
-                            )
-                            .build()
+                        BetaSelfHostedWorkUpdateRequest.of(
+                            BetaSelfHostedWorkUpdateRequest.Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                     )
                     .build()
             )

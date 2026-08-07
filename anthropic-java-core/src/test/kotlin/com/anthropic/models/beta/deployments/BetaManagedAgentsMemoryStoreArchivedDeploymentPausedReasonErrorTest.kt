@@ -12,12 +12,10 @@ internal class BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonErrorTe
     @Test
     fun create() {
         val betaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError =
-            BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.Type
-                        .MEMORY_STORE_ARCHIVED_ERROR
-                )
-                .build()
+            BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.of(
+                BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.Type
+                    .MEMORY_STORE_ARCHIVED_ERROR
+            )
 
         assertThat(betaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.type())
             .isEqualTo(
@@ -30,12 +28,10 @@ internal class BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonErrorTe
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError =
-            BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.builder()
-                .type(
-                    BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.Type
-                        .MEMORY_STORE_ARCHIVED_ERROR
-                )
-                .build()
+            BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.of(
+                BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.Type
+                    .MEMORY_STORE_ARCHIVED_ERROR
+            )
 
         val roundtrippedBetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError =
             jsonMapper.readValue(

@@ -11,7 +11,7 @@ internal class BetaToolUsesTriggerTest {
 
     @Test
     fun create() {
-        val betaToolUsesTrigger = BetaToolUsesTrigger.builder().value(1L).build()
+        val betaToolUsesTrigger = BetaToolUsesTrigger.of(1L)
 
         assertThat(betaToolUsesTrigger.value()).isEqualTo(1L)
     }
@@ -19,7 +19,7 @@ internal class BetaToolUsesTriggerTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaToolUsesTrigger = BetaToolUsesTrigger.builder().value(1L).build()
+        val betaToolUsesTrigger = BetaToolUsesTrigger.of(1L)
 
         val roundtrippedBetaToolUsesTrigger =
             jsonMapper.readValue(

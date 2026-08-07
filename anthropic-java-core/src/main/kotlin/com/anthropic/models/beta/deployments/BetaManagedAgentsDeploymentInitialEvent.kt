@@ -7,6 +7,7 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -213,6 +214,19 @@ private constructor(
         fun ofUserMessage(userMessage: BetaManagedAgentsDeploymentUserMessageEvent) =
             BetaManagedAgentsDeploymentInitialEvent(userMessage = userMessage)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentInitialEvent] whose
+         * [ofUserMessage] variant is built from the given required [content].
+         */
+        @JvmStatic
+        fun ofUserMessage(content: List<BetaManagedAgentsDeploymentUserMessageEvent.Content>) =
+            ofUserMessage(
+                BetaManagedAgentsDeploymentUserMessageEvent.builder()
+                    .type(BetaManagedAgentsDeploymentUserMessageEvent.Type.USER_MESSAGE)
+                    .content(content)
+                    .build()
+            )
+
         /** An outcome the agent should work toward. The agent begins work on receipt. */
         @JvmStatic
         fun ofUserDefineOutcome(
@@ -227,6 +241,19 @@ private constructor(
         @JvmStatic
         fun ofSystemMessage(systemMessage: BetaManagedAgentsDeploymentSystemMessageEvent) =
             BetaManagedAgentsDeploymentInitialEvent(systemMessage = systemMessage)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentInitialEvent] whose
+         * [ofSystemMessage] variant is built from the given required [content].
+         */
+        @JvmStatic
+        fun ofSystemMessage(content: List<BetaManagedAgentsSystemContentBlock>) =
+            ofSystemMessage(
+                BetaManagedAgentsDeploymentSystemMessageEvent.builder()
+                    .type(BetaManagedAgentsDeploymentSystemMessageEvent.Type.SYSTEM_MESSAGE)
+                    .content(content)
+                    .build()
+            )
     }
 
     /**

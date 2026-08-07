@@ -80,6 +80,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaToolChangeMcpToolsetReference] with the required
+         * [serverName] set to the given value.
+         */
+        @JvmStatic fun of(serverName: String) = builder().serverName(serverName).build()
     }
 
     /** A builder for [BetaToolChangeMcpToolsetReference]. */

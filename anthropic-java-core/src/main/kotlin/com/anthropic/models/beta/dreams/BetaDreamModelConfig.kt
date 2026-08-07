@@ -90,6 +90,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaDreamModelConfig] with the required [id] set to the
+         * given value.
+         */
+        @JvmStatic fun of(id: String) = builder().id(id).build()
     }
 
     /** A builder for [BetaDreamModelConfig]. */

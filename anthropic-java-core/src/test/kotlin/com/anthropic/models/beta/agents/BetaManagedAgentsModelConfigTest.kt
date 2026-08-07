@@ -14,11 +14,7 @@ internal class BetaManagedAgentsModelConfigTest {
         val betaManagedAgentsModelConfig =
             BetaManagedAgentsModelConfig.builder()
                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
-                .effort(
-                    BetaManagedAgentsEffortLow.builder()
-                        .type(BetaManagedAgentsEffortLow.Type.LOW)
-                        .build()
-                )
+                .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                 .inferenceGeo("inference_geo")
                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                 .build()
@@ -27,11 +23,7 @@ internal class BetaManagedAgentsModelConfigTest {
             .isEqualTo(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
         assertThat(betaManagedAgentsModelConfig.effort())
             .contains(
-                BetaManagedAgentsModelConfig.Effort.ofLow(
-                    BetaManagedAgentsEffortLow.builder()
-                        .type(BetaManagedAgentsEffortLow.Type.LOW)
-                        .build()
-                )
+                BetaManagedAgentsModelConfig.Effort.ofLow(BetaManagedAgentsEffortLow.Type.LOW)
             )
         assertThat(betaManagedAgentsModelConfig.inferenceGeo()).contains("inference_geo")
         assertThat(betaManagedAgentsModelConfig.speed())
@@ -44,11 +36,7 @@ internal class BetaManagedAgentsModelConfigTest {
         val betaManagedAgentsModelConfig =
             BetaManagedAgentsModelConfig.builder()
                 .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
-                .effort(
-                    BetaManagedAgentsEffortLow.builder()
-                        .type(BetaManagedAgentsEffortLow.Type.LOW)
-                        .build()
-                )
+                .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                 .inferenceGeo("inference_geo")
                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                 .build()

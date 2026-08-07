@@ -11,7 +11,7 @@ internal class UrlImageSourceTest {
 
     @Test
     fun create() {
-        val urlImageSource = UrlImageSource.builder().url("url").build()
+        val urlImageSource = UrlImageSource.of("url")
 
         assertThat(urlImageSource.url()).isEqualTo("url")
     }
@@ -19,7 +19,7 @@ internal class UrlImageSourceTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val urlImageSource = UrlImageSource.builder().url("url").build()
+        val urlImageSource = UrlImageSource.of("url")
 
         val roundtrippedUrlImageSource =
             jsonMapper.readValue(

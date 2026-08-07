@@ -15,9 +15,9 @@ internal class BetaManagedAgentsModelRateLimitedErrorTest {
             BetaManagedAgentsModelRateLimitedError.builder()
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(BetaManagedAgentsModelRateLimitedError.Type.MODEL_RATE_LIMITED_ERROR)
                 .build()
@@ -26,9 +26,7 @@ internal class BetaManagedAgentsModelRateLimitedErrorTest {
         assertThat(betaManagedAgentsModelRateLimitedError.retryStatus())
             .isEqualTo(
                 BetaManagedAgentsModelRateLimitedError.RetryStatus.ofRetrying(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                 )
             )
         assertThat(betaManagedAgentsModelRateLimitedError.type())
@@ -42,9 +40,9 @@ internal class BetaManagedAgentsModelRateLimitedErrorTest {
             BetaManagedAgentsModelRateLimitedError.builder()
                 .message("message")
                 .retryStatus(
-                    BetaManagedAgentsRetryStatusRetrying.builder()
-                        .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                        .build()
+                    BetaManagedAgentsRetryStatusRetrying.of(
+                        BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                    )
                 )
                 .type(BetaManagedAgentsModelRateLimitedError.Type.MODEL_RATE_LIMITED_ERROR)
                 .build()

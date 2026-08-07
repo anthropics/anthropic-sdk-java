@@ -15,9 +15,7 @@ internal class WebFetchToolResultBlockTest {
             WebFetchToolResultBlock.builder()
                 .caller(DirectCaller.builder().build())
                 .content(
-                    WebFetchToolResultErrorBlock.builder()
-                        .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebFetchToolResultErrorBlock.of(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()
@@ -27,9 +25,7 @@ internal class WebFetchToolResultBlockTest {
         assertThat(webFetchToolResultBlock.content())
             .isEqualTo(
                 WebFetchToolResultBlock.Content.ofWebFetchToolResultErrorBlock(
-                    WebFetchToolResultErrorBlock.builder()
-                        .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
         assertThat(webFetchToolResultBlock.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
@@ -42,9 +38,7 @@ internal class WebFetchToolResultBlockTest {
             WebFetchToolResultBlock.builder()
                 .caller(DirectCaller.builder().build())
                 .content(
-                    WebFetchToolResultErrorBlock.builder()
-                        .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebFetchToolResultErrorBlock.of(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .build()

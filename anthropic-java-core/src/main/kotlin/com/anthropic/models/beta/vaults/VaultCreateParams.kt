@@ -390,6 +390,12 @@ private constructor(
              * ```
              */
             @JvmStatic fun builder() = Builder()
+
+            /**
+             * Returns an immutable instance of [Body] with the required [displayName] set to the
+             * given value.
+             */
+            @JvmStatic fun of(displayName: String) = builder().displayName(displayName).build()
         }
 
         /** A builder for [Body]. */

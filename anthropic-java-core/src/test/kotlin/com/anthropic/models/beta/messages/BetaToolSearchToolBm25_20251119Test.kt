@@ -42,9 +42,9 @@ internal class BetaToolSearchToolBm25_20251119Test {
     @Test
     fun addToUnsetListsOnToBuilder() {
         val baseBetaToolSearchToolBm25_20251119 =
-            BetaToolSearchToolBm25_20251119.builder()
-                .type(BetaToolSearchToolBm25_20251119.Type.TOOL_SEARCH_TOOL_BM25_20251119)
-                .build()
+            BetaToolSearchToolBm25_20251119.of(
+                BetaToolSearchToolBm25_20251119.Type.TOOL_SEARCH_TOOL_BM25_20251119
+            )
 
         val betaToolSearchToolBm25_20251119 =
             baseBetaToolSearchToolBm25_20251119

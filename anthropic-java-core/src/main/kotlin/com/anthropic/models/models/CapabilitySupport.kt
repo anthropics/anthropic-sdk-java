@@ -66,6 +66,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [CapabilitySupport] with the required [supported] set to
+         * the given value.
+         */
+        @JvmStatic fun of(supported: Boolean) = builder().supported(supported).build()
     }
 
     /** A builder for [CapabilitySupport]. */

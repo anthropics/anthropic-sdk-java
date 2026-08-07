@@ -119,6 +119,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsMcpToolConfigParams] with the required
+         * [name] set to the given value.
+         */
+        @JvmStatic fun of(name: String) = builder().name(name).build()
     }
 
     /** A builder for [BetaManagedAgentsMcpToolConfigParams]. */
@@ -432,10 +438,26 @@ private constructor(
             fun ofAlwaysAllow(alwaysAllow: BetaManagedAgentsAlwaysAllowPolicy) =
                 PermissionPolicy(alwaysAllow = alwaysAllow)
 
+            /**
+             * Returns an immutable instance of [PermissionPolicy] whose [ofAlwaysAllow] variant is
+             * built from the given required [type].
+             */
+            @JvmStatic
+            fun ofAlwaysAllow(type: BetaManagedAgentsAlwaysAllowPolicy.Type) =
+                ofAlwaysAllow(BetaManagedAgentsAlwaysAllowPolicy.of(type))
+
             /** Tool calls require user confirmation before execution. */
             @JvmStatic
             fun ofAlwaysAsk(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy) =
                 PermissionPolicy(alwaysAsk = alwaysAsk)
+
+            /**
+             * Returns an immutable instance of [PermissionPolicy] whose [ofAlwaysAsk] variant is
+             * built from the given required [type].
+             */
+            @JvmStatic
+            fun ofAlwaysAsk(type: BetaManagedAgentsAlwaysAskPolicy.Type) =
+                ofAlwaysAsk(BetaManagedAgentsAlwaysAskPolicy.of(type))
         }
 
         /**

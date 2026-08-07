@@ -7,6 +7,7 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -399,10 +400,31 @@ private constructor(
         fun ofUserMessage(userMessage: BetaManagedAgentsUserMessageEventParams) =
             BetaManagedAgentsEventParams(userMessage = userMessage)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsEventParams] whose [ofUserMessage]
+         * variant is built from the given required [content].
+         */
+        @JvmStatic
+        fun ofUserMessage(content: List<BetaManagedAgentsUserMessageEventParams.Content>) =
+            ofUserMessage(
+                BetaManagedAgentsUserMessageEventParams.builder()
+                    .type(BetaManagedAgentsUserMessageEventParams.Type.USER_MESSAGE)
+                    .content(content)
+                    .build()
+            )
+
         /** Parameters for sending an interrupt to pause the agent. */
         @JvmStatic
         fun ofUserInterrupt(userInterrupt: BetaManagedAgentsUserInterruptEventParams) =
             BetaManagedAgentsEventParams(userInterrupt = userInterrupt)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsEventParams] whose [ofUserInterrupt]
+         * variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofUserInterrupt(type: BetaManagedAgentsUserInterruptEventParams.Type) =
+            ofUserInterrupt(BetaManagedAgentsUserInterruptEventParams.of(type))
 
         /** Parameters for confirming or denying a tool execution request. */
         @JvmStatic
@@ -415,6 +437,22 @@ private constructor(
         fun ofUserCustomToolResult(
             userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
         ) = BetaManagedAgentsEventParams(userCustomToolResult = userCustomToolResult)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsEventParams] whose
+         * [ofUserCustomToolResult] variant is built from the given required [customToolUseId].
+         */
+        @JvmStatic
+        fun ofUserCustomToolResult(customToolUseId: String) =
+            ofUserCustomToolResult(
+                BetaManagedAgentsUserCustomToolResultEventParams.builder()
+                    .type(
+                        BetaManagedAgentsUserCustomToolResultEventParams.Type
+                            .USER_CUSTOM_TOOL_RESULT
+                    )
+                    .customToolUseId(customToolUseId)
+                    .build()
+            )
 
         /**
          * Parameters for defining an outcome the agent should work toward. The agent begins work on
@@ -434,6 +472,19 @@ private constructor(
             BetaManagedAgentsEventParams(userToolResult = userToolResult)
 
         /**
+         * Returns an immutable instance of [BetaManagedAgentsEventParams] whose [ofUserToolResult]
+         * variant is built from the given required [toolUseId].
+         */
+        @JvmStatic
+        fun ofUserToolResult(toolUseId: String) =
+            ofUserToolResult(
+                BetaManagedAgentsUserToolResultEventParams.builder()
+                    .type(BetaManagedAgentsUserToolResultEventParams.Type.USER_TOOL_RESULT)
+                    .toolUseId(toolUseId)
+                    .build()
+            )
+
+        /**
          * Privileged context for the accompanying turn and all subsequent turns, appended to the
          * session's system context as a `role: "system"` turn rather than replacing the top-level
          * system prompt. At most one per request: it must be the final event and immediately follow
@@ -443,6 +494,19 @@ private constructor(
         @JvmStatic
         fun ofSystemMessage(systemMessage: BetaManagedAgentsSystemMessageEventParams) =
             BetaManagedAgentsEventParams(systemMessage = systemMessage)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsEventParams] whose [ofSystemMessage]
+         * variant is built from the given required [content].
+         */
+        @JvmStatic
+        fun ofSystemMessage(content: List<BetaManagedAgentsSystemContentBlock>) =
+            ofSystemMessage(
+                BetaManagedAgentsSystemMessageEventParams.builder()
+                    .type(BetaManagedAgentsSystemMessageEventParams.Type.SYSTEM_MESSAGE)
+                    .content(content)
+                    .build()
+            )
     }
 
     /**

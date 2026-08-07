@@ -16,8 +16,8 @@ internal class BetaThinkingCapabilityTest {
                 .supported(true)
                 .types(
                     BetaThinkingTypes.builder()
-                        .adaptive(BetaCapabilitySupport.builder().supported(true).build())
-                        .enabled(BetaCapabilitySupport.builder().supported(true).build())
+                        .adaptive(BetaCapabilitySupport.of(true))
+                        .enabled(BetaCapabilitySupport.of(true))
                         .build()
                 )
                 .build()
@@ -26,8 +26,8 @@ internal class BetaThinkingCapabilityTest {
         assertThat(betaThinkingCapability.types())
             .isEqualTo(
                 BetaThinkingTypes.builder()
-                    .adaptive(BetaCapabilitySupport.builder().supported(true).build())
-                    .enabled(BetaCapabilitySupport.builder().supported(true).build())
+                    .adaptive(BetaCapabilitySupport.of(true))
+                    .enabled(BetaCapabilitySupport.of(true))
                     .build()
             )
     }
@@ -40,8 +40,8 @@ internal class BetaThinkingCapabilityTest {
                 .supported(true)
                 .types(
                     BetaThinkingTypes.builder()
-                        .adaptive(BetaCapabilitySupport.builder().supported(true).build())
-                        .enabled(BetaCapabilitySupport.builder().supported(true).build())
+                        .adaptive(BetaCapabilitySupport.of(true))
+                        .enabled(BetaCapabilitySupport.of(true))
                         .build()
                 )
                 .build()

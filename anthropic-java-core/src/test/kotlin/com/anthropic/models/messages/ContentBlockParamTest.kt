@@ -355,7 +355,7 @@ internal class ContentBlockParamTest {
 
     @Test
     fun ofRedactedThinking() {
-        val redactedThinking = RedactedThinkingBlockParam.builder().data("data").build()
+        val redactedThinking = RedactedThinkingBlockParam.of("data")
 
         val contentBlockParam = ContentBlockParam.ofRedactedThinking(redactedThinking)
 
@@ -382,9 +382,7 @@ internal class ContentBlockParamTest {
     fun ofRedactedThinkingRoundtrip() {
         val jsonMapper = jsonMapper()
         val contentBlockParam =
-            ContentBlockParam.ofRedactedThinking(
-                RedactedThinkingBlockParam.builder().data("data").build()
-            )
+            ContentBlockParam.ofRedactedThinking(RedactedThinkingBlockParam.of("data"))
 
         val roundtrippedContentBlockParam =
             jsonMapper.readValue(
@@ -674,9 +672,9 @@ internal class ContentBlockParamTest {
         val webFetchToolResult =
             WebFetchToolResultBlockParam.builder()
                 .content(
-                    WebFetchToolResultErrorBlockParam.builder()
-                        .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebFetchToolResultErrorBlockParam.of(
+                        WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -713,9 +711,9 @@ internal class ContentBlockParamTest {
             ContentBlockParam.ofWebFetchToolResult(
                 WebFetchToolResultBlockParam.builder()
                     .content(
-                        WebFetchToolResultErrorBlockParam.builder()
-                            .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        WebFetchToolResultErrorBlockParam.of(
+                            WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .cacheControl(
@@ -741,9 +739,9 @@ internal class ContentBlockParamTest {
         val codeExecutionToolResult =
             CodeExecutionToolResultBlockParam.builder()
                 .content(
-                    CodeExecutionToolResultErrorParam.builder()
-                        .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    CodeExecutionToolResultErrorParam.of(
+                        CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -779,9 +777,9 @@ internal class ContentBlockParamTest {
             ContentBlockParam.ofCodeExecutionToolResult(
                 CodeExecutionToolResultBlockParam.builder()
                     .content(
-                        CodeExecutionToolResultErrorParam.builder()
-                            .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        CodeExecutionToolResultErrorParam.of(
+                            CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .cacheControl(
@@ -806,9 +804,9 @@ internal class ContentBlockParamTest {
         val bashCodeExecutionToolResult =
             BashCodeExecutionToolResultBlockParam.builder()
                 .content(
-                    BashCodeExecutionToolResultErrorParam.builder()
-                        .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    BashCodeExecutionToolResultErrorParam.of(
+                        BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -846,9 +844,9 @@ internal class ContentBlockParamTest {
             ContentBlockParam.ofBashCodeExecutionToolResult(
                 BashCodeExecutionToolResultBlockParam.builder()
                     .content(
-                        BashCodeExecutionToolResultErrorParam.builder()
-                            .errorCode(BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                            .build()
+                        BashCodeExecutionToolResultErrorParam.of(
+                            BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                        )
                     )
                     .toolUseId("srvtoolu_SQfNkl1n_JR_")
                     .cacheControl(

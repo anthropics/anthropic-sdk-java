@@ -12,7 +12,7 @@ internal class BetaTextEditorCodeExecutionCreateResultBlockParamTest {
     @Test
     fun create() {
         val betaTextEditorCodeExecutionCreateResultBlockParam =
-            BetaTextEditorCodeExecutionCreateResultBlockParam.builder().isFileUpdate(true).build()
+            BetaTextEditorCodeExecutionCreateResultBlockParam.of(true)
 
         assertThat(betaTextEditorCodeExecutionCreateResultBlockParam.isFileUpdate()).isEqualTo(true)
     }
@@ -21,7 +21,7 @@ internal class BetaTextEditorCodeExecutionCreateResultBlockParamTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaTextEditorCodeExecutionCreateResultBlockParam =
-            BetaTextEditorCodeExecutionCreateResultBlockParam.builder().isFileUpdate(true).build()
+            BetaTextEditorCodeExecutionCreateResultBlockParam.of(true)
 
         val roundtrippedBetaTextEditorCodeExecutionCreateResultBlockParam =
             jsonMapper.readValue(

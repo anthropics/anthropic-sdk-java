@@ -180,9 +180,35 @@ private constructor(
         fun ofAgentMessage(agentMessage: BetaManagedAgentsAgentMessagePreview) =
             BetaManagedAgentsStartEventPreview(agentMessage = agentMessage)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsStartEventPreview] whose
+         * [ofAgentMessage] variant is built from the given required [id].
+         */
+        @JvmStatic
+        fun ofAgentMessage(id: String) =
+            ofAgentMessage(
+                BetaManagedAgentsAgentMessagePreview.builder()
+                    .type(BetaManagedAgentsAgentMessagePreview.Type.AGENT_MESSAGE)
+                    .id(id)
+                    .build()
+            )
+
         @JvmStatic
         fun ofAgentThinking(agentThinking: BetaManagedAgentsAgentThinkingPreview) =
             BetaManagedAgentsStartEventPreview(agentThinking = agentThinking)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsStartEventPreview] whose
+         * [ofAgentThinking] variant is built from the given required [id].
+         */
+        @JvmStatic
+        fun ofAgentThinking(id: String) =
+            ofAgentThinking(
+                BetaManagedAgentsAgentThinkingPreview.builder()
+                    .type(BetaManagedAgentsAgentThinkingPreview.Type.AGENT_THINKING)
+                    .id(id)
+                    .build()
+            )
     }
 
     /**

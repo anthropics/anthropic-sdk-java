@@ -545,8 +545,34 @@ private constructor(
             /** Document referenced by URL. */
             @JvmStatic fun ofUrl(url: BetaManagedAgentsUrlDocumentSource) = Source(url = url)
 
+            /**
+             * Returns an immutable instance of [Source] whose [ofUrl] variant is built from the
+             * given required [url].
+             */
+            @JvmStatic
+            fun ofUrl(url: String) =
+                ofUrl(
+                    BetaManagedAgentsUrlDocumentSource.builder()
+                        .type(BetaManagedAgentsUrlDocumentSource.Type.URL)
+                        .url(url)
+                        .build()
+                )
+
             /** Document referenced by file ID. */
             @JvmStatic fun ofFile(file: BetaManagedAgentsFileDocumentSource) = Source(file = file)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofFile] variant is built from the
+             * given required [fileId].
+             */
+            @JvmStatic
+            fun ofFile(fileId: String) =
+                ofFile(
+                    BetaManagedAgentsFileDocumentSource.builder()
+                        .type(BetaManagedAgentsFileDocumentSource.Type.FILE)
+                        .fileId(fileId)
+                        .build()
+                )
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

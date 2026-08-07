@@ -549,11 +549,31 @@ private constructor(
             environmentArchived: BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError
         ) = BetaManagedAgentsDeploymentPausedReasonError(environmentArchived = environmentArchived)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofEnvironmentArchived] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofEnvironmentArchived(
+            type: BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.Type
+        ) =
+            ofEnvironmentArchived(
+                BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError.of(type)
+            )
+
         /** The deployment's agent was archived. */
         @JvmStatic
         fun ofAgentArchived(
             agentArchived: BetaManagedAgentsAgentArchivedDeploymentPausedReasonError
         ) = BetaManagedAgentsDeploymentPausedReasonError(agentArchived = agentArchived)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofAgentArchived] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofAgentArchived(type: BetaManagedAgentsAgentArchivedDeploymentPausedReasonError.Type) =
+            ofAgentArchived(BetaManagedAgentsAgentArchivedDeploymentPausedReasonError.of(type))
 
         /** The deployment's environment no longer exists. */
         @JvmStatic
@@ -561,16 +581,44 @@ private constructor(
             environmentNotFound: BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError
         ) = BetaManagedAgentsDeploymentPausedReasonError(environmentNotFound = environmentNotFound)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofEnvironmentNotFound] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofEnvironmentNotFound(
+            type: BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.Type
+        ) =
+            ofEnvironmentNotFound(
+                BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError.of(type)
+            )
+
         /** A vault referenced by the deployment no longer exists. */
         @JvmStatic
         fun ofVaultNotFound(
             vaultNotFound: BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError
         ) = BetaManagedAgentsDeploymentPausedReasonError(vaultNotFound = vaultNotFound)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofVaultNotFound] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofVaultNotFound(type: BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.Type) =
+            ofVaultNotFound(BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError.of(type))
+
         /** A file resource referenced by the deployment no longer exists. */
         @JvmStatic
         fun ofFileNotFound(fileNotFound: BetaManagedAgentsFileNotFoundDeploymentPausedReasonError) =
             BetaManagedAgentsDeploymentPausedReasonError(fileNotFound = fileNotFound)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofFileNotFound] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofFileNotFound(type: BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.Type) =
+            ofFileNotFound(BetaManagedAgentsFileNotFoundDeploymentPausedReasonError.of(type))
 
         /** A referenced resource no longer exists and its kind was not reported. */
         @JvmStatic
@@ -582,11 +630,35 @@ private constructor(
                 sessionResourceNotFound = sessionResourceNotFound
             )
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofSessionResourceNotFound] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofSessionResourceNotFound(
+            type: BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.Type
+        ) =
+            ofSessionResourceNotFound(
+                BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError.of(type)
+            )
+
         /** The deployment's workspace was archived. */
         @JvmStatic
         fun ofWorkspaceArchived(
             workspaceArchived: BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError
         ) = BetaManagedAgentsDeploymentPausedReasonError(workspaceArchived = workspaceArchived)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofWorkspaceArchived] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofWorkspaceArchived(
+            type: BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError.Type
+        ) =
+            ofWorkspaceArchived(
+                BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError.of(type)
+            )
 
         /** The deployment's organization is disabled. */
         @JvmStatic
@@ -597,17 +669,49 @@ private constructor(
                 organizationDisabled = organizationDisabled
             )
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofOrganizationDisabled] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofOrganizationDisabled(
+            type: BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError.Type
+        ) =
+            ofOrganizationDisabled(
+                BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError.of(type)
+            )
+
         /** A memory store referenced by the deployment is archived. */
         @JvmStatic
         fun ofMemoryStoreArchived(
             memoryStoreArchived: BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError
         ) = BetaManagedAgentsDeploymentPausedReasonError(memoryStoreArchived = memoryStoreArchived)
 
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofMemoryStoreArchived] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofMemoryStoreArchived(
+            type: BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.Type
+        ) =
+            ofMemoryStoreArchived(
+                BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError.of(type)
+            )
+
         /** A skill referenced by the deployment's agent no longer exists. */
         @JvmStatic
         fun ofSkillNotFound(
             skillNotFound: BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError
         ) = BetaManagedAgentsDeploymentPausedReasonError(skillNotFound = skillNotFound)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofSkillNotFound] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofSkillNotFound(type: BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.Type) =
+            ofSkillNotFound(BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError.of(type))
 
         /** A vault referenced by the deployment is archived. */
         @JvmStatic
@@ -616,12 +720,28 @@ private constructor(
         ) = BetaManagedAgentsDeploymentPausedReasonError(vaultArchived = vaultArchived)
 
         /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofVaultArchived] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofVaultArchived(type: BetaManagedAgentsVaultArchivedDeploymentPausedReasonError.Type) =
+            ofVaultArchived(BetaManagedAgentsVaultArchivedDeploymentPausedReasonError.of(type))
+
+        /**
          * An unrecognized error auto-paused the deployment. A fallback variant; matches a run whose
          * `error.type` is `unknown_error`.
          */
         @JvmStatic
         fun ofUnknown(unknown: BetaManagedAgentsUnknownDeploymentPausedReasonError) =
             BetaManagedAgentsDeploymentPausedReasonError(unknown = unknown)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofUnknown] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofUnknown(type: BetaManagedAgentsUnknownDeploymentPausedReasonError.Type) =
+            ofUnknown(BetaManagedAgentsUnknownDeploymentPausedReasonError.of(type))
 
         /**
          * The deployment configures resources, but its environment is self-hosted and cannot mount
@@ -637,6 +757,18 @@ private constructor(
             )
 
         /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofSelfHostedResourcesUnsupported] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofSelfHostedResourcesUnsupported(
+            type: BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.Type
+        ) =
+            ofSelfHostedResourcesUnsupported(
+                BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError.of(type)
+            )
+
+        /**
          * An MCP server host used by the deployment's agent is blocked by the environment's network
          * policy.
          */
@@ -644,6 +776,18 @@ private constructor(
         fun ofMcpEgressBlocked(
             mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError
         ) = BetaManagedAgentsDeploymentPausedReasonError(mcpEgressBlocked = mcpEgressBlocked)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsDeploymentPausedReasonError] whose
+         * [ofMcpEgressBlocked] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofMcpEgressBlocked(
+            type: BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.Type
+        ) =
+            ofMcpEgressBlocked(
+                BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError.of(type)
+            )
     }
 
     /**

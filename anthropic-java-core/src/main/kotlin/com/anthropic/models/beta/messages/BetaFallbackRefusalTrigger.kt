@@ -82,6 +82,15 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaFallbackRefusalTrigger] with the required
+         * [category] set to the given value.
+         */
+        @JvmStatic fun of(category: Category?) = builder().category(category).build()
+
+        /** Alias for calling [of] with `category.orElse(null)`. */
+        @JvmStatic fun of(category: Optional<Category>) = of(category.getOrNull())
     }
 
     /** A builder for [BetaFallbackRefusalTrigger]. */

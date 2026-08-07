@@ -1496,10 +1496,39 @@ private constructor(
                 environmentArchived: BetaManagedAgentsEnvironmentArchivedRunError
             ) = Error(environmentArchived = environmentArchived)
 
+            /**
+             * Returns an immutable instance of [Error] whose [ofEnvironmentArchived] variant is
+             * built from the given required [message].
+             */
+            @JvmStatic
+            fun ofEnvironmentArchived(message: String) =
+                ofEnvironmentArchived(
+                    BetaManagedAgentsEnvironmentArchivedRunError.builder()
+                        .type(
+                            BetaManagedAgentsEnvironmentArchivedRunError.Type
+                                .ENVIRONMENT_ARCHIVED_ERROR
+                        )
+                        .message(message)
+                        .build()
+                )
+
             /** The deployment's agent was archived. */
             @JvmStatic
             fun ofAgentArchived(agentArchived: BetaManagedAgentsAgentArchivedRunError) =
                 Error(agentArchived = agentArchived)
+
+            /**
+             * Returns an immutable instance of [Error] whose [ofAgentArchived] variant is built
+             * from the given required [message].
+             */
+            @JvmStatic
+            fun ofAgentArchived(message: String) =
+                ofAgentArchived(
+                    BetaManagedAgentsAgentArchivedRunError.builder()
+                        .type(BetaManagedAgentsAgentArchivedRunError.Type.AGENT_ARCHIVED_ERROR)
+                        .message(message)
+                        .build()
+                )
 
             /** The deployment's environment no longer exists. */
             @JvmStatic
@@ -1507,20 +1536,75 @@ private constructor(
                 environmentNotFound: BetaManagedAgentsEnvironmentNotFoundRunError
             ) = Error(environmentNotFound = environmentNotFound)
 
+            /**
+             * Returns an immutable instance of [Error] whose [ofEnvironmentNotFound] variant is
+             * built from the given required [message].
+             */
+            @JvmStatic
+            fun ofEnvironmentNotFound(message: String) =
+                ofEnvironmentNotFound(
+                    BetaManagedAgentsEnvironmentNotFoundRunError.builder()
+                        .type(
+                            BetaManagedAgentsEnvironmentNotFoundRunError.Type
+                                .ENVIRONMENT_NOT_FOUND_ERROR
+                        )
+                        .message(message)
+                        .build()
+                )
+
             /** A vault referenced by the deployment no longer exists. */
             @JvmStatic
             fun ofVaultNotFound(vaultNotFound: BetaManagedAgentsVaultNotFoundRunError) =
                 Error(vaultNotFound = vaultNotFound)
+
+            /**
+             * Returns an immutable instance of [Error] whose [ofVaultNotFound] variant is built
+             * from the given required [message].
+             */
+            @JvmStatic
+            fun ofVaultNotFound(message: String) =
+                ofVaultNotFound(
+                    BetaManagedAgentsVaultNotFoundRunError.builder()
+                        .type(BetaManagedAgentsVaultNotFoundRunError.Type.VAULT_NOT_FOUND_ERROR)
+                        .message(message)
+                        .build()
+                )
 
             /** A vault referenced by the deployment is archived. */
             @JvmStatic
             fun ofVaultArchived(vaultArchived: BetaManagedAgentsVaultArchivedRunError) =
                 Error(vaultArchived = vaultArchived)
 
+            /**
+             * Returns an immutable instance of [Error] whose [ofVaultArchived] variant is built
+             * from the given required [message].
+             */
+            @JvmStatic
+            fun ofVaultArchived(message: String) =
+                ofVaultArchived(
+                    BetaManagedAgentsVaultArchivedRunError.builder()
+                        .type(BetaManagedAgentsVaultArchivedRunError.Type.VAULT_ARCHIVED_ERROR)
+                        .message(message)
+                        .build()
+                )
+
             /** A file resource referenced by the deployment no longer exists. */
             @JvmStatic
             fun ofFileNotFound(fileNotFound: BetaManagedAgentsFileNotFoundRunError) =
                 Error(fileNotFound = fileNotFound)
+
+            /**
+             * Returns an immutable instance of [Error] whose [ofFileNotFound] variant is built from
+             * the given required [message].
+             */
+            @JvmStatic
+            fun ofFileNotFound(message: String) =
+                ofFileNotFound(
+                    BetaManagedAgentsFileNotFoundRunError.builder()
+                        .type(BetaManagedAgentsFileNotFoundRunError.Type.FILE_NOT_FOUND_ERROR)
+                        .message(message)
+                        .build()
+                )
 
             /** A memory store referenced by the deployment is archived. */
             @JvmStatic
@@ -1528,10 +1612,39 @@ private constructor(
                 memoryStoreArchived: BetaManagedAgentsMemoryStoreArchivedRunError
             ) = Error(memoryStoreArchived = memoryStoreArchived)
 
+            /**
+             * Returns an immutable instance of [Error] whose [ofMemoryStoreArchived] variant is
+             * built from the given required [message].
+             */
+            @JvmStatic
+            fun ofMemoryStoreArchived(message: String) =
+                ofMemoryStoreArchived(
+                    BetaManagedAgentsMemoryStoreArchivedRunError.builder()
+                        .type(
+                            BetaManagedAgentsMemoryStoreArchivedRunError.Type
+                                .MEMORY_STORE_ARCHIVED_ERROR
+                        )
+                        .message(message)
+                        .build()
+                )
+
             /** A skill referenced by the deployment's agent no longer exists. */
             @JvmStatic
             fun ofSkillNotFound(skillNotFound: BetaManagedAgentsSkillNotFoundRunError) =
                 Error(skillNotFound = skillNotFound)
+
+            /**
+             * Returns an immutable instance of [Error] whose [ofSkillNotFound] variant is built
+             * from the given required [message].
+             */
+            @JvmStatic
+            fun ofSkillNotFound(message: String) =
+                ofSkillNotFound(
+                    BetaManagedAgentsSkillNotFoundRunError.builder()
+                        .type(BetaManagedAgentsSkillNotFoundRunError.Type.SKILL_NOT_FOUND_ERROR)
+                        .message(message)
+                        .build()
+                )
 
             /** A referenced resource no longer exists and its kind was not reported. */
             @JvmStatic
@@ -1539,16 +1652,63 @@ private constructor(
                 sessionResourceNotFound: BetaManagedAgentsSessionResourceNotFoundRunError
             ) = Error(sessionResourceNotFound = sessionResourceNotFound)
 
+            /**
+             * Returns an immutable instance of [Error] whose [ofSessionResourceNotFound] variant is
+             * built from the given required [message].
+             */
+            @JvmStatic
+            fun ofSessionResourceNotFound(message: String) =
+                ofSessionResourceNotFound(
+                    BetaManagedAgentsSessionResourceNotFoundRunError.builder()
+                        .type(
+                            BetaManagedAgentsSessionResourceNotFoundRunError.Type
+                                .SESSION_RESOURCE_NOT_FOUND_ERROR
+                        )
+                        .message(message)
+                        .build()
+                )
+
             /** The deployment's workspace was archived. */
             @JvmStatic
             fun ofWorkspaceArchived(workspaceArchived: BetaManagedAgentsWorkspaceArchivedRunError) =
                 Error(workspaceArchived = workspaceArchived)
+
+            /**
+             * Returns an immutable instance of [Error] whose [ofWorkspaceArchived] variant is built
+             * from the given required [message].
+             */
+            @JvmStatic
+            fun ofWorkspaceArchived(message: String) =
+                ofWorkspaceArchived(
+                    BetaManagedAgentsWorkspaceArchivedRunError.builder()
+                        .type(
+                            BetaManagedAgentsWorkspaceArchivedRunError.Type.WORKSPACE_ARCHIVED_ERROR
+                        )
+                        .message(message)
+                        .build()
+                )
 
             /** The deployment's organization is disabled. */
             @JvmStatic
             fun ofOrganizationDisabled(
                 organizationDisabled: BetaManagedAgentsOrganizationDisabledRunError
             ) = Error(organizationDisabled = organizationDisabled)
+
+            /**
+             * Returns an immutable instance of [Error] whose [ofOrganizationDisabled] variant is
+             * built from the given required [message].
+             */
+            @JvmStatic
+            fun ofOrganizationDisabled(message: String) =
+                ofOrganizationDisabled(
+                    BetaManagedAgentsOrganizationDisabledRunError.builder()
+                        .type(
+                            BetaManagedAgentsOrganizationDisabledRunError.Type
+                                .ORGANIZATION_DISABLED_ERROR
+                        )
+                        .message(message)
+                        .build()
+                )
 
             /**
              * Session creation was rejected due to rate limiting. The schedule keeps firing;
@@ -1559,6 +1719,22 @@ private constructor(
                 sessionRateLimited: BetaManagedAgentsSessionRateLimitedRunError
             ) = Error(sessionRateLimited = sessionRateLimited)
 
+            /**
+             * Returns an immutable instance of [Error] whose [ofSessionRateLimited] variant is
+             * built from the given required [message].
+             */
+            @JvmStatic
+            fun ofSessionRateLimited(message: String) =
+                ofSessionRateLimited(
+                    BetaManagedAgentsSessionRateLimitedRunError.builder()
+                        .type(
+                            BetaManagedAgentsSessionRateLimitedRunError.Type
+                                .SESSION_RATE_LIMITED_ERROR
+                        )
+                        .message(message)
+                        .build()
+                )
+
             /** The session create request was rejected with a non-retryable validation error. */
             @JvmStatic
             fun ofSessionCreationRejected(
@@ -1566,11 +1742,40 @@ private constructor(
             ) = Error(sessionCreationRejected = sessionCreationRejected)
 
             /**
+             * Returns an immutable instance of [Error] whose [ofSessionCreationRejected] variant is
+             * built from the given required [message].
+             */
+            @JvmStatic
+            fun ofSessionCreationRejected(message: String) =
+                ofSessionCreationRejected(
+                    BetaManagedAgentsSessionCreationRejectedRunError.builder()
+                        .type(
+                            BetaManagedAgentsSessionCreationRejectedRunError.Type
+                                .SESSION_CREATION_REJECTED_ERROR
+                        )
+                        .message(message)
+                        .build()
+                )
+
+            /**
              * An unknown or unexpected error caused the run to fail. A fallback variant; clients
              * that do not recognize a new error type can match on message alone.
              */
             @JvmStatic
             fun ofUnknown(unknown: BetaManagedAgentsUnknownRunError) = Error(unknown = unknown)
+
+            /**
+             * Returns an immutable instance of [Error] whose [ofUnknown] variant is built from the
+             * given required [message].
+             */
+            @JvmStatic
+            fun ofUnknown(message: String) =
+                ofUnknown(
+                    BetaManagedAgentsUnknownRunError.builder()
+                        .type(BetaManagedAgentsUnknownRunError.Type.UNKNOWN_ERROR)
+                        .message(message)
+                        .build()
+                )
 
             /**
              * The deployment configures resources, but its environment is self-hosted and cannot
@@ -1583,12 +1788,43 @@ private constructor(
             ) = Error(selfHostedResourcesUnsupported = selfHostedResourcesUnsupported)
 
             /**
+             * Returns an immutable instance of [Error] whose [ofSelfHostedResourcesUnsupported]
+             * variant is built from the given required [message].
+             */
+            @JvmStatic
+            fun ofSelfHostedResourcesUnsupported(message: String) =
+                ofSelfHostedResourcesUnsupported(
+                    BetaManagedAgentsSelfHostedResourcesUnsupportedRunError.builder()
+                        .type(
+                            BetaManagedAgentsSelfHostedResourcesUnsupportedRunError.Type
+                                .SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
+                        )
+                        .message(message)
+                        .build()
+                )
+
+            /**
              * An MCP server host used by the deployment's agent is blocked by the environment's
              * network policy.
              */
             @JvmStatic
             fun ofMcpEgressBlocked(mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedRunError) =
                 Error(mcpEgressBlocked = mcpEgressBlocked)
+
+            /**
+             * Returns an immutable instance of [Error] whose [ofMcpEgressBlocked] variant is built
+             * from the given required [message].
+             */
+            @JvmStatic
+            fun ofMcpEgressBlocked(message: String) =
+                ofMcpEgressBlocked(
+                    BetaManagedAgentsMcpEgressBlockedRunError.builder()
+                        .type(
+                            BetaManagedAgentsMcpEgressBlockedRunError.Type.MCP_EGRESS_BLOCKED_ERROR
+                        )
+                        .message(message)
+                        .build()
+                )
         }
 
         /** An interface that defines how to map each variant of [Error] to a value of type [T]. */

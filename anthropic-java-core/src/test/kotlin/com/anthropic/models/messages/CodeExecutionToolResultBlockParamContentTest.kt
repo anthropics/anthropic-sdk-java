@@ -17,9 +17,9 @@ internal class CodeExecutionToolResultBlockParamContentTest {
     @Test
     fun ofErrorParam() {
         val errorParam =
-            CodeExecutionToolResultErrorParam.builder()
-                .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                .build()
+            CodeExecutionToolResultErrorParam.of(
+                CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+            )
 
         val codeExecutionToolResultBlockParamContent =
             CodeExecutionToolResultBlockParamContent.ofErrorParam(errorParam)
@@ -37,9 +37,9 @@ internal class CodeExecutionToolResultBlockParamContentTest {
         val jsonMapper = jsonMapper()
         val codeExecutionToolResultBlockParamContent =
             CodeExecutionToolResultBlockParamContent.ofErrorParam(
-                CodeExecutionToolResultErrorParam.builder()
-                    .errorCode(CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT)
-                    .build()
+                CodeExecutionToolResultErrorParam.of(
+                    CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
+                )
             )
 
         val roundtrippedCodeExecutionToolResultBlockParamContent =
@@ -56,7 +56,7 @@ internal class CodeExecutionToolResultBlockParamContentTest {
     fun ofResultBlockParam() {
         val resultBlockParam =
             CodeExecutionResultBlockParam.builder()
-                .addContent(CodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+                .addContent(CodeExecutionOutputBlockParam.of("file_id"))
                 .returnCode(0L)
                 .stderr("stderr")
                 .stdout("stdout")
@@ -80,7 +80,7 @@ internal class CodeExecutionToolResultBlockParamContentTest {
         val codeExecutionToolResultBlockParamContent =
             CodeExecutionToolResultBlockParamContent.ofResultBlockParam(
                 CodeExecutionResultBlockParam.builder()
-                    .addContent(CodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+                    .addContent(CodeExecutionOutputBlockParam.of("file_id"))
                     .returnCode(0L)
                     .stderr("stderr")
                     .stdout("stdout")
@@ -101,7 +101,7 @@ internal class CodeExecutionToolResultBlockParamContentTest {
     fun ofEncryptedCodeExecutionResultBlockParam() {
         val encryptedCodeExecutionResultBlockParam =
             EncryptedCodeExecutionResultBlockParam.builder()
-                .addContent(CodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+                .addContent(CodeExecutionOutputBlockParam.of("file_id"))
                 .encryptedStdout("encrypted_stdout")
                 .returnCode(0L)
                 .stderr("stderr")
@@ -126,7 +126,7 @@ internal class CodeExecutionToolResultBlockParamContentTest {
         val codeExecutionToolResultBlockParamContent =
             CodeExecutionToolResultBlockParamContent.ofEncryptedCodeExecutionResultBlockParam(
                 EncryptedCodeExecutionResultBlockParam.builder()
-                    .addContent(CodeExecutionOutputBlockParam.builder().fileId("file_id").build())
+                    .addContent(CodeExecutionOutputBlockParam.of("file_id"))
                     .encryptedStdout("encrypted_stdout")
                     .returnCode(0L)
                     .stderr("stderr")

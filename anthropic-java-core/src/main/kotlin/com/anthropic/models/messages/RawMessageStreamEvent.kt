@@ -269,6 +269,13 @@ private constructor(
         fun ofMessageStart(messageStart: RawMessageStartEvent) =
             RawMessageStreamEvent(messageStart = messageStart)
 
+        /**
+         * Returns an immutable instance of [RawMessageStreamEvent] whose [ofMessageStart] variant
+         * is built from the given required [message].
+         */
+        @JvmStatic
+        fun ofMessageStart(message: Message) = ofMessageStart(RawMessageStartEvent.of(message))
+
         @JvmStatic
         fun ofMessageDelta(messageDelta: RawMessageDeltaEvent) =
             RawMessageStreamEvent(messageDelta = messageDelta)
@@ -288,6 +295,13 @@ private constructor(
         @JvmStatic
         fun ofContentBlockStop(contentBlockStop: RawContentBlockStopEvent) =
             RawMessageStreamEvent(contentBlockStop = contentBlockStop)
+
+        /**
+         * Returns an immutable instance of [RawMessageStreamEvent] whose [ofContentBlockStop]
+         * variant is built from the given required [index].
+         */
+        @JvmStatic
+        fun ofContentBlockStop(index: Long) = ofContentBlockStop(RawContentBlockStopEvent.of(index))
     }
 
     /**

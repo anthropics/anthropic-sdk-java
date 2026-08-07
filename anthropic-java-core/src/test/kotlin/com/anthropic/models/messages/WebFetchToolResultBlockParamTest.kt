@@ -14,9 +14,9 @@ internal class WebFetchToolResultBlockParamTest {
         val webFetchToolResultBlockParam =
             WebFetchToolResultBlockParam.builder()
                 .content(
-                    WebFetchToolResultErrorBlockParam.builder()
-                        .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebFetchToolResultErrorBlockParam.of(
+                        WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(
@@ -28,9 +28,7 @@ internal class WebFetchToolResultBlockParamTest {
         assertThat(webFetchToolResultBlockParam.content())
             .isEqualTo(
                 WebFetchToolResultBlockParam.Content.ofWebFetchToolResultErrorBlockParam(
-                    WebFetchToolResultErrorBlockParam.builder()
-                        .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
                 )
             )
         assertThat(webFetchToolResultBlockParam.toolUseId()).isEqualTo("srvtoolu_SQfNkl1n_JR_")
@@ -46,9 +44,9 @@ internal class WebFetchToolResultBlockParamTest {
         val webFetchToolResultBlockParam =
             WebFetchToolResultBlockParam.builder()
                 .content(
-                    WebFetchToolResultErrorBlockParam.builder()
-                        .errorCode(WebFetchToolResultErrorCode.INVALID_TOOL_INPUT)
-                        .build()
+                    WebFetchToolResultErrorBlockParam.of(
+                        WebFetchToolResultErrorCode.INVALID_TOOL_INPUT
+                    )
                 )
                 .toolUseId("srvtoolu_SQfNkl1n_JR_")
                 .cacheControl(

@@ -1435,10 +1435,26 @@ private constructor(
             toolSearchToolBm25_20251119: ToolSearchToolBm25_20251119
         ) = MessageCountTokensTool(toolSearchToolBm25_20251119 = toolSearchToolBm25_20251119)
 
+        /**
+         * Returns an immutable instance of [MessageCountTokensTool] whose
+         * [ofToolSearchToolBm25_20251119] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofToolSearchToolBm25_20251119(type: ToolSearchToolBm25_20251119.Type) =
+            ofToolSearchToolBm25_20251119(ToolSearchToolBm25_20251119.of(type))
+
         @JvmStatic
         fun ofToolSearchToolRegex20251119(
             toolSearchToolRegex20251119: ToolSearchToolRegex20251119
         ) = MessageCountTokensTool(toolSearchToolRegex20251119 = toolSearchToolRegex20251119)
+
+        /**
+         * Returns an immutable instance of [MessageCountTokensTool] whose
+         * [ofToolSearchToolRegex20251119] variant is built from the given required [type].
+         */
+        @JvmStatic
+        fun ofToolSearchToolRegex20251119(type: ToolSearchToolRegex20251119.Type) =
+            ofToolSearchToolRegex20251119(ToolSearchToolRegex20251119.of(type))
     }
 
     /**

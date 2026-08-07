@@ -1282,9 +1282,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     BetaManagedAgentsUnknownError.builder()
                         .message("message")
                         .retryStatus(
-                            BetaManagedAgentsRetryStatusRetrying.builder()
-                                .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                                .build()
+                            BetaManagedAgentsRetryStatusRetrying.of(
+                                BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                            )
                         )
                         .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                         .build()
@@ -1349,9 +1349,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                         BetaManagedAgentsUnknownError.builder()
                             .message("message")
                             .retryStatus(
-                                BetaManagedAgentsRetryStatusRetrying.builder()
-                                    .type(BetaManagedAgentsRetryStatusRetrying.Type.RETRYING)
-                                    .build()
+                                BetaManagedAgentsRetryStatusRetrying.of(
+                                    BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
+                                )
                             )
                             .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                             .build()
@@ -1539,9 +1539,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .stopReason(
-                    BetaManagedAgentsSessionEndTurn.builder()
-                        .type(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-                        .build()
+                    BetaManagedAgentsSessionEndTurn.of(
+                        BetaManagedAgentsSessionEndTurn.Type.END_TURN
+                    )
                 )
                 .type(BetaManagedAgentsSessionStatusIdleEvent.Type.SESSION_STATUS_IDLE)
                 .build()
@@ -1601,9 +1601,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .stopReason(
-                        BetaManagedAgentsSessionEndTurn.builder()
-                            .type(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-                            .build()
+                        BetaManagedAgentsSessionEndTurn.of(
+                            BetaManagedAgentsSessionEndTurn.Type.END_TURN
+                        )
                     )
                     .type(BetaManagedAgentsSessionStatusIdleEvent.Type.SESSION_STATUS_IDLE)
                     .build()
@@ -2508,9 +2508,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
                 .stopReason(
-                    BetaManagedAgentsSessionEndTurn.builder()
-                        .type(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-                        .build()
+                    BetaManagedAgentsSessionEndTurn.of(
+                        BetaManagedAgentsSessionEndTurn.Type.END_TURN
+                    )
                 )
                 .type(BetaManagedAgentsSessionThreadStatusIdleEvent.Type.SESSION_THREAD_STATUS_IDLE)
                 .build()
@@ -2574,9 +2574,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
                     .stopReason(
-                        BetaManagedAgentsSessionEndTurn.builder()
-                            .type(BetaManagedAgentsSessionEndTurn.Type.END_TURN)
-                            .build()
+                        BetaManagedAgentsSessionEndTurn.of(
+                            BetaManagedAgentsSessionEndTurn.Type.END_TURN
+                        )
                     )
                     .type(
                         BetaManagedAgentsSessionThreadStatusIdleEvent.Type
@@ -2878,9 +2878,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             BetaManagedAgentsModelConfig.builder()
                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                 .effort(
-                                    BetaManagedAgentsEffortLow.builder()
-                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                        .build()
+                                    BetaManagedAgentsEffortLow.of(
+                                        BetaManagedAgentsEffortLow.Type.LOW
+                                    )
                                 )
                                 .inferenceGeo("inference_geo")
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -2907,9 +2907,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                             BetaManagedAgentsModelConfig.builder()
                                                 .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                                 .effort(
-                                                    BetaManagedAgentsEffortLow.builder()
-                                                        .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                                        .build()
+                                                    BetaManagedAgentsEffortLow.of(
+                                                        BetaManagedAgentsEffortLow.Type.LOW
+                                                    )
                                                 )
                                                 .inferenceGeo("inference_geo")
                                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -2938,14 +2938,11 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                                                 .BASH
                                                         )
                                                         .permissionPolicy(
-                                                            BetaManagedAgentsAlwaysAllowPolicy
-                                                                .builder()
-                                                                .type(
-                                                                    BetaManagedAgentsAlwaysAllowPolicy
-                                                                        .Type
-                                                                        .ALWAYS_ALLOW
-                                                                )
-                                                                .build()
+                                                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                                BetaManagedAgentsAlwaysAllowPolicy
+                                                                    .Type
+                                                                    .ALWAYS_ALLOW
+                                                            )
                                                         )
                                                         .build()
                                                 )
@@ -2954,14 +2951,11 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                                         .builder()
                                                         .enabled(true)
                                                         .permissionPolicy(
-                                                            BetaManagedAgentsAlwaysAskPolicy
-                                                                .builder()
-                                                                .type(
-                                                                    BetaManagedAgentsAlwaysAskPolicy
-                                                                        .Type
-                                                                        .ALWAYS_ASK
-                                                                )
-                                                                .build()
+                                                            BetaManagedAgentsAlwaysAskPolicy.of(
+                                                                BetaManagedAgentsAlwaysAskPolicy
+                                                                    .Type
+                                                                    .ALWAYS_ASK
+                                                            )
                                                         )
                                                         .build()
                                                 )
@@ -3005,12 +2999,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                         .enabled(true)
                                         .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                        .ALWAYS_ALLOW
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                            )
                                         )
                                         .build()
                                 )
@@ -3018,11 +3009,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
                                         .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAskPolicy.builder()
-                                                .type(
-                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
-                                                )
-                                                .build()
+                                            BetaManagedAgentsAlwaysAskPolicy.of(
+                                                BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
+                                            )
                                         )
                                         .build()
                                 )
@@ -3125,9 +3114,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                 BetaManagedAgentsModelConfig.builder()
                                     .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                     .effort(
-                                        BetaManagedAgentsEffortLow.builder()
-                                            .type(BetaManagedAgentsEffortLow.Type.LOW)
-                                            .build()
+                                        BetaManagedAgentsEffortLow.of(
+                                            BetaManagedAgentsEffortLow.Type.LOW
+                                        )
                                     )
                                     .inferenceGeo("inference_geo")
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -3155,11 +3144,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                                 BetaManagedAgentsModelConfig.builder()
                                                     .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
                                                     .effort(
-                                                        BetaManagedAgentsEffortLow.builder()
-                                                            .type(
-                                                                BetaManagedAgentsEffortLow.Type.LOW
-                                                            )
-                                                            .build()
+                                                        BetaManagedAgentsEffortLow.of(
+                                                            BetaManagedAgentsEffortLow.Type.LOW
+                                                        )
                                                     )
                                                     .inferenceGeo("inference_geo")
                                                     .speed(
@@ -3193,13 +3180,11 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                                             )
                                                             .permissionPolicy(
                                                                 BetaManagedAgentsAlwaysAllowPolicy
-                                                                    .builder()
-                                                                    .type(
+                                                                    .of(
                                                                         BetaManagedAgentsAlwaysAllowPolicy
                                                                             .Type
                                                                             .ALWAYS_ALLOW
                                                                     )
-                                                                    .build()
                                                             )
                                                             .build()
                                                     )
@@ -3208,14 +3193,11 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                                             .builder()
                                                             .enabled(true)
                                                             .permissionPolicy(
-                                                                BetaManagedAgentsAlwaysAskPolicy
-                                                                    .builder()
-                                                                    .type(
-                                                                        BetaManagedAgentsAlwaysAskPolicy
-                                                                            .Type
-                                                                            .ALWAYS_ASK
-                                                                    )
-                                                                    .build()
+                                                                BetaManagedAgentsAlwaysAskPolicy.of(
+                                                                    BetaManagedAgentsAlwaysAskPolicy
+                                                                        .Type
+                                                                        .ALWAYS_ASK
+                                                                )
                                                             )
                                                             .build()
                                                     )
@@ -3260,12 +3242,10 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                             .enabled(true)
                                             .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                                    .type(
-                                                        BetaManagedAgentsAlwaysAllowPolicy.Type
-                                                            .ALWAYS_ALLOW
-                                                    )
-                                                    .build()
+                                                BetaManagedAgentsAlwaysAllowPolicy.of(
+                                                    BetaManagedAgentsAlwaysAllowPolicy.Type
+                                                        .ALWAYS_ALLOW
+                                                )
                                             )
                                             .build()
                                     )
@@ -3273,12 +3253,9 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                         BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                             .enabled(true)
                                             .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAskPolicy.builder()
-                                                    .type(
-                                                        BetaManagedAgentsAlwaysAskPolicy.Type
-                                                            .ALWAYS_ASK
-                                                    )
-                                                    .build()
+                                                BetaManagedAgentsAlwaysAskPolicy.of(
+                                                    BetaManagedAgentsAlwaysAskPolicy.Type.ALWAYS_ASK
+                                                )
                                             )
                                             .build()
                                     )

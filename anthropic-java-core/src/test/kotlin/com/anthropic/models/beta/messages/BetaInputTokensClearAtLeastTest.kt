@@ -11,7 +11,7 @@ internal class BetaInputTokensClearAtLeastTest {
 
     @Test
     fun create() {
-        val betaInputTokensClearAtLeast = BetaInputTokensClearAtLeast.builder().value(0L).build()
+        val betaInputTokensClearAtLeast = BetaInputTokensClearAtLeast.of(0L)
 
         assertThat(betaInputTokensClearAtLeast.value()).isEqualTo(0L)
     }
@@ -19,7 +19,7 @@ internal class BetaInputTokensClearAtLeastTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaInputTokensClearAtLeast = BetaInputTokensClearAtLeast.builder().value(0L).build()
+        val betaInputTokensClearAtLeast = BetaInputTokensClearAtLeast.of(0L)
 
         val roundtrippedBetaInputTokensClearAtLeast =
             jsonMapper.readValue(

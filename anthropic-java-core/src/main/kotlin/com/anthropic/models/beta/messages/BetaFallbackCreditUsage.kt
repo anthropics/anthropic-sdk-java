@@ -82,6 +82,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaFallbackCreditUsage] with the required [status] set
+         * to the given value.
+         */
+        @JvmStatic fun of(status: Status) = builder().status(status).build()
     }
 
     /** A builder for [BetaFallbackCreditUsage]. */
@@ -369,6 +375,14 @@ private constructor(
             @JvmStatic
             fun ofNotApplied(notApplied: BetaFallbackCreditNotApplied) =
                 Status(notApplied = notApplied)
+
+            /**
+             * Returns an immutable instance of [Status] whose [ofNotApplied] variant is built from
+             * the given required [reason].
+             */
+            @JvmStatic
+            fun ofNotApplied(reason: BetaFallbackCreditNotApplied.Reason) =
+                ofNotApplied(BetaFallbackCreditNotApplied.of(reason))
         }
 
         /** An interface that defines how to map each variant of [Status] to a value of type [T]. */

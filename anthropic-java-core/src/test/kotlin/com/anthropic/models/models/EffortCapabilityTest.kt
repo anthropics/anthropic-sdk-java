@@ -13,25 +13,20 @@ internal class EffortCapabilityTest {
     fun create() {
         val effortCapability =
             EffortCapability.builder()
-                .high(CapabilitySupport.builder().supported(true).build())
-                .low(CapabilitySupport.builder().supported(true).build())
-                .max(CapabilitySupport.builder().supported(true).build())
-                .medium(CapabilitySupport.builder().supported(true).build())
+                .high(CapabilitySupport.of(true))
+                .low(CapabilitySupport.of(true))
+                .max(CapabilitySupport.of(true))
+                .medium(CapabilitySupport.of(true))
                 .supported(true)
-                .xhigh(CapabilitySupport.builder().supported(true).build())
+                .xhigh(CapabilitySupport.of(true))
                 .build()
 
-        assertThat(effortCapability.high())
-            .isEqualTo(CapabilitySupport.builder().supported(true).build())
-        assertThat(effortCapability.low())
-            .isEqualTo(CapabilitySupport.builder().supported(true).build())
-        assertThat(effortCapability.max())
-            .isEqualTo(CapabilitySupport.builder().supported(true).build())
-        assertThat(effortCapability.medium())
-            .isEqualTo(CapabilitySupport.builder().supported(true).build())
+        assertThat(effortCapability.high()).isEqualTo(CapabilitySupport.of(true))
+        assertThat(effortCapability.low()).isEqualTo(CapabilitySupport.of(true))
+        assertThat(effortCapability.max()).isEqualTo(CapabilitySupport.of(true))
+        assertThat(effortCapability.medium()).isEqualTo(CapabilitySupport.of(true))
         assertThat(effortCapability.supported()).isEqualTo(true)
-        assertThat(effortCapability.xhigh())
-            .contains(CapabilitySupport.builder().supported(true).build())
+        assertThat(effortCapability.xhigh()).contains(CapabilitySupport.of(true))
     }
 
     @Test
@@ -39,12 +34,12 @@ internal class EffortCapabilityTest {
         val jsonMapper = jsonMapper()
         val effortCapability =
             EffortCapability.builder()
-                .high(CapabilitySupport.builder().supported(true).build())
-                .low(CapabilitySupport.builder().supported(true).build())
-                .max(CapabilitySupport.builder().supported(true).build())
-                .medium(CapabilitySupport.builder().supported(true).build())
+                .high(CapabilitySupport.of(true))
+                .low(CapabilitySupport.of(true))
+                .max(CapabilitySupport.of(true))
+                .medium(CapabilitySupport.of(true))
                 .supported(true)
-                .xhigh(CapabilitySupport.builder().supported(true).build())
+                .xhigh(CapabilitySupport.of(true))
                 .build()
 
         val roundtrippedEffortCapability =

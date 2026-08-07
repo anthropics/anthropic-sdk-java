@@ -27,13 +27,11 @@ internal class MessageCreateParamsTest {
                 OutputConfig.builder()
                     .effort(OutputConfig.Effort.LOW)
                     .format(
-                        JsonOutputFormat.builder()
-                            .schema(
-                                JsonOutputFormat.Schema.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .build()
+                        JsonOutputFormat.of(
+                            JsonOutputFormat.Schema.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                     )
                     .build()
             )
@@ -122,13 +120,11 @@ internal class MessageCreateParamsTest {
                     OutputConfig.builder()
                         .effort(OutputConfig.Effort.LOW)
                         .format(
-                            JsonOutputFormat.builder()
-                                .schema(
-                                    JsonOutputFormat.Schema.builder()
-                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                        .build()
-                                )
-                                .build()
+                            JsonOutputFormat.of(
+                                JsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
                         )
                         .build()
                 )
@@ -240,13 +236,11 @@ internal class MessageCreateParamsTest {
                     OutputConfig.builder()
                         .effort(OutputConfig.Effort.LOW)
                         .format(
-                            JsonOutputFormat.builder()
-                                .schema(
-                                    JsonOutputFormat.Schema.builder()
-                                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                        .build()
-                                )
-                                .build()
+                            JsonOutputFormat.of(
+                                JsonOutputFormat.Schema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
                         )
                         .build()
                 )
@@ -335,13 +329,11 @@ internal class MessageCreateParamsTest {
                 OutputConfig.builder()
                     .effort(OutputConfig.Effort.LOW)
                     .format(
-                        JsonOutputFormat.builder()
-                            .schema(
-                                JsonOutputFormat.Schema.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                    .build()
-                            )
-                            .build()
+                        JsonOutputFormat.of(
+                            JsonOutputFormat.Schema.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
                     )
                     .build()
             )

@@ -11,7 +11,7 @@ internal class BillingErrorTest {
 
     @Test
     fun create() {
-        val billingError = BillingError.builder().message("message").build()
+        val billingError = BillingError.of("message")
 
         assertThat(billingError.message()).isEqualTo("message")
     }
@@ -19,7 +19,7 @@ internal class BillingErrorTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val billingError = BillingError.builder().message("message").build()
+        val billingError = BillingError.of("message")
 
         val roundtrippedBillingError =
             jsonMapper.readValue(

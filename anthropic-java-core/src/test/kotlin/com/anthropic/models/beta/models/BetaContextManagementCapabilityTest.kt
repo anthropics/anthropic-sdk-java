@@ -13,18 +13,18 @@ internal class BetaContextManagementCapabilityTest {
     fun create() {
         val betaContextManagementCapability =
             BetaContextManagementCapability.builder()
-                .clearThinking20251015(BetaCapabilitySupport.builder().supported(true).build())
-                .clearToolUses20250919(BetaCapabilitySupport.builder().supported(true).build())
-                .compact20260112(BetaCapabilitySupport.builder().supported(true).build())
+                .clearThinking20251015(BetaCapabilitySupport.of(true))
+                .clearToolUses20250919(BetaCapabilitySupport.of(true))
+                .compact20260112(BetaCapabilitySupport.of(true))
                 .supported(true)
                 .build()
 
         assertThat(betaContextManagementCapability.clearThinking20251015())
-            .contains(BetaCapabilitySupport.builder().supported(true).build())
+            .contains(BetaCapabilitySupport.of(true))
         assertThat(betaContextManagementCapability.clearToolUses20250919())
-            .contains(BetaCapabilitySupport.builder().supported(true).build())
+            .contains(BetaCapabilitySupport.of(true))
         assertThat(betaContextManagementCapability.compact20260112())
-            .contains(BetaCapabilitySupport.builder().supported(true).build())
+            .contains(BetaCapabilitySupport.of(true))
         assertThat(betaContextManagementCapability.supported()).isEqualTo(true)
     }
 
@@ -33,9 +33,9 @@ internal class BetaContextManagementCapabilityTest {
         val jsonMapper = jsonMapper()
         val betaContextManagementCapability =
             BetaContextManagementCapability.builder()
-                .clearThinking20251015(BetaCapabilitySupport.builder().supported(true).build())
-                .clearToolUses20250919(BetaCapabilitySupport.builder().supported(true).build())
-                .compact20260112(BetaCapabilitySupport.builder().supported(true).build())
+                .clearThinking20251015(BetaCapabilitySupport.of(true))
+                .clearToolUses20250919(BetaCapabilitySupport.of(true))
+                .compact20260112(BetaCapabilitySupport.of(true))
                 .supported(true)
                 .build()
 

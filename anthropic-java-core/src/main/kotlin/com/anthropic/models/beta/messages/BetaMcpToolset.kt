@@ -152,6 +152,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaMcpToolset] with the required [mcpServerName] set
+         * to the given value.
+         */
+        @JvmStatic fun of(mcpServerName: String) = builder().mcpServerName(mcpServerName).build()
     }
 
     /** A builder for [BetaMcpToolset]. */

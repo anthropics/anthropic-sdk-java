@@ -158,6 +158,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [DocumentBlockParam] with the required [source] set to
+         * the given value.
+         */
+        @JvmStatic fun of(source: Source) = builder().source(source).build()
     }
 
     /** A builder for [DocumentBlockParam]. */
@@ -611,11 +617,37 @@ private constructor(
 
             @JvmStatic fun ofBase64(base64: Base64PdfSource) = Source(base64 = base64)
 
+            /**
+             * Returns an immutable instance of [Source] whose [ofBase64] variant is built from the
+             * given required [data].
+             */
+            @JvmStatic fun ofBase64(data: String) = ofBase64(Base64PdfSource.of(data))
+
             @JvmStatic fun ofText(text: PlainTextSource) = Source(text = text)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofText] variant is built from the
+             * given required [data].
+             */
+            @JvmStatic fun ofText(data: String) = ofText(PlainTextSource.of(data))
 
             @JvmStatic fun ofContent(content: ContentBlockSource) = Source(content = content)
 
+            /**
+             * Returns an immutable instance of [Source] whose [ofContent] variant is built from the
+             * given required [content].
+             */
+            @JvmStatic
+            fun ofContent(content: ContentBlockSource.Content) =
+                ofContent(ContentBlockSource.of(content))
+
             @JvmStatic fun ofUrl(url: UrlPdfSource) = Source(url = url)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofUrl] variant is built from the
+             * given required [url].
+             */
+            @JvmStatic fun ofUrl(url: String) = ofUrl(UrlPdfSource.of(url))
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */

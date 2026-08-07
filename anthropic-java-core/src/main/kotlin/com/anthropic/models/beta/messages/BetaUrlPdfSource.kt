@@ -76,6 +76,12 @@ private constructor(
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaUrlPdfSource] with the required [url] set to the
+         * given value.
+         */
+        @JvmStatic fun of(url: String) = builder().url(url).build()
     }
 
     /** A builder for [BetaUrlPdfSource]. */

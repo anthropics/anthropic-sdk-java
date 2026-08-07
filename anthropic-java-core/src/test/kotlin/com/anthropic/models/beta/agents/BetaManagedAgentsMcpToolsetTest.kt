@@ -18,9 +18,9 @@ internal class BetaManagedAgentsMcpToolsetTest {
                         .enabled(true)
                         .name("name")
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )
@@ -28,9 +28,9 @@ internal class BetaManagedAgentsMcpToolsetTest {
                     BetaManagedAgentsMcpToolsetDefaultConfig.builder()
                         .enabled(true)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )
@@ -44,9 +44,9 @@ internal class BetaManagedAgentsMcpToolsetTest {
                     .enabled(true)
                     .name("name")
                     .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                            .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                            .build()
+                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                        )
                     )
                     .build()
             )
@@ -55,9 +55,9 @@ internal class BetaManagedAgentsMcpToolsetTest {
                 BetaManagedAgentsMcpToolsetDefaultConfig.builder()
                     .enabled(true)
                     .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.builder()
-                            .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                            .build()
+                        BetaManagedAgentsAlwaysAllowPolicy.of(
+                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                        )
                     )
                     .build()
             )
@@ -76,9 +76,9 @@ internal class BetaManagedAgentsMcpToolsetTest {
                         .enabled(true)
                         .name("name")
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )
@@ -86,9 +86,9 @@ internal class BetaManagedAgentsMcpToolsetTest {
                     BetaManagedAgentsMcpToolsetDefaultConfig.builder()
                         .enabled(true)
                         .permissionPolicy(
-                            BetaManagedAgentsAlwaysAllowPolicy.builder()
-                                .type(BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW)
-                                .build()
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
                         .build()
                 )

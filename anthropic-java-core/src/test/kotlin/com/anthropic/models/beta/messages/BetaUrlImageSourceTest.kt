@@ -11,7 +11,7 @@ internal class BetaUrlImageSourceTest {
 
     @Test
     fun create() {
-        val betaUrlImageSource = BetaUrlImageSource.builder().url("url").build()
+        val betaUrlImageSource = BetaUrlImageSource.of("url")
 
         assertThat(betaUrlImageSource.url()).isEqualTo("url")
     }
@@ -19,7 +19,7 @@ internal class BetaUrlImageSourceTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaUrlImageSource = BetaUrlImageSource.builder().url("url").build()
+        val betaUrlImageSource = BetaUrlImageSource.of("url")
 
         val roundtrippedBetaUrlImageSource =
             jsonMapper.readValue(

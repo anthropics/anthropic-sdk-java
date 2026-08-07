@@ -166,6 +166,14 @@ private constructor(
         @JvmStatic
         fun ofRequestError(requestError: BetaWebSearchToolRequestError) =
             BetaWebSearchToolResultBlockParamContent(requestError = requestError)
+
+        /**
+         * Returns an immutable instance of [BetaWebSearchToolResultBlockParamContent] whose
+         * [ofRequestError] variant is built from the given required [errorCode].
+         */
+        @JvmStatic
+        fun ofRequestError(errorCode: BetaWebSearchToolResultErrorCode) =
+            ofRequestError(BetaWebSearchToolRequestError.of(errorCode))
     }
 
     /**

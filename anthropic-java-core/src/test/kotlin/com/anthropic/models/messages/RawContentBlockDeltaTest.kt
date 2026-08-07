@@ -16,7 +16,7 @@ internal class RawContentBlockDeltaTest {
 
     @Test
     fun ofText() {
-        val text = TextDelta.builder().text("text").build()
+        val text = TextDelta.of("text")
 
         val rawContentBlockDelta = RawContentBlockDelta.ofText(text)
 
@@ -30,8 +30,7 @@ internal class RawContentBlockDeltaTest {
     @Test
     fun ofTextRoundtrip() {
         val jsonMapper = jsonMapper()
-        val rawContentBlockDelta =
-            RawContentBlockDelta.ofText(TextDelta.builder().text("text").build())
+        val rawContentBlockDelta = RawContentBlockDelta.ofText(TextDelta.of("text"))
 
         val roundtrippedRawContentBlockDelta =
             jsonMapper.readValue(
@@ -44,7 +43,7 @@ internal class RawContentBlockDeltaTest {
 
     @Test
     fun ofInputJson() {
-        val inputJson = InputJsonDelta.builder().partialJson("partial_json").build()
+        val inputJson = InputJsonDelta.of("partial_json")
 
         val rawContentBlockDelta = RawContentBlockDelta.ofInputJson(inputJson)
 
@@ -59,9 +58,7 @@ internal class RawContentBlockDeltaTest {
     fun ofInputJsonRoundtrip() {
         val jsonMapper = jsonMapper()
         val rawContentBlockDelta =
-            RawContentBlockDelta.ofInputJson(
-                InputJsonDelta.builder().partialJson("partial_json").build()
-            )
+            RawContentBlockDelta.ofInputJson(InputJsonDelta.of("partial_json"))
 
         val roundtrippedRawContentBlockDelta =
             jsonMapper.readValue(
@@ -127,7 +124,7 @@ internal class RawContentBlockDeltaTest {
 
     @Test
     fun ofThinking() {
-        val thinking = ThinkingDelta.builder().thinking("thinking").build()
+        val thinking = ThinkingDelta.of("thinking")
 
         val rawContentBlockDelta = RawContentBlockDelta.ofThinking(thinking)
 
@@ -141,8 +138,7 @@ internal class RawContentBlockDeltaTest {
     @Test
     fun ofThinkingRoundtrip() {
         val jsonMapper = jsonMapper()
-        val rawContentBlockDelta =
-            RawContentBlockDelta.ofThinking(ThinkingDelta.builder().thinking("thinking").build())
+        val rawContentBlockDelta = RawContentBlockDelta.ofThinking(ThinkingDelta.of("thinking"))
 
         val roundtrippedRawContentBlockDelta =
             jsonMapper.readValue(
@@ -155,7 +151,7 @@ internal class RawContentBlockDeltaTest {
 
     @Test
     fun ofSignature() {
-        val signature = SignatureDelta.builder().signature("signature").build()
+        val signature = SignatureDelta.of("signature")
 
         val rawContentBlockDelta = RawContentBlockDelta.ofSignature(signature)
 
@@ -169,10 +165,7 @@ internal class RawContentBlockDeltaTest {
     @Test
     fun ofSignatureRoundtrip() {
         val jsonMapper = jsonMapper()
-        val rawContentBlockDelta =
-            RawContentBlockDelta.ofSignature(
-                SignatureDelta.builder().signature("signature").build()
-            )
+        val rawContentBlockDelta = RawContentBlockDelta.ofSignature(SignatureDelta.of("signature"))
 
         val roundtrippedRawContentBlockDelta =
             jsonMapper.readValue(
