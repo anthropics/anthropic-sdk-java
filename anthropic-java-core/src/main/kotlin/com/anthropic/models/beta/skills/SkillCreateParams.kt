@@ -380,7 +380,8 @@ private constructor(
              * Returns an immutable instance of [Body] with the required [files] set to the given
              * value.
              */
-            @JvmStatic fun of(files: List<InputStream>) = builder().files(files).build()
+            @JvmStatic
+            fun of(files: List<MultipartField<InputStream>>) = builder().files(files).build()
         }
 
         /** A builder for [Body]. */
