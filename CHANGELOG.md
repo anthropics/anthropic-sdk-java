@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.53.0 (2026-08-07)
+
+Full Changelog: [v2.52.0...v2.53.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.52.0...v2.53.0)
+
+### Features
+
+* **api:** add `mid-conversation-tool-changes-2026-07-01` beta ([02bf73e](https://github.com/anthropics/anthropic-sdk-java/commit/02bf73e535e123386690b1b2b37b3b8a2474cd41))
+* **api:** add support for session budgets, advisor tool, pinned inference location and skills auto-loading from GitHub ([ae84c87](https://github.com/anthropics/anthropic-sdk-java/commit/ae84c87e4ff52b1440b1fe3e05bfcaab771a98b6))
+* **client:** add accessors for properties shared across union variants ([c61dd17](https://github.com/anthropics/anthropic-sdk-java/commit/c61dd17606f41fec474d7783a57014c9093ec79e))
+
+
+### Bug Fixes
+
+* **client:** add id()/toolUseId() delegating accessors to StructuredContentBlock wrappers ([#183](https://github.com/anthropics/anthropic-sdk-java/issues/183)) ([c69c3a3](https://github.com/anthropics/anthropic-sdk-java/commit/c69c3a3d2df125418974b91bc9a6858fc4387f79))
+
+
+### Chores
+
+* **api:** remove retired Claude Opus 4.1 models ([003af97](https://github.com/anthropics/anthropic-sdk-java/commit/003af97ca585fef2f1d858480e7e694ef098bfd5))
+* **docs:** small updates to descriptions ([7faf29c](https://github.com/anthropics/anthropic-sdk-java/commit/7faf29c865a0c6025d54dcb9b94509128a8d5add))
+* **docs:** updates to a few documentation strings ([1e66bdc](https://github.com/anthropics/anthropic-sdk-java/commit/1e66bdc615b61eb05ecab20a281b5cafe00836fd))
+
 ## 2.52.0 (2026-07-24)
 
 Full Changelog: [v2.51.0...v2.52.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.51.0...v2.52.0)
