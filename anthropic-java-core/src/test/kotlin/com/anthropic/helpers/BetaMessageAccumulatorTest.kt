@@ -870,8 +870,8 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(toolUseContentBlockStartEvent(1L, "1-TOOL."))
 
         // Tool use content block deltas will build up an empty JSON string. This behavior was
-        // observed in issue #249. It should be interpreted as a missing field. Whitespace should
-        // be ignored.
+        // observed in issue #249. A tool that declares no parameters has an
+        // input of `{}` — the only object it can be. Whitespace should be ignored.
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, ""))
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, " "))
 
@@ -894,7 +894,7 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(content.size).isEqualTo(1)
         assertThat(content[0].asToolUse().name()).isEqualTo("1-TOOL.")
-        assertThat(content[0].asToolUse()._input().isMissing()).isTrue()
+        assertThat(content[0].asToolUse()._input().asObject().get()).isEmpty()
     }
 
     @Test

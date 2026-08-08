@@ -1,6 +1,7 @@
 package com.anthropic.helpers
 
 import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonValue
 import com.anthropic.core.JsonObject
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -541,7 +542,7 @@ class BetaMessageAccumulator private constructor() {
                         // arguments, the concatenated `inputJson` can be an empty
                         // string. In that case, interpret it as a missing field.
                         val parsedInput =
-                            if (inputJson.trim() == "") JsonMissing.of()
+                            if (inputJson.trim() == "") JsonValue.from(emptyMap<String, Any>())
                             else
                                 try {
                                     JSON_MAPPER.readValue(inputJson, JsonObject::class.java)

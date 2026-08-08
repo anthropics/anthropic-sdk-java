@@ -1,6 +1,7 @@
 package com.anthropic.helpers
 
 import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonValue
 import com.anthropic.core.JsonObject
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -469,7 +470,7 @@ class MessageAccumulator private constructor() {
                             )
 
                         val parsedInput =
-                            if (inputJson.trim() == "") JsonMissing.of()
+                            if (inputJson.trim() == "") JsonValue.from(emptyMap<String, Any>())
                             else JSON_MAPPER.readValue(inputJson, JsonObject::class.java)
 
                         messageContent[index] =
