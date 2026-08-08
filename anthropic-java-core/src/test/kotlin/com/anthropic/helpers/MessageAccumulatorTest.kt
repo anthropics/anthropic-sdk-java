@@ -661,6 +661,30 @@ internal class MessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateToolUseContentBlockWithNoInputCanBeSentBackToTheApi() {
+        val accumulator = MessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+        accumulator.accumulate(toolUseContentBlockStartEvent(1L, "1-TOOL."))
+        // A tool that declares no parameters streams no input JSON at all.
+        accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, ""))
+        accumulator.accumulate(contentBlockStopEvent(1L))
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(StopReason.TOOL_USE), outputTokens = 88L)
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        // Appending the assistant turn back into the conversation is the normal
+        // shape of a tool-use loop. The Messages API requires `tool_use.input`,
+        // so a param whose `input` is missing is rejected with a 400:
+        //   messages.N.content.M.tool_use.input: Field required
+        val toolUse =
+            accumulator.message().toParam().content().blockParams().get()[0].asToolUse()
+
+        assertThat(toolUse._input().asObject().get()).isEmpty()
+    }
+
+    @Test
     fun accumulateTextAndToolUseContentBlocks() {
         val accumulator = MessageAccumulator.create()
 

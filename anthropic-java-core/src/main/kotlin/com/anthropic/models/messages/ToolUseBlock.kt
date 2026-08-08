@@ -51,7 +51,11 @@ private constructor(
     fun toParam(): ToolUseBlockParam =
         ToolUseBlockParam.builder()
             .id(_id())
-            .input(_input())
+            // A tool that declares no parameters streams only an empty `input_json_delta`, so an
+            // accumulated `Message` can carry a missing `input` (see #249). `tool_use.input` is
+            // required on the way back in, so send the empty object the API itself sent us in
+            // `content_block_start`.
+            .input(if (_input().isMissing()) JsonValue.from(emptyMap<String, Any>()) else _input())
             .name(_name())
             .caller(
                 _caller().map {

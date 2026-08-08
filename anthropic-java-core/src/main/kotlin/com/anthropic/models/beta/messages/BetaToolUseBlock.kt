@@ -53,7 +53,10 @@ private constructor(
     fun toParam(): BetaToolUseBlockParam =
         BetaToolUseBlockParam.builder()
             .id(_id())
-            .input(_input())
+            // A tool that declares no parameters streams only an empty `input_json_delta`, so an
+            // accumulated block can carry a missing `input` (see #249). `input` is required on the
+            // way back in, so send the empty object it must be.
+            .input(if (_input().isMissing()) JsonValue.from(emptyMap<String, Any>()) else _input())
             .name(_name())
             .caller(
                 _caller().map {
