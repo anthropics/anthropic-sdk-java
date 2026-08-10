@@ -4,10 +4,14 @@ package com.anthropic.models.beta.sessions.events
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
+import com.anthropic.core.Enum
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -33,6 +37,42 @@ private constructor(
     private val systemMessage: BetaManagedAgentsSystemMessageEventParams? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun type(): Type =
+        accept(
+            object : Visitor<Type> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEventParams
+                ): Type = Type.USER_MESSAGE
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEventParams
+                ): Type = Type.USER_INTERRUPT
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEventParams
+                ): Type = Type.USER_TOOL_CONFIRMATION
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
+                ): Type = Type.USER_CUSTOM_TOOL_RESULT
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
+                ): Type = Type.USER_DEFINE_OUTCOME
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEventParams
+                ): Type = Type.USER_TOOL_RESULT
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEventParams
+                ): Type = Type.SYSTEM_MESSAGE
+
+                override fun unknown(json: JsonValue?): Type =
+                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
+        )
 
     fun toolUseId(): Optional<String> =
         accept(
@@ -664,5 +704,175 @@ private constructor(
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsEventParams")
             }
         }
+    }
+
+    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val USER_MESSAGE = of("user.message")
+
+            @JvmField val USER_INTERRUPT = of("user.interrupt")
+
+            @JvmField val USER_TOOL_CONFIRMATION = of("user.tool_confirmation")
+
+            @JvmField val USER_CUSTOM_TOOL_RESULT = of("user.custom_tool_result")
+
+            @JvmField val USER_DEFINE_OUTCOME = of("user.define_outcome")
+
+            @JvmField val USER_TOOL_RESULT = of("user.tool_result")
+
+            @JvmField val SYSTEM_MESSAGE = of("system.message")
+
+            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonValue): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
+        }
+
+        /** An enum containing [Type]'s known values. */
+        enum class Known {
+            USER_MESSAGE,
+            USER_INTERRUPT,
+            USER_TOOL_CONFIRMATION,
+            USER_CUSTOM_TOOL_RESULT,
+            USER_DEFINE_OUTCOME,
+            USER_TOOL_RESULT,
+            SYSTEM_MESSAGE,
+        }
+
+        /**
+         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Type] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            USER_MESSAGE,
+            USER_INTERRUPT,
+            USER_TOOL_CONFIRMATION,
+            USER_CUSTOM_TOOL_RESULT,
+            USER_DEFINE_OUTCOME,
+            USER_TOOL_RESULT,
+            SYSTEM_MESSAGE,
+            /** An enum member indicating that [Type] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                USER_MESSAGE -> Value.USER_MESSAGE
+                USER_INTERRUPT -> Value.USER_INTERRUPT
+                USER_TOOL_CONFIRMATION -> Value.USER_TOOL_CONFIRMATION
+                USER_CUSTOM_TOOL_RESULT -> Value.USER_CUSTOM_TOOL_RESULT
+                USER_DEFINE_OUTCOME -> Value.USER_DEFINE_OUTCOME
+                USER_TOOL_RESULT -> Value.USER_TOOL_RESULT
+                SYSTEM_MESSAGE -> Value.SYSTEM_MESSAGE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                USER_MESSAGE -> Known.USER_MESSAGE
+                USER_INTERRUPT -> Known.USER_INTERRUPT
+                USER_TOOL_CONFIRMATION -> Known.USER_TOOL_CONFIRMATION
+                USER_CUSTOM_TOOL_RESULT -> Known.USER_CUSTOM_TOOL_RESULT
+                USER_DEFINE_OUTCOME -> Known.USER_DEFINE_OUTCOME
+                USER_TOOL_RESULT -> Known.USER_TOOL_RESULT
+                SYSTEM_MESSAGE -> Known.SYSTEM_MESSAGE
+                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Type = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Type && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 }

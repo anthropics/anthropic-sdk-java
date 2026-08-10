@@ -4,9 +4,13 @@ package com.anthropic.models.beta.messages
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
+import com.anthropic.core.Enum
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -30,6 +34,33 @@ private constructor(
     private val rename: BetaMemoryTool20250818RenameCommand? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun command(): Command =
+        accept(
+            object : Visitor<Command> {
+                override fun visitView(view: BetaMemoryTool20250818ViewCommand): Command =
+                    Command.VIEW
+
+                override fun visitCreate(create: BetaMemoryTool20250818CreateCommand): Command =
+                    Command.CREATE
+
+                override fun visitStrReplace(
+                    strReplace: BetaMemoryTool20250818StrReplaceCommand
+                ): Command = Command.STR_REPLACE
+
+                override fun visitInsert(insert: BetaMemoryTool20250818InsertCommand): Command =
+                    Command.INSERT
+
+                override fun visitDelete(delete: BetaMemoryTool20250818DeleteCommand): Command =
+                    Command.DELETE
+
+                override fun visitRename(rename: BetaMemoryTool20250818RenameCommand): Command =
+                    Command.RENAME
+
+                override fun unknown(json: JsonValue?): Command =
+                    Command.of(json?.asObject()?.getOrNull()?.get("command") ?: JsonMissing.of())
+            }
+        )
 
     fun path(): Optional<String> =
         accept(
@@ -401,5 +432,169 @@ private constructor(
                 else -> throw IllegalStateException("Invalid BetaMemoryTool20250818Command")
             }
         }
+    }
+
+    class Command @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val VIEW = of("view")
+
+            @JvmField val CREATE = of("create")
+
+            @JvmField val STR_REPLACE = of("str_replace")
+
+            @JvmField val INSERT = of("insert")
+
+            @JvmField val DELETE = of("delete")
+
+            @JvmField val RENAME = of("rename")
+
+            @JvmStatic fun of(value: String) = Command(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonValue): Command =
+                value.asString().getOrNull()?.let { of(it) } ?: Command(value)
+        }
+
+        /** An enum containing [Command]'s known values. */
+        enum class Known {
+            VIEW,
+            CREATE,
+            STR_REPLACE,
+            INSERT,
+            DELETE,
+            RENAME,
+        }
+
+        /**
+         * An enum containing [Command]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Command] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            VIEW,
+            CREATE,
+            STR_REPLACE,
+            INSERT,
+            DELETE,
+            RENAME,
+            /** An enum member indicating that [Command] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                VIEW -> Value.VIEW
+                CREATE -> Value.CREATE
+                STR_REPLACE -> Value.STR_REPLACE
+                INSERT -> Value.INSERT
+                DELETE -> Value.DELETE
+                RENAME -> Value.RENAME
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                VIEW -> Known.VIEW
+                CREATE -> Known.CREATE
+                STR_REPLACE -> Known.STR_REPLACE
+                INSERT -> Known.INSERT
+                DELETE -> Known.DELETE
+                RENAME -> Known.RENAME
+                else -> throw AnthropicInvalidDataException("Unknown Command: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Command = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Command && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 }
