@@ -74,7 +74,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun outputBehavior(): Optional<OutputBehavior> = body.outputBehavior()
+    fun outputBehavior(): Optional<BetaOutputBehavior> = body.outputBehavior()
 
     /**
      * Returns the raw JSON value of [inputs].
@@ -102,7 +102,7 @@ private constructor(
      *
      * Unlike [outputBehavior], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _outputBehavior(): JsonField<OutputBehavior> = body._outputBehavior()
+    fun _outputBehavior(): JsonField<BetaOutputBehavior> = body._outputBehavior()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -271,36 +271,39 @@ private constructor(
          * memory_store input and writes the consolidated memories into it. The input store is never
          * mutated.
          */
-        fun outputBehavior(outputBehavior: OutputBehavior) = apply {
+        fun outputBehavior(outputBehavior: BetaOutputBehavior) = apply {
             body.outputBehavior(outputBehavior)
         }
 
         /**
          * Sets [Builder.outputBehavior] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.outputBehavior] with a well-typed [OutputBehavior] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.outputBehavior] with a well-typed [BetaOutputBehavior]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
-        fun outputBehavior(outputBehavior: JsonField<OutputBehavior>) = apply {
+        fun outputBehavior(outputBehavior: JsonField<BetaOutputBehavior>) = apply {
             body.outputBehavior(outputBehavior)
         }
 
-        /** Alias for calling [outputBehavior] with `OutputBehavior.ofCreateNew()`. */
-        fun outputBehaviorCreateNew() = apply { body.outputBehaviorCreateNew() }
+        /** Alias for calling [outputBehavior] with `BetaOutputBehavior.ofCreateNew(createNew)`. */
+        fun outputBehavior(createNew: BetaOutputBehaviorCreateNew) = apply {
+            body.outputBehavior(createNew)
+        }
 
         /**
          * Alias for calling [outputBehavior] with
-         * `OutputBehavior.ofUpdateExisting(updateExisting)`.
+         * `BetaOutputBehavior.ofUpdateExisting(updateExisting)`.
          */
-        fun outputBehavior(updateExisting: OutputBehavior.UpdateExisting) = apply {
+        fun outputBehavior(updateExisting: BetaOutputBehaviorUpdateExisting) = apply {
             body.outputBehavior(updateExisting)
         }
 
         /**
          * Alias for calling [outputBehavior] with the following:
          * ```java
-         * OutputBehavior.UpdateExisting.builder()
+         * BetaOutputBehaviorUpdateExisting.builder()
+         *     .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
          *     .memoryStoreId(memoryStoreId)
          *     .build()
          * ```
@@ -466,7 +469,7 @@ private constructor(
         private val inputs: JsonField<List<BetaDreamInput>>,
         private val model: JsonField<Model>,
         private val instructions: JsonField<String>,
-        private val outputBehavior: JsonField<OutputBehavior>,
+        private val outputBehavior: JsonField<BetaOutputBehavior>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -481,7 +484,7 @@ private constructor(
             instructions: JsonField<String> = JsonMissing.of(),
             @JsonProperty("output_behavior")
             @ExcludeMissing
-            outputBehavior: JsonField<OutputBehavior> = JsonMissing.of(),
+            outputBehavior: JsonField<BetaOutputBehavior> = JsonMissing.of(),
         ) : this(inputs, model, instructions, outputBehavior, mutableMapOf())
 
         /**
@@ -512,7 +515,7 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun outputBehavior(): Optional<OutputBehavior> =
+        fun outputBehavior(): Optional<BetaOutputBehavior> =
             outputBehavior.getOptional("output_behavior")
 
         /**
@@ -549,7 +552,7 @@ private constructor(
          */
         @JsonProperty("output_behavior")
         @ExcludeMissing
-        fun _outputBehavior(): JsonField<OutputBehavior> = outputBehavior
+        fun _outputBehavior(): JsonField<BetaOutputBehavior> = outputBehavior
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -583,7 +586,7 @@ private constructor(
             private var inputs: JsonField<MutableList<BetaDreamInput>>? = null
             private var model: JsonField<Model>? = null
             private var instructions: JsonField<String> = JsonMissing.of()
-            private var outputBehavior: JsonField<OutputBehavior> = JsonMissing.of()
+            private var outputBehavior: JsonField<BetaOutputBehavior> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -707,41 +710,48 @@ private constructor(
              * memory_store input and writes the consolidated memories into it. The input store is
              * never mutated.
              */
-            fun outputBehavior(outputBehavior: OutputBehavior) =
+            fun outputBehavior(outputBehavior: BetaOutputBehavior) =
                 outputBehavior(JsonField.of(outputBehavior))
 
             /**
              * Sets [Builder.outputBehavior] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.outputBehavior] with a well-typed [OutputBehavior]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.outputBehavior] with a well-typed
+             * [BetaOutputBehavior] value instead. This method is primarily for setting the field to
+             * an undocumented or not yet supported value.
              */
-            fun outputBehavior(outputBehavior: JsonField<OutputBehavior>) = apply {
+            fun outputBehavior(outputBehavior: JsonField<BetaOutputBehavior>) = apply {
                 this.outputBehavior = outputBehavior
             }
 
-            /** Alias for calling [outputBehavior] with `OutputBehavior.ofCreateNew()`. */
-            fun outputBehaviorCreateNew() = outputBehavior(OutputBehavior.ofCreateNew())
+            /**
+             * Alias for calling [outputBehavior] with `BetaOutputBehavior.ofCreateNew(createNew)`.
+             */
+            fun outputBehavior(createNew: BetaOutputBehaviorCreateNew) =
+                outputBehavior(BetaOutputBehavior.ofCreateNew(createNew))
 
             /**
              * Alias for calling [outputBehavior] with
-             * `OutputBehavior.ofUpdateExisting(updateExisting)`.
+             * `BetaOutputBehavior.ofUpdateExisting(updateExisting)`.
              */
-            fun outputBehavior(updateExisting: OutputBehavior.UpdateExisting) =
-                outputBehavior(OutputBehavior.ofUpdateExisting(updateExisting))
+            fun outputBehavior(updateExisting: BetaOutputBehaviorUpdateExisting) =
+                outputBehavior(BetaOutputBehavior.ofUpdateExisting(updateExisting))
 
             /**
              * Alias for calling [outputBehavior] with the following:
              * ```java
-             * OutputBehavior.UpdateExisting.builder()
+             * BetaOutputBehaviorUpdateExisting.builder()
+             *     .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
              *     .memoryStoreId(memoryStoreId)
              *     .build()
              * ```
              */
             fun updateExistingOutputBehavior(memoryStoreId: String) =
                 outputBehavior(
-                    OutputBehavior.UpdateExisting.builder().memoryStoreId(memoryStoreId).build()
+                    BetaOutputBehaviorUpdateExisting.builder()
+                        .type(BetaOutputBehaviorUpdateExisting.Type.UPDATE_EXISTING)
+                        .memoryStoreId(memoryStoreId)
+                        .build()
                 )
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1085,511 +1095,6 @@ private constructor(
                     else -> throw IllegalStateException("Invalid Model")
                 }
             }
-        }
-    }
-
-    /**
-     * The default destination: the job creates a new output memory store as a clone of the
-     * memory_store input and writes the consolidated memories into it. The input store is never
-     * mutated.
-     */
-    @JsonDeserialize(using = OutputBehavior.Deserializer::class)
-    @JsonSerialize(using = OutputBehavior.Serializer::class)
-    class OutputBehavior
-    private constructor(
-        private val createNew: JsonValue? = null,
-        private val updateExisting: UpdateExisting? = null,
-        private val _json: JsonValue? = null,
-    ) {
-
-        /**
-         * The default destination: the job creates a new output memory store as a clone of the
-         * memory_store input and writes the consolidated memories into it. The input store is never
-         * mutated.
-         */
-        fun createNew(): Optional<JsonValue> = Optional.ofNullable(createNew)
-
-        /**
-         * The job writes the consolidated memories into this existing memory store instead of
-         * creating one. In EAP the store must be the job's own memory_store input, so the job
-         * consolidates the store in place.
-         */
-        fun updateExisting(): Optional<UpdateExisting> = Optional.ofNullable(updateExisting)
-
-        fun isCreateNew(): Boolean = createNew != null
-
-        fun isUpdateExisting(): Boolean = updateExisting != null
-
-        /**
-         * The default destination: the job creates a new output memory store as a clone of the
-         * memory_store input and writes the consolidated memories into it. The input store is never
-         * mutated.
-         */
-        fun asCreateNew(): JsonValue = createNew.getOrThrow("createNew")
-
-        /**
-         * The job writes the consolidated memories into this existing memory store instead of
-         * creating one. In EAP the store must be the job's own memory_store input, so the job
-         * consolidates the store in place.
-         */
-        fun asUpdateExisting(): UpdateExisting = updateExisting.getOrThrow("updateExisting")
-
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
-
-        /**
-         * Maps this instance's current variant to a value of type [T] using the given [visitor].
-         *
-         * Note that this method is _not_ forwards compatible with new variants from the API, unless
-         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
-         * the SDK gracefully, consider overriding [Visitor.unknown]:
-         * ```java
-         * import com.anthropic.core.JsonValue;
-         * import java.util.Optional;
-         *
-         * Optional<String> result = outputBehavior.accept(new OutputBehavior.Visitor<Optional<String>>() {
-         *     @Override
-         *     public Optional<String> visitCreateNew(JsonValue createNew) {
-         *         return Optional.of(createNew.toString());
-         *     }
-         *
-         *     // ...
-         *
-         *     @Override
-         *     public Optional<String> unknown(JsonValue json) {
-         *         // Or inspect the `json`.
-         *         return Optional.empty();
-         *     }
-         * });
-         * ```
-         *
-         * @throws AnthropicInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
-         *   and the current variant is unknown.
-         */
-        fun <T> accept(visitor: Visitor<T>): T =
-            when {
-                createNew != null -> visitor.visitCreateNew(createNew)
-                updateExisting != null -> visitor.visitUpdateExisting(updateExisting)
-                else -> visitor.unknown(_json)
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): OutputBehavior = apply {
-            if (validated) {
-                return@apply
-            }
-
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitCreateNew(createNew: JsonValue) {
-                        createNew.let {
-                            if (it != JsonValue.from(mapOf("type" to "create_new"))) {
-                                throw AnthropicInvalidDataException(
-                                    "'createNew' is invalid, received $it"
-                                )
-                            }
-                        }
-                    }
-
-                    override fun visitUpdateExisting(updateExisting: UpdateExisting) {
-                        updateExisting.validate()
-                    }
-                }
-            )
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitCreateNew(createNew: JsonValue) =
-                        createNew.let {
-                            if (it == JsonValue.from(mapOf("type" to "create_new"))) 1 else 0
-                        }
-
-                    override fun visitUpdateExisting(updateExisting: UpdateExisting) =
-                        updateExisting.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is OutputBehavior &&
-                createNew == other.createNew &&
-                updateExisting == other.updateExisting
-        }
-
-        override fun hashCode(): Int = Objects.hash(createNew, updateExisting)
-
-        override fun toString(): String =
-            when {
-                createNew != null -> "OutputBehavior{createNew=$createNew}"
-                updateExisting != null -> "OutputBehavior{updateExisting=$updateExisting}"
-                _json != null -> "OutputBehavior{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid OutputBehavior")
-            }
-
-        companion object {
-
-            /**
-             * The default destination: the job creates a new output memory store as a clone of the
-             * memory_store input and writes the consolidated memories into it. The input store is
-             * never mutated.
-             */
-            @JvmStatic
-            fun ofCreateNew() =
-                OutputBehavior(createNew = JsonValue.from(mapOf("type" to "create_new")))
-
-            /**
-             * The job writes the consolidated memories into this existing memory store instead of
-             * creating one. In EAP the store must be the job's own memory_store input, so the job
-             * consolidates the store in place.
-             */
-            @JvmStatic
-            fun ofUpdateExisting(updateExisting: UpdateExisting) =
-                OutputBehavior(updateExisting = updateExisting)
-
-            /**
-             * Returns an immutable instance of [OutputBehavior] whose [ofUpdateExisting] variant is
-             * built from the given required [memoryStoreId].
-             */
-            @JvmStatic
-            fun ofUpdateExisting(memoryStoreId: String) =
-                ofUpdateExisting(UpdateExisting.of(memoryStoreId))
-        }
-
-        /**
-         * An interface that defines how to map each variant of [OutputBehavior] to a value of type
-         * [T].
-         */
-        interface Visitor<out T> {
-
-            /**
-             * The default destination: the job creates a new output memory store as a clone of the
-             * memory_store input and writes the consolidated memories into it. The input store is
-             * never mutated.
-             */
-            fun visitCreateNew(createNew: JsonValue): T
-
-            /**
-             * The job writes the consolidated memories into this existing memory store instead of
-             * creating one. In EAP the store must be the job's own memory_store input, so the job
-             * consolidates the store in place.
-             */
-            fun visitUpdateExisting(updateExisting: UpdateExisting): T
-
-            /**
-             * Maps an unknown variant of [OutputBehavior] to a value of type [T].
-             *
-             * An instance of [OutputBehavior] can contain an unknown variant if it was deserialized
-             * from data that doesn't match any known variant. For example, if the SDK is on an
-             * older version than the API, then the API may respond with new variants that the SDK
-             * is unaware of.
-             *
-             * @throws AnthropicInvalidDataException in the default implementation.
-             */
-            fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown OutputBehavior: $json")
-            }
-        }
-
-        internal class Deserializer : BaseDeserializer<OutputBehavior>(OutputBehavior::class) {
-
-            override fun ObjectCodec.deserialize(node: JsonNode): OutputBehavior {
-                val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
-
-                when (type) {
-                    "create_new" -> {
-                        return tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                            ?.let { OutputBehavior(createNew = it, _json = json) }
-                            ?.takeIf { it.isValid() } ?: OutputBehavior(_json = json)
-                    }
-                    "update_existing" -> {
-                        return tryDeserialize(node, jacksonTypeRef<UpdateExisting>())?.let {
-                            OutputBehavior(updateExisting = it, _json = json)
-                        } ?: OutputBehavior(_json = json)
-                    }
-                }
-
-                return OutputBehavior(_json = json)
-            }
-        }
-
-        internal class Serializer : BaseSerializer<OutputBehavior>(OutputBehavior::class) {
-
-            override fun serialize(
-                value: OutputBehavior,
-                generator: JsonGenerator,
-                provider: SerializerProvider,
-            ) {
-                when {
-                    value.createNew != null -> generator.writeObject(value.createNew)
-                    value.updateExisting != null -> generator.writeObject(value.updateExisting)
-                    value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid OutputBehavior")
-                }
-            }
-        }
-
-        /**
-         * The job writes the consolidated memories into this existing memory store instead of
-         * creating one. In EAP the store must be the job's own memory_store input, so the job
-         * consolidates the store in place.
-         */
-        class UpdateExisting
-        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-        private constructor(
-            private val memoryStoreId: JsonField<String>,
-            private val type: JsonValue,
-            private val additionalProperties: MutableMap<String, JsonValue>,
-        ) {
-
-            @JsonCreator
-            private constructor(
-                @JsonProperty("memory_store_id")
-                @ExcludeMissing
-                memoryStoreId: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-            ) : this(memoryStoreId, type, mutableMapOf())
-
-            /**
-             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun memoryStoreId(): String = memoryStoreId.getRequired("memory_store_id")
-
-            /**
-             * Expected to always return the following:
-             * ```java
-             * JsonValue.from("update_existing")
-             * ```
-             *
-             * However, this method can be useful for debugging and logging (e.g. if the server
-             * responded with an unexpected value).
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
-
-            /**
-             * Returns the raw JSON value of [memoryStoreId].
-             *
-             * Unlike [memoryStoreId], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("memory_store_id")
-            @ExcludeMissing
-            fun _memoryStoreId(): JsonField<String> = memoryStoreId
-
-            @JsonAnySetter
-            private fun putAdditionalProperty(key: String, value: JsonValue) {
-                additionalProperties.put(key, value)
-            }
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> =
-                Collections.unmodifiableMap(additionalProperties)
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /**
-                 * Returns a mutable builder for constructing an instance of [UpdateExisting].
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .memoryStoreId()
-                 * ```
-                 */
-                @JvmStatic fun builder() = Builder()
-
-                /**
-                 * Returns an immutable instance of [UpdateExisting] with the required
-                 * [memoryStoreId] set to the given value.
-                 */
-                @JvmStatic
-                fun of(memoryStoreId: String) = builder().memoryStoreId(memoryStoreId).build()
-            }
-
-            /** A builder for [UpdateExisting]. */
-            class Builder internal constructor() {
-
-                private var memoryStoreId: JsonField<String>? = null
-                private var type: JsonValue = JsonValue.from("update_existing")
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(updateExisting: UpdateExisting) = apply {
-                    memoryStoreId = updateExisting.memoryStoreId
-                    type = updateExisting.type
-                    additionalProperties = updateExisting.additionalProperties.toMutableMap()
-                }
-
-                fun memoryStoreId(memoryStoreId: String) =
-                    memoryStoreId(JsonField.of(memoryStoreId))
-
-                /**
-                 * Sets [Builder.memoryStoreId] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.memoryStoreId] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun memoryStoreId(memoryStoreId: JsonField<String>) = apply {
-                    this.memoryStoreId = memoryStoreId
-                }
-
-                /**
-                 * Sets the field to an arbitrary JSON value.
-                 *
-                 * It is usually unnecessary to call this method because the field defaults to the
-                 * following:
-                 * ```java
-                 * JsonValue.from("update_existing")
-                 * ```
-                 *
-                 * This method is primarily for setting the field to an undocumented or not yet
-                 * supported value.
-                 */
-                fun type(type: JsonValue) = apply { this.type = type }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [UpdateExisting].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .memoryStoreId()
-                 * ```
-                 *
-                 * @throws IllegalStateException if any required field is unset.
-                 */
-                fun build(): UpdateExisting =
-                    UpdateExisting(
-                        checkRequired("memoryStoreId", memoryStoreId),
-                        type,
-                        additionalProperties.toMutableMap(),
-                    )
-            }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws AnthropicInvalidDataException if any value type in this object doesn't match
-             *   its expected type.
-             */
-            fun validate(): UpdateExisting = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                memoryStoreId()
-                _type().let {
-                    if (it != JsonValue.from("update_existing")) {
-                        throw AnthropicInvalidDataException("'type' is invalid, received $it")
-                    }
-                }
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: AnthropicInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                (if (memoryStoreId.asKnown().isPresent) 1 else 0) +
-                    type.let { if (it == JsonValue.from("update_existing")) 1 else 0 }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UpdateExisting &&
-                    memoryStoreId == other.memoryStoreId &&
-                    type == other.type &&
-                    additionalProperties == other.additionalProperties
-            }
-
-            private val hashCode: Int by lazy {
-                Objects.hash(memoryStoreId, type, additionalProperties)
-            }
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() =
-                "UpdateExisting{memoryStoreId=$memoryStoreId, type=$type, additionalProperties=$additionalProperties}"
         }
     }
 

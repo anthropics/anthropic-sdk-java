@@ -29,7 +29,11 @@ internal class DreamListPageResponseTest {
                                 .speed(BetaDreamModelConfig.Speed.STANDARD)
                                 .build()
                         )
-                        .outputBehaviorCreateNew()
+                        .outputBehavior(
+                            BetaOutputBehaviorCreateNew.of(
+                                BetaOutputBehaviorCreateNew.Type.CREATE_NEW
+                            )
+                        )
                         .addMemoryStoreOutput("memory_store_id")
                         .sessionId("session_id")
                         .status(BetaDreamStatus.PENDING)
@@ -63,7 +67,9 @@ internal class DreamListPageResponseTest {
                             .speed(BetaDreamModelConfig.Speed.STANDARD)
                             .build()
                     )
-                    .outputBehaviorCreateNew()
+                    .outputBehavior(
+                        BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
+                    )
                     .addMemoryStoreOutput("memory_store_id")
                     .sessionId("session_id")
                     .status(BetaDreamStatus.PENDING)
@@ -101,7 +107,11 @@ internal class DreamListPageResponseTest {
                                 .speed(BetaDreamModelConfig.Speed.STANDARD)
                                 .build()
                         )
-                        .outputBehaviorCreateNew()
+                        .outputBehavior(
+                            BetaOutputBehaviorCreateNew.of(
+                                BetaOutputBehaviorCreateNew.Type.CREATE_NEW
+                            )
+                        )
                         .addMemoryStoreOutput("memory_store_id")
                         .sessionId("session_id")
                         .status(BetaDreamStatus.PENDING)

@@ -5,6 +5,7 @@ package com.anthropic.services.blocking.beta
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.dreams.BetaOutputBehaviorCreateNew
 import com.anthropic.models.beta.dreams.DreamArchiveParams
 import com.anthropic.models.beta.dreams.DreamCancelParams
 import com.anthropic.models.beta.dreams.DreamCreateParams
@@ -31,7 +32,9 @@ internal class DreamServiceTest {
                     .addMemoryStoreInput("x")
                     .model("string")
                     .instructions("x")
-                    .outputBehaviorCreateNew()
+                    .outputBehavior(
+                        BetaOutputBehaviorCreateNew.of(BetaOutputBehaviorCreateNew.Type.CREATE_NEW)
+                    )
                     .build()
             )
 
