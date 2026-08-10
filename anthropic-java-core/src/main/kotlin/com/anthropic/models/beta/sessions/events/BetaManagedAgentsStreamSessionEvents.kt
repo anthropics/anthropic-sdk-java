@@ -4,6 +4,9 @@ package com.anthropic.models.beta.sessions.events
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
+import com.anthropic.core.Enum
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -15,6 +18,7 @@ import com.anthropic.models.beta.sessions.BetaManagedAgentsStartEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsStartEventPreview
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsUserToolResultEvent
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -80,6 +84,162 @@ private constructor(
     private val sessionUsage: BetaManagedAgentsSessionUsageEvent? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun type(): Type =
+        accept(
+            object : Visitor<Type> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Type = Type.USER_MESSAGE
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Type = Type.USER_INTERRUPT
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Type = Type.USER_TOOL_CONFIRMATION
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Type = Type.USER_CUSTOM_TOOL_RESULT
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Type = Type.AGENT_CUSTOM_TOOL_USE
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Type = Type.AGENT_MESSAGE
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Type = Type.AGENT_THINKING
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Type = Type.AGENT_MCP_TOOL_USE
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Type = Type.AGENT_MCP_TOOL_RESULT
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Type = Type.AGENT_TOOL_USE
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Type = Type.AGENT_TOOL_RESULT
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Type = Type.AGENT_THREAD_MESSAGE_RECEIVED
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Type = Type.AGENT_THREAD_MESSAGE_SENT
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Type = Type.AGENT_THREAD_CONTEXT_COMPACTED
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Type = Type.SESSION_ERROR
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Type = Type.SESSION_STATUS_RESCHEDULED
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Type = Type.SESSION_STATUS_RUNNING
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Type = Type.SESSION_STATUS_IDLE
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Type = Type.SESSION_STATUS_TERMINATED
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Type = Type.SESSION_THREAD_CREATED
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Type = Type.SPAN_OUTCOME_EVALUATION_START
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Type = Type.SPAN_OUTCOME_EVALUATION_END
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Type = Type.SPAN_MODEL_REQUEST_START
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Type = Type.SPAN_MODEL_REQUEST_END
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Type = Type.SPAN_OUTCOME_EVALUATION_ONGOING
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Type = Type.USER_DEFINE_OUTCOME
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Type = Type.SESSION_DELETED
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Type = Type.SESSION_THREAD_STATUS_RUNNING
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Type = Type.SESSION_THREAD_STATUS_IDLE
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Type = Type.SESSION_THREAD_STATUS_TERMINATED
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Type = Type.USER_TOOL_RESULT
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Type = Type.SESSION_THREAD_STATUS_RESCHEDULED
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Type = Type.SESSION_UPDATED
+
+                override fun visitEventStart(eventStart: BetaManagedAgentsStartEvent): Type =
+                    Type.EVENT_START
+
+                override fun visitEventDelta(eventDelta: BetaManagedAgentsDeltaEvent): Type =
+                    Type.EVENT_DELTA
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Type = Type.SYSTEM_MESSAGE
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
+                ): Type = Type.SESSION_USAGE
+
+                override fun unknown(json: JsonValue?): Type =
+                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
+        )
 
     fun id(): Optional<String> =
         accept(
@@ -3816,5 +3976,356 @@ private constructor(
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsStreamSessionEvents")
             }
         }
+    }
+
+    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val USER_MESSAGE = of("user.message")
+
+            @JvmField val USER_INTERRUPT = of("user.interrupt")
+
+            @JvmField val USER_TOOL_CONFIRMATION = of("user.tool_confirmation")
+
+            @JvmField val USER_CUSTOM_TOOL_RESULT = of("user.custom_tool_result")
+
+            @JvmField val AGENT_CUSTOM_TOOL_USE = of("agent.custom_tool_use")
+
+            @JvmField val AGENT_MESSAGE = of("agent.message")
+
+            @JvmField val AGENT_THINKING = of("agent.thinking")
+
+            @JvmField val AGENT_MCP_TOOL_USE = of("agent.mcp_tool_use")
+
+            @JvmField val AGENT_MCP_TOOL_RESULT = of("agent.mcp_tool_result")
+
+            @JvmField val AGENT_TOOL_USE = of("agent.tool_use")
+
+            @JvmField val AGENT_TOOL_RESULT = of("agent.tool_result")
+
+            @JvmField val AGENT_THREAD_MESSAGE_RECEIVED = of("agent.thread_message_received")
+
+            @JvmField val AGENT_THREAD_MESSAGE_SENT = of("agent.thread_message_sent")
+
+            @JvmField val AGENT_THREAD_CONTEXT_COMPACTED = of("agent.thread_context_compacted")
+
+            @JvmField val SESSION_ERROR = of("session.error")
+
+            @JvmField val SESSION_STATUS_RESCHEDULED = of("session.status_rescheduled")
+
+            @JvmField val SESSION_STATUS_RUNNING = of("session.status_running")
+
+            @JvmField val SESSION_STATUS_IDLE = of("session.status_idle")
+
+            @JvmField val SESSION_STATUS_TERMINATED = of("session.status_terminated")
+
+            @JvmField val SESSION_THREAD_CREATED = of("session.thread_created")
+
+            @JvmField val SPAN_OUTCOME_EVALUATION_START = of("span.outcome_evaluation_start")
+
+            @JvmField val SPAN_OUTCOME_EVALUATION_END = of("span.outcome_evaluation_end")
+
+            @JvmField val SPAN_MODEL_REQUEST_START = of("span.model_request_start")
+
+            @JvmField val SPAN_MODEL_REQUEST_END = of("span.model_request_end")
+
+            @JvmField val SPAN_OUTCOME_EVALUATION_ONGOING = of("span.outcome_evaluation_ongoing")
+
+            @JvmField val USER_DEFINE_OUTCOME = of("user.define_outcome")
+
+            @JvmField val SESSION_DELETED = of("session.deleted")
+
+            @JvmField val SESSION_THREAD_STATUS_RUNNING = of("session.thread_status_running")
+
+            @JvmField val SESSION_THREAD_STATUS_IDLE = of("session.thread_status_idle")
+
+            @JvmField val SESSION_THREAD_STATUS_TERMINATED = of("session.thread_status_terminated")
+
+            @JvmField val USER_TOOL_RESULT = of("user.tool_result")
+
+            @JvmField
+            val SESSION_THREAD_STATUS_RESCHEDULED = of("session.thread_status_rescheduled")
+
+            @JvmField val SESSION_UPDATED = of("session.updated")
+
+            @JvmField val EVENT_START = of("event_start")
+
+            @JvmField val EVENT_DELTA = of("event_delta")
+
+            @JvmField val SYSTEM_MESSAGE = of("system.message")
+
+            @JvmField val SESSION_USAGE = of("session.usage")
+
+            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonValue): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
+        }
+
+        /** An enum containing [Type]'s known values. */
+        enum class Known {
+            USER_MESSAGE,
+            USER_INTERRUPT,
+            USER_TOOL_CONFIRMATION,
+            USER_CUSTOM_TOOL_RESULT,
+            AGENT_CUSTOM_TOOL_USE,
+            AGENT_MESSAGE,
+            AGENT_THINKING,
+            AGENT_MCP_TOOL_USE,
+            AGENT_MCP_TOOL_RESULT,
+            AGENT_TOOL_USE,
+            AGENT_TOOL_RESULT,
+            AGENT_THREAD_MESSAGE_RECEIVED,
+            AGENT_THREAD_MESSAGE_SENT,
+            AGENT_THREAD_CONTEXT_COMPACTED,
+            SESSION_ERROR,
+            SESSION_STATUS_RESCHEDULED,
+            SESSION_STATUS_RUNNING,
+            SESSION_STATUS_IDLE,
+            SESSION_STATUS_TERMINATED,
+            SESSION_THREAD_CREATED,
+            SPAN_OUTCOME_EVALUATION_START,
+            SPAN_OUTCOME_EVALUATION_END,
+            SPAN_MODEL_REQUEST_START,
+            SPAN_MODEL_REQUEST_END,
+            SPAN_OUTCOME_EVALUATION_ONGOING,
+            USER_DEFINE_OUTCOME,
+            SESSION_DELETED,
+            SESSION_THREAD_STATUS_RUNNING,
+            SESSION_THREAD_STATUS_IDLE,
+            SESSION_THREAD_STATUS_TERMINATED,
+            USER_TOOL_RESULT,
+            SESSION_THREAD_STATUS_RESCHEDULED,
+            SESSION_UPDATED,
+            EVENT_START,
+            EVENT_DELTA,
+            SYSTEM_MESSAGE,
+            SESSION_USAGE,
+        }
+
+        /**
+         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Type] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            USER_MESSAGE,
+            USER_INTERRUPT,
+            USER_TOOL_CONFIRMATION,
+            USER_CUSTOM_TOOL_RESULT,
+            AGENT_CUSTOM_TOOL_USE,
+            AGENT_MESSAGE,
+            AGENT_THINKING,
+            AGENT_MCP_TOOL_USE,
+            AGENT_MCP_TOOL_RESULT,
+            AGENT_TOOL_USE,
+            AGENT_TOOL_RESULT,
+            AGENT_THREAD_MESSAGE_RECEIVED,
+            AGENT_THREAD_MESSAGE_SENT,
+            AGENT_THREAD_CONTEXT_COMPACTED,
+            SESSION_ERROR,
+            SESSION_STATUS_RESCHEDULED,
+            SESSION_STATUS_RUNNING,
+            SESSION_STATUS_IDLE,
+            SESSION_STATUS_TERMINATED,
+            SESSION_THREAD_CREATED,
+            SPAN_OUTCOME_EVALUATION_START,
+            SPAN_OUTCOME_EVALUATION_END,
+            SPAN_MODEL_REQUEST_START,
+            SPAN_MODEL_REQUEST_END,
+            SPAN_OUTCOME_EVALUATION_ONGOING,
+            USER_DEFINE_OUTCOME,
+            SESSION_DELETED,
+            SESSION_THREAD_STATUS_RUNNING,
+            SESSION_THREAD_STATUS_IDLE,
+            SESSION_THREAD_STATUS_TERMINATED,
+            USER_TOOL_RESULT,
+            SESSION_THREAD_STATUS_RESCHEDULED,
+            SESSION_UPDATED,
+            EVENT_START,
+            EVENT_DELTA,
+            SYSTEM_MESSAGE,
+            SESSION_USAGE,
+            /** An enum member indicating that [Type] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                USER_MESSAGE -> Value.USER_MESSAGE
+                USER_INTERRUPT -> Value.USER_INTERRUPT
+                USER_TOOL_CONFIRMATION -> Value.USER_TOOL_CONFIRMATION
+                USER_CUSTOM_TOOL_RESULT -> Value.USER_CUSTOM_TOOL_RESULT
+                AGENT_CUSTOM_TOOL_USE -> Value.AGENT_CUSTOM_TOOL_USE
+                AGENT_MESSAGE -> Value.AGENT_MESSAGE
+                AGENT_THINKING -> Value.AGENT_THINKING
+                AGENT_MCP_TOOL_USE -> Value.AGENT_MCP_TOOL_USE
+                AGENT_MCP_TOOL_RESULT -> Value.AGENT_MCP_TOOL_RESULT
+                AGENT_TOOL_USE -> Value.AGENT_TOOL_USE
+                AGENT_TOOL_RESULT -> Value.AGENT_TOOL_RESULT
+                AGENT_THREAD_MESSAGE_RECEIVED -> Value.AGENT_THREAD_MESSAGE_RECEIVED
+                AGENT_THREAD_MESSAGE_SENT -> Value.AGENT_THREAD_MESSAGE_SENT
+                AGENT_THREAD_CONTEXT_COMPACTED -> Value.AGENT_THREAD_CONTEXT_COMPACTED
+                SESSION_ERROR -> Value.SESSION_ERROR
+                SESSION_STATUS_RESCHEDULED -> Value.SESSION_STATUS_RESCHEDULED
+                SESSION_STATUS_RUNNING -> Value.SESSION_STATUS_RUNNING
+                SESSION_STATUS_IDLE -> Value.SESSION_STATUS_IDLE
+                SESSION_STATUS_TERMINATED -> Value.SESSION_STATUS_TERMINATED
+                SESSION_THREAD_CREATED -> Value.SESSION_THREAD_CREATED
+                SPAN_OUTCOME_EVALUATION_START -> Value.SPAN_OUTCOME_EVALUATION_START
+                SPAN_OUTCOME_EVALUATION_END -> Value.SPAN_OUTCOME_EVALUATION_END
+                SPAN_MODEL_REQUEST_START -> Value.SPAN_MODEL_REQUEST_START
+                SPAN_MODEL_REQUEST_END -> Value.SPAN_MODEL_REQUEST_END
+                SPAN_OUTCOME_EVALUATION_ONGOING -> Value.SPAN_OUTCOME_EVALUATION_ONGOING
+                USER_DEFINE_OUTCOME -> Value.USER_DEFINE_OUTCOME
+                SESSION_DELETED -> Value.SESSION_DELETED
+                SESSION_THREAD_STATUS_RUNNING -> Value.SESSION_THREAD_STATUS_RUNNING
+                SESSION_THREAD_STATUS_IDLE -> Value.SESSION_THREAD_STATUS_IDLE
+                SESSION_THREAD_STATUS_TERMINATED -> Value.SESSION_THREAD_STATUS_TERMINATED
+                USER_TOOL_RESULT -> Value.USER_TOOL_RESULT
+                SESSION_THREAD_STATUS_RESCHEDULED -> Value.SESSION_THREAD_STATUS_RESCHEDULED
+                SESSION_UPDATED -> Value.SESSION_UPDATED
+                EVENT_START -> Value.EVENT_START
+                EVENT_DELTA -> Value.EVENT_DELTA
+                SYSTEM_MESSAGE -> Value.SYSTEM_MESSAGE
+                SESSION_USAGE -> Value.SESSION_USAGE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                USER_MESSAGE -> Known.USER_MESSAGE
+                USER_INTERRUPT -> Known.USER_INTERRUPT
+                USER_TOOL_CONFIRMATION -> Known.USER_TOOL_CONFIRMATION
+                USER_CUSTOM_TOOL_RESULT -> Known.USER_CUSTOM_TOOL_RESULT
+                AGENT_CUSTOM_TOOL_USE -> Known.AGENT_CUSTOM_TOOL_USE
+                AGENT_MESSAGE -> Known.AGENT_MESSAGE
+                AGENT_THINKING -> Known.AGENT_THINKING
+                AGENT_MCP_TOOL_USE -> Known.AGENT_MCP_TOOL_USE
+                AGENT_MCP_TOOL_RESULT -> Known.AGENT_MCP_TOOL_RESULT
+                AGENT_TOOL_USE -> Known.AGENT_TOOL_USE
+                AGENT_TOOL_RESULT -> Known.AGENT_TOOL_RESULT
+                AGENT_THREAD_MESSAGE_RECEIVED -> Known.AGENT_THREAD_MESSAGE_RECEIVED
+                AGENT_THREAD_MESSAGE_SENT -> Known.AGENT_THREAD_MESSAGE_SENT
+                AGENT_THREAD_CONTEXT_COMPACTED -> Known.AGENT_THREAD_CONTEXT_COMPACTED
+                SESSION_ERROR -> Known.SESSION_ERROR
+                SESSION_STATUS_RESCHEDULED -> Known.SESSION_STATUS_RESCHEDULED
+                SESSION_STATUS_RUNNING -> Known.SESSION_STATUS_RUNNING
+                SESSION_STATUS_IDLE -> Known.SESSION_STATUS_IDLE
+                SESSION_STATUS_TERMINATED -> Known.SESSION_STATUS_TERMINATED
+                SESSION_THREAD_CREATED -> Known.SESSION_THREAD_CREATED
+                SPAN_OUTCOME_EVALUATION_START -> Known.SPAN_OUTCOME_EVALUATION_START
+                SPAN_OUTCOME_EVALUATION_END -> Known.SPAN_OUTCOME_EVALUATION_END
+                SPAN_MODEL_REQUEST_START -> Known.SPAN_MODEL_REQUEST_START
+                SPAN_MODEL_REQUEST_END -> Known.SPAN_MODEL_REQUEST_END
+                SPAN_OUTCOME_EVALUATION_ONGOING -> Known.SPAN_OUTCOME_EVALUATION_ONGOING
+                USER_DEFINE_OUTCOME -> Known.USER_DEFINE_OUTCOME
+                SESSION_DELETED -> Known.SESSION_DELETED
+                SESSION_THREAD_STATUS_RUNNING -> Known.SESSION_THREAD_STATUS_RUNNING
+                SESSION_THREAD_STATUS_IDLE -> Known.SESSION_THREAD_STATUS_IDLE
+                SESSION_THREAD_STATUS_TERMINATED -> Known.SESSION_THREAD_STATUS_TERMINATED
+                USER_TOOL_RESULT -> Known.USER_TOOL_RESULT
+                SESSION_THREAD_STATUS_RESCHEDULED -> Known.SESSION_THREAD_STATUS_RESCHEDULED
+                SESSION_UPDATED -> Known.SESSION_UPDATED
+                EVENT_START -> Known.EVENT_START
+                EVENT_DELTA -> Known.EVENT_DELTA
+                SYSTEM_MESSAGE -> Known.SYSTEM_MESSAGE
+                SESSION_USAGE -> Known.SESSION_USAGE
+                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Type = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Type && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 }

@@ -4,9 +4,13 @@ package com.anthropic.models.beta.webhooks
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
+import com.anthropic.core.Enum
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -70,6 +74,190 @@ private constructor(
     private val sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun type(): Type =
+        accept(
+            object : Visitor<Type> {
+                override fun visitSessionCreated(
+                    sessionCreated: BetaWebhookSessionCreatedEventData
+                ): Type = Type.SESSION_CREATED
+
+                override fun visitSessionPending(
+                    sessionPending: BetaWebhookSessionPendingEventData
+                ): Type = Type.SESSION_PENDING
+
+                override fun visitSessionRunning(
+                    sessionRunning: BetaWebhookSessionRunningEventData
+                ): Type = Type.SESSION_RUNNING
+
+                override fun visitSessionIdled(
+                    sessionIdled: BetaWebhookSessionIdledEventData
+                ): Type = Type.SESSION_IDLED
+
+                override fun visitSessionRequiresAction(
+                    sessionRequiresAction: BetaWebhookSessionRequiresActionEventData
+                ): Type = Type.SESSION_REQUIRES_ACTION
+
+                override fun visitSessionArchived(
+                    sessionArchived: BetaWebhookSessionArchivedEventData
+                ): Type = Type.SESSION_ARCHIVED
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaWebhookSessionDeletedEventData
+                ): Type = Type.SESSION_DELETED
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
+                ): Type = Type.SESSION_STATUS_RESCHEDULED
+
+                override fun visitSessionStatusRunStarted(
+                    sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData
+                ): Type = Type.SESSION_STATUS_RUN_STARTED
+
+                override fun visitSessionStatusIdled(
+                    sessionStatusIdled: BetaWebhookSessionStatusIdledEventData
+                ): Type = Type.SESSION_STATUS_IDLED
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaWebhookSessionStatusTerminatedEventData
+                ): Type = Type.SESSION_STATUS_TERMINATED
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaWebhookSessionThreadCreatedEventData
+                ): Type = Type.SESSION_THREAD_CREATED
+
+                override fun visitSessionThreadIdled(
+                    sessionThreadIdled: BetaWebhookSessionThreadIdledEventData
+                ): Type = Type.SESSION_THREAD_IDLED
+
+                override fun visitSessionThreadTerminated(
+                    sessionThreadTerminated: BetaWebhookSessionThreadTerminatedEventData
+                ): Type = Type.SESSION_THREAD_TERMINATED
+
+                override fun visitSessionOutcomeEvaluationEnded(
+                    sessionOutcomeEvaluationEnded: BetaWebhookSessionOutcomeEvaluationEndedEventData
+                ): Type = Type.SESSION_OUTCOME_EVALUATION_ENDED
+
+                override fun visitVaultCreated(
+                    vaultCreated: BetaWebhookVaultCreatedEventData
+                ): Type = Type.VAULT_CREATED
+
+                override fun visitVaultArchived(
+                    vaultArchived: BetaWebhookVaultArchivedEventData
+                ): Type = Type.VAULT_ARCHIVED
+
+                override fun visitVaultDeleted(
+                    vaultDeleted: BetaWebhookVaultDeletedEventData
+                ): Type = Type.VAULT_DELETED
+
+                override fun visitVaultCredentialCreated(
+                    vaultCredentialCreated: BetaWebhookVaultCredentialCreatedEventData
+                ): Type = Type.VAULT_CREDENTIAL_CREATED
+
+                override fun visitVaultCredentialArchived(
+                    vaultCredentialArchived: BetaWebhookVaultCredentialArchivedEventData
+                ): Type = Type.VAULT_CREDENTIAL_ARCHIVED
+
+                override fun visitVaultCredentialDeleted(
+                    vaultCredentialDeleted: BetaWebhookVaultCredentialDeletedEventData
+                ): Type = Type.VAULT_CREDENTIAL_DELETED
+
+                override fun visitVaultCredentialRefreshFailed(
+                    vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
+                ): Type = Type.VAULT_CREDENTIAL_REFRESH_FAILED
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaWebhookSessionUpdatedEventData
+                ): Type = Type.SESSION_UPDATED
+
+                override fun visitAgentCreated(
+                    agentCreated: BetaWebhookAgentCreatedEventData
+                ): Type = Type.AGENT_CREATED
+
+                override fun visitAgentArchived(
+                    agentArchived: BetaWebhookAgentArchivedEventData
+                ): Type = Type.AGENT_ARCHIVED
+
+                override fun visitAgentDeleted(
+                    agentDeleted: BetaWebhookAgentDeletedEventData
+                ): Type = Type.AGENT_DELETED
+
+                override fun visitDeploymentPaused(
+                    deploymentPaused: BetaWebhookDeploymentPausedEventData
+                ): Type = Type.DEPLOYMENT_PAUSED
+
+                override fun visitDeploymentRunFailed(
+                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
+                ): Type = Type.DEPLOYMENT_RUN_FAILED
+
+                override fun visitDeploymentCreated(
+                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
+                ): Type = Type.DEPLOYMENT_CREATED
+
+                override fun visitDeploymentUpdated(
+                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
+                ): Type = Type.DEPLOYMENT_UPDATED
+
+                override fun visitDeploymentUnpaused(
+                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
+                ): Type = Type.DEPLOYMENT_UNPAUSED
+
+                override fun visitAgentUpdated(
+                    agentUpdated: BetaWebhookAgentUpdatedEventData
+                ): Type = Type.AGENT_UPDATED
+
+                override fun visitDeploymentArchived(
+                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
+                ): Type = Type.DEPLOYMENT_ARCHIVED
+
+                override fun visitDeploymentRunStarted(
+                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
+                ): Type = Type.DEPLOYMENT_RUN_STARTED
+
+                override fun visitDeploymentDeleted(
+                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
+                ): Type = Type.DEPLOYMENT_DELETED
+
+                override fun visitDeploymentRunSucceeded(
+                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
+                ): Type = Type.DEPLOYMENT_RUN_SUCCEEDED
+
+                override fun visitEnvironmentCreated(
+                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
+                ): Type = Type.ENVIRONMENT_CREATED
+
+                override fun visitEnvironmentUpdated(
+                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
+                ): Type = Type.ENVIRONMENT_UPDATED
+
+                override fun visitEnvironmentArchived(
+                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
+                ): Type = Type.ENVIRONMENT_ARCHIVED
+
+                override fun visitEnvironmentDeleted(
+                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
+                ): Type = Type.ENVIRONMENT_DELETED
+
+                override fun visitMemoryStoreCreated(
+                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
+                ): Type = Type.MEMORY_STORE_CREATED
+
+                override fun visitMemoryStoreArchived(
+                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
+                ): Type = Type.MEMORY_STORE_ARCHIVED
+
+                override fun visitMemoryStoreDeleted(
+                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
+                ): Type = Type.MEMORY_STORE_DELETED
+
+                override fun visitSessionBudgetReached(
+                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
+                ): Type = Type.SESSION_BUDGET_REACHED
+
+                override fun unknown(json: JsonValue?): Type =
+                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
+        )
 
     fun id(): String =
         accept(
@@ -2801,5 +2989,397 @@ private constructor(
                 else -> throw IllegalStateException("Invalid BetaWebhookEventData")
             }
         }
+    }
+
+    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val SESSION_CREATED = of("session.created")
+
+            @JvmField val SESSION_PENDING = of("session.pending")
+
+            @JvmField val SESSION_RUNNING = of("session.running")
+
+            @JvmField val SESSION_IDLED = of("session.idled")
+
+            @JvmField val SESSION_REQUIRES_ACTION = of("session.requires_action")
+
+            @JvmField val SESSION_ARCHIVED = of("session.archived")
+
+            @JvmField val SESSION_DELETED = of("session.deleted")
+
+            @JvmField val SESSION_STATUS_RESCHEDULED = of("session.status_rescheduled")
+
+            @JvmField val SESSION_STATUS_RUN_STARTED = of("session.status_run_started")
+
+            @JvmField val SESSION_STATUS_IDLED = of("session.status_idled")
+
+            @JvmField val SESSION_STATUS_TERMINATED = of("session.status_terminated")
+
+            @JvmField val SESSION_THREAD_CREATED = of("session.thread_created")
+
+            @JvmField val SESSION_THREAD_IDLED = of("session.thread_idled")
+
+            @JvmField val SESSION_THREAD_TERMINATED = of("session.thread_terminated")
+
+            @JvmField val SESSION_OUTCOME_EVALUATION_ENDED = of("session.outcome_evaluation_ended")
+
+            @JvmField val VAULT_CREATED = of("vault.created")
+
+            @JvmField val VAULT_ARCHIVED = of("vault.archived")
+
+            @JvmField val VAULT_DELETED = of("vault.deleted")
+
+            @JvmField val VAULT_CREDENTIAL_CREATED = of("vault_credential.created")
+
+            @JvmField val VAULT_CREDENTIAL_ARCHIVED = of("vault_credential.archived")
+
+            @JvmField val VAULT_CREDENTIAL_DELETED = of("vault_credential.deleted")
+
+            @JvmField val VAULT_CREDENTIAL_REFRESH_FAILED = of("vault_credential.refresh_failed")
+
+            @JvmField val SESSION_UPDATED = of("session.updated")
+
+            @JvmField val AGENT_CREATED = of("agent.created")
+
+            @JvmField val AGENT_ARCHIVED = of("agent.archived")
+
+            @JvmField val AGENT_DELETED = of("agent.deleted")
+
+            @JvmField val DEPLOYMENT_PAUSED = of("deployment.paused")
+
+            @JvmField val DEPLOYMENT_RUN_FAILED = of("deployment_run.failed")
+
+            @JvmField val DEPLOYMENT_CREATED = of("deployment.created")
+
+            @JvmField val DEPLOYMENT_UPDATED = of("deployment.updated")
+
+            @JvmField val DEPLOYMENT_UNPAUSED = of("deployment.unpaused")
+
+            @JvmField val AGENT_UPDATED = of("agent.updated")
+
+            @JvmField val DEPLOYMENT_ARCHIVED = of("deployment.archived")
+
+            @JvmField val DEPLOYMENT_RUN_STARTED = of("deployment_run.started")
+
+            @JvmField val DEPLOYMENT_DELETED = of("deployment.deleted")
+
+            @JvmField val DEPLOYMENT_RUN_SUCCEEDED = of("deployment_run.succeeded")
+
+            @JvmField val ENVIRONMENT_CREATED = of("environment.created")
+
+            @JvmField val ENVIRONMENT_UPDATED = of("environment.updated")
+
+            @JvmField val ENVIRONMENT_ARCHIVED = of("environment.archived")
+
+            @JvmField val ENVIRONMENT_DELETED = of("environment.deleted")
+
+            @JvmField val MEMORY_STORE_CREATED = of("memory_store.created")
+
+            @JvmField val MEMORY_STORE_ARCHIVED = of("memory_store.archived")
+
+            @JvmField val MEMORY_STORE_DELETED = of("memory_store.deleted")
+
+            @JvmField val SESSION_BUDGET_REACHED = of("session.budget_reached")
+
+            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonValue): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
+        }
+
+        /** An enum containing [Type]'s known values. */
+        enum class Known {
+            SESSION_CREATED,
+            SESSION_PENDING,
+            SESSION_RUNNING,
+            SESSION_IDLED,
+            SESSION_REQUIRES_ACTION,
+            SESSION_ARCHIVED,
+            SESSION_DELETED,
+            SESSION_STATUS_RESCHEDULED,
+            SESSION_STATUS_RUN_STARTED,
+            SESSION_STATUS_IDLED,
+            SESSION_STATUS_TERMINATED,
+            SESSION_THREAD_CREATED,
+            SESSION_THREAD_IDLED,
+            SESSION_THREAD_TERMINATED,
+            SESSION_OUTCOME_EVALUATION_ENDED,
+            VAULT_CREATED,
+            VAULT_ARCHIVED,
+            VAULT_DELETED,
+            VAULT_CREDENTIAL_CREATED,
+            VAULT_CREDENTIAL_ARCHIVED,
+            VAULT_CREDENTIAL_DELETED,
+            VAULT_CREDENTIAL_REFRESH_FAILED,
+            SESSION_UPDATED,
+            AGENT_CREATED,
+            AGENT_ARCHIVED,
+            AGENT_DELETED,
+            DEPLOYMENT_PAUSED,
+            DEPLOYMENT_RUN_FAILED,
+            DEPLOYMENT_CREATED,
+            DEPLOYMENT_UPDATED,
+            DEPLOYMENT_UNPAUSED,
+            AGENT_UPDATED,
+            DEPLOYMENT_ARCHIVED,
+            DEPLOYMENT_RUN_STARTED,
+            DEPLOYMENT_DELETED,
+            DEPLOYMENT_RUN_SUCCEEDED,
+            ENVIRONMENT_CREATED,
+            ENVIRONMENT_UPDATED,
+            ENVIRONMENT_ARCHIVED,
+            ENVIRONMENT_DELETED,
+            MEMORY_STORE_CREATED,
+            MEMORY_STORE_ARCHIVED,
+            MEMORY_STORE_DELETED,
+            SESSION_BUDGET_REACHED,
+        }
+
+        /**
+         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Type] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            SESSION_CREATED,
+            SESSION_PENDING,
+            SESSION_RUNNING,
+            SESSION_IDLED,
+            SESSION_REQUIRES_ACTION,
+            SESSION_ARCHIVED,
+            SESSION_DELETED,
+            SESSION_STATUS_RESCHEDULED,
+            SESSION_STATUS_RUN_STARTED,
+            SESSION_STATUS_IDLED,
+            SESSION_STATUS_TERMINATED,
+            SESSION_THREAD_CREATED,
+            SESSION_THREAD_IDLED,
+            SESSION_THREAD_TERMINATED,
+            SESSION_OUTCOME_EVALUATION_ENDED,
+            VAULT_CREATED,
+            VAULT_ARCHIVED,
+            VAULT_DELETED,
+            VAULT_CREDENTIAL_CREATED,
+            VAULT_CREDENTIAL_ARCHIVED,
+            VAULT_CREDENTIAL_DELETED,
+            VAULT_CREDENTIAL_REFRESH_FAILED,
+            SESSION_UPDATED,
+            AGENT_CREATED,
+            AGENT_ARCHIVED,
+            AGENT_DELETED,
+            DEPLOYMENT_PAUSED,
+            DEPLOYMENT_RUN_FAILED,
+            DEPLOYMENT_CREATED,
+            DEPLOYMENT_UPDATED,
+            DEPLOYMENT_UNPAUSED,
+            AGENT_UPDATED,
+            DEPLOYMENT_ARCHIVED,
+            DEPLOYMENT_RUN_STARTED,
+            DEPLOYMENT_DELETED,
+            DEPLOYMENT_RUN_SUCCEEDED,
+            ENVIRONMENT_CREATED,
+            ENVIRONMENT_UPDATED,
+            ENVIRONMENT_ARCHIVED,
+            ENVIRONMENT_DELETED,
+            MEMORY_STORE_CREATED,
+            MEMORY_STORE_ARCHIVED,
+            MEMORY_STORE_DELETED,
+            SESSION_BUDGET_REACHED,
+            /** An enum member indicating that [Type] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                SESSION_CREATED -> Value.SESSION_CREATED
+                SESSION_PENDING -> Value.SESSION_PENDING
+                SESSION_RUNNING -> Value.SESSION_RUNNING
+                SESSION_IDLED -> Value.SESSION_IDLED
+                SESSION_REQUIRES_ACTION -> Value.SESSION_REQUIRES_ACTION
+                SESSION_ARCHIVED -> Value.SESSION_ARCHIVED
+                SESSION_DELETED -> Value.SESSION_DELETED
+                SESSION_STATUS_RESCHEDULED -> Value.SESSION_STATUS_RESCHEDULED
+                SESSION_STATUS_RUN_STARTED -> Value.SESSION_STATUS_RUN_STARTED
+                SESSION_STATUS_IDLED -> Value.SESSION_STATUS_IDLED
+                SESSION_STATUS_TERMINATED -> Value.SESSION_STATUS_TERMINATED
+                SESSION_THREAD_CREATED -> Value.SESSION_THREAD_CREATED
+                SESSION_THREAD_IDLED -> Value.SESSION_THREAD_IDLED
+                SESSION_THREAD_TERMINATED -> Value.SESSION_THREAD_TERMINATED
+                SESSION_OUTCOME_EVALUATION_ENDED -> Value.SESSION_OUTCOME_EVALUATION_ENDED
+                VAULT_CREATED -> Value.VAULT_CREATED
+                VAULT_ARCHIVED -> Value.VAULT_ARCHIVED
+                VAULT_DELETED -> Value.VAULT_DELETED
+                VAULT_CREDENTIAL_CREATED -> Value.VAULT_CREDENTIAL_CREATED
+                VAULT_CREDENTIAL_ARCHIVED -> Value.VAULT_CREDENTIAL_ARCHIVED
+                VAULT_CREDENTIAL_DELETED -> Value.VAULT_CREDENTIAL_DELETED
+                VAULT_CREDENTIAL_REFRESH_FAILED -> Value.VAULT_CREDENTIAL_REFRESH_FAILED
+                SESSION_UPDATED -> Value.SESSION_UPDATED
+                AGENT_CREATED -> Value.AGENT_CREATED
+                AGENT_ARCHIVED -> Value.AGENT_ARCHIVED
+                AGENT_DELETED -> Value.AGENT_DELETED
+                DEPLOYMENT_PAUSED -> Value.DEPLOYMENT_PAUSED
+                DEPLOYMENT_RUN_FAILED -> Value.DEPLOYMENT_RUN_FAILED
+                DEPLOYMENT_CREATED -> Value.DEPLOYMENT_CREATED
+                DEPLOYMENT_UPDATED -> Value.DEPLOYMENT_UPDATED
+                DEPLOYMENT_UNPAUSED -> Value.DEPLOYMENT_UNPAUSED
+                AGENT_UPDATED -> Value.AGENT_UPDATED
+                DEPLOYMENT_ARCHIVED -> Value.DEPLOYMENT_ARCHIVED
+                DEPLOYMENT_RUN_STARTED -> Value.DEPLOYMENT_RUN_STARTED
+                DEPLOYMENT_DELETED -> Value.DEPLOYMENT_DELETED
+                DEPLOYMENT_RUN_SUCCEEDED -> Value.DEPLOYMENT_RUN_SUCCEEDED
+                ENVIRONMENT_CREATED -> Value.ENVIRONMENT_CREATED
+                ENVIRONMENT_UPDATED -> Value.ENVIRONMENT_UPDATED
+                ENVIRONMENT_ARCHIVED -> Value.ENVIRONMENT_ARCHIVED
+                ENVIRONMENT_DELETED -> Value.ENVIRONMENT_DELETED
+                MEMORY_STORE_CREATED -> Value.MEMORY_STORE_CREATED
+                MEMORY_STORE_ARCHIVED -> Value.MEMORY_STORE_ARCHIVED
+                MEMORY_STORE_DELETED -> Value.MEMORY_STORE_DELETED
+                SESSION_BUDGET_REACHED -> Value.SESSION_BUDGET_REACHED
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                SESSION_CREATED -> Known.SESSION_CREATED
+                SESSION_PENDING -> Known.SESSION_PENDING
+                SESSION_RUNNING -> Known.SESSION_RUNNING
+                SESSION_IDLED -> Known.SESSION_IDLED
+                SESSION_REQUIRES_ACTION -> Known.SESSION_REQUIRES_ACTION
+                SESSION_ARCHIVED -> Known.SESSION_ARCHIVED
+                SESSION_DELETED -> Known.SESSION_DELETED
+                SESSION_STATUS_RESCHEDULED -> Known.SESSION_STATUS_RESCHEDULED
+                SESSION_STATUS_RUN_STARTED -> Known.SESSION_STATUS_RUN_STARTED
+                SESSION_STATUS_IDLED -> Known.SESSION_STATUS_IDLED
+                SESSION_STATUS_TERMINATED -> Known.SESSION_STATUS_TERMINATED
+                SESSION_THREAD_CREATED -> Known.SESSION_THREAD_CREATED
+                SESSION_THREAD_IDLED -> Known.SESSION_THREAD_IDLED
+                SESSION_THREAD_TERMINATED -> Known.SESSION_THREAD_TERMINATED
+                SESSION_OUTCOME_EVALUATION_ENDED -> Known.SESSION_OUTCOME_EVALUATION_ENDED
+                VAULT_CREATED -> Known.VAULT_CREATED
+                VAULT_ARCHIVED -> Known.VAULT_ARCHIVED
+                VAULT_DELETED -> Known.VAULT_DELETED
+                VAULT_CREDENTIAL_CREATED -> Known.VAULT_CREDENTIAL_CREATED
+                VAULT_CREDENTIAL_ARCHIVED -> Known.VAULT_CREDENTIAL_ARCHIVED
+                VAULT_CREDENTIAL_DELETED -> Known.VAULT_CREDENTIAL_DELETED
+                VAULT_CREDENTIAL_REFRESH_FAILED -> Known.VAULT_CREDENTIAL_REFRESH_FAILED
+                SESSION_UPDATED -> Known.SESSION_UPDATED
+                AGENT_CREATED -> Known.AGENT_CREATED
+                AGENT_ARCHIVED -> Known.AGENT_ARCHIVED
+                AGENT_DELETED -> Known.AGENT_DELETED
+                DEPLOYMENT_PAUSED -> Known.DEPLOYMENT_PAUSED
+                DEPLOYMENT_RUN_FAILED -> Known.DEPLOYMENT_RUN_FAILED
+                DEPLOYMENT_CREATED -> Known.DEPLOYMENT_CREATED
+                DEPLOYMENT_UPDATED -> Known.DEPLOYMENT_UPDATED
+                DEPLOYMENT_UNPAUSED -> Known.DEPLOYMENT_UNPAUSED
+                AGENT_UPDATED -> Known.AGENT_UPDATED
+                DEPLOYMENT_ARCHIVED -> Known.DEPLOYMENT_ARCHIVED
+                DEPLOYMENT_RUN_STARTED -> Known.DEPLOYMENT_RUN_STARTED
+                DEPLOYMENT_DELETED -> Known.DEPLOYMENT_DELETED
+                DEPLOYMENT_RUN_SUCCEEDED -> Known.DEPLOYMENT_RUN_SUCCEEDED
+                ENVIRONMENT_CREATED -> Known.ENVIRONMENT_CREATED
+                ENVIRONMENT_UPDATED -> Known.ENVIRONMENT_UPDATED
+                ENVIRONMENT_ARCHIVED -> Known.ENVIRONMENT_ARCHIVED
+                ENVIRONMENT_DELETED -> Known.ENVIRONMENT_DELETED
+                MEMORY_STORE_CREATED -> Known.MEMORY_STORE_CREATED
+                MEMORY_STORE_ARCHIVED -> Known.MEMORY_STORE_ARCHIVED
+                MEMORY_STORE_DELETED -> Known.MEMORY_STORE_DELETED
+                SESSION_BUDGET_REACHED -> Known.SESSION_BUDGET_REACHED
+                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Type = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Type && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 }
