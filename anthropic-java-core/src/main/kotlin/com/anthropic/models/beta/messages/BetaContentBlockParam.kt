@@ -4,9 +4,13 @@ package com.anthropic.models.beta.messages
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
+import com.anthropic.core.Enum
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -51,6 +55,92 @@ private constructor(
     private val fallback: BetaFallbackBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun type(): Type =
+        accept(
+            object : Visitor<Type> {
+                override fun visitText(text: BetaTextBlockParam): Type = Type.TEXT
+
+                override fun visitImage(image: BetaImageBlockParam): Type = Type.IMAGE
+
+                override fun visitDocument(document: BetaRequestDocumentBlock): Type = Type.DOCUMENT
+
+                override fun visitSearchResult(searchResult: BetaSearchResultBlockParam): Type =
+                    Type.SEARCH_RESULT
+
+                override fun visitThinking(thinking: BetaThinkingBlockParam): Type = Type.THINKING
+
+                override fun visitRedactedThinking(
+                    redactedThinking: BetaRedactedThinkingBlockParam
+                ): Type = Type.REDACTED_THINKING
+
+                override fun visitToolUse(toolUse: BetaToolUseBlockParam): Type = Type.TOOL_USE
+
+                override fun visitToolResult(toolResult: BetaToolResultBlockParam): Type =
+                    Type.TOOL_RESULT
+
+                override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlockParam): Type =
+                    Type.SERVER_TOOL_USE
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: BetaWebSearchToolResultBlockParam
+                ): Type = Type.WEB_SEARCH_TOOL_RESULT
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: BetaWebFetchToolResultBlockParam
+                ): Type = Type.WEB_FETCH_TOOL_RESULT
+
+                override fun visitAdvisorToolResult(
+                    advisorToolResult: BetaAdvisorToolResultBlockParam
+                ): Type = Type.ADVISOR_TOOL_RESULT
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: BetaCodeExecutionToolResultBlockParam
+                ): Type = Type.CODE_EXECUTION_TOOL_RESULT
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlockParam
+                ): Type = Type.BASH_CODE_EXECUTION_TOOL_RESULT
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult:
+                        BetaTextEditorCodeExecutionToolResultBlockParam
+                ): Type = Type.TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: BetaToolSearchToolResultBlockParam
+                ): Type = Type.TOOL_SEARCH_TOOL_RESULT
+
+                override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlockParam): Type =
+                    Type.MCP_TOOL_USE
+
+                override fun visitMcpToolResult(
+                    mcpToolResult: BetaRequestMcpToolResultBlockParam
+                ): Type = Type.MCP_TOOL_RESULT
+
+                override fun visitContainerUpload(
+                    containerUpload: BetaContainerUploadBlockParam
+                ): Type = Type.CONTAINER_UPLOAD
+
+                override fun visitCompaction(compaction: BetaCompactionBlockParam): Type =
+                    Type.COMPACTION
+
+                override fun visitMidConvSystem(
+                    midConvSystem: BetaMidConversationSystemBlockParam
+                ): Type = Type.MID_CONV_SYSTEM
+
+                override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock): Type =
+                    Type.TOOL_ADDITION
+
+                override fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock): Type =
+                    Type.TOOL_REMOVAL
+
+                override fun visitFallback(fallback: BetaFallbackBlockParam): Type = Type.FALLBACK
+
+                override fun unknown(json: JsonValue?): Type =
+                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
+        )
 
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         accept(
@@ -1769,5 +1859,281 @@ private constructor(
                 else -> throw IllegalStateException("Invalid BetaContentBlockParam")
             }
         }
+    }
+
+    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val TEXT = of("text")
+
+            @JvmField val IMAGE = of("image")
+
+            @JvmField val DOCUMENT = of("document")
+
+            @JvmField val SEARCH_RESULT = of("search_result")
+
+            @JvmField val THINKING = of("thinking")
+
+            @JvmField val REDACTED_THINKING = of("redacted_thinking")
+
+            @JvmField val TOOL_USE = of("tool_use")
+
+            @JvmField val TOOL_RESULT = of("tool_result")
+
+            @JvmField val SERVER_TOOL_USE = of("server_tool_use")
+
+            @JvmField val WEB_SEARCH_TOOL_RESULT = of("web_search_tool_result")
+
+            @JvmField val WEB_FETCH_TOOL_RESULT = of("web_fetch_tool_result")
+
+            @JvmField val ADVISOR_TOOL_RESULT = of("advisor_tool_result")
+
+            @JvmField val CODE_EXECUTION_TOOL_RESULT = of("code_execution_tool_result")
+
+            @JvmField val BASH_CODE_EXECUTION_TOOL_RESULT = of("bash_code_execution_tool_result")
+
+            @JvmField
+            val TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT =
+                of("text_editor_code_execution_tool_result")
+
+            @JvmField val TOOL_SEARCH_TOOL_RESULT = of("tool_search_tool_result")
+
+            @JvmField val MCP_TOOL_USE = of("mcp_tool_use")
+
+            @JvmField val MCP_TOOL_RESULT = of("mcp_tool_result")
+
+            @JvmField val CONTAINER_UPLOAD = of("container_upload")
+
+            @JvmField val COMPACTION = of("compaction")
+
+            @JvmField val MID_CONV_SYSTEM = of("mid_conv_system")
+
+            @JvmField val TOOL_ADDITION = of("tool_addition")
+
+            @JvmField val TOOL_REMOVAL = of("tool_removal")
+
+            @JvmField val FALLBACK = of("fallback")
+
+            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonValue): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
+        }
+
+        /** An enum containing [Type]'s known values. */
+        enum class Known {
+            TEXT,
+            IMAGE,
+            DOCUMENT,
+            SEARCH_RESULT,
+            THINKING,
+            REDACTED_THINKING,
+            TOOL_USE,
+            TOOL_RESULT,
+            SERVER_TOOL_USE,
+            WEB_SEARCH_TOOL_RESULT,
+            WEB_FETCH_TOOL_RESULT,
+            ADVISOR_TOOL_RESULT,
+            CODE_EXECUTION_TOOL_RESULT,
+            BASH_CODE_EXECUTION_TOOL_RESULT,
+            TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT,
+            TOOL_SEARCH_TOOL_RESULT,
+            MCP_TOOL_USE,
+            MCP_TOOL_RESULT,
+            CONTAINER_UPLOAD,
+            COMPACTION,
+            MID_CONV_SYSTEM,
+            TOOL_ADDITION,
+            TOOL_REMOVAL,
+            FALLBACK,
+        }
+
+        /**
+         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Type] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            TEXT,
+            IMAGE,
+            DOCUMENT,
+            SEARCH_RESULT,
+            THINKING,
+            REDACTED_THINKING,
+            TOOL_USE,
+            TOOL_RESULT,
+            SERVER_TOOL_USE,
+            WEB_SEARCH_TOOL_RESULT,
+            WEB_FETCH_TOOL_RESULT,
+            ADVISOR_TOOL_RESULT,
+            CODE_EXECUTION_TOOL_RESULT,
+            BASH_CODE_EXECUTION_TOOL_RESULT,
+            TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT,
+            TOOL_SEARCH_TOOL_RESULT,
+            MCP_TOOL_USE,
+            MCP_TOOL_RESULT,
+            CONTAINER_UPLOAD,
+            COMPACTION,
+            MID_CONV_SYSTEM,
+            TOOL_ADDITION,
+            TOOL_REMOVAL,
+            FALLBACK,
+            /** An enum member indicating that [Type] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                TEXT -> Value.TEXT
+                IMAGE -> Value.IMAGE
+                DOCUMENT -> Value.DOCUMENT
+                SEARCH_RESULT -> Value.SEARCH_RESULT
+                THINKING -> Value.THINKING
+                REDACTED_THINKING -> Value.REDACTED_THINKING
+                TOOL_USE -> Value.TOOL_USE
+                TOOL_RESULT -> Value.TOOL_RESULT
+                SERVER_TOOL_USE -> Value.SERVER_TOOL_USE
+                WEB_SEARCH_TOOL_RESULT -> Value.WEB_SEARCH_TOOL_RESULT
+                WEB_FETCH_TOOL_RESULT -> Value.WEB_FETCH_TOOL_RESULT
+                ADVISOR_TOOL_RESULT -> Value.ADVISOR_TOOL_RESULT
+                CODE_EXECUTION_TOOL_RESULT -> Value.CODE_EXECUTION_TOOL_RESULT
+                BASH_CODE_EXECUTION_TOOL_RESULT -> Value.BASH_CODE_EXECUTION_TOOL_RESULT
+                TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT ->
+                    Value.TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
+                TOOL_SEARCH_TOOL_RESULT -> Value.TOOL_SEARCH_TOOL_RESULT
+                MCP_TOOL_USE -> Value.MCP_TOOL_USE
+                MCP_TOOL_RESULT -> Value.MCP_TOOL_RESULT
+                CONTAINER_UPLOAD -> Value.CONTAINER_UPLOAD
+                COMPACTION -> Value.COMPACTION
+                MID_CONV_SYSTEM -> Value.MID_CONV_SYSTEM
+                TOOL_ADDITION -> Value.TOOL_ADDITION
+                TOOL_REMOVAL -> Value.TOOL_REMOVAL
+                FALLBACK -> Value.FALLBACK
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                TEXT -> Known.TEXT
+                IMAGE -> Known.IMAGE
+                DOCUMENT -> Known.DOCUMENT
+                SEARCH_RESULT -> Known.SEARCH_RESULT
+                THINKING -> Known.THINKING
+                REDACTED_THINKING -> Known.REDACTED_THINKING
+                TOOL_USE -> Known.TOOL_USE
+                TOOL_RESULT -> Known.TOOL_RESULT
+                SERVER_TOOL_USE -> Known.SERVER_TOOL_USE
+                WEB_SEARCH_TOOL_RESULT -> Known.WEB_SEARCH_TOOL_RESULT
+                WEB_FETCH_TOOL_RESULT -> Known.WEB_FETCH_TOOL_RESULT
+                ADVISOR_TOOL_RESULT -> Known.ADVISOR_TOOL_RESULT
+                CODE_EXECUTION_TOOL_RESULT -> Known.CODE_EXECUTION_TOOL_RESULT
+                BASH_CODE_EXECUTION_TOOL_RESULT -> Known.BASH_CODE_EXECUTION_TOOL_RESULT
+                TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT ->
+                    Known.TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
+                TOOL_SEARCH_TOOL_RESULT -> Known.TOOL_SEARCH_TOOL_RESULT
+                MCP_TOOL_USE -> Known.MCP_TOOL_USE
+                MCP_TOOL_RESULT -> Known.MCP_TOOL_RESULT
+                CONTAINER_UPLOAD -> Known.CONTAINER_UPLOAD
+                COMPACTION -> Known.COMPACTION
+                MID_CONV_SYSTEM -> Known.MID_CONV_SYSTEM
+                TOOL_ADDITION -> Known.TOOL_ADDITION
+                TOOL_REMOVAL -> Known.TOOL_REMOVAL
+                FALLBACK -> Known.FALLBACK
+                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Type = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Type && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 }

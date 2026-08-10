@@ -4,6 +4,7 @@ package com.anthropic.models.beta.messages
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
+import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -326,6 +327,35 @@ private constructor(
         private val unavailable: BetaCacheMissUnavailable? = null,
         private val _json: JsonValue? = null,
     ) {
+
+        fun type(): Type =
+            accept(
+                object : Visitor<Type> {
+                    override fun visitModelChanged(modelChanged: BetaCacheMissModelChanged): Type =
+                        Type.MODEL_CHANGED
+
+                    override fun visitSystemChanged(
+                        systemChanged: BetaCacheMissSystemChanged
+                    ): Type = Type.SYSTEM_CHANGED
+
+                    override fun visitToolsChanged(toolsChanged: BetaCacheMissToolsChanged): Type =
+                        Type.TOOLS_CHANGED
+
+                    override fun visitMessagesChanged(
+                        messagesChanged: BetaCacheMissMessagesChanged
+                    ): Type = Type.MESSAGES_CHANGED
+
+                    override fun visitPreviousMessageNotFound(
+                        previousMessageNotFound: BetaCacheMissPreviousMessageNotFound
+                    ): Type = Type.PREVIOUS_MESSAGE_NOT_FOUND
+
+                    override fun visitUnavailable(unavailable: BetaCacheMissUnavailable): Type =
+                        Type.UNAVAILABLE
+
+                    override fun unknown(json: JsonValue?): Type =
+                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+                }
+            )
 
         fun cacheMissedInputTokens(): Optional<Long> =
             accept(
@@ -730,6 +760,171 @@ private constructor(
                     else -> throw IllegalStateException("Invalid CacheMissReason")
                 }
             }
+        }
+
+        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val MODEL_CHANGED = of("model_changed")
+
+                @JvmField val SYSTEM_CHANGED = of("system_changed")
+
+                @JvmField val TOOLS_CHANGED = of("tools_changed")
+
+                @JvmField val MESSAGES_CHANGED = of("messages_changed")
+
+                @JvmField val PREVIOUS_MESSAGE_NOT_FOUND = of("previous_message_not_found")
+
+                @JvmField val UNAVAILABLE = of("unavailable")
+
+                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+                @JvmSynthetic
+                internal fun of(value: JsonValue): Type =
+                    value.asString().getOrNull()?.let { of(it) } ?: Type(value)
+            }
+
+            /** An enum containing [Type]'s known values. */
+            enum class Known {
+                MODEL_CHANGED,
+                SYSTEM_CHANGED,
+                TOOLS_CHANGED,
+                MESSAGES_CHANGED,
+                PREVIOUS_MESSAGE_NOT_FOUND,
+                UNAVAILABLE,
+            }
+
+            /**
+             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Type] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                MODEL_CHANGED,
+                SYSTEM_CHANGED,
+                TOOLS_CHANGED,
+                MESSAGES_CHANGED,
+                PREVIOUS_MESSAGE_NOT_FOUND,
+                UNAVAILABLE,
+                /** An enum member indicating that [Type] was instantiated with an unknown value. */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    MODEL_CHANGED -> Value.MODEL_CHANGED
+                    SYSTEM_CHANGED -> Value.SYSTEM_CHANGED
+                    TOOLS_CHANGED -> Value.TOOLS_CHANGED
+                    MESSAGES_CHANGED -> Value.MESSAGES_CHANGED
+                    PREVIOUS_MESSAGE_NOT_FOUND -> Value.PREVIOUS_MESSAGE_NOT_FOUND
+                    UNAVAILABLE -> Value.UNAVAILABLE
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    MODEL_CHANGED -> Known.MODEL_CHANGED
+                    SYSTEM_CHANGED -> Known.SYSTEM_CHANGED
+                    TOOLS_CHANGED -> Known.TOOLS_CHANGED
+                    MESSAGES_CHANGED -> Known.MESSAGES_CHANGED
+                    PREVIOUS_MESSAGE_NOT_FOUND -> Known.PREVIOUS_MESSAGE_NOT_FOUND
+                    UNAVAILABLE -> Known.UNAVAILABLE
+                    else -> throw AnthropicInvalidDataException("Unknown Type: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws AnthropicInvalidDataException if this class instance's value does not have
+             *   the expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    AnthropicInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws AnthropicInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
+            fun validate(): Type = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: AnthropicInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Type && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
         }
     }
 
