@@ -31,6 +31,7 @@ internal class DreamServiceTest {
                     .addMemoryStoreInput("x")
                     .model("string")
                     .instructions("x")
+                    .outputBehaviorCreateNew()
                     .build()
             )
 

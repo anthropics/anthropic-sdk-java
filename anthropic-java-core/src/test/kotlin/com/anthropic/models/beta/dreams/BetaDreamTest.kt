@@ -27,6 +27,7 @@ internal class BetaDreamTest {
                         .speed(BetaDreamModelConfig.Speed.STANDARD)
                         .build()
                 )
+                .outputBehaviorCreateNew()
                 .addMemoryStoreOutput("memory_store_id")
                 .sessionId("session_id")
                 .status(BetaDreamStatus.PENDING)
@@ -66,6 +67,7 @@ internal class BetaDreamTest {
                     .speed(BetaDreamModelConfig.Speed.STANDARD)
                     .build()
             )
+        assertThat(betaDream.outputBehavior()).isEqualTo(BetaDream.OutputBehavior.ofCreateNew())
         assertThat(betaDream.outputs())
             .containsExactly(
                 BetaDreamOutput.builder()
@@ -105,6 +107,7 @@ internal class BetaDreamTest {
                         .speed(BetaDreamModelConfig.Speed.STANDARD)
                         .build()
                 )
+                .outputBehaviorCreateNew()
                 .addMemoryStoreOutput("memory_store_id")
                 .sessionId("session_id")
                 .status(BetaDreamStatus.PENDING)
