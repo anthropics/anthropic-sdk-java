@@ -18,7 +18,11 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** An input memory store the dream reads from. The dream never mutates this store. */
+/**
+ * An input memory store the dream reads from. The dream never mutates this store unless it is also
+ * the destination: with output_behavior {type: "update_existing"} the job consolidates this store
+ * in place.
+ */
 @JsonDeserialize(using = BetaDreamInput.Deserializer::class)
 @JsonSerialize(using = BetaDreamInput.Serializer::class)
 class BetaDreamInput
@@ -28,7 +32,11 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
-    /** An input memory store the dream reads from. The dream never mutates this store. */
+    /**
+     * An input memory store the dream reads from. The dream never mutates this store unless it is
+     * also the destination: with output_behavior {type: "update_existing"} the job consolidates
+     * this store in place.
+     */
     fun memoryStore(): Optional<BetaDreamMemoryStoreInput> = Optional.ofNullable(memoryStore)
 
     /** Input session transcripts the dream reads. */
@@ -38,7 +46,11 @@ private constructor(
 
     fun isSessions(): Boolean = sessions != null
 
-    /** An input memory store the dream reads from. The dream never mutates this store. */
+    /**
+     * An input memory store the dream reads from. The dream never mutates this store unless it is
+     * also the destination: with output_behavior {type: "update_existing"} the job consolidates
+     * this store in place.
+     */
     fun asMemoryStore(): BetaDreamMemoryStoreInput = memoryStore.getOrThrow("memoryStore")
 
     /** Input session transcripts the dream reads. */
@@ -159,7 +171,11 @@ private constructor(
 
     companion object {
 
-        /** An input memory store the dream reads from. The dream never mutates this store. */
+        /**
+         * An input memory store the dream reads from. The dream never mutates this store unless it
+         * is also the destination: with output_behavior {type: "update_existing"} the job
+         * consolidates this store in place.
+         */
         @JvmStatic
         fun ofMemoryStore(memoryStore: BetaDreamMemoryStoreInput) =
             BetaDreamInput(memoryStore = memoryStore)
@@ -200,7 +216,11 @@ private constructor(
      */
     interface Visitor<out T> {
 
-        /** An input memory store the dream reads from. The dream never mutates this store. */
+        /**
+         * An input memory store the dream reads from. The dream never mutates this store unless it
+         * is also the destination: with output_behavior {type: "update_existing"} the job
+         * consolidates this store in place.
+         */
         fun visitMemoryStore(memoryStore: BetaDreamMemoryStoreInput): T
 
         /** Input session transcripts the dream reads. */

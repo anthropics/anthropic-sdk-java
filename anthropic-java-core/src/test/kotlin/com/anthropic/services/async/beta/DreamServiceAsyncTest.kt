@@ -31,6 +31,7 @@ internal class DreamServiceAsyncTest {
                     .addMemoryStoreInput("x")
                     .model("string")
                     .instructions("x")
+                    .outputBehaviorCreateNew()
                     .build()
             )
 

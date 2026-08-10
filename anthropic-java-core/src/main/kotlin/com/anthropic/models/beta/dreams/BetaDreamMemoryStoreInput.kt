@@ -17,7 +17,11 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** An input memory store the dream reads from. The dream never mutates this store. */
+/**
+ * An input memory store the dream reads from. The dream never mutates this store unless it is also
+ * the destination: with output_behavior {type: "update_existing"} the job consolidates this store
+ * in place.
+ */
 class BetaDreamMemoryStoreInput
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

@@ -16,6 +16,7 @@ internal class DreamCreateParamsTest {
             .addMemoryStoreInput("x")
             .model("string")
             .instructions("x")
+            .outputBehaviorCreateNew()
             .build()
     }
 
@@ -27,6 +28,7 @@ internal class DreamCreateParamsTest {
                 .addMemoryStoreInput("x")
                 .model("string")
                 .instructions("x")
+                .outputBehaviorCreateNew()
                 .build()
 
         val headers = params._headers()
@@ -54,6 +56,7 @@ internal class DreamCreateParamsTest {
                 .addMemoryStoreInput("x")
                 .model("string")
                 .instructions("x")
+                .outputBehaviorCreateNew()
                 .build()
 
         val body = params._body()
@@ -69,6 +72,7 @@ internal class DreamCreateParamsTest {
             )
         assertThat(body.model()).isEqualTo(DreamCreateParams.Model.ofString("string"))
         assertThat(body.instructions()).contains("x")
+        assertThat(body.outputBehavior()).contains(DreamCreateParams.OutputBehavior.ofCreateNew())
     }
 
     @Test
