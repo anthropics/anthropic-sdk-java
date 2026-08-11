@@ -75,12 +75,16 @@ class BetaMessageAccumulator private constructor() {
             // requires it to be set — carry the raw field through so the rebuild does not throw.
             builder.iterations(usage._iterations())
 
+            // Each `message_delta` usage value is a cumulative whole-message total, so it
+            // overwrites (never adds to) the accumulated value. A counter that does not apply to
+            // the response is omitted from the event, in which case the `message_start` value
+            // stands.
             if (!deltaUsage._outputTokens().isMissing()) {
                 builder.outputTokens(deltaUsage.outputTokens())
             }
 
-            if (!deltaUsage._inputTokens().isMissing()) {
-                builder.inputTokens(deltaUsage.inputTokens().orElse(0))
+            if (deltaUsage.inputTokens().isPresent) {
+                builder.inputTokens(deltaUsage.inputTokens().get())
             }
 
             if (!deltaUsage._cacheCreationInputTokens().isMissing()) {

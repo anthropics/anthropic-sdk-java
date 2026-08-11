@@ -692,6 +692,95 @@ internal class BetaMessageAccumulatorTest {
     }
 
     @Test
+    fun messageDeltaAppliesContextManagementAndContainer() {
+        // `context_management` (a top-level key of the `message_delta` event, not of its `delta`)
+        // and `container` are never sent on `message_start`, so that event is their only source.
+        val accumulator = BetaMessageAccumulator.create()
+        val container =
+            BetaContainer.builder()
+                .id("container-id")
+                .expiresAt(java.time.OffsetDateTime.parse("2050-01-01T00:00:00Z"))
+                .skills(listOf())
+                .build()
+        val contextManagement =
+            BetaContextManagementResponse.builder()
+                .addAppliedEdit(
+                    BetaClearToolUses20250919EditResponse.builder()
+                        .clearedInputTokens(5L)
+                        .clearedToolUses(1L)
+                        .build()
+                )
+                .build()
+
+        accumulator.accumulate(
+            BetaRawMessageStreamEvent.ofMessageStart(
+                BetaRawMessageStartEvent.builder()
+                    .message(
+                        BetaMessage.builder()
+                            .id("message-id")
+                            .model(Model.CLAUDE_SONNET_4_5)
+                            .content(listOf())
+                            .usage(usage(INPUT_TOKENS))
+                            .stopDetails(NOT_SET)
+                            .stopReason(NOT_SET)
+                            .stopSequence(NOT_SET)
+                            .container(null as BetaContainer?)
+                            .contextManagement(null as BetaContextManagementResponse?)
+                            .diagnostics(null)
+                            .build()
+                    )
+                    .build()
+            )
+        )
+        accumulator.accumulate(
+            BetaRawMessageStreamEvent.ofMessageDelta(
+                BetaRawMessageDeltaEvent.builder()
+                    .contextManagement(contextManagement)
+                    .delta(
+                        BetaRawMessageDeltaEvent.Delta.builder()
+                            .container(container)
+                            .stopDetails(NOT_SET)
+                            .stopReason(JsonField.of(BetaStopReason.END_TURN))
+                            .stopSequence(NOT_SET)
+                            .build()
+                    )
+                    .usage(
+                        BetaMessageDeltaUsage.builder()
+                            .fallbackCredit(null)
+                            .outputTokens(96L)
+                            .outputTokensDetails(
+                                BetaOutputTokensDetails.builder().thinkingTokens(64L).build()
+                            )
+                            .cacheCreationInputTokens(7L)
+                            .cacheReadInputTokens(9L)
+                            .inputTokens(101L)
+                            .serverToolUse(
+                                BetaServerToolUsage.builder()
+                                    .webSearchRequests(2L)
+                                    .webFetchRequests(1L)
+                                    .build()
+                            )
+                            .iterations(null)
+                            .build()
+                    )
+                    .build()
+            )
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val message = accumulator.message()
+
+        assertThat(message.contextManagement()).hasValue(contextManagement)
+        assertThat(message.container()).hasValue(container)
+        assertThat(message.usage().outputTokens()).isEqualTo(96L)
+        assertThat(message.usage().inputTokens()).isEqualTo(101L)
+        assertThat(message.usage().outputTokensDetails().get().thinkingTokens()).isEqualTo(64L)
+        // Never re-sent on `message_delta`, so these must survive from `message_start`.
+        assertThat(message.usage().serviceTier()).hasValue(BetaUsage.ServiceTier.STANDARD)
+        assertThat(message.usage().cacheCreation().get().ephemeral5mInputTokens()).isEqualTo(0L)
+    }
+
+    @Test
     fun accumulateContentBlocksWithDuplicateIndexes() {
         val accumulator = BetaMessageAccumulator.create()
 
