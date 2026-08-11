@@ -30,7 +30,7 @@ private constructor(
     ) : this(model, mutableMapOf())
 
     fun toParam(): BetaFallbackInfoParam =
-        BetaFallbackInfoParam.builder().model(_model().map { Model.of(it.toString()) }).build()
+        BetaFallbackInfoParam.builder().model(_model().map { Model.of(it._value()) }).build()
 
     /**
      * The model that will complete your prompt.

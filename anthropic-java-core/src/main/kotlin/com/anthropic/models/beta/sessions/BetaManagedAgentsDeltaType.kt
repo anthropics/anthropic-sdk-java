@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 /** EventDeltaType enum */
 class BetaManagedAgentsDeltaType
@@ -28,6 +29,10 @@ private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val AGENT_THINKING = of("agent.thinking")
 
         @JvmStatic fun of(value: String) = BetaManagedAgentsDeltaType(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaManagedAgentsDeltaType =
+            value.asString().getOrNull()?.let { of(it) } ?: BetaManagedAgentsDeltaType(value)
     }
 
     /** An enum containing [BetaManagedAgentsDeltaType]'s known values. */

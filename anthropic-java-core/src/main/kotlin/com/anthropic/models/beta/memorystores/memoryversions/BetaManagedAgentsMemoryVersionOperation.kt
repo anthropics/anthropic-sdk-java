@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * The kind of mutation a `memory_version` records. Every non-no-op mutation to a memory appends
@@ -34,6 +35,11 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         @JvmStatic
         fun of(value: String) = BetaManagedAgentsMemoryVersionOperation(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaManagedAgentsMemoryVersionOperation =
+            value.asString().getOrNull()?.let { of(it) }
+                ?: BetaManagedAgentsMemoryVersionOperation(value)
     }
 
     /** An enum containing [BetaManagedAgentsMemoryVersionOperation]'s known values. */

@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 /** SessionThreadStatus enum */
 class BetaManagedAgentsSessionThreadStatus
@@ -32,6 +33,11 @@ private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val TERMINATED = of("terminated")
 
         @JvmStatic fun of(value: String) = BetaManagedAgentsSessionThreadStatus(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaManagedAgentsSessionThreadStatus =
+            value.asString().getOrNull()?.let { of(it) }
+                ?: BetaManagedAgentsSessionThreadStatus(value)
     }
 
     /** An enum containing [BetaManagedAgentsSessionThreadStatus]'s known values. */

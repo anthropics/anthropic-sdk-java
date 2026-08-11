@@ -3090,6 +3090,10 @@ private constructor(
             @JvmField val STANDARD_ONLY = of("standard_only")
 
             @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): ServiceTier =
+                value.asString().getOrNull()?.let { of(it) } ?: ServiceTier(value)
         }
 
         /** An enum containing [ServiceTier]'s known values. */

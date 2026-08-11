@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 class ToolSearchToolResultErrorCode
 @JsonCreator
@@ -31,6 +32,10 @@ private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
 
         @JvmStatic fun of(value: String) = ToolSearchToolResultErrorCode(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): ToolSearchToolResultErrorCode =
+            value.asString().getOrNull()?.let { of(it) } ?: ToolSearchToolResultErrorCode(value)
     }
 
     /** An enum containing [ToolSearchToolResultErrorCode]'s known values. */

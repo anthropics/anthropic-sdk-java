@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 class BetaCodeExecutionToolResultErrorCode
 @JsonCreator
@@ -31,6 +32,11 @@ private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
 
         @JvmStatic fun of(value: String) = BetaCodeExecutionToolResultErrorCode(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaCodeExecutionToolResultErrorCode =
+            value.asString().getOrNull()?.let { of(it) }
+                ?: BetaCodeExecutionToolResultErrorCode(value)
     }
 
     /** An enum containing [BetaCodeExecutionToolResultErrorCode]'s known values. */

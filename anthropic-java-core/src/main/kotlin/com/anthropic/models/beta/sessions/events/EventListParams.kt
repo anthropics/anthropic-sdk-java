@@ -422,6 +422,10 @@ private constructor(
             @JvmField val DESC = of("desc")
 
             @JvmStatic fun of(value: String) = Order(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Order =
+                value.asString().getOrNull()?.let { of(it) } ?: Order(value)
         }
 
         /** An enum containing [Order]'s known values. */

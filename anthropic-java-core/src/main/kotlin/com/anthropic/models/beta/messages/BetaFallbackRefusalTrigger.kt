@@ -266,6 +266,10 @@ private constructor(
             @JvmField val GENERAL_HARMS = of("general_harms")
 
             @JvmStatic fun of(value: String) = Category(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Category =
+                value.asString().getOrNull()?.let { of(it) } ?: Category(value)
         }
 
         /** An enum containing [Category]'s known values. */

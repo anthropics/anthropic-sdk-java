@@ -396,6 +396,10 @@ private constructor(
             @JvmField val SPAN_MODEL_REQUEST_END = of("span.model_request_end")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */

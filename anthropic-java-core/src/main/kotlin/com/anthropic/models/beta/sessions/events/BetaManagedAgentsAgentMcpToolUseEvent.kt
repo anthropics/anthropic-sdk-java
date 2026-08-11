@@ -590,6 +590,10 @@ private constructor(
             @JvmField val AGENT_MCP_TOOL_USE = of("agent.mcp_tool_use")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */
@@ -727,6 +731,10 @@ private constructor(
             @JvmField val DENY = of("deny")
 
             @JvmStatic fun of(value: String) = EvaluatedPermission(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): EvaluatedPermission =
+                value.asString().getOrNull()?.let { of(it) } ?: EvaluatedPermission(value)
         }
 
         /** An enum containing [EvaluatedPermission]'s known values. */

@@ -264,6 +264,10 @@ private constructor(
             @JvmField val MAX = of("max")
 
             @JvmStatic fun of(value: String) = Effort(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Effort =
+                value.asString().getOrNull()?.let { of(it) } ?: Effort(value)
         }
 
         /** An enum containing [Effort]'s known values. */

@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 class BetaStopReason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -37,6 +38,10 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
         @JvmField val MODEL_CONTEXT_WINDOW_EXCEEDED = of("model_context_window_exceeded")
 
         @JvmStatic fun of(value: String) = BetaStopReason(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaStopReason =
+            value.asString().getOrNull()?.let { of(it) } ?: BetaStopReason(value)
     }
 
     /** An enum containing [BetaStopReason]'s known values. */

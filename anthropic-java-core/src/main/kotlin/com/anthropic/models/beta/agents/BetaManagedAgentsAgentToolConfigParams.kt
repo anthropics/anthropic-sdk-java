@@ -323,6 +323,10 @@ private constructor(
             @JvmField val WEB_SEARCH = of("web_search")
 
             @JvmStatic fun of(value: String) = Name(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Name =
+                value.asString().getOrNull()?.let { of(it) } ?: Name(value)
         }
 
         /** An enum containing [Name]'s known values. */
@@ -745,7 +749,7 @@ private constructor(
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
                 @JvmSynthetic
-                internal fun of(value: JsonValue): Type =
+                internal fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

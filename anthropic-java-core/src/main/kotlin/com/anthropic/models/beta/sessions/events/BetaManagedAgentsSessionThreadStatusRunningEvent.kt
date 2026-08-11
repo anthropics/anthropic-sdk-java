@@ -346,6 +346,10 @@ private constructor(
             @JvmField val SESSION_THREAD_STATUS_RUNNING = of("session.thread_status_running")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */

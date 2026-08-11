@@ -59,7 +59,7 @@ private constructor(
                         .build()
                 }
             )
-            .name(_name().map { ServerToolUseBlockParam.Name.of(it.toString()) })
+            .name(_name().map { ServerToolUseBlockParam.Name.of(it._value()) })
             .caller(
                 _caller().map {
                     it.accept(
@@ -720,7 +720,7 @@ private constructor(
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
                 @JvmSynthetic
-                internal fun of(value: JsonValue): Type =
+                internal fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -982,6 +982,10 @@ private constructor(
             @JvmField val TOOL_SEARCH_TOOL_BM25 = of("tool_search_tool_bm25")
 
             @JvmStatic fun of(value: String) = Name(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Name =
+                value.asString().getOrNull()?.let { of(it) } ?: Name(value)
         }
 
         /** An enum containing [Name]'s known values. */

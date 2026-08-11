@@ -314,6 +314,10 @@ private constructor(
             @JvmField val MEMORY_STORE = of("memory_store")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */
@@ -447,6 +451,10 @@ private constructor(
             @JvmField val READ_ONLY = of("read_only")
 
             @JvmStatic fun of(value: String) = Access(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Access =
+                value.asString().getOrNull()?.let { of(it) } ?: Access(value)
         }
 
         /** An enum containing [Access]'s known values. */

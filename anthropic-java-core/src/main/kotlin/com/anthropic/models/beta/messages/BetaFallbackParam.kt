@@ -407,6 +407,10 @@ private constructor(
             @JvmField val FAST = of("fast")
 
             @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Speed =
+                value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 
         /** An enum containing [Speed]'s known values. */
@@ -808,7 +812,7 @@ private constructor(
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
                 @JvmSynthetic
-                internal fun of(value: JsonValue): Type =
+                internal fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

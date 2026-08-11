@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 /** Lifecycle status of a Dream. */
 class BetaDreamStatus @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -33,6 +34,10 @@ class BetaDreamStatus @JsonCreator private constructor(private val value: JsonFi
         @JvmField val CANCELED = of("canceled")
 
         @JvmStatic fun of(value: String) = BetaDreamStatus(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaDreamStatus =
+            value.asString().getOrNull()?.let { of(it) } ?: BetaDreamStatus(value)
     }
 
     /** An enum containing [BetaDreamStatus]'s known values. */

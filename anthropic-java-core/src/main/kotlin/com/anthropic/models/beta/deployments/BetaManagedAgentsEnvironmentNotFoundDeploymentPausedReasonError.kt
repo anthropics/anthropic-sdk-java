@@ -193,6 +193,10 @@ private constructor(
             @JvmField val ENVIRONMENT_NOT_FOUND_ERROR = of("environment_not_found_error")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */

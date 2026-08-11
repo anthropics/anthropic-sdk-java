@@ -315,6 +315,10 @@ private constructor(
             @JvmField val DENY = of("deny")
 
             @JvmStatic fun of(value: String) = Result(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Result =
+                value.asString().getOrNull()?.let { of(it) } ?: Result(value)
         }
 
         /** An enum containing [Result]'s known values. */
@@ -449,6 +453,10 @@ private constructor(
             @JvmField val USER_TOOL_CONFIRMATION = of("user.tool_confirmation")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */

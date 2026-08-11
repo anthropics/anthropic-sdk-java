@@ -192,6 +192,10 @@ private constructor(
             @JvmField val REJECTED = of("rejected")
 
             @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Status =
+                value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 
         /** An enum containing [Status]'s known values. */
