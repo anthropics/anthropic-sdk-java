@@ -64,6 +64,9 @@ internal constructor(
     /** @see ContentBlock.containerUpload */
     fun containerUpload(): Optional<ContainerUploadBlock> = rawContentBlock.containerUpload()
 
+    /** @see ContentBlock.type */
+    fun type(): ContentBlock.Type = rawContentBlock.type()
+
     /** @see ContentBlock.id */
     fun id(): Optional<String> = rawContentBlock.id()
 

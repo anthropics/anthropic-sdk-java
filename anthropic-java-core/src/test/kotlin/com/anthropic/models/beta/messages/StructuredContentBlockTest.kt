@@ -165,6 +165,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("containerUpload", OPTIONAL),
                 DelegationReadTestCase("compaction", OPTIONAL),
                 DelegationReadTestCase("fallback", OPTIONAL),
+                DelegationReadTestCase("type", BetaContentBlock.Type.TEXT),
                 DelegationReadTestCase("id", OPTIONAL),
                 DelegationReadTestCase("toolUseId", OPTIONAL),
                 // `isText()` is a special case and has its own test function.
