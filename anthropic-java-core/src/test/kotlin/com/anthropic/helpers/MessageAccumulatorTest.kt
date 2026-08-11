@@ -627,6 +627,29 @@ internal class MessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateToolUseContentBlockWithNoInputCanBeSentBackToTheApi() {
+        val accumulator = MessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+        accumulator.accumulate(toolUseContentBlockStartEvent(1L, "1-TOOL."))
+        // A tool that declares no parameters streams one empty `input_json_delta`.
+        accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, ""))
+        accumulator.accumulate(contentBlockStopEvent(1L))
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(StopReason.TOOL_USE), outputTokens = 88L)
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        // Appending the assistant turn back into the conversation is the normal
+        // shape of a tool-use loop. `tool_use.input` is required, so a param
+        // whose `input` is missing is rejected with a 400:
+        //   messages.N.content.M.tool_use.input: Field required
+        val toolUse = accumulator.message().toParam().content().blockParams().get()[0].asToolUse()
+
+        assertThat(toolUse._input().asObject().get()).isEmpty()
+    }
+
+    @Test
     fun accumulateToolUseContentBlockWithNoInput() {
         val accumulator = MessageAccumulator.create()
 
@@ -635,8 +658,8 @@ internal class MessageAccumulatorTest {
         accumulator.accumulate(toolUseContentBlockStartEvent(1L, "1-TOOL."))
 
         // Tool use content block deltas will build up an empty JSON string. This behavior was
-        // observed in issue #249. It should be interpreted as a missing field. Whitespace should
-        // be ignored.
+        // observed in issue #249. A tool that declares no parameters has an
+        // input of `{}` — the only object it can be. Whitespace should be ignored.
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, ""))
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, " "))
 
@@ -657,7 +680,7 @@ internal class MessageAccumulatorTest {
 
         assertThat(content.size).isEqualTo(1)
         assertThat(content[0].asToolUse().name()).isEqualTo("1-TOOL.")
-        assertThat(content[0].asToolUse()._input().isMissing()).isTrue()
+        assertThat(content[0].asToolUse()._input().asObject().get()).isEmpty()
     }
 
     @Test
