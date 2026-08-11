@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 class TextEditorCodeExecutionToolResultErrorCode
 @JsonCreator
@@ -34,6 +35,11 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         @JvmStatic
         fun of(value: String) = TextEditorCodeExecutionToolResultErrorCode(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): TextEditorCodeExecutionToolResultErrorCode =
+            value.asString().getOrNull()?.let { of(it) }
+                ?: TextEditorCodeExecutionToolResultErrorCode(value)
     }
 
     /** An enum containing [TextEditorCodeExecutionToolResultErrorCode]'s known values. */

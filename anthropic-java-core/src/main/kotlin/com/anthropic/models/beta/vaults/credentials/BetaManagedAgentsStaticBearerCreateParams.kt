@@ -262,6 +262,10 @@ private constructor(
             @JvmField val STATIC_BEARER = of("static_bearer")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */

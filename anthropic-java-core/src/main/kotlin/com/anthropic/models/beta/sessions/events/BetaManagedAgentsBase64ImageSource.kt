@@ -255,6 +255,10 @@ private constructor(
             @JvmField val BASE64 = of("base64")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */

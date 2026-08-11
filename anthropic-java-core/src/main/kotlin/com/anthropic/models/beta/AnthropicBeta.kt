@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 class AnthropicBeta @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -91,6 +92,10 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             of("mid-conversation-tool-changes-2026-07-01")
 
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): AnthropicBeta =
+            value.asString().getOrNull()?.let { of(it) } ?: AnthropicBeta(value)
     }
 
     /** An enum containing [AnthropicBeta]'s known values. */

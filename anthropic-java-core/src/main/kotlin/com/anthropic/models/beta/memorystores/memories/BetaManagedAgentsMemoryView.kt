@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Selects which projection of a `memory` or `memory_version` the server returns. `basic` returns
@@ -33,6 +34,10 @@ private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val FULL = of("full")
 
         @JvmStatic fun of(value: String) = BetaManagedAgentsMemoryView(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaManagedAgentsMemoryView =
+            value.asString().getOrNull()?.let { of(it) } ?: BetaManagedAgentsMemoryView(value)
     }
 
     /** An enum containing [BetaManagedAgentsMemoryView]'s known values. */

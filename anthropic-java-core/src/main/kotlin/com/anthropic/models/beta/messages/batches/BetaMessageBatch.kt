@@ -636,6 +636,10 @@ private constructor(
             @JvmField val ENDED = of("ended")
 
             @JvmStatic fun of(value: String) = ProcessingStatus(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): ProcessingStatus =
+                value.asString().getOrNull()?.let { of(it) } ?: ProcessingStatus(value)
         }
 
         /** An enum containing [ProcessingStatus]'s known values. */

@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 class ErrorType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -39,6 +40,10 @@ class ErrorType @JsonCreator private constructor(private val value: JsonField<St
         @JvmField val BILLING_ERROR = of("billing_error")
 
         @JvmStatic fun of(value: String) = ErrorType(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): ErrorType =
+            value.asString().getOrNull()?.let { of(it) } ?: ErrorType(value)
     }
 
     /** An enum containing [ErrorType]'s known values. */

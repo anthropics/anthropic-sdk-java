@@ -456,6 +456,10 @@ private constructor(
             @JvmField val DESC = of("desc")
 
             @JvmStatic fun of(value: String) = Order(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Order =
+                value.asString().getOrNull()?.let { of(it) } ?: Order(value)
         }
 
         /** An enum containing [Order]'s known values. */
@@ -597,6 +601,10 @@ private constructor(
             @JvmField val TERMINATED = of("terminated")
 
             @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Status =
+                value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 
         /** An enum containing [Status]'s known values. */

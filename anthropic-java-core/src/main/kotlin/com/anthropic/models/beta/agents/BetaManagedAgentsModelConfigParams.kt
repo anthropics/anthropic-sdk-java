@@ -886,6 +886,11 @@ private constructor(
                 @JvmField val MAX = of("max")
 
                 @JvmStatic fun of(value: String) = BetaManagedAgentsEffortLevel(JsonField.of(value))
+
+                @JvmSynthetic
+                internal fun of(value: JsonField<String>): BetaManagedAgentsEffortLevel =
+                    value.asString().getOrNull()?.let { of(it) }
+                        ?: BetaManagedAgentsEffortLevel(value)
             }
 
             /** An enum containing [BetaManagedAgentsEffortLevel]'s known values. */
@@ -1048,6 +1053,10 @@ private constructor(
             @JvmField val FAST = of("fast")
 
             @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Speed =
+                value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 
         /** An enum containing [Speed]'s known values. */

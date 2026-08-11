@@ -257,6 +257,10 @@ private constructor(
             @JvmField val IMAGE_WEBP = of("image/webp")
 
             @JvmStatic fun of(value: String) = MediaType(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): MediaType =
+                value.asString().getOrNull()?.let { of(it) } ?: MediaType(value)
         }
 
         /** An enum containing [MediaType]'s known values. */

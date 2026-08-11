@@ -448,6 +448,10 @@ private constructor(
             @JvmField val SYSTEM = of("system")
 
             @JvmStatic fun of(value: String) = Role(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Role =
+                value.asString().getOrNull()?.let { of(it) } ?: Role(value)
         }
 
         /** An enum containing [Role]'s known values. */

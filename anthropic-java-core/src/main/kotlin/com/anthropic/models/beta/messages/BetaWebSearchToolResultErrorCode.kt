@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 class BetaWebSearchToolResultErrorCode
 @JsonCreator
@@ -35,6 +36,10 @@ private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val REQUEST_TOO_LARGE = of("request_too_large")
 
         @JvmStatic fun of(value: String) = BetaWebSearchToolResultErrorCode(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaWebSearchToolResultErrorCode =
+            value.asString().getOrNull()?.let { of(it) } ?: BetaWebSearchToolResultErrorCode(value)
     }
 
     /** An enum containing [BetaWebSearchToolResultErrorCode]'s known values. */

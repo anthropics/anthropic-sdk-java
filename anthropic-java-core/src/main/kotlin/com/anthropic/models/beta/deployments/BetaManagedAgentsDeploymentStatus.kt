@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 /** Lifecycle status of a deployment. */
 class BetaManagedAgentsDeploymentStatus
@@ -28,6 +29,10 @@ private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val PAUSED = of("paused")
 
         @JvmStatic fun of(value: String) = BetaManagedAgentsDeploymentStatus(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaManagedAgentsDeploymentStatus =
+            value.asString().getOrNull()?.let { of(it) } ?: BetaManagedAgentsDeploymentStatus(value)
     }
 
     /** An enum containing [BetaManagedAgentsDeploymentStatus]'s known values. */

@@ -775,7 +775,7 @@ private constructor(
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
                 @JvmSynthetic
-                internal fun of(value: JsonValue): Type =
+                internal fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1028,6 +1028,10 @@ private constructor(
             @JvmField val ACCOUNT = of("account")
 
             @JvmStatic fun of(value: String) = Scope(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Scope =
+                value.asString().getOrNull()?.let { of(it) } ?: Scope(value)
         }
 
         /** An enum containing [Scope]'s known values. */

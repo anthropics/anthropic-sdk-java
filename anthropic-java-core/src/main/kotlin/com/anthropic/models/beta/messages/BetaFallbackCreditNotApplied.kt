@@ -339,6 +339,10 @@ private constructor(
             @JvmField val WRONG_WORKSPACE = of("wrong_workspace")
 
             @JvmStatic fun of(value: String) = Reason(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Reason =
+                value.asString().getOrNull()?.let { of(it) } ?: Reason(value)
         }
 
         /** An enum containing [Reason]'s known values. */

@@ -42,7 +42,7 @@ private constructor(
         BetaTextEditorCodeExecutionToolResultErrorParam.builder()
             .errorCode(
                 _errorCode().map {
-                    BetaTextEditorCodeExecutionToolResultErrorParam.ErrorCode.of(it.toString())
+                    BetaTextEditorCodeExecutionToolResultErrorParam.ErrorCode.of(it._value())
                 }
             )
             .errorMessage(_errorMessage())
@@ -286,6 +286,10 @@ private constructor(
             @JvmField val FILE_NOT_FOUND = of("file_not_found")
 
             @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): ErrorCode =
+                value.asString().getOrNull()?.let { of(it) } ?: ErrorCode(value)
         }
 
         /** An enum containing [ErrorCode]'s known values. */

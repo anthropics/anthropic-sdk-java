@@ -808,6 +808,10 @@ private constructor(
             @JvmField val INTERNAL = of("internal")
 
             @JvmStatic fun of(value: String) = Relationship(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Relationship =
+                value.asString().getOrNull()?.let { of(it) } ?: Relationship(value)
         }
 
         /** An enum containing [Relationship]'s known values. */

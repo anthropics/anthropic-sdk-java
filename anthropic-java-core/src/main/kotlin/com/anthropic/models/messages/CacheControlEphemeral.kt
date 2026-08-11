@@ -232,6 +232,10 @@ private constructor(
             @JvmField val TTL_1H = of("1h")
 
             @JvmStatic fun of(value: String) = Ttl(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Ttl =
+                value.asString().getOrNull()?.let { of(it) } ?: Ttl(value)
         }
 
         /** An enum containing [Ttl]'s known values. */

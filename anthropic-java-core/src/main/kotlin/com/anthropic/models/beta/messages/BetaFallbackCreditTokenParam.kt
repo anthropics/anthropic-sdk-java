@@ -255,6 +255,10 @@ private constructor(
             @JvmField val BEST_EFFORT = of("best_effort")
 
             @JvmStatic fun of(value: String) = Mode(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Mode =
+                value.asString().getOrNull()?.let { of(it) } ?: Mode(value)
         }
 
         /** An enum containing [Mode]'s known values. */

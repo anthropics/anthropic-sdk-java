@@ -467,6 +467,10 @@ private constructor(
             @JvmField val CODE_EXECUTION_20260521 = of("code_execution_20260521")
 
             @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): AllowedCaller =
+                value.asString().getOrNull()?.let { of(it) } ?: AllowedCaller(value)
         }
 
         /** An enum containing [AllowedCaller]'s known values. */

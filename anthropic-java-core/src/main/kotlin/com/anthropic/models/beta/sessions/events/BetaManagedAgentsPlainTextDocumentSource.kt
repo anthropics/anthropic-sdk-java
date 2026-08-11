@@ -259,6 +259,10 @@ private constructor(
             @JvmField val TEXT_PLAIN = of("text/plain")
 
             @JvmStatic fun of(value: String) = MediaType(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): MediaType =
+                value.asString().getOrNull()?.let { of(it) } ?: MediaType(value)
         }
 
         /** An enum containing [MediaType]'s known values. */
@@ -391,6 +395,10 @@ private constructor(
             @JvmField val TEXT = of("text")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */
