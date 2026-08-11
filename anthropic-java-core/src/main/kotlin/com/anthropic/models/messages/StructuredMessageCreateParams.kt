@@ -9,6 +9,7 @@ import com.anthropic.core.http.QueryParams
 import com.anthropic.core.outputFormatFromClass
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * A wrapper for [MessageCreateParams] that provides a type-safe [Builder] that can record the
@@ -47,23 +48,9 @@ internal constructor(
     class Builder<T : Any> internal constructor() {
         private var outputType: Class<T>? = null
         private var paramsBuilder = MessageCreateParams.builder()
-        private var outputConfigSet: Boolean = false
 
         @JvmSynthetic
-        internal fun wrap(
-            outputType: Class<T>,
-            paramsBuilder: MessageCreateParams.Builder,
-            localValidation: JsonSchemaLocalValidation,
-        ) = apply {
-            this.outputType = outputType
-            this.paramsBuilder = paramsBuilder
-            // Convert the class to a JSON schema and apply it to the delegate `Builder`.
-            outputConfig(outputType, localValidation)
-        }
-
-        /** Injects a given `MessageCreateParams.Builder`. For use only when testing. */
-        @JvmSynthetic
-        internal fun inject(paramsBuilder: MessageCreateParams.Builder) = apply {
+        internal fun wrap(paramsBuilder: MessageCreateParams.Builder) = apply {
             this.paramsBuilder = paramsBuilder
         }
 
@@ -174,19 +161,54 @@ internal constructor(
         /** @see MessageCreateParams.Builder.metadata */
         fun metadata(metadata: JsonField<Metadata>) = apply { paramsBuilder.metadata(metadata) }
 
-        /** @see MessageCreateParams.Builder.outputConfig */
+        /**
+         * Sets the output configuration, carrying over the output format already set unless the
+         * given output configuration sets its own, as the response will still be deserialized to an
+         * instance of the output type.
+         *
+         * @see MessageCreateParams.Builder.outputConfig
+         */
         fun outputConfig(outputConfig: OutputConfig) = apply {
-            paramsBuilder.outputConfig(outputConfig)
-        }
-
-        /** @see MessageCreateParams.Builder.outputConfig */
-        fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
-            paramsBuilder.outputConfig(outputConfig)
+            val currentFormat =
+                paramsBuilder.currentOutputConfig()?._format()?.asKnown()?.getOrNull()
+            paramsBuilder.outputConfig(
+                if (currentFormat != null && outputConfig._format().isMissing())
+                    outputConfig.toBuilder().format(currentFormat).build()
+                else outputConfig
+            )
         }
 
         /**
-         * Sets the output configuration with a JSON schema format derived from the structure of the
-         * given class. This is the recommended way to specify structured outputs.
+         * Sets the output configuration, carrying over the output format already set unless the
+         * given output configuration is not an [OutputConfig] value or sets its own.
+         *
+         * @see MessageCreateParams.Builder.outputConfig
+         */
+        fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
+            val knownOutputConfig = outputConfig.asKnown().getOrNull()
+            if (knownOutputConfig != null) outputConfig(knownOutputConfig)
+            else paramsBuilder.outputConfig(outputConfig)
+        }
+
+        /**
+         * Sets the output configuration, including a JSON schema format derived from the structure
+         * of the output type of the given structured output configuration. Use this instead of the
+         * output type alone to set other output configuration options alongside the output type.
+         *
+         * Unlike the beta version, this GA version does NOT auto-inject any beta header.
+         *
+         * @see MessageCreateParams.Builder.outputConfig
+         */
+        fun outputConfig(outputConfig: StructuredOutputConfig<T>) = apply {
+            outputType = outputConfig.outputType
+            paramsBuilder.outputConfig(outputConfig.rawOutputConfig)
+            // GA version: NO beta header injection
+        }
+
+        /**
+         * Sets the output format of the output configuration to a JSON schema derived from the
+         * structure of the given class, preserving any other output configuration options already
+         * set. This is the recommended way to specify structured outputs.
          *
          * Unlike the beta version, this GA version does NOT auto-inject any beta header.
          *
@@ -197,16 +219,12 @@ internal constructor(
             outputType: Class<T>,
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
         ) = apply {
-            if (outputConfigSet) {
-                throw IllegalArgumentException(
-                    "outputConfig was called multiple times. Please use only one outputConfig call."
-                )
-            }
             this.outputType = outputType
-            val format = outputFormatFromClass(outputType, localValidation)
-            paramsBuilder.outputConfig(OutputConfig.builder().format(format).build())
+            val builder = paramsBuilder.currentOutputConfig()?.toBuilder() ?: OutputConfig.builder()
+            paramsBuilder.outputConfig(
+                builder.format(outputFormatFromClass(outputType, localValidation)).build()
+            )
             // GA version: NO beta header injection
-            outputConfigSet = true
         }
 
         /** @see MessageCreateParams.Builder.serviceTier */

@@ -855,10 +855,14 @@ private constructor(
             body.outputConfig(outputConfig)
         }
 
+        /** Returns the output configuration set so far, so a derived format can be merged in. */
+        @JvmSynthetic internal fun currentOutputConfig(): OutputConfig? = body.currentOutputConfig()
+
         /**
-         * Sets the output configuration with a JSON schema format derived from the structure of the
-         * given class. This returns a [StructuredMessageCreateParams.Builder] that can be used to
-         * continue building the request and will eventually build a [StructuredMessageCreateParams]
+         * Sets the output format of the output configuration to a JSON schema derived from the
+         * structure of the given class, preserving any other output configuration options already
+         * set. This returns a [StructuredMessageCreateParams.Builder] that can be used to continue
+         * building the request and will eventually build a [StructuredMessageCreateParams]
          * instance. See the SDK documentation for more details on _Structured Outputs_.
          *
          * Unlike the beta version, this GA version does NOT auto-inject any beta header.
@@ -876,7 +880,27 @@ private constructor(
         fun <T : Any> outputConfig(
             outputType: Class<T>,
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
-        ) = StructuredMessageCreateParams.builder<T>().wrap(outputType, this, localValidation)
+        ) =
+            StructuredMessageCreateParams.builder<T>()
+                .wrap(this)
+                .outputConfig(outputType, localValidation)
+
+        /**
+         * Sets the output configuration, including a JSON schema format derived from the structure
+         * of the output type of the given structured output configuration. Use this instead of
+         * passing only the output type to set other output configuration options (such as the
+         * effort level) alongside the output type. This returns a
+         * [StructuredMessageCreateParams.Builder] that can be used to continue building the request
+         * and will eventually build a [StructuredMessageCreateParams] instance. See the SDK
+         * documentation for more details on _Structured Outputs_.
+         *
+         * Unlike the beta version, this GA version does NOT auto-inject any beta header.
+         *
+         * @param outputConfig The structured output configuration recording the class from which
+         *   the JSON schema was derived and the other output configuration options.
+         */
+        fun <T : Any> outputConfig(outputConfig: StructuredOutputConfig<T>) =
+            StructuredMessageCreateParams.builder<T>().wrap(this).outputConfig(outputConfig)
 
         /**
          * Determines whether to use priority capacity (if available) or standard capacity for this
@@ -2433,6 +2457,12 @@ private constructor(
             fun outputConfig(outputConfig: JsonField<OutputConfig>) = apply {
                 this.outputConfig = outputConfig
             }
+
+            /**
+             * Returns the output configuration set so far, so a derived format can be merged in.
+             */
+            @JvmSynthetic
+            internal fun currentOutputConfig(): OutputConfig? = outputConfig.asKnown().getOrNull()
 
             /**
              * Determines whether to use priority capacity (if available) or standard capacity for
