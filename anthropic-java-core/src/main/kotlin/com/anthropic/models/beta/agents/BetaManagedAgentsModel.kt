@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * The model that will power your agent.
@@ -68,6 +69,10 @@ private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val CLAUDE_SONNET_4_5_20250929 = of("claude-sonnet-4-5-20250929")
 
         @JvmStatic fun of(value: String) = BetaManagedAgentsModel(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaManagedAgentsModel =
+            value.asString().getOrNull()?.let { of(it) } ?: BetaManagedAgentsModel(value)
     }
 
     /** An enum containing [BetaManagedAgentsModel]'s known values. */

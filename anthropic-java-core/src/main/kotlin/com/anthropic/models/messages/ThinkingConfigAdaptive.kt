@@ -217,6 +217,10 @@ private constructor(
             @JvmField val OMITTED = of("omitted")
 
             @JvmStatic fun of(value: String) = Display(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Display =
+                value.asString().getOrNull()?.let { of(it) } ?: Display(value)
         }
 
         /** An enum containing [Display]'s known values. */

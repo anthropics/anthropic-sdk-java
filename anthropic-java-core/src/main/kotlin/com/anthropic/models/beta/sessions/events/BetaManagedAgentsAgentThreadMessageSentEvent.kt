@@ -968,7 +968,7 @@ private constructor(
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
                 @JvmSynthetic
-                internal fun of(value: JsonValue): Type =
+                internal fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1114,6 +1114,10 @@ private constructor(
             @JvmField val AGENT_THREAD_MESSAGE_SENT = of("agent.thread_message_sent")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */

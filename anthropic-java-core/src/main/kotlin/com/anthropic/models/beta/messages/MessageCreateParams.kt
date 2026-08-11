@@ -4800,6 +4800,10 @@ private constructor(
             @JvmField val STANDARD_ONLY = of("standard_only")
 
             @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): ServiceTier =
+                value.asString().getOrNull()?.let { of(it) } ?: ServiceTier(value)
         }
 
         /** An enum containing [ServiceTier]'s known values. */
@@ -4942,6 +4946,10 @@ private constructor(
             @JvmField val FAST = of("fast")
 
             @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Speed =
+                value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 
         /** An enum containing [Speed]'s known values. */

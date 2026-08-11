@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 /** Overall verdict of a credential validation probe. */
 class BetaManagedAgentsCredentialValidationStatus
@@ -31,6 +32,11 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         @JvmStatic
         fun of(value: String) = BetaManagedAgentsCredentialValidationStatus(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaManagedAgentsCredentialValidationStatus =
+            value.asString().getOrNull()?.let { of(it) }
+                ?: BetaManagedAgentsCredentialValidationStatus(value)
     }
 
     /** An enum containing [BetaManagedAgentsCredentialValidationStatus]'s known values. */

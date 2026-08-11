@@ -227,6 +227,10 @@ private constructor(
             @JvmField val UPDATE_EXISTING = of("update_existing")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */

@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * The model that will complete your prompt.
@@ -76,6 +77,10 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
         @JvmField val CLAUDE_SONNET_4_5_20250929 = of("claude-sonnet-4-5-20250929")
 
         @JvmStatic fun of(value: String) = Model(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): Model =
+            value.asString().getOrNull()?.let { of(it) } ?: Model(value)
     }
 
     /** An enum containing [Model]'s known values. */

@@ -275,6 +275,10 @@ private constructor(
             @JvmField val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
 
             @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): ErrorCode =
+                value.asString().getOrNull()?.let { of(it) } ?: ErrorCode(value)
         }
 
         /** An enum containing [ErrorCode]'s known values. */

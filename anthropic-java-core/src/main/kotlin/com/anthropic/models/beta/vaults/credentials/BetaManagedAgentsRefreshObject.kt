@@ -242,6 +242,10 @@ private constructor(
             @JvmField val NO_REFRESH_TOKEN = of("no_refresh_token")
 
             @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Status =
+                value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 
         /** An enum containing [Status]'s known values. */

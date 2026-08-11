@@ -89,7 +89,12 @@ private constructor(
                     BetaMessageParam.Content.ofBetaContentBlockParams(it.map { it.toParam() })
                 }
             )
-            .role(_role())
+            .role(
+                _role().let {
+                    if (it.isMissing() || it.isNull()) it
+                    else JsonField.of(BetaMessageParam.Role.of(it))
+                }
+            )
             .build()
 
     /**

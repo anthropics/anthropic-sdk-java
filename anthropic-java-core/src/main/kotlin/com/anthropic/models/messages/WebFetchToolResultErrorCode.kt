@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 class WebFetchToolResultErrorCode
 @JsonCreator
@@ -41,6 +42,10 @@ private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val UNAVAILABLE = of("unavailable")
 
         @JvmStatic fun of(value: String) = WebFetchToolResultErrorCode(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): WebFetchToolResultErrorCode =
+            value.asString().getOrNull()?.let { of(it) } ?: WebFetchToolResultErrorCode(value)
     }
 
     /** An enum containing [WebFetchToolResultErrorCode]'s known values. */

@@ -45,7 +45,7 @@ private constructor(
             .content(_content())
             .fileType(
                 _fileType().map {
-                    TextEditorCodeExecutionViewResultBlockParam.FileType.of(it.toString())
+                    TextEditorCodeExecutionViewResultBlockParam.FileType.of(it._value())
                 }
             )
             .numLines(_numLines())
@@ -399,6 +399,10 @@ private constructor(
             @JvmField val PDF = of("pdf")
 
             @JvmStatic fun of(value: String) = FileType(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): FileType =
+                value.asString().getOrNull()?.let { of(it) } ?: FileType(value)
         }
 
         /** An enum containing [FileType]'s known values. */

@@ -36,7 +36,7 @@ private constructor(
     fun toParam(): BetaAdvisorToolResultErrorParam =
         BetaAdvisorToolResultErrorParam.builder()
             .errorCode(
-                _errorCode().map { BetaAdvisorToolResultErrorParam.ErrorCode.of(it.toString()) }
+                _errorCode().map { BetaAdvisorToolResultErrorParam.ErrorCode.of(it._value()) }
             )
             .build()
 
@@ -244,6 +244,10 @@ private constructor(
             @JvmField val MODEL_NOT_FOUND = of("model_not_found")
 
             @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): ErrorCode =
+                value.asString().getOrNull()?.let { of(it) } ?: ErrorCode(value)
         }
 
         /** An enum containing [ErrorCode]'s known values. */

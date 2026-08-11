@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 /** What triggered a deployment run. */
 class BetaManagedAgentsTriggerType
@@ -28,6 +29,10 @@ private constructor(private val value: JsonField<String>) : Enum {
         @JvmField val MANUAL = of("manual")
 
         @JvmStatic fun of(value: String) = BetaManagedAgentsTriggerType(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): BetaManagedAgentsTriggerType =
+            value.asString().getOrNull()?.let { of(it) } ?: BetaManagedAgentsTriggerType(value)
     }
 
     /** An enum containing [BetaManagedAgentsTriggerType]'s known values. */

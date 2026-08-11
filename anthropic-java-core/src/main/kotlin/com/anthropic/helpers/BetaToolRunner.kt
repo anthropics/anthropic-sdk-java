@@ -140,7 +140,7 @@ internal constructor(
     }
 
     private fun generateToolResponse(lastMessage: BetaMessageParam): BetaMessageParam? {
-        if (lastMessage._role() != JsonValue.from("assistant")) {
+        if (lastMessage.roleString() != "assistant") {
             return null
         }
 
@@ -196,12 +196,15 @@ internal constructor(
     }
 
     /**
-     * A message built by [BetaMessage.toParam] carries `role` as a raw JSON string rather than a
-     * known [BetaMessageParam.Role], so the throwing [BetaMessageParam.role] accessor can't be used
-     * on the history. Both shapes are read back as their non-throwing string form instead.
+     * A message in the history may carry `role` either as a known [BetaMessageParam.Role] or as a
+     * raw JSON string (e.g. one set via [JsonValue]), so the throwing [BetaMessageParam.role]
+     * accessor can't be used on the history. Both shapes are read back as their non-throwing string
+     * form instead.
      */
-    private fun BetaMessageParam.isSystem(): Boolean =
-        (_role().asKnown().getOrNull()?._value() ?: _role()).asString().getOrNull() == "system"
+    private fun BetaMessageParam.roleString(): String? =
+        (_role().asKnown().getOrNull()?._value() ?: _role()).asString().getOrNull()
+
+    private fun BetaMessageParam.isSystem(): Boolean = roleString() == "system"
 
     private fun applyToolChange(block: BetaContentBlockParam, available: MutableSet<String>) {
         when {

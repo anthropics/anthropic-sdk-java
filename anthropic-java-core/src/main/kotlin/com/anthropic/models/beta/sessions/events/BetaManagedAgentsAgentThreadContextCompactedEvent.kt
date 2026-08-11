@@ -265,6 +265,10 @@ private constructor(
             @JvmField val AGENT_THREAD_CONTEXT_COMPACTED = of("agent.thread_context_compacted")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
         /** An enum containing [Type]'s known values. */

@@ -6,6 +6,7 @@ import com.anthropic.core.Enum
 import com.anthropic.core.JsonField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import kotlin.jvm.optionals.getOrNull
 
 class StopReason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -35,6 +36,10 @@ class StopReason @JsonCreator private constructor(private val value: JsonField<S
         @JvmField val MODEL_CONTEXT_WINDOW_EXCEEDED = of("model_context_window_exceeded")
 
         @JvmStatic fun of(value: String) = StopReason(JsonField.of(value))
+
+        @JvmSynthetic
+        internal fun of(value: JsonField<String>): StopReason =
+            value.asString().getOrNull()?.let { of(it) } ?: StopReason(value)
     }
 
     /** An enum containing [StopReason]'s known values. */

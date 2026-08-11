@@ -354,6 +354,10 @@ private constructor(
             @JvmField val STOPPED = of("stopped")
 
             @JvmStatic fun of(value: String) = State(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): State =
+                value.asString().getOrNull()?.let { of(it) } ?: State(value)
         }
 
         /** An enum containing [State]'s known values. */

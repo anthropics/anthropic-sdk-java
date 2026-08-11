@@ -37,7 +37,7 @@ private constructor(
         BetaBashCodeExecutionToolResultErrorParam.builder()
             .errorCode(
                 _errorCode().map {
-                    BetaBashCodeExecutionToolResultErrorParam.ErrorCode.of(it.toString())
+                    BetaBashCodeExecutionToolResultErrorParam.ErrorCode.of(it._value())
                 }
             )
             .build()
@@ -246,6 +246,10 @@ private constructor(
             @JvmField val OUTPUT_FILE_TOO_LARGE = of("output_file_too_large")
 
             @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): ErrorCode =
+                value.asString().getOrNull()?.let { of(it) } ?: ErrorCode(value)
         }
 
         /** An enum containing [ErrorCode]'s known values. */

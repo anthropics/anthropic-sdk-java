@@ -463,7 +463,7 @@ private constructor(
             @JvmStatic fun of(value: String) = Command(JsonField.of(value))
 
             @JvmSynthetic
-            internal fun of(value: JsonValue): Command =
+            internal fun of(value: JsonField<String>): Command =
                 value.asString().getOrNull()?.let { of(it) } ?: Command(value)
         }
 
