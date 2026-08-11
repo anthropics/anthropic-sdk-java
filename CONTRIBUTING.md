@@ -31,15 +31,27 @@ $ ./gradlew :anthropic-java-example:run
 
 ## Running tests
 
-Most tests require you to [set up a mock server](https://github.com/stoplightio/prism) against the OpenAPI spec to run the tests.
-
-```sh
-$ npx prism mock path/to/your/openapi.yml
-```
+Most tests run against a mock server generated from the OpenAPI spec. `./scripts/test` starts
+one for you and shuts it down when it finishes, so usually there is nothing to set up:
 
 ```sh
 $ ./scripts/test
 ```
+
+The spec URL is read from `.stats.yml`, so no path is needed.
+
+To keep a server running across several test runs, start it yourself first — `./scripts/test`
+will detect it and reuse it:
+
+```sh
+$ ./scripts/mock --daemon   # background, on 127.0.0.1:4010
+$ ./scripts/mock            # or in the foreground
+```
+
+To run against something other than the mock server, set `TEST_API_BASE_URL`.
+
+Without a mock server the suite does not merely fail — a large number of tests never run at all,
+so a green result is not meaningful. Check that the count looks complete.
 
 The `anthropic-java-ecosystem-test` module verifies that the SDK still works for downstream
 consumers: it runs ProGuard/R8 shrinking checks, executes a Java consumer on a real Java 8 runtime,
