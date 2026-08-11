@@ -863,6 +863,33 @@ internal class BetaMessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateToolUseContentBlockWithNoInputCanBeSentBackToTheApi() {
+        val accumulator = BetaMessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+        accumulator.accumulate(toolUseContentBlockStartEvent(1L, "1-TOOL."))
+        // A tool that declares no parameters streams one empty `input_json_delta`.
+        accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, ""))
+        accumulator.accumulate(contentBlockStopEvent(1L))
+        accumulator.accumulate(
+            messageDeltaEvent(
+                stopReason = JsonField.of(BetaStopReason.TOOL_USE),
+                outputTokens = 88L,
+            )
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        // Appending the assistant turn back into the conversation is the normal
+        // shape of a tool-use loop. `tool_use.input` is required, so a param
+        // whose `input` is missing is rejected with a 400:
+        //   messages.N.content.M.tool_use.input: Field required
+        val toolUse =
+            accumulator.message().toParam().content().betaContentBlockParams().get()[0].asToolUse()
+
+        assertThat(toolUse._input().asObject().get()).isEmpty()
+    }
+
+    @Test
     fun accumulateToolUseContentBlockWithNoInput() {
         val accumulator = BetaMessageAccumulator.create()
 

@@ -644,8 +644,7 @@ internal class MessageAccumulatorTest {
         // shape of a tool-use loop. `tool_use.input` is required, so a param
         // whose `input` is missing is rejected with a 400:
         //   messages.N.content.M.tool_use.input: Field required
-        val toolUse =
-            accumulator.message().toParam().content().blockParams().get()[0].asToolUse()
+        val toolUse = accumulator.message().toParam().content().blockParams().get()[0].asToolUse()
 
         assertThat(toolUse._input().asObject().get()).isEmpty()
     }
