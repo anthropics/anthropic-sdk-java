@@ -1,6 +1,5 @@
 package com.anthropic.helpers
 
-import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonObject
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -539,9 +538,9 @@ class BetaMessageAccumulator private constructor() {
                         // Anthropic Streaming Messages API: "the final `tool_use.input`
                         // is always an _object_." However, if a tool function has no
                         // arguments, the concatenated `inputJson` can be an empty
-                        // string. In that case, interpret it as a missing field.
+                        // string. In that case, interpret it as an empty object.
                         val parsedInput =
-                            if (inputJson.trim() == "") JsonMissing.of()
+                            if (inputJson.trim() == "") JsonObject.of(emptyMap())
                             else
                                 try {
                                     JSON_MAPPER.readValue(inputJson, JsonObject::class.java)
