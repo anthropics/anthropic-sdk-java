@@ -4,9 +4,11 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonNull
 import com.anthropic.core.JsonString
+import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.*
 import com.anthropic.models.messages.RawContentBlockStartEvent.ContentBlock
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -59,6 +61,22 @@ internal class MessageAccumulatorTest {
 
         assertThat(usage2.inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(usage2.outputTokens()).isEqualTo(11L)
+    }
+
+    @Test
+    fun mergeMessageUsageWithNullInputTokensKeepsMessageStartValue() {
+        val merged =
+            MessageAccumulator.mergeMessageUsage(
+                usage(INPUT_TOKENS),
+                jsonMapper()
+                    .readValue(
+                        """{"output_tokens":5,"input_tokens":null}""",
+                        MessageDeltaUsage::class.java,
+                    ),
+            )
+
+        assertThat(merged.inputTokens()).isEqualTo(INPUT_TOKENS)
+        assertThat(merged.outputTokens()).isEqualTo(5L)
     }
 
     @Test
@@ -457,6 +475,116 @@ internal class MessageAccumulatorTest {
 
         assertThat(accumulator.message().usage().inputTokens()).isEqualTo(INPUT_TOKENS)
         assertThat(accumulator.message().usage().outputTokens()).isEqualTo(13L)
+    }
+
+    @Test
+    fun messageDeltaAppliesContainerAndAllUsageCounters() {
+        // Everything the terminal `message_delta` carries must land on the accumulated message:
+        // `container` and `output_tokens_details` are never sent on `message_start`, so this event
+        // is their only source.
+        val accumulator = MessageAccumulator.create()
+        val container =
+            Container.builder()
+                .id("container-id")
+                .expiresAt(OffsetDateTime.parse("2050-01-01T00:00:00Z"))
+                .build()
+
+        accumulator.accumulate(messageStartEvent())
+        accumulator.accumulate(
+            RawMessageStreamEvent.ofMessageDelta(
+                RawMessageDeltaEvent.builder()
+                    .delta(
+                        RawMessageDeltaEvent.Delta.builder()
+                            .container(container)
+                            .stopDetails(NOT_SET)
+                            .stopReason(JsonField.of(StopReason.END_TURN))
+                            .stopSequence(NOT_SET)
+                            .build()
+                    )
+                    .usage(
+                        MessageDeltaUsage.builder()
+                            .outputTokens(96L)
+                            .outputTokensDetails(
+                                OutputTokensDetails.builder().thinkingTokens(64L).build()
+                            )
+                            .cacheCreationInputTokens(7L)
+                            .cacheReadInputTokens(9L)
+                            .inputTokens(101L)
+                            .serverToolUse(
+                                ServerToolUsage.builder()
+                                    .webFetchRequests(1L)
+                                    .webSearchRequests(2L)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val message = accumulator.message()
+
+        assertThat(message.container()).hasValue(container)
+        assertThat(message.usage().outputTokens()).isEqualTo(96L)
+        assertThat(message.usage().inputTokens()).isEqualTo(101L)
+        assertThat(message.usage().cacheCreationInputTokens()).hasValue(7L)
+        assertThat(message.usage().cacheReadInputTokens()).hasValue(9L)
+        assertThat(message.usage().outputTokensDetails().get().thinkingTokens()).isEqualTo(64L)
+        assertThat(message.usage().serverToolUse().get().webFetchRequests()).isEqualTo(1L)
+        assertThat(message.usage().serverToolUse().get().webSearchRequests()).isEqualTo(2L)
+    }
+
+    @Test
+    fun messageDeltaWithoutOptionalUsageKeysKeepsMessageStartValues() {
+        // A `message_delta` omits every usage key that does not apply to the response, and never
+        // re-sends `service_tier`, `cache_creation` or `inference_geo`, so all of those must
+        // survive from `message_start`.
+        val accumulator = MessageAccumulator.create()
+        val startUsage =
+            usage(INPUT_TOKENS)
+                .toBuilder()
+                .cacheCreationInputTokens(11L)
+                .cacheReadInputTokens(22L)
+                .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(33L).build())
+                .serverToolUse(
+                    ServerToolUsage.builder().webFetchRequests(3L).webSearchRequests(4L).build()
+                )
+                .build()
+
+        accumulator.accumulate(messageStartEvent(startUsage))
+        accumulator.accumulate(
+            RawMessageStreamEvent.ofMessageDelta(
+                RawMessageDeltaEvent.builder()
+                    .delta(
+                        RawMessageDeltaEvent.Delta.builder()
+                            .stopDetails(NOT_SET)
+                            .stopReason(JsonField.of(StopReason.END_TURN))
+                            .stopSequence(NOT_SET)
+                            .build()
+                    )
+                    // Only `output_tokens` is non-optional on the wire.
+                    .usage(
+                        jsonMapper()
+                            .readValue("""{"output_tokens":77}""", MessageDeltaUsage::class.java)
+                    )
+                    .build()
+            )
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val message = accumulator.message()
+
+        assertThat(message.usage().outputTokens()).isEqualTo(77L)
+        assertThat(message.usage().inputTokens()).isEqualTo(INPUT_TOKENS)
+        assertThat(message.usage().cacheCreationInputTokens()).hasValue(11L)
+        assertThat(message.usage().cacheReadInputTokens()).hasValue(22L)
+        assertThat(message.usage().outputTokensDetails().get().thinkingTokens()).isEqualTo(33L)
+        assertThat(message.usage().serverToolUse().get().webFetchRequests()).isEqualTo(3L)
+        assertThat(message.usage().serviceTier()).hasValue(Usage.ServiceTier.STANDARD)
+        assertThat(message.usage().cacheCreation().get().ephemeral5mInputTokens()).isEqualTo(0L)
+        assertThat(message.usage().inferenceGeo()).hasValue("inference_geo")
+        assertThat(message.container()).isEmpty()
     }
 
     @Test
@@ -863,7 +991,7 @@ internal class MessageAccumulatorTest {
     // In all the following test fixture factory functions, the `type` property (where relevant) is
     // not set explicitly, as it always has an appropriate non-null default value.
 
-    private fun messageStartEvent() =
+    private fun messageStartEvent(usage: Usage = usage(INPUT_TOKENS)) =
         RawMessageStreamEvent.ofMessageStart(
             RawMessageStartEvent.builder()
                 .message(
@@ -871,7 +999,7 @@ internal class MessageAccumulatorTest {
                         .id("message-id")
                         .model(Model.CLAUDE_SONNET_4_5)
                         .content(listOf())
-                        .usage(usage(INPUT_TOKENS))
+                        .usage(usage)
                         // `stopReason()` and `stopSequence()` must be set explicitly or an error
                         // will occur, but there is no appropriate value other than an explicit "not
                         // set" for a `message_start` event. The final values will be notified in

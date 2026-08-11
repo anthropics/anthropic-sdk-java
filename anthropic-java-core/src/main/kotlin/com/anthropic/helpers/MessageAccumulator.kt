@@ -100,12 +100,16 @@ class MessageAccumulator private constructor() {
         internal fun mergeMessageUsage(usage: Usage, deltaUsage: MessageDeltaUsage): Usage {
             val builder = usage.toBuilder()
 
+            // Each `message_delta` usage value is a cumulative whole-message total, so it
+            // overwrites (never adds to) the accumulated value. A counter that does not apply to
+            // the response is omitted from the event, in which case the `message_start` value
+            // stands.
             if (!deltaUsage._outputTokens().isMissing()) {
                 builder.outputTokens(deltaUsage.outputTokens())
             }
 
-            if (!deltaUsage._inputTokens().isMissing()) {
-                builder.inputTokens(deltaUsage.inputTokens().orElse(0))
+            if (deltaUsage.inputTokens().isPresent) {
+                builder.inputTokens(deltaUsage.inputTokens().get())
             }
 
             if (!deltaUsage._cacheCreationInputTokens().isMissing()) {
@@ -118,6 +122,10 @@ class MessageAccumulator private constructor() {
 
             if (!deltaUsage._serverToolUse().isMissing()) {
                 builder.serverToolUse(deltaUsage.serverToolUse())
+            }
+
+            if (!deltaUsage._outputTokensDetails().isMissing()) {
+                builder.outputTokensDetails(deltaUsage.outputTokensDetails())
             }
 
             return builder.build()
@@ -298,6 +306,12 @@ class MessageAccumulator private constructor() {
                         requireMessageBuilder().stopSequence(null)
                     } else if (!delta._stopSequence().isMissing()) {
                         requireMessageBuilder().stopSequence(delta.stopSequence().get())
+                    }
+
+                    // The container is reported only when one ran, and only on this event, so an
+                    // absent value must leave the accumulated value alone.
+                    if (delta.container().isPresent) {
+                        requireMessageBuilder().container(delta.container().get())
                     }
 
                     // Ensure we properly update the usage information from the delta event
