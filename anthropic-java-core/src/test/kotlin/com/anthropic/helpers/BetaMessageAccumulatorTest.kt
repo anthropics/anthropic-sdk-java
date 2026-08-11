@@ -1061,21 +1061,64 @@ internal class BetaMessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateToolUseContentBlockTruncatedByMaxTokens() {
+        val accumulator = BetaMessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+        accumulator.accumulate(toolUseContentBlockStartEvent(0L, "get_weather"))
+
+        // The stream hits `max_tokens` mid tool call, so the block stops on a fragment that can
+        // never become valid JSON. This is a legal stream and must still yield a final message.
+        accumulator.accumulate(toolUseContentBlockDeltaEvent(0L, "{\"location\": \"San Fr"))
+        assertThatNoException().isThrownBy { accumulator.accumulate(contentBlockStopEvent(0L)) }
+
+        accumulator.accumulate(
+            messageDeltaEvent(
+                stopReason = JsonField.of(BetaStopReason.MAX_TOKENS),
+                outputTokens = 9L,
+            )
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val message = accumulator.message()
+        val content = message.content()
+
+        assertThat(message.stopReason()).hasValue(BetaStopReason.MAX_TOKENS)
+        assertThat(message.usage().outputTokens()).isEqualTo(9L)
+
+        assertThat(content.size).isEqualTo(1)
+        assertThat(content[0].asToolUse().id()).isEqualTo("tool-id")
+        assertThat(content[0].asToolUse().name()).isEqualTo("get_weather")
+        // The unparseable fragment is dropped; `input` stays the empty object the block started as.
+        assertThat(content[0].asToolUse()._input().asObject().get()).isEmpty()
+    }
+
+    @Test
     fun accumulateToolUseContentBlockWithInvalidJson() {
         val accumulator = BetaMessageAccumulator.create()
 
         accumulator.accumulate(messageStartEvent())
         accumulator.accumulate(toolUseContentBlockStartEvent(1L, "test-tool"))
 
-        // Build up invalid JSON string: {invalid"json}
+        // Build up invalid JSON string: {invalid"json}. At `content_block_stop` this is
+        // indistinguishable from a fragment truncated by `max_tokens`, so it is tolerated the
+        // same way rather than thrown.
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, "{invalid\""))
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, "json}"))
+        accumulator.accumulate(contentBlockStopEvent(1L))
 
-        // Should throw AnthropicInvalidDataException when trying to parse invalid JSON
-        assertThatThrownBy { accumulator.accumulate(contentBlockStopEvent(1L)) }
-            .isInstanceOf(AnthropicInvalidDataException::class.java)
-            .hasMessageContaining("Unable to parse tool parameter JSON from model")
-            .hasMessageContaining("JSON: {invalid\"json}")
+        accumulator.accumulate(
+            messageDeltaEvent(
+                stopReason = JsonField.of(BetaStopReason.TOOL_USE),
+                outputTokens = 88L,
+            )
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val toolUse = accumulator.message().content()[0].asToolUse()
+
+        assertThat(toolUse.name()).isEqualTo("test-tool")
+        assertThat(toolUse._input().asObject().get()).isEmpty()
     }
 
     @Test

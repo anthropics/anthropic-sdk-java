@@ -549,9 +549,12 @@ class BetaMessageAccumulator private constructor() {
                                 try {
                                     JSON_MAPPER.readValue(inputJson, JsonObject::class.java)
                                 } catch (e: Exception) {
-                                    throw AnthropicInvalidDataException(
-                                        "Unable to parse tool parameter JSON from model. Please retry your request or adjust your prompt. Error: ${e}. JSON: $inputJson"
-                                    )
+                                    // A stream cut off mid tool call (e.g. by `max_tokens`)
+                                    // legally ends on a fragment that can never parse. Keep the
+                                    // start block's empty-object input rather than throw, so the
+                                    // caller still gets a message whose `stop_reason` explains
+                                    // the truncation.
+                                    JsonObject.of(emptyMap())
                                 }
 
                         messageContent[index] =

@@ -481,9 +481,23 @@ class MessageAccumulator private constructor() {
                                 "Missing input JSON for index $index."
                             )
 
+                        // Anthropic Streaming Messages API: "the final `tool_use.input` is always
+                        // an _object_." However, if a tool function has no arguments, the
+                        // concatenated `inputJson` can be an empty string. In that case, interpret
+                        // it as an empty object.
                         val parsedInput =
                             if (inputJson.trim() == "") JsonObject.of(emptyMap())
-                            else JSON_MAPPER.readValue(inputJson, JsonObject::class.java)
+                            else
+                                try {
+                                    JSON_MAPPER.readValue(inputJson, JsonObject::class.java)
+                                } catch (e: Exception) {
+                                    // A stream cut off mid tool call (e.g. by `max_tokens`)
+                                    // legally ends on a fragment that can never parse. Keep the
+                                    // start block's empty-object input rather than throw, so the
+                                    // caller still gets a message whose `stop_reason` explains
+                                    // the truncation.
+                                    JsonObject.of(emptyMap())
+                                }
 
                         messageContent[index] =
                             when {
@@ -492,12 +506,6 @@ class MessageAccumulator private constructor() {
                                         oldContentBlock
                                             .asToolUse()
                                             .toBuilder()
-                                            // Anthropic Streaming Messages API: "the final
-                                            // `tool_use.input` is always an _object_."
-                                            // However, if a tool function has no arguments, the
-                                            // concatenated `inputJson` can be an
-                                            // empty string. In that case, interpret it as an empty
-                                            // object.
                                             .input(parsedInput)
                                             .build()
                                     )
@@ -506,7 +514,6 @@ class MessageAccumulator private constructor() {
                                         oldContentBlock
                                             .asServerToolUse()
                                             .toBuilder()
-                                            // See note above about empty `inputJson`.
                                             .input(parsedInput)
                                             .build()
                                     )
