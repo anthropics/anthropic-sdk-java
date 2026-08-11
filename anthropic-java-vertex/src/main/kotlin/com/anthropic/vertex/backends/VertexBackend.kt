@@ -29,6 +29,7 @@ private constructor(
     @get:JvmName("googleCredentials") val googleCredentials: GoogleCredentials,
     @get:JvmName("region") val region: String,
     @get:JvmName("project") val project: String,
+    private val baseUrlOverride: String?,
 ) : Backend {
 
     private val jsonMapper = jsonMapper()
@@ -45,12 +46,13 @@ private constructor(
     }
 
     override fun baseUrl(): String =
-        when (region) {
-            "global" -> "https://aiplatform.googleapis.com"
-            "us" -> "https://aiplatform.us.rep.googleapis.com"
-            "eu" -> "https://aiplatform.eu.rep.googleapis.com"
-            else -> "https://$region-aiplatform.googleapis.com"
-        }
+        baseUrlOverride
+            ?: when (region) {
+                "global" -> "https://aiplatform.googleapis.com"
+                "us" -> "https://aiplatform.us.rep.googleapis.com"
+                "eu" -> "https://aiplatform.eu.rep.googleapis.com"
+                else -> "https://$region-aiplatform.googleapis.com"
+            }
 
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val pathSegments = request.pathSegments
@@ -151,8 +153,8 @@ private constructor(
      *
      * The credentials can be extracted from the environment and set on the builder by calling
      * [fromEnv] before calling [build] to create the [VertexBackend]. Alternatively, set the Google
-     * credentials, region and project explicitly via [googleCredentials], [region] and [project]
-     * before calling [build].
+     * credentials, region and project explicitly via [googleCredentials], [region] and [project].
+     * If requests should use a non-standard endpoint, set [baseUrl] before calling [build].
      */
     class Builder internal constructor() {
         private var googleCredentials: GoogleCredentials? = null
@@ -160,6 +162,8 @@ private constructor(
         private var region: String? = null
 
         private var project: String? = null
+
+        private var baseUrlOverride: String? = null
 
         fun fromEnv() = apply {
             try {
@@ -189,11 +193,15 @@ private constructor(
 
         fun project(project: String) = apply { this.project = project }
 
+        /** Overrides the base URL for requests. */
+        fun baseUrl(baseUrl: String) = apply { this.baseUrlOverride = baseUrl }
+
         fun build(): VertexBackend =
             VertexBackend(
                 checkRequired("googleCredentials", googleCredentials),
                 checkRequired("region", region),
                 checkRequired("project", project),
+                baseUrlOverride,
             )
     }
 }
