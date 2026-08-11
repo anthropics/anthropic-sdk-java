@@ -77,6 +77,9 @@ internal constructor(
     /** @see BetaContentBlock.compaction */
     fun compaction(): Optional<BetaCompactionBlock> = rawContentBlock.compaction()
 
+    /** @see BetaContentBlock.type */
+    fun type(): BetaContentBlock.Type = rawContentBlock.type()
+
     /** @see BetaContentBlock.id */
     fun id(): Optional<String> = rawContentBlock.id()
 

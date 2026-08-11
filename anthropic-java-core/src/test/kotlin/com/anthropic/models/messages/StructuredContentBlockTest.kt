@@ -141,6 +141,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("textEditorCodeExecutionToolResult", OPTIONAL),
                 DelegationReadTestCase("toolSearchToolResult", OPTIONAL),
                 DelegationReadTestCase("containerUpload", OPTIONAL),
+                DelegationReadTestCase("type", ContentBlock.Type.TEXT),
                 DelegationReadTestCase("id", OPTIONAL),
                 DelegationReadTestCase("toolUseId", OPTIONAL),
                 // `isText()` is a special case and has its own test function.
