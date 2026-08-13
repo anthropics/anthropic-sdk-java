@@ -1,5 +1,39 @@
 # Changelog
 
+## 2.54.0 (2026-08-13)
+
+Full Changelog: [v2.53.0...v2.54.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.53.0...v2.54.0)
+
+### Features
+
+* **api:** add output_behavior to dream creation (create a new memory store or update the input store in place) ([a49ea9a](https://github.com/anthropics/anthropic-sdk-java/commit/a49ea9a1e98227e41e10055359608f419c18c86f))
+* **client:** add StructuredOutputConfig for combining Class&lt;T&gt; structured outputs with other output options ([#192](https://github.com/anthropics/anthropic-sdk-java/issues/192)) ([8caead3](https://github.com/anthropics/anthropic-sdk-java/commit/8caead30a1223b6fd83e8d8a87eb96593c3ef340))
+* **client:** typed discriminator enum accessor on discriminated unions ([3333df7](https://github.com/anthropics/anthropic-sdk-java/commit/3333df749ce9100c2cc4e917f384f31e5e080d36))
+* **vertex:** allow overriding the base URL ([#343](https://github.com/anthropics/anthropic-sdk-java/issues/343)) ([2663a25](https://github.com/anthropics/anthropic-sdk-java/commit/2663a2529dd4c3b79234efb3c0acd7d9b73c5811))
+
+
+### Bug Fixes
+
+* **client:** add models ([1c84fd2](https://github.com/anthropics/anthropic-sdk-java/commit/1c84fd2087cf14553c5a414880d96f9d878ae8cd))
+* **client:** align skills Body.of() with custom multipart files type ([#189](https://github.com/anthropics/anthropic-sdk-java/issues/189)) ([fd17ff7](https://github.com/anthropics/anthropic-sdk-java/commit/fd17ff7e00e9201116f828b2786e613cd37b621b))
+* **client:** convert enum values to the param enum class in toParam() ([31ca943](https://github.com/anthropics/anthropic-sdk-java/commit/31ca943ae2298c0030a225abb6b309437094bf22))
+* **client:** delegate type() in StructuredContentBlock wrappers ([#191](https://github.com/anthropics/anthropic-sdk-java/issues/191)) ([1194dae](https://github.com/anthropics/anthropic-sdk-java/commit/1194dae9b49ddb6874995bd59b223149744ffe94))
+* **client:** don't throw when accumulating a tool call truncated by max_tokens ([#200](https://github.com/anthropics/anthropic-sdk-java/issues/200)) ([711d1d8](https://github.com/anthropics/anthropic-sdk-java/commit/711d1d8ae64a64540c976f119290826cefef8970))
+* **messages:** accumulate an empty tool_use input as {} rather than missing ([#382](https://github.com/anthropics/anthropic-sdk-java/issues/382)) ([68c8ae1](https://github.com/anthropics/anthropic-sdk-java/commit/68c8ae16fa7f8fdc1473129e66942584f09c0967))
+* **streaming:** apply all message_delta fields when accumulating streamed messages ([#197](https://github.com/anthropics/anthropic-sdk-java/issues/197)) ([4530957](https://github.com/anthropics/anthropic-sdk-java/commit/4530957b94df8506cce2334e017d2ce71ee80878))
+
+
+### Chores
+
+* **ci:** run breaking-change detection as a ci.yml job on every push ([db3a17b](https://github.com/anthropics/anthropic-sdk-java/commit/db3a17bbe81575625036f82e6f0d3e3d7dd03061))
+* **internal:** codegen related update ([0f36423](https://github.com/anthropics/anthropic-sdk-java/commit/0f36423f144bb63574d4eec1344716ecf6206f3c))
+
+
+### Documentation
+
+* **api:** clarify that user profile name is optional for resold profiles ([ab0287e](https://github.com/anthropics/anthropic-sdk-java/commit/ab0287ee203189c59a0dc5906f01cf8efd9ee029))
+* **contributing:** describe the mock server the scripts actually run ([#384](https://github.com/anthropics/anthropic-sdk-java/issues/384)) ([0a17d61](https://github.com/anthropics/anthropic-sdk-java/commit/0a17d61a054621b4edad76011027bceceeb20843))
+
 ## 2.53.0 (2026-08-07)
 
 Full Changelog: [v2.52.0...v2.53.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.52.0...v2.53.0)
