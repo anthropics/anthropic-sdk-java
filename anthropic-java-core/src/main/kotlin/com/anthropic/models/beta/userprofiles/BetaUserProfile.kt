@@ -137,8 +137,8 @@ private constructor(
     fun externalId(): Optional<String> = externalId.getOptional("external_id")
 
     /**
-     * Display name of the entity this profile represents. For `resold` this is the resold-to
-     * company's name.
+     * Real-world name of the entity this profile represents (company or individual). For `resold`
+     * this is the resold-to company's name.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -387,8 +387,8 @@ private constructor(
         fun externalId(externalId: JsonField<String>) = apply { this.externalId = externalId }
 
         /**
-         * Display name of the entity this profile represents. For `resold` this is the resold-to
-         * company's name.
+         * Real-world name of the entity this profile represents (company or individual). For
+         * `resold` this is the resold-to company's name.
          */
         fun name(name: String?) = name(JsonField.ofNullable(name))
 
