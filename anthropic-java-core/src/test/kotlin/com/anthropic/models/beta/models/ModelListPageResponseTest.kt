@@ -16,7 +16,7 @@ internal class ModelListPageResponseTest {
             ModelListPageResponse.builder()
                 .addData(
                     BetaModelInfo.builder()
-                        .id("claude-opus-4-6")
+                        .id("claude-opus-5")
                         .addAllowedFallbackModel("string")
                         .capabilities(
                             BetaModelCapabilities.builder()
@@ -57,8 +57,8 @@ internal class ModelListPageResponseTest {
                                 )
                                 .build()
                         )
-                        .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-                        .displayName("Claude Opus 4.6")
+                        .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                        .displayName("Claude Opus 5")
                         .maxInputTokens(0L)
                         .maxTokens(0L)
                         .build()
@@ -71,7 +71,7 @@ internal class ModelListPageResponseTest {
         assertThat(modelListPageResponse.data())
             .containsExactly(
                 BetaModelInfo.builder()
-                    .id("claude-opus-4-6")
+                    .id("claude-opus-5")
                     .addAllowedFallbackModel("string")
                     .capabilities(
                         BetaModelCapabilities.builder()
@@ -112,8 +112,8 @@ internal class ModelListPageResponseTest {
                             )
                             .build()
                     )
-                    .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-                    .displayName("Claude Opus 4.6")
+                    .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                    .displayName("Claude Opus 5")
                     .maxInputTokens(0L)
                     .maxTokens(0L)
                     .build()
@@ -130,7 +130,7 @@ internal class ModelListPageResponseTest {
             ModelListPageResponse.builder()
                 .addData(
                     BetaModelInfo.builder()
-                        .id("claude-opus-4-6")
+                        .id("claude-opus-5")
                         .addAllowedFallbackModel("string")
                         .capabilities(
                             BetaModelCapabilities.builder()
@@ -171,8 +171,8 @@ internal class ModelListPageResponseTest {
                                 )
                                 .build()
                         )
-                        .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-                        .displayName("Claude Opus 4.6")
+                        .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                        .displayName("Claude Opus 5")
                         .maxInputTokens(0L)
                         .maxTokens(0L)
                         .build()

@@ -18,7 +18,7 @@ internal class MessageCountTokensParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .userProfileId("anthropic-user-profile-id")
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_OPUS_4_6)
+            .model(Model.CLAUDE_OPUS_5)
             .cacheControl(
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -140,7 +140,7 @@ internal class MessageCountTokensParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .userProfileId("anthropic-user-profile-id")
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -272,7 +272,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .build()
 
         val headers = params._headers()
@@ -287,7 +287,7 @@ internal class MessageCountTokensParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .userProfileId("anthropic-user-profile-id")
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -412,7 +412,7 @@ internal class MessageCountTokensParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5)
         assertThat(body.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
@@ -550,7 +550,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .build()
 
         val body = params._body()
@@ -562,6 +562,6 @@ internal class MessageCountTokensParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5)
     }
 }

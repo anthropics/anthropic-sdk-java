@@ -51,7 +51,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -120,7 +119,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -183,7 +181,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -262,7 +259,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -333,7 +329,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -375,7 +370,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -428,7 +422,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -492,7 +485,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -556,7 +548,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -629,7 +620,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -701,7 +691,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -767,7 +756,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -834,7 +822,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -902,7 +889,6 @@ internal class ContentBlockParamTest {
             .contains(textEditorCodeExecutionToolResult)
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -971,7 +957,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).contains(toolSearchToolResult)
         assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -1032,7 +1017,6 @@ internal class ContentBlockParamTest {
         assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
         assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
         assertThat(contentBlockParam.containerUpload()).contains(containerUpload)
-        assertThat(contentBlockParam.midConvSystem()).isEmpty
     }
 
     @Test
@@ -1042,97 +1026,6 @@ internal class ContentBlockParamTest {
             ContentBlockParam.ofContainerUpload(
                 ContainerUploadBlockParam.builder()
                     .fileId("file_id")
-                    .cacheControl(
-                        CacheControlEphemeral.builder()
-                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
-                            .build()
-                    )
-                    .build()
-            )
-
-        val roundtrippedContentBlockParam =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(contentBlockParam),
-                jacksonTypeRef<ContentBlockParam>(),
-            )
-
-        assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
-    }
-
-    @Test
-    fun ofMidConvSystem() {
-        val midConvSystem =
-            MidConversationSystemBlockParam.builder()
-                .addContent(
-                    TextBlockParam.builder()
-                        .text("x")
-                        .cacheControl(
-                            CacheControlEphemeral.builder()
-                                .ttl(CacheControlEphemeral.Ttl.TTL_5M)
-                                .build()
-                        )
-                        .addCitation(
-                            CitationCharLocationParam.builder()
-                                .citedText("The grass is green. The sky is blue.")
-                                .documentIndex(0L)
-                                .documentTitle("x")
-                                .endCharIndex(0L)
-                                .startCharIndex(0L)
-                                .build()
-                        )
-                        .build()
-                )
-                .cacheControl(
-                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
-                )
-                .build()
-
-        val contentBlockParam = ContentBlockParam.ofMidConvSystem(midConvSystem)
-
-        assertThat(contentBlockParam.text()).isEmpty
-        assertThat(contentBlockParam.image()).isEmpty
-        assertThat(contentBlockParam.document()).isEmpty
-        assertThat(contentBlockParam.searchResult()).isEmpty
-        assertThat(contentBlockParam.thinking()).isEmpty
-        assertThat(contentBlockParam.redactedThinking()).isEmpty
-        assertThat(contentBlockParam.toolUse()).isEmpty
-        assertThat(contentBlockParam.toolResult()).isEmpty
-        assertThat(contentBlockParam.serverToolUse()).isEmpty
-        assertThat(contentBlockParam.webSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.webFetchToolResult()).isEmpty
-        assertThat(contentBlockParam.codeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.bashCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.textEditorCodeExecutionToolResult()).isEmpty
-        assertThat(contentBlockParam.toolSearchToolResult()).isEmpty
-        assertThat(contentBlockParam.containerUpload()).isEmpty
-        assertThat(contentBlockParam.midConvSystem()).contains(midConvSystem)
-    }
-
-    @Test
-    fun ofMidConvSystemRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val contentBlockParam =
-            ContentBlockParam.ofMidConvSystem(
-                MidConversationSystemBlockParam.builder()
-                    .addContent(
-                        TextBlockParam.builder()
-                            .text("x")
-                            .cacheControl(
-                                CacheControlEphemeral.builder()
-                                    .ttl(CacheControlEphemeral.Ttl.TTL_5M)
-                                    .build()
-                            )
-                            .addCitation(
-                                CitationCharLocationParam.builder()
-                                    .citedText("The grass is green. The sky is blue.")
-                                    .documentIndex(0L)
-                                    .documentTitle("x")
-                                    .endCharIndex(0L)
-                                    .startCharIndex(0L)
-                                    .build()
-                            )
-                            .build()
-                    )
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)

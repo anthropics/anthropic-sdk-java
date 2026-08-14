@@ -99,7 +99,7 @@ private constructor(
         mcpServers.getOptional("mcp_servers")
 
     /**
-     * Replacement model. Accepts the model string, e.g. `claude-opus-4-6`, or a `model_config`
+     * Replacement model. Accepts the model string, e.g. `claude-opus-5`, or a `model_config`
      * object. Omit to use the agent's model.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -319,7 +319,7 @@ private constructor(
         }
 
         /**
-         * Replacement model. Accepts the model string, e.g. `claude-opus-4-6`, or a `model_config`
+         * Replacement model. Accepts the model string, e.g. `claude-opus-5`, or a `model_config`
          * object. Omit to use the agent's model.
          */
         fun model(model: Model) = model(JsonField.of(model))
@@ -730,7 +730,7 @@ private constructor(
     }
 
     /**
-     * Replacement model. Accepts the model string, e.g. `claude-opus-4-6`, or a `model_config`
+     * Replacement model. Accepts the model string, e.g. `claude-opus-5`, or a `model_config`
      * object. Omit to use the agent's model.
      */
     @JsonDeserialize(using = Model.Deserializer::class)

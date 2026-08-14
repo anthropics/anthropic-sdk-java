@@ -864,7 +864,7 @@ import com.anthropic.models.messages.Model;
 
 MessageCreateParams params = MessageCreateParams.builder()
     .addUserMessage("Hello, world")
-    .model(Model.CLAUDE_OPUS_4_6)
+    .model(Model.CLAUDE_OPUS_5)
     .maxTokens(JsonMissing.of())
     .build();
 ```

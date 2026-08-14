@@ -49,7 +49,6 @@ private constructor(
     private val mcpToolResult: BetaRequestMcpToolResultBlockParam? = null,
     private val containerUpload: BetaContainerUploadBlockParam? = null,
     private val compaction: BetaCompactionBlockParam? = null,
-    private val midConvSystem: BetaMidConversationSystemBlockParam? = null,
     private val toolAddition: BetaRequestToolAdditionBlock? = null,
     private val toolRemoval: BetaRequestToolRemovalBlock? = null,
     private val fallback: BetaFallbackBlockParam? = null,
@@ -124,10 +123,6 @@ private constructor(
 
                 override fun visitCompaction(compaction: BetaCompactionBlockParam): Type =
                     Type.COMPACTION
-
-                override fun visitMidConvSystem(
-                    midConvSystem: BetaMidConversationSystemBlockParam
-                ): Type = Type.MID_CONV_SYSTEM
 
                 override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock): Type =
                     Type.TOOL_ADDITION
@@ -227,10 +222,6 @@ private constructor(
                     compaction: BetaCompactionBlockParam
                 ): Optional<BetaCacheControlEphemeral> = compaction.cacheControl()
 
-                override fun visitMidConvSystem(
-                    midConvSystem: BetaMidConversationSystemBlockParam
-                ): Optional<BetaCacheControlEphemeral> = midConvSystem.cacheControl()
-
                 override fun visitToolAddition(
                     toolAddition: BetaRequestToolAdditionBlock
                 ): Optional<BetaCacheControlEphemeral> = toolAddition.cacheControl()
@@ -322,10 +313,6 @@ private constructor(
 
                 override fun visitCompaction(
                     compaction: BetaCompactionBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitMidConvSystem(
-                    midConvSystem: BetaMidConversationSystemBlockParam
                 ): Optional<String> = Optional.empty()
 
                 override fun visitToolAddition(
@@ -420,10 +407,6 @@ private constructor(
                     compaction: BetaCompactionBlockParam
                 ): Optional<String> = Optional.empty()
 
-                override fun visitMidConvSystem(
-                    midConvSystem: BetaMidConversationSystemBlockParam
-                ): Optional<String> = Optional.empty()
-
                 override fun visitToolAddition(
                     toolAddition: BetaRequestToolAdditionBlock
                 ): Optional<String> = Optional.empty()
@@ -514,10 +497,6 @@ private constructor(
 
                 override fun visitCompaction(
                     compaction: BetaCompactionBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitMidConvSystem(
-                    midConvSystem: BetaMidConversationSystemBlockParam
                 ): Optional<String> = Optional.empty()
 
                 override fun visitToolAddition(
@@ -612,10 +591,6 @@ private constructor(
                     compaction: BetaCompactionBlockParam
                 ): Optional<Boolean> = Optional.empty()
 
-                override fun visitMidConvSystem(
-                    midConvSystem: BetaMidConversationSystemBlockParam
-                ): Optional<Boolean> = Optional.empty()
-
                 override fun visitToolAddition(
                     toolAddition: BetaRequestToolAdditionBlock
                 ): Optional<Boolean> = Optional.empty()
@@ -705,15 +680,6 @@ private constructor(
     fun compaction(): Optional<BetaCompactionBlockParam> = Optional.ofNullable(compaction)
 
     /**
-     * System instructions that appear mid-conversation.
-     *
-     * Use this block to provide or update system-level instructions at a specific point in the
-     * conversation, rather than only via the top-level `system` parameter.
-     */
-    fun midConvSystem(): Optional<BetaMidConversationSystemBlockParam> =
-        Optional.ofNullable(midConvSystem)
-
-    /**
      * Mid-conversation directive to surface a declared tool.
      *
      * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
@@ -783,8 +749,6 @@ private constructor(
     fun isContainerUpload(): Boolean = containerUpload != null
 
     fun isCompaction(): Boolean = compaction != null
-
-    fun isMidConvSystem(): Boolean = midConvSystem != null
 
     fun isToolAddition(): Boolean = toolAddition != null
 
@@ -865,15 +829,6 @@ private constructor(
      * no-ops. Empty string content is not allowed.
      */
     fun asCompaction(): BetaCompactionBlockParam = compaction.getOrThrow("compaction")
-
-    /**
-     * System instructions that appear mid-conversation.
-     *
-     * Use this block to provide or update system-level instructions at a specific point in the
-     * conversation, rather than only via the top-level `system` parameter.
-     */
-    fun asMidConvSystem(): BetaMidConversationSystemBlockParam =
-        midConvSystem.getOrThrow("midConvSystem")
 
     /**
      * Mid-conversation directive to surface a declared tool.
@@ -962,7 +917,6 @@ private constructor(
             mcpToolResult != null -> visitor.visitMcpToolResult(mcpToolResult)
             containerUpload != null -> visitor.visitContainerUpload(containerUpload)
             compaction != null -> visitor.visitCompaction(compaction)
-            midConvSystem != null -> visitor.visitMidConvSystem(midConvSystem)
             toolAddition != null -> visitor.visitToolAddition(toolAddition)
             toolRemoval != null -> visitor.visitToolRemoval(toolRemoval)
             fallback != null -> visitor.visitFallback(fallback)
@@ -1083,12 +1037,6 @@ private constructor(
                     compaction.validate()
                 }
 
-                override fun visitMidConvSystem(
-                    midConvSystem: BetaMidConversationSystemBlockParam
-                ) {
-                    midConvSystem.validate()
-                }
-
                 override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock) {
                     toolAddition.validate()
                 }
@@ -1186,10 +1134,6 @@ private constructor(
                 override fun visitCompaction(compaction: BetaCompactionBlockParam) =
                     compaction.validity()
 
-                override fun visitMidConvSystem(
-                    midConvSystem: BetaMidConversationSystemBlockParam
-                ) = midConvSystem.validity()
-
                 override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock) =
                     toolAddition.validity()
 
@@ -1228,7 +1172,6 @@ private constructor(
             mcpToolResult == other.mcpToolResult &&
             containerUpload == other.containerUpload &&
             compaction == other.compaction &&
-            midConvSystem == other.midConvSystem &&
             toolAddition == other.toolAddition &&
             toolRemoval == other.toolRemoval &&
             fallback == other.fallback
@@ -1256,7 +1199,6 @@ private constructor(
             mcpToolResult,
             containerUpload,
             compaction,
-            midConvSystem,
             toolAddition,
             toolRemoval,
             fallback,
@@ -1291,7 +1233,6 @@ private constructor(
             mcpToolResult != null -> "BetaContentBlockParam{mcpToolResult=$mcpToolResult}"
             containerUpload != null -> "BetaContentBlockParam{containerUpload=$containerUpload}"
             compaction != null -> "BetaContentBlockParam{compaction=$compaction}"
-            midConvSystem != null -> "BetaContentBlockParam{midConvSystem=$midConvSystem}"
             toolAddition != null -> "BetaContentBlockParam{toolAddition=$toolAddition}"
             toolRemoval != null -> "BetaContentBlockParam{toolRemoval=$toolRemoval}"
             fallback != null -> "BetaContentBlockParam{fallback=$fallback}"
@@ -1459,24 +1400,6 @@ private constructor(
             BetaContentBlockParam(compaction = compaction)
 
         /**
-         * System instructions that appear mid-conversation.
-         *
-         * Use this block to provide or update system-level instructions at a specific point in the
-         * conversation, rather than only via the top-level `system` parameter.
-         */
-        @JvmStatic
-        fun ofMidConvSystem(midConvSystem: BetaMidConversationSystemBlockParam) =
-            BetaContentBlockParam(midConvSystem = midConvSystem)
-
-        /**
-         * Returns an immutable instance of [BetaContentBlockParam] whose [ofMidConvSystem] variant
-         * is built from the given required [content].
-         */
-        @JvmStatic
-        fun ofMidConvSystem(content: List<BetaMidConversationSystemBlockParam.Content>) =
-            ofMidConvSystem(BetaMidConversationSystemBlockParam.of(content))
-
-        /**
          * Mid-conversation directive to surface a declared tool.
          *
          * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
@@ -1605,14 +1528,6 @@ private constructor(
          * as no-ops. Empty string content is not allowed.
          */
         fun visitCompaction(compaction: BetaCompactionBlockParam): T
-
-        /**
-         * System instructions that appear mid-conversation.
-         *
-         * Use this block to provide or update system-level instructions at a specific point in the
-         * conversation, rather than only via the top-level `system` parameter.
-         */
-        fun visitMidConvSystem(midConvSystem: BetaMidConversationSystemBlockParam): T
 
         /**
          * Mid-conversation directive to surface a declared tool.
@@ -1788,14 +1703,6 @@ private constructor(
                         BetaContentBlockParam(compaction = it, _json = json)
                     } ?: BetaContentBlockParam(_json = json)
                 }
-                "mid_conv_system" -> {
-                    return tryDeserialize(
-                            node,
-                            jacksonTypeRef<BetaMidConversationSystemBlockParam>(),
-                        )
-                        ?.let { BetaContentBlockParam(midConvSystem = it, _json = json) }
-                        ?: BetaContentBlockParam(_json = json)
-                }
                 "tool_addition" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaRequestToolAdditionBlock>())
                         ?.let { BetaContentBlockParam(toolAddition = it, _json = json) }
@@ -1851,7 +1758,6 @@ private constructor(
                 value.mcpToolResult != null -> generator.writeObject(value.mcpToolResult)
                 value.containerUpload != null -> generator.writeObject(value.containerUpload)
                 value.compaction != null -> generator.writeObject(value.compaction)
-                value.midConvSystem != null -> generator.writeObject(value.midConvSystem)
                 value.toolAddition != null -> generator.writeObject(value.toolAddition)
                 value.toolRemoval != null -> generator.writeObject(value.toolRemoval)
                 value.fallback != null -> generator.writeObject(value.fallback)
@@ -1917,8 +1823,6 @@ private constructor(
 
             @JvmField val COMPACTION = of("compaction")
 
-            @JvmField val MID_CONV_SYSTEM = of("mid_conv_system")
-
             @JvmField val TOOL_ADDITION = of("tool_addition")
 
             @JvmField val TOOL_REMOVAL = of("tool_removal")
@@ -1954,7 +1858,6 @@ private constructor(
             MCP_TOOL_RESULT,
             CONTAINER_UPLOAD,
             COMPACTION,
-            MID_CONV_SYSTEM,
             TOOL_ADDITION,
             TOOL_REMOVAL,
             FALLBACK,
@@ -1990,7 +1893,6 @@ private constructor(
             MCP_TOOL_RESULT,
             CONTAINER_UPLOAD,
             COMPACTION,
-            MID_CONV_SYSTEM,
             TOOL_ADDITION,
             TOOL_REMOVAL,
             FALLBACK,
@@ -2028,7 +1930,6 @@ private constructor(
                 MCP_TOOL_RESULT -> Value.MCP_TOOL_RESULT
                 CONTAINER_UPLOAD -> Value.CONTAINER_UPLOAD
                 COMPACTION -> Value.COMPACTION
-                MID_CONV_SYSTEM -> Value.MID_CONV_SYSTEM
                 TOOL_ADDITION -> Value.TOOL_ADDITION
                 TOOL_REMOVAL -> Value.TOOL_REMOVAL
                 FALLBACK -> Value.FALLBACK
@@ -2067,7 +1968,6 @@ private constructor(
                 MCP_TOOL_RESULT -> Known.MCP_TOOL_RESULT
                 CONTAINER_UPLOAD -> Known.CONTAINER_UPLOAD
                 COMPACTION -> Known.COMPACTION
-                MID_CONV_SYSTEM -> Known.MID_CONV_SYSTEM
                 TOOL_ADDITION -> Known.TOOL_ADDITION
                 TOOL_REMOVAL -> Known.TOOL_REMOVAL
                 FALLBACK -> Known.FALLBACK

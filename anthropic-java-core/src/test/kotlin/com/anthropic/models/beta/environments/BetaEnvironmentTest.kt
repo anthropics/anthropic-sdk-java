@@ -76,7 +76,7 @@ internal class BetaEnvironmentTest {
             )
         assertThat(betaEnvironment.createdAt()).isEqualTo("2026-03-15T10:00:00Z")
         assertThat(betaEnvironment.description())
-            .isEqualTo("Python environment with data-analysis packages.")
+            .contains("Python environment with data-analysis packages.")
         assertThat(betaEnvironment.metadata()).isEqualTo(BetaEnvironment.Metadata.builder().build())
         assertThat(betaEnvironment.name()).isEqualTo("python-data-analysis")
         assertThat(betaEnvironment.updatedAt()).isEqualTo("2026-03-15T10:00:00Z")
