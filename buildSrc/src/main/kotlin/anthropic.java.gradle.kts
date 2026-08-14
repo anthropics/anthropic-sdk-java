@@ -92,7 +92,7 @@ dependencies {
     // SLF4J lazily initializes on the first `LoggerFactory.getLogger` call in
     // the JVM and, without a provider, prints a warning to stderr. That warning
     // corrupts tests that capture and assert on exact stderr contents when
-    // another test races the initialization. Binding a no-op provider keeps
+    // another test races the initialization. Binding a no-op provider keeps
     // SLF4J silent.
     testRuntimeOnly(lib("slf4j-nop"))
 
@@ -147,9 +147,12 @@ fun registerPalantir(
         inputs.files(javaFiles).withPathSensitivity(PathSensitivity.RELATIVE)
         // Declaring the stamp file as an output lets Gradle build-cache the lint result by source
         // content, so unchanged sources resolve FROM-CACHE on CI where `build/` is not preserved.
-        // `format` mutates sources in place, so only `lint` is safe to cache.
+        // `format` mutates sources in place, so only `lint` is safe to cache, and it must rerun
+        // even when its inputs match the last run's (a file regenerated back to the same
+        // unformatted content would otherwise be reported up to date and left unformatted).
         outputs.file(lastRunTimeFile)
         outputs.cacheIf { name == "lint" }
+        outputs.upToDateWhen { name == "lint" }
 
         doFirst {
             // Create the argument file and set the preferred formatting style.
