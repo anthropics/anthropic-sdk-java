@@ -17,7 +17,6 @@ import com.anthropic.models.beta.messages.BetaFallbackBlockParam
 import com.anthropic.models.beta.messages.BetaImageBlockParam
 import com.anthropic.models.beta.messages.BetaMcpToolUseBlockParam
 import com.anthropic.models.beta.messages.BetaMessageParam
-import com.anthropic.models.beta.messages.BetaMidConversationSystemBlockParam
 import com.anthropic.models.beta.messages.BetaPlainTextSource
 import com.anthropic.models.beta.messages.BetaRedactedThinkingBlockParam
 import com.anthropic.models.beta.messages.BetaRequestDocumentBlock
@@ -367,10 +366,6 @@ object BetaMcp {
 
                 override fun visitFallback(fallback: BetaFallbackBlockParam) =
                     unsupported("fallback")
-
-                override fun visitMidConvSystem(
-                    midConvSystem: BetaMidConversationSystemBlockParam
-                ) = unsupported("mid_conv_system")
 
                 override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock) =
                     unsupported("tool_addition")

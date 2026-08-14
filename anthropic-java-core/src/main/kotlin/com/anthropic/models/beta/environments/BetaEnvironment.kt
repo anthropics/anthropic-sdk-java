@@ -109,12 +109,12 @@ private constructor(
     fun createdAt(): String = createdAt.getRequired("created_at")
 
     /**
-     * User-provided description for the environment
+     * User-provided description for the environment; null when unset
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
-    fun description(): String = description.getRequired("description")
+    fun description(): Optional<String> = description.getOptional("description")
 
     /**
      * User-provided metadata key-value pairs
@@ -342,8 +342,11 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<String>) = apply { this.createdAt = createdAt }
 
-        /** User-provided description for the environment */
-        fun description(description: String) = description(JsonField.of(description))
+        /** User-provided description for the environment; null when unset */
+        fun description(description: String?) = description(JsonField.ofNullable(description))
+
+        /** Alias for calling [Builder.description] with `description.orElse(null)`. */
+        fun description(description: Optional<String>) = description(description.getOrNull())
 
         /**
          * Sets [Builder.description] to an arbitrary JSON value.

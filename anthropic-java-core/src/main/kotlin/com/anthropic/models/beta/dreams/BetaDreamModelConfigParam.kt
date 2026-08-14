@@ -34,7 +34,7 @@ private constructor(
     ) : this(id, speed, mutableMapOf())
 
     /**
-     * Model identifier, e.g. "claude-opus-4-7". 1-256 characters.
+     * Model identifier, e.g. "claude-opus-5". 1-256 characters.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -109,7 +109,7 @@ private constructor(
             additionalProperties = betaDreamModelConfigParam.additionalProperties.toMutableMap()
         }
 
-        /** Model identifier, e.g. "claude-opus-4-7". 1-256 characters. */
+        /** Model identifier, e.g. "claude-opus-5". 1-256 characters. */
         fun id(id: String) = id(JsonField.of(id))
 
         /**

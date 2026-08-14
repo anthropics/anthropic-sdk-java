@@ -32,7 +32,7 @@ internal class AgentUpdateParamsTest {
             )
             .model(
                 BetaManagedAgentsModelConfigParams.builder()
-                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                     .effort(
                         BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW
                     )
@@ -122,7 +122,7 @@ internal class AgentUpdateParamsTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                         .effort(
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW
@@ -222,7 +222,7 @@ internal class AgentUpdateParamsTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                         .effort(
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW
@@ -305,7 +305,7 @@ internal class AgentUpdateParamsTest {
             .contains(
                 AgentUpdateParams.Model.ofBetaManagedAgentsModelConfigParams(
                     BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                         .effort(
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW

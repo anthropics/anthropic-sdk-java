@@ -19,7 +19,7 @@ internal class BetaRefusalStopDetailsTest {
                 )
                 .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                 .fallbackHasPrefillClaim(true)
-                .recommendedModel("claude-sonnet-4-6")
+                .recommendedModel("claude-opus-4-8")
                 .build()
 
         assertThat(betaRefusalStopDetails.category())
@@ -31,7 +31,7 @@ internal class BetaRefusalStopDetailsTest {
         assertThat(betaRefusalStopDetails.fallbackCreditToken())
             .contains("QW50aHJvcGljL0NsYXVkZQ==")
         assertThat(betaRefusalStopDetails.fallbackHasPrefillClaim()).contains(true)
-        assertThat(betaRefusalStopDetails.recommendedModel()).contains("claude-sonnet-4-6")
+        assertThat(betaRefusalStopDetails.recommendedModel()).contains("claude-opus-4-8")
     }
 
     @Test
@@ -45,7 +45,7 @@ internal class BetaRefusalStopDetailsTest {
                 )
                 .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                 .fallbackHasPrefillClaim(true)
-                .recommendedModel("claude-sonnet-4-6")
+                .recommendedModel("claude-opus-4-8")
                 .build()
 
         val roundtrippedBetaRefusalStopDetails =

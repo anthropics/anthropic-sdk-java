@@ -40,7 +40,7 @@ internal class AgentServiceAsyncTest {
             agentServiceAsync.create(
                 AgentCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
-                    .model(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                    .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                     .name("My First Agent")
                     .description("A general-purpose starter agent.")
                     .addMcpServer(
@@ -164,7 +164,7 @@ internal class AgentServiceAsyncTest {
                     )
                     .model(
                         BetaManagedAgentsModelConfigParams.builder()
-                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_8)
+                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                             .effort(
                                 BetaManagedAgentsModelConfigParams.Effort
                                     .BetaManagedAgentsEffortLevel

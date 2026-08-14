@@ -16,7 +16,7 @@ internal class ModelListPageResponseTest {
             ModelListPageResponse.builder()
                 .addData(
                     ModelInfo.builder()
-                        .id("claude-opus-4-6")
+                        .id("claude-opus-5")
                         .capabilities(
                             ModelCapabilities.builder()
                                 .batch(CapabilitySupport.of(true))
@@ -56,8 +56,8 @@ internal class ModelListPageResponseTest {
                                 )
                                 .build()
                         )
-                        .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-                        .displayName("Claude Opus 4.6")
+                        .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                        .displayName("Claude Opus 5")
                         .maxInputTokens(0L)
                         .maxTokens(0L)
                         .build()
@@ -70,7 +70,7 @@ internal class ModelListPageResponseTest {
         assertThat(modelListPageResponse.data())
             .containsExactly(
                 ModelInfo.builder()
-                    .id("claude-opus-4-6")
+                    .id("claude-opus-5")
                     .capabilities(
                         ModelCapabilities.builder()
                             .batch(CapabilitySupport.of(true))
@@ -110,8 +110,8 @@ internal class ModelListPageResponseTest {
                             )
                             .build()
                     )
-                    .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-                    .displayName("Claude Opus 4.6")
+                    .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                    .displayName("Claude Opus 5")
                     .maxInputTokens(0L)
                     .maxTokens(0L)
                     .build()
@@ -128,7 +128,7 @@ internal class ModelListPageResponseTest {
             ModelListPageResponse.builder()
                 .addData(
                     ModelInfo.builder()
-                        .id("claude-opus-4-6")
+                        .id("claude-opus-5")
                         .capabilities(
                             ModelCapabilities.builder()
                                 .batch(CapabilitySupport.of(true))
@@ -168,8 +168,8 @@ internal class ModelListPageResponseTest {
                                 )
                                 .build()
                         )
-                        .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-                        .displayName("Claude Opus 4.6")
+                        .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                        .displayName("Claude Opus 5")
                         .maxInputTokens(0L)
                         .maxTokens(0L)
                         .build()

@@ -15,7 +15,7 @@ internal class MessageCountTokensParamsTest {
         MessageCountTokensParams.builder()
             .userProfileId("anthropic-user-profile-id")
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_OPUS_4_6)
+            .model(Model.CLAUDE_OPUS_5)
             .cacheControl(
                 CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
             )
@@ -99,7 +99,7 @@ internal class MessageCountTokensParamsTest {
             MessageCountTokensParams.builder()
                 .userProfileId("anthropic-user-profile-id")
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -191,7 +191,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .build()
 
         val headers = params._headers()
@@ -205,7 +205,7 @@ internal class MessageCountTokensParamsTest {
             MessageCountTokensParams.builder()
                 .userProfileId("anthropic-user-profile-id")
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -288,7 +288,7 @@ internal class MessageCountTokensParamsTest {
             .containsExactly(
                 MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5)
         assertThat(body.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(body.outputConfig())
@@ -382,7 +382,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .build()
 
         val body = params._body()
@@ -391,6 +391,6 @@ internal class MessageCountTokensParamsTest {
             .containsExactly(
                 MessageParam.builder().content("Hello, world").role(MessageParam.Role.USER).build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5)
     }
 }

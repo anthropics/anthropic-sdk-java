@@ -2732,7 +2732,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                                 .effort(
                                     BetaManagedAgentsEffortLow.of(
                                         BetaManagedAgentsEffortLow.Type.LOW
@@ -2761,7 +2761,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                                         )
                                         .model(
                                             BetaManagedAgentsModelConfig.builder()
-                                                .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                                                 .effort(
                                                     BetaManagedAgentsEffortLow.of(
                                                         BetaManagedAgentsEffortLow.Type.LOW
@@ -2964,7 +2964,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                             )
                             .model(
                                 BetaManagedAgentsModelConfig.builder()
-                                    .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                                     .effort(
                                         BetaManagedAgentsEffortLow.of(
                                             BetaManagedAgentsEffortLow.Type.LOW
@@ -2994,7 +2994,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                                             )
                                             .model(
                                                 BetaManagedAgentsModelConfig.builder()
-                                                    .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                                                     .effort(
                                                         BetaManagedAgentsEffortLow.of(
                                                             BetaManagedAgentsEffortLow.Type.LOW

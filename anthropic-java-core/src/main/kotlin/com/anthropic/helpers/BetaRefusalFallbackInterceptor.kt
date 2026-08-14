@@ -33,7 +33,6 @@ import com.anthropic.models.beta.messages.BetaImageBlockParam
 import com.anthropic.models.beta.messages.BetaMcpToolUseBlockParam
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageIterationUsage
-import com.anthropic.models.beta.messages.BetaMidConversationSystemBlockParam
 import com.anthropic.models.beta.messages.BetaRawContentBlockStartEvent
 import com.anthropic.models.beta.messages.BetaRawContentBlockStopEvent
 import com.anthropic.models.beta.messages.BetaRawMessageDeltaEvent
@@ -642,9 +641,6 @@ private constructor(
                 TrimClassification.KEEP
 
             override fun visitCompaction(compaction: BetaCompactionBlockParam) =
-                TrimClassification.KEEP
-
-            override fun visitMidConvSystem(midConvSystem: BetaMidConversationSystemBlockParam) =
                 TrimClassification.KEEP
 
             override fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock) =

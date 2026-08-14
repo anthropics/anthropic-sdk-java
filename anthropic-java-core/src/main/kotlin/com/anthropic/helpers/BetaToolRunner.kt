@@ -239,23 +239,6 @@ internal constructor(
                 block.asToolRemoval().tool().referencedToolName()?.let(available::remove)
             block.isToolAddition() ->
                 block.asToolAddition().tool().referencedToolName()?.let(available::add)
-            block.isMidConvSystem() ->
-                block.asMidConvSystem().content().forEach { applyToolChange(it, available) }
-            else -> Unit // other and unknown block types are ignored for forward compatibility
-        }
-    }
-
-    /** Twin of [applyToolChange] over the nested `mid_conv_system` content union. */
-    private fun applyToolChange(
-        block: BetaMidConversationSystemBlockParam.Content,
-        available: MutableSet<String>,
-    ) {
-        when {
-            block.isToolRemoval() ->
-                block.asToolRemoval().tool().referencedToolName()?.let(available::remove)
-            block.isToolAddition() ->
-                block.asToolAddition().tool().referencedToolName()?.let(available::add)
-            else -> Unit // other and unknown block types are ignored for forward compatibility
         }
     }
 
