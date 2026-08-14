@@ -33,3 +33,11 @@ dependencies {
     testImplementation(libs.findLibrary("assertj").get())
     testRuntimeOnly(libs.findLibrary("junit-jupiter-engine").get())
 }
+
+tasks.test {
+    // detekt-test resolves the snippet compiler's JDK from the `JAVA_HOME` environment variable and only
+    // falls back to the test JVM when it's unset. When the environment exports a `JAVA_HOME` that isn't a
+    // full JDK home (or differs from the toolchain running the tests), type resolution silently breaks and
+    // every rule that relies on it misfires. Pin it to the JDK actually running the tests.
+    doFirst { environment("JAVA_HOME", javaLauncher.get().metadata.installationPath.asFile.absolutePath) }
+}

@@ -80,6 +80,11 @@ style:
     ignoreAnnotated: ['JsonAnySetter', 'JsonCreator', 'JsonProperty']
   UnusedPrivateProperty:
     active: true
+    # Examples deliberately bind responses (`val response: X = client...`) to show their types.
+    # TODO(codegen): generated service and error-handling tests bind locals (`response`, `headers`)
+    # and constants (`NOT_JSON`) that some specs never assert on; change the templates to omit unused
+    # bindings then drop the test exclude.
+    excludes: ['**/test/**', '**/anthropic-java-example/**']
   UseAnyOrNoneInsteadOfFind:
     active: true
   UseIsNullOrEmpty:
@@ -164,6 +169,9 @@ potential-bugs:
     active: true
   UnsafeCast:
     active: true
+    # TODO(codegen): generated multipart body tests normalize parts with `it as? ByteArray` even when
+    # the field type is statically narrower; change template to avoid the cast then drop this exclude.
+    excludes: ['**/test/**']
   UnusedUnaryOperator:
     active: true
   UselessPostfixExpression:

@@ -3,8 +3,8 @@ plugins {
     id("anthropic.publish")
 }
 
-// This module has Java test sources, but no Java main sources. Compiling them to Java 8 makes javac
-// emit an "obsolete source/target 8" warning, which the project-wide `-Werror` would turn into an
+// Java test sources (this module has no Java main sources) compile to Java 8, which makes javac
+// emit an "obsolete source/target 8" warning that the project-wide `-Werror` would turn into an
 // error. Suppress only that warning here.
 tasks.named<JavaCompile>("compileTestJava") { options.compilerArgs.add("-Xlint:-options") }
 
