@@ -53,6 +53,7 @@ internal constructor(
                     }
                     paramsBuilder
                         .addMessage(message)
+                        .adoptContainer(message)
                         .addMessage(generateToolResponse(message.toParam()) ?: break)
                 } else {
                     paramsBuilder = nextParams.toBuilder()
@@ -103,6 +104,7 @@ internal constructor(
                             }
                             paramsBuilder
                                 .addMessage(message)
+                                .adoptContainer(message)
                                 .addMessage(generateToolResponse(message.toParam()) ?: break)
                         } else {
                             paramsBuilder = nextParams.toBuilder()
@@ -137,6 +139,31 @@ internal constructor(
 
         val lastMessage = currentParams.messages().lastOrNull() ?: return Optional.empty()
         return Optional.ofNullable(generateToolResponse(lastMessage))
+    }
+
+    /**
+     * Carries the container the last turn ran in onto the next request: container-bound server
+     * tools reject a follow-up that omits it, so its id is forwarded unless the caller pinned a
+     * container themselves (a pinned [BetaContainerParams] without an id has the id filled in).
+     */
+    private fun MessageCreateParams.Builder.adoptContainer(message: BetaMessage) = apply {
+        val id = message._container().asKnown().getOrNull()?._id()?.asString()?.getOrNull()
+        if (id.isNullOrEmpty()) {
+            return@apply
+        }
+        // The builder has no accessors, but `currentParams` was built from it this iteration.
+        val pinned = currentParams._container()
+        if (pinned.isMissing() || pinned.isNull()) {
+            container(id)
+        } else {
+            pinned
+                .asKnown()
+                .getOrNull()
+                ?.betaContainerParams()
+                ?.getOrNull()
+                ?.takeIf { it._id().isMissing() || it._id().isNull() }
+                ?.let { container(it.toBuilder().id(id).build()) }
+        }
     }
 
     private fun generateToolResponse(lastMessage: BetaMessageParam): BetaMessageParam? {
