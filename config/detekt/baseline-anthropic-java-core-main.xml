@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BuilderEntryPoints:RequestOptions.kt$RequestOptions</ID>
+    <ID>BuilderEntryPoints:RetryingHttpClient.kt$RetryingHttpClient : HttpClient</ID>
+    <ID>BuilderEntryPoints:Values.kt$MultipartField&lt;T : Any></ID>
+    <ID>BuilderNullableSetterMissingOptionalOverload:Values.kt$MultipartField.Builder$fun value(value: T?)</ID>
+    <ID>CompanionFunctionMissingJvmStatic:AutoPager.kt$AutoPager.Companion$fun &lt;T> from(firstPage: Page&lt;T>): AutoPager&lt;T></ID>
+    <ID>CompanionFunctionMissingJvmStatic:AutoPagerAsync.kt$AutoPagerAsync.Companion$fun &lt;T> from(firstPage: PageAsync&lt;T>, defaultExecutor: Executor): AutoPagerAsync&lt;T></ID>
+    <ID>CompanionFunctionMissingJvmStatic:LogLevel.kt$LogLevel.Companion$fun fromEnv()</ID>
+    <ID>ExpressionBodySyntax:BaseDeserializer.kt$BaseDeserializer$return parser.codec.deserialize(parser.readValueAsTree())</ID>
+    <ID>ExpressionBodySyntax:BaseDeserializer.kt$BaseDeserializer$return this</ID>
+    <ID>ForbiddenMethodCall:AsyncStreamResponse.kt$&lt;no name provided>$whenComplete { _, error -> // If an error occurs from the original future, then we should resolve the // `onCompleteFuture` even if `subscribe` has not been called. error?.let(onCompleteFuture::completeExceptionally) }</ID>
+    <ID>ForbiddenMethodCall:AsyncStreamResponse.kt$&lt;no name provided>$whenComplete { streamResponse, error -> streamResponse?.close() }</ID>
+    <ID>ForbiddenMethodCall:AutoPagerAsync.kt$AutoPagerAsync$whenComplete { _, error -> val actualError = if (error is CompletionException &amp;&amp; error.cause != null) error.cause else error try { handler.onComplete(Optional.ofNullable(actualError)) } finally { try { if (actualError == null) { onCompleteFuture.complete(null) } else { onCompleteFuture.completeExceptionally(actualError) } } finally { close() } } }</ID>
+    <ID>ForbiddenMethodCall:DefaultSleeper.kt$DefaultSleeper$sleep(duration.toMillis())</ID>
+    <ID>ForbiddenMethodCall:Utils.kt$whenComplete { _, _ -> unlock() }</ID>
+    <ID>IteratorNotThrowingNoSuchElementException:StreamHandler.kt$CloseableSequence$&lt;no name provided> : Iterator</ID>
+    <ID>IteratorNotThrowingNoSuchElementException:StreamHandler.kt$IOExceptionWrappingSequence$&lt;no name provided> : Iterator</ID>
+    <ID>NullablePublicReturn:HttpRequestBody.kt$HttpRequestBody$fun contentType(): String?</ID>
+    <ID>NullablePublicReturn:Values.kt$JsonValue$fun &lt;R : Any> convert(type: Class&lt;R>): R?</ID>
+    <ID>NullablePublicReturn:Values.kt$JsonValue$fun &lt;R : Any> convert(type: TypeReference&lt;R>): R?</ID>
+    <ID>NullableToStringCall:HttpRequest.kt$HttpRequest$$body</ID>
+    <ID>NullableToStringCall:SseMessage.kt$SseMessage$$event</ID>
+    <ID>NullableToStringCall:SseMessage.kt$SseMessage$$id</ID>
+    <ID>NullableToStringCall:SseMessage.kt$SseMessage$$retry</ID>
+    <ID>NullableToStringCall:Timeout.kt$Timeout$$connect</ID>
+    <ID>NullableToStringCall:Timeout.kt$Timeout$$read</ID>
+    <ID>NullableToStringCall:Timeout.kt$Timeout$$request</ID>
+    <ID>NullableToStringCall:Timeout.kt$Timeout$$write</ID>
+    <ID>NullableToStringCall:UnwrapWebhookParams.kt$UnwrapWebhookParams$$headers</ID>
+    <ID>NullableToStringCall:UnwrapWebhookParams.kt$UnwrapWebhookParams$$secret</ID>
+    <ID>NullableToStringCall:Values.kt$MultipartField$$filename</ID>
+    <ID>OptionalOrElseNull:Values.kt$MultipartField.Builder$orElse(null)</ID>
+    <ID>PublicConstructor:AnthropicClientAsyncImpl.kt$AnthropicClientAsyncImpl$(private val clientOptions: ClientOptions)</ID>
+    <ID>PublicConstructor:AnthropicClientImpl.kt$AnthropicClientImpl$(private val clientOptions: ClientOptions)</ID>
+    <ID>PublicConstructor:DefaultSleeper.kt$DefaultSleeper : Sleeper</ID>
+    <ID>PublicConstructor:Values.kt$JsonField$IsMissing</ID>
+    <ID>PublicConstructor:Values.kt$JsonField.Deserializer$(private val type: JavaType? = null)</ID>
+    <ID>PublicConstructor:Values.kt$JsonMissing : JsonValue</ID>
+    <ID>PublicConstructor:Values.kt$JsonMissing$Serializer : BaseSerializer</ID>
+    <ID>PublicConstructor:Values.kt$JsonNull : JsonValue</ID>
+    <ID>PublicConstructor:Values.kt$JsonValue$Deserializer : BaseDeserializer</ID>
+    <ID>UnsafeCallOnNullableType:LoggingHttpClient.kt$LoggingHttpClient$error.cause!!</ID>
+    <ID>UnsafeCallOnNullableType:RetryingHttpClient.kt$RetryingHttpClient$throwable!!</ID>
+    <ID>UnsafeCallOnNullableType:SseMessage.kt$SseMessage.Builder$jsonMapper!!</ID>
+    <ID>UseCheckOrError:Values.kt$JsonMissing.Serializer$throw IllegalStateException("JsonMissing cannot be serialized")</ID>
+    <ID>UseCheckOrError:Values.kt$JsonValue.Companion$throw IllegalStateException("Unexpected JsonNode type: ${node.nodeType}")</ID>
+  </CurrentIssues>
+</SmellBaseline>

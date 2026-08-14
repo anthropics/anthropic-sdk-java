@@ -1,7 +1,33 @@
 plugins {
+    // Note: don't also apply `kotlin("jvm")` here. `kotlin-dsl` compiles this project with
+    // Gradle's embedded Kotlin; applying the standalone Kotlin plugin overrides that pairing with
+    // whatever version is on this classpath, which the Kotlin DSL does not support.
     `kotlin-dsl`
-    kotlin("jvm") version "1.9.20"
-    id("com.vanniktech.maven.publish") version "0.28.0"
+}
+
+// Lock the plugin classpath the convention scripts compile against, so the buildscript side of
+// the build is as reproducible as the libraries it produces. Regenerate alongside the per-module
+// lockfiles via `./scripts/lock` (the `--write-locks` flag propagates to `buildSrc`).
+dependencyLocking {
+    lockAllConfigurations()
+}
+
+// Mirrors `anthropic.java`'s task of the same name. A CLI build never resolves
+// `:buildSrc:runtimeClasspath`, so `--write-locks` alone omits it from the lockfile and STRICT
+// mode then rejects IntelliJ sync, which does resolve it.
+tasks.register("resolveAndLockAll") {
+    group = "Help"
+    description = "Resolves all configurations to write dependency lock state."
+    notCompatibleWithConfigurationCache("Resolves configurations at execution time")
+    val startParameter = project.gradle.startParameter
+    doFirst {
+        require(startParameter.isWriteDependencyLocks) {
+            "Run with --write-locks to update lock state"
+        }
+    }
+    doLast {
+        configurations.filter { it.isCanBeResolved }.forEach { it.resolve() }
+    }
 }
 
 repositories {
@@ -9,7 +35,15 @@ repositories {
     mavenCentral()
 }
 
+// Plugins used by the precompiled convention scripts in `src/main/kotlin` must be declared as
+// regular dependencies here (the scripts' `plugins {}` blocks can't carry versions).
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20")
-    implementation("com.vanniktech:gradle-maven-publish-plugin:0.28.0")
+    implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.detekt.gradle.plugin)
+    implementation(libs.maven.publish.gradle.plugin)
+    implementation(libs.dokka.gradle.plugin)
+    // Not a real Gradle plugin (it publishes no plugin marker): just a library carrying
+    // `proguard.gradle.ProGuardTask` for `anthropic-java-ecosystem-test`.
+    implementation(libs.proguard.gradle.plugin)
+    implementation(libs.shadow.gradle.plugin)
 }

@@ -4,9 +4,34 @@ plugins {
     `java-library`
 }
 
-repositories {
-    mavenCentral()
+// Pin every resolved configuration to the versions recorded in this module's `gradle.lockfile`
+// (when one is committed). Regenerate with `./scripts/lock`.
+dependencyLocking {
+    lockAllConfigurations()
 }
+
+// Resolves every resolvable configuration so `--write-locks` captures all of them in one pass.
+// Without this, lock state would only be written for whatever the requested task graph happened
+// to resolve.
+tasks.register("resolveAndLockAll") {
+    group = "Help"
+    description = "Resolves all configurations to write dependency lock state."
+    notCompatibleWithConfigurationCache("Resolves configurations at execution time")
+    val startParameter = project.gradle.startParameter
+    doFirst {
+        require(startParameter.isWriteDependencyLocks) {
+            "Run with --write-locks to update lock state"
+        }
+    }
+    doLast {
+        configurations.filter { it.isCanBeResolved }.forEach { it.resolve() }
+    }
+}
+
+// Precompiled script plugins can't use the generated type-safe `libs` accessors; look the catalog
+// up through its extension instead.
+val libs = the<VersionCatalogsExtension>().named("libs")
+fun lib(alias: String) = libs.findLibrary(alias).get()
 
 java {
     toolchain {
@@ -15,6 +40,18 @@ java {
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+// Lifecycle tasks that aggregate the per-language format/lint tasks registered below (and the
+// Kotlin ones from `anthropic.kotlin`). Registered here because every module applies this plugin
+// directly or transitively through `anthropic.kotlin`.
+tasks.register("format") {
+    group = "Verification"
+    description = "Formats all source files."
+}
+tasks.register("lint") {
+    group = "Verification"
+    description = "Verifies all source files are formatted."
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -36,16 +73,32 @@ tasks.withType<Test>().configureEach {
 
     // Run tests in parallel to some degree.
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
-    forkEvery = 100
+
+    // Mockito's ByteBuddy agent emits a JVM warning when loaded dynamically. Tests that capture
+    // stderr (e.g. LoggingHttpClientTest) see this warning interleaved with their expected output
+    // when other concurrent tests trigger the agent load. Pre-authorizing dynamic agent loading
+    // suppresses the warning at the JVM level.
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
 
     testLogging {
         exceptionFormat = TestExceptionFormat.FULL
     }
 }
 
+dependencies {
+    // SLF4J lazily initializes on the first `LoggerFactory.getLogger` call in
+    // the JVM and, without a provider, prints a warning to stderr. That warning
+    // corrupts tests that capture and assert on exact stderr contents when
+    // another test races the initialization. Binding a no-op provider keeps
+    // SLF4J silent.
+    testRuntimeOnly(lib("slf4j-nop"))
+
+    testRuntimeOnly(lib("junit-platform-launcher"))
+}
+
 val palantir by configurations.creating
 dependencies {
-    palantir("com.palantir.javaformat:palantir-java-format:2.89.0")
+    palantir(lib("palantir-java-format"))
 }
 
 fun registerPalantir(
@@ -75,8 +128,11 @@ fun registerPalantir(
         val lastRunTimeFile =
             project.layout.buildDirectory.file("palantir-$name-last-run.txt").get().asFile
 
-        // Read the time when this task was last executed for this module (if ever).
-        val lastRunTime = lastRunTimeFile.takeIf { it.exists() }?.readText()?.toLongOrNull() ?: 0L
+        // Use the stamp file's own mtime (0 when absent) rather than a wall-clock value written
+        // into it: a build-cache hit restores the stamp with a fresh local mtime, so the
+        // changed-file filter below stays consistent with this machine's source mtimes instead
+        // of comparing against the cache producer's clock.
+        val lastRunTime = lastRunTimeFile.lastModified()
 
         // Use a `fileTree` relative to the module's source directory.
         val javaFiles = project.fileTree("src") { include("**/*.java") }
@@ -85,7 +141,15 @@ fun registerPalantir(
         // one file.
         onlyIf { javaFiles.any { it.lastModified() > lastRunTime } }
 
-        inputs.files(javaFiles)
+        inputs.files(javaFiles).withPathSensitivity(PathSensitivity.RELATIVE)
+        // Declaring the stamp file as an output lets Gradle build-cache the lint result by source
+        // content, so unchanged sources resolve FROM-CACHE on CI where `build/` is not preserved.
+        // `format` mutates sources in place, so only `lint` is safe to cache, and it must rerun
+        // even when its inputs match the last run's (a file regenerated back to the same
+        // unformatted content would otherwise be reported up to date and left unformatted).
+        outputs.file(lastRunTimeFile)
+        outputs.cacheIf { name == "lint" }
+        outputs.upToDateWhen { name == "lint" }
 
         doFirst {
             // Create the argument file and set the preferred formatting style.
@@ -108,14 +172,14 @@ fun registerPalantir(
         }
 
         doLast {
-            // Record the last execution time for later up-to-date checking.
-            lastRunTimeFile.writeText(System.currentTimeMillis().toString())
+            // Touch the stamp so its mtime records this run; content is unused.
+            lastRunTimeFile.writeText("")
         }
 
-        // Pass the argument file using the @ symbol
-        args = listOf("@${argumentFile.absolutePath}")
-
-        outputs.upToDateWhen { javaFiles.none { it.lastModified() > lastRunTime } }
+        // Pass the argument file via an argument provider rather than `args`: `args` is an
+        // `@Input` on `JavaExec`, so the absolute path it carries would otherwise become part of
+        // the build-cache key and prevent hits across machines.
+        argumentProviders.add(CommandLineArgumentProvider { listOf("@${argumentFile.absolutePath}") })
     }
 
     tasks.named(name) {

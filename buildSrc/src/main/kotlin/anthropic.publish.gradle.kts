@@ -1,9 +1,13 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinJvm
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
-import com.vanniktech.maven.publish.SonatypeHost
+import com.vanniktech.maven.publish.SourcesJar
+import org.gradle.plugins.signing.SigningExtension
 
 plugins {
+    // Publishing needs the Dokka javadoc JAR (see `JavadocJar.Dokka` below), so every publishable
+    // module gets Dokka configured here.
+    id("anthropic.dokka")
     id("com.vanniktech.maven.publish")
 }
 
@@ -18,26 +22,21 @@ publishing {
   }
 }
 
-repositories {
-    gradlePluginPortal()
-    mavenCentral()
-}
-
-extra["signingInMemoryKey"] = System.getenv("GPG_SIGNING_KEY")
-extra["signingInMemoryKeyId"] = System.getenv("GPG_SIGNING_KEY_ID")
-extra["signingInMemoryKeyPassword"] = System.getenv("GPG_SIGNING_PASSWORD")
+val gpgSigningKey: Provider<String> = providers.environmentVariable("GPG_SIGNING_KEY")
+val gpgSigningKeyId: Provider<String> = providers.environmentVariable("GPG_SIGNING_KEY_ID")
+val gpgSigningPassword: Provider<String> = providers.environmentVariable("GPG_SIGNING_PASSWORD")
 
 configure<MavenPublishBaseExtension> {
     if (!project.hasProperty("publishLocal")) {
         signAllPublications()
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        publishToMavenCentral()
     }
 
     coordinates(project.group.toString(), project.name, project.version.toString())
     configure(
         KotlinJvm(
-            javadocJar = JavadocJar.Dokka("dokkaJavadoc"),
-            sourcesJar = true,
+            javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationJavadoc"),
+            sourcesJar = SourcesJar.Sources(),
         )
     )
 
@@ -63,6 +62,16 @@ configure<MavenPublishBaseExtension> {
             connection.set("scm:git:git://github.com/anthropics/anthropic-sdk-java.git")
             developerConnection.set("scm:git:git://github.com/anthropics/anthropic-sdk-java.git")
             url.set("https://github.com/anthropics/anthropic-sdk-java")
+        }
+    }
+}
+
+// `signAllPublications()` only auto-configures an in-memory signatory from the `signingInMemoryKey`
+// Gradle property; CI passes these via `GPG_SIGNING_*` env vars instead, so wire them in explicitly.
+plugins.withType<SigningPlugin> {
+    if (gpgSigningKey.isPresent) {
+        configure<SigningExtension> {
+            useInMemoryPgpKeys(gpgSigningKeyId.orNull, gpgSigningKey.get(), gpgSigningPassword.getOrElse(""))
         }
     }
 }

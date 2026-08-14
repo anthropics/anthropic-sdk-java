@@ -3,40 +3,79 @@ plugins {
     id("anthropic.publish")
 }
 
-configurations.all {
+// Java test sources (this module has no Java main sources) compile to Java 8, which makes javac
+// emit an "obsolete source/target 8" warning that the project-wide `-Werror` would turn into an
+// error. Suppress only that warning here.
+tasks.named<JavaCompile>("compileTestJava") { options.compilerArgs.add("-Xlint:-options") }
+
+// Runtime classpath for `testJacksonPublished`: the same dependencies as `testRuntimeClasspath`,
+// but exempt from the 2.14.0 force below, so Jackson resolves to the version declared in
+// `dependencies {}` (the one we publish in the POM).
+val jacksonPublishedRuntime: Configuration by configurations.creating {
+    isCanBeConsumed = false
+    isCanBeResolved = true
+    extendsFrom(configurations.testRuntimeClasspath.get())
+    // `extendsFrom` inherits dependencies but not attributes; without a runtime usage attribute,
+    // variant-aware resolution can't pick a variant for project and multi-variant dependencies.
+    attributes { attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME)) }
+}
+
+configurations.matching { it.name != jacksonPublishedRuntime.name }.configureEach {
     resolutionStrategy {
         // Compile and test against a lower Jackson version to ensure we're compatible with it. Note that
         // we generally support 2.13.4, but test against 2.14.0 because 2.13.4 has some annoying (but
         // niche) bugs (users should upgrade if they encounter them). We publish with a higher version
         // (see below) to ensure users depend on a secure version by default.
-        force("com.fasterxml.jackson.core:jackson-core:2.14.0")
-        force("com.fasterxml.jackson.core:jackson-databind:2.14.0")
-        force("com.fasterxml.jackson.core:jackson-annotations:2.14.0")
-        force("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.0")
-        force("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0")
-        force("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.0")
+        val jacksonCompat = libs.versions.jackson.compat.get()
+        force("com.fasterxml.jackson.core:jackson-core:$jacksonCompat")
+        force("com.fasterxml.jackson.core:jackson-databind:$jacksonCompat")
+        force("com.fasterxml.jackson.core:jackson-annotations:$jacksonCompat")
+        force("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonCompat")
+        force("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonCompat")
+        force("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonCompat")
     }
 }
 
-dependencies {
-    api("com.fasterxml.jackson.core:jackson-core:2.18.2")
-    api("com.fasterxml.jackson.core:jackson-databind:2.18.2")
-    api("com.google.errorprone:error_prone_annotations:2.33.0")
-    api("com.standardwebhooks:standardwebhooks:1.1.0")
+// Re-runs the already-compiled test classes against the published Jackson version. The main
+// `test` task covers the supported floor; this covers the version users get by default. Service
+// tests are excluded: they exercise HTTP plumbing (mock server, WireMock) rather than Jackson edge
+// cases, and skipping them keeps this pass cheap and runnable without a mock server.
+val testJacksonPublished by tasks.registering(Test::class) {
+    group = "verification"
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().output + sourceSets.main.get().output + jacksonPublishedRuntime
+    filter { excludeTestsMatching("com.anthropic.services.*") }
+    // Asserted by `JacksonVersionTest` so a resolution-strategy regression can't pass silently.
+    systemProperty("expected.jackson.version", libs.versions.jackson.asProvider().get())
+}
 
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.18.2")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.18.2")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
+tasks.test {
+    systemProperty("expected.jackson.version", libs.versions.jackson.compat.get())
+}
+
+// Wired into `check` (rather than `test.dependsOn`) so Gradle can schedule it concurrently with
+// `test` instead of forcing the two passes to run sequentially.
+tasks.check { dependsOn(testJacksonPublished) }
+
+dependencies {
+    api(libs.jackson.core)
+    api(libs.jackson.databind)
+    api(libs.errorprone.annotations)
+    api(libs.standardwebhooks)
+
+    implementation(libs.jackson.annotations)
+    implementation(libs.jackson.datatype.jdk8)
+    implementation(libs.jackson.datatype.jsr310)
+    implementation(libs.jackson.module.kotlin)
 
     testImplementation(kotlin("test"))
     testImplementation(project(":anthropic-java-client-okhttp"))
-    testImplementation("com.github.tomakehurst:wiremock-jre8:2.35.2")
-    testImplementation("org.assertj:assertj-core:3.27.7")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
-    testImplementation("org.junit-pioneer:junit-pioneer:1.9.1")
-    testImplementation("org.mockito:mockito-core:5.14.2")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.14.2")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation(libs.wiremock)
+    testImplementation(libs.assertj)
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.junit.pioneer)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.junit.jupiter)
+    testImplementation(libs.mockito.kotlin)
 }

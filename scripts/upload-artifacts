@@ -9,6 +9,11 @@ NC='\033[0m' # No Color
 
 MAVEN_REPO_PATH="./build/local-maven-repo"
 
+# Maximum number of files uploaded concurrently. Each upload makes two HTTPS
+# round trips (signed-URL request + PUT), so latency dominates and parallelism
+# is the only way to keep the runner's network busy.
+UPLOAD_CONCURRENCY="${UPLOAD_CONCURRENCY:-12}"
+
 log_error() {
     local msg="$1"
     local headers="$2"
@@ -17,6 +22,23 @@ log_error() {
     [[ -f "$headers" ]] && echo -e "${RED}Headers:$(cat "$headers")${NC}"
     echo -e "${RED}Body: ${body}${NC}"
     exit 1
+}
+
+# Mint a fresh GitHub Actions OIDC token, matching actions/github-script's
+# core.getIDToken(). The token initially passed in via $AUTH is only valid for a
+# few minutes, which a full artifact upload can outlast, so it must be refreshed
+# mid-run. Returns non-zero (leaving $AUTH unchanged) when refresh isn't possible.
+refresh_auth() {
+    [[ -n "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" && -n "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]] || return 1
+
+    local response token
+    response=$(curl --fail -sS --retry 5 \
+        -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+        "$ACTIONS_ID_TOKEN_REQUEST_URL") || return 1
+    token=$(echo "$response" | jq -e -r '.value' 2>/dev/null) || return 1
+    [[ -n "$token" && "$token" != "null" ]] || return 1
+
+    AUTH="$token"
 }
 
 upload_file() {
@@ -28,13 +50,31 @@ upload_file() {
         echo -e "${GREEN}Processing file: $file_name${NC}"
         pkg_file_name="mvn${file_name#"${MAVEN_REPO_PATH}"}"
 
-        # Get signed URL for uploading artifact file
-        signed_url_response=$(curl -X POST -G "$URL" \
-            -sS --retry 5 \
-            -D "$tmp_headers" \
-            --data-urlencode "filename=$pkg_file_name" \
-            -H "Authorization: Bearer $AUTH" \
-            -H "Content-Type: application/json")
+        # Get a signed URL for uploading the artifact file. --fail makes curl
+        # treat HTTP errors as failures and drop their response bodies, so a
+        # retried transient error (e.g. 503) can't prepend its body to the
+        # successful response and break the jq parse below. A 401 means the OIDC
+        # token expired mid-upload; refresh it once and retry rather than failing.
+        local response http_code attempt
+        for attempt in 1 2; do
+            response=$(curl -X POST -G "$URL" \
+                --fail -sS --retry 5 \
+                -w $'\n%{http_code}' \
+                -D "$tmp_headers" \
+                --data-urlencode "filename=$pkg_file_name" \
+                -H "Authorization: Bearer $AUTH" \
+                -H "Content-Type: application/json") || true
+            http_code="${response##*$'\n'}"
+            signed_url_response="${response%$'\n'*}"
+            if [[ "$http_code" == "401" && "$attempt" -eq 1 ]] && refresh_auth; then
+                continue
+            fi
+            break
+        done
+
+        if [[ "$http_code" != "200" ]]; then
+            log_error "Failed to get signed URL (HTTP $http_code)" "$tmp_headers" "$signed_url_response"
+        fi
 
         # Validate JSON and extract URL
         if ! signed_url=$(echo "$signed_url_response" | jq -e -r '.url' 2>/dev/null) || [[ "$signed_url" == "null" ]]; then
@@ -64,25 +104,33 @@ upload_file() {
         if ! echo "$upload_response" | grep -q "HTTP/[0-9.]* 200"; then
             log_error "Failed to upload artifact file" "$tmp_headers" "$upload_response"
         fi
-
-        # Insert small throttle to reduce rate limiting risk
-        sleep 0.1
     fi
 }
 
+# Upload every regular file under $1 with bounded concurrency. Each file's two
+# HTTPS round trips run in a background subshell; `wait -n` reaps one finished
+# upload before launching the next once UPLOAD_CONCURRENCY are in flight. A
+# failed upload's non-zero exit is captured from `wait -n` and surfaced once
+# all in-flight work has drained, so `set -e` (or the caller) sees it.
 walk_tree() {
-    local current_dir="$1"
-
-    for entry in "$current_dir"/*; do
-        # Check that entry is valid
-        [ -e "$entry" ] || [ -h "$entry" ] || continue
-
-        if [ -d "$entry" ]; then
-            walk_tree "$entry"
-        else
-            upload_file "$entry"
+    local running=0 rc=0
+    while IFS= read -r -d '' file; do
+        if (( running >= UPLOAD_CONCURRENCY )); then
+            wait -n || rc=$?
+            running=$((running - 1))
         fi
+        # Stop launching new uploads once one has failed; just drain.
+        if (( rc == 0 )); then
+            upload_file "$file" &
+            running=$((running + 1))
+        fi
+    done < <(find "$1" -type f -print0)
+
+    while (( running > 0 )); do
+        wait -n || rc=$?
+        running=$((running - 1))
     done
+    return "$rc"
 }
 
 generate_instructions() {
