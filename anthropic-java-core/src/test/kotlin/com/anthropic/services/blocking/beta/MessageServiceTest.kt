@@ -50,7 +50,7 @@ internal class MessageServiceTest {
                     .userProfileId("anthropic-user-profile-id")
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_6)
+                    .model(Model.CLAUDE_OPUS_5)
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -219,7 +219,7 @@ internal class MessageServiceTest {
                     .userProfileId("anthropic-user-profile-id")
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_6)
+                    .model(Model.CLAUDE_OPUS_5)
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -389,7 +389,7 @@ internal class MessageServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .userProfileId("anthropic-user-profile-id")
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_4_6)
+                    .model(Model.CLAUDE_OPUS_5)
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)

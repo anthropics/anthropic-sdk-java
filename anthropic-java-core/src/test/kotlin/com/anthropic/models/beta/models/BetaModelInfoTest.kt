@@ -15,7 +15,7 @@ internal class BetaModelInfoTest {
     fun create() {
         val betaModelInfo =
             BetaModelInfo.builder()
-                .id("claude-opus-4-6")
+                .id("claude-opus-5")
                 .addAllowedFallbackModel("string")
                 .capabilities(
                     BetaModelCapabilities.builder()
@@ -56,13 +56,13 @@ internal class BetaModelInfoTest {
                         )
                         .build()
                 )
-                .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-                .displayName("Claude Opus 4.6")
+                .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .displayName("Claude Opus 5")
                 .maxInputTokens(0L)
                 .maxTokens(0L)
                 .build()
 
-        assertThat(betaModelInfo.id()).isEqualTo("claude-opus-4-6")
+        assertThat(betaModelInfo.id()).isEqualTo("claude-opus-5")
         assertThat(betaModelInfo.allowedFallbackModels().getOrNull()).containsExactly("string")
         assertThat(betaModelInfo.capabilities())
             .contains(
@@ -105,8 +105,8 @@ internal class BetaModelInfoTest {
                     .build()
             )
         assertThat(betaModelInfo.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-        assertThat(betaModelInfo.displayName()).isEqualTo("Claude Opus 4.6")
+            .isEqualTo(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+        assertThat(betaModelInfo.displayName()).isEqualTo("Claude Opus 5")
         assertThat(betaModelInfo.maxInputTokens()).contains(0L)
         assertThat(betaModelInfo.maxTokens()).contains(0L)
     }
@@ -116,7 +116,7 @@ internal class BetaModelInfoTest {
         val jsonMapper = jsonMapper()
         val betaModelInfo =
             BetaModelInfo.builder()
-                .id("claude-opus-4-6")
+                .id("claude-opus-5")
                 .addAllowedFallbackModel("string")
                 .capabilities(
                     BetaModelCapabilities.builder()
@@ -157,8 +157,8 @@ internal class BetaModelInfoTest {
                         )
                         .build()
                 )
-                .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-                .displayName("Claude Opus 4.6")
+                .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .displayName("Claude Opus 5")
                 .maxInputTokens(0L)
                 .maxTokens(0L)
                 .build()

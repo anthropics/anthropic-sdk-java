@@ -14,7 +14,7 @@ internal class ModelInfoTest {
     fun create() {
         val modelInfo =
             ModelInfo.builder()
-                .id("claude-opus-4-6")
+                .id("claude-opus-5")
                 .capabilities(
                     ModelCapabilities.builder()
                         .batch(CapabilitySupport.of(true))
@@ -54,13 +54,13 @@ internal class ModelInfoTest {
                         )
                         .build()
                 )
-                .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-                .displayName("Claude Opus 4.6")
+                .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .displayName("Claude Opus 5")
                 .maxInputTokens(0L)
                 .maxTokens(0L)
                 .build()
 
-        assertThat(modelInfo.id()).isEqualTo("claude-opus-4-6")
+        assertThat(modelInfo.id()).isEqualTo("claude-opus-5")
         assertThat(modelInfo.capabilities())
             .contains(
                 ModelCapabilities.builder()
@@ -101,8 +101,8 @@ internal class ModelInfoTest {
                     )
                     .build()
             )
-        assertThat(modelInfo.createdAt()).isEqualTo(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-        assertThat(modelInfo.displayName()).isEqualTo("Claude Opus 4.6")
+        assertThat(modelInfo.createdAt()).isEqualTo(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+        assertThat(modelInfo.displayName()).isEqualTo("Claude Opus 5")
         assertThat(modelInfo.maxInputTokens()).contains(0L)
         assertThat(modelInfo.maxTokens()).contains(0L)
     }
@@ -112,7 +112,7 @@ internal class ModelInfoTest {
         val jsonMapper = jsonMapper()
         val modelInfo =
             ModelInfo.builder()
-                .id("claude-opus-4-6")
+                .id("claude-opus-5")
                 .capabilities(
                     ModelCapabilities.builder()
                         .batch(CapabilitySupport.of(true))
@@ -152,8 +152,8 @@ internal class ModelInfoTest {
                         )
                         .build()
                 )
-                .createdAt(OffsetDateTime.parse("2026-02-04T00:00:00Z"))
-                .displayName("Claude Opus 4.6")
+                .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .displayName("Claude Opus 5")
                 .maxInputTokens(0L)
                 .maxTokens(0L)
                 .build()

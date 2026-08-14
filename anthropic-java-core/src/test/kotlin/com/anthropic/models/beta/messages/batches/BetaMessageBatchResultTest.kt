@@ -79,7 +79,7 @@ internal class BetaMessageBatchResultTest {
                             .build()
                     )
                     .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
-                    .model(Model.CLAUDE_OPUS_4_6)
+                    .model(Model.CLAUDE_OPUS_5)
                     .stopDetails(
                         BetaRefusalStopDetails.builder()
                             .category(BetaRefusalStopDetails.Category.CYBER)
@@ -88,7 +88,7 @@ internal class BetaMessageBatchResultTest {
                             )
                             .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                             .fallbackHasPrefillClaim(true)
-                            .recommendedModel("claude-sonnet-4-6")
+                            .recommendedModel("claude-opus-4-8")
                             .build()
                     )
                     .stopReason(BetaStopReason.END_TURN)
@@ -197,7 +197,7 @@ internal class BetaMessageBatchResultTest {
                         .diagnostics(
                             BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build()
                         )
-                        .model(Model.CLAUDE_OPUS_4_6)
+                        .model(Model.CLAUDE_OPUS_5)
                         .stopDetails(
                             BetaRefusalStopDetails.builder()
                                 .category(BetaRefusalStopDetails.Category.CYBER)
@@ -206,7 +206,7 @@ internal class BetaMessageBatchResultTest {
                                 )
                                 .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
                                 .fallbackHasPrefillClaim(true)
-                                .recommendedModel("claude-sonnet-4-6")
+                                .recommendedModel("claude-opus-4-8")
                                 .build()
                         )
                         .stopReason(BetaStopReason.END_TURN)

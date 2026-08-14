@@ -24,7 +24,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfig.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                         .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                         .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -86,7 +86,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
         assertThat(betaManagedAgentsSessionThreadAgent.model())
             .isEqualTo(
                 BetaManagedAgentsModelConfig.builder()
-                    .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                     .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                     .inferenceGeo("inference_geo")
                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -157,7 +157,7 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfig.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_SONNET_4_6)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                         .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                         .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)

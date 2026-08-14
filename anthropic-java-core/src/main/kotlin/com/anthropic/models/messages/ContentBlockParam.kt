@@ -44,7 +44,6 @@ private constructor(
         null,
     private val toolSearchToolResult: ToolSearchToolResultBlockParam? = null,
     private val containerUpload: ContainerUploadBlockParam? = null,
-    private val midConvSystem: MidConversationSystemBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -101,10 +100,6 @@ private constructor(
                 override fun visitContainerUpload(
                     containerUpload: ContainerUploadBlockParam
                 ): Type = Type.CONTAINER_UPLOAD
-
-                override fun visitMidConvSystem(
-                    midConvSystem: MidConversationSystemBlockParam
-                ): Type = Type.MID_CONV_SYSTEM
 
                 override fun unknown(json: JsonValue?): Type =
                     Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
@@ -176,10 +171,6 @@ private constructor(
                 override fun visitContainerUpload(
                     containerUpload: ContainerUploadBlockParam
                 ): Optional<CacheControlEphemeral> = containerUpload.cacheControl()
-
-                override fun visitMidConvSystem(
-                    midConvSystem: MidConversationSystemBlockParam
-                ): Optional<CacheControlEphemeral> = midConvSystem.cacheControl()
             }
         )
 
@@ -240,10 +231,6 @@ private constructor(
 
                 override fun visitContainerUpload(
                     containerUpload: ContainerUploadBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitMidConvSystem(
-                    midConvSystem: MidConversationSystemBlockParam
                 ): Optional<String> = Optional.empty()
             }
         )
@@ -306,10 +293,6 @@ private constructor(
                 override fun visitContainerUpload(
                     containerUpload: ContainerUploadBlockParam
                 ): Optional<String> = Optional.empty()
-
-                override fun visitMidConvSystem(
-                    midConvSystem: MidConversationSystemBlockParam
-                ): Optional<String> = Optional.empty()
             }
         )
 
@@ -371,10 +354,6 @@ private constructor(
                 override fun visitContainerUpload(
                     containerUpload: ContainerUploadBlockParam
                 ): Optional<String> = Optional.empty()
-
-                override fun visitMidConvSystem(
-                    midConvSystem: MidConversationSystemBlockParam
-                ): Optional<String> = Optional.empty()
             }
         )
 
@@ -433,15 +412,6 @@ private constructor(
     fun containerUpload(): Optional<ContainerUploadBlockParam> =
         Optional.ofNullable(containerUpload)
 
-    /**
-     * System instructions that appear mid-conversation.
-     *
-     * Use this block to provide or update system-level instructions at a specific point in the
-     * conversation, rather than only via the top-level `system` parameter.
-     */
-    fun midConvSystem(): Optional<MidConversationSystemBlockParam> =
-        Optional.ofNullable(midConvSystem)
-
     fun isText(): Boolean = text != null
 
     fun isImage(): Boolean = image != null
@@ -473,8 +443,6 @@ private constructor(
     fun isToolSearchToolResult(): Boolean = toolSearchToolResult != null
 
     fun isContainerUpload(): Boolean = containerUpload != null
-
-    fun isMidConvSystem(): Boolean = midConvSystem != null
 
     /** Regular text content. */
     fun asText(): TextBlockParam = text.getOrThrow("text")
@@ -531,15 +499,6 @@ private constructor(
     fun asContainerUpload(): ContainerUploadBlockParam =
         containerUpload.getOrThrow("containerUpload")
 
-    /**
-     * System instructions that appear mid-conversation.
-     *
-     * Use this block to provide or update system-level instructions at a specific point in the
-     * conversation, rather than only via the top-level `system` parameter.
-     */
-    fun asMidConvSystem(): MidConversationSystemBlockParam =
-        midConvSystem.getOrThrow("midConvSystem")
-
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -592,7 +551,6 @@ private constructor(
                 visitor.visitTextEditorCodeExecutionToolResult(textEditorCodeExecutionToolResult)
             toolSearchToolResult != null -> visitor.visitToolSearchToolResult(toolSearchToolResult)
             containerUpload != null -> visitor.visitContainerUpload(containerUpload)
-            midConvSystem != null -> visitor.visitMidConvSystem(midConvSystem)
             else -> visitor.unknown(_json)
         }
 
@@ -688,10 +646,6 @@ private constructor(
                 override fun visitContainerUpload(containerUpload: ContainerUploadBlockParam) {
                     containerUpload.validate()
                 }
-
-                override fun visitMidConvSystem(midConvSystem: MidConversationSystemBlockParam) {
-                    midConvSystem.validate()
-                }
             }
         )
         validated = true
@@ -763,9 +717,6 @@ private constructor(
                 override fun visitContainerUpload(containerUpload: ContainerUploadBlockParam) =
                     containerUpload.validity()
 
-                override fun visitMidConvSystem(midConvSystem: MidConversationSystemBlockParam) =
-                    midConvSystem.validity()
-
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -791,8 +742,7 @@ private constructor(
             bashCodeExecutionToolResult == other.bashCodeExecutionToolResult &&
             textEditorCodeExecutionToolResult == other.textEditorCodeExecutionToolResult &&
             toolSearchToolResult == other.toolSearchToolResult &&
-            containerUpload == other.containerUpload &&
-            midConvSystem == other.midConvSystem
+            containerUpload == other.containerUpload
     }
 
     override fun hashCode(): Int =
@@ -813,7 +763,6 @@ private constructor(
             textEditorCodeExecutionToolResult,
             toolSearchToolResult,
             containerUpload,
-            midConvSystem,
         )
 
     override fun toString(): String =
@@ -840,7 +789,6 @@ private constructor(
             toolSearchToolResult != null ->
                 "ContentBlockParam{toolSearchToolResult=$toolSearchToolResult}"
             containerUpload != null -> "ContentBlockParam{containerUpload=$containerUpload}"
-            midConvSystem != null -> "ContentBlockParam{midConvSystem=$midConvSystem}"
             _json != null -> "ContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid ContentBlockParam")
         }
@@ -962,24 +910,6 @@ private constructor(
         @JvmStatic
         fun ofContainerUpload(fileId: String) =
             ofContainerUpload(ContainerUploadBlockParam.of(fileId))
-
-        /**
-         * System instructions that appear mid-conversation.
-         *
-         * Use this block to provide or update system-level instructions at a specific point in the
-         * conversation, rather than only via the top-level `system` parameter.
-         */
-        @JvmStatic
-        fun ofMidConvSystem(midConvSystem: MidConversationSystemBlockParam) =
-            ContentBlockParam(midConvSystem = midConvSystem)
-
-        /**
-         * Returns an immutable instance of [ContentBlockParam] whose [ofMidConvSystem] variant is
-         * built from the given required [content].
-         */
-        @JvmStatic
-        fun ofMidConvSystem(content: List<TextBlockParam>) =
-            ofMidConvSystem(MidConversationSystemBlockParam.of(content))
     }
 
     /**
@@ -1040,14 +970,6 @@ private constructor(
          * this block will be available in the container's input directory.
          */
         fun visitContainerUpload(containerUpload: ContainerUploadBlockParam): T
-
-        /**
-         * System instructions that appear mid-conversation.
-         *
-         * Use this block to provide or update system-level instructions at a specific point in the
-         * conversation, rather than only via the top-level `system` parameter.
-         */
-        fun visitMidConvSystem(midConvSystem: MidConversationSystemBlockParam): T
 
         /**
          * Maps an unknown variant of [ContentBlockParam] to a value of type [T].
@@ -1158,11 +1080,6 @@ private constructor(
                         ContentBlockParam(containerUpload = it, _json = json)
                     } ?: ContentBlockParam(_json = json)
                 }
-                "mid_conv_system" -> {
-                    return tryDeserialize(node, jacksonTypeRef<MidConversationSystemBlockParam>())
-                        ?.let { ContentBlockParam(midConvSystem = it, _json = json) }
-                        ?: ContentBlockParam(_json = json)
-                }
             }
 
             return ContentBlockParam(_json = json)
@@ -1198,7 +1115,6 @@ private constructor(
                 value.toolSearchToolResult != null ->
                     generator.writeObject(value.toolSearchToolResult)
                 value.containerUpload != null -> generator.writeObject(value.containerUpload)
-                value.midConvSystem != null -> generator.writeObject(value.midConvSystem)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid ContentBlockParam")
             }
@@ -1253,8 +1169,6 @@ private constructor(
 
             @JvmField val CONTAINER_UPLOAD = of("container_upload")
 
-            @JvmField val MID_CONV_SYSTEM = of("mid_conv_system")
-
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
             @JvmSynthetic
@@ -1280,7 +1194,6 @@ private constructor(
             TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT,
             TOOL_SEARCH_TOOL_RESULT,
             CONTAINER_UPLOAD,
-            MID_CONV_SYSTEM,
         }
 
         /**
@@ -1309,7 +1222,6 @@ private constructor(
             TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT,
             TOOL_SEARCH_TOOL_RESULT,
             CONTAINER_UPLOAD,
-            MID_CONV_SYSTEM,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -1340,7 +1252,6 @@ private constructor(
                     Value.TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
                 TOOL_SEARCH_TOOL_RESULT -> Value.TOOL_SEARCH_TOOL_RESULT
                 CONTAINER_UPLOAD -> Value.CONTAINER_UPLOAD
-                MID_CONV_SYSTEM -> Value.MID_CONV_SYSTEM
                 else -> Value._UNKNOWN
             }
 
@@ -1372,7 +1283,6 @@ private constructor(
                     Known.TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
                 TOOL_SEARCH_TOOL_RESULT -> Known.TOOL_SEARCH_TOOL_RESULT
                 CONTAINER_UPLOAD -> Known.CONTAINER_UPLOAD
-                MID_CONV_SYSTEM -> Known.MID_CONV_SYSTEM
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 

@@ -42,7 +42,7 @@ internal class RawMessageStreamEventTest {
                             .text("Hi! My name is Claude.")
                             .build()
                     )
-                    .model(Model.CLAUDE_OPUS_4_6)
+                    .model(Model.CLAUDE_OPUS_5)
                     .stopDetails(
                         RefusalStopDetails.builder()
                             .category(RefusalStopDetails.Category.CYBER)
@@ -118,7 +118,7 @@ internal class RawMessageStreamEventTest {
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
-                        .model(Model.CLAUDE_OPUS_4_6)
+                        .model(Model.CLAUDE_OPUS_5)
                         .stopDetails(
                             RefusalStopDetails.builder()
                                 .category(RefusalStopDetails.Category.CYBER)

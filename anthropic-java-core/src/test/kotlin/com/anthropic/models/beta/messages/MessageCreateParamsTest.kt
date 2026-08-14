@@ -19,7 +19,7 @@ internal class MessageCreateParamsTest {
             .userProfileId("anthropic-user-profile-id")
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
-            .model(Model.CLAUDE_OPUS_4_6)
+            .model(Model.CLAUDE_OPUS_5)
             .cacheControl(
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -166,7 +166,7 @@ internal class MessageCreateParamsTest {
                 .userProfileId("anthropic-user-profile-id")
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -325,7 +325,7 @@ internal class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .build()
 
         val headers = params._headers()
@@ -341,7 +341,7 @@ internal class MessageCreateParamsTest {
                 .userProfileId("anthropic-user-profile-id")
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -493,7 +493,7 @@ internal class MessageCreateParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5)
         assertThat(body.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
@@ -662,7 +662,7 @@ internal class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_4_6)
+                .model(Model.CLAUDE_OPUS_5)
                 .build()
 
         val body = params._body()
@@ -675,6 +675,6 @@ internal class MessageCreateParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_4_6)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5)
     }
 }
