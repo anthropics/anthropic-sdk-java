@@ -25,7 +25,7 @@ public final class MessagesMcpExample {
                 .build();
 
         BetaRequestMcpServerUrlDefinition mcpServer = BetaRequestMcpServerUrlDefinition.builder()
-                .url("http://example-server.modelcontextprotocol.io/sse")
+                .url("https://example-server.modelcontextprotocol.io/sse")
                 .name("example")
                 .toolConfiguration(toolConfiguration)
                 .build();
