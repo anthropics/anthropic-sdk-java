@@ -18,6 +18,13 @@ interface HttpResponse : AutoCloseable {
     fun requestId(): Optional<String> =
         Optional.ofNullable(headers().values("request-id").firstOrNull())
 
+    /**
+     * Returns the value of the `anthropic-workspace-id` header, or an empty [Optional] if there's
+     * no such header in the response.
+     */
+    fun workspaceId(): Optional<String> =
+        Optional.ofNullable(headers().values("anthropic-workspace-id").firstOrNull())
+
     fun body(): InputStream
 
     /** Overridden from [AutoCloseable] to not have a checked exception in its signature. */
