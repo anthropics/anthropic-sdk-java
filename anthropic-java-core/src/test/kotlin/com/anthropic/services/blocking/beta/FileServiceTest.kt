@@ -114,6 +114,7 @@ internal class FileServiceTest {
                 FileUploadParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .file("Example data".byteInputStream())
+                    .expiresInSeconds(3600L)
                     .build()
             )
 
