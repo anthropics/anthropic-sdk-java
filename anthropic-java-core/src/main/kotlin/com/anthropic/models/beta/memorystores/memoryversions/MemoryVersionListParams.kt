@@ -25,6 +25,7 @@ private constructor(
     private val memoryId: String?,
     private val operation: BetaManagedAgentsMemoryVersionOperation?,
     private val page: String?,
+    private val serviceAccountId: String?,
     private val sessionId: String?,
     private val view: BetaManagedAgentsMemoryView?,
     private val betas: List<AnthropicBeta>?,
@@ -55,6 +56,9 @@ private constructor(
 
     /** Query parameter for page */
     fun page(): Optional<String> = Optional.ofNullable(page)
+
+    /** Query parameter for service_account_id */
+    fun serviceAccountId(): Optional<String> = Optional.ofNullable(serviceAccountId)
 
     /** Query parameter for session_id */
     fun sessionId(): Optional<String> = Optional.ofNullable(sessionId)
@@ -92,6 +96,7 @@ private constructor(
         private var memoryId: String? = null
         private var operation: BetaManagedAgentsMemoryVersionOperation? = null
         private var page: String? = null
+        private var serviceAccountId: String? = null
         private var sessionId: String? = null
         private var view: BetaManagedAgentsMemoryView? = null
         private var betas: MutableList<AnthropicBeta>? = null
@@ -108,6 +113,7 @@ private constructor(
             memoryId = memoryVersionListParams.memoryId
             operation = memoryVersionListParams.operation
             page = memoryVersionListParams.page
+            serviceAccountId = memoryVersionListParams.serviceAccountId
             sessionId = memoryVersionListParams.sessionId
             view = memoryVersionListParams.view
             betas = memoryVersionListParams.betas?.toMutableList()
@@ -174,6 +180,15 @@ private constructor(
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
+
+        /** Query parameter for service_account_id */
+        fun serviceAccountId(serviceAccountId: String?) = apply {
+            this.serviceAccountId = serviceAccountId
+        }
+
+        /** Alias for calling [Builder.serviceAccountId] with `serviceAccountId.orElse(null)`. */
+        fun serviceAccountId(serviceAccountId: Optional<String>) =
+            serviceAccountId(serviceAccountId.getOrNull())
 
         /** Query parameter for session_id */
         fun sessionId(sessionId: String?) = apply { this.sessionId = sessionId }
@@ -324,6 +339,7 @@ private constructor(
                 memoryId,
                 operation,
                 page,
+                serviceAccountId,
                 sessionId,
                 view,
                 betas?.toImmutable(),
@@ -360,6 +376,7 @@ private constructor(
                 memoryId?.let { put("memory_id", it) }
                 operation?.let { put("operation", it.toString()) }
                 page?.let { put("page", it) }
+                serviceAccountId?.let { put("service_account_id", it) }
                 sessionId?.let { put("session_id", it) }
                 view?.let { put("view", it.toString()) }
                 putAll(additionalQueryParams)
@@ -380,6 +397,7 @@ private constructor(
             memoryId == other.memoryId &&
             operation == other.operation &&
             page == other.page &&
+            serviceAccountId == other.serviceAccountId &&
             sessionId == other.sessionId &&
             view == other.view &&
             betas == other.betas &&
@@ -397,6 +415,7 @@ private constructor(
             memoryId,
             operation,
             page,
+            serviceAccountId,
             sessionId,
             view,
             betas,
@@ -405,5 +424,5 @@ private constructor(
         )
 
     override fun toString() =
-        "MemoryVersionListParams{memoryStoreId=$memoryStoreId, apiKeyId=$apiKeyId, createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, limit=$limit, memoryId=$memoryId, operation=$operation, page=$page, sessionId=$sessionId, view=$view, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MemoryVersionListParams{memoryStoreId=$memoryStoreId, apiKeyId=$apiKeyId, createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, limit=$limit, memoryId=$memoryId, operation=$operation, page=$page, serviceAccountId=$serviceAccountId, sessionId=$sessionId, view=$view, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

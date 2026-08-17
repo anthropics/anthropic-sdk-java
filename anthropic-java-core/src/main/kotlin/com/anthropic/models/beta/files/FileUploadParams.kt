@@ -45,11 +45,28 @@ private constructor(
     fun file(): InputStream = body.file()
 
     /**
+     * Seconds from upload until the file expires and its bytes become permanently unavailable. Must
+     * be between 3600 (one hour) and 7776000 (ninety days).
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun expiresInSeconds(): Optional<Long> = body.expiresInSeconds()
+
+    /**
      * Returns the raw multipart value of [file].
      *
      * Unlike [file], this method doesn't throw if the multipart field has an unexpected type.
      */
     fun _file(): MultipartField<InputStream> = body._file()
+
+    /**
+     * Returns the raw multipart value of [expiresInSeconds].
+     *
+     * Unlike [expiresInSeconds], this method doesn't throw if the multipart field has an unexpected
+     * type.
+     */
+    fun _expiresInSeconds(): MultipartField<Long> = body._expiresInSeconds()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -120,6 +137,7 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [file]
+         * - [expiresInSeconds]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -140,6 +158,25 @@ private constructor(
 
         /** The file to upload */
         fun file(path: Path) = apply { body.file(path) }
+
+        /**
+         * Seconds from upload until the file expires and its bytes become permanently unavailable.
+         * Must be between 3600 (one hour) and 7776000 (ninety days).
+         */
+        fun expiresInSeconds(expiresInSeconds: Long) = apply {
+            body.expiresInSeconds(expiresInSeconds)
+        }
+
+        /**
+         * Sets [Builder.expiresInSeconds] to an arbitrary multipart value.
+         *
+         * You should usually call [Builder.expiresInSeconds] with a well-typed [Long] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun expiresInSeconds(expiresInSeconds: MultipartField<Long>) = apply {
+            body.expiresInSeconds(expiresInSeconds)
+        }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -280,7 +317,7 @@ private constructor(
     }
 
     fun _body(): Map<String, MultipartField<*>> =
-        (mapOf("file" to _file()) +
+        (mapOf("file" to _file(), "expires_in_seconds" to _expiresInSeconds()) +
                 _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
             .toImmutable()
 
@@ -297,6 +334,7 @@ private constructor(
     class Body
     private constructor(
         private val file: MultipartField<InputStream>,
+        private val expiresInSeconds: MultipartField<Long>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -309,11 +347,31 @@ private constructor(
         fun file(): InputStream = file.value.getRequired("file")
 
         /**
+         * Seconds from upload until the file expires and its bytes become permanently unavailable.
+         * Must be between 3600 (one hour) and 7776000 (ninety days).
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun expiresInSeconds(): Optional<Long> =
+            expiresInSeconds.value.getOptional("expires_in_seconds")
+
+        /**
          * Returns the raw multipart value of [file].
          *
          * Unlike [file], this method doesn't throw if the multipart field has an unexpected type.
          */
         @JsonProperty("file") @ExcludeMissing fun _file(): MultipartField<InputStream> = file
+
+        /**
+         * Returns the raw multipart value of [expiresInSeconds].
+         *
+         * Unlike [expiresInSeconds], this method doesn't throw if the multipart field has an
+         * unexpected type.
+         */
+        @JsonProperty("expires_in_seconds")
+        @ExcludeMissing
+        fun _expiresInSeconds(): MultipartField<Long> = expiresInSeconds
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -350,11 +408,13 @@ private constructor(
         class Builder internal constructor() {
 
             private var file: MultipartField<InputStream>? = null
+            private var expiresInSeconds: MultipartField<Long> = MultipartField.of(null)
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 file = body.file
+                expiresInSeconds = body.expiresInSeconds
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -381,6 +441,24 @@ private constructor(
                         .filename(path.name)
                         .build()
                 )
+
+            /**
+             * Seconds from upload until the file expires and its bytes become permanently
+             * unavailable. Must be between 3600 (one hour) and 7776000 (ninety days).
+             */
+            fun expiresInSeconds(expiresInSeconds: Long) =
+                expiresInSeconds(MultipartField.of(expiresInSeconds))
+
+            /**
+             * Sets [Builder.expiresInSeconds] to an arbitrary multipart value.
+             *
+             * You should usually call [Builder.expiresInSeconds] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun expiresInSeconds(expiresInSeconds: MultipartField<Long>) = apply {
+                this.expiresInSeconds = expiresInSeconds
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -414,7 +492,11 @@ private constructor(
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
-                Body(checkRequired("file", file), additionalProperties.toMutableMap())
+                Body(
+                    checkRequired("file", file),
+                    expiresInSeconds,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -434,6 +516,7 @@ private constructor(
             }
 
             file()
+            expiresInSeconds()
             validated = true
         }
 
@@ -452,14 +535,18 @@ private constructor(
 
             return other is Body &&
                 file == other.file &&
+                expiresInSeconds == other.expiresInSeconds &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(file, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(file, expiresInSeconds, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() = "Body{file=$file, additionalProperties=$additionalProperties}"
+        override fun toString() =
+            "Body{file=$file, expiresInSeconds=$expiresInSeconds, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

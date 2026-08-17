@@ -27,6 +27,7 @@ internal class BetaManagedAgentsActorTest {
         assertThat(betaManagedAgentsActor.session()).contains(session)
         assertThat(betaManagedAgentsActor.api()).isEmpty
         assertThat(betaManagedAgentsActor.user()).isEmpty
+        assertThat(betaManagedAgentsActor.serviceAccount()).isEmpty
     }
 
     @Test
@@ -62,6 +63,7 @@ internal class BetaManagedAgentsActorTest {
         assertThat(betaManagedAgentsActor.session()).isEmpty
         assertThat(betaManagedAgentsActor.api()).contains(api)
         assertThat(betaManagedAgentsActor.user()).isEmpty
+        assertThat(betaManagedAgentsActor.serviceAccount()).isEmpty
     }
 
     @Test
@@ -97,6 +99,7 @@ internal class BetaManagedAgentsActorTest {
         assertThat(betaManagedAgentsActor.session()).isEmpty
         assertThat(betaManagedAgentsActor.api()).isEmpty
         assertThat(betaManagedAgentsActor.user()).contains(user)
+        assertThat(betaManagedAgentsActor.serviceAccount()).isEmpty
     }
 
     @Test
@@ -109,6 +112,33 @@ internal class BetaManagedAgentsActorTest {
                     .userId("x")
                     .build()
             )
+
+        val roundtrippedBetaManagedAgentsActor =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaManagedAgentsActor),
+                jacksonTypeRef<BetaManagedAgentsActor>(),
+            )
+
+        assertThat(roundtrippedBetaManagedAgentsActor).isEqualTo(betaManagedAgentsActor)
+    }
+
+    @Test
+    fun ofServiceAccount() {
+        val serviceAccount = BetaManagedAgentsServiceAccountActor.of("x")
+
+        val betaManagedAgentsActor = BetaManagedAgentsActor.ofServiceAccount(serviceAccount)
+
+        assertThat(betaManagedAgentsActor.session()).isEmpty
+        assertThat(betaManagedAgentsActor.api()).isEmpty
+        assertThat(betaManagedAgentsActor.user()).isEmpty
+        assertThat(betaManagedAgentsActor.serviceAccount()).contains(serviceAccount)
+    }
+
+    @Test
+    fun ofServiceAccountRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaManagedAgentsActor =
+            BetaManagedAgentsActor.ofServiceAccount(BetaManagedAgentsServiceAccountActor.of("x"))
 
         val roundtrippedBetaManagedAgentsActor =
             jsonMapper.readValue(
