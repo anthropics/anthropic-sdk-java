@@ -35,6 +35,7 @@ private constructor(
     private val session: BetaManagedAgentsSessionActor? = null,
     private val api: BetaManagedAgentsApiActor? = null,
     private val user: BetaManagedAgentsUserActor? = null,
+    private val serviceAccount: BetaManagedAgentsServiceAccountActor? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -47,6 +48,10 @@ private constructor(
                 override fun visitApi(api: BetaManagedAgentsApiActor): Type = Type.API_ACTOR
 
                 override fun visitUser(user: BetaManagedAgentsUserActor): Type = Type.USER_ACTOR
+
+                override fun visitServiceAccount(
+                    serviceAccount: BetaManagedAgentsServiceAccountActor
+                ): Type = Type.SERVICE_ACCOUNT_ACTOR
 
                 override fun unknown(json: JsonValue?): Type =
                     Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
@@ -65,11 +70,20 @@ private constructor(
     /** Attribution for a write made by a human user through the Anthropic Console. */
     fun user(): Optional<BetaManagedAgentsUserActor> = Optional.ofNullable(user)
 
+    /**
+     * Attribution for a write made by a workload authenticated as a service account, for example
+     * via Workload Identity Federation.
+     */
+    fun serviceAccount(): Optional<BetaManagedAgentsServiceAccountActor> =
+        Optional.ofNullable(serviceAccount)
+
     fun isSession(): Boolean = session != null
 
     fun isApi(): Boolean = api != null
 
     fun isUser(): Boolean = user != null
+
+    fun isServiceAccount(): Boolean = serviceAccount != null
 
     /**
      * Attribution for a write made by an agent during a session, through the mounted filesystem at
@@ -82,6 +96,13 @@ private constructor(
 
     /** Attribution for a write made by a human user through the Anthropic Console. */
     fun asUser(): BetaManagedAgentsUserActor = user.getOrThrow("user")
+
+    /**
+     * Attribution for a write made by a workload authenticated as a service account, for example
+     * via Workload Identity Federation.
+     */
+    fun asServiceAccount(): BetaManagedAgentsServiceAccountActor =
+        serviceAccount.getOrThrow("serviceAccount")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -119,6 +140,7 @@ private constructor(
             session != null -> visitor.visitSession(session)
             api != null -> visitor.visitApi(api)
             user != null -> visitor.visitUser(user)
+            serviceAccount != null -> visitor.visitServiceAccount(serviceAccount)
             else -> visitor.unknown(_json)
         }
 
@@ -150,6 +172,12 @@ private constructor(
                 override fun visitUser(user: BetaManagedAgentsUserActor) {
                     user.validate()
                 }
+
+                override fun visitServiceAccount(
+                    serviceAccount: BetaManagedAgentsServiceAccountActor
+                ) {
+                    serviceAccount.validate()
+                }
             }
         )
         validated = true
@@ -179,6 +207,10 @@ private constructor(
 
                 override fun visitUser(user: BetaManagedAgentsUserActor) = user.validity()
 
+                override fun visitServiceAccount(
+                    serviceAccount: BetaManagedAgentsServiceAccountActor
+                ) = serviceAccount.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -191,16 +223,18 @@ private constructor(
         return other is BetaManagedAgentsActor &&
             session == other.session &&
             api == other.api &&
-            user == other.user
+            user == other.user &&
+            serviceAccount == other.serviceAccount
     }
 
-    override fun hashCode(): Int = Objects.hash(session, api, user)
+    override fun hashCode(): Int = Objects.hash(session, api, user, serviceAccount)
 
     override fun toString(): String =
         when {
             session != null -> "BetaManagedAgentsActor{session=$session}"
             api != null -> "BetaManagedAgentsActor{api=$api}"
             user != null -> "BetaManagedAgentsActor{user=$user}"
+            serviceAccount != null -> "BetaManagedAgentsActor{serviceAccount=$serviceAccount}"
             _json != null -> "BetaManagedAgentsActor{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaManagedAgentsActor")
         }
@@ -260,6 +294,22 @@ private constructor(
                     .userId(userId)
                     .build()
             )
+
+        /**
+         * Attribution for a write made by a workload authenticated as a service account, for
+         * example via Workload Identity Federation.
+         */
+        @JvmStatic
+        fun ofServiceAccount(serviceAccount: BetaManagedAgentsServiceAccountActor) =
+            BetaManagedAgentsActor(serviceAccount = serviceAccount)
+
+        /**
+         * Returns an immutable instance of [BetaManagedAgentsActor] whose [ofServiceAccount]
+         * variant is built from the given required [serviceAccountId].
+         */
+        @JvmStatic
+        fun ofServiceAccount(serviceAccountId: String) =
+            ofServiceAccount(BetaManagedAgentsServiceAccountActor.of(serviceAccountId))
     }
 
     /**
@@ -279,6 +329,12 @@ private constructor(
 
         /** Attribution for a write made by a human user through the Anthropic Console. */
         fun visitUser(user: BetaManagedAgentsUserActor): T
+
+        /**
+         * Attribution for a write made by a workload authenticated as a service account, for
+         * example via Workload Identity Federation.
+         */
+        fun visitServiceAccount(serviceAccount: BetaManagedAgentsServiceAccountActor): T
 
         /**
          * Maps an unknown variant of [BetaManagedAgentsActor] to a value of type [T].
@@ -318,6 +374,14 @@ private constructor(
                         BetaManagedAgentsActor(user = it, _json = json)
                     } ?: BetaManagedAgentsActor(_json = json)
                 }
+                "service_account_actor" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsServiceAccountActor>(),
+                        )
+                        ?.let { BetaManagedAgentsActor(serviceAccount = it, _json = json) }
+                        ?: BetaManagedAgentsActor(_json = json)
+                }
             }
 
             return BetaManagedAgentsActor(_json = json)
@@ -336,6 +400,7 @@ private constructor(
                 value.session != null -> generator.writeObject(value.session)
                 value.api != null -> generator.writeObject(value.api)
                 value.user != null -> generator.writeObject(value.user)
+                value.serviceAccount != null -> generator.writeObject(value.serviceAccount)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaManagedAgentsActor")
             }
@@ -362,6 +427,8 @@ private constructor(
 
             @JvmField val USER_ACTOR = of("user_actor")
 
+            @JvmField val SERVICE_ACCOUNT_ACTOR = of("service_account_actor")
+
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
             @JvmSynthetic
@@ -374,6 +441,7 @@ private constructor(
             SESSION_ACTOR,
             API_ACTOR,
             USER_ACTOR,
+            SERVICE_ACCOUNT_ACTOR,
         }
 
         /**
@@ -389,6 +457,7 @@ private constructor(
             SESSION_ACTOR,
             API_ACTOR,
             USER_ACTOR,
+            SERVICE_ACCOUNT_ACTOR,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -405,6 +474,7 @@ private constructor(
                 SESSION_ACTOR -> Value.SESSION_ACTOR
                 API_ACTOR -> Value.API_ACTOR
                 USER_ACTOR -> Value.USER_ACTOR
+                SERVICE_ACCOUNT_ACTOR -> Value.SERVICE_ACCOUNT_ACTOR
                 else -> Value._UNKNOWN
             }
 
@@ -422,6 +492,7 @@ private constructor(
                 SESSION_ACTOR -> Known.SESSION_ACTOR
                 API_ACTOR -> Known.API_ACTOR
                 USER_ACTOR -> Known.USER_ACTOR
+                SERVICE_ACCOUNT_ACTOR -> Known.SERVICE_ACCOUNT_ACTOR
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 

@@ -56,7 +56,8 @@ private constructor(
     fun config(): Optional<Config> = body.config()
 
     /**
-     * Updated description of the environment
+     * Updated description of the environment. Omit to preserve; null clears to null; an empty
+     * string is stored as an empty string.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -224,7 +225,10 @@ private constructor(
         /** Alias for calling [config] with `Config.ofSelfHosted(selfHosted)`. */
         fun config(selfHosted: BetaSelfHostedConfigParams) = apply { body.config(selfHosted) }
 
-        /** Updated description of the environment */
+        /**
+         * Updated description of the environment. Omit to preserve; null clears to null; an empty
+         * string is stored as an empty string.
+         */
         fun description(description: String?) = apply { body.description(description) }
 
         /** Alias for calling [Builder.description] with `description.orElse(null)`. */
@@ -469,7 +473,8 @@ private constructor(
         fun config(): Optional<Config> = config.getOptional("config")
 
         /**
-         * Updated description of the environment
+         * Updated description of the environment. Omit to preserve; null clears to null; an empty
+         * string is stored as an empty string.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -599,7 +604,10 @@ private constructor(
             fun config(selfHosted: BetaSelfHostedConfigParams) =
                 config(Config.ofSelfHosted(selfHosted))
 
-            /** Updated description of the environment */
+            /**
+             * Updated description of the environment. Omit to preserve; null clears to null; an
+             * empty string is stored as an empty string.
+             */
             fun description(description: String?) = description(JsonField.ofNullable(description))
 
             /** Alias for calling [Builder.description] with `description.orElse(null)`. */

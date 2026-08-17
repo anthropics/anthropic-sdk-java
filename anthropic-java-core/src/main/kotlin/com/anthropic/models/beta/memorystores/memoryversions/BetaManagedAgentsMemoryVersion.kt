@@ -616,6 +616,28 @@ private constructor(
             )
 
         /**
+         * Alias for calling [createdBy] with
+         * `BetaManagedAgentsActor.ofServiceAccount(serviceAccount)`.
+         */
+        fun createdBy(serviceAccount: BetaManagedAgentsServiceAccountActor) =
+            createdBy(BetaManagedAgentsActor.ofServiceAccount(serviceAccount))
+
+        /**
+         * Alias for calling [createdBy] with the following:
+         * ```java
+         * BetaManagedAgentsServiceAccountActor.builder()
+         *     .serviceAccountId(serviceAccountId)
+         *     .build()
+         * ```
+         */
+        fun serviceAccountCreatedBy(serviceAccountId: String) =
+            createdBy(
+                BetaManagedAgentsServiceAccountActor.builder()
+                    .serviceAccountId(serviceAccountId)
+                    .build()
+            )
+
+        /**
          * The memory's path at the time of this write. `null` if and only if `redacted_at` is set.
          */
         fun path(path: String?) = path(JsonField.ofNullable(path))
@@ -727,6 +749,28 @@ private constructor(
                 BetaManagedAgentsUserActor.builder()
                     .type(BetaManagedAgentsUserActor.Type.USER_ACTOR)
                     .userId(userId)
+                    .build()
+            )
+
+        /**
+         * Alias for calling [redactedBy] with
+         * `BetaManagedAgentsActor.ofServiceAccount(serviceAccount)`.
+         */
+        fun redactedBy(serviceAccount: BetaManagedAgentsServiceAccountActor) =
+            redactedBy(BetaManagedAgentsActor.ofServiceAccount(serviceAccount))
+
+        /**
+         * Alias for calling [redactedBy] with the following:
+         * ```java
+         * BetaManagedAgentsServiceAccountActor.builder()
+         *     .serviceAccountId(serviceAccountId)
+         *     .build()
+         * ```
+         */
+        fun serviceAccountRedactedBy(serviceAccountId: String) =
+            redactedBy(
+                BetaManagedAgentsServiceAccountActor.builder()
+                    .serviceAccountId(serviceAccountId)
                     .build()
             )
 
