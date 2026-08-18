@@ -29,6 +29,7 @@ internal class UserProfileServiceTest {
             userProfileService.create(
                 UserProfileCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                     .externalId("user_12345")
                     .metadata(UserProfileCreateParams.Metadata.builder().build())
                     .name("x")
@@ -73,6 +74,7 @@ internal class UserProfileServiceTest {
                 UserProfileUpdateParams.builder()
                     .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                     .externalId("user_12345")
                     .metadata(
                         UserProfileUpdateParams.Metadata.builder()

@@ -38,6 +38,17 @@ private constructor(
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
+     * How the platform uses the API on behalf of the entity this profile represents. `application`:
+     * the platform sells a product that uses the API behind the scenes, and the profile represents
+     * an individual end-user of that product. `passthrough`: the platform resells raw inference,
+     * and the profile identifies the resold-to company.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun accessType(): Optional<AccessType> = body.accessType()
+
+    /**
      * If present, replaces the stored external_id. Omit to leave unchanged. Maximum 255 characters.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -72,6 +83,13 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun relationship(): Optional<Relationship> = body.relationship()
+
+    /**
+     * Returns the raw JSON value of [accessType].
+     *
+     * Unlike [accessType], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _accessType(): JsonField<AccessType> = body._accessType()
 
     /**
      * Returns the raw JSON value of [externalId].
@@ -172,12 +190,34 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
+         * - [accessType]
          * - [externalId]
          * - [metadata]
          * - [name]
          * - [relationship]
+         * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
+
+        /**
+         * How the platform uses the API on behalf of the entity this profile represents.
+         * `application`: the platform sells a product that uses the API behind the scenes, and the
+         * profile represents an individual end-user of that product. `passthrough`: the platform
+         * resells raw inference, and the profile identifies the resold-to company.
+         */
+        fun accessType(accessType: AccessType?) = apply { body.accessType(accessType) }
+
+        /** Alias for calling [Builder.accessType] with `accessType.orElse(null)`. */
+        fun accessType(accessType: Optional<AccessType>) = accessType(accessType.getOrNull())
+
+        /**
+         * Sets [Builder.accessType] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.accessType] with a well-typed [AccessType] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun accessType(accessType: JsonField<AccessType>) = apply { body.accessType(accessType) }
 
         /**
          * If present, replaces the stored external_id. Omit to leave unchanged. Maximum 255
@@ -405,6 +445,7 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val accessType: JsonField<AccessType>,
         private val externalId: JsonField<String>,
         private val metadata: JsonField<Metadata>,
         private val name: JsonField<String>,
@@ -414,6 +455,9 @@ private constructor(
 
         @JsonCreator
         private constructor(
+            @JsonProperty("access_type")
+            @ExcludeMissing
+            accessType: JsonField<AccessType> = JsonMissing.of(),
             @JsonProperty("external_id")
             @ExcludeMissing
             externalId: JsonField<String> = JsonMissing.of(),
@@ -424,7 +468,18 @@ private constructor(
             @JsonProperty("relationship")
             @ExcludeMissing
             relationship: JsonField<Relationship> = JsonMissing.of(),
-        ) : this(externalId, metadata, name, relationship, mutableMapOf())
+        ) : this(accessType, externalId, metadata, name, relationship, mutableMapOf())
+
+        /**
+         * How the platform uses the API on behalf of the entity this profile represents.
+         * `application`: the platform sells a product that uses the API behind the scenes, and the
+         * profile represents an individual end-user of that product. `passthrough`: the platform
+         * resells raw inference, and the profile identifies the resold-to company.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun accessType(): Optional<AccessType> = accessType.getOptional("access_type")
 
         /**
          * If present, replaces the stored external_id. Omit to leave unchanged. Maximum 255
@@ -463,6 +518,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun relationship(): Optional<Relationship> = relationship.getOptional("relationship")
+
+        /**
+         * Returns the raw JSON value of [accessType].
+         *
+         * Unlike [accessType], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("access_type")
+        @ExcludeMissing
+        fun _accessType(): JsonField<AccessType> = accessType
 
         /**
          * Returns the raw JSON value of [externalId].
@@ -518,6 +582,7 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
+            private var accessType: JsonField<AccessType> = JsonMissing.of()
             private var externalId: JsonField<String> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
@@ -526,11 +591,34 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
+                accessType = body.accessType
                 externalId = body.externalId
                 metadata = body.metadata
                 name = body.name
                 relationship = body.relationship
                 additionalProperties = body.additionalProperties.toMutableMap()
+            }
+
+            /**
+             * How the platform uses the API on behalf of the entity this profile represents.
+             * `application`: the platform sells a product that uses the API behind the scenes, and
+             * the profile represents an individual end-user of that product. `passthrough`: the
+             * platform resells raw inference, and the profile identifies the resold-to company.
+             */
+            fun accessType(accessType: AccessType?) = accessType(JsonField.ofNullable(accessType))
+
+            /** Alias for calling [Builder.accessType] with `accessType.orElse(null)`. */
+            fun accessType(accessType: Optional<AccessType>) = accessType(accessType.getOrNull())
+
+            /**
+             * Sets [Builder.accessType] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.accessType] with a well-typed [AccessType] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun accessType(accessType: JsonField<AccessType>) = apply {
+                this.accessType = accessType
             }
 
             /**
@@ -634,7 +722,14 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): Body =
-                Body(externalId, metadata, name, relationship, additionalProperties.toMutableMap())
+                Body(
+                    accessType,
+                    externalId,
+                    metadata,
+                    name,
+                    relationship,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -653,6 +748,7 @@ private constructor(
                 return@apply
             }
 
+            accessType().ifPresent { it.validate() }
             externalId()
             metadata().ifPresent { it.validate() }
             name()
@@ -676,7 +772,8 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (externalId.asKnown().isPresent) 1 else 0) +
+            (accessType.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (externalId.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (relationship.asKnown().getOrNull()?.validity() ?: 0)
@@ -687,6 +784,7 @@ private constructor(
             }
 
             return other is Body &&
+                accessType == other.accessType &&
                 externalId == other.externalId &&
                 metadata == other.metadata &&
                 name == other.name &&
@@ -695,13 +793,161 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(externalId, metadata, name, relationship, additionalProperties)
+            Objects.hash(accessType, externalId, metadata, name, relationship, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{externalId=$externalId, metadata=$metadata, name=$name, relationship=$relationship, additionalProperties=$additionalProperties}"
+            "Body{accessType=$accessType, externalId=$externalId, metadata=$metadata, name=$name, relationship=$relationship, additionalProperties=$additionalProperties}"
+    }
+
+    /**
+     * How the platform uses the API on behalf of the entity this profile represents. `application`:
+     * the platform sells a product that uses the API behind the scenes, and the profile represents
+     * an individual end-user of that product. `passthrough`: the platform resells raw inference,
+     * and the profile identifies the resold-to company.
+     */
+    class AccessType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val APPLICATION = of("application")
+
+            @JvmField val PASSTHROUGH = of("passthrough")
+
+            @JvmStatic fun of(value: String) = AccessType(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): AccessType =
+                value.asString().getOrNull()?.let { of(it) } ?: AccessType(value)
+        }
+
+        /** An enum containing [AccessType]'s known values. */
+        enum class Known {
+            APPLICATION,
+            PASSTHROUGH,
+        }
+
+        /**
+         * An enum containing [AccessType]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [AccessType] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            APPLICATION,
+            PASSTHROUGH,
+            /**
+             * An enum member indicating that [AccessType] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                APPLICATION -> Value.APPLICATION
+                PASSTHROUGH -> Value.PASSTHROUGH
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                APPLICATION -> Known.APPLICATION
+                PASSTHROUGH -> Known.PASSTHROUGH
+                else -> throw AnthropicInvalidDataException("Unknown AccessType: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): AccessType = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is AccessType && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 
     /**
