@@ -16,7 +16,6 @@ internal class FileUploadParamsTest {
         FileUploadParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .file("Example data".byteInputStream())
-            .expiresInSeconds(3600L)
             .build()
     }
 
@@ -26,7 +25,6 @@ internal class FileUploadParamsTest {
             FileUploadParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .file("Example data".byteInputStream())
-                .expiresInSeconds(3600L)
                 .build()
 
         val headers = params._headers()
@@ -52,7 +50,6 @@ internal class FileUploadParamsTest {
             FileUploadParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .file("Example data".byteInputStream())
-                .expiresInSeconds(3600L)
                 .build()
 
         val body = params._body()
@@ -66,13 +63,10 @@ internal class FileUploadParamsTest {
                 InputStream::class.java,
             )
             .isEqualTo(
-                mapOf(
-                        "file" to MultipartField.of("Example data".byteInputStream()),
-                        "expires_in_seconds" to MultipartField.of(3600L),
-                    )
-                    .mapValues { (_, field) ->
-                        field.map { (it as? ByteArray)?.inputStream() ?: it }
-                    }
+                mapOf("file" to MultipartField.of("Example data".byteInputStream())).mapValues {
+                    (_, field) ->
+                    field.map { (it as? ByteArray)?.inputStream() ?: it }
+                }
             )
     }
 

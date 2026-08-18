@@ -18,7 +18,6 @@ internal class BetaUserProfileTest {
                 .id("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .metadata(BetaUserProfile.Metadata.builder().build())
-                .relationship(BetaUserProfile.Relationship.EXTERNAL)
                 .trustGrants(
                     BetaUserProfile.TrustGrants.builder()
                         .putAdditionalProperty("cyber", JsonValue.from(mapOf("status" to "active")))
@@ -26,15 +25,16 @@ internal class BetaUserProfileTest {
                 )
                 .type(BetaUserProfile.Type.USER_PROFILE)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                .accessType(BetaUserProfile.AccessType.APPLICATION)
                 .externalId("user_12345")
                 .name("Example User")
+                .relationship(BetaUserProfile.Relationship.EXTERNAL)
                 .build()
 
         assertThat(betaUserProfile.id()).isEqualTo("uprof_011CZkZCu8hGbp5mYRQgUmz9")
         assertThat(betaUserProfile.createdAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaUserProfile.metadata()).isEqualTo(BetaUserProfile.Metadata.builder().build())
-        assertThat(betaUserProfile.relationship()).isEqualTo(BetaUserProfile.Relationship.EXTERNAL)
         assertThat(betaUserProfile.trustGrants())
             .isEqualTo(
                 BetaUserProfile.TrustGrants.builder()
@@ -44,8 +44,10 @@ internal class BetaUserProfileTest {
         assertThat(betaUserProfile.type()).isEqualTo(BetaUserProfile.Type.USER_PROFILE)
         assertThat(betaUserProfile.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+        assertThat(betaUserProfile.accessType()).contains(BetaUserProfile.AccessType.APPLICATION)
         assertThat(betaUserProfile.externalId()).contains("user_12345")
         assertThat(betaUserProfile.name()).contains("Example User")
+        assertThat(betaUserProfile.relationship()).contains(BetaUserProfile.Relationship.EXTERNAL)
     }
 
     @Test
@@ -56,7 +58,6 @@ internal class BetaUserProfileTest {
                 .id("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .metadata(BetaUserProfile.Metadata.builder().build())
-                .relationship(BetaUserProfile.Relationship.EXTERNAL)
                 .trustGrants(
                     BetaUserProfile.TrustGrants.builder()
                         .putAdditionalProperty("cyber", JsonValue.from(mapOf("status" to "active")))
@@ -64,8 +65,10 @@ internal class BetaUserProfileTest {
                 )
                 .type(BetaUserProfile.Type.USER_PROFILE)
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                .accessType(BetaUserProfile.AccessType.APPLICATION)
                 .externalId("user_12345")
                 .name("Example User")
+                .relationship(BetaUserProfile.Relationship.EXTERNAL)
                 .build()
 
         val roundtrippedBetaUserProfile =
