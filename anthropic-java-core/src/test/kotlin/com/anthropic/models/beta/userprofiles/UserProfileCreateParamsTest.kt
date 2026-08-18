@@ -13,6 +13,7 @@ internal class UserProfileCreateParamsTest {
     fun create() {
         UserProfileCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .accessType(UserProfileCreateParams.AccessType.APPLICATION)
             .externalId("user_12345")
             .metadata(UserProfileCreateParams.Metadata.builder().build())
             .name("x")
@@ -25,6 +26,7 @@ internal class UserProfileCreateParamsTest {
         val params =
             UserProfileCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
                 .metadata(UserProfileCreateParams.Metadata.builder().build())
                 .name("x")
@@ -53,6 +55,7 @@ internal class UserProfileCreateParamsTest {
         val params =
             UserProfileCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
                 .metadata(UserProfileCreateParams.Metadata.builder().build())
                 .name("x")
@@ -61,6 +64,7 @@ internal class UserProfileCreateParamsTest {
 
         val body = params._body()
 
+        assertThat(body.accessType()).contains(UserProfileCreateParams.AccessType.APPLICATION)
         assertThat(body.externalId()).contains("user_12345")
         assertThat(body.metadata()).contains(UserProfileCreateParams.Metadata.builder().build())
         assertThat(body.name()).contains("x")

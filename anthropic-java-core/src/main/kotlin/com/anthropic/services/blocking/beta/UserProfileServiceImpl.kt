@@ -35,7 +35,7 @@ class UserProfileServiceImpl internal constructor(private val clientOptions: Cli
     companion object {
 
         private val DEFAULT_HEADERS =
-            Headers.builder().put("anthropic-beta", "user-profiles-2026-03-24").build()
+            Headers.builder().put("anthropic-beta", "user-profiles-2026-08-18").build()
     }
 
     private val withRawResponse: UserProfileService.WithRawResponse by lazy {

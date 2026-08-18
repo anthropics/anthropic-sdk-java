@@ -15,6 +15,7 @@ internal class UserProfileUpdateParamsTest {
         UserProfileUpdateParams.builder()
             .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
             .externalId("user_12345")
             .metadata(
                 UserProfileUpdateParams.Metadata.builder()
@@ -44,6 +45,7 @@ internal class UserProfileUpdateParamsTest {
             UserProfileUpdateParams.builder()
                 .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
                 .metadata(
                     UserProfileUpdateParams.Metadata.builder()
@@ -80,6 +82,7 @@ internal class UserProfileUpdateParamsTest {
             UserProfileUpdateParams.builder()
                 .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
                 .metadata(
                     UserProfileUpdateParams.Metadata.builder()
@@ -92,6 +95,7 @@ internal class UserProfileUpdateParamsTest {
 
         val body = params._body()
 
+        assertThat(body.accessType()).contains(UserProfileUpdateParams.AccessType.APPLICATION)
         assertThat(body.externalId()).contains("user_12345")
         assertThat(body.metadata())
             .contains(

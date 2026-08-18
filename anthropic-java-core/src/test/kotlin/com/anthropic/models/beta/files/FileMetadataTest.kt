@@ -20,7 +20,6 @@ internal class FileMetadataTest {
                 .mimeType("application/pdf")
                 .sizeBytes(102400L)
                 .downloadable(false)
-                .expiresAt(OffsetDateTime.parse("2025-05-15T18:37:24.100435Z"))
                 .scope(BetaFileScope.of("id"))
                 .build()
 
@@ -31,8 +30,6 @@ internal class FileMetadataTest {
         assertThat(fileMetadata.mimeType()).isEqualTo("application/pdf")
         assertThat(fileMetadata.sizeBytes()).isEqualTo(102400L)
         assertThat(fileMetadata.downloadable()).contains(false)
-        assertThat(fileMetadata.expiresAt())
-            .contains(OffsetDateTime.parse("2025-05-15T18:37:24.100435Z"))
         assertThat(fileMetadata.scope()).contains(BetaFileScope.of("id"))
     }
 
@@ -47,7 +44,6 @@ internal class FileMetadataTest {
                 .mimeType("application/pdf")
                 .sizeBytes(102400L)
                 .downloadable(false)
-                .expiresAt(OffsetDateTime.parse("2025-05-15T18:37:24.100435Z"))
                 .scope(BetaFileScope.of("id"))
                 .build()
 
