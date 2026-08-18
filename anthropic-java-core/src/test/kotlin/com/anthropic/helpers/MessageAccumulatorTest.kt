@@ -990,6 +990,40 @@ internal class MessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateUnknownContentBlockAndDeltaTypes() {
+        val accumulator = MessageAccumulator.create()
+        val unknownBlockJson =
+            """{"type":"zz_future_block","id":"zzblk_1","payload":{"level":2,"tags":["a","b"]}}"""
+
+        accumulator.accumulate(messageStartEvent())
+
+        accumulator.accumulate(
+            contentBlockStartEvent(
+                0L,
+                jsonMapper().readValue(unknownBlockJson, ContentBlock::class.java),
+            )
+        )
+        accumulator.accumulate(unknownContentBlockDeltaEvent(0L))
+        accumulator.accumulate(contentBlockStopEvent(0L))
+
+        accumulator.accumulate(textContentBlockStartEvent(1L, "ONE."))
+        accumulator.accumulate(unknownContentBlockDeltaEvent(1L))
+        accumulator.accumulate(textContentBlockDeltaEvent(1L, "TWO."))
+        accumulator.accumulate(contentBlockStopEvent(1L))
+
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(StopReason.END_TURN), outputTokens = 9L)
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val content = accumulator.message().content()
+
+        assertThat(content.size).isEqualTo(2)
+        assertThat(jsonMapper().writeValueAsString(content[0])).isEqualTo(unknownBlockJson)
+        assertThat(content[1].asText().text()).isEqualTo("ONE.TWO.")
+    }
+
+    @Test
     fun fixtureCreation() {
         // A quick smoke test to ensure that all the test fixture factory functions work without
         // throwing any exceptions unless expected to do so.
@@ -1223,6 +1257,16 @@ internal class MessageAccumulatorTest {
     private fun signatureContentBlockDeltaEvent(index: Long) =
         contentBlockDeltaEvent(index, signatureDelta("a-signature"))
 
+    private fun unknownContentBlockDeltaEvent(index: Long) =
+        contentBlockDeltaEvent(
+            index,
+            jsonMapper()
+                .readValue(
+                    """{"type":"zz_future_delta","fragment":"x"}""",
+                    RawContentBlockDelta::class.java,
+                ),
+        )
+
     private fun contentBlockStartEvent(index: Long, contentBlock: ContentBlock) =
         RawMessageStreamEvent.ofContentBlockStart(
             RawContentBlockStartEvent.builder().index(index).contentBlock(contentBlock).build()
@@ -1234,6 +1278,7 @@ internal class MessageAccumulatorTest {
                 .index(index)
                 .apply {
                     when (delta) {
+                        is RawContentBlockDelta -> delta(delta)
                         is TextDelta -> delta(delta)
                         is CitationsDelta -> delta(delta)
                         is InputJsonDelta -> delta(delta)
