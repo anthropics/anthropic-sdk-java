@@ -1,5 +1,31 @@
 # Changelog
 
+## 2.55.0 (2026-08-18)
+
+Full Changelog: [v2.54.0...v2.55.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.54.0...v2.55.0)
+
+### Features
+
+* **api:** additions to files and memory stores ([1f89b9b](https://github.com/anthropics/anthropic-sdk-java/commit/1f89b9b41e239c832fe9608bcf5e68bc3dc4968d))
+* **api:** updates to skill, files, and user profiles ([a5febda](https://github.com/anthropics/anthropic-sdk-java/commit/a5febdadd6dea6d922774afce1522a4b3ff61071))
+* **client:** add helpers for accessing the workspace ID in response headers ([718d5c1](https://github.com/anthropics/anthropic-sdk-java/commit/718d5c180edad19737654827fc0f4758cb9512ba))
+* **internal:** upgrade to Gradle 9 and Kotlin 2.3 with a shared version catalog ([596395e](https://github.com/anthropics/anthropic-sdk-java/commit/596395e1bd5ba9589772490da63d2344f254f11d))
+
+
+### Bug Fixes
+
+* **api:** remove unsupported mid_conv_system content block ([89bf901](https://github.com/anthropics/anthropic-sdk-java/commit/89bf90137d5fc003f74684f90d5e8dfe8a23e875))
+* **client:** don't let null usage fields in message_delta overwrite accumulated usage ([#226](https://github.com/anthropics/anthropic-sdk-java/issues/226)) ([603d2f5](https://github.com/anthropics/anthropic-sdk-java/commit/603d2f5474850d5c40ce047b1080eecdec9e6a87))
+* **client:** keep unknown content block and delta types when accumulating a message stream ([#225](https://github.com/anthropics/anthropic-sdk-java/issues/225)) ([9bf944d](https://github.com/anthropics/anthropic-sdk-java/commit/9bf944db2663f465db0590adbed23744f3c31009))
+* **tool-runner:** forward the server-assigned container on follow-up requests ([#216](https://github.com/anthropics/anthropic-sdk-java/issues/216)) ([b754c45](https://github.com/anthropics/anthropic-sdk-java/commit/b754c459b55192947787a46db07cf4e97e07cc31))
+* **tool-runner:** send the BetaToolRunner helper header ([#220](https://github.com/anthropics/anthropic-sdk-java/issues/220)) ([95b359c](https://github.com/anthropics/anthropic-sdk-java/commit/95b359c5f9495f86ba8cafa417b5856aacb9cf54))
+
+
+### Chores
+
+* **internal:** lint and format build logic sources with ktfmt ([9b52a2a](https://github.com/anthropics/anthropic-sdk-java/commit/9b52a2afc079ae8fb067e661584fecdb5aed682e))
+* **internal:** remove leftover prism references ([7624523](https://github.com/anthropics/anthropic-sdk-java/commit/76245235cbc8d0ba8d0736329778115f14ceb6e2))
+
 ## 2.54.0 (2026-08-13)
 
 Full Changelog: [v2.53.0...v2.54.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.53.0...v2.54.0)
