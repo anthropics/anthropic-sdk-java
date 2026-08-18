@@ -5,7 +5,6 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.*
-import kotlin.jvm.optionals.getOrNull
 
 /** Checks if a content block is one that tracks tool input via input_json_delta events */
 @JvmSynthetic
@@ -84,33 +83,15 @@ class BetaMessageAccumulator private constructor() {
                 builder.outputTokens(deltaUsage.outputTokens())
             }
 
-            if (deltaUsage.inputTokens().isPresent) {
-                builder.inputTokens(deltaUsage.inputTokens().get())
-            }
-
-            if (!deltaUsage._cacheCreationInputTokens().isMissing()) {
-                builder.cacheCreationInputTokens(deltaUsage.cacheCreationInputTokens())
-            }
-
-            if (!deltaUsage._cacheReadInputTokens().isMissing()) {
-                builder.cacheReadInputTokens(deltaUsage.cacheReadInputTokens())
-            }
-
-            if (!deltaUsage._serverToolUse().isMissing()) {
-                builder.serverToolUse(deltaUsage.serverToolUse())
-            }
-
-            if (!deltaUsage._outputTokensDetails().isMissing()) {
-                builder.outputTokensDetails(deltaUsage.outputTokensDetails().getOrNull())
-            }
-
-            if (!deltaUsage._fallbackCredit().isMissing()) {
-                builder.fallbackCredit(deltaUsage.fallbackCredit().getOrNull())
-            }
-
-            if (!deltaUsage._iterations().isMissing()) {
+            deltaUsage.inputTokens().ifPresent { builder.inputTokens(it) }
+            deltaUsage.cacheCreationInputTokens().ifPresent { builder.cacheCreationInputTokens(it) }
+            deltaUsage.cacheReadInputTokens().ifPresent { builder.cacheReadInputTokens(it) }
+            deltaUsage.serverToolUse().ifPresent { builder.serverToolUse(it) }
+            deltaUsage.outputTokensDetails().ifPresent { builder.outputTokensDetails(it) }
+            deltaUsage.fallbackCredit().ifPresent { builder.fallbackCredit(it) }
+            deltaUsage.iterations().ifPresent { deltaIterations ->
                 builder.iterations(
-                    deltaUsage.iterations().getOrNull()?.map { deltaIteration ->
+                    deltaIterations.map { deltaIteration ->
                         // Convert between the structurally identical per-type unions via JSON so
                         // every variant survives — including variants unknown to the union (e.g.
                         // fallback iteration types), which both unions carry as raw values.
