@@ -78,6 +78,38 @@ internal class BetaMessageAccumulatorTest {
         assertThat(usage2.outputTokens()).isEqualTo(11L)
     }
 
+    @Test
+    fun mergeMessageUsageWithNullCountersKeepsMessageStartValues() {
+        val startUsage =
+            usage(INPUT_TOKENS)
+                .toBuilder()
+                .cacheCreationInputTokens(10L)
+                .cacheReadInputTokens(5L)
+                .serverToolUse(
+                    BetaServerToolUsage.builder().webSearchRequests(2L).webFetchRequests(1L).build()
+                )
+                .outputTokensDetails(BetaOutputTokensDetails.builder().thinkingTokens(3L).build())
+                .build()
+
+        val merged =
+            BetaMessageAccumulator.mergeMessageUsage(
+                startUsage,
+                jsonMapper()
+                    .readValue(
+                        """{"output_tokens":5,"input_tokens":null,"cache_creation_input_tokens":null,"cache_read_input_tokens":null,"server_tool_use":null,"output_tokens_details":null,"fallback_credit":null,"iterations":null}""",
+                        BetaMessageDeltaUsage::class.java,
+                    ),
+            )
+
+        assertThat(merged.outputTokens()).isEqualTo(5L)
+        assertThat(merged.inputTokens()).isEqualTo(INPUT_TOKENS)
+        assertThat(merged.cacheCreationInputTokens()).hasValue(10L)
+        assertThat(merged.cacheReadInputTokens()).hasValue(5L)
+        assertThat(merged.serverToolUse()).isEqualTo(startUsage.serverToolUse())
+        assertThat(merged.outputTokensDetails()).isEqualTo(startUsage.outputTokensDetails())
+        assertThat(merged.iterations()).hasValue(listOf())
+    }
+
     // The chain shape `BetaRefusalFallbackInterceptor` (and server-side `fallbacks`) writes into
     // the terminal message_delta's usage labels the serving hop `fallback_message`.
     @Test

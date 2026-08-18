@@ -80,6 +80,36 @@ internal class MessageAccumulatorTest {
     }
 
     @Test
+    fun mergeMessageUsageWithNullCountersKeepsMessageStartValues() {
+        val startUsage =
+            usage(INPUT_TOKENS)
+                .toBuilder()
+                .cacheCreationInputTokens(10L)
+                .cacheReadInputTokens(5L)
+                .serverToolUse(
+                    ServerToolUsage.builder().webFetchRequests(1L).webSearchRequests(2L).build()
+                )
+                .outputTokensDetails(OutputTokensDetails.builder().thinkingTokens(3L).build())
+                .build()
+
+        val merged =
+            MessageAccumulator.mergeMessageUsage(
+                startUsage,
+                jsonMapper()
+                    .readValue(
+                        """{"output_tokens":5,"cache_creation_input_tokens":null,"cache_read_input_tokens":null,"server_tool_use":null,"output_tokens_details":null}""",
+                        MessageDeltaUsage::class.java,
+                    ),
+            )
+
+        assertThat(merged.outputTokens()).isEqualTo(5L)
+        assertThat(merged.cacheCreationInputTokens()).hasValue(10L)
+        assertThat(merged.cacheReadInputTokens()).hasValue(5L)
+        assertThat(merged.serverToolUse()).isEqualTo(startUsage.serverToolUse())
+        assertThat(merged.outputTokensDetails()).isEqualTo(startUsage.outputTokensDetails())
+    }
+
+    @Test
     fun mergeTextDeltaWrongBlockType() {
         assertThatThrownBy {
                 MessageAccumulator.mergeTextDelta(
