@@ -1,6 +1,7 @@
 package com.anthropic.helpers
 
 import com.anthropic.core.JsonObject
+import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.BashCodeExecutionToolResultBlock
@@ -411,6 +412,11 @@ class MessageAccumulator private constructor() {
                                     override fun visitRedactedThinking(
                                         redactedThinking: RedactedThinkingBlock
                                     ) = ContentBlock.ofRedactedThinking(redactedThinking)
+
+                                    // A block type newer than this SDK is kept as raw JSON, as it
+                                    // would be in the non-streaming message.
+                                    override fun unknown(json: JsonValue?): ContentBlock =
+                                        JSON_MAPPER.convertValue(json, ContentBlock::class.java)
                                 }
                             )
                 }
@@ -448,6 +454,8 @@ class MessageAccumulator private constructor() {
 
                                     override fun visitSignature(signature: SignatureDelta) =
                                         mergeSignatureDelta(oldContentBlock, signature)
+
+                                    override fun unknown(json: JsonValue?) = oldContentBlock
                                 }
                             )
                 }

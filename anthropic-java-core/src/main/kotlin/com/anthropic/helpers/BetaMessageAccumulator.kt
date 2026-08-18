@@ -1,6 +1,7 @@
 package com.anthropic.helpers
 
 import com.anthropic.core.JsonObject
+import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.*
@@ -453,6 +454,11 @@ class BetaMessageAccumulator private constructor() {
 
                                     override fun visitCompaction(compaction: BetaCompactionBlock) =
                                         BetaContentBlock.ofCompaction(compaction)
+
+                                    // A block type newer than this SDK is kept as raw JSON, as it
+                                    // would be in the non-streaming message.
+                                    override fun unknown(json: JsonValue?): BetaContentBlock =
+                                        JSON_MAPPER.convertValue(json, BetaContentBlock::class.java)
                                 }
                             )
 
@@ -506,6 +512,8 @@ class BetaMessageAccumulator private constructor() {
                                     override fun visitCompaction(
                                         compaction: BetaCompactionContentBlockDelta
                                     ) = mergeCompactionDelta(oldContentBlock, compaction)
+
+                                    override fun unknown(json: JsonValue?) = oldContentBlock
                                 }
                             )
                 }
