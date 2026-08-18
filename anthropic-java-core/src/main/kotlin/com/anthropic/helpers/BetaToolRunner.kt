@@ -36,7 +36,7 @@ internal constructor(
         }
 
         return iterator {
-            var paramsBuilder = params.initialMessageParams.toBuilder()
+            var paramsBuilder = params.initialMessageParams.toBuilderWithToolRunnerHeader()
 
             for (iteration in 0.until(params.maxIterations().orElse(Long.MAX_VALUE))) {
                 currentParams = paramsBuilder.build()
@@ -56,7 +56,7 @@ internal constructor(
                         .adoptContainer(message)
                         .addMessage(generateToolResponse(message.toParam()) ?: break)
                 } else {
-                    paramsBuilder = nextParams.toBuilder()
+                    paramsBuilder = nextParams.toBuilderWithToolRunnerHeader()
                     this@BetaToolRunner.nextParams = null
                 }
             }
@@ -73,7 +73,7 @@ internal constructor(
                 }
 
                 return iterator {
-                    var paramsBuilder = params.initialMessageParams.toBuilder()
+                    var paramsBuilder = params.initialMessageParams.toBuilderWithToolRunnerHeader()
 
                     for (iteration in 0.until(params.maxIterations().orElse(Long.MAX_VALUE))) {
                         currentParams = paramsBuilder.build()
@@ -107,7 +107,7 @@ internal constructor(
                                 .adoptContainer(message)
                                 .addMessage(generateToolResponse(message.toParam()) ?: break)
                         } else {
-                            paramsBuilder = nextParams.toBuilder()
+                            paramsBuilder = nextParams.toBuilderWithToolRunnerHeader()
                             this@BetaToolRunner.nextParams = null
                         }
                     }
@@ -140,6 +140,16 @@ internal constructor(
         val lastMessage = currentParams.messages().lastOrNull() ?: return Optional.empty()
         return Optional.ofNullable(generateToolResponse(lastMessage))
     }
+
+    private fun MessageCreateParams.toBuilderWithToolRunnerHeader(): MessageCreateParams.Builder =
+        toBuilder()
+            .replaceAdditionalHeaders(
+                STAINLESS_HELPER_HEADER,
+                mergedStainlessHelperValue(
+                    _additionalHeaders(),
+                    StainlessHelperHeaderValue.BETA_TOOL_RUNNER,
+                ),
+            )
 
     /**
      * Carries the container the last turn ran in onto the next request: container-bound server
