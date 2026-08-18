@@ -37,6 +37,7 @@ internal class BetaToolRunnerTest {
             // NOTE: In tests, identify tools with their snake-case names (e.g., "get_weather").
             .addTool(GetWeather::class.java)
             .addTool(BrokenGetWeather::class.java)
+            .putAdditionalHeader(STAINLESS_HELPER_HEADER, "BetaToolRunner")
             .build()
     private val requestOptions = RequestOptions.builder().timeout(Duration.ofSeconds(42)).build()
 
@@ -789,6 +790,167 @@ internal class BetaToolRunnerTest {
     }
 
     @Test
+    fun iteration_whenNoHelperHeader_tagsEveryRequestOnce() {
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(
+                        initialMessageParams
+                            .toBuilder()
+                            .removeAdditionalHeaders(STAINLESS_HELPER_HEADER)
+                            .build()
+                    )
+                    .maxIterations(2)
+                    .build(),
+                requestOptions,
+            )
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Untagged City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, finalAssistantMessage())
+
+        toolRunner.toList()
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        assertThat(
+                requests.allValues.map { it._additionalHeaders().values(STAINLESS_HELPER_HEADER) }
+            )
+            .containsExactly(listOf("BetaToolRunner"), listOf("BetaToolRunner"))
+        assertThat(requests.secondValue)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(assistantMessage1)
+                    .addMessage(getWeatherToolResponse("Untagged City"))
+                    .build()
+            )
+    }
+
+    @Test
+    fun iteration_whenHelperHeaderAlreadySet_appendsRunnerTagOnce() {
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(
+                        initialMessageParams
+                            .toBuilder()
+                            .replaceAdditionalHeaders(STAINLESS_HELPER_HEADER, "something-else")
+                            .build()
+                    )
+                    .maxIterations(2)
+                    .build(),
+                requestOptions,
+            )
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Pre-tagged City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, finalAssistantMessage())
+
+        toolRunner.toList()
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        assertThat(
+                requests.allValues.map { it._additionalHeaders().values(STAINLESS_HELPER_HEADER) }
+            )
+            .containsExactly(
+                listOf("something-else, BetaToolRunner"),
+                listOf("something-else, BetaToolRunner"),
+            )
+    }
+
+    @Test
+    fun iteration_whenNextParamsUntagged_tagsNextRequest() {
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Untagged Next Params City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, finalAssistantMessage())
+
+        toolRunner
+            .asSequence()
+            .onEachIndexed { index, message ->
+                if (index == 0) {
+                    toolRunner.setNextParams(
+                        toolRunner
+                            .params()
+                            .toBuilder()
+                            .removeAdditionalHeaders(STAINLESS_HELPER_HEADER)
+                            .addMessage(message)
+                            .addMessage(getWeatherToolResponse("Untagged Next Params City"))
+                            .build()
+                    )
+                }
+            }
+            .toList()
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        assertThat(
+                requests.allValues.map { it._additionalHeaders().values(STAINLESS_HELPER_HEADER) }
+            )
+            .containsExactly(listOf("BetaToolRunner"), listOf("BetaToolRunner"))
+        assertThat(GetWeather.executions).doesNotContainKey("Untagged Next Params City")
+    }
+
+    @Test
+    fun streamingIteration_whenNoHelperHeader_tagsEveryRequestOnce() {
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(
+                        initialMessageParams
+                            .toBuilder()
+                            .removeAdditionalHeaders(STAINLESS_HELPER_HEADER)
+                            .build()
+                    )
+                    .maxIterations(2)
+                    .build(),
+                requestOptions,
+            )
+        val finalEvents =
+            listOf(
+                BetaRawMessageStreamEvent.ofMessageStart(
+                    BetaRawMessageStartEvent.builder()
+                        .message(finalAssistantMessage().toBuilder().content(listOf()).build())
+                        .build()
+                ),
+                BetaRawMessageStreamEvent.ofMessageStop(BetaRawMessageStopEvent.builder().build()),
+            )
+        whenever(messageService.createStreaming(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                streamResponseOf(getWeatherToolUseStreamEvents("Untagged Streaming City")),
+                streamResponseOf(finalEvents),
+            )
+
+        var responses = 0
+        for (response in toolRunner.streaming()) {
+            response.stream().forEach { _ -> }
+            responses++
+        }
+
+        assertThat(responses).isEqualTo(2)
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).createStreaming(requests.capture(), any())
+        assertThat(
+                requests.allValues.map { it._additionalHeaders().values(STAINLESS_HELPER_HEADER) }
+            )
+            .containsExactly(listOf("BetaToolRunner"), listOf("BetaToolRunner"))
+    }
+
+    @Test
     fun iteration_whenFallbackSeam_executesOnlyPostSeamToolUse() {
         val assistantMessage1 =
             betaMessageBuilder()
@@ -1384,6 +1546,76 @@ internal class BetaToolRunnerTest {
                 )
             )
             .build()
+
+    private fun getWeatherToolUseStreamEvents(location: String) =
+        listOf(
+            BetaRawMessageStreamEvent.ofMessageStart(
+                BetaRawMessageStartEvent.builder()
+                    .message(
+                        betaMessageBuilder()
+                            .content(listOf())
+                            .stopDetails(JsonMissing.of())
+                            .stopReason(JsonMissing.of())
+                            .stopSequence(JsonMissing.of())
+                            .contextManagement(null)
+                            .build()
+                    )
+                    .build()
+            ),
+            BetaRawMessageStreamEvent.ofContentBlockStart(
+                BetaRawContentBlockStartEvent.builder()
+                    .index(0L)
+                    .contentBlock(
+                        BetaRawContentBlockStartEvent.ContentBlock.ofToolUse(
+                            BetaToolUseBlock.builder()
+                                .id("toolUseId")
+                                .name("get_weather")
+                                .input(JsonNull.of())
+                                .build()
+                        )
+                    )
+                    .build()
+            ),
+            BetaRawMessageStreamEvent.ofContentBlockDelta(
+                BetaRawContentBlockDeltaEvent.builder()
+                    .index(0L)
+                    .delta(
+                        BetaInputJsonDelta.builder()
+                            .partialJson("""{"location":"$location"}""")
+                            .build()
+                    )
+                    .build()
+            ),
+            BetaRawMessageStreamEvent.ofContentBlockStop(
+                BetaRawContentBlockStopEvent.builder().index(0L).build()
+            ),
+            BetaRawMessageStreamEvent.ofMessageDelta(
+                BetaRawMessageDeltaEvent.builder()
+                    .contextManagement(null)
+                    .delta(
+                        BetaRawMessageDeltaEvent.Delta.builder()
+                            .container(null)
+                            .stopDetails(null)
+                            .stopReason(BetaStopReason.TOOL_USE)
+                            .stopSequence(null)
+                            .build()
+                    )
+                    .usage(
+                        BetaMessageDeltaUsage.builder()
+                            .fallbackCredit(null)
+                            .outputTokens(1L)
+                            .outputTokensDetails(null)
+                            .cacheCreationInputTokens(0L)
+                            .cacheReadInputTokens(0L)
+                            .inputTokens(1L)
+                            .serverToolUse(null)
+                            .iterations(null)
+                            .build()
+                    )
+                    .build()
+            ),
+            BetaRawMessageStreamEvent.ofMessageStop(BetaRawMessageStopEvent.builder().build()),
+        )
 
     private fun finalAssistantMessage() =
         betaMessageBuilder()
