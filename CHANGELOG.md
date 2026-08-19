@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.56.0 (2026-08-19)
+
+Full Changelog: [v2.55.0...v2.56.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.55.0...v2.56.0)
+
+### Features
+
+* **api:** Files and Skills APIs are now GA; add computer use and browser use toolsets ([762f342](https://github.com/anthropics/anthropic-sdk-java/commit/762f3423d18f6194a5eab8e25b9207679aa392d0))
+
 ## 2.55.0 (2026-08-18)
 
 Full Changelog: [v2.54.0...v2.55.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.54.0...v2.55.0)
