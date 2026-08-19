@@ -3,11 +3,11 @@
 package com.anthropic.models.beta.sessions
 
 import com.anthropic.core.jsonMapper
-import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401Params
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkillParams
+import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsSkillParams
@@ -57,14 +57,14 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(
@@ -128,14 +128,14 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(
@@ -189,14 +189,14 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                                     .AGENT_TOOLSET_20260401
                             )
                             .addConfig(
-                                BetaManagedAgentsAgentToolConfigParams.builder()
-                                    .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                                BetaManagedAgentsBashToolConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
                                         BetaManagedAgentsAlwaysAllowPolicy.of(
                                             BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                         )
                                     )
+                                    .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                     .build()
                             )
                             .defaultConfig(
@@ -240,14 +240,14 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(
@@ -304,14 +304,14 @@ internal class BetaManagedAgentsAgentWithOverridesParamsTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(

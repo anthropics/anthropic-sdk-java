@@ -56,14 +56,14 @@ internal class AgentCreateParamsTest {
                 BetaManagedAgentsAgentToolset20260401Params.builder()
                     .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
                     .addConfig(
-                        BetaManagedAgentsAgentToolConfigParams.builder()
-                            .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                        BetaManagedAgentsBashToolConfigParams.builder()
                             .enabled(true)
                             .permissionPolicy(
                                 BetaManagedAgentsAlwaysAllowPolicy.of(
                                     BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                 )
                             )
+                            .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                             .build()
                     )
                     .defaultConfig(
@@ -128,14 +128,14 @@ internal class AgentCreateParamsTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(
@@ -220,14 +220,14 @@ internal class AgentCreateParamsTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(
@@ -300,14 +300,14 @@ internal class AgentCreateParamsTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(

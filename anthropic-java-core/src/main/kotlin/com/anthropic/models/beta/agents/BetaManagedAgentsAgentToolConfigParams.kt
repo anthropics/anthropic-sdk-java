@@ -5,17 +5,12 @@ package com.anthropic.models.beta.agents
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
 import com.anthropic.core.Enum
-import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
 import com.fasterxml.jackson.databind.JsonNode
@@ -23,233 +18,281 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Configuration override for a specific tool within a toolset. */
+@JsonDeserialize(using = BetaManagedAgentsAgentToolConfigParams.Deserializer::class)
+@JsonSerialize(using = BetaManagedAgentsAgentToolConfigParams.Serializer::class)
 class BetaManagedAgentsAgentToolConfigParams
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val name: JsonField<Name>,
-    private val enabled: JsonField<Boolean>,
-    private val permissionPolicy: JsonField<PermissionPolicy>,
-    private val additionalProperties: MutableMap<String, JsonValue>,
+    private val bash: BetaManagedAgentsBashToolConfigParams? = null,
+    private val edit: BetaManagedAgentsEditToolConfigParams? = null,
+    private val read: BetaManagedAgentsReadToolConfigParams? = null,
+    private val write: BetaManagedAgentsWriteToolConfigParams? = null,
+    private val glob: BetaManagedAgentsGlobToolConfigParams? = null,
+    private val grep: BetaManagedAgentsGrepToolConfigParams? = null,
+    private val webFetch: BetaManagedAgentsWebFetchToolConfigParams? = null,
+    private val webSearch: BetaManagedAgentsWebSearchToolConfigParams? = null,
+    private val _json: JsonValue? = null,
 ) {
 
-    @JsonCreator
-    private constructor(
-        @JsonProperty("name") @ExcludeMissing name: JsonField<Name> = JsonMissing.of(),
-        @JsonProperty("enabled") @ExcludeMissing enabled: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("permission_policy")
-        @ExcludeMissing
-        permissionPolicy: JsonField<PermissionPolicy> = JsonMissing.of(),
-    ) : this(name, enabled, permissionPolicy, mutableMapOf())
+    fun type(): Type =
+        accept(
+            object : Visitor<Type> {
+                override fun visitBash(bash: BetaManagedAgentsBashToolConfigParams): Type =
+                    Type.BASH
+
+                override fun visitEdit(edit: BetaManagedAgentsEditToolConfigParams): Type =
+                    Type.EDIT
+
+                override fun visitRead(read: BetaManagedAgentsReadToolConfigParams): Type =
+                    Type.READ
+
+                override fun visitWrite(write: BetaManagedAgentsWriteToolConfigParams): Type =
+                    Type.WRITE
+
+                override fun visitGlob(glob: BetaManagedAgentsGlobToolConfigParams): Type =
+                    Type.GLOB
+
+                override fun visitGrep(grep: BetaManagedAgentsGrepToolConfigParams): Type =
+                    Type.GREP
+
+                override fun visitWebFetch(
+                    webFetch: BetaManagedAgentsWebFetchToolConfigParams
+                ): Type = Type.WEB_FETCH
+
+                override fun visitWebSearch(
+                    webSearch: BetaManagedAgentsWebSearchToolConfigParams
+                ): Type = Type.WEB_SEARCH
+
+                override fun unknown(json: JsonValue?): Type =
+                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
+        )
+
+    fun enabled(): Optional<Boolean> =
+        accept(
+            object : Visitor<Optional<Boolean>> {
+                override fun visitBash(
+                    bash: BetaManagedAgentsBashToolConfigParams
+                ): Optional<Boolean> = bash.enabled()
+
+                override fun visitEdit(
+                    edit: BetaManagedAgentsEditToolConfigParams
+                ): Optional<Boolean> = edit.enabled()
+
+                override fun visitRead(
+                    read: BetaManagedAgentsReadToolConfigParams
+                ): Optional<Boolean> = read.enabled()
+
+                override fun visitWrite(
+                    write: BetaManagedAgentsWriteToolConfigParams
+                ): Optional<Boolean> = write.enabled()
+
+                override fun visitGlob(
+                    glob: BetaManagedAgentsGlobToolConfigParams
+                ): Optional<Boolean> = glob.enabled()
+
+                override fun visitGrep(
+                    grep: BetaManagedAgentsGrepToolConfigParams
+                ): Optional<Boolean> = grep.enabled()
+
+                override fun visitWebFetch(
+                    webFetch: BetaManagedAgentsWebFetchToolConfigParams
+                ): Optional<Boolean> = webFetch.enabled()
+
+                override fun visitWebSearch(
+                    webSearch: BetaManagedAgentsWebSearchToolConfigParams
+                ): Optional<Boolean> = webSearch.enabled()
+            }
+        )
+
+    fun allowedDomains(): Optional<List<String>> =
+        accept(
+            object : Visitor<Optional<List<String>>> {
+                override fun visitBash(
+                    bash: BetaManagedAgentsBashToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitEdit(
+                    edit: BetaManagedAgentsEditToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitRead(
+                    read: BetaManagedAgentsReadToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitWrite(
+                    write: BetaManagedAgentsWriteToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitGlob(
+                    glob: BetaManagedAgentsGlobToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitGrep(
+                    grep: BetaManagedAgentsGrepToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitWebFetch(
+                    webFetch: BetaManagedAgentsWebFetchToolConfigParams
+                ): Optional<List<String>> = webFetch.allowedDomains()
+
+                override fun visitWebSearch(
+                    webSearch: BetaManagedAgentsWebSearchToolConfigParams
+                ): Optional<List<String>> = webSearch.allowedDomains()
+            }
+        )
+
+    fun blockedDomains(): Optional<List<String>> =
+        accept(
+            object : Visitor<Optional<List<String>>> {
+                override fun visitBash(
+                    bash: BetaManagedAgentsBashToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitEdit(
+                    edit: BetaManagedAgentsEditToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitRead(
+                    read: BetaManagedAgentsReadToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitWrite(
+                    write: BetaManagedAgentsWriteToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitGlob(
+                    glob: BetaManagedAgentsGlobToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitGrep(
+                    grep: BetaManagedAgentsGrepToolConfigParams
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitWebFetch(
+                    webFetch: BetaManagedAgentsWebFetchToolConfigParams
+                ): Optional<List<String>> = webFetch.blockedDomains()
+
+                override fun visitWebSearch(
+                    webSearch: BetaManagedAgentsWebSearchToolConfigParams
+                ): Optional<List<String>> = webSearch.blockedDomains()
+            }
+        )
+
+    /** Configuration override for the bash tool. */
+    fun bash(): Optional<BetaManagedAgentsBashToolConfigParams> = Optional.ofNullable(bash)
+
+    /** Configuration override for the edit tool. */
+    fun edit(): Optional<BetaManagedAgentsEditToolConfigParams> = Optional.ofNullable(edit)
+
+    /** Configuration override for the read tool. */
+    fun read(): Optional<BetaManagedAgentsReadToolConfigParams> = Optional.ofNullable(read)
+
+    /** Configuration override for the write tool. */
+    fun write(): Optional<BetaManagedAgentsWriteToolConfigParams> = Optional.ofNullable(write)
+
+    /** Configuration override for the glob tool. */
+    fun glob(): Optional<BetaManagedAgentsGlobToolConfigParams> = Optional.ofNullable(glob)
+
+    /** Configuration override for the grep tool. */
+    fun grep(): Optional<BetaManagedAgentsGrepToolConfigParams> = Optional.ofNullable(grep)
+
+    /** Configuration override for the web_fetch tool. */
+    fun webFetch(): Optional<BetaManagedAgentsWebFetchToolConfigParams> =
+        Optional.ofNullable(webFetch)
+
+    /** Configuration override for the web_search tool. */
+    fun webSearch(): Optional<BetaManagedAgentsWebSearchToolConfigParams> =
+        Optional.ofNullable(webSearch)
+
+    fun isBash(): Boolean = bash != null
+
+    fun isEdit(): Boolean = edit != null
+
+    fun isRead(): Boolean = read != null
+
+    fun isWrite(): Boolean = write != null
+
+    fun isGlob(): Boolean = glob != null
+
+    fun isGrep(): Boolean = grep != null
+
+    fun isWebFetch(): Boolean = webFetch != null
+
+    fun isWebSearch(): Boolean = webSearch != null
+
+    /** Configuration override for the bash tool. */
+    fun asBash(): BetaManagedAgentsBashToolConfigParams = bash.getOrThrow("bash")
+
+    /** Configuration override for the edit tool. */
+    fun asEdit(): BetaManagedAgentsEditToolConfigParams = edit.getOrThrow("edit")
+
+    /** Configuration override for the read tool. */
+    fun asRead(): BetaManagedAgentsReadToolConfigParams = read.getOrThrow("read")
+
+    /** Configuration override for the write tool. */
+    fun asWrite(): BetaManagedAgentsWriteToolConfigParams = write.getOrThrow("write")
+
+    /** Configuration override for the glob tool. */
+    fun asGlob(): BetaManagedAgentsGlobToolConfigParams = glob.getOrThrow("glob")
+
+    /** Configuration override for the grep tool. */
+    fun asGrep(): BetaManagedAgentsGrepToolConfigParams = grep.getOrThrow("grep")
+
+    /** Configuration override for the web_fetch tool. */
+    fun asWebFetch(): BetaManagedAgentsWebFetchToolConfigParams = webFetch.getOrThrow("webFetch")
+
+    /** Configuration override for the web_search tool. */
+    fun asWebSearch(): BetaManagedAgentsWebSearchToolConfigParams =
+        webSearch.getOrThrow("webSearch")
+
+    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
-     * Built-in agent tool identifier.
+     * Maps this instance's current variant to a value of type [T] using the given [visitor].
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun name(): Name = name.getRequired("name")
-
-    /**
-     * Whether this tool is enabled and available to Claude. Overrides the default_config setting.
+     * Note that this method is _not_ forwards compatible with new variants from the API, unless
+     * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of the
+     * SDK gracefully, consider overriding [Visitor.unknown]:
+     * ```java
+     * import com.anthropic.core.JsonValue;
+     * import java.util.Optional;
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
-
-    /**
-     * Permission policy for tool execution.
+     * Optional<String> result = betaManagedAgentsAgentToolConfigParams.accept(new BetaManagedAgentsAgentToolConfigParams.Visitor<Optional<String>>() {
+     *     @Override
+     *     public Optional<String> visitBash(BetaManagedAgentsBashToolConfigParams bash) {
+     *         return Optional.of(bash.toString());
+     *     }
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun permissionPolicy(): Optional<PermissionPolicy> =
-        permissionPolicy.getOptional("permission_policy")
-
-    /**
-     * Returns the raw JSON value of [name].
+     *     // ...
      *
-     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<Name> = name
-
-    /**
-     * Returns the raw JSON value of [enabled].
+     *     @Override
+     *     public Optional<String> unknown(JsonValue json) {
+     *         // Or inspect the `json`.
+     *         return Optional.empty();
+     *     }
+     * });
+     * ```
      *
-     * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected type.
+     * @throws AnthropicInvalidDataException if [Visitor.unknown] is not overridden in [visitor] and
+     *   the current variant is unknown.
      */
-    @JsonProperty("enabled") @ExcludeMissing fun _enabled(): JsonField<Boolean> = enabled
-
-    /**
-     * Returns the raw JSON value of [permissionPolicy].
-     *
-     * Unlike [permissionPolicy], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("permission_policy")
-    @ExcludeMissing
-    fun _permissionPolicy(): JsonField<PermissionPolicy> = permissionPolicy
-
-    @JsonAnySetter
-    private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
-    }
-
-    @JsonAnyGetter
-    @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
-
-    fun toBuilder() = Builder().from(this)
-
-    companion object {
-
-        /**
-         * Returns a mutable builder for constructing an instance of
-         * [BetaManagedAgentsAgentToolConfigParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .name()
-         * ```
-         */
-        @JvmStatic fun builder() = Builder()
-
-        /**
-         * Returns an immutable instance of [BetaManagedAgentsAgentToolConfigParams] with the
-         * required [name] set to the given value.
-         */
-        @JvmStatic fun of(name: Name) = builder().name(name).build()
-    }
-
-    /** A builder for [BetaManagedAgentsAgentToolConfigParams]. */
-    class Builder internal constructor() {
-
-        private var name: JsonField<Name>? = null
-        private var enabled: JsonField<Boolean> = JsonMissing.of()
-        private var permissionPolicy: JsonField<PermissionPolicy> = JsonMissing.of()
-        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-        @JvmSynthetic
-        internal fun from(
-            betaManagedAgentsAgentToolConfigParams: BetaManagedAgentsAgentToolConfigParams
-        ) = apply {
-            name = betaManagedAgentsAgentToolConfigParams.name
-            enabled = betaManagedAgentsAgentToolConfigParams.enabled
-            permissionPolicy = betaManagedAgentsAgentToolConfigParams.permissionPolicy
-            additionalProperties =
-                betaManagedAgentsAgentToolConfigParams.additionalProperties.toMutableMap()
+    fun <T> accept(visitor: Visitor<T>): T =
+        when {
+            bash != null -> visitor.visitBash(bash)
+            edit != null -> visitor.visitEdit(edit)
+            read != null -> visitor.visitRead(read)
+            write != null -> visitor.visitWrite(write)
+            glob != null -> visitor.visitGlob(glob)
+            grep != null -> visitor.visitGrep(grep)
+            webFetch != null -> visitor.visitWebFetch(webFetch)
+            webSearch != null -> visitor.visitWebSearch(webSearch)
+            else -> visitor.unknown(_json)
         }
-
-        /** Built-in agent tool identifier. */
-        fun name(name: Name) = name(JsonField.of(name))
-
-        /**
-         * Sets [Builder.name] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.name] with a well-typed [Name] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun name(name: JsonField<Name>) = apply { this.name = name }
-
-        /**
-         * Whether this tool is enabled and available to Claude. Overrides the default_config
-         * setting.
-         */
-        fun enabled(enabled: Boolean?) = enabled(JsonField.ofNullable(enabled))
-
-        /**
-         * Alias for [Builder.enabled].
-         *
-         * This unboxed primitive overload exists for backwards compatibility.
-         */
-        fun enabled(enabled: Boolean) = enabled(enabled as Boolean?)
-
-        /** Alias for calling [Builder.enabled] with `enabled.orElse(null)`. */
-        fun enabled(enabled: Optional<Boolean>) = enabled(enabled.getOrNull())
-
-        /**
-         * Sets [Builder.enabled] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.enabled] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
-
-        /** Permission policy for tool execution. */
-        fun permissionPolicy(permissionPolicy: PermissionPolicy?) =
-            permissionPolicy(JsonField.ofNullable(permissionPolicy))
-
-        /** Alias for calling [Builder.permissionPolicy] with `permissionPolicy.orElse(null)`. */
-        fun permissionPolicy(permissionPolicy: Optional<PermissionPolicy>) =
-            permissionPolicy(permissionPolicy.getOrNull())
-
-        /**
-         * Sets [Builder.permissionPolicy] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.permissionPolicy] with a well-typed [PermissionPolicy]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
-         */
-        fun permissionPolicy(permissionPolicy: JsonField<PermissionPolicy>) = apply {
-            this.permissionPolicy = permissionPolicy
-        }
-
-        /**
-         * Alias for calling [permissionPolicy] with `PermissionPolicy.ofAlwaysAllow(alwaysAllow)`.
-         */
-        fun permissionPolicy(alwaysAllow: BetaManagedAgentsAlwaysAllowPolicy) =
-            permissionPolicy(PermissionPolicy.ofAlwaysAllow(alwaysAllow))
-
-        /** Alias for calling [permissionPolicy] with `PermissionPolicy.ofAlwaysAsk(alwaysAsk)`. */
-        fun permissionPolicy(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy) =
-            permissionPolicy(PermissionPolicy.ofAlwaysAsk(alwaysAsk))
-
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
-
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
-
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
-
-        /**
-         * Returns an immutable instance of [BetaManagedAgentsAgentToolConfigParams].
-         *
-         * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .name()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
-         */
-        fun build(): BetaManagedAgentsAgentToolConfigParams =
-            BetaManagedAgentsAgentToolConfigParams(
-                checkRequired("name", name),
-                enabled,
-                permissionPolicy,
-                additionalProperties.toMutableMap(),
-            )
-    }
 
     private var validated: Boolean = false
 
@@ -266,9 +309,41 @@ private constructor(
             return@apply
         }
 
-        name().validate()
-        enabled()
-        permissionPolicy().ifPresent { it.validate() }
+        accept(
+            object : Visitor<Unit> {
+                override fun visitBash(bash: BetaManagedAgentsBashToolConfigParams) {
+                    bash.validate()
+                }
+
+                override fun visitEdit(edit: BetaManagedAgentsEditToolConfigParams) {
+                    edit.validate()
+                }
+
+                override fun visitRead(read: BetaManagedAgentsReadToolConfigParams) {
+                    read.validate()
+                }
+
+                override fun visitWrite(write: BetaManagedAgentsWriteToolConfigParams) {
+                    write.validate()
+                }
+
+                override fun visitGlob(glob: BetaManagedAgentsGlobToolConfigParams) {
+                    glob.validate()
+                }
+
+                override fun visitGrep(grep: BetaManagedAgentsGrepToolConfigParams) {
+                    grep.validate()
+                }
+
+                override fun visitWebFetch(webFetch: BetaManagedAgentsWebFetchToolConfigParams) {
+                    webFetch.validate()
+                }
+
+                override fun visitWebSearch(webSearch: BetaManagedAgentsWebSearchToolConfigParams) {
+                    webSearch.validate()
+                }
+            }
+        )
         validated = true
     }
 
@@ -287,12 +362,271 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (name.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (enabled.asKnown().isPresent) 1 else 0) +
-            (permissionPolicy.asKnown().getOrNull()?.validity() ?: 0)
+        accept(
+            object : Visitor<Int> {
+                override fun visitBash(bash: BetaManagedAgentsBashToolConfigParams) =
+                    bash.validity()
 
-    /** Built-in agent tool identifier. */
-    class Name @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+                override fun visitEdit(edit: BetaManagedAgentsEditToolConfigParams) =
+                    edit.validity()
+
+                override fun visitRead(read: BetaManagedAgentsReadToolConfigParams) =
+                    read.validity()
+
+                override fun visitWrite(write: BetaManagedAgentsWriteToolConfigParams) =
+                    write.validity()
+
+                override fun visitGlob(glob: BetaManagedAgentsGlobToolConfigParams) =
+                    glob.validity()
+
+                override fun visitGrep(grep: BetaManagedAgentsGrepToolConfigParams) =
+                    grep.validity()
+
+                override fun visitWebFetch(webFetch: BetaManagedAgentsWebFetchToolConfigParams) =
+                    webFetch.validity()
+
+                override fun visitWebSearch(webSearch: BetaManagedAgentsWebSearchToolConfigParams) =
+                    webSearch.validity()
+
+                override fun unknown(json: JsonValue?) = 0
+            }
+        )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is BetaManagedAgentsAgentToolConfigParams &&
+            bash == other.bash &&
+            edit == other.edit &&
+            read == other.read &&
+            write == other.write &&
+            glob == other.glob &&
+            grep == other.grep &&
+            webFetch == other.webFetch &&
+            webSearch == other.webSearch
+    }
+
+    override fun hashCode(): Int =
+        Objects.hash(bash, edit, read, write, glob, grep, webFetch, webSearch)
+
+    override fun toString(): String =
+        when {
+            bash != null -> "BetaManagedAgentsAgentToolConfigParams{bash=$bash}"
+            edit != null -> "BetaManagedAgentsAgentToolConfigParams{edit=$edit}"
+            read != null -> "BetaManagedAgentsAgentToolConfigParams{read=$read}"
+            write != null -> "BetaManagedAgentsAgentToolConfigParams{write=$write}"
+            glob != null -> "BetaManagedAgentsAgentToolConfigParams{glob=$glob}"
+            grep != null -> "BetaManagedAgentsAgentToolConfigParams{grep=$grep}"
+            webFetch != null -> "BetaManagedAgentsAgentToolConfigParams{webFetch=$webFetch}"
+            webSearch != null -> "BetaManagedAgentsAgentToolConfigParams{webSearch=$webSearch}"
+            _json != null -> "BetaManagedAgentsAgentToolConfigParams{_unknown=$_json}"
+            else -> throw IllegalStateException("Invalid BetaManagedAgentsAgentToolConfigParams")
+        }
+
+    companion object {
+
+        /** Configuration override for the bash tool. */
+        @JvmStatic
+        fun ofBash(bash: BetaManagedAgentsBashToolConfigParams) =
+            BetaManagedAgentsAgentToolConfigParams(bash = bash)
+
+        /** Configuration override for the edit tool. */
+        @JvmStatic
+        fun ofEdit(edit: BetaManagedAgentsEditToolConfigParams) =
+            BetaManagedAgentsAgentToolConfigParams(edit = edit)
+
+        /** Configuration override for the read tool. */
+        @JvmStatic
+        fun ofRead(read: BetaManagedAgentsReadToolConfigParams) =
+            BetaManagedAgentsAgentToolConfigParams(read = read)
+
+        /** Configuration override for the write tool. */
+        @JvmStatic
+        fun ofWrite(write: BetaManagedAgentsWriteToolConfigParams) =
+            BetaManagedAgentsAgentToolConfigParams(write = write)
+
+        /** Configuration override for the glob tool. */
+        @JvmStatic
+        fun ofGlob(glob: BetaManagedAgentsGlobToolConfigParams) =
+            BetaManagedAgentsAgentToolConfigParams(glob = glob)
+
+        /** Configuration override for the grep tool. */
+        @JvmStatic
+        fun ofGrep(grep: BetaManagedAgentsGrepToolConfigParams) =
+            BetaManagedAgentsAgentToolConfigParams(grep = grep)
+
+        /** Configuration override for the web_fetch tool. */
+        @JvmStatic
+        fun ofWebFetch(webFetch: BetaManagedAgentsWebFetchToolConfigParams) =
+            BetaManagedAgentsAgentToolConfigParams(webFetch = webFetch)
+
+        /** Configuration override for the web_search tool. */
+        @JvmStatic
+        fun ofWebSearch(webSearch: BetaManagedAgentsWebSearchToolConfigParams) =
+            BetaManagedAgentsAgentToolConfigParams(webSearch = webSearch)
+    }
+
+    /**
+     * An interface that defines how to map each variant of [BetaManagedAgentsAgentToolConfigParams]
+     * to a value of type [T].
+     */
+    interface Visitor<out T> {
+
+        /** Configuration override for the bash tool. */
+        fun visitBash(bash: BetaManagedAgentsBashToolConfigParams): T
+
+        /** Configuration override for the edit tool. */
+        fun visitEdit(edit: BetaManagedAgentsEditToolConfigParams): T
+
+        /** Configuration override for the read tool. */
+        fun visitRead(read: BetaManagedAgentsReadToolConfigParams): T
+
+        /** Configuration override for the write tool. */
+        fun visitWrite(write: BetaManagedAgentsWriteToolConfigParams): T
+
+        /** Configuration override for the glob tool. */
+        fun visitGlob(glob: BetaManagedAgentsGlobToolConfigParams): T
+
+        /** Configuration override for the grep tool. */
+        fun visitGrep(grep: BetaManagedAgentsGrepToolConfigParams): T
+
+        /** Configuration override for the web_fetch tool. */
+        fun visitWebFetch(webFetch: BetaManagedAgentsWebFetchToolConfigParams): T
+
+        /** Configuration override for the web_search tool. */
+        fun visitWebSearch(webSearch: BetaManagedAgentsWebSearchToolConfigParams): T
+
+        /**
+         * Maps an unknown variant of [BetaManagedAgentsAgentToolConfigParams] to a value of type
+         * [T].
+         *
+         * An instance of [BetaManagedAgentsAgentToolConfigParams] can contain an unknown variant if
+         * it was deserialized from data that doesn't match any known variant. For example, if the
+         * SDK is on an older version than the API, then the API may respond with new variants that
+         * the SDK is unaware of.
+         *
+         * @throws AnthropicInvalidDataException in the default implementation.
+         */
+        fun unknown(json: JsonValue?): T {
+            throw AnthropicInvalidDataException(
+                "Unknown BetaManagedAgentsAgentToolConfigParams: $json"
+            )
+        }
+    }
+
+    internal class Deserializer :
+        BaseDeserializer<BetaManagedAgentsAgentToolConfigParams>(
+            BetaManagedAgentsAgentToolConfigParams::class
+        ) {
+
+        override fun ObjectCodec.deserialize(
+            node: JsonNode
+        ): BetaManagedAgentsAgentToolConfigParams {
+            val json = JsonValue.fromJsonNode(node)
+            val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+
+            when (type) {
+                "bash" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsBashToolConfigParams>(),
+                        )
+                        ?.let { BetaManagedAgentsAgentToolConfigParams(bash = it, _json = json) }
+                        ?: BetaManagedAgentsAgentToolConfigParams(_json = json)
+                }
+                "edit" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsEditToolConfigParams>(),
+                        )
+                        ?.let { BetaManagedAgentsAgentToolConfigParams(edit = it, _json = json) }
+                        ?: BetaManagedAgentsAgentToolConfigParams(_json = json)
+                }
+                "read" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsReadToolConfigParams>(),
+                        )
+                        ?.let { BetaManagedAgentsAgentToolConfigParams(read = it, _json = json) }
+                        ?: BetaManagedAgentsAgentToolConfigParams(_json = json)
+                }
+                "write" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsWriteToolConfigParams>(),
+                        )
+                        ?.let { BetaManagedAgentsAgentToolConfigParams(write = it, _json = json) }
+                        ?: BetaManagedAgentsAgentToolConfigParams(_json = json)
+                }
+                "glob" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsGlobToolConfigParams>(),
+                        )
+                        ?.let { BetaManagedAgentsAgentToolConfigParams(glob = it, _json = json) }
+                        ?: BetaManagedAgentsAgentToolConfigParams(_json = json)
+                }
+                "grep" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsGrepToolConfigParams>(),
+                        )
+                        ?.let { BetaManagedAgentsAgentToolConfigParams(grep = it, _json = json) }
+                        ?: BetaManagedAgentsAgentToolConfigParams(_json = json)
+                }
+                "web_fetch" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsWebFetchToolConfigParams>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsAgentToolConfigParams(webFetch = it, _json = json)
+                        } ?: BetaManagedAgentsAgentToolConfigParams(_json = json)
+                }
+                "web_search" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsWebSearchToolConfigParams>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsAgentToolConfigParams(webSearch = it, _json = json)
+                        } ?: BetaManagedAgentsAgentToolConfigParams(_json = json)
+                }
+            }
+
+            return BetaManagedAgentsAgentToolConfigParams(_json = json)
+        }
+    }
+
+    internal class Serializer :
+        BaseSerializer<BetaManagedAgentsAgentToolConfigParams>(
+            BetaManagedAgentsAgentToolConfigParams::class
+        ) {
+
+        override fun serialize(
+            value: BetaManagedAgentsAgentToolConfigParams,
+            generator: JsonGenerator,
+            provider: SerializerProvider,
+        ) {
+            when {
+                value.bash != null -> generator.writeObject(value.bash)
+                value.edit != null -> generator.writeObject(value.edit)
+                value.read != null -> generator.writeObject(value.read)
+                value.write != null -> generator.writeObject(value.write)
+                value.glob != null -> generator.writeObject(value.glob)
+                value.grep != null -> generator.writeObject(value.grep)
+                value.webFetch != null -> generator.writeObject(value.webFetch)
+                value.webSearch != null -> generator.writeObject(value.webSearch)
+                value._json != null -> generator.writeObject(value._json)
+                else ->
+                    throw IllegalStateException("Invalid BetaManagedAgentsAgentToolConfigParams")
+            }
+        }
+    }
+
+    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -322,14 +656,14 @@ private constructor(
 
             @JvmField val WEB_SEARCH = of("web_search")
 
-            @JvmStatic fun of(value: String) = Name(JsonField.of(value))
+            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
             @JvmSynthetic
-            internal fun of(value: JsonField<String>): Name =
-                value.asString().getOrNull()?.let { of(it) } ?: Name(value)
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
-        /** An enum containing [Name]'s known values. */
+        /** An enum containing [Type]'s known values. */
         enum class Known {
             BASH,
             EDIT,
@@ -342,9 +676,9 @@ private constructor(
         }
 
         /**
-         * An enum containing [Name]'s known values, as well as an [_UNKNOWN] member.
+         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
          *
-         * An instance of [Name] can contain an unknown value in a couple of cases:
+         * An instance of [Type] can contain an unknown value in a couple of cases:
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
@@ -359,7 +693,7 @@ private constructor(
             GREP,
             WEB_FETCH,
             WEB_SEARCH,
-            /** An enum member indicating that [Name] was instantiated with an unknown value. */
+            /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
 
@@ -402,7 +736,7 @@ private constructor(
                 GREP -> Known.GREP
                 WEB_FETCH -> Known.WEB_FETCH
                 WEB_SEARCH -> Known.WEB_SEARCH
-                else -> throw AnthropicInvalidDataException("Unknown Name: $value")
+                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 
         /**
@@ -430,7 +764,7 @@ private constructor(
          * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
          *   expected type.
          */
-        fun validate(): Name = apply {
+        fun validate(): Type = apply {
             if (validated) {
                 return@apply
             }
@@ -460,434 +794,11 @@ private constructor(
                 return true
             }
 
-            return other is Name && value == other.value
+            return other is Type && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
 
         override fun toString() = value.toString()
     }
-
-    /** Permission policy for tool execution. */
-    @JsonDeserialize(using = PermissionPolicy.Deserializer::class)
-    @JsonSerialize(using = PermissionPolicy.Serializer::class)
-    class PermissionPolicy
-    private constructor(
-        private val alwaysAllow: BetaManagedAgentsAlwaysAllowPolicy? = null,
-        private val alwaysAsk: BetaManagedAgentsAlwaysAskPolicy? = null,
-        private val _json: JsonValue? = null,
-    ) {
-
-        fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAlwaysAllow(
-                        alwaysAllow: BetaManagedAgentsAlwaysAllowPolicy
-                    ): Type = Type.ALWAYS_ALLOW
-
-                    override fun visitAlwaysAsk(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy): Type =
-                        Type.ALWAYS_ASK
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
-
-        /** Tool calls are automatically approved without user confirmation. */
-        fun alwaysAllow(): Optional<BetaManagedAgentsAlwaysAllowPolicy> =
-            Optional.ofNullable(alwaysAllow)
-
-        /** Tool calls require user confirmation before execution. */
-        fun alwaysAsk(): Optional<BetaManagedAgentsAlwaysAskPolicy> = Optional.ofNullable(alwaysAsk)
-
-        fun isAlwaysAllow(): Boolean = alwaysAllow != null
-
-        fun isAlwaysAsk(): Boolean = alwaysAsk != null
-
-        /** Tool calls are automatically approved without user confirmation. */
-        fun asAlwaysAllow(): BetaManagedAgentsAlwaysAllowPolicy =
-            alwaysAllow.getOrThrow("alwaysAllow")
-
-        /** Tool calls require user confirmation before execution. */
-        fun asAlwaysAsk(): BetaManagedAgentsAlwaysAskPolicy = alwaysAsk.getOrThrow("alwaysAsk")
-
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
-
-        /**
-         * Maps this instance's current variant to a value of type [T] using the given [visitor].
-         *
-         * Note that this method is _not_ forwards compatible with new variants from the API, unless
-         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
-         * the SDK gracefully, consider overriding [Visitor.unknown]:
-         * ```java
-         * import com.anthropic.core.JsonValue;
-         * import java.util.Optional;
-         *
-         * Optional<String> result = permissionPolicy.accept(new PermissionPolicy.Visitor<Optional<String>>() {
-         *     @Override
-         *     public Optional<String> visitAlwaysAllow(BetaManagedAgentsAlwaysAllowPolicy alwaysAllow) {
-         *         return Optional.of(alwaysAllow.toString());
-         *     }
-         *
-         *     // ...
-         *
-         *     @Override
-         *     public Optional<String> unknown(JsonValue json) {
-         *         // Or inspect the `json`.
-         *         return Optional.empty();
-         *     }
-         * });
-         * ```
-         *
-         * @throws AnthropicInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
-         *   and the current variant is unknown.
-         */
-        fun <T> accept(visitor: Visitor<T>): T =
-            when {
-                alwaysAllow != null -> visitor.visitAlwaysAllow(alwaysAllow)
-                alwaysAsk != null -> visitor.visitAlwaysAsk(alwaysAsk)
-                else -> visitor.unknown(_json)
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): PermissionPolicy = apply {
-            if (validated) {
-                return@apply
-            }
-
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAlwaysAllow(alwaysAllow: BetaManagedAgentsAlwaysAllowPolicy) {
-                        alwaysAllow.validate()
-                    }
-
-                    override fun visitAlwaysAsk(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy) {
-                        alwaysAsk.validate()
-                    }
-                }
-            )
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAlwaysAllow(alwaysAllow: BetaManagedAgentsAlwaysAllowPolicy) =
-                        alwaysAllow.validity()
-
-                    override fun visitAlwaysAsk(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy) =
-                        alwaysAsk.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is PermissionPolicy &&
-                alwaysAllow == other.alwaysAllow &&
-                alwaysAsk == other.alwaysAsk
-        }
-
-        override fun hashCode(): Int = Objects.hash(alwaysAllow, alwaysAsk)
-
-        override fun toString(): String =
-            when {
-                alwaysAllow != null -> "PermissionPolicy{alwaysAllow=$alwaysAllow}"
-                alwaysAsk != null -> "PermissionPolicy{alwaysAsk=$alwaysAsk}"
-                _json != null -> "PermissionPolicy{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid PermissionPolicy")
-            }
-
-        companion object {
-
-            /** Tool calls are automatically approved without user confirmation. */
-            @JvmStatic
-            fun ofAlwaysAllow(alwaysAllow: BetaManagedAgentsAlwaysAllowPolicy) =
-                PermissionPolicy(alwaysAllow = alwaysAllow)
-
-            /**
-             * Returns an immutable instance of [PermissionPolicy] whose [ofAlwaysAllow] variant is
-             * built from the given required [type].
-             */
-            @JvmStatic
-            fun ofAlwaysAllow(type: BetaManagedAgentsAlwaysAllowPolicy.Type) =
-                ofAlwaysAllow(BetaManagedAgentsAlwaysAllowPolicy.of(type))
-
-            /** Tool calls require user confirmation before execution. */
-            @JvmStatic
-            fun ofAlwaysAsk(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy) =
-                PermissionPolicy(alwaysAsk = alwaysAsk)
-
-            /**
-             * Returns an immutable instance of [PermissionPolicy] whose [ofAlwaysAsk] variant is
-             * built from the given required [type].
-             */
-            @JvmStatic
-            fun ofAlwaysAsk(type: BetaManagedAgentsAlwaysAskPolicy.Type) =
-                ofAlwaysAsk(BetaManagedAgentsAlwaysAskPolicy.of(type))
-        }
-
-        /**
-         * An interface that defines how to map each variant of [PermissionPolicy] to a value of
-         * type [T].
-         */
-        interface Visitor<out T> {
-
-            /** Tool calls are automatically approved without user confirmation. */
-            fun visitAlwaysAllow(alwaysAllow: BetaManagedAgentsAlwaysAllowPolicy): T
-
-            /** Tool calls require user confirmation before execution. */
-            fun visitAlwaysAsk(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy): T
-
-            /**
-             * Maps an unknown variant of [PermissionPolicy] to a value of type [T].
-             *
-             * An instance of [PermissionPolicy] can contain an unknown variant if it was
-             * deserialized from data that doesn't match any known variant. For example, if the SDK
-             * is on an older version than the API, then the API may respond with new variants that
-             * the SDK is unaware of.
-             *
-             * @throws AnthropicInvalidDataException in the default implementation.
-             */
-            fun unknown(json: JsonValue?): T {
-                throw AnthropicInvalidDataException("Unknown PermissionPolicy: $json")
-            }
-        }
-
-        internal class Deserializer : BaseDeserializer<PermissionPolicy>(PermissionPolicy::class) {
-
-            override fun ObjectCodec.deserialize(node: JsonNode): PermissionPolicy {
-                val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
-
-                when (type) {
-                    "always_allow" -> {
-                        return tryDeserialize(
-                                node,
-                                jacksonTypeRef<BetaManagedAgentsAlwaysAllowPolicy>(),
-                            )
-                            ?.let { PermissionPolicy(alwaysAllow = it, _json = json) }
-                            ?: PermissionPolicy(_json = json)
-                    }
-                    "always_ask" -> {
-                        return tryDeserialize(
-                                node,
-                                jacksonTypeRef<BetaManagedAgentsAlwaysAskPolicy>(),
-                            )
-                            ?.let { PermissionPolicy(alwaysAsk = it, _json = json) }
-                            ?: PermissionPolicy(_json = json)
-                    }
-                }
-
-                return PermissionPolicy(_json = json)
-            }
-        }
-
-        internal class Serializer : BaseSerializer<PermissionPolicy>(PermissionPolicy::class) {
-
-            override fun serialize(
-                value: PermissionPolicy,
-                generator: JsonGenerator,
-                provider: SerializerProvider,
-            ) {
-                when {
-                    value.alwaysAllow != null -> generator.writeObject(value.alwaysAllow)
-                    value.alwaysAsk != null -> generator.writeObject(value.alwaysAsk)
-                    value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid PermissionPolicy")
-                }
-            }
-        }
-
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val ALWAYS_ALLOW = of("always_allow")
-
-                @JvmField val ALWAYS_ASK = of("always_ask")
-
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
-                    value.asString().getOrNull()?.let { of(it) } ?: Type(value)
-            }
-
-            /** An enum containing [Type]'s known values. */
-            enum class Known {
-                ALWAYS_ALLOW,
-                ALWAYS_ASK,
-            }
-
-            /**
-             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [Type] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                ALWAYS_ALLOW,
-                ALWAYS_ASK,
-                /** An enum member indicating that [Type] was instantiated with an unknown value. */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    ALWAYS_ALLOW -> Value.ALWAYS_ALLOW
-                    ALWAYS_ASK -> Value.ALWAYS_ASK
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    ALWAYS_ALLOW -> Known.ALWAYS_ALLOW
-                    ALWAYS_ASK -> Known.ALWAYS_ASK
-                    else -> throw AnthropicInvalidDataException("Unknown Type: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws AnthropicInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    AnthropicInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws AnthropicInvalidDataException if any value type in this object doesn't match
-             *   its expected type.
-             */
-            fun validate(): Type = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: AnthropicInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Type && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-
-        return other is BetaManagedAgentsAgentToolConfigParams &&
-            name == other.name &&
-            enabled == other.enabled &&
-            permissionPolicy == other.permissionPolicy &&
-            additionalProperties == other.additionalProperties
-    }
-
-    private val hashCode: Int by lazy {
-        Objects.hash(name, enabled, permissionPolicy, additionalProperties)
-    }
-
-    override fun hashCode(): Int = hashCode
-
-    override fun toString() =
-        "BetaManagedAgentsAgentToolConfigParams{name=$name, enabled=$enabled, permissionPolicy=$permissionPolicy, additionalProperties=$additionalProperties}"
 }
