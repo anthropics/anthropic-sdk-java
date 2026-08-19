@@ -16,14 +16,14 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
             BetaManagedAgentsAgentToolset20260401Params.builder()
                 .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
                 .addConfig(
-                    BetaManagedAgentsAgentToolConfigParams.builder()
-                        .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                    BetaManagedAgentsBashToolConfigParams.builder()
                         .enabled(true)
                         .permissionPolicy(
                             BetaManagedAgentsAlwaysAllowPolicy.of(
                                 BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                             )
                         )
+                        .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                         .build()
                 )
                 .defaultConfig(
@@ -42,15 +42,17 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
             .isEqualTo(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
         assertThat(betaManagedAgentsAgentToolset20260401Params.configs().getOrNull())
             .containsExactly(
-                BetaManagedAgentsAgentToolConfigParams.builder()
-                    .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
-                    .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                BetaManagedAgentsAgentToolConfigParams.ofBash(
+                    BetaManagedAgentsBashToolConfigParams.builder()
+                        .enabled(true)
+                        .permissionPolicy(
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
-                    )
-                    .build()
+                        .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
+                        .build()
+                )
             )
         assertThat(betaManagedAgentsAgentToolset20260401Params.defaultConfig())
             .contains(
@@ -76,29 +78,33 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
             baseBetaManagedAgentsAgentToolset20260401Params
                 .toBuilder()
                 .addConfig(
-                    BetaManagedAgentsAgentToolConfigParams.builder()
-                        .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                    BetaManagedAgentsAgentToolConfigParams.ofBash(
+                        BetaManagedAgentsBashToolConfigParams.builder()
+                            .enabled(true)
+                            .permissionPolicy(
+                                BetaManagedAgentsAlwaysAllowPolicy.of(
+                                    BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                                )
+                            )
+                            .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
+                            .build()
+                    )
+                )
+                .build()
+
+        assertThat(betaManagedAgentsAgentToolset20260401Params.configs().getOrNull())
+            .containsExactly(
+                BetaManagedAgentsAgentToolConfigParams.ofBash(
+                    BetaManagedAgentsBashToolConfigParams.builder()
                         .enabled(true)
                         .permissionPolicy(
                             BetaManagedAgentsAlwaysAllowPolicy.of(
                                 BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                             )
                         )
+                        .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                         .build()
                 )
-                .build()
-
-        assertThat(betaManagedAgentsAgentToolset20260401Params.configs().getOrNull())
-            .containsExactly(
-                BetaManagedAgentsAgentToolConfigParams.builder()
-                    .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
-                    .enabled(true)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
-                        )
-                    )
-                    .build()
             )
     }
 
@@ -109,14 +115,14 @@ internal class BetaManagedAgentsAgentToolset20260401ParamsTest {
             BetaManagedAgentsAgentToolset20260401Params.builder()
                 .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)
                 .addConfig(
-                    BetaManagedAgentsAgentToolConfigParams.builder()
-                        .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                    BetaManagedAgentsBashToolConfigParams.builder()
                         .enabled(true)
                         .permissionPolicy(
                             BetaManagedAgentsAlwaysAllowPolicy.of(
                                 BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                             )
                         )
+                        .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                         .build()
                 )
                 .defaultConfig(

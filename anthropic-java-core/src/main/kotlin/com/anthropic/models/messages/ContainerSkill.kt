@@ -51,7 +51,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Skill version or 'latest' for most recent version
+     * The resolved version: a skill version ID for custom skills.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -144,7 +144,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** Skill version or 'latest' for most recent version */
+        /** The resolved version: a skill version ID for custom skills. */
         fun version(version: String) = version(JsonField.of(version))
 
         /**

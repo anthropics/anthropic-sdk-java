@@ -79,9 +79,8 @@ internal class AgentListPageResponseTest {
                         .addTool(
                             BetaManagedAgentsAgentToolset20260401.builder()
                                 .addConfig(
-                                    BetaManagedAgentsAgentToolConfig.builder()
+                                    BetaManagedAgentsBashToolConfig.builder()
                                         .enabled(true)
-                                        .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                         .permissionPolicy(
                                             BetaManagedAgentsAlwaysAllowPolicy.of(
                                                 BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
@@ -175,9 +174,8 @@ internal class AgentListPageResponseTest {
                     .addTool(
                         BetaManagedAgentsAgentToolset20260401.builder()
                             .addConfig(
-                                BetaManagedAgentsAgentToolConfig.builder()
+                                BetaManagedAgentsBashToolConfig.builder()
                                     .enabled(true)
-                                    .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                     .permissionPolicy(
                                         BetaManagedAgentsAlwaysAllowPolicy.of(
                                             BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
@@ -274,9 +272,8 @@ internal class AgentListPageResponseTest {
                         .addTool(
                             BetaManagedAgentsAgentToolset20260401.builder()
                                 .addConfig(
-                                    BetaManagedAgentsAgentToolConfig.builder()
+                                    BetaManagedAgentsBashToolConfig.builder()
                                         .enabled(true)
-                                        .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                         .permissionPolicy(
                                             BetaManagedAgentsAlwaysAllowPolicy.of(
                                                 BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW

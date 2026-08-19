@@ -10,11 +10,11 @@ import com.anthropic.models.beta.agents.AgentArchiveParams
 import com.anthropic.models.beta.agents.AgentCreateParams
 import com.anthropic.models.beta.agents.AgentRetrieveParams
 import com.anthropic.models.beta.agents.AgentUpdateParams
-import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401Params
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkillParams
+import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSelfParams
@@ -83,14 +83,14 @@ internal class AgentServiceTest {
                                     .AGENT_TOOLSET_20260401
                             )
                             .addConfig(
-                                BetaManagedAgentsAgentToolConfigParams.builder()
-                                    .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                                BetaManagedAgentsBashToolConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
                                         BetaManagedAgentsAlwaysAllowPolicy.of(
                                             BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                         )
                                     )
+                                    .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                     .build()
                             )
                             .defaultConfig(
@@ -201,14 +201,14 @@ internal class AgentServiceTest {
                                     .AGENT_TOOLSET_20260401
                             )
                             .addConfig(
-                                BetaManagedAgentsAgentToolConfigParams.builder()
-                                    .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                                BetaManagedAgentsBashToolConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
                                         BetaManagedAgentsAlwaysAllowPolicy.of(
                                             BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                         )
                                     )
+                                    .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                     .build()
                             )
                             .defaultConfig(
