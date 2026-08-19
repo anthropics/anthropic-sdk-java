@@ -14,9 +14,8 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
         val betaManagedAgentsAgentToolset20260401 =
             BetaManagedAgentsAgentToolset20260401.builder()
                 .addConfig(
-                    BetaManagedAgentsAgentToolConfig.builder()
+                    BetaManagedAgentsBashToolConfig.builder()
                         .enabled(true)
-                        .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                         .permissionPolicy(
                             BetaManagedAgentsAlwaysAllowPolicy.of(
                                 BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
@@ -39,15 +38,16 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
 
         assertThat(betaManagedAgentsAgentToolset20260401.configs())
             .containsExactly(
-                BetaManagedAgentsAgentToolConfig.builder()
-                    .enabled(true)
-                    .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
-                    .permissionPolicy(
-                        BetaManagedAgentsAlwaysAllowPolicy.of(
-                            BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                BetaManagedAgentsAgentToolConfig.ofBash(
+                    BetaManagedAgentsBashToolConfig.builder()
+                        .enabled(true)
+                        .permissionPolicy(
+                            BetaManagedAgentsAlwaysAllowPolicy.of(
+                                BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
+                            )
                         )
-                    )
-                    .build()
+                        .build()
+                )
             )
         assertThat(betaManagedAgentsAgentToolset20260401.defaultConfig())
             .isEqualTo(
@@ -70,9 +70,8 @@ internal class BetaManagedAgentsAgentToolset20260401Test {
         val betaManagedAgentsAgentToolset20260401 =
             BetaManagedAgentsAgentToolset20260401.builder()
                 .addConfig(
-                    BetaManagedAgentsAgentToolConfig.builder()
+                    BetaManagedAgentsBashToolConfig.builder()
                         .enabled(true)
-                        .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                         .permissionPolicy(
                             BetaManagedAgentsAlwaysAllowPolicy.of(
                                 BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW

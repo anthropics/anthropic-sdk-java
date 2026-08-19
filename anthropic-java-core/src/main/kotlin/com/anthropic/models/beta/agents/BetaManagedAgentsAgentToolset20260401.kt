@@ -161,6 +161,44 @@ private constructor(
                 }
         }
 
+        /** Alias for calling [addConfig] with `BetaManagedAgentsAgentToolConfig.ofBash(bash)`. */
+        fun addConfig(bash: BetaManagedAgentsBashToolConfig) =
+            addConfig(BetaManagedAgentsAgentToolConfig.ofBash(bash))
+
+        /** Alias for calling [addConfig] with `BetaManagedAgentsAgentToolConfig.ofEdit(edit)`. */
+        fun addConfig(edit: BetaManagedAgentsEditToolConfig) =
+            addConfig(BetaManagedAgentsAgentToolConfig.ofEdit(edit))
+
+        /** Alias for calling [addConfig] with `BetaManagedAgentsAgentToolConfig.ofRead(read)`. */
+        fun addConfig(read: BetaManagedAgentsReadToolConfig) =
+            addConfig(BetaManagedAgentsAgentToolConfig.ofRead(read))
+
+        /** Alias for calling [addConfig] with `BetaManagedAgentsAgentToolConfig.ofWrite(write)`. */
+        fun addConfig(write: BetaManagedAgentsWriteToolConfig) =
+            addConfig(BetaManagedAgentsAgentToolConfig.ofWrite(write))
+
+        /** Alias for calling [addConfig] with `BetaManagedAgentsAgentToolConfig.ofGlob(glob)`. */
+        fun addConfig(glob: BetaManagedAgentsGlobToolConfig) =
+            addConfig(BetaManagedAgentsAgentToolConfig.ofGlob(glob))
+
+        /** Alias for calling [addConfig] with `BetaManagedAgentsAgentToolConfig.ofGrep(grep)`. */
+        fun addConfig(grep: BetaManagedAgentsGrepToolConfig) =
+            addConfig(BetaManagedAgentsAgentToolConfig.ofGrep(grep))
+
+        /**
+         * Alias for calling [addConfig] with
+         * `BetaManagedAgentsAgentToolConfig.ofWebFetch(webFetch)`.
+         */
+        fun addConfig(webFetch: BetaManagedAgentsWebFetchToolConfig) =
+            addConfig(BetaManagedAgentsAgentToolConfig.ofWebFetch(webFetch))
+
+        /**
+         * Alias for calling [addConfig] with
+         * `BetaManagedAgentsAgentToolConfig.ofWebSearch(webSearch)`.
+         */
+        fun addConfig(webSearch: BetaManagedAgentsWebSearchToolConfig) =
+            addConfig(BetaManagedAgentsAgentToolConfig.ofWebSearch(webSearch))
+
         /** Resolved default configuration for agent tools. */
         fun defaultConfig(defaultConfig: BetaManagedAgentsAgentToolsetDefaultConfig) =
             defaultConfig(JsonField.of(defaultConfig))

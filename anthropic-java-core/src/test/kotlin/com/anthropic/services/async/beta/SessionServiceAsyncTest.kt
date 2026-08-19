@@ -8,10 +8,10 @@ import com.anthropic.core.JsonValue
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.BetaCurrency
 import com.anthropic.models.beta.BetaMonetaryAmount
-import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401Params
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
+import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsUrlMcpServerParams
 import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsFileResourceParams
@@ -138,8 +138,7 @@ internal class SessionServiceAsyncTest {
                                             .AGENT_TOOLSET_20260401
                                     )
                                     .addConfig(
-                                        BetaManagedAgentsAgentToolConfigParams.builder()
-                                            .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                                        BetaManagedAgentsBashToolConfigParams.builder()
                                             .enabled(true)
                                             .permissionPolicy(
                                                 BetaManagedAgentsAlwaysAllowPolicy.of(
@@ -147,6 +146,7 @@ internal class SessionServiceAsyncTest {
                                                         .ALWAYS_ALLOW
                                                 )
                                             )
+                                            .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                             .build()
                                     )
                                     .defaultConfig(

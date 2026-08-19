@@ -7,12 +7,12 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.BetaCurrency
 import com.anthropic.models.beta.BetaMonetaryAmount
-import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAskPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
+import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsCustomSkill
 import com.anthropic.models.beta.agents.BetaManagedAgentsEffortLow
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
@@ -2787,12 +2787,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                                         .addTool(
                                             BetaManagedAgentsAgentToolset20260401.builder()
                                                 .addConfig(
-                                                    BetaManagedAgentsAgentToolConfig.builder()
+                                                    BetaManagedAgentsBashToolConfig.builder()
                                                         .enabled(true)
-                                                        .name(
-                                                            BetaManagedAgentsAgentToolConfig.Name
-                                                                .BASH
-                                                        )
                                                         .permissionPolicy(
                                                             BetaManagedAgentsAlwaysAllowPolicy.of(
                                                                 BetaManagedAgentsAlwaysAllowPolicy
@@ -2851,9 +2847,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                         .addTool(
                             BetaManagedAgentsAgentToolset20260401.builder()
                                 .addConfig(
-                                    BetaManagedAgentsAgentToolConfig.builder()
+                                    BetaManagedAgentsBashToolConfig.builder()
                                         .enabled(true)
-                                        .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                         .permissionPolicy(
                                             BetaManagedAgentsAlwaysAllowPolicy.of(
                                                 BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
@@ -3023,13 +3018,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                                             .addTool(
                                                 BetaManagedAgentsAgentToolset20260401.builder()
                                                     .addConfig(
-                                                        BetaManagedAgentsAgentToolConfig.builder()
+                                                        BetaManagedAgentsBashToolConfig.builder()
                                                             .enabled(true)
-                                                            .name(
-                                                                BetaManagedAgentsAgentToolConfig
-                                                                    .Name
-                                                                    .BASH
-                                                            )
                                                             .permissionPolicy(
                                                                 BetaManagedAgentsAlwaysAllowPolicy
                                                                     .of(
@@ -3090,9 +3080,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                             .addTool(
                                 BetaManagedAgentsAgentToolset20260401.builder()
                                     .addConfig(
-                                        BetaManagedAgentsAgentToolConfig.builder()
+                                        BetaManagedAgentsBashToolConfig.builder()
                                             .enabled(true)
-                                            .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                             .permissionPolicy(
                                                 BetaManagedAgentsAlwaysAllowPolicy.of(
                                                     BetaManagedAgentsAlwaysAllowPolicy.Type

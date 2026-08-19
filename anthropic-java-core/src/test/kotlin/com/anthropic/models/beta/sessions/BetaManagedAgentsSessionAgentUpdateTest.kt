@@ -3,10 +3,10 @@
 package com.anthropic.models.beta.sessions
 
 import com.anthropic.core.jsonMapper
-import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401Params
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
+import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsUrlMcpServerParams
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
@@ -32,14 +32,14 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(
@@ -72,14 +72,14 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(
@@ -120,14 +120,14 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                                     .AGENT_TOOLSET_20260401
                             )
                             .addConfig(
-                                BetaManagedAgentsAgentToolConfigParams.builder()
-                                    .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                                BetaManagedAgentsBashToolConfigParams.builder()
                                     .enabled(true)
                                     .permissionPolicy(
                                         BetaManagedAgentsAlwaysAllowPolicy.of(
                                             BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                         )
                                     )
+                                    .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                     .build()
                             )
                             .defaultConfig(
@@ -161,14 +161,14 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(
@@ -204,14 +204,14 @@ internal class BetaManagedAgentsSessionAgentUpdateTest {
                             BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401
                         )
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfigParams.builder()
-                                .name(BetaManagedAgentsAgentToolConfigParams.Name.BASH)
+                            BetaManagedAgentsBashToolConfigParams.builder()
                                 .enabled(true)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                                     )
                                 )
+                                .type(BetaManagedAgentsBashToolConfigParams.Type.BASH)
                                 .build()
                         )
                         .defaultConfig(

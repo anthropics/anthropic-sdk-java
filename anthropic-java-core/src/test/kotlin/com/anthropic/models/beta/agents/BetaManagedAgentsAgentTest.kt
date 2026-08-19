@@ -73,9 +73,8 @@ internal class BetaManagedAgentsAgentTest {
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401.builder()
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfig.builder()
+                            BetaManagedAgentsBashToolConfig.builder()
                                 .enabled(true)
-                                .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
@@ -170,9 +169,8 @@ internal class BetaManagedAgentsAgentTest {
                 BetaManagedAgentsAgent.Tool.ofAgentToolset20260401(
                     BetaManagedAgentsAgentToolset20260401.builder()
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfig.builder()
+                            BetaManagedAgentsBashToolConfig.builder()
                                 .enabled(true)
-                                .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
@@ -262,9 +260,8 @@ internal class BetaManagedAgentsAgentTest {
                 .addTool(
                     BetaManagedAgentsAgentToolset20260401.builder()
                         .addConfig(
-                            BetaManagedAgentsAgentToolConfig.builder()
+                            BetaManagedAgentsBashToolConfig.builder()
                                 .enabled(true)
-                                .name(BetaManagedAgentsAgentToolConfig.Name.BASH)
                                 .permissionPolicy(
                                     BetaManagedAgentsAlwaysAllowPolicy.of(
                                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
