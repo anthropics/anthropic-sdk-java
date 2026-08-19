@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.57.0 (2026-08-19)
+
+Full Changelog: [v2.56.0...v2.57.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.56.0...v2.57.0)
+
+### Features
+
+* **api:** managed agents web search config and self hosted sandbox memory ([83b03c0](https://github.com/anthropics/anthropic-sdk-java/commit/83b03c0423617d79366fb9b9557b036f6ea88c43))
+
 ## 2.56.0 (2026-08-19)
 
 Full Changelog: [v2.55.0...v2.56.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.55.0...v2.56.0)
