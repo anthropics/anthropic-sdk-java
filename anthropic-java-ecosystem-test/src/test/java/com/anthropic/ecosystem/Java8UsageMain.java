@@ -19,6 +19,8 @@ public final class Java8UsageMain {
         require(client.completions() != null, "completions");
         require(client.messages() != null, "messages");
         require(client.models() != null, "models");
+        require(client.files() != null, "files");
+        require(client.skills() != null, "skills");
         require(client.beta() != null, "beta");
 
         JsonMapper mapper = ObjectMappers.jsonMapper();

@@ -6,12 +6,12 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponseFor
-import com.anthropic.models.beta.files.DeletedFile
+import com.anthropic.models.beta.files.BetaDeletedFile
+import com.anthropic.models.beta.files.BetaFileMetadata
 import com.anthropic.models.beta.files.FileDeleteParams
 import com.anthropic.models.beta.files.FileDownloadParams
 import com.anthropic.models.beta.files.FileListPageAsync
 import com.anthropic.models.beta.files.FileListParams
-import com.anthropic.models.beta.files.FileMetadata
 import com.anthropic.models.beta.files.FileRetrieveMetadataParams
 import com.anthropic.models.beta.files.FileUploadParams
 import java.util.concurrent.CompletableFuture
@@ -49,7 +49,7 @@ interface FileServiceAsync {
         list(FileListParams.none(), requestOptions)
 
     /** Delete File */
-    fun delete(fileId: String): CompletableFuture<DeletedFile> =
+    fun delete(fileId: String): CompletableFuture<BetaDeletedFile> =
         delete(fileId, FileDeleteParams.none())
 
     /** @see delete */
@@ -57,27 +57,27 @@ interface FileServiceAsync {
         fileId: String,
         params: FileDeleteParams = FileDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<DeletedFile> =
+    ): CompletableFuture<BetaDeletedFile> =
         delete(params.toBuilder().fileId(fileId).build(), requestOptions)
 
     /** @see delete */
     fun delete(
         fileId: String,
         params: FileDeleteParams = FileDeleteParams.none(),
-    ): CompletableFuture<DeletedFile> = delete(fileId, params, RequestOptions.none())
+    ): CompletableFuture<BetaDeletedFile> = delete(fileId, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: FileDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<DeletedFile>
+    ): CompletableFuture<BetaDeletedFile>
 
     /** @see delete */
-    fun delete(params: FileDeleteParams): CompletableFuture<DeletedFile> =
+    fun delete(params: FileDeleteParams): CompletableFuture<BetaDeletedFile> =
         delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(fileId: String, requestOptions: RequestOptions): CompletableFuture<DeletedFile> =
+    fun delete(fileId: String, requestOptions: RequestOptions): CompletableFuture<BetaDeletedFile> =
         delete(fileId, FileDeleteParams.none(), requestOptions)
 
     /** Download File */
@@ -113,7 +113,7 @@ interface FileServiceAsync {
         download(fileId, FileDownloadParams.none(), requestOptions)
 
     /** Get File Metadata */
-    fun retrieveMetadata(fileId: String): CompletableFuture<FileMetadata> =
+    fun retrieveMetadata(fileId: String): CompletableFuture<BetaFileMetadata> =
         retrieveMetadata(fileId, FileRetrieveMetadataParams.none())
 
     /** @see retrieveMetadata */
@@ -121,41 +121,41 @@ interface FileServiceAsync {
         fileId: String,
         params: FileRetrieveMetadataParams = FileRetrieveMetadataParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileMetadata> =
+    ): CompletableFuture<BetaFileMetadata> =
         retrieveMetadata(params.toBuilder().fileId(fileId).build(), requestOptions)
 
     /** @see retrieveMetadata */
     fun retrieveMetadata(
         fileId: String,
         params: FileRetrieveMetadataParams = FileRetrieveMetadataParams.none(),
-    ): CompletableFuture<FileMetadata> = retrieveMetadata(fileId, params, RequestOptions.none())
+    ): CompletableFuture<BetaFileMetadata> = retrieveMetadata(fileId, params, RequestOptions.none())
 
     /** @see retrieveMetadata */
     fun retrieveMetadata(
         params: FileRetrieveMetadataParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileMetadata>
+    ): CompletableFuture<BetaFileMetadata>
 
     /** @see retrieveMetadata */
-    fun retrieveMetadata(params: FileRetrieveMetadataParams): CompletableFuture<FileMetadata> =
+    fun retrieveMetadata(params: FileRetrieveMetadataParams): CompletableFuture<BetaFileMetadata> =
         retrieveMetadata(params, RequestOptions.none())
 
     /** @see retrieveMetadata */
     fun retrieveMetadata(
         fileId: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FileMetadata> =
+    ): CompletableFuture<BetaFileMetadata> =
         retrieveMetadata(fileId, FileRetrieveMetadataParams.none(), requestOptions)
 
     /** Upload File */
-    fun upload(params: FileUploadParams): CompletableFuture<FileMetadata> =
+    fun upload(params: FileUploadParams): CompletableFuture<BetaFileMetadata> =
         upload(params, RequestOptions.none())
 
     /** @see upload */
     fun upload(
         params: FileUploadParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileMetadata>
+    ): CompletableFuture<BetaFileMetadata>
 
     /** A view of [FileServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -196,7 +196,7 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `delete /v1/files/{file_id}?beta=true`, but is otherwise
          * the same as [FileServiceAsync.delete].
          */
-        fun delete(fileId: String): CompletableFuture<HttpResponseFor<DeletedFile>> =
+        fun delete(fileId: String): CompletableFuture<HttpResponseFor<BetaDeletedFile>> =
             delete(fileId, FileDeleteParams.none())
 
         /** @see delete */
@@ -204,31 +204,31 @@ interface FileServiceAsync {
             fileId: String,
             params: FileDeleteParams = FileDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<DeletedFile>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedFile>> =
             delete(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see delete */
         fun delete(
             fileId: String,
             params: FileDeleteParams = FileDeleteParams.none(),
-        ): CompletableFuture<HttpResponseFor<DeletedFile>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedFile>> =
             delete(fileId, params, RequestOptions.none())
 
         /** @see delete */
         fun delete(
             params: FileDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<DeletedFile>>
+        ): CompletableFuture<HttpResponseFor<BetaDeletedFile>>
 
         /** @see delete */
-        fun delete(params: FileDeleteParams): CompletableFuture<HttpResponseFor<DeletedFile>> =
+        fun delete(params: FileDeleteParams): CompletableFuture<HttpResponseFor<BetaDeletedFile>> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
         fun delete(
             fileId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<DeletedFile>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedFile>> =
             delete(fileId, FileDeleteParams.none(), requestOptions)
 
         /**
@@ -273,7 +273,7 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `get /v1/files/{file_id}?beta=true`, but is otherwise the
          * same as [FileServiceAsync.retrieveMetadata].
          */
-        fun retrieveMetadata(fileId: String): CompletableFuture<HttpResponseFor<FileMetadata>> =
+        fun retrieveMetadata(fileId: String): CompletableFuture<HttpResponseFor<BetaFileMetadata>> =
             retrieveMetadata(fileId, FileRetrieveMetadataParams.none())
 
         /** @see retrieveMetadata */
@@ -281,46 +281,46 @@ interface FileServiceAsync {
             fileId: String,
             params: FileRetrieveMetadataParams = FileRetrieveMetadataParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileMetadata>> =
+        ): CompletableFuture<HttpResponseFor<BetaFileMetadata>> =
             retrieveMetadata(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see retrieveMetadata */
         fun retrieveMetadata(
             fileId: String,
             params: FileRetrieveMetadataParams = FileRetrieveMetadataParams.none(),
-        ): CompletableFuture<HttpResponseFor<FileMetadata>> =
+        ): CompletableFuture<HttpResponseFor<BetaFileMetadata>> =
             retrieveMetadata(fileId, params, RequestOptions.none())
 
         /** @see retrieveMetadata */
         fun retrieveMetadata(
             params: FileRetrieveMetadataParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileMetadata>>
+        ): CompletableFuture<HttpResponseFor<BetaFileMetadata>>
 
         /** @see retrieveMetadata */
         fun retrieveMetadata(
             params: FileRetrieveMetadataParams
-        ): CompletableFuture<HttpResponseFor<FileMetadata>> =
+        ): CompletableFuture<HttpResponseFor<BetaFileMetadata>> =
             retrieveMetadata(params, RequestOptions.none())
 
         /** @see retrieveMetadata */
         fun retrieveMetadata(
             fileId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileMetadata>> =
+        ): CompletableFuture<HttpResponseFor<BetaFileMetadata>> =
             retrieveMetadata(fileId, FileRetrieveMetadataParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /v1/files?beta=true`, but is otherwise the same as
          * [FileServiceAsync.upload].
          */
-        fun upload(params: FileUploadParams): CompletableFuture<HttpResponseFor<FileMetadata>> =
+        fun upload(params: FileUploadParams): CompletableFuture<HttpResponseFor<BetaFileMetadata>> =
             upload(params, RequestOptions.none())
 
         /** @see upload */
         fun upload(
             params: FileUploadParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileMetadata>>
+        ): CompletableFuture<HttpResponseFor<BetaFileMetadata>>
     }
 }

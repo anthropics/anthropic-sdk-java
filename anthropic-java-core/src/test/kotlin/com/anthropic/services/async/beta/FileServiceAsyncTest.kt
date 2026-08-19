@@ -49,7 +49,7 @@ internal class FileServiceAsyncTest {
                 .build()
         val fileServiceAsync = client.beta().files()
 
-        val deletedFileFuture =
+        val betaDeletedFileFuture =
             fileServiceAsync.delete(
                 FileDeleteParams.builder()
                     .fileId("file_id")
@@ -57,8 +57,8 @@ internal class FileServiceAsyncTest {
                     .build()
             )
 
-        val deletedFile = deletedFileFuture.get()
-        deletedFile.validate()
+        val betaDeletedFile = betaDeletedFileFuture.get()
+        betaDeletedFile.validate()
     }
 
     @Test
@@ -92,7 +92,7 @@ internal class FileServiceAsyncTest {
                 .build()
         val fileServiceAsync = client.beta().files()
 
-        val fileMetadataFuture =
+        val betaFileMetadataFuture =
             fileServiceAsync.retrieveMetadata(
                 FileRetrieveMetadataParams.builder()
                     .fileId("file_id")
@@ -100,8 +100,8 @@ internal class FileServiceAsyncTest {
                     .build()
             )
 
-        val fileMetadata = fileMetadataFuture.get()
-        fileMetadata.validate()
+        val betaFileMetadata = betaFileMetadataFuture.get()
+        betaFileMetadata.validate()
     }
 
     @Test
@@ -113,7 +113,7 @@ internal class FileServiceAsyncTest {
                 .build()
         val fileServiceAsync = client.beta().files()
 
-        val fileMetadataFuture =
+        val betaFileMetadataFuture =
             fileServiceAsync.upload(
                 FileUploadParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
@@ -121,7 +121,7 @@ internal class FileServiceAsyncTest {
                     .build()
             )
 
-        val fileMetadata = fileMetadataFuture.get()
-        fileMetadata.validate()
+        val betaFileMetadata = betaFileMetadataFuture.get()
+        betaFileMetadata.validate()
     }
 }

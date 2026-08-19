@@ -6,12 +6,12 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponseFor
-import com.anthropic.models.beta.files.DeletedFile
+import com.anthropic.models.beta.files.BetaDeletedFile
+import com.anthropic.models.beta.files.BetaFileMetadata
 import com.anthropic.models.beta.files.FileDeleteParams
 import com.anthropic.models.beta.files.FileDownloadParams
 import com.anthropic.models.beta.files.FileListPage
 import com.anthropic.models.beta.files.FileListParams
-import com.anthropic.models.beta.files.FileMetadata
 import com.anthropic.models.beta.files.FileRetrieveMetadataParams
 import com.anthropic.models.beta.files.FileUploadParams
 import com.google.errorprone.annotations.MustBeClosed
@@ -49,30 +49,32 @@ interface FileService {
         list(FileListParams.none(), requestOptions)
 
     /** Delete File */
-    fun delete(fileId: String): DeletedFile = delete(fileId, FileDeleteParams.none())
+    fun delete(fileId: String): BetaDeletedFile = delete(fileId, FileDeleteParams.none())
 
     /** @see delete */
     fun delete(
         fileId: String,
         params: FileDeleteParams = FileDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): DeletedFile = delete(params.toBuilder().fileId(fileId).build(), requestOptions)
+    ): BetaDeletedFile = delete(params.toBuilder().fileId(fileId).build(), requestOptions)
 
     /** @see delete */
-    fun delete(fileId: String, params: FileDeleteParams = FileDeleteParams.none()): DeletedFile =
-        delete(fileId, params, RequestOptions.none())
+    fun delete(
+        fileId: String,
+        params: FileDeleteParams = FileDeleteParams.none(),
+    ): BetaDeletedFile = delete(fileId, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: FileDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): DeletedFile
+    ): BetaDeletedFile
 
     /** @see delete */
-    fun delete(params: FileDeleteParams): DeletedFile = delete(params, RequestOptions.none())
+    fun delete(params: FileDeleteParams): BetaDeletedFile = delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(fileId: String, requestOptions: RequestOptions): DeletedFile =
+    fun delete(fileId: String, requestOptions: RequestOptions): BetaDeletedFile =
         delete(fileId, FileDeleteParams.none(), requestOptions)
 
     /** Download File */
@@ -111,7 +113,7 @@ interface FileService {
         download(fileId, FileDownloadParams.none(), requestOptions)
 
     /** Get File Metadata */
-    fun retrieveMetadata(fileId: String): FileMetadata =
+    fun retrieveMetadata(fileId: String): BetaFileMetadata =
         retrieveMetadata(fileId, FileRetrieveMetadataParams.none())
 
     /** @see retrieveMetadata */
@@ -119,36 +121,37 @@ interface FileService {
         fileId: String,
         params: FileRetrieveMetadataParams = FileRetrieveMetadataParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileMetadata = retrieveMetadata(params.toBuilder().fileId(fileId).build(), requestOptions)
+    ): BetaFileMetadata =
+        retrieveMetadata(params.toBuilder().fileId(fileId).build(), requestOptions)
 
     /** @see retrieveMetadata */
     fun retrieveMetadata(
         fileId: String,
         params: FileRetrieveMetadataParams = FileRetrieveMetadataParams.none(),
-    ): FileMetadata = retrieveMetadata(fileId, params, RequestOptions.none())
+    ): BetaFileMetadata = retrieveMetadata(fileId, params, RequestOptions.none())
 
     /** @see retrieveMetadata */
     fun retrieveMetadata(
         params: FileRetrieveMetadataParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileMetadata
+    ): BetaFileMetadata
 
     /** @see retrieveMetadata */
-    fun retrieveMetadata(params: FileRetrieveMetadataParams): FileMetadata =
+    fun retrieveMetadata(params: FileRetrieveMetadataParams): BetaFileMetadata =
         retrieveMetadata(params, RequestOptions.none())
 
     /** @see retrieveMetadata */
-    fun retrieveMetadata(fileId: String, requestOptions: RequestOptions): FileMetadata =
+    fun retrieveMetadata(fileId: String, requestOptions: RequestOptions): BetaFileMetadata =
         retrieveMetadata(fileId, FileRetrieveMetadataParams.none(), requestOptions)
 
     /** Upload File */
-    fun upload(params: FileUploadParams): FileMetadata = upload(params, RequestOptions.none())
+    fun upload(params: FileUploadParams): BetaFileMetadata = upload(params, RequestOptions.none())
 
     /** @see upload */
     fun upload(
         params: FileUploadParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileMetadata
+    ): BetaFileMetadata
 
     /** A view of [FileService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -188,7 +191,7 @@ interface FileService {
          * the same as [FileService.delete].
          */
         @MustBeClosed
-        fun delete(fileId: String): HttpResponseFor<DeletedFile> =
+        fun delete(fileId: String): HttpResponseFor<BetaDeletedFile> =
             delete(fileId, FileDeleteParams.none())
 
         /** @see delete */
@@ -197,7 +200,7 @@ interface FileService {
             fileId: String,
             params: FileDeleteParams = FileDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DeletedFile> =
+        ): HttpResponseFor<BetaDeletedFile> =
             delete(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see delete */
@@ -205,23 +208,26 @@ interface FileService {
         fun delete(
             fileId: String,
             params: FileDeleteParams = FileDeleteParams.none(),
-        ): HttpResponseFor<DeletedFile> = delete(fileId, params, RequestOptions.none())
+        ): HttpResponseFor<BetaDeletedFile> = delete(fileId, params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
         fun delete(
             params: FileDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DeletedFile>
+        ): HttpResponseFor<BetaDeletedFile>
 
         /** @see delete */
         @MustBeClosed
-        fun delete(params: FileDeleteParams): HttpResponseFor<DeletedFile> =
+        fun delete(params: FileDeleteParams): HttpResponseFor<BetaDeletedFile> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
-        fun delete(fileId: String, requestOptions: RequestOptions): HttpResponseFor<DeletedFile> =
+        fun delete(
+            fileId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaDeletedFile> =
             delete(fileId, FileDeleteParams.none(), requestOptions)
 
         /**
@@ -268,7 +274,7 @@ interface FileService {
          * same as [FileService.retrieveMetadata].
          */
         @MustBeClosed
-        fun retrieveMetadata(fileId: String): HttpResponseFor<FileMetadata> =
+        fun retrieveMetadata(fileId: String): HttpResponseFor<BetaFileMetadata> =
             retrieveMetadata(fileId, FileRetrieveMetadataParams.none())
 
         /** @see retrieveMetadata */
@@ -277,7 +283,7 @@ interface FileService {
             fileId: String,
             params: FileRetrieveMetadataParams = FileRetrieveMetadataParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileMetadata> =
+        ): HttpResponseFor<BetaFileMetadata> =
             retrieveMetadata(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see retrieveMetadata */
@@ -285,26 +291,28 @@ interface FileService {
         fun retrieveMetadata(
             fileId: String,
             params: FileRetrieveMetadataParams = FileRetrieveMetadataParams.none(),
-        ): HttpResponseFor<FileMetadata> = retrieveMetadata(fileId, params, RequestOptions.none())
+        ): HttpResponseFor<BetaFileMetadata> =
+            retrieveMetadata(fileId, params, RequestOptions.none())
 
         /** @see retrieveMetadata */
         @MustBeClosed
         fun retrieveMetadata(
             params: FileRetrieveMetadataParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileMetadata>
+        ): HttpResponseFor<BetaFileMetadata>
 
         /** @see retrieveMetadata */
         @MustBeClosed
-        fun retrieveMetadata(params: FileRetrieveMetadataParams): HttpResponseFor<FileMetadata> =
-            retrieveMetadata(params, RequestOptions.none())
+        fun retrieveMetadata(
+            params: FileRetrieveMetadataParams
+        ): HttpResponseFor<BetaFileMetadata> = retrieveMetadata(params, RequestOptions.none())
 
         /** @see retrieveMetadata */
         @MustBeClosed
         fun retrieveMetadata(
             fileId: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<FileMetadata> =
+        ): HttpResponseFor<BetaFileMetadata> =
             retrieveMetadata(fileId, FileRetrieveMetadataParams.none(), requestOptions)
 
         /**
@@ -312,7 +320,7 @@ interface FileService {
          * [FileService.upload].
          */
         @MustBeClosed
-        fun upload(params: FileUploadParams): HttpResponseFor<FileMetadata> =
+        fun upload(params: FileUploadParams): HttpResponseFor<BetaFileMetadata> =
             upload(params, RequestOptions.none())
 
         /** @see upload */
@@ -320,6 +328,6 @@ interface FileService {
         fun upload(
             params: FileUploadParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileMetadata>
+        ): HttpResponseFor<BetaFileMetadata>
     }
 }

@@ -20,11 +20,13 @@ import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.messages.BetaAdvisorTool20260301
+import com.anthropic.models.beta.messages.BetaBrowserToolset20260801
 import com.anthropic.models.beta.messages.BetaCacheControlEphemeral
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20250522
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20250825
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20260120
 import com.anthropic.models.beta.messages.BetaCodeExecutionTool20260521
+import com.anthropic.models.beta.messages.BetaComputerToolset20260801
 import com.anthropic.models.beta.messages.BetaContainerParams
 import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaContextManagementConfig
@@ -2642,6 +2644,13 @@ private constructor(
 
                 /**
                  * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofBrowserToolset20260801(browserToolset20260801)`.
+                 */
+                fun addTool(browserToolset20260801: BetaBrowserToolset20260801) =
+                    addTool(BetaToolUnion.ofBrowserToolset20260801(browserToolset20260801))
+
+                /**
+                 * Alias for calling [addTool] with
                  * `BetaToolUnion.ofComputerUse20241022(computerUse20241022)`.
                  */
                 fun addTool(computerUse20241022: BetaToolComputerUse20241022) =
@@ -2674,6 +2683,13 @@ private constructor(
                  */
                 fun addTool(computerUse20251124: BetaToolComputerUse20251124) =
                     addTool(BetaToolUnion.ofComputerUse20251124(computerUse20251124))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaToolUnion.ofComputerToolset20260801(computerToolset20260801)`.
+                 */
+                fun addTool(computerToolset20260801: BetaComputerToolset20260801) =
+                    addTool(BetaToolUnion.ofComputerToolset20260801(computerToolset20260801))
 
                 /**
                  * Alias for calling [addTool] with

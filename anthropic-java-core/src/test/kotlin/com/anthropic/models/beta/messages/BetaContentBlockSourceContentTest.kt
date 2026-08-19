@@ -90,6 +90,11 @@ internal class BetaContentBlockSourceContentTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .transformations(
+                    BetaImageTransformationsParam.builder()
+                        .oversizedImage(BetaImageTransformationsParam.OversizedImage.DOWNSIZE)
+                        .build()
+                )
                 .build()
 
         val betaContentBlockSourceContent = BetaContentBlockSourceContent.ofImage(image)
@@ -113,6 +118,11 @@ internal class BetaContentBlockSourceContentTest {
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .transformations(
+                        BetaImageTransformationsParam.builder()
+                            .oversizedImage(BetaImageTransformationsParam.OversizedImage.DOWNSIZE)
                             .build()
                     )
                     .build()

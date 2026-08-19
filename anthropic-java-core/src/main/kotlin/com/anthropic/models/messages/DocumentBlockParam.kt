@@ -263,6 +263,19 @@ private constructor(
          */
         fun urlSource(url: String) = source(UrlPdfSource.builder().url(url).build())
 
+        /** Alias for calling [source] with `Source.ofFile(file)`. */
+        fun source(file: FileDocumentSource) = source(Source.ofFile(file))
+
+        /**
+         * Alias for calling [source] with the following:
+         * ```java
+         * FileDocumentSource.builder()
+         *     .fileId(fileId)
+         *     .build()
+         * ```
+         */
+        fun fileSource(fileId: String) = source(FileDocumentSource.builder().fileId(fileId).build())
+
         /**
          * Sets the field to an arbitrary JSON value.
          *
@@ -439,6 +452,7 @@ private constructor(
         private val text: PlainTextSource? = null,
         private val content: ContentBlockSource? = null,
         private val url: UrlPdfSource? = null,
+        private val file: FileDocumentSource? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -452,6 +466,8 @@ private constructor(
                     override fun visitContent(content: ContentBlockSource): Type = Type.CONTENT
 
                     override fun visitUrl(url: UrlPdfSource): Type = Type.URL
+
+                    override fun visitFile(file: FileDocumentSource): Type = Type.FILE
 
                     override fun unknown(json: JsonValue?): Type =
                         Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
@@ -471,6 +487,9 @@ private constructor(
                         Optional.empty()
 
                     override fun visitUrl(url: UrlPdfSource): Optional<String> = Optional.empty()
+
+                    override fun visitFile(file: FileDocumentSource): Optional<String> =
+                        Optional.empty()
                 }
             )
 
@@ -482,6 +501,8 @@ private constructor(
 
         fun url(): Optional<UrlPdfSource> = Optional.ofNullable(url)
 
+        fun file(): Optional<FileDocumentSource> = Optional.ofNullable(file)
+
         fun isBase64(): Boolean = base64 != null
 
         fun isText(): Boolean = text != null
@@ -490,6 +511,8 @@ private constructor(
 
         fun isUrl(): Boolean = url != null
 
+        fun isFile(): Boolean = file != null
+
         fun asBase64(): Base64PdfSource = base64.getOrThrow("base64")
 
         fun asText(): PlainTextSource = text.getOrThrow("text")
@@ -497,6 +520,8 @@ private constructor(
         fun asContent(): ContentBlockSource = content.getOrThrow("content")
 
         fun asUrl(): UrlPdfSource = url.getOrThrow("url")
+
+        fun asFile(): FileDocumentSource = file.getOrThrow("file")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -535,6 +560,7 @@ private constructor(
                 text != null -> visitor.visitText(text)
                 content != null -> visitor.visitContent(content)
                 url != null -> visitor.visitUrl(url)
+                file != null -> visitor.visitFile(file)
                 else -> visitor.unknown(_json)
             }
 
@@ -571,6 +597,10 @@ private constructor(
                     override fun visitUrl(url: UrlPdfSource) {
                         url.validate()
                     }
+
+                    override fun visitFile(file: FileDocumentSource) {
+                        file.validate()
+                    }
                 }
             )
             validated = true
@@ -602,6 +632,8 @@ private constructor(
 
                     override fun visitUrl(url: UrlPdfSource) = url.validity()
 
+                    override fun visitFile(file: FileDocumentSource) = file.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -615,10 +647,11 @@ private constructor(
                 base64 == other.base64 &&
                 text == other.text &&
                 content == other.content &&
-                url == other.url
+                url == other.url &&
+                file == other.file
         }
 
-        override fun hashCode(): Int = Objects.hash(base64, text, content, url)
+        override fun hashCode(): Int = Objects.hash(base64, text, content, url, file)
 
         override fun toString(): String =
             when {
@@ -626,6 +659,7 @@ private constructor(
                 text != null -> "Source{text=$text}"
                 content != null -> "Source{content=$content}"
                 url != null -> "Source{url=$url}"
+                file != null -> "Source{file=$file}"
                 _json != null -> "Source{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Source")
             }
@@ -665,6 +699,14 @@ private constructor(
              * given required [url].
              */
             @JvmStatic fun ofUrl(url: String) = ofUrl(UrlPdfSource.of(url))
+
+            @JvmStatic fun ofFile(file: FileDocumentSource) = Source(file = file)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofFile] variant is built from the
+             * given required [fileId].
+             */
+            @JvmStatic fun ofFile(fileId: String) = ofFile(FileDocumentSource.of(fileId))
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */
@@ -677,6 +719,8 @@ private constructor(
             fun visitContent(content: ContentBlockSource): T
 
             fun visitUrl(url: UrlPdfSource): T
+
+            fun visitFile(file: FileDocumentSource): T
 
             /**
              * Maps an unknown variant of [Source] to a value of type [T].
@@ -720,6 +764,11 @@ private constructor(
                             Source(url = it, _json = json)
                         } ?: Source(_json = json)
                     }
+                    "file" -> {
+                        return tryDeserialize(node, jacksonTypeRef<FileDocumentSource>())?.let {
+                            Source(file = it, _json = json)
+                        } ?: Source(_json = json)
+                    }
                 }
 
                 return Source(_json = json)
@@ -738,6 +787,7 @@ private constructor(
                     value.text != null -> generator.writeObject(value.text)
                     value.content != null -> generator.writeObject(value.content)
                     value.url != null -> generator.writeObject(value.url)
+                    value.file != null -> generator.writeObject(value.file)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Source")
                 }
@@ -766,6 +816,8 @@ private constructor(
 
                 @JvmField val URL = of("url")
 
+                @JvmField val FILE = of("file")
+
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
                 @JvmSynthetic
@@ -779,6 +831,7 @@ private constructor(
                 TEXT,
                 CONTENT,
                 URL,
+                FILE,
             }
 
             /**
@@ -795,6 +848,7 @@ private constructor(
                 TEXT,
                 CONTENT,
                 URL,
+                FILE,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
@@ -812,6 +866,7 @@ private constructor(
                     TEXT -> Value.TEXT
                     CONTENT -> Value.CONTENT
                     URL -> Value.URL
+                    FILE -> Value.FILE
                     else -> Value._UNKNOWN
                 }
 
@@ -830,6 +885,7 @@ private constructor(
                     TEXT -> Known.TEXT
                     CONTENT -> Known.CONTENT
                     URL -> Known.URL
+                    FILE -> Known.FILE
                     else -> throw AnthropicInvalidDataException("Unknown Type: $value")
                 }
 

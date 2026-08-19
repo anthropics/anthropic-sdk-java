@@ -1,0 +1,80 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.anthropic.models.skills
+
+import com.anthropic.core.MultipartField
+import java.io.InputStream
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+internal class SkillCreateParamsTest {
+
+    @Test
+    fun create() {
+        SkillCreateParams.builder()
+            .addFile("Example data".byteInputStream())
+            .displayName("display_name")
+            .build()
+    }
+
+    @Test
+    fun body() {
+        val params =
+            SkillCreateParams.builder()
+                .addFile("Example data".byteInputStream())
+                .displayName("display_name")
+                .build()
+
+        val body = params._body()
+
+        assertThat(body.filterValues { !it.value.isNull() })
+            .usingRecursiveComparison()
+            // TODO(AssertJ): Replace this and the `mapValues` below with:
+            // https://github.com/assertj/assertj/issues/3165
+            .withEqualsForType(
+                { a, b -> a.readBytes() contentEquals b.readBytes() },
+                InputStream::class.java,
+            )
+            .isEqualTo(
+                mapOf(
+                        "files" to
+                            MultipartField.builder<List<InputStream>>()
+                                .value(listOf("Example data".byteInputStream()))
+                                .contentType("application/octet-stream")
+                                .build(),
+                        "display_name" to MultipartField.of("display_name"),
+                    )
+                    .mapValues { (_, field) ->
+                        field.map { (it as? ByteArray)?.inputStream() ?: it }
+                    }
+            )
+    }
+
+    @Test
+    fun bodyWithoutOptionalFields() {
+        val params = SkillCreateParams.builder().addFile("Example data".byteInputStream()).build()
+
+        val body = params._body()
+
+        assertThat(body.filterValues { !it.value.isNull() })
+            .usingRecursiveComparison()
+            // TODO(AssertJ): Replace this and the `mapValues` below with:
+            // https://github.com/assertj/assertj/issues/3165
+            .withEqualsForType(
+                { a, b -> a.readBytes() contentEquals b.readBytes() },
+                InputStream::class.java,
+            )
+            .isEqualTo(
+                mapOf(
+                        "files" to
+                            MultipartField.builder<List<InputStream>>()
+                                .value(listOf("Example data".byteInputStream()))
+                                .contentType("application/octet-stream")
+                                .build()
+                    )
+                    .mapValues { (_, field) ->
+                        field.map { (it as? ByteArray)?.inputStream() ?: it }
+                    }
+            )
+    }
+}

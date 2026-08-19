@@ -19,6 +19,13 @@ internal class MessageTest {
                     Container.builder()
                         .id("container_011CpZohnwH4vuy7gazohgSP")
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .addSkill(
+                            ContainerSkill.builder()
+                                .skillId("pdf")
+                                .type(ContainerSkill.Type.ANTHROPIC)
+                                .version("latest")
+                                .build()
+                        )
                         .build()
                 )
                 .addContent(
@@ -78,6 +85,13 @@ internal class MessageTest {
                 Container.builder()
                     .id("container_011CpZohnwH4vuy7gazohgSP")
                     .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .addSkill(
+                        ContainerSkill.builder()
+                            .skillId("pdf")
+                            .type(ContainerSkill.Type.ANTHROPIC)
+                            .version("latest")
+                            .build()
+                    )
                     .build()
             )
         assertThat(message.content())
@@ -143,6 +157,13 @@ internal class MessageTest {
                     Container.builder()
                         .id("container_011CpZohnwH4vuy7gazohgSP")
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .addSkill(
+                            ContainerSkill.builder()
+                                .skillId("pdf")
+                                .type(ContainerSkill.Type.ANTHROPIC)
+                                .version("latest")
+                                .build()
+                        )
                         .build()
                 )
                 .addContent(

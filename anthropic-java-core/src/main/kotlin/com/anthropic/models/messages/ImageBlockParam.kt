@@ -34,6 +34,7 @@ private constructor(
     private val source: JsonField<Source>,
     private val type: JsonValue,
     private val cacheControl: JsonField<CacheControlEphemeral>,
+    private val transformations: JsonField<ImageTransformationsParam>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -44,7 +45,10 @@ private constructor(
         @JsonProperty("cache_control")
         @ExcludeMissing
         cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
-    ) : this(source, type, cacheControl, mutableMapOf())
+        @JsonProperty("transformations")
+        @ExcludeMissing
+        transformations: JsonField<ImageTransformationsParam> = JsonMissing.of(),
+    ) : this(source, type, cacheControl, transformations, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -72,6 +76,18 @@ private constructor(
     fun cacheControl(): Optional<CacheControlEphemeral> = cacheControl.getOptional("cache_control")
 
     /**
+     * Configures the transformations the server applies to this image before the model observes it.
+     * Each key names a condition the server transforms images for; its value selects the
+     * transformation applied. Omitted keys keep their default behavior, and an empty object is
+     * equivalent to omitting the field.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun transformations(): Optional<ImageTransformationsParam> =
+        transformations.getOptional("transformations")
+
+    /**
      * Returns the raw JSON value of [source].
      *
      * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
@@ -86,6 +102,15 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<CacheControlEphemeral> = cacheControl
+
+    /**
+     * Returns the raw JSON value of [transformations].
+     *
+     * Unlike [transformations], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("transformations")
+    @ExcludeMissing
+    fun _transformations(): JsonField<ImageTransformationsParam> = transformations
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -124,6 +149,7 @@ private constructor(
         private var source: JsonField<Source>? = null
         private var type: JsonValue = JsonValue.from("image")
         private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
+        private var transformations: JsonField<ImageTransformationsParam> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -131,6 +157,7 @@ private constructor(
             source = imageBlockParam.source
             type = imageBlockParam.type
             cacheControl = imageBlockParam.cacheControl
+            transformations = imageBlockParam.transformations
             additionalProperties = imageBlockParam.additionalProperties.toMutableMap()
         }
 
@@ -159,6 +186,19 @@ private constructor(
          * ```
          */
         fun urlSource(url: String) = source(UrlImageSource.builder().url(url).build())
+
+        /** Alias for calling [source] with `Source.ofFile(file)`. */
+        fun source(file: FileImageSource) = source(Source.ofFile(file))
+
+        /**
+         * Alias for calling [source] with the following:
+         * ```java
+         * FileImageSource.builder()
+         *     .fileId(fileId)
+         *     .build()
+         * ```
+         */
+        fun fileSource(fileId: String) = source(FileImageSource.builder().fileId(fileId).build())
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -191,6 +231,30 @@ private constructor(
          */
         fun cacheControl(cacheControl: JsonField<CacheControlEphemeral>) = apply {
             this.cacheControl = cacheControl
+        }
+
+        /**
+         * Configures the transformations the server applies to this image before the model observes
+         * it. Each key names a condition the server transforms images for; its value selects the
+         * transformation applied. Omitted keys keep their default behavior, and an empty object is
+         * equivalent to omitting the field.
+         */
+        fun transformations(transformations: ImageTransformationsParam?) =
+            transformations(JsonField.ofNullable(transformations))
+
+        /** Alias for calling [Builder.transformations] with `transformations.orElse(null)`. */
+        fun transformations(transformations: Optional<ImageTransformationsParam>) =
+            transformations(transformations.getOrNull())
+
+        /**
+         * Sets [Builder.transformations] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.transformations] with a well-typed
+         * [ImageTransformationsParam] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun transformations(transformations: JsonField<ImageTransformationsParam>) = apply {
+            this.transformations = transformations
         }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -229,6 +293,7 @@ private constructor(
                 checkRequired("source", source),
                 type,
                 cacheControl,
+                transformations,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -255,6 +320,7 @@ private constructor(
             }
         }
         cacheControl().ifPresent { it.validate() }
+        transformations().ifPresent { it.validate() }
         validated = true
     }
 
@@ -275,7 +341,8 @@ private constructor(
     internal fun validity(): Int =
         (source.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("image")) 1 else 0 } +
-            (cacheControl.asKnown().getOrNull()?.validity() ?: 0)
+            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (transformations.asKnown().getOrNull()?.validity() ?: 0)
 
     @JsonDeserialize(using = Source.Deserializer::class)
     @JsonSerialize(using = Source.Serializer::class)
@@ -283,6 +350,7 @@ private constructor(
     private constructor(
         private val base64: Base64ImageSource? = null,
         private val url: UrlImageSource? = null,
+        private val file: FileImageSource? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -293,6 +361,8 @@ private constructor(
 
                     override fun visitUrl(url: UrlImageSource): Type = Type.URL
 
+                    override fun visitFile(file: FileImageSource): Type = Type.FILE
+
                     override fun unknown(json: JsonValue?): Type =
                         Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
                 }
@@ -302,13 +372,19 @@ private constructor(
 
         fun url(): Optional<UrlImageSource> = Optional.ofNullable(url)
 
+        fun file(): Optional<FileImageSource> = Optional.ofNullable(file)
+
         fun isBase64(): Boolean = base64 != null
 
         fun isUrl(): Boolean = url != null
 
+        fun isFile(): Boolean = file != null
+
         fun asBase64(): Base64ImageSource = base64.getOrThrow("base64")
 
         fun asUrl(): UrlImageSource = url.getOrThrow("url")
+
+        fun asFile(): FileImageSource = file.getOrThrow("file")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -345,6 +421,7 @@ private constructor(
             when {
                 base64 != null -> visitor.visitBase64(base64)
                 url != null -> visitor.visitUrl(url)
+                file != null -> visitor.visitFile(file)
                 else -> visitor.unknown(_json)
             }
 
@@ -373,6 +450,10 @@ private constructor(
                     override fun visitUrl(url: UrlImageSource) {
                         url.validate()
                     }
+
+                    override fun visitFile(file: FileImageSource) {
+                        file.validate()
+                    }
                 }
             )
             validated = true
@@ -400,6 +481,8 @@ private constructor(
 
                     override fun visitUrl(url: UrlImageSource) = url.validity()
 
+                    override fun visitFile(file: FileImageSource) = file.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -409,15 +492,19 @@ private constructor(
                 return true
             }
 
-            return other is Source && base64 == other.base64 && url == other.url
+            return other is Source &&
+                base64 == other.base64 &&
+                url == other.url &&
+                file == other.file
         }
 
-        override fun hashCode(): Int = Objects.hash(base64, url)
+        override fun hashCode(): Int = Objects.hash(base64, url, file)
 
         override fun toString(): String =
             when {
                 base64 != null -> "Source{base64=$base64}"
                 url != null -> "Source{url=$url}"
+                file != null -> "Source{file=$file}"
                 _json != null -> "Source{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Source")
             }
@@ -433,6 +520,14 @@ private constructor(
              * given required [url].
              */
             @JvmStatic fun ofUrl(url: String) = ofUrl(UrlImageSource.of(url))
+
+            @JvmStatic fun ofFile(file: FileImageSource) = Source(file = file)
+
+            /**
+             * Returns an immutable instance of [Source] whose [ofFile] variant is built from the
+             * given required [fileId].
+             */
+            @JvmStatic fun ofFile(fileId: String) = ofFile(FileImageSource.of(fileId))
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */
@@ -441,6 +536,8 @@ private constructor(
             fun visitBase64(base64: Base64ImageSource): T
 
             fun visitUrl(url: UrlImageSource): T
+
+            fun visitFile(file: FileImageSource): T
 
             /**
              * Maps an unknown variant of [Source] to a value of type [T].
@@ -474,6 +571,11 @@ private constructor(
                             Source(url = it, _json = json)
                         } ?: Source(_json = json)
                     }
+                    "file" -> {
+                        return tryDeserialize(node, jacksonTypeRef<FileImageSource>())?.let {
+                            Source(file = it, _json = json)
+                        } ?: Source(_json = json)
+                    }
                 }
 
                 return Source(_json = json)
@@ -490,6 +592,7 @@ private constructor(
                 when {
                     value.base64 != null -> generator.writeObject(value.base64)
                     value.url != null -> generator.writeObject(value.url)
+                    value.file != null -> generator.writeObject(value.file)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Source")
                 }
@@ -514,6 +617,8 @@ private constructor(
 
                 @JvmField val URL = of("url")
 
+                @JvmField val FILE = of("file")
+
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
                 @JvmSynthetic
@@ -525,6 +630,7 @@ private constructor(
             enum class Known {
                 BASE64,
                 URL,
+                FILE,
             }
 
             /**
@@ -539,6 +645,7 @@ private constructor(
             enum class Value {
                 BASE64,
                 URL,
+                FILE,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
@@ -554,6 +661,7 @@ private constructor(
                 when (this) {
                     BASE64 -> Value.BASE64
                     URL -> Value.URL
+                    FILE -> Value.FILE
                     else -> Value._UNKNOWN
                 }
 
@@ -570,6 +678,7 @@ private constructor(
                 when (this) {
                     BASE64 -> Known.BASE64
                     URL -> Known.URL
+                    FILE -> Known.FILE
                     else -> throw AnthropicInvalidDataException("Unknown Type: $value")
                 }
 
@@ -647,15 +756,16 @@ private constructor(
             source == other.source &&
             type == other.type &&
             cacheControl == other.cacheControl &&
+            transformations == other.transformations &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(source, type, cacheControl, additionalProperties)
+        Objects.hash(source, type, cacheControl, transformations, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ImageBlockParam{source=$source, type=$type, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
+        "ImageBlockParam{source=$source, type=$type, cacheControl=$cacheControl, transformations=$transformations, additionalProperties=$additionalProperties}"
 }

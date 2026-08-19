@@ -37,6 +37,7 @@ private constructor(
     private val name: JsonField<String>,
     private val type: JsonValue,
     private val caller: JsonField<Caller>,
+    private val toolsetName: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -47,7 +48,10 @@ private constructor(
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("caller") @ExcludeMissing caller: JsonField<Caller> = JsonMissing.of(),
-    ) : this(id, input, name, type, caller, mutableMapOf())
+        @JsonProperty("toolset_name")
+        @ExcludeMissing
+        toolsetName: JsonField<String> = JsonMissing.of(),
+    ) : this(id, input, name, type, caller, toolsetName, mutableMapOf())
 
     fun toParam(): BetaToolUseBlockParam =
         BetaToolUseBlockParam.builder()
@@ -86,6 +90,7 @@ private constructor(
                     )
                 }
             )
+            .toolsetName(_toolsetName())
             .build()
 
     /**
@@ -126,6 +131,14 @@ private constructor(
     fun caller(): Optional<Caller> = caller.getOptional("caller")
 
     /**
+     * For a toolset member tool_use, the toolset family.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun toolsetName(): Optional<String> = toolsetName.getOptional("toolset_name")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -152,6 +165,15 @@ private constructor(
      * Unlike [caller], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("caller") @ExcludeMissing fun _caller(): JsonField<Caller> = caller
+
+    /**
+     * Returns the raw JSON value of [toolsetName].
+     *
+     * Unlike [toolsetName], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("toolset_name")
+    @ExcludeMissing
+    fun _toolsetName(): JsonField<String> = toolsetName
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -188,6 +210,7 @@ private constructor(
         private var name: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("tool_use")
         private var caller: JsonField<Caller> = JsonMissing.of()
+        private var toolsetName: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -197,6 +220,7 @@ private constructor(
             name = betaToolUseBlock.name
             type = betaToolUseBlock.type
             caller = betaToolUseBlock.caller
+            toolsetName = betaToolUseBlock.toolsetName
             additionalProperties = betaToolUseBlock.additionalProperties.toMutableMap()
         }
 
@@ -292,6 +316,21 @@ private constructor(
         fun codeExecution20260120Caller(toolId: String) =
             caller(BetaServerToolCaller20260120.builder().toolId(toolId).build())
 
+        /** For a toolset member tool_use, the toolset family. */
+        fun toolsetName(toolsetName: String?) = toolsetName(JsonField.ofNullable(toolsetName))
+
+        /** Alias for calling [Builder.toolsetName] with `toolsetName.orElse(null)`. */
+        fun toolsetName(toolsetName: Optional<String>) = toolsetName(toolsetName.getOrNull())
+
+        /**
+         * Sets [Builder.toolsetName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.toolsetName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun toolsetName(toolsetName: JsonField<String>) = apply { this.toolsetName = toolsetName }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -332,6 +371,7 @@ private constructor(
                 checkRequired("name", name),
                 type,
                 caller,
+                toolsetName,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -360,6 +400,7 @@ private constructor(
             }
         }
         caller().ifPresent { it.validate() }
+        toolsetName()
         validated = true
     }
 
@@ -382,7 +423,8 @@ private constructor(
             (input.asKnown().getOrNull()?.validity() ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("tool_use")) 1 else 0 } +
-            (caller.asKnown().getOrNull()?.validity() ?: 0)
+            (caller.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (toolsetName.asKnown().isPresent) 1 else 0)
 
     class Input
     @JsonCreator
@@ -962,15 +1004,16 @@ private constructor(
             name == other.name &&
             type == other.type &&
             caller == other.caller &&
+            toolsetName == other.toolsetName &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, input, name, type, caller, additionalProperties)
+        Objects.hash(id, input, name, type, caller, toolsetName, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolUseBlock{id=$id, input=$input, name=$name, type=$type, caller=$caller, additionalProperties=$additionalProperties}"
+        "BetaToolUseBlock{id=$id, input=$input, name=$name, type=$type, caller=$caller, toolsetName=$toolsetName, additionalProperties=$additionalProperties}"
 }

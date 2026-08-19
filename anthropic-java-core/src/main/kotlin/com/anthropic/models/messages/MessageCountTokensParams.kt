@@ -826,10 +826,26 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofBrowserToolset20260801(browserToolset20260801)`.
+         */
+        fun addTool(browserToolset20260801: BrowserToolset20260801) = apply {
+            body.addTool(browserToolset20260801)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `MessageCountTokensTool.ofMemoryTool20250818(memoryTool20250818)`.
          */
         fun addTool(memoryTool20250818: MemoryTool20250818) = apply {
             body.addTool(memoryTool20250818)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `MessageCountTokensTool.ofComputerToolset20260801(computerToolset20260801)`.
+         */
+        fun addTool(computerToolset20260801: ComputerToolset20260801) = apply {
+            body.addTool(computerToolset20260801)
         }
 
         /**
@@ -1946,10 +1962,24 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofBrowserToolset20260801(browserToolset20260801)`.
+             */
+            fun addTool(browserToolset20260801: BrowserToolset20260801) =
+                addTool(MessageCountTokensTool.ofBrowserToolset20260801(browserToolset20260801))
+
+            /**
+             * Alias for calling [addTool] with
              * `MessageCountTokensTool.ofMemoryTool20250818(memoryTool20250818)`.
              */
             fun addTool(memoryTool20250818: MemoryTool20250818) =
                 addTool(MessageCountTokensTool.ofMemoryTool20250818(memoryTool20250818))
+
+            /**
+             * Alias for calling [addTool] with
+             * `MessageCountTokensTool.ofComputerToolset20260801(computerToolset20260801)`.
+             */
+            fun addTool(computerToolset20260801: ComputerToolset20260801) =
+                addTool(MessageCountTokensTool.ofComputerToolset20260801(computerToolset20260801))
 
             /**
              * Alias for calling [addTool] with

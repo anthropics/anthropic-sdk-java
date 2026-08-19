@@ -159,6 +159,7 @@ internal class ContentBlockTest {
                         .build()
                 )
                 .name("x")
+                .toolsetName("toolset_name")
                 .build()
 
         val contentBlock = ContentBlock.ofToolUse(toolUse)
@@ -191,6 +192,7 @@ internal class ContentBlockTest {
                             .build()
                     )
                     .name("x")
+                    .toolsetName("toolset_name")
                     .build()
             )
 

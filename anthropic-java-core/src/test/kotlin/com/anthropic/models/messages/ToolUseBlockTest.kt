@@ -22,6 +22,7 @@ internal class ToolUseBlockTest {
                         .build()
                 )
                 .name("x")
+                .toolsetName("toolset_name")
                 .build()
 
         assertThat(toolUseBlock.id()).isEqualTo("id")
@@ -34,6 +35,7 @@ internal class ToolUseBlockTest {
                     .build()
             )
         assertThat(toolUseBlock.name()).isEqualTo("x")
+        assertThat(toolUseBlock.toolsetName()).contains("toolset_name")
     }
 
     @Test
@@ -49,6 +51,7 @@ internal class ToolUseBlockTest {
                         .build()
                 )
                 .name("x")
+                .toolsetName("toolset_name")
                 .build()
 
         val roundtrippedToolUseBlock =

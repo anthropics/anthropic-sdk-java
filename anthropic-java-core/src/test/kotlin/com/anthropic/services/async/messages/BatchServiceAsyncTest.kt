@@ -7,10 +7,12 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.core.JsonValue
 import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CitationCharLocationParam
+import com.anthropic.models.messages.ContainerParams
 import com.anthropic.models.messages.JsonOutputFormat
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
 import com.anthropic.models.messages.OutputConfig
+import com.anthropic.models.messages.SkillParams
 import com.anthropic.models.messages.TextBlockParam
 import com.anthropic.models.messages.ThinkingConfigAdaptive
 import com.anthropic.models.messages.Tool
@@ -48,7 +50,18 @@ internal class BatchServiceAsyncTest {
                                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
                                             .build()
                                     )
-                                    .container("container")
+                                    .container(
+                                        ContainerParams.builder()
+                                            .id("id")
+                                            .addSkill(
+                                                SkillParams.builder()
+                                                    .skillId("pdf")
+                                                    .type(SkillParams.Type.ANTHROPIC)
+                                                    .version("latest")
+                                                    .build()
+                                            )
+                                            .build()
+                                    )
                                     .inferenceGeo("inference_geo")
                                     .metadata(
                                         Metadata.builder()

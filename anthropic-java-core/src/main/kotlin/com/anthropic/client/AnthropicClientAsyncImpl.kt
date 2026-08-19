@@ -8,10 +8,14 @@ import com.anthropic.services.async.BetaServiceAsync
 import com.anthropic.services.async.BetaServiceAsyncImpl
 import com.anthropic.services.async.CompletionServiceAsync
 import com.anthropic.services.async.CompletionServiceAsyncImpl
+import com.anthropic.services.async.FileServiceAsync
+import com.anthropic.services.async.FileServiceAsyncImpl
 import com.anthropic.services.async.MessageServiceAsync
 import com.anthropic.services.async.MessageServiceAsyncImpl
 import com.anthropic.services.async.ModelServiceAsync
 import com.anthropic.services.async.ModelServiceAsyncImpl
+import com.anthropic.services.async.SkillServiceAsync
+import com.anthropic.services.async.SkillServiceAsyncImpl
 import java.util.function.Consumer
 
 class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : AnthropicClientAsync {
@@ -43,6 +47,12 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
         ModelServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val files: FileServiceAsync by lazy { FileServiceAsyncImpl(clientOptionsWithUserAgent) }
+
+    private val skills: SkillServiceAsync by lazy {
+        SkillServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     private val beta: BetaServiceAsync by lazy { BetaServiceAsyncImpl(clientOptionsWithUserAgent) }
 
     override fun sync(): AnthropicClient = sync
@@ -57,6 +67,10 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
     override fun messages(): MessageServiceAsync = messages
 
     override fun models(): ModelServiceAsync = models
+
+    override fun files(): FileServiceAsync = files
+
+    override fun skills(): SkillServiceAsync = skills
 
     override fun beta(): BetaServiceAsync = beta
 
@@ -77,6 +91,14 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
             ModelServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val files: FileServiceAsync.WithRawResponse by lazy {
+            FileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val skills: SkillServiceAsync.WithRawResponse by lazy {
+            SkillServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val beta: BetaServiceAsync.WithRawResponse by lazy {
             BetaServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -93,6 +115,10 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
         override fun messages(): MessageServiceAsync.WithRawResponse = messages
 
         override fun models(): ModelServiceAsync.WithRawResponse = models
+
+        override fun files(): FileServiceAsync.WithRawResponse = files
+
+        override fun skills(): SkillServiceAsync.WithRawResponse = skills
 
         override fun beta(): BetaServiceAsync.WithRawResponse = beta
     }

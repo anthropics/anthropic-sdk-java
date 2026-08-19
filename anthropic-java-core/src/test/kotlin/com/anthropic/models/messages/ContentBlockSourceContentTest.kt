@@ -85,6 +85,11 @@ internal class ContentBlockSourceContentTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .transformations(
+                    ImageTransformationsParam.builder()
+                        .oversizedImage(ImageTransformationsParam.OversizedImage.DOWNSIZE)
+                        .build()
+                )
                 .build()
 
         val contentBlockSourceContent = ContentBlockSourceContent.ofImage(image)
@@ -108,6 +113,11 @@ internal class ContentBlockSourceContentTest {
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .transformations(
+                        ImageTransformationsParam.builder()
+                            .oversizedImage(ImageTransformationsParam.OversizedImage.DOWNSIZE)
                             .build()
                     )
                     .build()

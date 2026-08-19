@@ -24,6 +24,11 @@ internal class BetaImageBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .transformations(
+                    BetaImageTransformationsParam.builder()
+                        .oversizedImage(BetaImageTransformationsParam.OversizedImage.DOWNSIZE)
+                        .build()
+                )
                 .build()
 
         assertThat(betaImageBlockParam.source())
@@ -39,6 +44,12 @@ internal class BetaImageBlockParamTest {
             .contains(
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
+        assertThat(betaImageBlockParam.transformations())
+            .contains(
+                BetaImageTransformationsParam.builder()
+                    .oversizedImage(BetaImageTransformationsParam.OversizedImage.DOWNSIZE)
                     .build()
             )
     }
@@ -57,6 +68,11 @@ internal class BetaImageBlockParamTest {
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .transformations(
+                    BetaImageTransformationsParam.builder()
+                        .oversizedImage(BetaImageTransformationsParam.OversizedImage.DOWNSIZE)
                         .build()
                 )
                 .build()
