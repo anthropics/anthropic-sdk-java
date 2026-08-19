@@ -164,7 +164,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun container(): Optional<String> = body.container()
+    fun container(): Optional<MessageCreateParamsContainer> = body.container()
 
     /**
      * Specifies the geographic region for inference processing. If not specified, the workspace's
@@ -414,7 +414,7 @@ private constructor(
      *
      * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _container(): JsonField<String> = body._container()
+    fun _container(): JsonField<MessageCreateParamsContainer> = body._container()
 
     /**
      * Returns the raw JSON value of [inferenceGeo].
@@ -795,19 +795,33 @@ private constructor(
         }
 
         /** Container identifier for reuse across requests. */
-        fun container(container: String?) = apply { body.container(container) }
+        fun container(container: MessageCreateParamsContainer?) = apply {
+            body.container(container)
+        }
 
         /** Alias for calling [Builder.container] with `container.orElse(null)`. */
-        fun container(container: Optional<String>) = container(container.getOrNull())
+        fun container(container: Optional<MessageCreateParamsContainer>) =
+            container(container.getOrNull())
 
         /**
          * Sets [Builder.container] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.container] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.container] with a well-typed
+         * [MessageCreateParamsContainer] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
          */
-        fun container(container: JsonField<String>) = apply { body.container(container) }
+        fun container(container: JsonField<MessageCreateParamsContainer>) = apply {
+            body.container(container)
+        }
+
+        /**
+         * Alias for calling [container] with
+         * `MessageCreateParamsContainer.ofContainerParams(containerParams)`.
+         */
+        fun container(containerParams: ContainerParams) = apply { body.container(containerParams) }
+
+        /** Alias for calling [container] with `MessageCreateParamsContainer.ofString(string)`. */
+        fun container(string: String) = apply { body.container(string) }
 
         /**
          * Specifies the geographic region for inference processing. If not specified, the
@@ -1210,10 +1224,26 @@ private constructor(
         }
 
         /**
+         * Alias for calling [addTool] with
+         * `ToolUnion.ofBrowserToolset20260801(browserToolset20260801)`.
+         */
+        fun addTool(browserToolset20260801: BrowserToolset20260801) = apply {
+            body.addTool(browserToolset20260801)
+        }
+
+        /**
          * Alias for calling [addTool] with `ToolUnion.ofMemoryTool20250818(memoryTool20250818)`.
          */
         fun addTool(memoryTool20250818: MemoryTool20250818) = apply {
             body.addTool(memoryTool20250818)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `ToolUnion.ofComputerToolset20260801(computerToolset20260801)`.
+         */
+        fun addTool(computerToolset20260801: ComputerToolset20260801) = apply {
+            body.addTool(computerToolset20260801)
         }
 
         /**
@@ -1517,7 +1547,7 @@ private constructor(
         private val messages: JsonField<List<MessageParam>>,
         private val model: JsonField<Model>,
         private val cacheControl: JsonField<CacheControlEphemeral>,
-        private val container: JsonField<String>,
+        private val container: JsonField<MessageCreateParamsContainer>,
         private val inferenceGeo: JsonField<String>,
         private val metadata: JsonField<Metadata>,
         private val outputConfig: JsonField<OutputConfig>,
@@ -1547,7 +1577,7 @@ private constructor(
             cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of(),
             @JsonProperty("container")
             @ExcludeMissing
-            container: JsonField<String> = JsonMissing.of(),
+            container: JsonField<MessageCreateParamsContainer> = JsonMissing.of(),
             @JsonProperty("inference_geo")
             @ExcludeMissing
             inferenceGeo: JsonField<String> = JsonMissing.of(),
@@ -1708,7 +1738,7 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun container(): Optional<String> = container.getOptional("container")
+        fun container(): Optional<MessageCreateParamsContainer> = container.getOptional("container")
 
         /**
          * Specifies the geographic region for inference processing. If not specified, the
@@ -1964,7 +1994,9 @@ private constructor(
          *
          * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("container") @ExcludeMissing fun _container(): JsonField<String> = container
+        @JsonProperty("container")
+        @ExcludeMissing
+        fun _container(): JsonField<MessageCreateParamsContainer> = container
 
         /**
          * Returns the raw JSON value of [inferenceGeo].
@@ -2114,7 +2146,7 @@ private constructor(
             private var messages: JsonField<MutableList<MessageParam>>? = null
             private var model: JsonField<Model>? = null
             private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
-            private var container: JsonField<String> = JsonMissing.of()
+            private var container: JsonField<MessageCreateParamsContainer> = JsonMissing.of()
             private var inferenceGeo: JsonField<String> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var outputConfig: JsonField<OutputConfig> = JsonMissing.of()
@@ -2396,19 +2428,35 @@ private constructor(
             }
 
             /** Container identifier for reuse across requests. */
-            fun container(container: String?) = container(JsonField.ofNullable(container))
+            fun container(container: MessageCreateParamsContainer?) =
+                container(JsonField.ofNullable(container))
 
             /** Alias for calling [Builder.container] with `container.orElse(null)`. */
-            fun container(container: Optional<String>) = container(container.getOrNull())
+            fun container(container: Optional<MessageCreateParamsContainer>) =
+                container(container.getOrNull())
 
             /**
              * Sets [Builder.container] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.container] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
+             * You should usually call [Builder.container] with a well-typed
+             * [MessageCreateParamsContainer] value instead. This method is primarily for setting
+             * the field to an undocumented or not yet supported value.
              */
-            fun container(container: JsonField<String>) = apply { this.container = container }
+            fun container(container: JsonField<MessageCreateParamsContainer>) = apply {
+                this.container = container
+            }
+
+            /**
+             * Alias for calling [container] with
+             * `MessageCreateParamsContainer.ofContainerParams(containerParams)`.
+             */
+            fun container(containerParams: ContainerParams) =
+                container(MessageCreateParamsContainer.ofContainerParams(containerParams))
+
+            /**
+             * Alias for calling [container] with `MessageCreateParamsContainer.ofString(string)`.
+             */
+            fun container(string: String) = container(MessageCreateParamsContainer.ofString(string))
 
             /**
              * Specifies the geographic region for inference processing. If not specified, the
@@ -2796,10 +2844,24 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `ToolUnion.ofBrowserToolset20260801(browserToolset20260801)`.
+             */
+            fun addTool(browserToolset20260801: BrowserToolset20260801) =
+                addTool(ToolUnion.ofBrowserToolset20260801(browserToolset20260801))
+
+            /**
+             * Alias for calling [addTool] with
              * `ToolUnion.ofMemoryTool20250818(memoryTool20250818)`.
              */
             fun addTool(memoryTool20250818: MemoryTool20250818) =
                 addTool(ToolUnion.ofMemoryTool20250818(memoryTool20250818))
+
+            /**
+             * Alias for calling [addTool] with
+             * `ToolUnion.ofComputerToolset20260801(computerToolset20260801)`.
+             */
+            fun addTool(computerToolset20260801: ComputerToolset20260801) =
+                addTool(ToolUnion.ofComputerToolset20260801(computerToolset20260801))
 
             /**
              * Alias for calling [addTool] with
@@ -3012,7 +3074,7 @@ private constructor(
             messages().forEach { it.validate() }
             model()
             cacheControl().ifPresent { it.validate() }
-            container()
+            container().ifPresent { it.validate() }
             inferenceGeo()
             metadata().ifPresent { it.validate() }
             outputConfig().ifPresent { it.validate() }
@@ -3048,7 +3110,7 @@ private constructor(
                 (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
                 (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (container.asKnown().isPresent) 1 else 0) +
+                (container.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +

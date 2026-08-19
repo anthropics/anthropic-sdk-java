@@ -296,6 +296,67 @@ private constructor(
             }
         )
 
+    fun toolsetName(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitText(text: TextBlockParam): Optional<String> = Optional.empty()
+
+                override fun visitImage(image: ImageBlockParam): Optional<String> = Optional.empty()
+
+                override fun visitDocument(document: DocumentBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitSearchResult(
+                    searchResult: SearchResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitThinking(thinking: ThinkingBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: RedactedThinkingBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolUse(toolUse: ToolUseBlockParam): Optional<String> =
+                    toolUse.toolsetName()
+
+                override fun visitToolResult(toolResult: ToolResultBlockParam): Optional<String> =
+                    toolResult.toolsetName()
+
+                override fun visitServerToolUse(
+                    serverToolUse: ServerToolUseBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: WebSearchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: WebFetchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: ToolSearchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitContainerUpload(
+                    containerUpload: ContainerUploadBlockParam
+                ): Optional<String> = Optional.empty()
+            }
+        )
+
     fun toolUseId(): Optional<String> =
         accept(
             object : Visitor<Optional<String>> {

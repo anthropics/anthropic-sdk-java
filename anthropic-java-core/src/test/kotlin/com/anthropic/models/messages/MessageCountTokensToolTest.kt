@@ -54,7 +54,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -140,7 +142,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -208,7 +212,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -271,7 +277,9 @@ internal class MessageCountTokensToolTest {
             .contains(codeExecutionTool20250825)
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -334,7 +342,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20260120())
             .contains(codeExecutionTool20260120)
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -397,7 +407,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521())
             .contains(codeExecutionTool20260521)
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -439,6 +451,379 @@ internal class MessageCountTokensToolTest {
     }
 
     @Test
+    fun ofBrowserToolset20260801() {
+        val browserToolset20260801 =
+            BrowserToolset20260801.builder()
+                .addAllowedCaller(BrowserToolset20260801.AllowedCaller.DIRECT)
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .configs(
+                    BrowserToolsetConfigs.builder()
+                        .closeTab(
+                            BrowserCloseTabConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .doubleClick(
+                            BrowserDoubleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .fileUpload(
+                            BrowserFileUploadConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .find(BrowserFindConfig.builder().deferLoading(true).enabled(true).build())
+                        .formInput(
+                            BrowserFormInputConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .getPageText(
+                            BrowserGetPageTextConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .holdKey(
+                            BrowserHoldKeyConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .hover(
+                            BrowserHoverConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .javascriptExec(
+                            BrowserJavascriptExecConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .key(BrowserKeyConfig.builder().deferLoading(true).enabled(true).build())
+                        .leftClick(
+                            BrowserLeftClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftClickDrag(
+                            BrowserLeftClickDragConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftMouseDown(
+                            BrowserLeftMouseDownConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftMouseUp(
+                            BrowserLeftMouseUpConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .listTabs(
+                            BrowserListTabsConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .middleClick(
+                            BrowserMiddleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .mouseMove(
+                            BrowserMouseMoveConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .navigate(
+                            BrowserNavigateConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .newTab(
+                            BrowserNewTabConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .readConsole(
+                            BrowserReadConsoleConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .readNetwork(
+                            BrowserReadNetworkConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .readPage(
+                            BrowserReadPageConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .rightClick(
+                            BrowserRightClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .screenshot(
+                            BrowserScreenshotConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .scroll(
+                            BrowserScrollConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .scrollTo(
+                            BrowserScrollToConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .switchTab(
+                            BrowserSwitchTabConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .tripleClick(
+                            BrowserTripleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .type(BrowserTypeConfig.builder().deferLoading(true).enabled(true).build())
+                        .wait(BrowserWaitConfig.builder().deferLoading(true).enabled(true).build())
+                        .zoom(BrowserZoomConfig.builder().deferLoading(true).enabled(true).build())
+                        .build()
+                )
+                .build()
+
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofBrowserToolset20260801(browserToolset20260801)
+
+        assertThat(messageCountTokensTool.tool()).isEmpty
+        assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).contains(browserToolset20260801)
+        assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20250910()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
+        assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+    }
+
+    @Test
+    fun ofBrowserToolset20260801Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofBrowserToolset20260801(
+                BrowserToolset20260801.builder()
+                    .addAllowedCaller(BrowserToolset20260801.AllowedCaller.DIRECT)
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .configs(
+                        BrowserToolsetConfigs.builder()
+                            .closeTab(
+                                BrowserCloseTabConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .doubleClick(
+                                BrowserDoubleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .fileUpload(
+                                BrowserFileUploadConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .find(
+                                BrowserFindConfig.builder().deferLoading(true).enabled(true).build()
+                            )
+                            .formInput(
+                                BrowserFormInputConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .getPageText(
+                                BrowserGetPageTextConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .holdKey(
+                                BrowserHoldKeyConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .hover(
+                                BrowserHoverConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .javascriptExec(
+                                BrowserJavascriptExecConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .key(
+                                BrowserKeyConfig.builder().deferLoading(true).enabled(true).build()
+                            )
+                            .leftClick(
+                                BrowserLeftClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftClickDrag(
+                                BrowserLeftClickDragConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftMouseDown(
+                                BrowserLeftMouseDownConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftMouseUp(
+                                BrowserLeftMouseUpConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .listTabs(
+                                BrowserListTabsConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .middleClick(
+                                BrowserMiddleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .mouseMove(
+                                BrowserMouseMoveConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .navigate(
+                                BrowserNavigateConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .newTab(
+                                BrowserNewTabConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .readConsole(
+                                BrowserReadConsoleConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .readNetwork(
+                                BrowserReadNetworkConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .readPage(
+                                BrowserReadPageConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .rightClick(
+                                BrowserRightClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .screenshot(
+                                BrowserScreenshotConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .scroll(
+                                BrowserScrollConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .scrollTo(
+                                BrowserScrollToConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .switchTab(
+                                BrowserSwitchTabConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .tripleClick(
+                                BrowserTripleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .type(
+                                BrowserTypeConfig.builder().deferLoading(true).enabled(true).build()
+                            )
+                            .wait(
+                                BrowserWaitConfig.builder().deferLoading(true).enabled(true).build()
+                            )
+                            .zoom(
+                                BrowserZoomConfig.builder().deferLoading(true).enabled(true).build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedMessageCountTokensTool =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(messageCountTokensTool),
+                jacksonTypeRef<MessageCountTokensTool>(),
+            )
+
+        assertThat(roundtrippedMessageCountTokensTool).isEqualTo(messageCountTokensTool)
+    }
+
+    @Test
     fun ofMemoryTool20250818() {
         val memoryTool20250818 =
             MemoryTool20250818.builder()
@@ -463,7 +848,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).contains(memoryTool20250818)
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -510,6 +897,250 @@ internal class MessageCountTokensToolTest {
     }
 
     @Test
+    fun ofComputerToolset20260801() {
+        val computerToolset20260801 =
+            ComputerToolset20260801.builder()
+                .addAllowedCaller(ComputerToolset20260801.AllowedCaller.DIRECT)
+                .cacheControl(
+                    CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .configs(
+                    ComputerToolsetConfigs.builder()
+                        .cursorPosition(
+                            ComputerCursorPositionConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .doubleClick(
+                            ComputerDoubleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .holdKey(
+                            ComputerHoldKeyConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .key(ComputerKeyConfig.builder().deferLoading(true).enabled(true).build())
+                        .leftClick(
+                            ComputerLeftClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftClickDrag(
+                            ComputerLeftClickDragConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftMouseDown(
+                            ComputerLeftMouseDownConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftMouseUp(
+                            ComputerLeftMouseUpConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .middleClick(
+                            ComputerMiddleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .mouseMove(
+                            ComputerMouseMoveConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .rightClick(
+                            ComputerRightClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .screenshot(
+                            ComputerScreenshotConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .scroll(
+                            ComputerScrollConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .tripleClick(
+                            ComputerTripleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .type(ComputerTypeConfig.builder().deferLoading(true).enabled(true).build())
+                        .wait(ComputerWaitConfig.builder().deferLoading(true).enabled(true).build())
+                        .zoom(ComputerZoomConfig.builder().deferLoading(true).enabled(true).build())
+                        .build()
+                )
+                .build()
+
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofComputerToolset20260801(computerToolset20260801)
+
+        assertThat(messageCountTokensTool.tool()).isEmpty
+        assertThat(messageCountTokensTool.toolBash20250124()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20250522()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
+        assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
+        assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801())
+            .contains(computerToolset20260801)
+        assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
+        assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20250305()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20250910()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260209()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260209()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260309()).isEmpty
+        assertThat(messageCountTokensTool.webSearchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
+        assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
+        assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+    }
+
+    @Test
+    fun ofComputerToolset20260801Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val messageCountTokensTool =
+            MessageCountTokensTool.ofComputerToolset20260801(
+                ComputerToolset20260801.builder()
+                    .addAllowedCaller(ComputerToolset20260801.AllowedCaller.DIRECT)
+                    .cacheControl(
+                        CacheControlEphemeral.builder()
+                            .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .configs(
+                        ComputerToolsetConfigs.builder()
+                            .cursorPosition(
+                                ComputerCursorPositionConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .doubleClick(
+                                ComputerDoubleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .holdKey(
+                                ComputerHoldKeyConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .key(
+                                ComputerKeyConfig.builder().deferLoading(true).enabled(true).build()
+                            )
+                            .leftClick(
+                                ComputerLeftClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftClickDrag(
+                                ComputerLeftClickDragConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftMouseDown(
+                                ComputerLeftMouseDownConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftMouseUp(
+                                ComputerLeftMouseUpConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .middleClick(
+                                ComputerMiddleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .mouseMove(
+                                ComputerMouseMoveConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .rightClick(
+                                ComputerRightClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .screenshot(
+                                ComputerScreenshotConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .scroll(
+                                ComputerScrollConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .tripleClick(
+                                ComputerTripleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .type(
+                                ComputerTypeConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .wait(
+                                ComputerWaitConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .zoom(
+                                ComputerZoomConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedMessageCountTokensTool =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(messageCountTokensTool),
+                jacksonTypeRef<MessageCountTokensTool>(),
+            )
+
+        assertThat(roundtrippedMessageCountTokensTool).isEqualTo(messageCountTokensTool)
+    }
+
+    @Test
     fun ofToolTextEditor20250124() {
         val toolTextEditor20250124 =
             ToolTextEditor20250124.builder()
@@ -535,7 +1166,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).contains(toolTextEditor20250124)
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -607,7 +1240,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).contains(toolTextEditor20250429)
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -680,7 +1315,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).contains(toolTextEditor20250728)
@@ -759,7 +1396,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -837,7 +1476,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -915,7 +1556,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -993,7 +1636,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -1066,7 +1711,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -1146,7 +1793,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -1227,7 +1876,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -1297,7 +1948,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty
@@ -1362,7 +2015,9 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.codeExecutionTool20250825()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260120()).isEmpty
         assertThat(messageCountTokensTool.codeExecutionTool20260521()).isEmpty
+        assertThat(messageCountTokensTool.browserToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.memoryTool20250818()).isEmpty
+        assertThat(messageCountTokensTool.computerToolset20260801()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250124()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250429()).isEmpty
         assertThat(messageCountTokensTool.toolTextEditor20250728()).isEmpty

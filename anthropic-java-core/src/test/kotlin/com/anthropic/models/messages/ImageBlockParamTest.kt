@@ -22,6 +22,11 @@ internal class ImageBlockParamTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .transformations(
+                    ImageTransformationsParam.builder()
+                        .oversizedImage(ImageTransformationsParam.OversizedImage.DOWNSIZE)
+                        .build()
+                )
                 .build()
 
         assertThat(imageBlockParam.source())
@@ -35,6 +40,12 @@ internal class ImageBlockParamTest {
             )
         assertThat(imageBlockParam.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
+        assertThat(imageBlockParam.transformations())
+            .contains(
+                ImageTransformationsParam.builder()
+                    .oversizedImage(ImageTransformationsParam.OversizedImage.DOWNSIZE)
+                    .build()
+            )
     }
 
     @Test
@@ -50,6 +61,11 @@ internal class ImageBlockParamTest {
                 )
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
+                )
+                .transformations(
+                    ImageTransformationsParam.builder()
+                        .oversizedImage(ImageTransformationsParam.OversizedImage.DOWNSIZE)
+                        .build()
                 )
                 .build()
 

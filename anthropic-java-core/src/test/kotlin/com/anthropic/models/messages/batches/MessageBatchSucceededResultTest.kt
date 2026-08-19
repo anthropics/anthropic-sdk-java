@@ -6,6 +6,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.models.messages.CacheCreation
 import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.Container
+import com.anthropic.models.messages.ContainerSkill
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.Model
 import com.anthropic.models.messages.OutputTokensDetails
@@ -31,6 +32,13 @@ internal class MessageBatchSucceededResultTest {
                         Container.builder()
                             .id("container_011CpZohnwH4vuy7gazohgSP")
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addSkill(
+                                ContainerSkill.builder()
+                                    .skillId("pdf")
+                                    .type(ContainerSkill.Type.ANTHROPIC)
+                                    .version("latest")
+                                    .build()
+                            )
                             .build()
                     )
                     .addContent(
@@ -93,6 +101,13 @@ internal class MessageBatchSucceededResultTest {
                         Container.builder()
                             .id("container_011CpZohnwH4vuy7gazohgSP")
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addSkill(
+                                ContainerSkill.builder()
+                                    .skillId("pdf")
+                                    .type(ContainerSkill.Type.ANTHROPIC)
+                                    .version("latest")
+                                    .build()
+                            )
                             .build()
                     )
                     .addContent(
@@ -159,6 +174,13 @@ internal class MessageBatchSucceededResultTest {
                         Container.builder()
                             .id("container_011CpZohnwH4vuy7gazohgSP")
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addSkill(
+                                ContainerSkill.builder()
+                                    .skillId("pdf")
+                                    .type(ContainerSkill.Type.ANTHROPIC)
+                                    .version("latest")
+                                    .build()
+                            )
                             .build()
                     )
                     .addContent(

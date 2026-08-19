@@ -20,7 +20,18 @@ internal class MessageCreateParamsTest {
             .cacheControl(
                 CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
             )
-            .container("container")
+            .container(
+                ContainerParams.builder()
+                    .id("id")
+                    .addSkill(
+                        SkillParams.builder()
+                            .skillId("pdf")
+                            .type(SkillParams.Type.ANTHROPIC)
+                            .version("latest")
+                            .build()
+                    )
+                    .build()
+            )
             .inferenceGeo("inference_geo")
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
             .outputConfig(
@@ -113,7 +124,18 @@ internal class MessageCreateParamsTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
-                .container("container")
+                .container(
+                    ContainerParams.builder()
+                        .id("id")
+                        .addSkill(
+                            SkillParams.builder()
+                                .skillId("pdf")
+                                .type(SkillParams.Type.ANTHROPIC)
+                                .version("latest")
+                                .build()
+                        )
+                        .build()
+                )
                 .inferenceGeo("inference_geo")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .outputConfig(
@@ -229,7 +251,18 @@ internal class MessageCreateParamsTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
-                .container("container")
+                .container(
+                    ContainerParams.builder()
+                        .id("id")
+                        .addSkill(
+                            SkillParams.builder()
+                                .skillId("pdf")
+                                .type(SkillParams.Type.ANTHROPIC)
+                                .version("latest")
+                                .build()
+                        )
+                        .build()
+                )
                 .inferenceGeo("inference_geo")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .outputConfig(
@@ -320,7 +353,21 @@ internal class MessageCreateParamsTest {
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5)
         assertThat(body.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
-        assertThat(body.container()).contains("container")
+        assertThat(body.container())
+            .contains(
+                MessageCreateParamsContainer.ofContainerParams(
+                    ContainerParams.builder()
+                        .id("id")
+                        .addSkill(
+                            SkillParams.builder()
+                                .skillId("pdf")
+                                .type(SkillParams.Type.ANTHROPIC)
+                                .version("latest")
+                                .build()
+                        )
+                        .build()
+                )
+            )
         assertThat(body.inferenceGeo()).contains("inference_geo")
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())

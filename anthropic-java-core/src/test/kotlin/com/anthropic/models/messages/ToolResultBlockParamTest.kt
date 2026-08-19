@@ -19,6 +19,7 @@ internal class ToolResultBlockParamTest {
                 )
                 .content("string")
                 .isError(true)
+                .toolsetName("toolset_name")
                 .build()
 
         assertThat(toolResultBlockParam.toolUseId()).isEqualTo("tool_use_id")
@@ -27,6 +28,7 @@ internal class ToolResultBlockParamTest {
         assertThat(toolResultBlockParam.content())
             .contains(ToolResultBlockParam.Content.ofString("string"))
         assertThat(toolResultBlockParam.isError()).contains(true)
+        assertThat(toolResultBlockParam.toolsetName()).contains("toolset_name")
     }
 
     @Test
@@ -40,6 +42,7 @@ internal class ToolResultBlockParamTest {
                 )
                 .content("string")
                 .isError(true)
+                .toolsetName("toolset_name")
                 .build()
 
         val roundtrippedToolResultBlockParam =

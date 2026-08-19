@@ -29,7 +29,9 @@ private constructor(
     private val codeExecutionTool20250825: CodeExecutionTool20250825? = null,
     private val codeExecutionTool20260120: CodeExecutionTool20260120? = null,
     private val codeExecutionTool20260521: CodeExecutionTool20260521? = null,
+    private val browserToolset20260801: BrowserToolset20260801? = null,
     private val memoryTool20250818: MemoryTool20250818? = null,
+    private val computerToolset20260801: ComputerToolset20260801? = null,
     private val toolTextEditor20250124: ToolTextEditor20250124? = null,
     private val toolTextEditor20250429: ToolTextEditor20250429? = null,
     private val toolTextEditor20250728: ToolTextEditor20250728? = null,
@@ -71,9 +73,17 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ): Optional<CacheControlEphemeral> = codeExecutionTool20260521.cacheControl()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<CacheControlEphemeral> = browserToolset20260801.cacheControl()
+
                 override fun visitMemoryTool20250818(
                     memoryTool20250818: MemoryTool20250818
                 ): Optional<CacheControlEphemeral> = memoryTool20250818.cacheControl()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
+                ): Optional<CacheControlEphemeral> = computerToolset20260801.cacheControl()
 
                 override fun visitToolTextEditor20250124(
                     toolTextEditor20250124: ToolTextEditor20250124
@@ -150,9 +160,17 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ): Optional<Boolean> = codeExecutionTool20260521.deferLoading()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<Boolean> = Optional.empty()
+
                 override fun visitMemoryTool20250818(
                     memoryTool20250818: MemoryTool20250818
                 ): Optional<Boolean> = memoryTool20250818.deferLoading()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
+                ): Optional<Boolean> = Optional.empty()
 
                 override fun visitToolTextEditor20250124(
                     toolTextEditor20250124: ToolTextEditor20250124
@@ -229,9 +247,17 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ): Optional<Boolean> = codeExecutionTool20260521.strict()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<Boolean> = Optional.empty()
+
                 override fun visitMemoryTool20250818(
                     memoryTool20250818: MemoryTool20250818
                 ): Optional<Boolean> = memoryTool20250818.strict()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
+                ): Optional<Boolean> = Optional.empty()
 
                 override fun visitToolTextEditor20250124(
                     toolTextEditor20250124: ToolTextEditor20250124
@@ -308,8 +334,16 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ): Optional<List<String>> = Optional.empty()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<List<String>> = Optional.empty()
+
                 override fun visitMemoryTool20250818(
                     memoryTool20250818: MemoryTool20250818
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
                 ): Optional<List<String>> = Optional.empty()
 
                 override fun visitToolTextEditor20250124(
@@ -387,8 +421,16 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ): Optional<List<String>> = Optional.empty()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<List<String>> = Optional.empty()
+
                 override fun visitMemoryTool20250818(
                     memoryTool20250818: MemoryTool20250818
+                ): Optional<List<String>> = Optional.empty()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
                 ): Optional<List<String>> = Optional.empty()
 
                 override fun visitToolTextEditor20250124(
@@ -466,8 +508,16 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ): Optional<Long> = Optional.empty()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<Long> = Optional.empty()
+
                 override fun visitMemoryTool20250818(
                     memoryTool20250818: MemoryTool20250818
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
                 ): Optional<Long> = Optional.empty()
 
                 override fun visitToolTextEditor20250124(
@@ -545,8 +595,16 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ): Optional<UserLocation> = Optional.empty()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<UserLocation> = Optional.empty()
+
                 override fun visitMemoryTool20250818(
                     memoryTool20250818: MemoryTool20250818
+                ): Optional<UserLocation> = Optional.empty()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
                 ): Optional<UserLocation> = Optional.empty()
 
                 override fun visitToolTextEditor20250124(
@@ -625,8 +683,16 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ): Optional<CitationsConfigParam> = Optional.empty()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<CitationsConfigParam> = Optional.empty()
+
                 override fun visitMemoryTool20250818(
                     memoryTool20250818: MemoryTool20250818
+                ): Optional<CitationsConfigParam> = Optional.empty()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
                 ): Optional<CitationsConfigParam> = Optional.empty()
 
                 override fun visitToolTextEditor20250124(
@@ -704,8 +770,16 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ): Optional<Long> = Optional.empty()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<Long> = Optional.empty()
+
                 override fun visitMemoryTool20250818(
                     memoryTool20250818: MemoryTool20250818
+                ): Optional<Long> = Optional.empty()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
                 ): Optional<Long> = Optional.empty()
 
                 override fun visitToolTextEditor20250124(
@@ -783,8 +857,16 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ): Optional<Boolean> = Optional.empty()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<Boolean> = Optional.empty()
+
                 override fun visitMemoryTool20250818(
                     memoryTool20250818: MemoryTool20250818
+                ): Optional<Boolean> = Optional.empty()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
                 ): Optional<Boolean> = Optional.empty()
 
                 override fun visitToolTextEditor20250124(
@@ -855,7 +937,26 @@ private constructor(
     fun codeExecutionTool20260521(): Optional<CodeExecutionTool20260521> =
         Optional.ofNullable(codeExecutionTool20260521)
 
+    /**
+     * The browser toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+     * browser tool family. The model is served the family's tool with any members disabled via
+     * ``configs`` removed from its schema.
+     */
+    fun browserToolset20260801(): Optional<BrowserToolset20260801> =
+        Optional.ofNullable(browserToolset20260801)
+
     fun memoryTool20250818(): Optional<MemoryTool20250818> = Optional.ofNullable(memoryTool20250818)
+
+    /**
+     * The computer toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+     * computer tool family. The model is served the family's tool with any members disabled via
+     * ``configs`` removed from its schema. Every member is enabled by default, zoom included. The
+     * single-tool options ``display_number`` and ``enable_zoom`` are not fields of a toolset entry
+     * — it carries only ``type``, ``configs``, and ``cache_control``; zoom is controlled via
+     * ``configs.zoom.enabled``.
+     */
+    fun computerToolset20260801(): Optional<ComputerToolset20260801> =
+        Optional.ofNullable(computerToolset20260801)
 
     fun toolTextEditor20250124(): Optional<ToolTextEditor20250124> =
         Optional.ofNullable(toolTextEditor20250124)
@@ -906,7 +1007,11 @@ private constructor(
 
     fun isCodeExecutionTool20260521(): Boolean = codeExecutionTool20260521 != null
 
+    fun isBrowserToolset20260801(): Boolean = browserToolset20260801 != null
+
     fun isMemoryTool20250818(): Boolean = memoryTool20250818 != null
+
+    fun isComputerToolset20260801(): Boolean = computerToolset20260801 != null
 
     fun isToolTextEditor20250124(): Boolean = toolTextEditor20250124 != null
 
@@ -950,8 +1055,27 @@ private constructor(
     fun asCodeExecutionTool20260521(): CodeExecutionTool20260521 =
         codeExecutionTool20260521.getOrThrow("codeExecutionTool20260521")
 
+    /**
+     * The browser toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+     * browser tool family. The model is served the family's tool with any members disabled via
+     * ``configs`` removed from its schema.
+     */
+    fun asBrowserToolset20260801(): BrowserToolset20260801 =
+        browserToolset20260801.getOrThrow("browserToolset20260801")
+
     fun asMemoryTool20250818(): MemoryTool20250818 =
         memoryTool20250818.getOrThrow("memoryTool20250818")
+
+    /**
+     * The computer toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+     * computer tool family. The model is served the family's tool with any members disabled via
+     * ``configs`` removed from its schema. Every member is enabled by default, zoom included. The
+     * single-tool options ``display_number`` and ``enable_zoom`` are not fields of a toolset entry
+     * — it carries only ``type``, ``configs``, and ``cache_control``; zoom is controlled via
+     * ``configs.zoom.enabled``.
+     */
+    fun asComputerToolset20260801(): ComputerToolset20260801 =
+        computerToolset20260801.getOrThrow("computerToolset20260801")
 
     fun asToolTextEditor20250124(): ToolTextEditor20250124 =
         toolTextEditor20250124.getOrThrow("toolTextEditor20250124")
@@ -1033,7 +1157,11 @@ private constructor(
                 visitor.visitCodeExecutionTool20260120(codeExecutionTool20260120)
             codeExecutionTool20260521 != null ->
                 visitor.visitCodeExecutionTool20260521(codeExecutionTool20260521)
+            browserToolset20260801 != null ->
+                visitor.visitBrowserToolset20260801(browserToolset20260801)
             memoryTool20250818 != null -> visitor.visitMemoryTool20250818(memoryTool20250818)
+            computerToolset20260801 != null ->
+                visitor.visitComputerToolset20260801(computerToolset20260801)
             toolTextEditor20250124 != null ->
                 visitor.visitToolTextEditor20250124(toolTextEditor20250124)
             toolTextEditor20250429 != null ->
@@ -1106,8 +1234,20 @@ private constructor(
                     codeExecutionTool20260521.validate()
                 }
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ) {
+                    browserToolset20260801.validate()
+                }
+
                 override fun visitMemoryTool20250818(memoryTool20250818: MemoryTool20250818) {
                     memoryTool20250818.validate()
+                }
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
+                ) {
+                    computerToolset20260801.validate()
                 }
 
                 override fun visitToolTextEditor20250124(
@@ -1216,8 +1356,16 @@ private constructor(
                     codeExecutionTool20260521: CodeExecutionTool20260521
                 ) = codeExecutionTool20260521.validity()
 
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ) = browserToolset20260801.validity()
+
                 override fun visitMemoryTool20250818(memoryTool20250818: MemoryTool20250818) =
                     memoryTool20250818.validity()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
+                ) = computerToolset20260801.validity()
 
                 override fun visitToolTextEditor20250124(
                     toolTextEditor20250124: ToolTextEditor20250124
@@ -1279,7 +1427,9 @@ private constructor(
             codeExecutionTool20250825 == other.codeExecutionTool20250825 &&
             codeExecutionTool20260120 == other.codeExecutionTool20260120 &&
             codeExecutionTool20260521 == other.codeExecutionTool20260521 &&
+            browserToolset20260801 == other.browserToolset20260801 &&
             memoryTool20250818 == other.memoryTool20250818 &&
+            computerToolset20260801 == other.computerToolset20260801 &&
             toolTextEditor20250124 == other.toolTextEditor20250124 &&
             toolTextEditor20250429 == other.toolTextEditor20250429 &&
             toolTextEditor20250728 == other.toolTextEditor20250728 &&
@@ -1302,7 +1452,9 @@ private constructor(
             codeExecutionTool20250825,
             codeExecutionTool20260120,
             codeExecutionTool20260521,
+            browserToolset20260801,
             memoryTool20250818,
+            computerToolset20260801,
             toolTextEditor20250124,
             toolTextEditor20250429,
             toolTextEditor20250728,
@@ -1329,8 +1481,12 @@ private constructor(
                 "MessageCountTokensTool{codeExecutionTool20260120=$codeExecutionTool20260120}"
             codeExecutionTool20260521 != null ->
                 "MessageCountTokensTool{codeExecutionTool20260521=$codeExecutionTool20260521}"
+            browserToolset20260801 != null ->
+                "MessageCountTokensTool{browserToolset20260801=$browserToolset20260801}"
             memoryTool20250818 != null ->
                 "MessageCountTokensTool{memoryTool20250818=$memoryTool20250818}"
+            computerToolset20260801 != null ->
+                "MessageCountTokensTool{computerToolset20260801=$computerToolset20260801}"
             toolTextEditor20250124 != null ->
                 "MessageCountTokensTool{toolTextEditor20250124=$toolTextEditor20250124}"
             toolTextEditor20250429 != null ->
@@ -1385,9 +1541,30 @@ private constructor(
         fun ofCodeExecutionTool20260521(codeExecutionTool20260521: CodeExecutionTool20260521) =
             MessageCountTokensTool(codeExecutionTool20260521 = codeExecutionTool20260521)
 
+        /**
+         * The browser toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+         * browser tool family. The model is served the family's tool with any members disabled via
+         * ``configs`` removed from its schema.
+         */
+        @JvmStatic
+        fun ofBrowserToolset20260801(browserToolset20260801: BrowserToolset20260801) =
+            MessageCountTokensTool(browserToolset20260801 = browserToolset20260801)
+
         @JvmStatic
         fun ofMemoryTool20250818(memoryTool20250818: MemoryTool20250818) =
             MessageCountTokensTool(memoryTool20250818 = memoryTool20250818)
+
+        /**
+         * The computer toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+         * computer tool family. The model is served the family's tool with any members disabled via
+         * ``configs`` removed from its schema. Every member is enabled by default, zoom included.
+         * The single-tool options ``display_number`` and ``enable_zoom`` are not fields of a
+         * toolset entry — it carries only ``type``, ``configs``, and ``cache_control``; zoom is
+         * controlled via ``configs.zoom.enabled``.
+         */
+        @JvmStatic
+        fun ofComputerToolset20260801(computerToolset20260801: ComputerToolset20260801) =
+            MessageCountTokensTool(computerToolset20260801 = computerToolset20260801)
 
         @JvmStatic
         fun ofToolTextEditor20250124(toolTextEditor20250124: ToolTextEditor20250124) =
@@ -1477,7 +1654,24 @@ private constructor(
         /** Code execution tool with REPL state persistence. */
         fun visitCodeExecutionTool20260521(codeExecutionTool20260521: CodeExecutionTool20260521): T
 
+        /**
+         * The browser toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+         * browser tool family. The model is served the family's tool with any members disabled via
+         * ``configs`` removed from its schema.
+         */
+        fun visitBrowserToolset20260801(browserToolset20260801: BrowserToolset20260801): T
+
         fun visitMemoryTool20250818(memoryTool20250818: MemoryTool20250818): T
+
+        /**
+         * The computer toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+         * computer tool family. The model is served the family's tool with any members disabled via
+         * ``configs`` removed from its schema. Every member is enabled by default, zoom included.
+         * The single-tool options ``display_number`` and ``enable_zoom`` are not fields of a
+         * toolset entry — it carries only ``type``, ``configs``, and ``cache_control``; zoom is
+         * controlled via ``configs.zoom.enabled``.
+         */
+        fun visitComputerToolset20260801(computerToolset20260801: ComputerToolset20260801): T
 
         fun visitToolTextEditor20250124(toolTextEditor20250124: ToolTextEditor20250124): T
 
@@ -1549,8 +1743,14 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<CodeExecutionTool20260521>())?.let {
                             MessageCountTokensTool(codeExecutionTool20260521 = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<BrowserToolset20260801>())?.let {
+                            MessageCountTokensTool(browserToolset20260801 = it, _json = json)
+                        },
                         tryDeserialize(node, jacksonTypeRef<MemoryTool20250818>())?.let {
                             MessageCountTokensTool(memoryTool20250818 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<ComputerToolset20260801>())?.let {
+                            MessageCountTokensTool(computerToolset20260801 = it, _json = json)
                         },
                         tryDeserialize(node, jacksonTypeRef<ToolTextEditor20250124>())?.let {
                             MessageCountTokensTool(toolTextEditor20250124 = it, _json = json)
@@ -1623,7 +1823,11 @@ private constructor(
                     generator.writeObject(value.codeExecutionTool20260120)
                 value.codeExecutionTool20260521 != null ->
                     generator.writeObject(value.codeExecutionTool20260521)
+                value.browserToolset20260801 != null ->
+                    generator.writeObject(value.browserToolset20260801)
                 value.memoryTool20250818 != null -> generator.writeObject(value.memoryTool20250818)
+                value.computerToolset20260801 != null ->
+                    generator.writeObject(value.computerToolset20260801)
                 value.toolTextEditor20250124 != null ->
                     generator.writeObject(value.toolTextEditor20250124)
                 value.toolTextEditor20250429 != null ->

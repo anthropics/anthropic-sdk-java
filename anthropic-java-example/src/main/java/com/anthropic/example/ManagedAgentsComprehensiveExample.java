@@ -21,10 +21,10 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock;
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserCustomToolResultEventParams;
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams;
 import com.anthropic.models.beta.sessions.events.EventSendParams;
-import com.anthropic.models.beta.skills.SkillCreateParams;
 import com.anthropic.models.beta.vaults.VaultCreateParams;
 import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsStaticBearerCreateParams;
 import com.anthropic.models.beta.vaults.credentials.CredentialCreateParams;
+import com.anthropic.models.skills.SkillCreateParams;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -80,10 +80,9 @@ public final class ManagedAgentsComprehensiveExample {
 
         // Upload a custom skill
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        var skill = client.beta()
-                .skills()
+        var skill = client.skills()
                 .create(SkillCreateParams.builder()
-                        .displayTitle("comprehensive-greeting-" + System.currentTimeMillis())
+                        .displayName("comprehensive-greeting-" + System.currentTimeMillis())
                         // Each file's `filename` is its path inside the skill, including the
                         // skill's top-level directory.
                         .addFile(MultipartField.<InputStream>builder()

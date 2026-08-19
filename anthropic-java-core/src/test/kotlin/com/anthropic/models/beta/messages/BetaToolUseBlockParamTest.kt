@@ -27,6 +27,7 @@ internal class BetaToolUseBlockParamTest {
                         .build()
                 )
                 .caller(BetaDirectCaller.builder().build())
+                .toolsetName("toolset_name")
                 .build()
 
         assertThat(betaToolUseBlockParam.id()).isEqualTo("id")
@@ -45,6 +46,7 @@ internal class BetaToolUseBlockParamTest {
             )
         assertThat(betaToolUseBlockParam.caller())
             .contains(BetaToolUseBlockParam.Caller.ofDirect(BetaDirectCaller.builder().build()))
+        assertThat(betaToolUseBlockParam.toolsetName()).contains("toolset_name")
     }
 
     @Test
@@ -65,6 +67,7 @@ internal class BetaToolUseBlockParamTest {
                         .build()
                 )
                 .caller(BetaDirectCaller.builder().build())
+                .toolsetName("toolset_name")
                 .build()
 
         val roundtrippedBetaToolUseBlockParam =

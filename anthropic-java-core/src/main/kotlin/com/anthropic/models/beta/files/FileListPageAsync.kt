@@ -19,14 +19,15 @@ private constructor(
     private val streamHandlerExecutor: Executor,
     private val params: FileListParams,
     private val response: FileListPageResponse,
-) : PageAsync<FileMetadata> {
+) : PageAsync<BetaFileMetadata> {
 
     /**
      * Delegates to [FileListPageResponse], but gracefully handles missing data.
      *
      * @see FileListPageResponse.data
      */
-    fun data(): List<FileMetadata> = response._data().getOptional("data").getOrNull() ?: emptyList()
+    fun data(): List<BetaFileMetadata> =
+        response._data().getOptional("data").getOrNull() ?: emptyList()
 
     /**
      * Delegates to [FileListPageResponse], but gracefully handles missing data.
@@ -49,7 +50,7 @@ private constructor(
      */
     fun lastId(): Optional<String> = response._lastId().getOptional("last_id")
 
-    override fun items(): List<FileMetadata> = data()
+    override fun items(): List<BetaFileMetadata> = data()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty() && lastId().isPresent
 
@@ -61,7 +62,8 @@ private constructor(
 
     override fun nextPage(): CompletableFuture<FileListPageAsync> = service.list(nextPageParams())
 
-    fun autoPager(): AutoPagerAsync<FileMetadata> = AutoPagerAsync.from(this, streamHandlerExecutor)
+    fun autoPager(): AutoPagerAsync<BetaFileMetadata> =
+        AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
     fun params(): FileListParams = params

@@ -18,13 +18,13 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.multipartFormData
 import com.anthropic.core.http.parseable
 import com.anthropic.core.prepareAsync
-import com.anthropic.models.beta.files.DeletedFile
+import com.anthropic.models.beta.files.BetaDeletedFile
+import com.anthropic.models.beta.files.BetaFileMetadata
 import com.anthropic.models.beta.files.FileDeleteParams
 import com.anthropic.models.beta.files.FileDownloadParams
 import com.anthropic.models.beta.files.FileListPageAsync
 import com.anthropic.models.beta.files.FileListPageResponse
 import com.anthropic.models.beta.files.FileListParams
-import com.anthropic.models.beta.files.FileMetadata
 import com.anthropic.models.beta.files.FileRetrieveMetadataParams
 import com.anthropic.models.beta.files.FileUploadParams
 import java.util.concurrent.CompletableFuture
@@ -59,7 +59,7 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun delete(
         params: FileDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<DeletedFile> =
+    ): CompletableFuture<BetaDeletedFile> =
         // delete /v1/files/{file_id}?beta=true
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
 
@@ -73,14 +73,14 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun retrieveMetadata(
         params: FileRetrieveMetadataParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FileMetadata> =
+    ): CompletableFuture<BetaFileMetadata> =
         // get /v1/files/{file_id}?beta=true
         withRawResponse().retrieveMetadata(params, requestOptions).thenApply { it.parse() }
 
     override fun upload(
         params: FileUploadParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FileMetadata> =
+    ): CompletableFuture<BetaFileMetadata> =
         // post /v1/files?beta=true
         withRawResponse().upload(params, requestOptions).thenApply { it.parse() }
 
@@ -137,13 +137,13 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 }
         }
 
-        private val deleteHandler: Handler<DeletedFile> =
-            jsonHandler<DeletedFile>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<BetaDeletedFile> =
+            jsonHandler<BetaDeletedFile>(clientOptions.jsonMapper)
 
         override fun delete(
             params: FileDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<DeletedFile>> {
+        ): CompletableFuture<HttpResponseFor<BetaDeletedFile>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("fileId", params.fileId().getOrNull())
@@ -196,13 +196,13 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 .thenApply { response -> errorHandler.handle(response) }
         }
 
-        private val retrieveMetadataHandler: Handler<FileMetadata> =
-            jsonHandler<FileMetadata>(clientOptions.jsonMapper)
+        private val retrieveMetadataHandler: Handler<BetaFileMetadata> =
+            jsonHandler<BetaFileMetadata>(clientOptions.jsonMapper)
 
         override fun retrieveMetadata(
             params: FileRetrieveMetadataParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileMetadata>> {
+        ): CompletableFuture<HttpResponseFor<BetaFileMetadata>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("fileId", params.fileId().getOrNull())
@@ -231,13 +231,13 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 }
         }
 
-        private val uploadHandler: Handler<FileMetadata> =
-            jsonHandler<FileMetadata>(clientOptions.jsonMapper)
+        private val uploadHandler: Handler<BetaFileMetadata> =
+            jsonHandler<BetaFileMetadata>(clientOptions.jsonMapper)
 
         override fun upload(
             params: FileUploadParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileMetadata>> {
+        ): CompletableFuture<HttpResponseFor<BetaFileMetadata>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)

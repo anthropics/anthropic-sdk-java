@@ -173,6 +173,7 @@ internal class BetaContentBlockTest {
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
                 .caller(BetaDirectCaller.builder().build())
+                .toolsetName("toolset_name")
                 .build()
 
         val betaContentBlock = BetaContentBlock.ofToolUse(toolUse)
@@ -206,6 +207,7 @@ internal class BetaContentBlockTest {
                     .input(JsonValue.from(mapOf<String, Any>()))
                     .name("x")
                     .caller(BetaDirectCaller.builder().build())
+                    .toolsetName("toolset_name")
                     .build()
             )
 

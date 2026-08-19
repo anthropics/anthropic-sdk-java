@@ -575,6 +575,11 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(computerToolset20260801: BetaComputerToolset20260801) = apply {
+            paramsBuilder.addTool(computerToolset20260801)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
         fun addTool(textEditor20241022: BetaToolTextEditor20241022) = apply {
             paramsBuilder.addTool(textEditor20241022)
         }
@@ -612,6 +617,11 @@ internal constructor(
         /** @see MessageCreateParams.Builder.addTool */
         fun addTool(codeExecutionTool20260521: BetaCodeExecutionTool20260521) = apply {
             paramsBuilder.addTool(codeExecutionTool20260521)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(browserToolset20260801: BetaBrowserToolset20260801) = apply {
+            paramsBuilder.addTool(browserToolset20260801)
         }
 
         /** @see MessageCreateParams.Builder.addTool */

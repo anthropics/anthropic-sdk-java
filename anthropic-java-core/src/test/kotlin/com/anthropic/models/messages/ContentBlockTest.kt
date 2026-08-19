@@ -155,6 +155,7 @@ internal class ContentBlockTest {
                 .caller(DirectCaller.builder().build())
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
+                .toolsetName("toolset_name")
                 .build()
 
         val contentBlock = ContentBlock.ofToolUse(toolUse)
@@ -183,6 +184,7 @@ internal class ContentBlockTest {
                     .caller(DirectCaller.builder().build())
                     .input(JsonValue.from(mapOf<String, Any>()))
                     .name("x")
+                    .toolsetName("toolset_name")
                     .build()
             )
 

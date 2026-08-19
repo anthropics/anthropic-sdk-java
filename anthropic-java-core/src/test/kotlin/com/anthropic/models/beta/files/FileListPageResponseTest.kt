@@ -15,7 +15,7 @@ internal class FileListPageResponseTest {
         val fileListPageResponse =
             FileListPageResponse.builder()
                 .addData(
-                    FileMetadata.builder()
+                    BetaFileMetadata.builder()
                         .id("file_011CNha8iCJcU1wXNR6q4V8w")
                         .createdAt(OffsetDateTime.parse("2025-04-15T18:37:24.100435Z"))
                         .filename("document.pdf")
@@ -32,7 +32,7 @@ internal class FileListPageResponseTest {
 
         assertThat(fileListPageResponse.data())
             .containsExactly(
-                FileMetadata.builder()
+                BetaFileMetadata.builder()
                     .id("file_011CNha8iCJcU1wXNR6q4V8w")
                     .createdAt(OffsetDateTime.parse("2025-04-15T18:37:24.100435Z"))
                     .filename("document.pdf")
@@ -53,7 +53,7 @@ internal class FileListPageResponseTest {
         val fileListPageResponse =
             FileListPageResponse.builder()
                 .addData(
-                    FileMetadata.builder()
+                    BetaFileMetadata.builder()
                         .id("file_011CNha8iCJcU1wXNR6q4V8w")
                         .createdAt(OffsetDateTime.parse("2025-04-15T18:37:24.100435Z"))
                         .filename("document.pdf")

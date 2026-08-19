@@ -1043,6 +1043,14 @@ private constructor(
 
         /**
          * Alias for calling [addTool] with
+         * `Tool.ofBetaBrowserToolset20260801(betaBrowserToolset20260801)`.
+         */
+        fun addTool(betaBrowserToolset20260801: BetaBrowserToolset20260801) = apply {
+            body.addTool(betaBrowserToolset20260801)
+        }
+
+        /**
+         * Alias for calling [addTool] with
          * `Tool.ofBetaToolComputerUse20241022(betaToolComputerUse20241022)`.
          */
         fun addTool(betaToolComputerUse20241022: BetaToolComputerUse20241022) = apply {
@@ -1078,6 +1086,14 @@ private constructor(
          */
         fun addTool(betaToolComputerUse20251124: BetaToolComputerUse20251124) = apply {
             body.addTool(betaToolComputerUse20251124)
+        }
+
+        /**
+         * Alias for calling [addTool] with
+         * `Tool.ofBetaComputerToolset20260801(betaComputerToolset20260801)`.
+         */
+        fun addTool(betaComputerToolset20260801: BetaComputerToolset20260801) = apply {
+            body.addTool(betaComputerToolset20260801)
         }
 
         /**
@@ -2436,6 +2452,13 @@ private constructor(
 
             /**
              * Alias for calling [addTool] with
+             * `Tool.ofBetaBrowserToolset20260801(betaBrowserToolset20260801)`.
+             */
+            fun addTool(betaBrowserToolset20260801: BetaBrowserToolset20260801) =
+                addTool(Tool.ofBetaBrowserToolset20260801(betaBrowserToolset20260801))
+
+            /**
+             * Alias for calling [addTool] with
              * `Tool.ofBetaToolComputerUse20241022(betaToolComputerUse20241022)`.
              */
             fun addTool(betaToolComputerUse20241022: BetaToolComputerUse20241022) =
@@ -2468,6 +2491,13 @@ private constructor(
              */
             fun addTool(betaToolComputerUse20251124: BetaToolComputerUse20251124) =
                 addTool(Tool.ofBetaToolComputerUse20251124(betaToolComputerUse20251124))
+
+            /**
+             * Alias for calling [addTool] with
+             * `Tool.ofBetaComputerToolset20260801(betaComputerToolset20260801)`.
+             */
+            fun addTool(betaComputerToolset20260801: BetaComputerToolset20260801) =
+                addTool(Tool.ofBetaComputerToolset20260801(betaComputerToolset20260801))
 
             /**
              * Alias for calling [addTool] with
@@ -3100,11 +3130,13 @@ private constructor(
         private val betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825? = null,
         private val betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120? = null,
         private val betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521? = null,
+        private val betaBrowserToolset20260801: BetaBrowserToolset20260801? = null,
         private val betaToolComputerUse20241022: BetaToolComputerUse20241022? = null,
         private val betaMemoryTool20250818: BetaMemoryTool20250818? = null,
         private val betaToolComputerUse20250124: BetaToolComputerUse20250124? = null,
         private val betaToolTextEditor20241022: BetaToolTextEditor20241022? = null,
         private val betaToolComputerUse20251124: BetaToolComputerUse20251124? = null,
+        private val betaComputerToolset20260801: BetaComputerToolset20260801? = null,
         private val betaToolTextEditor20250124: BetaToolTextEditor20250124? = null,
         private val betaToolTextEditor20250429: BetaToolTextEditor20250429? = null,
         private val betaToolTextEditor20250728: BetaToolTextEditor20250728? = null,
@@ -3156,6 +3188,11 @@ private constructor(
                     ): Optional<BetaCacheControlEphemeral> =
                         betaCodeExecutionTool20260521.cacheControl()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaBrowserToolset20260801.cacheControl()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<BetaCacheControlEphemeral> =
@@ -3179,6 +3216,11 @@ private constructor(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
                     ): Optional<BetaCacheControlEphemeral> =
                         betaToolComputerUse20251124.cacheControl()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
+                    ): Optional<BetaCacheControlEphemeral> =
+                        betaComputerToolset20260801.cacheControl()
 
                     override fun visitBetaToolTextEditor20250124(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
@@ -3275,6 +3317,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<Boolean> = betaCodeExecutionTool20260521.deferLoading()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<Boolean> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<Boolean> = betaToolComputerUse20241022.deferLoading()
@@ -3294,6 +3340,10 @@ private constructor(
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
                     ): Optional<Boolean> = betaToolComputerUse20251124.deferLoading()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
+                    ): Optional<Boolean> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
@@ -3382,6 +3432,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<Boolean> = betaCodeExecutionTool20260521.strict()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<Boolean> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<Boolean> = betaToolComputerUse20241022.strict()
@@ -3401,6 +3455,10 @@ private constructor(
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
                     ): Optional<Boolean> = betaToolComputerUse20251124.strict()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
+                    ): Optional<Boolean> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
@@ -3489,6 +3547,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<Long> = Optional.empty()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<Long> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<Long> = Optional.of(betaToolComputerUse20241022.displayHeightPx())
@@ -3508,6 +3570,10 @@ private constructor(
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
                     ): Optional<Long> = Optional.of(betaToolComputerUse20251124.displayHeightPx())
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
+                    ): Optional<Long> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
@@ -3596,6 +3662,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<Long> = Optional.empty()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<Long> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<Long> = Optional.of(betaToolComputerUse20241022.displayWidthPx())
@@ -3615,6 +3685,10 @@ private constructor(
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
                     ): Optional<Long> = Optional.of(betaToolComputerUse20251124.displayWidthPx())
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
+                    ): Optional<Long> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
@@ -3703,6 +3777,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<Long> = Optional.empty()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<Long> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<Long> = betaToolComputerUse20241022.displayNumber()
@@ -3722,6 +3800,10 @@ private constructor(
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
                     ): Optional<Long> = betaToolComputerUse20251124.displayNumber()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
+                    ): Optional<Long> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
@@ -3811,6 +3893,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<List<String>> = Optional.empty()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<List<String>> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<List<String>> = Optional.empty()
@@ -3829,6 +3915,10 @@ private constructor(
 
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
                     ): Optional<List<String>> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
@@ -3919,6 +4009,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<List<String>> = Optional.empty()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<List<String>> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<List<String>> = Optional.empty()
@@ -3937,6 +4031,10 @@ private constructor(
 
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<List<String>> = Optional.empty()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
                     ): Optional<List<String>> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
@@ -4026,6 +4124,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<Long> = Optional.empty()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<Long> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<Long> = Optional.empty()
@@ -4044,6 +4146,10 @@ private constructor(
 
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
                     ): Optional<Long> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
@@ -4134,6 +4240,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<BetaUserLocation> = Optional.empty()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<BetaUserLocation> = Optional.empty()
@@ -4152,6 +4262,10 @@ private constructor(
 
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
                     ): Optional<BetaUserLocation> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
@@ -4242,6 +4356,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<BetaCitationsConfigParam> = Optional.empty()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<BetaCitationsConfigParam> = Optional.empty()
@@ -4260,6 +4378,10 @@ private constructor(
 
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
                     ): Optional<BetaCitationsConfigParam> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
@@ -4349,6 +4471,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<Long> = Optional.empty()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<Long> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<Long> = Optional.empty()
@@ -4367,6 +4493,10 @@ private constructor(
 
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Long> = Optional.empty()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
                     ): Optional<Long> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
@@ -4456,6 +4586,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ): Optional<Boolean> = Optional.empty()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<Boolean> = Optional.empty()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ): Optional<Boolean> = Optional.empty()
@@ -4474,6 +4608,10 @@ private constructor(
 
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<Boolean> = Optional.empty()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
                     ): Optional<Boolean> = Optional.empty()
 
                     override fun visitBetaToolTextEditor20250124(
@@ -4556,6 +4694,14 @@ private constructor(
         fun betaCodeExecutionTool20260521(): Optional<BetaCodeExecutionTool20260521> =
             Optional.ofNullable(betaCodeExecutionTool20260521)
 
+        /**
+         * The browser toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+         * browser tool family. The model is served the family's tool with any members disabled via
+         * ``configs`` removed from its schema.
+         */
+        fun betaBrowserToolset20260801(): Optional<BetaBrowserToolset20260801> =
+            Optional.ofNullable(betaBrowserToolset20260801)
+
         fun betaToolComputerUse20241022(): Optional<BetaToolComputerUse20241022> =
             Optional.ofNullable(betaToolComputerUse20241022)
 
@@ -4570,6 +4716,17 @@ private constructor(
 
         fun betaToolComputerUse20251124(): Optional<BetaToolComputerUse20251124> =
             Optional.ofNullable(betaToolComputerUse20251124)
+
+        /**
+         * The computer toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+         * computer tool family. The model is served the family's tool with any members disabled via
+         * ``configs`` removed from its schema. Every member is enabled by default, zoom included.
+         * The single-tool options ``display_number`` and ``enable_zoom`` are not fields of a
+         * toolset entry — it carries only ``type``, ``configs``, and ``cache_control``; zoom is
+         * controlled via ``configs.zoom.enabled``.
+         */
+        fun betaComputerToolset20260801(): Optional<BetaComputerToolset20260801> =
+            Optional.ofNullable(betaComputerToolset20260801)
 
         fun betaToolTextEditor20250124(): Optional<BetaToolTextEditor20250124> =
             Optional.ofNullable(betaToolTextEditor20250124)
@@ -4633,6 +4790,8 @@ private constructor(
 
         fun isBetaCodeExecutionTool20260521(): Boolean = betaCodeExecutionTool20260521 != null
 
+        fun isBetaBrowserToolset20260801(): Boolean = betaBrowserToolset20260801 != null
+
         fun isBetaToolComputerUse20241022(): Boolean = betaToolComputerUse20241022 != null
 
         fun isBetaMemoryTool20250818(): Boolean = betaMemoryTool20250818 != null
@@ -4642,6 +4801,8 @@ private constructor(
         fun isBetaToolTextEditor20241022(): Boolean = betaToolTextEditor20241022 != null
 
         fun isBetaToolComputerUse20251124(): Boolean = betaToolComputerUse20251124 != null
+
+        fun isBetaComputerToolset20260801(): Boolean = betaComputerToolset20260801 != null
 
         fun isBetaToolTextEditor20250124(): Boolean = betaToolTextEditor20250124 != null
 
@@ -4693,6 +4854,14 @@ private constructor(
         fun asBetaCodeExecutionTool20260521(): BetaCodeExecutionTool20260521 =
             betaCodeExecutionTool20260521.getOrThrow("betaCodeExecutionTool20260521")
 
+        /**
+         * The browser toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+         * browser tool family. The model is served the family's tool with any members disabled via
+         * ``configs`` removed from its schema.
+         */
+        fun asBetaBrowserToolset20260801(): BetaBrowserToolset20260801 =
+            betaBrowserToolset20260801.getOrThrow("betaBrowserToolset20260801")
+
         fun asBetaToolComputerUse20241022(): BetaToolComputerUse20241022 =
             betaToolComputerUse20241022.getOrThrow("betaToolComputerUse20241022")
 
@@ -4707,6 +4876,17 @@ private constructor(
 
         fun asBetaToolComputerUse20251124(): BetaToolComputerUse20251124 =
             betaToolComputerUse20251124.getOrThrow("betaToolComputerUse20251124")
+
+        /**
+         * The computer toolset: a single ``tools[]`` entry (carrying no ``name``) that declares the
+         * computer tool family. The model is served the family's tool with any members disabled via
+         * ``configs`` removed from its schema. Every member is enabled by default, zoom included.
+         * The single-tool options ``display_number`` and ``enable_zoom`` are not fields of a
+         * toolset entry — it carries only ``type``, ``configs``, and ``cache_control``; zoom is
+         * controlled via ``configs.zoom.enabled``.
+         */
+        fun asBetaComputerToolset20260801(): BetaComputerToolset20260801 =
+            betaComputerToolset20260801.getOrThrow("betaComputerToolset20260801")
 
         fun asBetaToolTextEditor20250124(): BetaToolTextEditor20250124 =
             betaToolTextEditor20250124.getOrThrow("betaToolTextEditor20250124")
@@ -4802,6 +4982,8 @@ private constructor(
                     visitor.visitBetaCodeExecutionTool20260120(betaCodeExecutionTool20260120)
                 betaCodeExecutionTool20260521 != null ->
                     visitor.visitBetaCodeExecutionTool20260521(betaCodeExecutionTool20260521)
+                betaBrowserToolset20260801 != null ->
+                    visitor.visitBetaBrowserToolset20260801(betaBrowserToolset20260801)
                 betaToolComputerUse20241022 != null ->
                     visitor.visitBetaToolComputerUse20241022(betaToolComputerUse20241022)
                 betaMemoryTool20250818 != null ->
@@ -4812,6 +4994,8 @@ private constructor(
                     visitor.visitBetaToolTextEditor20241022(betaToolTextEditor20241022)
                 betaToolComputerUse20251124 != null ->
                     visitor.visitBetaToolComputerUse20251124(betaToolComputerUse20251124)
+                betaComputerToolset20260801 != null ->
+                    visitor.visitBetaComputerToolset20260801(betaComputerToolset20260801)
                 betaToolTextEditor20250124 != null ->
                     visitor.visitBetaToolTextEditor20250124(betaToolTextEditor20250124)
                 betaToolTextEditor20250429 != null ->
@@ -4900,6 +5084,12 @@ private constructor(
                         betaCodeExecutionTool20260521.validate()
                     }
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ) {
+                        betaBrowserToolset20260801.validate()
+                    }
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ) {
@@ -4928,6 +5118,12 @@ private constructor(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
                     ) {
                         betaToolComputerUse20251124.validate()
+                    }
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
+                    ) {
+                        betaComputerToolset20260801.validate()
                     }
 
                     override fun visitBetaToolTextEditor20250124(
@@ -5060,6 +5256,10 @@ private constructor(
                         betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
                     ) = betaCodeExecutionTool20260521.validity()
 
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ) = betaBrowserToolset20260801.validity()
+
                     override fun visitBetaToolComputerUse20241022(
                         betaToolComputerUse20241022: BetaToolComputerUse20241022
                     ) = betaToolComputerUse20241022.validity()
@@ -5079,6 +5279,10 @@ private constructor(
                     override fun visitBetaToolComputerUse20251124(
                         betaToolComputerUse20251124: BetaToolComputerUse20251124
                     ) = betaToolComputerUse20251124.validity()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
+                    ) = betaComputerToolset20260801.validity()
 
                     override fun visitBetaToolTextEditor20250124(
                         betaToolTextEditor20250124: BetaToolTextEditor20250124
@@ -5152,11 +5356,13 @@ private constructor(
                 betaCodeExecutionTool20250825 == other.betaCodeExecutionTool20250825 &&
                 betaCodeExecutionTool20260120 == other.betaCodeExecutionTool20260120 &&
                 betaCodeExecutionTool20260521 == other.betaCodeExecutionTool20260521 &&
+                betaBrowserToolset20260801 == other.betaBrowserToolset20260801 &&
                 betaToolComputerUse20241022 == other.betaToolComputerUse20241022 &&
                 betaMemoryTool20250818 == other.betaMemoryTool20250818 &&
                 betaToolComputerUse20250124 == other.betaToolComputerUse20250124 &&
                 betaToolTextEditor20241022 == other.betaToolTextEditor20241022 &&
                 betaToolComputerUse20251124 == other.betaToolComputerUse20251124 &&
+                betaComputerToolset20260801 == other.betaComputerToolset20260801 &&
                 betaToolTextEditor20250124 == other.betaToolTextEditor20250124 &&
                 betaToolTextEditor20250429 == other.betaToolTextEditor20250429 &&
                 betaToolTextEditor20250728 == other.betaToolTextEditor20250728 &&
@@ -5182,11 +5388,13 @@ private constructor(
                 betaCodeExecutionTool20250825,
                 betaCodeExecutionTool20260120,
                 betaCodeExecutionTool20260521,
+                betaBrowserToolset20260801,
                 betaToolComputerUse20241022,
                 betaMemoryTool20250818,
                 betaToolComputerUse20250124,
                 betaToolTextEditor20241022,
                 betaToolComputerUse20251124,
+                betaComputerToolset20260801,
                 betaToolTextEditor20250124,
                 betaToolTextEditor20250429,
                 betaToolTextEditor20250728,
@@ -5216,6 +5424,8 @@ private constructor(
                     "Tool{betaCodeExecutionTool20260120=$betaCodeExecutionTool20260120}"
                 betaCodeExecutionTool20260521 != null ->
                     "Tool{betaCodeExecutionTool20260521=$betaCodeExecutionTool20260521}"
+                betaBrowserToolset20260801 != null ->
+                    "Tool{betaBrowserToolset20260801=$betaBrowserToolset20260801}"
                 betaToolComputerUse20241022 != null ->
                     "Tool{betaToolComputerUse20241022=$betaToolComputerUse20241022}"
                 betaMemoryTool20250818 != null ->
@@ -5226,6 +5436,8 @@ private constructor(
                     "Tool{betaToolTextEditor20241022=$betaToolTextEditor20241022}"
                 betaToolComputerUse20251124 != null ->
                     "Tool{betaToolComputerUse20251124=$betaToolComputerUse20251124}"
+                betaComputerToolset20260801 != null ->
+                    "Tool{betaComputerToolset20260801=$betaComputerToolset20260801}"
                 betaToolTextEditor20250124 != null ->
                     "Tool{betaToolTextEditor20250124=$betaToolTextEditor20250124}"
                 betaToolTextEditor20250429 != null ->
@@ -5293,6 +5505,16 @@ private constructor(
                 betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
             ) = Tool(betaCodeExecutionTool20260521 = betaCodeExecutionTool20260521)
 
+            /**
+             * The browser toolset: a single ``tools[]`` entry (carrying no ``name``) that declares
+             * the browser tool family. The model is served the family's tool with any members
+             * disabled via ``configs`` removed from its schema.
+             */
+            @JvmStatic
+            fun ofBetaBrowserToolset20260801(
+                betaBrowserToolset20260801: BetaBrowserToolset20260801
+            ) = Tool(betaBrowserToolset20260801 = betaBrowserToolset20260801)
+
             @JvmStatic
             fun ofBetaToolComputerUse20241022(
                 betaToolComputerUse20241022: BetaToolComputerUse20241022
@@ -5316,6 +5538,19 @@ private constructor(
             fun ofBetaToolComputerUse20251124(
                 betaToolComputerUse20251124: BetaToolComputerUse20251124
             ) = Tool(betaToolComputerUse20251124 = betaToolComputerUse20251124)
+
+            /**
+             * The computer toolset: a single ``tools[]`` entry (carrying no ``name``) that declares
+             * the computer tool family. The model is served the family's tool with any members
+             * disabled via ``configs`` removed from its schema. Every member is enabled by default,
+             * zoom included. The single-tool options ``display_number`` and ``enable_zoom`` are not
+             * fields of a toolset entry — it carries only ``type``, ``configs``, and
+             * ``cache_control``; zoom is controlled via ``configs.zoom.enabled``.
+             */
+            @JvmStatic
+            fun ofBetaComputerToolset20260801(
+                betaComputerToolset20260801: BetaComputerToolset20260801
+            ) = Tool(betaComputerToolset20260801 = betaComputerToolset20260801)
 
             @JvmStatic
             fun ofBetaToolTextEditor20250124(
@@ -5447,6 +5682,15 @@ private constructor(
                 betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
             ): T
 
+            /**
+             * The browser toolset: a single ``tools[]`` entry (carrying no ``name``) that declares
+             * the browser tool family. The model is served the family's tool with any members
+             * disabled via ``configs`` removed from its schema.
+             */
+            fun visitBetaBrowserToolset20260801(
+                betaBrowserToolset20260801: BetaBrowserToolset20260801
+            ): T
+
             fun visitBetaToolComputerUse20241022(
                 betaToolComputerUse20241022: BetaToolComputerUse20241022
             ): T
@@ -5463,6 +5707,18 @@ private constructor(
 
             fun visitBetaToolComputerUse20251124(
                 betaToolComputerUse20251124: BetaToolComputerUse20251124
+            ): T
+
+            /**
+             * The computer toolset: a single ``tools[]`` entry (carrying no ``name``) that declares
+             * the computer tool family. The model is served the family's tool with any members
+             * disabled via ``configs`` removed from its schema. Every member is enabled by default,
+             * zoom included. The single-tool options ``display_number`` and ``enable_zoom`` are not
+             * fields of a toolset entry — it carries only ``type``, ``configs``, and
+             * ``cache_control``; zoom is controlled via ``configs.zoom.enabled``.
+             */
+            fun visitBetaComputerToolset20260801(
+                betaComputerToolset20260801: BetaComputerToolset20260801
             ): T
 
             fun visitBetaToolTextEditor20250124(
@@ -5554,6 +5810,8 @@ private constructor(
                                 ?.let { Tool(betaCodeExecutionTool20260120 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaCodeExecutionTool20260521>())
                                 ?.let { Tool(betaCodeExecutionTool20260521 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaBrowserToolset20260801>())
+                                ?.let { Tool(betaBrowserToolset20260801 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20241022>())
                                 ?.let { Tool(betaToolComputerUse20241022 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaMemoryTool20250818>())?.let {
@@ -5565,6 +5823,8 @@ private constructor(
                                 ?.let { Tool(betaToolTextEditor20241022 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolComputerUse20251124>())
                                 ?.let { Tool(betaToolComputerUse20251124 = it, _json = json) },
+                            tryDeserialize(node, jacksonTypeRef<BetaComputerToolset20260801>())
+                                ?.let { Tool(betaComputerToolset20260801 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250124>())
                                 ?.let { Tool(betaToolTextEditor20250124 = it, _json = json) },
                             tryDeserialize(node, jacksonTypeRef<BetaToolTextEditor20250429>())
@@ -5640,6 +5900,8 @@ private constructor(
                         generator.writeObject(value.betaCodeExecutionTool20260120)
                     value.betaCodeExecutionTool20260521 != null ->
                         generator.writeObject(value.betaCodeExecutionTool20260521)
+                    value.betaBrowserToolset20260801 != null ->
+                        generator.writeObject(value.betaBrowserToolset20260801)
                     value.betaToolComputerUse20241022 != null ->
                         generator.writeObject(value.betaToolComputerUse20241022)
                     value.betaMemoryTool20250818 != null ->
@@ -5650,6 +5912,8 @@ private constructor(
                         generator.writeObject(value.betaToolTextEditor20241022)
                     value.betaToolComputerUse20251124 != null ->
                         generator.writeObject(value.betaToolComputerUse20251124)
+                    value.betaComputerToolset20260801 != null ->
+                        generator.writeObject(value.betaComputerToolset20260801)
                     value.betaToolTextEditor20250124 != null ->
                         generator.writeObject(value.betaToolTextEditor20250124)
                     value.betaToolTextEditor20250429 != null ->

@@ -420,6 +420,98 @@ private constructor(
             }
         )
 
+    fun toolsetName(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitText(text: BetaTextBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitImage(image: BetaImageBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitDocument(document: BetaRequestDocumentBlock): Optional<String> =
+                    Optional.empty()
+
+                override fun visitSearchResult(
+                    searchResult: BetaSearchResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitThinking(thinking: BetaThinkingBlockParam): Optional<String> =
+                    Optional.empty()
+
+                override fun visitRedactedThinking(
+                    redactedThinking: BetaRedactedThinkingBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolUse(toolUse: BetaToolUseBlockParam): Optional<String> =
+                    toolUse.toolsetName()
+
+                override fun visitToolResult(
+                    toolResult: BetaToolResultBlockParam
+                ): Optional<String> = toolResult.toolsetName()
+
+                override fun visitServerToolUse(
+                    serverToolUse: BetaServerToolUseBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebSearchToolResult(
+                    webSearchToolResult: BetaWebSearchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitWebFetchToolResult(
+                    webFetchToolResult: BetaWebFetchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitAdvisorToolResult(
+                    advisorToolResult: BetaAdvisorToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitCodeExecutionToolResult(
+                    codeExecutionToolResult: BetaCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitBashCodeExecutionToolResult(
+                    bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitTextEditorCodeExecutionToolResult(
+                    textEditorCodeExecutionToolResult:
+                        BetaTextEditorCodeExecutionToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolSearchToolResult(
+                    toolSearchToolResult: BetaToolSearchToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitMcpToolUse(
+                    mcpToolUse: BetaMcpToolUseBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitMcpToolResult(
+                    mcpToolResult: BetaRequestMcpToolResultBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitContainerUpload(
+                    containerUpload: BetaContainerUploadBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitCompaction(
+                    compaction: BetaCompactionBlockParam
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolAddition(
+                    toolAddition: BetaRequestToolAdditionBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitToolRemoval(
+                    toolRemoval: BetaRequestToolRemovalBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitFallback(fallback: BetaFallbackBlockParam): Optional<String> =
+                    Optional.empty()
+            }
+        )
+
     fun toolUseId(): Optional<String> =
         accept(
             object : Visitor<Optional<String>> {

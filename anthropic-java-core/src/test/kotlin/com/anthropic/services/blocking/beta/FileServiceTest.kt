@@ -48,7 +48,7 @@ internal class FileServiceTest {
                 .build()
         val fileService = client.beta().files()
 
-        val deletedFile =
+        val betaDeletedFile =
             fileService.delete(
                 FileDeleteParams.builder()
                     .fileId("file_id")
@@ -56,7 +56,7 @@ internal class FileServiceTest {
                     .build()
             )
 
-        deletedFile.validate()
+        betaDeletedFile.validate()
     }
 
     @Test
@@ -89,7 +89,7 @@ internal class FileServiceTest {
                 .build()
         val fileService = client.beta().files()
 
-        val fileMetadata =
+        val betaFileMetadata =
             fileService.retrieveMetadata(
                 FileRetrieveMetadataParams.builder()
                     .fileId("file_id")
@@ -97,7 +97,7 @@ internal class FileServiceTest {
                     .build()
             )
 
-        fileMetadata.validate()
+        betaFileMetadata.validate()
     }
 
     @Test
@@ -109,7 +109,7 @@ internal class FileServiceTest {
                 .build()
         val fileService = client.beta().files()
 
-        val fileMetadata =
+        val betaFileMetadata =
             fileService.upload(
                 FileUploadParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
@@ -117,6 +117,6 @@ internal class FileServiceTest {
                     .build()
             )
 
-        fileMetadata.validate()
+        betaFileMetadata.validate()
     }
 }

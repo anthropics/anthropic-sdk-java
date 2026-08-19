@@ -16,14 +16,15 @@ private constructor(
     private val service: FileService,
     private val params: FileListParams,
     private val response: FileListPageResponse,
-) : Page<FileMetadata> {
+) : Page<BetaFileMetadata> {
 
     /**
      * Delegates to [FileListPageResponse], but gracefully handles missing data.
      *
      * @see FileListPageResponse.data
      */
-    fun data(): List<FileMetadata> = response._data().getOptional("data").getOrNull() ?: emptyList()
+    fun data(): List<BetaFileMetadata> =
+        response._data().getOptional("data").getOrNull() ?: emptyList()
 
     /**
      * Delegates to [FileListPageResponse], but gracefully handles missing data.
@@ -46,7 +47,7 @@ private constructor(
      */
     fun lastId(): Optional<String> = response._lastId().getOptional("last_id")
 
-    override fun items(): List<FileMetadata> = data()
+    override fun items(): List<BetaFileMetadata> = data()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty() && lastId().isPresent
 
@@ -58,7 +59,7 @@ private constructor(
 
     override fun nextPage(): FileListPage = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager<FileMetadata> = AutoPager.from(this)
+    fun autoPager(): AutoPager<BetaFileMetadata> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
     fun params(): FileListParams = params
