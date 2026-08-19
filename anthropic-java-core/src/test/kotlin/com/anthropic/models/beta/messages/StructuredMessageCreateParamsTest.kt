@@ -151,6 +151,7 @@ internal class StructuredMessageCreateParamsTest {
         private val TOOL_MEMORY_TOOL_20250818 = BetaMemoryTool20250818.builder().build()
         private val TOOL_COMP_USE_20251124 =
             BetaToolComputerUse20251124.builder().displayHeightPx(0).displayWidthPx(0).build()
+        private val TOOL_COMPUTER_TOOLSET_20260801 = BetaComputerToolset20260801.builder().build()
         private val TOOL_SEARCH_TOOL_20251119 =
             BetaToolSearchToolBm25_20251119.builder()
                 .type(BetaToolSearchToolBm25_20251119.Type.of(STRING))
@@ -168,6 +169,7 @@ internal class StructuredMessageCreateParamsTest {
         private val TOOL_WEB_FETCH_20250910 = BetaWebFetchTool20250910.builder().build()
         private val TOOL_CODE_20260120 = BetaCodeExecutionTool20260120.builder().build()
         private val TOOL_CODE_20260521 = BetaCodeExecutionTool20260521.builder().build()
+        private val TOOL_BROWSER_TOOLSET_20260801 = BetaBrowserToolset20260801.builder().build()
         private val TOOL_WEB_SEARCH_20260209 = BetaWebSearchTool20260209.builder().build()
         private val TOOL_WEB_FETCH_20260209 = BetaWebFetchTool20260209.builder().build()
         private val TOOL_WEB_FETCH_20260309 = BetaWebFetchTool20260309.builder().build()
@@ -279,6 +281,7 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addTool", TOOL_COMP_USE_20241022),
                 DelegationWriteTestCase("addTool", TOOL_MEMORY_TOOL_20250818),
                 DelegationWriteTestCase("addTool", TOOL_COMP_USE_20251124),
+                DelegationWriteTestCase("addTool", TOOL_COMPUTER_TOOLSET_20260801),
                 DelegationWriteTestCase("addTool", TOOL_COMP_USE_20250124),
                 DelegationWriteTestCase("addTool", TOOL_TEXT_EDIT_20241022),
                 DelegationWriteTestCase("addTool", TOOL_TEXT_EDIT_20250124),
@@ -288,6 +291,7 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addTool", TOOL_WEB_FETCH_20250910),
                 DelegationWriteTestCase("addTool", TOOL_CODE_20260120),
                 DelegationWriteTestCase("addTool", TOOL_CODE_20260521),
+                DelegationWriteTestCase("addTool", TOOL_BROWSER_TOOLSET_20260801),
                 DelegationWriteTestCase("addTool", TOOL_WEB_SEARCH_20260209),
                 DelegationWriteTestCase("addTool", TOOL_WEB_FETCH_20260209),
                 DelegationWriteTestCase("addTool", TOOL_WEB_FETCH_20260309),

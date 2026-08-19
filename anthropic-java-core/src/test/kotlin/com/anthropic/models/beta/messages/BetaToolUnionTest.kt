@@ -58,11 +58,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -153,11 +155,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -233,11 +237,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -308,11 +314,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -378,11 +386,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).contains(codeExecutionTool20250825)
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -448,11 +458,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).contains(codeExecutionTool20260120)
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -518,11 +530,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).contains(codeExecutionTool20260521)
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -566,6 +580,439 @@ internal class BetaToolUnionTest {
     }
 
     @Test
+    fun ofBrowserToolset20260801() {
+        val browserToolset20260801 =
+            BetaBrowserToolset20260801.builder()
+                .addAllowedCaller(BetaBrowserToolset20260801.AllowedCaller.DIRECT)
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .configs(
+                    BetaBrowserToolsetConfigs.builder()
+                        .closeTab(
+                            BetaBrowserCloseTabConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .doubleClick(
+                            BetaBrowserDoubleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .fileUpload(
+                            BetaBrowserFileUploadConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .find(
+                            BetaBrowserFindConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .formInput(
+                            BetaBrowserFormInputConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .getPageText(
+                            BetaBrowserGetPageTextConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .holdKey(
+                            BetaBrowserHoldKeyConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .hover(
+                            BetaBrowserHoverConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .javascriptExec(
+                            BetaBrowserJavascriptExecConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .key(
+                            BetaBrowserKeyConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .leftClick(
+                            BetaBrowserLeftClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftClickDrag(
+                            BetaBrowserLeftClickDragConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftMouseDown(
+                            BetaBrowserLeftMouseDownConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftMouseUp(
+                            BetaBrowserLeftMouseUpConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .listTabs(
+                            BetaBrowserListTabsConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .middleClick(
+                            BetaBrowserMiddleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .mouseMove(
+                            BetaBrowserMouseMoveConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .navigate(
+                            BetaBrowserNavigateConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .newTab(
+                            BetaBrowserNewTabConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .readConsole(
+                            BetaBrowserReadConsoleConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .readNetwork(
+                            BetaBrowserReadNetworkConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .readPage(
+                            BetaBrowserReadPageConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .rightClick(
+                            BetaBrowserRightClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .screenshot(
+                            BetaBrowserScreenshotConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .scroll(
+                            BetaBrowserScrollConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .scrollTo(
+                            BetaBrowserScrollToConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .switchTab(
+                            BetaBrowserSwitchTabConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .tripleClick(
+                            BetaBrowserTripleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .type(
+                            BetaBrowserTypeConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .wait(
+                            BetaBrowserWaitConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .zoom(
+                            BetaBrowserZoomConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .build()
+                )
+                .build()
+
+        val betaToolUnion = BetaToolUnion.ofBrowserToolset20260801(browserToolset20260801)
+
+        assertThat(betaToolUnion.betaTool()).isEmpty
+        assertThat(betaToolUnion.bash20241022()).isEmpty
+        assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).contains(browserToolset20260801)
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.memoryTool20250818()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
+        assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250429()).isEmpty
+        assertThat(betaToolUnion.textEditor20250728()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260309()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260318()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260318()).isEmpty
+        assertThat(betaToolUnion.advisorTool20260301()).isEmpty
+        assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
+        assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(betaToolUnion.mcpToolset()).isEmpty
+    }
+
+    @Test
+    fun ofBrowserToolset20260801Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaToolUnion =
+            BetaToolUnion.ofBrowserToolset20260801(
+                BetaBrowserToolset20260801.builder()
+                    .addAllowedCaller(BetaBrowserToolset20260801.AllowedCaller.DIRECT)
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .configs(
+                        BetaBrowserToolsetConfigs.builder()
+                            .closeTab(
+                                BetaBrowserCloseTabConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .doubleClick(
+                                BetaBrowserDoubleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .fileUpload(
+                                BetaBrowserFileUploadConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .find(
+                                BetaBrowserFindConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .formInput(
+                                BetaBrowserFormInputConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .getPageText(
+                                BetaBrowserGetPageTextConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .holdKey(
+                                BetaBrowserHoldKeyConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .hover(
+                                BetaBrowserHoverConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .javascriptExec(
+                                BetaBrowserJavascriptExecConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .key(
+                                BetaBrowserKeyConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftClick(
+                                BetaBrowserLeftClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftClickDrag(
+                                BetaBrowserLeftClickDragConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftMouseDown(
+                                BetaBrowserLeftMouseDownConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftMouseUp(
+                                BetaBrowserLeftMouseUpConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .listTabs(
+                                BetaBrowserListTabsConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .middleClick(
+                                BetaBrowserMiddleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .mouseMove(
+                                BetaBrowserMouseMoveConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .navigate(
+                                BetaBrowserNavigateConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .newTab(
+                                BetaBrowserNewTabConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .readConsole(
+                                BetaBrowserReadConsoleConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .readNetwork(
+                                BetaBrowserReadNetworkConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .readPage(
+                                BetaBrowserReadPageConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .rightClick(
+                                BetaBrowserRightClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .screenshot(
+                                BetaBrowserScreenshotConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .scroll(
+                                BetaBrowserScrollConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .scrollTo(
+                                BetaBrowserScrollToConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .switchTab(
+                                BetaBrowserSwitchTabConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .tripleClick(
+                                BetaBrowserTripleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .type(
+                                BetaBrowserTypeConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .wait(
+                                BetaBrowserWaitConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .zoom(
+                                BetaBrowserZoomConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedBetaToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaToolUnion),
+                jacksonTypeRef<BetaToolUnion>(),
+            )
+
+        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
+    }
+
+    @Test
     fun ofComputerUse20241022() {
         val computerUse20241022 =
             BetaToolComputerUse20241022.builder()
@@ -596,11 +1043,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).contains(computerUse20241022)
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -679,11 +1128,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).contains(memoryTool20250818)
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -762,11 +1213,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).contains(computerUse20250124)
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -845,11 +1298,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).contains(textEditor20241022)
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -929,11 +1384,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).contains(computerUse20251124)
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -986,6 +1443,283 @@ internal class BetaToolUnionTest {
     }
 
     @Test
+    fun ofComputerToolset20260801() {
+        val computerToolset20260801 =
+            BetaComputerToolset20260801.builder()
+                .addAllowedCaller(BetaComputerToolset20260801.AllowedCaller.DIRECT)
+                .cacheControl(
+                    BetaCacheControlEphemeral.builder()
+                        .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                        .build()
+                )
+                .configs(
+                    BetaComputerToolsetConfigs.builder()
+                        .cursorPosition(
+                            BetaComputerCursorPositionConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .doubleClick(
+                            BetaComputerDoubleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .holdKey(
+                            BetaComputerHoldKeyConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .key(
+                            BetaComputerKeyConfig.builder().deferLoading(true).enabled(true).build()
+                        )
+                        .leftClick(
+                            BetaComputerLeftClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftClickDrag(
+                            BetaComputerLeftClickDragConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftMouseDown(
+                            BetaComputerLeftMouseDownConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .leftMouseUp(
+                            BetaComputerLeftMouseUpConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .middleClick(
+                            BetaComputerMiddleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .mouseMove(
+                            BetaComputerMouseMoveConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .rightClick(
+                            BetaComputerRightClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .screenshot(
+                            BetaComputerScreenshotConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .scroll(
+                            BetaComputerScrollConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .tripleClick(
+                            BetaComputerTripleClickConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .type(
+                            BetaComputerTypeConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .wait(
+                            BetaComputerWaitConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .zoom(
+                            BetaComputerZoomConfig.builder()
+                                .deferLoading(true)
+                                .enabled(true)
+                                .build()
+                        )
+                        .build()
+                )
+                .build()
+
+        val betaToolUnion = BetaToolUnion.ofComputerToolset20260801(computerToolset20260801)
+
+        assertThat(betaToolUnion.betaTool()).isEmpty
+        assertThat(betaToolUnion.bash20241022()).isEmpty
+        assertThat(betaToolUnion.bash20250124()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250522()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
+        assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
+        assertThat(betaToolUnion.computerUse20241022()).isEmpty
+        assertThat(betaToolUnion.memoryTool20250818()).isEmpty
+        assertThat(betaToolUnion.computerUse20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20241022()).isEmpty
+        assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).contains(computerToolset20260801)
+        assertThat(betaToolUnion.textEditor20250124()).isEmpty
+        assertThat(betaToolUnion.textEditor20250429()).isEmpty
+        assertThat(betaToolUnion.textEditor20250728()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20250305()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20250910()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260209()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260309()).isEmpty
+        assertThat(betaToolUnion.webSearchTool20260318()).isEmpty
+        assertThat(betaToolUnion.webFetchTool20260318()).isEmpty
+        assertThat(betaToolUnion.advisorTool20260301()).isEmpty
+        assertThat(betaToolUnion.searchToolBm25_20251119()).isEmpty
+        assertThat(betaToolUnion.searchToolRegex20251119()).isEmpty
+        assertThat(betaToolUnion.mcpToolset()).isEmpty
+    }
+
+    @Test
+    fun ofComputerToolset20260801Roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaToolUnion =
+            BetaToolUnion.ofComputerToolset20260801(
+                BetaComputerToolset20260801.builder()
+                    .addAllowedCaller(BetaComputerToolset20260801.AllowedCaller.DIRECT)
+                    .cacheControl(
+                        BetaCacheControlEphemeral.builder()
+                            .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .configs(
+                        BetaComputerToolsetConfigs.builder()
+                            .cursorPosition(
+                                BetaComputerCursorPositionConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .doubleClick(
+                                BetaComputerDoubleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .holdKey(
+                                BetaComputerHoldKeyConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .key(
+                                BetaComputerKeyConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftClick(
+                                BetaComputerLeftClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftClickDrag(
+                                BetaComputerLeftClickDragConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftMouseDown(
+                                BetaComputerLeftMouseDownConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .leftMouseUp(
+                                BetaComputerLeftMouseUpConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .middleClick(
+                                BetaComputerMiddleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .mouseMove(
+                                BetaComputerMouseMoveConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .rightClick(
+                                BetaComputerRightClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .screenshot(
+                                BetaComputerScreenshotConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .scroll(
+                                BetaComputerScrollConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .tripleClick(
+                                BetaComputerTripleClickConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .type(
+                                BetaComputerTypeConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .wait(
+                                BetaComputerWaitConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .zoom(
+                                BetaComputerZoomConfig.builder()
+                                    .deferLoading(true)
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedBetaToolUnion =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaToolUnion),
+                jacksonTypeRef<BetaToolUnion>(),
+            )
+
+        assertThat(roundtrippedBetaToolUnion).isEqualTo(betaToolUnion)
+    }
+
+    @Test
     fun ofTextEditor20250124() {
         val textEditor20250124 =
             BetaToolTextEditor20250124.builder()
@@ -1013,11 +1747,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).contains(textEditor20250124)
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -1093,11 +1829,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).contains(textEditor20250429)
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -1174,11 +1912,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).contains(textEditor20250728)
@@ -1261,11 +2001,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -1347,11 +2089,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -1433,11 +2177,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -1519,11 +2265,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -1600,11 +2348,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -1688,11 +2438,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -1777,11 +2529,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -1862,11 +2616,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -1941,11 +2697,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -2013,11 +2771,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty
@@ -2093,11 +2853,13 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.codeExecutionTool20250825()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260120()).isEmpty
         assertThat(betaToolUnion.codeExecutionTool20260521()).isEmpty
+        assertThat(betaToolUnion.browserToolset20260801()).isEmpty
         assertThat(betaToolUnion.computerUse20241022()).isEmpty
         assertThat(betaToolUnion.memoryTool20250818()).isEmpty
         assertThat(betaToolUnion.computerUse20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20241022()).isEmpty
         assertThat(betaToolUnion.computerUse20251124()).isEmpty
+        assertThat(betaToolUnion.computerToolset20260801()).isEmpty
         assertThat(betaToolUnion.textEditor20250124()).isEmpty
         assertThat(betaToolUnion.textEditor20250429()).isEmpty
         assertThat(betaToolUnion.textEditor20250728()).isEmpty

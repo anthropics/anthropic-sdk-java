@@ -111,6 +111,11 @@ internal class BetaContentBlockParamTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .transformations(
+                    BetaImageTransformationsParam.builder()
+                        .oversizedImage(BetaImageTransformationsParam.OversizedImage.DOWNSIZE)
+                        .build()
+                )
                 .build()
 
         val betaContentBlockParam = BetaContentBlockParam.ofImage(image)
@@ -155,6 +160,11 @@ internal class BetaContentBlockParamTest {
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .transformations(
+                        BetaImageTransformationsParam.builder()
+                            .oversizedImage(BetaImageTransformationsParam.OversizedImage.DOWNSIZE)
                             .build()
                     )
                     .build()
@@ -455,6 +465,7 @@ internal class BetaContentBlockParamTest {
                         .build()
                 )
                 .caller(BetaDirectCaller.builder().build())
+                .toolsetName("toolset_name")
                 .build()
 
         val betaContentBlockParam = BetaContentBlockParam.ofToolUse(toolUse)
@@ -503,6 +514,7 @@ internal class BetaContentBlockParamTest {
                             .build()
                     )
                     .caller(BetaDirectCaller.builder().build())
+                    .toolsetName("toolset_name")
                     .build()
             )
 
@@ -527,6 +539,7 @@ internal class BetaContentBlockParamTest {
                 )
                 .content("string")
                 .isError(true)
+                .toolsetName("toolset_name")
                 .build()
 
         val betaContentBlockParam = BetaContentBlockParam.ofToolResult(toolResult)
@@ -570,6 +583,7 @@ internal class BetaContentBlockParamTest {
                     )
                     .content("string")
                     .isError(true)
+                    .toolsetName("toolset_name")
                     .build()
             )
 

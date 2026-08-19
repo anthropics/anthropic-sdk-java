@@ -3,10 +3,8 @@ package com.anthropic.example;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.MultipartField;
-import com.anthropic.models.beta.AnthropicBeta;
-import com.anthropic.models.beta.skills.SkillCreateParams;
-import com.anthropic.models.beta.skills.SkillRetrieveParams;
-import com.anthropic.models.beta.skills.versions.VersionRetrieveParams;
+import com.anthropic.models.skills.SkillCreateParams;
+import com.anthropic.models.skills.versions.VersionRetrieveParams;
 import java.io.InputStream;
 
 /** Creates a skill from multiple local files, then retrieves the skill and its latest version. */
@@ -19,13 +17,9 @@ public final class SkillsExample {
 
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-        // Display titles must be unique within the workspace, so suffix with a timestamp to keep
-        // the example rerunnable.
-        var skill = client.beta()
-                .skills()
+        var skill = client.skills()
                 .create(SkillCreateParams.builder()
-                        .addBeta(AnthropicBeta.SKILLS_2025_10_02)
-                        .displayTitle("greeting-" + System.currentTimeMillis())
+                        .displayName("greeting-" + System.currentTimeMillis())
                         // Each file's `filename` is its path inside the skill, including the
                         // skill's top-level directory.
                         .addFile(MultipartField.<InputStream>builder()
@@ -39,29 +33,18 @@ public final class SkillsExample {
                         .build());
         System.out.println("Created skill: " + skill.id());
 
-        var retrieved = client.beta()
-                .skills()
-                .retrieve(SkillRetrieveParams.builder()
-                        .skillId(skill.id())
-                        .addBeta(AnthropicBeta.SKILLS_2025_10_02)
-                        .build());
-        String version = retrieved.latestVersion().orElseThrow();
-        System.out.println("Retrieved skill: " + retrieved.displayTitle().orElse("(untitled)") + " v" + version);
+        var retrieved = client.skills().retrieve(skill.id());
+        String versionId = retrieved.latestVersionId();
+        System.out.println("Retrieved skill: " + retrieved.displayName() + " (latest version " + versionId + ")");
 
         // The version's name and description are parsed by the API from the uploaded SKILL.md.
-        var skillVersion = client.beta()
-                .skills()
+        var skillVersion = client.skills()
                 .versions()
                 .retrieve(VersionRetrieveParams.builder()
                         .skillId(skill.id())
-                        .version(version)
-                        .addBeta(AnthropicBeta.SKILLS_2025_10_02)
+                        .version(versionId)
                         .build());
-        System.out.println("Retrieved version: name="
-                + skillVersion.name()
-                + ", directory="
-                + skillVersion.directory()
-                + ", description="
-                + skillVersion.description());
+        System.out.println(
+                "Retrieved version: name=" + skillVersion.name() + ", description=" + skillVersion.description());
     }
 }

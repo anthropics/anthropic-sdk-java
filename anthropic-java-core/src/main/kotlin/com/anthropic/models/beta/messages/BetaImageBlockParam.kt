@@ -34,6 +34,7 @@ private constructor(
     private val source: JsonField<Source>,
     private val type: JsonValue,
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+    private val transformations: JsonField<BetaImageTransformationsParam>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -44,7 +45,10 @@ private constructor(
         @JsonProperty("cache_control")
         @ExcludeMissing
         cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
-    ) : this(source, type, cacheControl, mutableMapOf())
+        @JsonProperty("transformations")
+        @ExcludeMissing
+        transformations: JsonField<BetaImageTransformationsParam> = JsonMissing.of(),
+    ) : this(source, type, cacheControl, transformations, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -73,6 +77,18 @@ private constructor(
         cacheControl.getOptional("cache_control")
 
     /**
+     * Configures the transformations the server applies to this image before the model observes it.
+     * Each key names a condition the server transforms images for; its value selects the
+     * transformation applied. Omitted keys keep their default behavior, and an empty object is
+     * equivalent to omitting the field.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun transformations(): Optional<BetaImageTransformationsParam> =
+        transformations.getOptional("transformations")
+
+    /**
      * Returns the raw JSON value of [source].
      *
      * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
@@ -87,6 +103,15 @@ private constructor(
     @JsonProperty("cache_control")
     @ExcludeMissing
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
+
+    /**
+     * Returns the raw JSON value of [transformations].
+     *
+     * Unlike [transformations], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("transformations")
+    @ExcludeMissing
+    fun _transformations(): JsonField<BetaImageTransformationsParam> = transformations
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -125,6 +150,7 @@ private constructor(
         private var source: JsonField<Source>? = null
         private var type: JsonValue = JsonValue.from("image")
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+        private var transformations: JsonField<BetaImageTransformationsParam> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -132,6 +158,7 @@ private constructor(
             source = betaImageBlockParam.source
             type = betaImageBlockParam.type
             cacheControl = betaImageBlockParam.cacheControl
+            transformations = betaImageBlockParam.transformations
             additionalProperties = betaImageBlockParam.additionalProperties.toMutableMap()
         }
 
@@ -208,6 +235,30 @@ private constructor(
             this.cacheControl = cacheControl
         }
 
+        /**
+         * Configures the transformations the server applies to this image before the model observes
+         * it. Each key names a condition the server transforms images for; its value selects the
+         * transformation applied. Omitted keys keep their default behavior, and an empty object is
+         * equivalent to omitting the field.
+         */
+        fun transformations(transformations: BetaImageTransformationsParam?) =
+            transformations(JsonField.ofNullable(transformations))
+
+        /** Alias for calling [Builder.transformations] with `transformations.orElse(null)`. */
+        fun transformations(transformations: Optional<BetaImageTransformationsParam>) =
+            transformations(transformations.getOrNull())
+
+        /**
+         * Sets [Builder.transformations] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.transformations] with a well-typed
+         * [BetaImageTransformationsParam] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun transformations(transformations: JsonField<BetaImageTransformationsParam>) = apply {
+            this.transformations = transformations
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -244,6 +295,7 @@ private constructor(
                 checkRequired("source", source),
                 type,
                 cacheControl,
+                transformations,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -270,6 +322,7 @@ private constructor(
             }
         }
         cacheControl().ifPresent { it.validate() }
+        transformations().ifPresent { it.validate() }
         validated = true
     }
 
@@ -290,7 +343,8 @@ private constructor(
     internal fun validity(): Int =
         (source.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("image")) 1 else 0 } +
-            (cacheControl.asKnown().getOrNull()?.validity() ?: 0)
+            (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+            (transformations.asKnown().getOrNull()?.validity() ?: 0)
 
     @JsonDeserialize(using = Source.Deserializer::class)
     @JsonSerialize(using = Source.Serializer::class)
@@ -704,15 +758,16 @@ private constructor(
             source == other.source &&
             type == other.type &&
             cacheControl == other.cacheControl &&
+            transformations == other.transformations &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(source, type, cacheControl, additionalProperties)
+        Objects.hash(source, type, cacheControl, transformations, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaImageBlockParam{source=$source, type=$type, cacheControl=$cacheControl, additionalProperties=$additionalProperties}"
+        "BetaImageBlockParam{source=$source, type=$type, cacheControl=$cacheControl, transformations=$transformations, additionalProperties=$additionalProperties}"
 }

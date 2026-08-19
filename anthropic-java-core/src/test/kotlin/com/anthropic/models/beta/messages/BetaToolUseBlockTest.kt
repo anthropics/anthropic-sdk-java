@@ -18,6 +18,7 @@ internal class BetaToolUseBlockTest {
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
                 .caller(BetaDirectCaller.builder().build())
+                .toolsetName("toolset_name")
                 .build()
 
         assertThat(betaToolUseBlock.id()).isEqualTo("id")
@@ -25,6 +26,7 @@ internal class BetaToolUseBlockTest {
         assertThat(betaToolUseBlock.name()).isEqualTo("x")
         assertThat(betaToolUseBlock.caller())
             .contains(BetaToolUseBlock.Caller.ofDirect(BetaDirectCaller.builder().build()))
+        assertThat(betaToolUseBlock.toolsetName()).contains("toolset_name")
     }
 
     @Test
@@ -36,6 +38,7 @@ internal class BetaToolUseBlockTest {
                 .input(JsonValue.from(mapOf<String, Any>()))
                 .name("x")
                 .caller(BetaDirectCaller.builder().build())
+                .toolsetName("toolset_name")
                 .build()
 
         val roundtrippedBetaToolUseBlock =

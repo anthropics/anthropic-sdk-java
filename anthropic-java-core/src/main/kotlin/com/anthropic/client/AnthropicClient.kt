@@ -5,8 +5,10 @@ package com.anthropic.client
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.blocking.BetaService
 import com.anthropic.services.blocking.CompletionService
+import com.anthropic.services.blocking.FileService
 import com.anthropic.services.blocking.MessageService
 import com.anthropic.services.blocking.ModelService
+import com.anthropic.services.blocking.SkillService
 import java.util.function.Consumer
 
 /**
@@ -51,6 +53,10 @@ interface AnthropicClient {
 
     fun models(): ModelService
 
+    fun files(): FileService
+
+    fun skills(): SkillService
+
     fun beta(): BetaService
 
     /**
@@ -81,6 +87,10 @@ interface AnthropicClient {
         fun messages(): MessageService.WithRawResponse
 
         fun models(): ModelService.WithRawResponse
+
+        fun files(): FileService.WithRawResponse
+
+        fun skills(): SkillService.WithRawResponse
 
         fun beta(): BetaService.WithRawResponse
     }

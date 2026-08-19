@@ -22,7 +22,7 @@ import kotlin.jvm.optionals.getOrNull
 class FileListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val data: JsonField<List<FileMetadata>>,
+    private val data: JsonField<List<BetaFileMetadata>>,
     private val firstId: JsonField<String>,
     private val hasMore: JsonField<Boolean>,
     private val lastId: JsonField<String>,
@@ -33,7 +33,7 @@ private constructor(
     private constructor(
         @JsonProperty("data")
         @ExcludeMissing
-        data: JsonField<List<FileMetadata>> = JsonMissing.of(),
+        data: JsonField<List<BetaFileMetadata>> = JsonMissing.of(),
         @JsonProperty("first_id") @ExcludeMissing firstId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("has_more") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("last_id") @ExcludeMissing lastId: JsonField<String> = JsonMissing.of(),
@@ -45,7 +45,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun data(): List<FileMetadata> = data.getRequired("data")
+    fun data(): List<BetaFileMetadata> = data.getRequired("data")
 
     /**
      * ID of the first file in this page of results.
@@ -76,7 +76,7 @@ private constructor(
      *
      * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<FileMetadata>> = data
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<BetaFileMetadata>> = data
 
     /**
      * Returns the raw JSON value of [firstId].
@@ -127,13 +127,13 @@ private constructor(
          * Returns an immutable instance of [FileListPageResponse] with the required [data] set to
          * the given value.
          */
-        @JvmStatic fun of(data: List<FileMetadata>) = builder().data(data).build()
+        @JvmStatic fun of(data: List<BetaFileMetadata>) = builder().data(data).build()
     }
 
     /** A builder for [FileListPageResponse]. */
     class Builder internal constructor() {
 
-        private var data: JsonField<MutableList<FileMetadata>>? = null
+        private var data: JsonField<MutableList<BetaFileMetadata>>? = null
         private var firstId: JsonField<String> = JsonMissing.of()
         private var hasMore: JsonField<Boolean> = JsonMissing.of()
         private var lastId: JsonField<String> = JsonMissing.of()
@@ -150,25 +150,25 @@ private constructor(
         }
 
         /** List of file metadata objects. */
-        fun data(data: List<FileMetadata>) = data(JsonField.of(data))
+        fun data(data: List<BetaFileMetadata>) = data(JsonField.of(data))
 
         /**
          * Sets [Builder.data] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.data] with a well-typed `List<FileMetadata>` value
+         * You should usually call [Builder.data] with a well-typed `List<BetaFileMetadata>` value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun data(data: JsonField<List<FileMetadata>>) = apply {
+        fun data(data: JsonField<List<BetaFileMetadata>>) = apply {
             this.data = data.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [FileMetadata] to [Builder.data].
+         * Adds a single [BetaFileMetadata] to [Builder.data].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addData(data: FileMetadata) = apply {
+        fun addData(data: BetaFileMetadata) = apply {
             this.data =
                 (this.data ?: JsonField.of(mutableListOf())).also {
                     checkKnown("data", it).add(data)

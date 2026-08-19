@@ -39,6 +39,7 @@ private constructor(
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
     private val content: JsonField<Content>,
     private val isError: JsonField<Boolean>,
+    private val toolsetName: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -53,7 +54,10 @@ private constructor(
         cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
         @JsonProperty("content") @ExcludeMissing content: JsonField<Content> = JsonMissing.of(),
         @JsonProperty("is_error") @ExcludeMissing isError: JsonField<Boolean> = JsonMissing.of(),
-    ) : this(toolUseId, type, cacheControl, content, isError, mutableMapOf())
+        @JsonProperty("toolset_name")
+        @ExcludeMissing
+        toolsetName: JsonField<String> = JsonMissing.of(),
+    ) : this(toolUseId, type, cacheControl, content, isError, toolsetName, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -94,6 +98,14 @@ private constructor(
     fun isError(): Optional<Boolean> = isError.getOptional("is_error")
 
     /**
+     * For a toolset member tool_result, the toolset family of the paired tool_use.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun toolsetName(): Optional<String> = toolsetName.getOptional("toolset_name")
+
+    /**
      * Returns the raw JSON value of [toolUseId].
      *
      * Unlike [toolUseId], this method doesn't throw if the JSON field has an unexpected type.
@@ -122,6 +134,15 @@ private constructor(
      * Unlike [isError], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("is_error") @ExcludeMissing fun _isError(): JsonField<Boolean> = isError
+
+    /**
+     * Returns the raw JSON value of [toolsetName].
+     *
+     * Unlike [toolsetName], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("toolset_name")
+    @ExcludeMissing
+    fun _toolsetName(): JsonField<String> = toolsetName
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -162,6 +183,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var content: JsonField<Content> = JsonMissing.of()
         private var isError: JsonField<Boolean> = JsonMissing.of()
+        private var toolsetName: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -171,6 +193,7 @@ private constructor(
             cacheControl = betaToolResultBlockParam.cacheControl
             content = betaToolResultBlockParam.content
             isError = betaToolResultBlockParam.isError
+            toolsetName = betaToolResultBlockParam.toolsetName
             additionalProperties = betaToolResultBlockParam.additionalProperties.toMutableMap()
         }
 
@@ -252,6 +275,21 @@ private constructor(
          */
         fun isError(isError: JsonField<Boolean>) = apply { this.isError = isError }
 
+        /** For a toolset member tool_result, the toolset family of the paired tool_use. */
+        fun toolsetName(toolsetName: String?) = toolsetName(JsonField.ofNullable(toolsetName))
+
+        /** Alias for calling [Builder.toolsetName] with `toolsetName.orElse(null)`. */
+        fun toolsetName(toolsetName: Optional<String>) = toolsetName(toolsetName.getOrNull())
+
+        /**
+         * Sets [Builder.toolsetName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.toolsetName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun toolsetName(toolsetName: JsonField<String>) = apply { this.toolsetName = toolsetName }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -290,6 +328,7 @@ private constructor(
                 cacheControl,
                 content,
                 isError,
+                toolsetName,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -318,6 +357,7 @@ private constructor(
         cacheControl().ifPresent { it.validate() }
         content().ifPresent { it.validate() }
         isError()
+        toolsetName()
         validated = true
     }
 
@@ -340,7 +380,8 @@ private constructor(
             type.let { if (it == JsonValue.from("tool_result")) 1 else 0 } +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (content.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (isError.asKnown().isPresent) 1 else 0)
+            (if (isError.asKnown().isPresent) 1 else 0) +
+            (if (toolsetName.asKnown().isPresent) 1 else 0)
 
     @JsonDeserialize(using = Content.Deserializer::class)
     @JsonSerialize(using = Content.Serializer::class)
@@ -561,6 +602,7 @@ private constructor(
             private val searchResult: BetaSearchResultBlockParam? = null,
             private val document: BetaRequestDocumentBlock? = null,
             private val toolReference: BetaToolReferenceBlockParam? = null,
+            private val browserState: BetaBrowserStateBlockParam? = null,
             private val _json: JsonValue? = null,
         ) {
 
@@ -581,6 +623,10 @@ private constructor(
                         override fun visitToolReference(
                             toolReference: BetaToolReferenceBlockParam
                         ): Type = Type.TOOL_REFERENCE
+
+                        override fun visitBrowserState(
+                            browserState: BetaBrowserStateBlockParam
+                        ): Type = Type.BROWSER_STATE
 
                         override fun unknown(json: JsonValue?): Type =
                             Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
@@ -609,6 +655,10 @@ private constructor(
                         override fun visitToolReference(
                             toolReference: BetaToolReferenceBlockParam
                         ): Optional<BetaCacheControlEphemeral> = toolReference.cacheControl()
+
+                        override fun visitBrowserState(
+                            browserState: BetaBrowserStateBlockParam
+                        ): Optional<BetaCacheControlEphemeral> = browserState.cacheControl()
                     }
                 )
 
@@ -632,6 +682,10 @@ private constructor(
                         override fun visitToolReference(
                             toolReference: BetaToolReferenceBlockParam
                         ): Optional<String> = Optional.empty()
+
+                        override fun visitBrowserState(
+                            browserState: BetaBrowserStateBlockParam
+                        ): Optional<String> = Optional.empty()
                     }
                 )
 
@@ -648,6 +702,18 @@ private constructor(
             fun toolReference(): Optional<BetaToolReferenceBlockParam> =
                 Optional.ofNullable(toolReference)
 
+            /**
+             * The caller's browser state after a browser toolset member call — the full inventory
+             * of open tabs, which tab is active, and any side effects (tabs opened, download state
+             * changes) the call produced.
+             *
+             * At most one per `tool_result`, only on a non-error result answering a browser toolset
+             * member `tool_use`. The server renders the model-visible text from it; the model never
+             * sees the raw fields.
+             */
+            fun browserState(): Optional<BetaBrowserStateBlockParam> =
+                Optional.ofNullable(browserState)
+
             fun isText(): Boolean = text != null
 
             fun isImage(): Boolean = image != null
@@ -657,6 +723,8 @@ private constructor(
             fun isDocument(): Boolean = document != null
 
             fun isToolReference(): Boolean = toolReference != null
+
+            fun isBrowserState(): Boolean = browserState != null
 
             fun asText(): BetaTextBlockParam = text.getOrThrow("text")
 
@@ -670,6 +738,18 @@ private constructor(
             /** Tool reference block that can be included in tool_result content. */
             fun asToolReference(): BetaToolReferenceBlockParam =
                 toolReference.getOrThrow("toolReference")
+
+            /**
+             * The caller's browser state after a browser toolset member call — the full inventory
+             * of open tabs, which tab is active, and any side effects (tabs opened, download state
+             * changes) the call produced.
+             *
+             * At most one per `tool_result`, only on a non-error result answering a browser toolset
+             * member `tool_use`. The server renders the model-visible text from it; the model never
+             * sees the raw fields.
+             */
+            fun asBrowserState(): BetaBrowserStateBlockParam =
+                browserState.getOrThrow("browserState")
 
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -710,6 +790,7 @@ private constructor(
                     searchResult != null -> visitor.visitSearchResult(searchResult)
                     document != null -> visitor.visitDocument(document)
                     toolReference != null -> visitor.visitToolReference(toolReference)
+                    browserState != null -> visitor.visitBrowserState(browserState)
                     else -> visitor.unknown(_json)
                 }
 
@@ -753,6 +834,10 @@ private constructor(
                         ) {
                             toolReference.validate()
                         }
+
+                        override fun visitBrowserState(browserState: BetaBrowserStateBlockParam) {
+                            browserState.validate()
+                        }
                     }
                 )
                 validated = true
@@ -790,6 +875,9 @@ private constructor(
                             toolReference: BetaToolReferenceBlockParam
                         ) = toolReference.validity()
 
+                        override fun visitBrowserState(browserState: BetaBrowserStateBlockParam) =
+                            browserState.validity()
+
                         override fun unknown(json: JsonValue?) = 0
                     }
                 )
@@ -804,11 +892,12 @@ private constructor(
                     image == other.image &&
                     searchResult == other.searchResult &&
                     document == other.document &&
-                    toolReference == other.toolReference
+                    toolReference == other.toolReference &&
+                    browserState == other.browserState
             }
 
             override fun hashCode(): Int =
-                Objects.hash(text, image, searchResult, document, toolReference)
+                Objects.hash(text, image, searchResult, document, toolReference, browserState)
 
             override fun toString(): String =
                 when {
@@ -817,6 +906,7 @@ private constructor(
                     searchResult != null -> "Block{searchResult=$searchResult}"
                     document != null -> "Block{document=$document}"
                     toolReference != null -> "Block{toolReference=$toolReference}"
+                    browserState != null -> "Block{browserState=$browserState}"
                     _json != null -> "Block{_unknown=$_json}"
                     else -> throw IllegalStateException("Invalid Block")
                 }
@@ -868,6 +958,27 @@ private constructor(
                 @JvmStatic
                 fun ofToolReference(toolName: String) =
                     ofToolReference(BetaToolReferenceBlockParam.of(toolName))
+
+                /**
+                 * The caller's browser state after a browser toolset member call — the full
+                 * inventory of open tabs, which tab is active, and any side effects (tabs opened,
+                 * download state changes) the call produced.
+                 *
+                 * At most one per `tool_result`, only on a non-error result answering a browser
+                 * toolset member `tool_use`. The server renders the model-visible text from it; the
+                 * model never sees the raw fields.
+                 */
+                @JvmStatic
+                fun ofBrowserState(browserState: BetaBrowserStateBlockParam) =
+                    Block(browserState = browserState)
+
+                /**
+                 * Returns an immutable instance of [Block] whose [ofBrowserState] variant is built
+                 * from the given required [tabs].
+                 */
+                @JvmStatic
+                fun ofBrowserState(tabs: List<BetaBrowserStateTabEntry>) =
+                    ofBrowserState(BetaBrowserStateBlockParam.of(tabs))
             }
 
             /**
@@ -885,6 +996,17 @@ private constructor(
 
                 /** Tool reference block that can be included in tool_result content. */
                 fun visitToolReference(toolReference: BetaToolReferenceBlockParam): T
+
+                /**
+                 * The caller's browser state after a browser toolset member call — the full
+                 * inventory of open tabs, which tab is active, and any side effects (tabs opened,
+                 * download state changes) the call produced.
+                 *
+                 * At most one per `tool_result`, only on a non-error result answering a browser
+                 * toolset member `tool_use`. The server renders the model-visible text from it; the
+                 * model never sees the raw fields.
+                 */
+                fun visitBrowserState(browserState: BetaBrowserStateBlockParam): T
 
                 /**
                  * Maps an unknown variant of [Block] to a value of type [T].
@@ -937,6 +1059,14 @@ private constructor(
                                 ?.let { Block(toolReference = it, _json = json) }
                                 ?: Block(_json = json)
                         }
+                        "browser_state" -> {
+                            return tryDeserialize(
+                                    node,
+                                    jacksonTypeRef<BetaBrowserStateBlockParam>(),
+                                )
+                                ?.let { Block(browserState = it, _json = json) }
+                                ?: Block(_json = json)
+                        }
                     }
 
                     return Block(_json = json)
@@ -956,6 +1086,7 @@ private constructor(
                         value.searchResult != null -> generator.writeObject(value.searchResult)
                         value.document != null -> generator.writeObject(value.document)
                         value.toolReference != null -> generator.writeObject(value.toolReference)
+                        value.browserState != null -> generator.writeObject(value.browserState)
                         value._json != null -> generator.writeObject(value._json)
                         else -> throw IllegalStateException("Invalid Block")
                     }
@@ -987,6 +1118,8 @@ private constructor(
 
                     @JvmField val TOOL_REFERENCE = of("tool_reference")
 
+                    @JvmField val BROWSER_STATE = of("browser_state")
+
                     @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
                     @JvmSynthetic
@@ -1001,6 +1134,7 @@ private constructor(
                     SEARCH_RESULT,
                     DOCUMENT,
                     TOOL_REFERENCE,
+                    BROWSER_STATE,
                 }
 
                 /**
@@ -1018,6 +1152,7 @@ private constructor(
                     SEARCH_RESULT,
                     DOCUMENT,
                     TOOL_REFERENCE,
+                    BROWSER_STATE,
                     /**
                      * An enum member indicating that [Type] was instantiated with an unknown value.
                      */
@@ -1038,6 +1173,7 @@ private constructor(
                         SEARCH_RESULT -> Value.SEARCH_RESULT
                         DOCUMENT -> Value.DOCUMENT
                         TOOL_REFERENCE -> Value.TOOL_REFERENCE
+                        BROWSER_STATE -> Value.BROWSER_STATE
                         else -> Value._UNKNOWN
                     }
 
@@ -1057,6 +1193,7 @@ private constructor(
                         SEARCH_RESULT -> Known.SEARCH_RESULT
                         DOCUMENT -> Known.DOCUMENT
                         TOOL_REFERENCE -> Known.TOOL_REFERENCE
+                        BROWSER_STATE -> Known.BROWSER_STATE
                         else -> throw AnthropicInvalidDataException("Unknown Type: $value")
                     }
 
@@ -1137,15 +1274,24 @@ private constructor(
             cacheControl == other.cacheControl &&
             content == other.content &&
             isError == other.isError &&
+            toolsetName == other.toolsetName &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(toolUseId, type, cacheControl, content, isError, additionalProperties)
+        Objects.hash(
+            toolUseId,
+            type,
+            cacheControl,
+            content,
+            isError,
+            toolsetName,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolResultBlockParam{toolUseId=$toolUseId, type=$type, cacheControl=$cacheControl, content=$content, isError=$isError, additionalProperties=$additionalProperties}"
+        "BetaToolResultBlockParam{toolUseId=$toolUseId, type=$type, cacheControl=$cacheControl, content=$content, isError=$isError, toolsetName=$toolsetName, additionalProperties=$additionalProperties}"
 }

@@ -382,8 +382,18 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(browserToolset20260801: BrowserToolset20260801) = apply {
+            paramsBuilder.addTool(browserToolset20260801)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
         fun addTool(memoryTool20250818: MemoryTool20250818) = apply {
             paramsBuilder.addTool(memoryTool20250818)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(computerToolset20260801: ComputerToolset20260801) = apply {
+            paramsBuilder.addTool(computerToolset20260801)
         }
 
         /** @see MessageCreateParams.Builder.addTool */
@@ -422,13 +432,25 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.container */
-        fun container(container: String?) = apply { paramsBuilder.container(container) }
+        fun container(container: MessageCreateParamsContainer?) = apply {
+            paramsBuilder.container(container)
+        }
 
         /** @see MessageCreateParams.Builder.container */
-        fun container(container: Optional<String>) = apply { paramsBuilder.container(container) }
+        fun container(container: Optional<MessageCreateParamsContainer>) = apply {
+            paramsBuilder.container(container)
+        }
 
         /** @see MessageCreateParams.Builder.container */
-        fun container(container: JsonField<String>) = apply { paramsBuilder.container(container) }
+        fun container(container: JsonField<MessageCreateParamsContainer>) = apply {
+            paramsBuilder.container(container)
+        }
+
+        /** @see MessageCreateParams.Builder.container */
+        fun container(params: ContainerParams) = apply { paramsBuilder.container(params) }
+
+        /** @see MessageCreateParams.Builder.container */
+        fun container(string: String) = apply { paramsBuilder.container(string) }
 
         /** @see MessageCreateParams.Builder.topK */
         fun topK(topK: Long) = apply { paramsBuilder.topK(topK) }

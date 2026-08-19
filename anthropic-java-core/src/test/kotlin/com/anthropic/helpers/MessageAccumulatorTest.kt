@@ -517,6 +517,7 @@ internal class MessageAccumulatorTest {
             Container.builder()
                 .id("container-id")
                 .expiresAt(OffsetDateTime.parse("2050-01-01T00:00:00Z"))
+                .skills(listOf())
                 .build()
 
         accumulator.accumulate(messageStartEvent())

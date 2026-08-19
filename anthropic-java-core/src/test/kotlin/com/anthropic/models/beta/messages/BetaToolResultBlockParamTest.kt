@@ -21,6 +21,7 @@ internal class BetaToolResultBlockParamTest {
                 )
                 .content("string")
                 .isError(true)
+                .toolsetName("toolset_name")
                 .build()
 
         assertThat(betaToolResultBlockParam.toolUseId()).isEqualTo("tool_use_id")
@@ -33,6 +34,7 @@ internal class BetaToolResultBlockParamTest {
         assertThat(betaToolResultBlockParam.content())
             .contains(BetaToolResultBlockParam.Content.ofString("string"))
         assertThat(betaToolResultBlockParam.isError()).contains(true)
+        assertThat(betaToolResultBlockParam.toolsetName()).contains("toolset_name")
     }
 
     @Test
@@ -48,6 +50,7 @@ internal class BetaToolResultBlockParamTest {
                 )
                 .content("string")
                 .isError(true)
+                .toolsetName("toolset_name")
                 .build()
 
         val roundtrippedBetaToolResultBlockParam =

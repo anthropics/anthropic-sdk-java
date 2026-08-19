@@ -5,8 +5,10 @@ package com.anthropic.client
 import com.anthropic.core.ClientOptions
 import com.anthropic.services.async.BetaServiceAsync
 import com.anthropic.services.async.CompletionServiceAsync
+import com.anthropic.services.async.FileServiceAsync
 import com.anthropic.services.async.MessageServiceAsync
 import com.anthropic.services.async.ModelServiceAsync
+import com.anthropic.services.async.SkillServiceAsync
 import java.util.function.Consumer
 
 /**
@@ -51,6 +53,10 @@ interface AnthropicClientAsync {
 
     fun models(): ModelServiceAsync
 
+    fun files(): FileServiceAsync
+
+    fun skills(): SkillServiceAsync
+
     fun beta(): BetaServiceAsync
 
     /**
@@ -85,6 +91,10 @@ interface AnthropicClientAsync {
         fun messages(): MessageServiceAsync.WithRawResponse
 
         fun models(): ModelServiceAsync.WithRawResponse
+
+        fun files(): FileServiceAsync.WithRawResponse
+
+        fun skills(): SkillServiceAsync.WithRawResponse
 
         fun beta(): BetaServiceAsync.WithRawResponse
     }

@@ -99,6 +99,11 @@ internal class ContentBlockParamTest {
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
+                .transformations(
+                    ImageTransformationsParam.builder()
+                        .oversizedImage(ImageTransformationsParam.OversizedImage.DOWNSIZE)
+                        .build()
+                )
                 .build()
 
         val contentBlockParam = ContentBlockParam.ofImage(image)
@@ -136,6 +141,11 @@ internal class ContentBlockParamTest {
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                            .build()
+                    )
+                    .transformations(
+                        ImageTransformationsParam.builder()
+                            .oversizedImage(ImageTransformationsParam.OversizedImage.DOWNSIZE)
                             .build()
                     )
                     .build()
@@ -402,6 +412,7 @@ internal class ContentBlockParamTest {
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
                 .caller(DirectCaller.builder().build())
+                .toolsetName("toolset_name")
                 .build()
 
         val contentBlockParam = ContentBlockParam.ofToolUse(toolUse)
@@ -443,6 +454,7 @@ internal class ContentBlockParamTest {
                             .build()
                     )
                     .caller(DirectCaller.builder().build())
+                    .toolsetName("toolset_name")
                     .build()
             )
 
@@ -465,6 +477,7 @@ internal class ContentBlockParamTest {
                 )
                 .content("string")
                 .isError(true)
+                .toolsetName("toolset_name")
                 .build()
 
         val contentBlockParam = ContentBlockParam.ofToolResult(toolResult)
@@ -501,6 +514,7 @@ internal class ContentBlockParamTest {
                     )
                     .content("string")
                     .isError(true)
+                    .toolsetName("toolset_name")
                     .build()
             )
 

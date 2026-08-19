@@ -6,8 +6,7 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.messages.Base64ImageSource
 import com.anthropic.models.messages.BashCodeExecutionToolResultErrorCode
-import com.anthropic.models.messages.CodeExecutionToolResultBlockContent
-import com.anthropic.models.messages.CodeExecutionToolResultErrorCode
+import com.anthropic.models.messages.BrowserStateChange
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
@@ -53,6 +52,8 @@ internal class EcosystemCompatibilityTest {
         assertThat(client.completions()).isNotNull()
         assertThat(client.messages()).isNotNull()
         assertThat(client.models()).isNotNull()
+        assertThat(client.files()).isNotNull()
+        assertThat(client.skills()).isNotNull()
         assertThat(client.beta()).isNotNull()
     }
 
@@ -75,21 +76,17 @@ internal class EcosystemCompatibilityTest {
     }
 
     @Test
-    fun codeExecutionToolResultBlockContentRoundtrip() {
+    fun browserStateChangeRoundtrip() {
         val jsonMapper = jsonMapper()
-        val codeExecutionToolResultBlockContent =
-            CodeExecutionToolResultBlockContent.ofError(
-                CodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT
-            )
+        val browserStateChange = BrowserStateChange.ofTabOpened("tab_id")
 
-        val roundtrippedCodeExecutionToolResultBlockContent =
+        val roundtrippedBrowserStateChange =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(codeExecutionToolResultBlockContent),
-                jacksonTypeRef<CodeExecutionToolResultBlockContent>(),
+                jsonMapper.writeValueAsString(browserStateChange),
+                jacksonTypeRef<BrowserStateChange>(),
             )
 
-        assertThat(roundtrippedCodeExecutionToolResultBlockContent)
-            .isEqualTo(codeExecutionToolResultBlockContent)
+        assertThat(roundtrippedBrowserStateChange).isEqualTo(browserStateChange)
     }
 
     @Test
