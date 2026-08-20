@@ -196,10 +196,21 @@ private constructor(
 
         jsonBody.put("anthropic_version", ANTHROPIC_VERSION)
 
-        val betaVersions =
-            request.headers.values(HEADER_ANTHROPIC_BETA).flatMap { it.split(",") }.distinct()
+        // Bedrock's InvokeModel API takes beta flags in the body's "anthropic_beta" array, not
+        // the "anthropic-beta" header. Merge header betas into any betas already in the body
+        // (body values keep their positions; header values are appended) — never clobber a body
+        // array the caller set. The header itself is removed below, before the request is signed.
+        val headerBetaVersions =
+            request.headers
+                .values(HEADER_ANTHROPIC_BETA)
+                .flatMap { it.split(",") }
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
 
-        if (betaVersions.isNotEmpty()) {
+        if (headerBetaVersions.isNotEmpty()) {
+            val bodyBetaVersions = jsonBody.get("anthropic_beta")?.map { it.asText() }.orEmpty()
+            val betaVersions = (bodyBetaVersions + headerBetaVersions).distinct()
+
             jsonBody.replace("anthropic_beta", jsonMapper.valueToTree(betaVersions))
         }
 
@@ -215,6 +226,8 @@ private constructor(
             .toBuilder()
             .replaceAllPathSegments("model", modelId)
             .addPathSegment(if (isStream) "invoke-with-response-stream" else "invoke")
+            // Bedrock takes betas in the body, so the header must not be signed or sent.
+            .removeHeaders(HEADER_ANTHROPIC_BETA)
             .body(json(jsonMapper, jsonBody))
             .build()
     }
