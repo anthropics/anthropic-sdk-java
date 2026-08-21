@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.57.1 (2026-08-21)
+
+Full Changelog: [v2.57.0...v2.57.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.57.0...v2.57.1)
+
+### Bug Fixes
+
+* **bedrock:** stop clobbering body anthropic_beta with header betas ([#58](https://github.com/anthropics/anthropic-sdk-java/issues/58)) ([e2609a9](https://github.com/anthropics/anthropic-sdk-java/commit/e2609a93461620f87111b97429b2b86ccb011172))
+* **client:** let explicit and ANTHROPIC_BASE_URL base URLs override profile base_url ([#241](https://github.com/anthropics/anthropic-sdk-java/issues/241)) ([7486e65](https://github.com/anthropics/anthropic-sdk-java/commit/7486e65be4708bb0faba4c190fd7ecefcf750f0e))
+
+
+### Documentation
+
+* **examples:** use adaptive thinking in thinking examples ([da9aaba](https://github.com/anthropics/anthropic-sdk-java/commit/da9aabae5101e150b1c8e0bf6bf7bb8685312d03))
+
 ## 2.57.0 (2026-08-19)
 
 Full Changelog: [v2.56.0...v2.57.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.56.0...v2.57.0)

@@ -599,9 +599,9 @@ internal class BedrockBackendTest {
 
         val betaJson = json!!.get("anthropic_beta")
 
-        // The headers are not modified (that is not tested as it is not
-        // important whether they are or not). The beta versions from headers
-        // should be listed in a JSON array in the body.
+        // The beta versions from headers should be listed in a JSON array in the body, and the
+        // header should be removed so that it is neither signed nor sent.
+        assertThat(preparedRequest.headers.values("anthropic-beta")).isEmpty()
         assertThat(betaJson).isNotNull()
         assertThat(betaJson.size()).isEqualTo(1)
         assertThat(betaJson[0].asText()).isEqualTo("b1")
@@ -625,6 +625,7 @@ internal class BedrockBackendTest {
 
         val betaJson = json!!.get("anthropic_beta")
 
+        assertThat(preparedRequest.headers.values("anthropic-beta")).isEmpty()
         assertThat(betaJson).isNotNull()
 
         // The order of the versions is indeterminate, so convert to a list (not
@@ -656,6 +657,7 @@ internal class BedrockBackendTest {
 
         val betaJson = json!!.get("anthropic_beta")
 
+        assertThat(preparedRequest.headers.values("anthropic-beta")).isEmpty()
         assertThat(betaJson).isNotNull()
 
         val betaVersions = betaJson.map { it.asText() }.toList()
@@ -667,6 +669,76 @@ internal class BedrockBackendTest {
         assertThat(betaVersions).contains("b4")
         assertThat(betaVersions).contains("b5")
         assertThat(betaVersions).contains("b6")
+    }
+
+    @Test
+    fun prepareRequestBetaHeaderMergedWithBodyBetas() {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request =
+            createRequest(
+                    """{"model":"$MODEL_ID", "anthropic_beta":["b0","b2"]}""",
+                    "v1",
+                    "messages",
+                )
+                .toBuilder()
+                .putHeader("anthropic-beta", "b1,b2")
+                .putHeader("anthropic-beta", "b3")
+                .build()
+        val preparedRequest = backend.prepareRequest(request)
+        val json = bodyToJson(jsonMapper(), preparedRequest.body)
+
+        assertThat(json).isNotNull()
+
+        // The body's beta versions are retained first, in their original order; header versions
+        // are appended after; duplicates are removed (first occurrence wins); nothing is dropped.
+        val betaVersions = json!!.get("anthropic_beta").map { it.asText() }.toList()
+
+        assertThat(betaVersions).containsExactly("b0", "b2", "b1", "b3")
+        assertThat(preparedRequest.headers.values("anthropic-beta")).isEmpty()
+    }
+
+    @Test
+    fun prepareRequestBetaBodyOnlyNoHeader() {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request =
+            createRequest(
+                """{"model":"$MODEL_ID", "anthropic_beta":["b2","b1"]}""",
+                "v1",
+                "messages",
+            )
+        val preparedRequest = backend.prepareRequest(request)
+        val json = bodyToJson(jsonMapper(), preparedRequest.body)
+
+        assertThat(json).isNotNull()
+
+        // With no header betas, the body's beta versions are left exactly as the caller set them.
+        val betaVersions = json!!.get("anthropic_beta").map { it.asText() }.toList()
+
+        assertThat(betaVersions).containsExactly("b2", "b1")
+    }
+
+    @Test
+    fun prepareRequestBetaWhitespaceAndEmptyTokens() {
+        initEnv()
+        val backend = BedrockBackend.fromEnv()
+        val request =
+            createRequest("""{"model":"$MODEL_ID"}""", "v1", "messages")
+                .toBuilder()
+                .putHeader("anthropic-beta", " b1 , b2 ,, ")
+                .putHeader("anthropic-beta", "b3 ")
+                .build()
+        val preparedRequest = backend.prepareRequest(request)
+        val json = bodyToJson(jsonMapper(), preparedRequest.body)
+
+        assertThat(json).isNotNull()
+
+        // Comma-joined header values are split, whitespace is trimmed and empty tokens dropped.
+        val betaVersions = json!!.get("anthropic_beta").map { it.asText() }.toList()
+
+        assertThat(betaVersions).containsExactly("b1", "b2", "b3")
+        assertThat(preparedRequest.headers.values("anthropic-beta")).isEmpty()
     }
 
     @Test
