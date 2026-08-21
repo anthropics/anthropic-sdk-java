@@ -46,6 +46,11 @@ private constructor(
      *   credential resolution chain
      */
     private val fromEnvCalled: Boolean,
+    /**
+     * Whether [baseUrl] was set explicitly or from the environment rather than defaulted. A
+     * profile's `base_url` applies only when it was not: explicit > environment > profile.
+     */
+    private val baseUrlOverridden: Boolean,
 ) : Backend {
 
     private data class FederationConfig(
@@ -66,7 +71,10 @@ private constructor(
 
         resolveCredentials(httpClient)?.let { result ->
             clientOptionsBuilder.credentials(result)
-            result.baseUrl?.let { clientOptionsBuilder.baseUrl(it) }
+            // Propagate the winning base URL so token exchange/refresh requests target the same
+            // host as API requests.
+            val resolvedBaseUrl = if (baseUrlOverridden) baseUrl else result.baseUrl
+            resolvedBaseUrl?.let { clientOptionsBuilder.baseUrl(it) }
         }
     }
 
@@ -161,7 +169,7 @@ private constructor(
         private var federationConfig: FederationConfig? = null
         private var configurationProvider: ProfileConfigProvider? = null
         private var fromEnvCalled: Boolean = false
-        private var baseUrl: String = PRODUCTION_URL
+        private var baseUrl: String? = null
         private var jsonMapper: JsonMapper? = null
 
         fun fromEnv() = apply {
@@ -185,7 +193,7 @@ private constructor(
 
         fun authToken(authToken: Optional<String>) = authToken(authToken.orElse(null))
 
-        fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl ?: PRODUCTION_URL }
+        fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl }
 
         fun jsonMapper(jsonMapper: JsonMapper?) = apply { this.jsonMapper = jsonMapper }
 
@@ -247,11 +255,12 @@ private constructor(
             return AnthropicBackend(
                 apiKey,
                 authToken,
-                baseUrl,
+                baseUrl ?: PRODUCTION_URL,
                 jsonMapper ?: jsonMapper(),
                 federationConfig,
                 configurationProvider,
                 fromEnvCalled,
+                baseUrl != null,
             )
         }
     }
