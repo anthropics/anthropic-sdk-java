@@ -363,7 +363,14 @@ private constructor(
                                         jsonMapper.readTree(message.payload).get("bytes").asText()
                                     )
                             )
-                        val sseEventType = jsonMapper.readTree(sseJson).get("type").asText()
+                        // AWS Bedrock appends a trailing `amazon-bedrock-invocationMetrics`
+                        // object to a Messages API stream that carries no "type" field. There
+                        // is no SSE event name to give a frame like that, so drop it rather
+                        // than fail the whole stream (matching the behavior of the other
+                        // Anthropic SDKs).
+                        val sseEventType =
+                            jsonMapper.readTree(sseJson).get("type")?.asText()
+                                ?: return@MessageDecoder
 
                         output.write("event: $sseEventType\ndata: $sseJson\n\n".toByteArray())
                         output.flush()
