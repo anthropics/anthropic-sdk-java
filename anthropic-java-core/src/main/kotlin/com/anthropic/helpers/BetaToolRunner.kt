@@ -45,16 +45,15 @@ internal constructor(
 
                 val nextParams = nextParams
                 if (nextParams == null) {
-                    // A refusal-terminated turn is terminal: its tool calls belong to a dead
-                    // conversation, so executing them would fire side effects the caller never
-                    // confirmed and produce tool_results that cannot be coherently replayed.
-                    if (message.stopReason().getOrNull() == BetaStopReason.REFUSAL) {
+                    val nextStep = determineNextStepFromStopReason(message.stopReason())
+                    if (nextStep == NextStep.STOP) {
                         break
                     }
-                    paramsBuilder
-                        .addMessage(message)
-                        .adoptContainer(message)
-                        .addMessage(generateToolResponse(message.toParam()) ?: break)
+                    paramsBuilder.addMessage(message).adoptContainer(message)
+                    if (nextStep == NextStep.RUN_TOOLS) {
+                        val toolResponse = generateToolResponse(message.toParam()) ?: break
+                        paramsBuilder.addMessage(toolResponse)
+                    }
                 } else {
                     paramsBuilder = nextParams.toBuilderWithToolRunnerHeader()
                     this@BetaToolRunner.nextParams = null
@@ -95,17 +94,15 @@ internal constructor(
                         val message = accumulator.message()
                         val nextParams = nextParams
                         if (nextParams == null) {
-                            // A refusal-terminated turn is terminal: its tool calls belong to a
-                            // dead conversation, so executing them would fire side effects the
-                            // caller never confirmed and produce tool_results that cannot be
-                            // coherently replayed.
-                            if (message.stopReason().getOrNull() == BetaStopReason.REFUSAL) {
+                            val nextStep = determineNextStepFromStopReason(message.stopReason())
+                            if (nextStep == NextStep.STOP) {
                                 break
                             }
-                            paramsBuilder
-                                .addMessage(message)
-                                .adoptContainer(message)
-                                .addMessage(generateToolResponse(message.toParam()) ?: break)
+                            paramsBuilder.addMessage(message).adoptContainer(message)
+                            if (nextStep == NextStep.RUN_TOOLS) {
+                                val toolResponse = generateToolResponse(message.toParam()) ?: break
+                                paramsBuilder.addMessage(toolResponse)
+                            }
                         } else {
                             paramsBuilder = nextParams.toBuilderWithToolRunnerHeader()
                             this@BetaToolRunner.nextParams = null
@@ -150,6 +147,47 @@ internal constructor(
                     StainlessHelperHeaderValue.BETA_TOOL_RUNNER,
                 ),
             )
+
+    /** What the loop does with a turn once it has been yielded, decided by its stop reason. */
+    private enum class NextStep {
+        /**
+         * Answer the turn's client tool calls and continue; with none to answer, the loop is done.
+         */
+        RUN_TOOLS,
+        /**
+         * The turn isn't finished: sending it back unchanged, without answering any tool calls,
+         * lets the server continue it.
+         */
+        RESUME,
+        /**
+         * The turn is final. Its tool calls are not executed: they belong to a conversation that
+         * has ended, so running them would fire side effects the caller never confirmed and produce
+         * tool_results that cannot be coherently replayed.
+         */
+        STOP,
+    }
+
+    /**
+     * Sorts every stop reason into a [NextStep]. The `when` has no `else`, so a newly generated
+     * [BetaStopReason.Value] member fails to compile here until it is classified.
+     */
+    private fun determineNextStepFromStopReason(stopReason: Optional<BetaStopReason>): NextStep {
+        val value = stopReason.getOrNull()?.value() ?: return NextStep.STOP
+        return when (value) {
+            BetaStopReason.Value.TOOL_USE -> NextStep.RUN_TOOLS
+            BetaStopReason.Value.PAUSE_TURN,
+            // pause_after_compaction hands the turn back before the model answers; sending it
+            // back unchanged continues it.
+            BetaStopReason.Value.COMPACTION -> NextStep.RESUME
+            BetaStopReason.Value.END_TURN,
+            BetaStopReason.Value.MAX_TOKENS,
+            BetaStopReason.Value.STOP_SEQUENCE,
+            BetaStopReason.Value.REFUSAL,
+            BetaStopReason.Value.MODEL_CONTEXT_WINDOW_EXCEEDED,
+            // A stop reason newer than this SDK stops the loop rather than throwing.
+            BetaStopReason.Value._UNKNOWN -> NextStep.STOP
+        }
+    }
 
     /**
      * Carries the container the last turn ran in onto the next request: container-bound server

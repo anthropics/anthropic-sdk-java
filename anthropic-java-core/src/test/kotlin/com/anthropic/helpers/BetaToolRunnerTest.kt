@@ -18,6 +18,8 @@ import java.util.stream.Stream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -103,6 +105,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(initialMessageParams, requestOptions))
             .thenReturn(assistantMessage)
@@ -150,6 +153,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(initialMessageParams, requestOptions))
             .thenReturn(assistantMessage1)
@@ -232,6 +236,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(paramsWithRemoval, requestOptions))
             .thenReturn(assistantMessage1)
@@ -321,6 +326,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(paramsWithChanges, requestOptions))
             .thenReturn(assistantMessage1)
@@ -380,6 +386,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(initialMessageParams, requestOptions))
             .thenReturn(assistantMessage1)
@@ -439,6 +446,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(initialMessageParams, requestOptions))
             .thenReturn(assistantMessage1)
@@ -951,6 +959,286 @@ internal class BetaToolRunnerTest {
     }
 
     @Test
+    fun iteration_whenPauseTurn_resendsPausedTurn() {
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(initialMessageParams)
+                    .maxIterations(4)
+                    .build(),
+                requestOptions,
+            )
+        val pausedMessage = pausedServerToolUseMessage()
+        val resumedMessage =
+            betaMessageBuilder()
+                .addContent(
+                    BetaTextBlock.builder()
+                        .citations(null)
+                        .text("The weather in San Francisco is foggy and 60°F")
+                        .build()
+                )
+                .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
+                .build()
+        whenever(messageService.create(initialMessageParams, requestOptions))
+            .thenReturn(pausedMessage)
+        whenever(
+                messageService.create(
+                    initialMessageParams.toBuilder().addMessage(pausedMessage).build(),
+                    requestOptions,
+                )
+            )
+            .thenReturn(resumedMessage)
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).containsExactly(pausedMessage, resumedMessage)
+        assertThat(toolRunner.params().messages().last()).isEqualTo(pausedMessage.toParam())
+        assertThat(toolRunner.lastToolResponse()).isEmpty
+        verify(messageService, times(2)).create(any<MessageCreateParams>(), any())
+    }
+
+    @Test
+    fun streamingIteration_whenPauseTurn_resendsPausedTurn() {
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(initialMessageParams)
+                    .maxIterations(4)
+                    .build(),
+                requestOptions,
+            )
+        val pausedEvents =
+            streamEvents(
+                BetaRawContentBlockStartEvent.ContentBlock.ofServerToolUse(
+                    BetaServerToolUseBlock.builder()
+                        .id("srvtoolu_1")
+                        .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
+                        .input(JsonNull.of())
+                        .build()
+                ),
+                BetaRawContentBlockDelta.ofInputJson(
+                    BetaInputJsonDelta.builder()
+                        .partialJson("""{"query":"weather in San Francisco"}""")
+                        .build()
+                ),
+                BetaStopReason.PAUSE_TURN,
+            )
+        val resumedEvents =
+            streamEvents(
+                BetaRawContentBlockStartEvent.ContentBlock.ofText(
+                    BetaTextBlock.builder().citations(null).text("").build()
+                ),
+                BetaRawContentBlockDelta.ofText(
+                    BetaTextDelta.builder().text("The weather in San Francisco is foggy").build()
+                ),
+                BetaStopReason.END_TURN,
+            )
+        whenever(messageService.createStreaming(any<MessageCreateParams>(), any()))
+            .thenReturn(streamResponseOf(pausedEvents), streamResponseOf(resumedEvents))
+
+        val stopReasons = mutableListOf<BetaStopReason>()
+        for (response in toolRunner.streaming()) {
+            val accumulator = BetaMessageAccumulator.create()
+            response.stream().forEach(accumulator::accumulate)
+            stopReasons.add(accumulator.message().stopReason().get())
+        }
+
+        assertThat(stopReasons).containsExactly(BetaStopReason.PAUSE_TURN, BetaStopReason.END_TURN)
+        assertThat(toolRunner.params().messages()).hasSize(2)
+        val resentTurn = toolRunner.params().messages().last()
+        assertThat(resentTurn.role()).isEqualTo(BetaMessageParam.Role.ASSISTANT)
+        assertThat(resentTurn.content().betaContentBlockParams().get().single().isServerToolUse())
+            .isTrue()
+        assertThat(toolRunner.lastToolResponse()).isEmpty
+        verify(messageService, times(2)).createStreaming(any<MessageCreateParams>(), any())
+    }
+
+    @Test
+    fun iteration_whenPauseTurnRepeats_stopsAtMaxIterations() {
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(pausedServerToolUseMessage())
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).hasSize(2)
+        assertThat(messages.last().stopReason()).hasValue(BetaStopReason.PAUSE_TURN)
+        verify(messageService, times(2)).create(any<MessageCreateParams>(), any())
+    }
+
+    @Test
+    fun iteration_whenCompaction_resendsCompactedTurn() {
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(initialMessageParams)
+                    .maxIterations(4)
+                    .build(),
+                requestOptions,
+            )
+        val compactedMessage =
+            betaMessageBuilder()
+                .addContent(
+                    BetaCompactionBlock.builder()
+                        .content("The user asked about the weather in San Francisco.")
+                        .encryptedContent(null)
+                        .build()
+                )
+                .contextManagement(null)
+                .stopReason(BetaStopReason.COMPACTION)
+                .build()
+        val resumedMessage = finalAssistantMessage()
+        whenever(messageService.create(initialMessageParams, requestOptions))
+            .thenReturn(compactedMessage)
+        whenever(
+                messageService.create(
+                    initialMessageParams.toBuilder().addMessage(compactedMessage).build(),
+                    requestOptions,
+                )
+            )
+            .thenReturn(resumedMessage)
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).containsExactly(compactedMessage, resumedMessage)
+        assertThat(toolRunner.params().messages().last()).isEqualTo(compactedMessage.toParam())
+        assertThat(toolRunner.lastToolResponse()).isEmpty
+        verify(messageService, times(2)).create(any<MessageCreateParams>(), any())
+    }
+
+    @Test
+    fun streamingIteration_whenCompaction_resendsCompactedTurn() {
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(initialMessageParams)
+                    .maxIterations(4)
+                    .build(),
+                requestOptions,
+            )
+        val compactedEvents =
+            streamEvents(
+                BetaRawContentBlockStartEvent.ContentBlock.ofCompaction(
+                    BetaCompactionBlock.builder().content(null).encryptedContent(null).build()
+                ),
+                BetaRawContentBlockDelta.ofCompaction(
+                    BetaCompactionContentBlockDelta.builder()
+                        .content("The user asked about the weather in San Francisco.")
+                        .encryptedContent(null)
+                        .build()
+                ),
+                BetaStopReason.COMPACTION,
+            )
+        val resumedEvents =
+            streamEvents(
+                BetaRawContentBlockStartEvent.ContentBlock.ofText(
+                    BetaTextBlock.builder().citations(null).text("").build()
+                ),
+                BetaRawContentBlockDelta.ofText(
+                    BetaTextDelta.builder().text("The weather in San Francisco is foggy").build()
+                ),
+                BetaStopReason.END_TURN,
+            )
+        whenever(messageService.createStreaming(any<MessageCreateParams>(), any()))
+            .thenReturn(streamResponseOf(compactedEvents), streamResponseOf(resumedEvents))
+
+        val stopReasons = mutableListOf<BetaStopReason>()
+        for (response in toolRunner.streaming()) {
+            val accumulator = BetaMessageAccumulator.create()
+            response.stream().forEach(accumulator::accumulate)
+            stopReasons.add(accumulator.message().stopReason().get())
+        }
+
+        assertThat(stopReasons).containsExactly(BetaStopReason.COMPACTION, BetaStopReason.END_TURN)
+        assertThat(toolRunner.params().messages()).hasSize(2)
+        val resentTurn = toolRunner.params().messages().last()
+        assertThat(resentTurn.role()).isEqualTo(BetaMessageParam.Role.ASSISTANT)
+        assertThat(resentTurn.content().betaContentBlockParams().get().single().isCompaction())
+            .isTrue()
+        assertThat(toolRunner.lastToolResponse()).isEmpty
+        verify(messageService, times(2)).createStreaming(any<MessageCreateParams>(), any())
+    }
+
+    @Test
+    fun iteration_whenMaxTokensCutsOffToolUse_stopsWithoutExecutingTools() {
+        val truncatedMessage =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Truncated City"))
+                .contextManagement(null)
+                .stopReason(BetaStopReason.MAX_TOKENS)
+                .build()
+        whenever(messageService.create(initialMessageParams, requestOptions))
+            .thenReturn(truncatedMessage)
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).containsExactly(truncatedMessage)
+        assertThat(toolRunner.lastToolResponse()).isEmpty
+        assertThat(GetWeather.executions).doesNotContainKey("Truncated City")
+        verify(messageService, times(1)).create(any<MessageCreateParams>(), any())
+    }
+
+    /** What the loop must do with a turn that calls a client tool, for each stop reason. */
+    enum class StopReasonTestCase(
+        val stopReason: BetaStopReason?,
+        val requests: Int,
+        val runsTool: Boolean,
+    ) {
+        TOOL_USE(BetaStopReason.TOOL_USE, requests = 2, runsTool = true),
+        PAUSE_TURN(BetaStopReason.PAUSE_TURN, requests = 2, runsTool = false),
+        COMPACTION(BetaStopReason.COMPACTION, requests = 2, runsTool = false),
+        END_TURN(BetaStopReason.END_TURN, requests = 1, runsTool = false),
+        MAX_TOKENS(BetaStopReason.MAX_TOKENS, requests = 1, runsTool = false),
+        STOP_SEQUENCE(BetaStopReason.STOP_SEQUENCE, requests = 1, runsTool = false),
+        REFUSAL(BetaStopReason.REFUSAL, requests = 1, runsTool = false),
+        MODEL_CONTEXT_WINDOW_EXCEEDED(
+            BetaStopReason.MODEL_CONTEXT_WINDOW_EXCEEDED,
+            requests = 1,
+            runsTool = false,
+        ),
+        UNKNOWN(BetaStopReason.of("a_newer_stop_reason"), requests = 1, runsTool = false),
+        ABSENT(null, requests = 1, runsTool = false),
+    }
+
+    @Test
+    fun stopReasonTestCases_coverEveryStopReasonValue() {
+        assertThat(StopReasonTestCase.values().mapNotNull { it.stopReason?.value() })
+            .containsAll(BetaStopReason.Value.values().toList())
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    fun iteration_followsStopReason(testCase: StopReasonTestCase) {
+        val location = "Stop Reason City (${testCase.name})"
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse(location))
+                .contextManagement(null)
+                .stopReason(testCase.stopReason)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, finalAssistantMessage())
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).hasSize(testCase.requests)
+        verify(messageService, times(testCase.requests)).create(any<MessageCreateParams>(), any())
+        assertThat(GetWeather.executions.containsKey(location)).isEqualTo(testCase.runsTool)
+        if (testCase.requests == 2) {
+            // The turn went back either answered by a tool_result turn or unchanged.
+            assertThat(toolRunner.params().messages().last())
+                .isEqualTo(
+                    if (testCase.runsTool) getWeatherToolResponse(location)
+                    else assistantMessage1.toParam()
+                )
+        }
+    }
+
+    @Test
     fun iteration_whenFallbackSeam_executesOnlyPostSeamToolUse() {
         val assistantMessage1 =
             betaMessageBuilder()
@@ -1000,6 +1288,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(initialMessageParams, requestOptions))
             .thenReturn(assistantMessage1)
@@ -1094,6 +1383,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(initialMessageParams, requestOptions))
             .thenReturn(assistantMessage1)
@@ -1177,6 +1467,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(initialMessageParams, requestOptions))
             .thenReturn(assistantMessage1)
@@ -1257,6 +1548,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(initialMessageParams, requestOptions))
             .thenReturn(assistantMessage1)
@@ -1364,6 +1656,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(initialMessageParams, requestOptions))
             .thenReturn(assistantMessage1)
@@ -1491,6 +1784,7 @@ internal class BetaToolRunnerTest {
                         .build()
                 )
                 .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
                 .build()
         whenever(messageService.create(initialMessageParams, requestOptions))
             .thenReturn(assistantMessage1)
@@ -1621,6 +1915,7 @@ internal class BetaToolRunnerTest {
         betaMessageBuilder()
             .addContent(BetaTextBlock.builder().citations(null).text("Foggy, as usual.").build())
             .contextManagement(null)
+            .stopReason(BetaStopReason.END_TURN)
             .build()
 
     private fun betaContainer(id: String) =
@@ -1644,7 +1939,8 @@ internal class BetaToolRunnerTest {
             .container(null)
             .diagnostics(null)
             .stopDetails(null)
-            .stopReason(null)
+            // The stop reason of a turn that calls tools; turns that end otherwise override it.
+            .stopReason(BetaStopReason.TOOL_USE)
             .stopSequence(null)
             .usage(betaUsage())
 
@@ -1670,6 +1966,79 @@ internal class BetaToolRunnerTest {
             .inferenceGeo(null)
             .iterations(null)
             .build()
+
+    private fun pausedServerToolUseMessage() =
+        betaMessageBuilder()
+            .addContent(
+                BetaTextBlock.builder().citations(null).text("Let me look that up.").build()
+            )
+            .addContent(
+                BetaServerToolUseBlock.builder()
+                    .id("srvtoolu_1")
+                    .name(BetaServerToolUseBlock.Name.WEB_SEARCH)
+                    .input(JsonValue.from(mapOf("query" to "weather in San Francisco")))
+                    .build()
+            )
+            .contextManagement(null)
+            .stopReason(BetaStopReason.PAUSE_TURN)
+            .build()
+
+    /** The event sequence for a streamed message with a single content block. */
+    private fun streamEvents(
+        contentBlock: BetaRawContentBlockStartEvent.ContentBlock,
+        delta: BetaRawContentBlockDelta,
+        stopReason: BetaStopReason,
+    ) =
+        listOf(
+            BetaRawMessageStreamEvent.ofMessageStart(
+                BetaRawMessageStartEvent.builder()
+                    .message(
+                        betaMessageBuilder()
+                            .content(listOf())
+                            .stopDetails(JsonMissing.of())
+                            .stopReason(JsonMissing.of())
+                            .stopSequence(JsonMissing.of())
+                            .contextManagement(null)
+                            .build()
+                    )
+                    .build()
+            ),
+            BetaRawMessageStreamEvent.ofContentBlockStart(
+                BetaRawContentBlockStartEvent.builder().index(0L).contentBlock(contentBlock).build()
+            ),
+            BetaRawMessageStreamEvent.ofContentBlockDelta(
+                BetaRawContentBlockDeltaEvent.builder().index(0L).delta(delta).build()
+            ),
+            BetaRawMessageStreamEvent.ofContentBlockStop(
+                BetaRawContentBlockStopEvent.builder().index(0L).build()
+            ),
+            BetaRawMessageStreamEvent.ofMessageDelta(
+                BetaRawMessageDeltaEvent.builder()
+                    .contextManagement(null)
+                    .delta(
+                        BetaRawMessageDeltaEvent.Delta.builder()
+                            .container(null)
+                            .stopDetails(null)
+                            .stopReason(stopReason)
+                            .stopSequence(null)
+                            .build()
+                    )
+                    .usage(
+                        BetaMessageDeltaUsage.builder()
+                            .fallbackCredit(null)
+                            .outputTokens(1L)
+                            .outputTokensDetails(null)
+                            .cacheCreationInputTokens(0L)
+                            .cacheReadInputTokens(0L)
+                            .inputTokens(1L)
+                            .serverToolUse(null)
+                            .iterations(null)
+                            .build()
+                    )
+                    .build()
+            ),
+            BetaRawMessageStreamEvent.ofMessageStop(BetaRawMessageStopEvent.builder().build()),
+        )
 }
 
 @JsonClassDescription("Get the weather in a given location")
