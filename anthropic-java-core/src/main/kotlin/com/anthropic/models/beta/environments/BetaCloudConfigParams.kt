@@ -80,6 +80,8 @@ private constructor(
      * use `package==1.0.0`. You are responsible for validating the package and version exist.
      * Unversioned installs the latest.
      *
+     * Under `limited` networking, requires `networking.allow_package_managers` to be `true`.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -180,6 +182,8 @@ private constructor(
          * When versioning, use the version semantics relevant for the package manager, e.g. for
          * `pip` use `package==1.0.0`. You are responsible for validating the package and version
          * exist. Unversioned installs the latest.
+         *
+         * Under `limited` networking, requires `networking.allow_package_managers` to be `true`.
          */
         fun packages(packages: BetaPackagesParams?) = packages(JsonField.ofNullable(packages))
 
