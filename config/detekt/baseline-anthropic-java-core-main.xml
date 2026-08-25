@@ -36,7 +36,6 @@
     <ID>IteratorNotThrowingNoSuchElementException:StreamHandler.kt$CloseableSequence$&lt;no name provided> : Iterator</ID>
     <ID>IteratorNotThrowingNoSuchElementException:StreamHandler.kt$IOExceptionWrappingSequence$&lt;no name provided> : Iterator</ID>
     <ID>NullablePublicReturn:BetaToolUseBlock.kt$BetaToolUseBlock$fun &lt;T : Any> input(parametersType: Class&lt;T>): T?</ID>
-    <ID>NullablePublicReturn:ClientOptions.kt$ClientOptions$fun baseUrl(): String?</ID>
     <ID>NullablePublicReturn:HttpRequestBody.kt$HttpRequestBody$fun contentType(): String?</ID>
     <ID>NullablePublicReturn:Values.kt$JsonValue$fun &lt;R : Any> convert(type: Class&lt;R>): R?</ID>
     <ID>NullablePublicReturn:Values.kt$JsonValue$fun &lt;R : Any> convert(type: TypeReference&lt;R>): R?</ID>

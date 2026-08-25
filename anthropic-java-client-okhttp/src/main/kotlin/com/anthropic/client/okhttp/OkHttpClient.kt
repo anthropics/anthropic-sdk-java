@@ -152,17 +152,6 @@ internal constructor(
         return toBuilder().baseUrl(toUrl()).build()
     }
 
-    private fun HttpRequest.toUrl(): String {
-        val builder = (baseUrl ?: backend.baseUrl()).toHttpUrl().newBuilder()
-
-        pathSegments.forEach(builder::addPathSegment)
-        queryParams.keys().forEach { key ->
-            queryParams.values(key).forEach { builder.addQueryParameter(key, it) }
-        }
-
-        return builder.toString()
-    }
-
     companion object {
         @JvmStatic fun builder() = Builder()
     }

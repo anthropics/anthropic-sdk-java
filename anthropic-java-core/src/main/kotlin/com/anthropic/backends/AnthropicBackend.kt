@@ -71,10 +71,9 @@ private constructor(
 
         resolveCredentials(httpClient)?.let { result ->
             clientOptionsBuilder.credentials(result)
-            // Propagate the winning base URL so token exchange/refresh requests target the same
-            // host as API requests.
-            val resolvedBaseUrl = if (baseUrlOverridden) baseUrl else result.baseUrl
-            resolvedBaseUrl?.let { clientOptionsBuilder.baseUrl(it) }
+            if (!baseUrlOverridden) {
+                result.baseUrl?.let { clientOptionsBuilder.baseUrl(it) }
+            }
         }
     }
 
