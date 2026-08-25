@@ -218,6 +218,8 @@ private constructor(
 
             @JvmField val OMITTED = of("omitted")
 
+            @JvmField val UPDATES = of("updates")
+
             @JvmStatic fun of(value: String) = Display(JsonField.of(value))
 
             @JvmSynthetic
@@ -229,6 +231,7 @@ private constructor(
         enum class Known {
             SUMMARIZED,
             OMITTED,
+            UPDATES,
         }
 
         /**
@@ -243,6 +246,7 @@ private constructor(
         enum class Value {
             SUMMARIZED,
             OMITTED,
+            UPDATES,
             /** An enum member indicating that [Display] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -258,6 +262,7 @@ private constructor(
             when (this) {
                 SUMMARIZED -> Value.SUMMARIZED
                 OMITTED -> Value.OMITTED
+                UPDATES -> Value.UPDATES
                 else -> Value._UNKNOWN
             }
 
@@ -274,6 +279,7 @@ private constructor(
             when (this) {
                 SUMMARIZED -> Known.SUMMARIZED
                 OMITTED -> Known.OMITTED
+                UPDATES -> Known.UPDATES
                 else -> throw AnthropicInvalidDataException("Unknown Display: $value")
             }
 
