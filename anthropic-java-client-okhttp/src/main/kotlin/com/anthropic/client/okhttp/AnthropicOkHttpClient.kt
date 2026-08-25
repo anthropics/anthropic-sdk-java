@@ -516,6 +516,7 @@ class AnthropicOkHttpClient private constructor() {
                     .backend(backend)
                     .build()
 
+            clientOptions.baseUrl(backend.baseUrl())
             (backend as? AnthropicBackend)?.applyCredentials(rawHttpClient, clientOptions)
 
             return AnthropicClientImpl(clientOptions.httpClient(rawHttpClient).build())

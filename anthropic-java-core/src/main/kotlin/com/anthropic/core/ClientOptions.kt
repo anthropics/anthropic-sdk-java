@@ -97,7 +97,7 @@ private constructor(
      * Defaults to [Clock.systemUTC].
      */
     @get:JvmName("clock") val clock: Clock,
-    val baseUrl: String?,
+    private val baseUrl: String?,
     /** Headers to send with the request. */
     @get:JvmName("headers") val headers: Headers,
     /** Query params to send with the request. */
@@ -158,13 +158,15 @@ private constructor(
      *
      * Defaults to the production environment: `https://api.anthropic.com`.
      */
-    fun baseUrl(): String? = baseUrl
+    fun baseUrl(): String = baseUrl ?: PRODUCTION_URL
 
     fun webhookKey(): Optional<String> = Optional.ofNullable(webhookKey)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
+
+        const val PRODUCTION_URL = "https://api.anthropic.com"
 
         /**
          * Returns a mutable builder for constructing an instance of [ClientOptions].
@@ -559,7 +561,7 @@ private constructor(
                         AuthorizingHttpClient.builder()
                             .httpClient(interceptedHttpClient)
                             .tokenProvider(credentialResult.provider)
-                            .defaultBaseUrl(baseUrl ?: "https://api.anthropic.com")
+                            .defaultBaseUrl(baseUrl ?: PRODUCTION_URL)
                             .workspaceId(credentialResult.workspaceId)
                             .build()
                     else ->

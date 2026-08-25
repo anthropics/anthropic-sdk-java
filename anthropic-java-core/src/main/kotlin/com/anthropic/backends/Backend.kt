@@ -17,6 +17,9 @@ interface Backend {
     /**
      * Gets the backend service's base URL identifying the network address of the service that will
      * be accessed by this backend.
+     *
+     * The client builder adopts this as the client's base URL when the client is built; each
+     * request then carries its own base URL, which is what the transport uses.
      */
     fun baseUrl(): String
 
