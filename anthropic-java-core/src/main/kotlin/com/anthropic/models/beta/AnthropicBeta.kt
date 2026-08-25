@@ -93,6 +93,16 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         val MID_CONVERSATION_TOOL_CHANGES_2026_07_01 =
             of("mid-conversation-tool-changes-2026-07-01")
 
+        @JvmField val COMPACT_2026_01_12 = of("compact-2026-01-12")
+
+        @JvmField val COMPUTER_USE_2025_11_24 = of("computer-use-2025-11-24")
+
+        @JvmField val MCP_TUNNELS_2026_06_22 = of("mcp-tunnels-2026-06-22")
+
+        @JvmField val STRUCTURED_OUTPUTS_2025_11_13 = of("structured-outputs-2025-11-13")
+
+        @JvmField val TASK_BUDGETS_2026_03_13 = of("task-budgets-2026-03-13")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
 
         @JvmSynthetic
@@ -136,6 +146,11 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         FALLBACK_CREDIT_2026_07_01,
         AGENT_MEMORY_2026_07_22,
         MID_CONVERSATION_TOOL_CHANGES_2026_07_01,
+        COMPACT_2026_01_12,
+        COMPUTER_USE_2025_11_24,
+        MCP_TUNNELS_2026_06_22,
+        STRUCTURED_OUTPUTS_2025_11_13,
+        TASK_BUDGETS_2026_03_13,
     }
 
     /**
@@ -182,6 +197,11 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         FALLBACK_CREDIT_2026_07_01,
         AGENT_MEMORY_2026_07_22,
         MID_CONVERSATION_TOOL_CHANGES_2026_07_01,
+        COMPACT_2026_01_12,
+        COMPUTER_USE_2025_11_24,
+        MCP_TUNNELS_2026_06_22,
+        STRUCTURED_OUTPUTS_2025_11_13,
+        TASK_BUDGETS_2026_03_13,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -233,6 +253,11 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             AGENT_MEMORY_2026_07_22 -> Value.AGENT_MEMORY_2026_07_22
             MID_CONVERSATION_TOOL_CHANGES_2026_07_01 ->
                 Value.MID_CONVERSATION_TOOL_CHANGES_2026_07_01
+            COMPACT_2026_01_12 -> Value.COMPACT_2026_01_12
+            COMPUTER_USE_2025_11_24 -> Value.COMPUTER_USE_2025_11_24
+            MCP_TUNNELS_2026_06_22 -> Value.MCP_TUNNELS_2026_06_22
+            STRUCTURED_OUTPUTS_2025_11_13 -> Value.STRUCTURED_OUTPUTS_2025_11_13
+            TASK_BUDGETS_2026_03_13 -> Value.TASK_BUDGETS_2026_03_13
             else -> Value._UNKNOWN
         }
 
@@ -282,6 +307,11 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             AGENT_MEMORY_2026_07_22 -> Known.AGENT_MEMORY_2026_07_22
             MID_CONVERSATION_TOOL_CHANGES_2026_07_01 ->
                 Known.MID_CONVERSATION_TOOL_CHANGES_2026_07_01
+            COMPACT_2026_01_12 -> Known.COMPACT_2026_01_12
+            COMPUTER_USE_2025_11_24 -> Known.COMPUTER_USE_2025_11_24
+            MCP_TUNNELS_2026_06_22 -> Known.MCP_TUNNELS_2026_06_22
+            STRUCTURED_OUTPUTS_2025_11_13 -> Known.STRUCTURED_OUTPUTS_2025_11_13
+            TASK_BUDGETS_2026_03_13 -> Known.TASK_BUDGETS_2026_03_13
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 
