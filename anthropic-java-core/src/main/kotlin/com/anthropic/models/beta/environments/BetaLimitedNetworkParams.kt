@@ -71,7 +71,8 @@ private constructor(
 
     /**
      * Permits outbound access to public package registries (PyPI, npm, etc.) beyond those listed in
-     * the `allowed_hosts` array. Defaults to `false`.
+     * the `allowed_hosts` array. Defaults to `false` on creation. Must be `true` when `packages`
+     * are specified.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -199,7 +200,8 @@ private constructor(
 
         /**
          * Permits outbound access to public package registries (PyPI, npm, etc.) beyond those
-         * listed in the `allowed_hosts` array. Defaults to `false`.
+         * listed in the `allowed_hosts` array. Defaults to `false` on creation. Must be `true` when
+         * `packages` are specified.
          */
         fun allowPackageManagers(allowPackageManagers: Boolean?) =
             allowPackageManagers(JsonField.ofNullable(allowPackageManagers))
