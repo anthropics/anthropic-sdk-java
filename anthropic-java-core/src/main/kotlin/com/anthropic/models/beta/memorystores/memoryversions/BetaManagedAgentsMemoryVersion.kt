@@ -22,9 +22,10 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * A `memory_version` object: one immutable, attributed row in a memory's append-only history. Every
  * non-no-op mutation to a memory produces a new version. Versions belong to the store (not the
- * individual memory) and persist after the memory is deleted. Retrieving a redacted version returns
- * 200 with `content`, `path`, `content_size_bytes`, and `content_sha256` set to `null`; branch on
- * `redacted_at`, not HTTP status.
+ * individual memory) and are not deleted with the memory; each version is retained for at least the
+ * version retention period after it was written, unless the store itself is deleted. Retrieving a
+ * redacted version returns 200 with `content`, `path`, `content_size_bytes`, and `content_sha256`
+ * set to `null`; branch on `redacted_at`, not HTTP status.
  */
 class BetaManagedAgentsMemoryVersion
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -112,8 +113,8 @@ private constructor(
     /**
      * ID of the memory this version snapshots (a `mem_...` value). Remains valid after the memory
      * is deleted; pass it as `memory_id` to
-     * [List memory versions](/en/api/beta/memory_stores/memory_versions/list) to retrieve the full
-     * lineage including the `deleted` row.
+     * [List memory versions](/en/api/beta/memory_stores/memory_versions/list) to retrieve the
+     * memory's retained versions, including the `deleted` row while the lineage is retained.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -411,7 +412,7 @@ private constructor(
          * ID of the memory this version snapshots (a `mem_...` value). Remains valid after the
          * memory is deleted; pass it as `memory_id` to
          * [List memory versions](/en/api/beta/memory_stores/memory_versions/list) to retrieve the
-         * full lineage including the `deleted` row.
+         * memory's retained versions, including the `deleted` row while the lineage is retained.
          */
         fun memoryId(memoryId: String) = memoryId(JsonField.of(memoryId))
 

@@ -128,7 +128,7 @@ private constructor(
     /**
      * ID of the `memory_version` representing this memory's current content (a `memver_...` value).
      * This is the authoritative head pointer; `memory_version` objects do not carry an `is_latest`
-     * flag, so compare against this field instead. Enumerate the full history via
+     * flag, so compare against this field instead. Enumerate the history via
      * [List memory versions](/en/api/beta/memory_stores/memory_versions/list).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -394,7 +394,7 @@ private constructor(
         /**
          * ID of the `memory_version` representing this memory's current content (a `memver_...`
          * value). This is the authoritative head pointer; `memory_version` objects do not carry an
-         * `is_latest` flag, so compare against this field instead. Enumerate the full history via
+         * `is_latest` flag, so compare against this field instead. Enumerate the history via
          * [List memory versions](/en/api/beta/memory_stores/memory_versions/list).
          */
         fun memoryVersionId(memoryVersionId: String) =
