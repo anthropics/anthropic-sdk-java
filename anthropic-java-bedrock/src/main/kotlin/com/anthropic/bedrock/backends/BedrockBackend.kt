@@ -276,9 +276,12 @@ private constructor(
                 }
                 .build()
 
+        // Buffer the body so hashing it for the signature doesn't consume a one-shot stream and
+        // leave nothing to send.
+        val bufferedRequest = request.buffered()
         val bodyData = ByteArrayOutputStream()
 
-        request.body?.writeTo(bodyData)
+        bufferedRequest.body?.writeTo(bodyData)
 
         val awsSignedRequest: SdkHttpRequest =
             AwsV4HttpSigner.create()
@@ -294,7 +297,7 @@ private constructor(
                 .request()
 
         // Overwrite any headers with the same names already present.
-        return request.toBuilder().replaceAllHeaders(awsSignedRequest.headers()).build()
+        return bufferedRequest.toBuilder().replaceAllHeaders(awsSignedRequest.headers()).build()
     }
 
     private fun authorizeRequestWithApiKey(request: HttpRequest): HttpRequest =
