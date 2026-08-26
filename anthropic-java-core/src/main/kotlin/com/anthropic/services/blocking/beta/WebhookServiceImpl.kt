@@ -26,7 +26,7 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookService =
         WebhookServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun unwrap(body: String): UnwrapWebhookEvent =
+    override fun parseUnverified(body: String): UnwrapWebhookEvent =
         try {
             clientOptions.jsonMapper.readValue(body, jacksonTypeRef<UnwrapWebhookEvent>())
         } catch (e: Exception) {
@@ -34,25 +34,30 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
         }
 
     override fun unwrap(unwrapParams: UnwrapWebhookParams): UnwrapWebhookEvent {
-        val headers = unwrapParams.headers().getOrNull()
-        if (headers != null) {
-            try {
-                val webhookSecret =
-                    checkRequired(
-                        "webhookKey",
-                        unwrapParams.secret().getOrNull() ?: clientOptions.webhookKey().getOrNull(),
-                    )
+        val headers = unwrapParams.headers()
+        try {
+            val webhookSecret =
+                checkRequired(
+                    "webhookKey",
+                    unwrapParams.secret().getOrNull() ?: clientOptions.webhookKey().getOrNull(),
+                )
+            checkRequired("webhookKey", webhookSecret.isNotEmpty())
 
-                val headersMap =
-                    headers.names().associateWith { name -> headers.values(name) }.toMap()
+            val headersMap = headers.names().associateWith { name -> headers.values(name) }.toMap()
 
-                val webhook = Webhook(webhookSecret)
-                webhook.verify(unwrapParams.body(), headersMap)
-            } catch (e: WebhookVerificationException) {
-                throw AnthropicWebhookException("Could not verify webhook event signature", e)
-            }
+            val webhook = Webhook(webhookSecret)
+            webhook.verify(unwrapParams.body(), headersMap)
+        } catch (e: WebhookVerificationException) {
+            throw AnthropicWebhookException("Could not verify webhook event signature", e)
         }
-        return unwrap(unwrapParams.body())
+        return try {
+            clientOptions.jsonMapper.readValue(
+                unwrapParams.body(),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+        } catch (e: Exception) {
+            throw AnthropicInvalidDataException("Error parsing body", e)
+        }
     }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :

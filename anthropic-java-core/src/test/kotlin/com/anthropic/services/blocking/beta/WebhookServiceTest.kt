@@ -17,6 +17,17 @@ import org.junit.jupiter.api.extension.ExtendWith
 internal class WebhookServiceTest {
 
     @Test
+    fun parseUnverified() {
+        val client = AnthropicOkHttpClient.builder().apiKey("my-anthropic-api-key").build()
+        val webhookService = client.beta().webhooks()
+
+        val payload =
+            "{\"id\":\"whe_0f1e2d3c4b5a69788796a5b4c3d2e1f0\",\"created_at\":\"2026-03-15T10:00:00Z\",\"data\":{\"id\":\"sesn_011CZkZAtmR3yMPDzynEDxu7\",\"organization_id\":\"org_011CZkZZAe0sMna4vkBdtrfx\",\"type\":\"session.status_idled\",\"workspace_id\":\"wrkspc_011CZkZaBF1tNoB5wlCeusgy\"},\"type\":\"event\"}"
+
+        webhookService.parseUnverified(payload).validate()
+    }
+
+    @Test
     fun unwrap() {
         val client = AnthropicOkHttpClient.builder().apiKey("my-anthropic-api-key").build()
         val webhookService = client.beta().webhooks()
@@ -50,6 +61,16 @@ internal class WebhookServiceTest {
         webhookService
             .withOptions { it.webhookKey(webhookSecret) }
             .unwrap(UnwrapWebhookParams.builder().body(payload).headers(headers).build())
+
+        // Headers are required: leaving them out must fail rather than skip verification
+        assertThrows<IllegalStateException> { UnwrapWebhookParams.builder().body(payload).build() }
+
+        // An empty secret must be rejected rather than used as the signing key
+        assertThrows<IllegalStateException> {
+            webhookService.unwrap(
+                UnwrapWebhookParams.builder().body(payload).headers(headers).secret("").build()
+            )
+        }
 
         // Secret in method takes precedence to secret on client
         val wrongKey = "whsec_aaaaaaaaaa"
