@@ -2,12 +2,15 @@ package com.anthropic.bedrock.backends
 
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.HttpRequestBody
 import com.anthropic.core.http.bodyToJson
 import com.anthropic.core.http.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.node.ObjectNode
+import java.io.ByteArrayOutputStream
+import java.io.OutputStream
 import java.lang.System.clearProperty
 import java.lang.System.setProperty
 import org.assertj.core.api.Assertions.assertThat
@@ -851,6 +854,43 @@ internal class BedrockBackendTest {
         assertThat(headers.names()).contains("content-type")
         assertThat(headers.values("content-type").size).isEqualTo(1)
         assertThat(headers.values("content-type")[0]).isEqualTo("application/json")
+    }
+
+    @Test
+    fun authorizeRequestPreservesStreamedBody() {
+        initEnv()
+        val backend = BedrockBackend.builder().withoutApiKeyEnvVar().fromEnv().build()
+        // A one-shot body, like a file upload streamed from an `InputStream` or `Path`.
+        val bytes = byteArrayOf(0x89.toByte(), 'P'.code.toByte(), 'N'.code.toByte(), 0x0D, 0x00)
+        val inputStream = bytes.inputStream()
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl("https://bedrock-runtime.us-east-1.amazonaws.com/path1/path2")
+                .body(
+                    object : HttpRequestBody {
+                        override fun writeTo(outputStream: OutputStream) {
+                            inputStream.copyTo(outputStream)
+                        }
+
+                        override fun contentType(): String = "multipart/form-data; boundary=abc"
+
+                        override fun contentLength(): Long = -1L
+
+                        override fun repeatable(): Boolean = false
+
+                        override fun close() = inputStream.close()
+                    }
+                )
+                .build()
+
+        val signedRequest = backend.authorizeRequest(request)
+
+        assertThat(signedRequest.headers.values("authorization")[0]).startsWith("AWS4-HMAC-SHA256")
+        val sentBody =
+            ByteArrayOutputStream().also { signedRequest.body!!.writeTo(it) }.toByteArray()
+        assertThat(sentBody).isEqualTo(bytes)
+        assertThat(signedRequest.body!!.contentLength()).isEqualTo(bytes.size.toLong())
     }
 
     @Test

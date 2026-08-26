@@ -2,9 +2,12 @@ package com.anthropic.aws.backends
 
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.HttpRequestBody
 import com.anthropic.core.http.json
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
+import java.io.ByteArrayOutputStream
+import java.io.OutputStream
 import java.lang.System.clearProperty
 import java.lang.System.setProperty
 import org.assertj.core.api.Assertions.assertThat
@@ -410,6 +413,46 @@ internal class AwsBackendTest {
 
         assertThat(authorized.headers.values("authorization")[0]).startsWith("AWS4-HMAC-SHA256")
         assertThat(authorized.headers.values("x-amz-date")).isNotEmpty()
+    }
+
+    @Test
+    fun authorizeRequestWithCredentialsPreservesStreamedBody() {
+        val backend =
+            AwsBackend.builder()
+                .awsAccessKey(AWS_ACCESS_KEY_ID)
+                .awsSecretAccessKey(AWS_SECRET_ACCESS_KEY)
+                .region(Region.US_EAST_1)
+                .workspaceId(WORKSPACE_ID)
+                .build()
+        // A one-shot body, like a multipart file upload streamed from an `InputStream` or `Path`.
+        val bytes = byteArrayOf(0x89.toByte(), 'P'.code.toByte(), 'N'.code.toByte(), 0x0D, 0x00)
+        val inputStream = bytes.inputStream()
+        val request =
+            createRequest()
+                .toBuilder()
+                .body(
+                    object : HttpRequestBody {
+                        override fun writeTo(outputStream: OutputStream) {
+                            inputStream.copyTo(outputStream)
+                        }
+
+                        override fun contentType(): String = "multipart/form-data; boundary=abc"
+
+                        override fun contentLength(): Long = -1L
+
+                        override fun repeatable(): Boolean = false
+
+                        override fun close() = inputStream.close()
+                    }
+                )
+                .build()
+
+        val authorized = backend.authorizeRequest(request)
+
+        assertThat(authorized.headers.values("authorization")[0]).startsWith("AWS4-HMAC-SHA256")
+        val sentBody = ByteArrayOutputStream().also { authorized.body!!.writeTo(it) }.toByteArray()
+        assertThat(sentBody).isEqualTo(bytes)
+        assertThat(authorized.body!!.contentLength()).isEqualTo(bytes.size.toLong())
     }
 
     @Test

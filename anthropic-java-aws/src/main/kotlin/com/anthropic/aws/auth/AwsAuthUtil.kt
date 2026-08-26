@@ -72,8 +72,11 @@ object AwsAuthUtil {
                 }
                 .build()
 
+        // Buffer the body so hashing it for the signature doesn't consume a one-shot stream
+        // (e.g. a file upload) and leave nothing to send.
+        val bufferedRequest = request.buffered()
         val bodyData = ByteArrayOutputStream()
-        request.body?.writeTo(bodyData)
+        bufferedRequest.body?.writeTo(bodyData)
 
         val awsSignedRequest: SdkHttpRequest =
             signer
@@ -86,7 +89,7 @@ object AwsAuthUtil {
                 }
                 .request()
 
-        return request.toBuilder().replaceAllHeaders(awsSignedRequest.headers()).build()
+        return bufferedRequest.toBuilder().replaceAllHeaders(awsSignedRequest.headers()).build()
     }
 
     /** Authorizes an HTTP request using an API key sent as a Bearer token. */
