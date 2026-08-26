@@ -1,5 +1,36 @@
 # Changelog
 
+## 2.58.0 (2026-08-26)
+
+Full Changelog: [v2.57.0...v2.58.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.57.0...v2.58.0)
+
+### Features
+
+* **api:** add `updates` thinking display mode (beta) ([792b318](https://github.com/anthropics/anthropic-sdk-java/commit/792b318a9bfbe4c36c8e0a3187edfcea788c27ea))
+* **api:** add missing anthropic-beta values ([60cc62a](https://github.com/anthropics/anthropic-sdk-java/commit/60cc62afc68b13b415aba5918dc3e206630b8499))
+* **api:** add support for Organization API endpoints ([3adde69](https://github.com/anthropics/anthropic-sdk-java/commit/3adde69133073e91066efacfbd510cb43e8c6304))
+
+
+### Bug Fixes
+
+* **bedrock:** stop clobbering body anthropic_beta with header betas ([#58](https://github.com/anthropics/anthropic-sdk-java/issues/58)) ([e2609a9](https://github.com/anthropics/anthropic-sdk-java/commit/e2609a93461620f87111b97429b2b86ccb011172))
+* **client:** let explicit and ANTHROPIC_BASE_URL base URLs override profile base_url ([#241](https://github.com/anthropics/anthropic-sdk-java/issues/241)) ([7486e65](https://github.com/anthropics/anthropic-sdk-java/commit/7486e65be4708bb0faba4c190fd7ecefcf750f0e))
+* **client:** resolve base URL in ClientOptions instead of the transport ([#242](https://github.com/anthropics/anthropic-sdk-java/issues/242)) ([a3e988a](https://github.com/anthropics/anthropic-sdk-java/commit/a3e988ac8555b14a74c710d447238538bef1f17a))
+* **tools:** keep the tool runner going on pause_turn ([#196](https://github.com/anthropics/anthropic-sdk-java/issues/196)) ([557c72d](https://github.com/anthropics/anthropic-sdk-java/commit/557c72df30a9fba137c7a4dc3b46263bd6a9bd62))
+
+
+### Chores
+
+* **docs:** clarify skill version `latest` support and memory version retention ([cc7fc00](https://github.com/anthropics/anthropic-sdk-java/commit/cc7fc00777dc10957728fb5f735176de00ab30fd))
+* **internal:** cancel superseded CI runs ([ae7cc8f](https://github.com/anthropics/anthropic-sdk-java/commit/ae7cc8f98e769002a705753aaf3c19af0c61caa5))
+* **internal:** minor workflow reformat ([36b5b98](https://github.com/anthropics/anthropic-sdk-java/commit/36b5b98a15ac50aead3f8f6e6890a28cd74363f2))
+
+
+### Documentation
+
+* **api:** clarify session thread agent and usage.iterations compaction descriptions (beta) ([2283253](https://github.com/anthropics/anthropic-sdk-java/commit/2283253bf62a4a639d67cb5f6ccbb52a7b016cb3))
+* **examples:** use adaptive thinking in thinking examples ([da9aaba](https://github.com/anthropics/anthropic-sdk-java/commit/da9aabae5101e150b1c8e0bf6bf7bb8685312d03))
+
 ## 2.57.0 (2026-08-19)
 
 Full Changelog: [v2.56.0...v2.57.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.56.0...v2.57.0)
