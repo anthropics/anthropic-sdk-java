@@ -1,0 +1,291 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.anthropic.models.beta.organization.federation.rules
+
+import com.anthropic.core.ExcludeMissing
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonValue
+import com.anthropic.core.checkRequired
+import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
+import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+/** Bind to a fixed service account by ID. */
+class BetaServiceAccountTarget
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+private constructor(
+    private val serviceAccountId: JsonField<String>,
+    private val type: JsonValue,
+    private val serviceAccountName: JsonField<String>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
+) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("service_account_id")
+        @ExcludeMissing
+        serviceAccountId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("service_account_name")
+        @ExcludeMissing
+        serviceAccountName: JsonField<String> = JsonMissing.of(),
+    ) : this(serviceAccountId, type, serviceAccountName, mutableMapOf())
+
+    /**
+     * Tagged ID of the service account to mint tokens for.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun serviceAccountId(): String = serviceAccountId.getRequired("service_account_id")
+
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("service_account")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+    /**
+     * Service account's display name at read time. Ignored on writes.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun serviceAccountName(): Optional<String> =
+        serviceAccountName.getOptional("service_account_name")
+
+    /**
+     * Returns the raw JSON value of [serviceAccountId].
+     *
+     * Unlike [serviceAccountId], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("service_account_id")
+    @ExcludeMissing
+    fun _serviceAccountId(): JsonField<String> = serviceAccountId
+
+    /**
+     * Returns the raw JSON value of [serviceAccountName].
+     *
+     * Unlike [serviceAccountName], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("service_account_name")
+    @ExcludeMissing
+    fun _serviceAccountName(): JsonField<String> = serviceAccountName
+
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
+    @JsonAnyGetter
+    @ExcludeMissing
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaServiceAccountTarget].
+         *
+         * The following fields are required:
+         * ```java
+         * .serviceAccountId()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaServiceAccountTarget] with the required
+         * [serviceAccountId] set to the given value.
+         */
+        @JvmStatic
+        fun of(serviceAccountId: String) = builder().serviceAccountId(serviceAccountId).build()
+    }
+
+    /** A builder for [BetaServiceAccountTarget]. */
+    class Builder internal constructor() {
+
+        private var serviceAccountId: JsonField<String>? = null
+        private var type: JsonValue = JsonValue.from("service_account")
+        private var serviceAccountName: JsonField<String> = JsonMissing.of()
+        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+        @JvmSynthetic
+        internal fun from(betaServiceAccountTarget: BetaServiceAccountTarget) = apply {
+            serviceAccountId = betaServiceAccountTarget.serviceAccountId
+            type = betaServiceAccountTarget.type
+            serviceAccountName = betaServiceAccountTarget.serviceAccountName
+            additionalProperties = betaServiceAccountTarget.additionalProperties.toMutableMap()
+        }
+
+        /** Tagged ID of the service account to mint tokens for. */
+        fun serviceAccountId(serviceAccountId: String) =
+            serviceAccountId(JsonField.of(serviceAccountId))
+
+        /**
+         * Sets [Builder.serviceAccountId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.serviceAccountId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun serviceAccountId(serviceAccountId: JsonField<String>) = apply {
+            this.serviceAccountId = serviceAccountId
+        }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("service_account")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun type(type: JsonValue) = apply { this.type = type }
+
+        /** Service account's display name at read time. Ignored on writes. */
+        fun serviceAccountName(serviceAccountName: String?) =
+            serviceAccountName(JsonField.ofNullable(serviceAccountName))
+
+        /**
+         * Alias for calling [Builder.serviceAccountName] with `serviceAccountName.orElse(null)`.
+         */
+        fun serviceAccountName(serviceAccountName: Optional<String>) =
+            serviceAccountName(serviceAccountName.getOrNull())
+
+        /**
+         * Sets [Builder.serviceAccountName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.serviceAccountName] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun serviceAccountName(serviceAccountName: JsonField<String>) = apply {
+            this.serviceAccountName = serviceAccountName
+        }
+
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.clear()
+            putAllAdditionalProperties(additionalProperties)
+        }
+
+        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+            additionalProperties.put(key, value)
+        }
+
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
+        }
+
+        /**
+         * Returns an immutable instance of [BetaServiceAccountTarget].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .serviceAccountId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): BetaServiceAccountTarget =
+            BetaServiceAccountTarget(
+                checkRequired("serviceAccountId", serviceAccountId),
+                type,
+                serviceAccountName,
+                additionalProperties.toMutableMap(),
+            )
+    }
+
+    private var validated: Boolean = false
+
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
+    fun validate(): BetaServiceAccountTarget = apply {
+        if (validated) {
+            return@apply
+        }
+
+        serviceAccountId()
+        _type().let {
+            if (it != JsonValue.from("service_account")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        serviceAccountName()
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (serviceAccountId.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("service_account")) 1 else 0 } +
+            (if (serviceAccountName.asKnown().isPresent) 1 else 0)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is BetaServiceAccountTarget &&
+            serviceAccountId == other.serviceAccountId &&
+            type == other.type &&
+            serviceAccountName == other.serviceAccountName &&
+            additionalProperties == other.additionalProperties
+    }
+
+    private val hashCode: Int by lazy {
+        Objects.hash(serviceAccountId, type, serviceAccountName, additionalProperties)
+    }
+
+    override fun hashCode(): Int = hashCode
+
+    override fun toString() =
+        "BetaServiceAccountTarget{serviceAccountId=$serviceAccountId, type=$type, serviceAccountName=$serviceAccountName, additionalProperties=$additionalProperties}"
+}

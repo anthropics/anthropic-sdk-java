@@ -21,6 +21,8 @@ import com.anthropic.services.async.beta.MessageServiceAsync
 import com.anthropic.services.async.beta.MessageServiceAsyncImpl
 import com.anthropic.services.async.beta.ModelServiceAsync
 import com.anthropic.services.async.beta.ModelServiceAsyncImpl
+import com.anthropic.services.async.beta.OrganizationServiceAsync
+import com.anthropic.services.async.beta.OrganizationServiceAsyncImpl
 import com.anthropic.services.async.beta.SessionServiceAsync
 import com.anthropic.services.async.beta.SessionServiceAsyncImpl
 import com.anthropic.services.async.beta.SkillServiceAsync
@@ -82,6 +84,10 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     private val tunnels: TunnelServiceAsync by lazy { TunnelServiceAsyncImpl(clientOptions) }
 
+    private val organization: OrganizationServiceAsync by lazy {
+        OrganizationServiceAsyncImpl(clientOptions)
+    }
+
     override fun withRawResponse(): BetaServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaServiceAsync =
@@ -116,6 +122,8 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun dreams(): DreamServiceAsync = dreams
 
     override fun tunnels(): TunnelServiceAsync = tunnels
+
+    override fun organization(): OrganizationServiceAsync = organization
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaServiceAsync.WithRawResponse {
@@ -180,6 +188,10 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
             TunnelServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val organization: OrganizationServiceAsync.WithRawResponse by lazy {
+            OrganizationServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): BetaServiceAsync.WithRawResponse =
@@ -216,5 +228,7 @@ class BetaServiceAsyncImpl internal constructor(private val clientOptions: Clien
         override fun dreams(): DreamServiceAsync.WithRawResponse = dreams
 
         override fun tunnels(): TunnelServiceAsync.WithRawResponse = tunnels
+
+        override fun organization(): OrganizationServiceAsync.WithRawResponse = organization
     }
 }
