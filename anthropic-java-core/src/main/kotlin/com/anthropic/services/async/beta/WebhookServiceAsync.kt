@@ -24,17 +24,20 @@ interface WebhookServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookServiceAsync
 
     /**
-     * Unwraps a webhook event from its JSON representation.
+     * Parses a webhook payload into an event without verifying its signature. Prefer `unwrap()`
+     * unless you have already verified the signature yourself.
      *
      * @throws AnthropicInvalidDataException if the body could not be parsed.
      */
-    fun unwrap(body: String): UnwrapWebhookEvent
+    fun parseUnverified(body: String): UnwrapWebhookEvent
 
     /**
-     * Unwraps a webhook event from its JSON representation.
+     * Verifies the webhook signature from the `webhook-id`, `webhook-timestamp` and
+     * `webhook-signature` headers using your webhook signing key, then parses the payload into an
+     * event. Fails if the signature is missing or invalid.
      *
-     * @throws AnthropicInvalidDataException if the body could not be parsed.
      * @throws AnthropicWebhookException if the webhook signature could not be verified
+     * @throws AnthropicInvalidDataException if the body could not be parsed.
      */
     fun unwrap(unwrapParams: UnwrapWebhookParams): UnwrapWebhookEvent
 

@@ -20,8 +20,8 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookServiceAsync =
         WebhookServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun unwrap(body: String): UnwrapWebhookEvent =
-        WebhookServiceImpl(clientOptions).unwrap(body)
+    override fun parseUnverified(body: String): UnwrapWebhookEvent =
+        WebhookServiceImpl(clientOptions).parseUnverified(body)
 
     override fun unwrap(unwrapParams: UnwrapWebhookParams): UnwrapWebhookEvent =
         WebhookServiceImpl(clientOptions).unwrap(unwrapParams)
