@@ -12,6 +12,7 @@ import com.anthropic.services.blocking.beta.FileService
 import com.anthropic.services.blocking.beta.MemoryStoreService
 import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.ModelService
+import com.anthropic.services.blocking.beta.OrganizationService
 import com.anthropic.services.blocking.beta.SessionService
 import com.anthropic.services.blocking.beta.SkillService
 import com.anthropic.services.blocking.beta.TunnelService
@@ -64,6 +65,8 @@ interface BetaService {
 
     fun tunnels(): TunnelService
 
+    fun organization(): OrganizationService
+
     /** A view of [BetaService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
@@ -103,5 +106,7 @@ interface BetaService {
         fun dreams(): DreamService.WithRawResponse
 
         fun tunnels(): TunnelService.WithRawResponse
+
+        fun organization(): OrganizationService.WithRawResponse
     }
 }

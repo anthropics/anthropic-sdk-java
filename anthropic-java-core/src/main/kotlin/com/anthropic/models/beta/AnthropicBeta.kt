@@ -106,6 +106,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         @JvmField
         val THINKING_DISPLAY_UPDATES_2026_08_18 = of("thinking-display-updates-2026-08-18")
 
+        @JvmField val CE_USER_MANAGEMENT_2026_07_13 = of("ce-user-management-2026-07-13")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
 
         @JvmSynthetic
@@ -155,6 +157,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         STRUCTURED_OUTPUTS_2025_11_13,
         TASK_BUDGETS_2026_03_13,
         THINKING_DISPLAY_UPDATES_2026_08_18,
+        CE_USER_MANAGEMENT_2026_07_13,
     }
 
     /**
@@ -207,6 +210,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         STRUCTURED_OUTPUTS_2025_11_13,
         TASK_BUDGETS_2026_03_13,
         THINKING_DISPLAY_UPDATES_2026_08_18,
+        CE_USER_MANAGEMENT_2026_07_13,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -264,6 +268,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             STRUCTURED_OUTPUTS_2025_11_13 -> Value.STRUCTURED_OUTPUTS_2025_11_13
             TASK_BUDGETS_2026_03_13 -> Value.TASK_BUDGETS_2026_03_13
             THINKING_DISPLAY_UPDATES_2026_08_18 -> Value.THINKING_DISPLAY_UPDATES_2026_08_18
+            CE_USER_MANAGEMENT_2026_07_13 -> Value.CE_USER_MANAGEMENT_2026_07_13
             else -> Value._UNKNOWN
         }
 
@@ -319,6 +324,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             STRUCTURED_OUTPUTS_2025_11_13 -> Known.STRUCTURED_OUTPUTS_2025_11_13
             TASK_BUDGETS_2026_03_13 -> Known.TASK_BUDGETS_2026_03_13
             THINKING_DISPLAY_UPDATES_2026_08_18 -> Known.THINKING_DISPLAY_UPDATES_2026_08_18
+            CE_USER_MANAGEMENT_2026_07_13 -> Known.CE_USER_MANAGEMENT_2026_07_13
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

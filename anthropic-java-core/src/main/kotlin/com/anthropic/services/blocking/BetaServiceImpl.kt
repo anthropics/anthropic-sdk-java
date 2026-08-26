@@ -21,6 +21,8 @@ import com.anthropic.services.blocking.beta.MessageService
 import com.anthropic.services.blocking.beta.MessageServiceImpl
 import com.anthropic.services.blocking.beta.ModelService
 import com.anthropic.services.blocking.beta.ModelServiceImpl
+import com.anthropic.services.blocking.beta.OrganizationService
+import com.anthropic.services.blocking.beta.OrganizationServiceImpl
 import com.anthropic.services.blocking.beta.SessionService
 import com.anthropic.services.blocking.beta.SessionServiceImpl
 import com.anthropic.services.blocking.beta.SkillService
@@ -73,6 +75,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     private val tunnels: TunnelService by lazy { TunnelServiceImpl(clientOptions) }
 
+    private val organization: OrganizationService by lazy { OrganizationServiceImpl(clientOptions) }
+
     override fun withRawResponse(): BetaService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BetaService =
@@ -107,6 +111,8 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
     override fun dreams(): DreamService = dreams
 
     override fun tunnels(): TunnelService = tunnels
+
+    override fun organization(): OrganizationService = organization
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         BetaService.WithRawResponse {
@@ -171,6 +177,10 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
             TunnelServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val organization: OrganizationService.WithRawResponse by lazy {
+            OrganizationServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): BetaService.WithRawResponse =
@@ -207,5 +217,7 @@ class BetaServiceImpl internal constructor(private val clientOptions: ClientOpti
         override fun dreams(): DreamService.WithRawResponse = dreams
 
         override fun tunnels(): TunnelService.WithRawResponse = tunnels
+
+        override fun organization(): OrganizationService.WithRawResponse = organization
     }
 }
