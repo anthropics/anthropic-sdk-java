@@ -16,15 +16,14 @@ private constructor(
     private val service: SkillService,
     private val params: SkillListParams,
     private val response: SkillListPageResponse,
-) : Page<SkillListResponse> {
+) : Page<BetaSkill> {
 
     /**
      * Delegates to [SkillListPageResponse], but gracefully handles missing data.
      *
      * @see SkillListPageResponse.data
      */
-    fun data(): List<SkillListResponse> =
-        response._data().getOptional("data").getOrNull() ?: emptyList()
+    fun data(): List<BetaSkill> = response._data().getOptional("data").getOrNull() ?: emptyList()
 
     /**
      * Delegates to [SkillListPageResponse], but gracefully handles missing data.
@@ -33,7 +32,7 @@ private constructor(
      */
     fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")
 
-    override fun items(): List<SkillListResponse> = data()
+    override fun items(): List<BetaSkill> = data()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
 
@@ -46,7 +45,7 @@ private constructor(
 
     override fun nextPage(): SkillListPage = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager<SkillListResponse> = AutoPager.from(this)
+    fun autoPager(): AutoPager<BetaSkill> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
     fun params(): SkillListParams = params

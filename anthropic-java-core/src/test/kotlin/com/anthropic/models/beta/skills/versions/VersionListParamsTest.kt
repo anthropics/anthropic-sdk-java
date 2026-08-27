@@ -14,7 +14,7 @@ internal class VersionListParamsTest {
     fun create() {
         VersionListParams.builder()
             .skillId("skill_id")
-            .limit(0L)
+            .limit(1L)
             .page("page")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
@@ -34,7 +34,7 @@ internal class VersionListParamsTest {
         val params =
             VersionListParams.builder()
                 .skillId("skill_id")
-                .limit(0L)
+                .limit(1L)
                 .page("page")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
@@ -61,7 +61,7 @@ internal class VersionListParamsTest {
         val params =
             VersionListParams.builder()
                 .skillId("skill_id")
-                .limit(0L)
+                .limit(1L)
                 .page("page")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
@@ -69,7 +69,7 @@ internal class VersionListParamsTest {
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
-            .isEqualTo(QueryParams.builder().put("limit", "0").put("page", "page").build())
+            .isEqualTo(QueryParams.builder().put("limit", "1").put("page", "page").build())
     }
 
     @Test

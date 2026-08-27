@@ -22,12 +22,11 @@ internal class FileListPageResponseTest {
                         .mimeType("application/pdf")
                         .sizeBytes(102400L)
                         .downloadable(false)
+                        .expiresAt(OffsetDateTime.parse("2025-05-15T18:37:24.100435Z"))
                         .scope(BetaFileScope.of("id"))
                         .build()
                 )
-                .firstId("file_011CNha8iCJcU1wXNR6q4V8w")
-                .hasMore(true)
-                .lastId("file_013Zva2CMHLNnXjNJJKqJ2EF")
+                .nextPage("next_page")
                 .build()
 
         assertThat(fileListPageResponse.data())
@@ -39,12 +38,11 @@ internal class FileListPageResponseTest {
                     .mimeType("application/pdf")
                     .sizeBytes(102400L)
                     .downloadable(false)
+                    .expiresAt(OffsetDateTime.parse("2025-05-15T18:37:24.100435Z"))
                     .scope(BetaFileScope.of("id"))
                     .build()
             )
-        assertThat(fileListPageResponse.firstId()).contains("file_011CNha8iCJcU1wXNR6q4V8w")
-        assertThat(fileListPageResponse.hasMore()).contains(true)
-        assertThat(fileListPageResponse.lastId()).contains("file_013Zva2CMHLNnXjNJJKqJ2EF")
+        assertThat(fileListPageResponse.nextPage()).contains("next_page")
     }
 
     @Test
@@ -60,12 +58,11 @@ internal class FileListPageResponseTest {
                         .mimeType("application/pdf")
                         .sizeBytes(102400L)
                         .downloadable(false)
+                        .expiresAt(OffsetDateTime.parse("2025-05-15T18:37:24.100435Z"))
                         .scope(BetaFileScope.of("id"))
                         .build()
                 )
-                .firstId("file_011CNha8iCJcU1wXNR6q4V8w")
-                .hasMore(true)
-                .lastId("file_013Zva2CMHLNnXjNJJKqJ2EF")
+                .nextPage("next_page")
                 .build()
 
         val roundtrippedFileListPageResponse =

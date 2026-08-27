@@ -14,9 +14,9 @@ import kotlin.jvm.optionals.getOrNull
 /** List Files */
 class FileListParams
 private constructor(
-    private val afterId: String?,
-    private val beforeId: String?,
+    private val ids: List<String>?,
     private val limit: Long?,
+    private val page: String?,
     private val scopeId: String?,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
@@ -24,16 +24,12 @@ private constructor(
 ) : Params {
 
     /**
-     * ID of the object to use as a cursor for pagination. When provided, returns the page of
-     * results immediately after this object.
+     * Restrict the result set to Files whose `id` is in this list. At most 100 entries (after
+     * de-duplication). Mutually exclusive with `page` and `limit`. When supplied, the response is
+     * always a single page (`next_page` is null). IDs that do not resolve to a visible File —
+     * including deleted Files — are silently omitted.
      */
-    fun afterId(): Optional<String> = Optional.ofNullable(afterId)
-
-    /**
-     * ID of the object to use as a cursor for pagination. When provided, returns the page of
-     * results immediately before this object.
-     */
-    fun beforeId(): Optional<String> = Optional.ofNullable(beforeId)
+    fun ids(): Optional<List<String>> = Optional.ofNullable(ids)
 
     /**
      * Number of items to return per page.
@@ -41,6 +37,9 @@ private constructor(
      * Defaults to `20`. Ranges from `1` to `1000`.
      */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
+    /** Opaque page cursor returned in a prior list response's `next_page`. Prefixed `page_`. */
+    fun page(): Optional<String> = Optional.ofNullable(page)
 
     /**
      * Filter by scope ID. Only returns files associated with the specified scope (e.g., a session
@@ -70,9 +69,9 @@ private constructor(
     /** A builder for [FileListParams]. */
     class Builder internal constructor() {
 
-        private var afterId: String? = null
-        private var beforeId: String? = null
+        private var ids: MutableList<String>? = null
         private var limit: Long? = null
+        private var page: String? = null
         private var scopeId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -80,9 +79,9 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(fileListParams: FileListParams) = apply {
-            afterId = fileListParams.afterId
-            beforeId = fileListParams.beforeId
+            ids = fileListParams.ids?.toMutableList()
             limit = fileListParams.limit
+            page = fileListParams.page
             scopeId = fileListParams.scopeId
             betas = fileListParams.betas?.toMutableList()
             additionalHeaders = fileListParams.additionalHeaders.toBuilder()
@@ -90,22 +89,22 @@ private constructor(
         }
 
         /**
-         * ID of the object to use as a cursor for pagination. When provided, returns the page of
-         * results immediately after this object.
+         * Restrict the result set to Files whose `id` is in this list. At most 100 entries (after
+         * de-duplication). Mutually exclusive with `page` and `limit`. When supplied, the response
+         * is always a single page (`next_page` is null). IDs that do not resolve to a visible File
+         * — including deleted Files — are silently omitted.
          */
-        fun afterId(afterId: String?) = apply { this.afterId = afterId }
+        fun ids(ids: List<String>?) = apply { this.ids = ids?.toMutableList() }
 
-        /** Alias for calling [Builder.afterId] with `afterId.orElse(null)`. */
-        fun afterId(afterId: Optional<String>) = afterId(afterId.getOrNull())
+        /** Alias for calling [Builder.ids] with `ids.orElse(null)`. */
+        fun ids(ids: Optional<List<String>>) = ids(ids.getOrNull())
 
         /**
-         * ID of the object to use as a cursor for pagination. When provided, returns the page of
-         * results immediately before this object.
+         * Adds a single [String] to [ids].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun beforeId(beforeId: String?) = apply { this.beforeId = beforeId }
-
-        /** Alias for calling [Builder.beforeId] with `beforeId.orElse(null)`. */
-        fun beforeId(beforeId: Optional<String>) = beforeId(beforeId.getOrNull())
+        fun addId(id: String) = apply { ids = (ids ?: mutableListOf()).apply { add(id) } }
 
         /**
          * Number of items to return per page.
@@ -123,6 +122,12 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        /** Opaque page cursor returned in a prior list response's `next_page`. Prefixed `page_`. */
+        fun page(page: String?) = apply { this.page = page }
+
+        /** Alias for calling [Builder.page] with `page.orElse(null)`. */
+        fun page(page: Optional<String>) = page(page.getOrNull())
 
         /**
          * Filter by scope ID. Only returns files associated with the specified scope (e.g., a
@@ -262,9 +267,9 @@ private constructor(
          */
         fun build(): FileListParams =
             FileListParams(
-                afterId,
-                beforeId,
+                ids?.toImmutable(),
                 limit,
+                page,
                 scopeId,
                 betas?.toImmutable(),
                 additionalHeaders.build(),
@@ -283,9 +288,9 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                afterId?.let { put("after_id", it) }
-                beforeId?.let { put("before_id", it) }
+                ids?.forEach { put("ids[]", it) }
                 limit?.let { put("limit", it.toString()) }
+                page?.let { put("page", it) }
                 scopeId?.let { put("scope_id", it) }
                 putAll(additionalQueryParams)
             }
@@ -297,9 +302,9 @@ private constructor(
         }
 
         return other is FileListParams &&
-            afterId == other.afterId &&
-            beforeId == other.beforeId &&
+            ids == other.ids &&
             limit == other.limit &&
+            page == other.page &&
             scopeId == other.scopeId &&
             betas == other.betas &&
             additionalHeaders == other.additionalHeaders &&
@@ -307,16 +312,8 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(
-            afterId,
-            beforeId,
-            limit,
-            scopeId,
-            betas,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+        Objects.hash(ids, limit, page, scopeId, betas, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "FileListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, scopeId=$scopeId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "FileListParams{ids=$ids, limit=$limit, page=$page, scopeId=$scopeId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

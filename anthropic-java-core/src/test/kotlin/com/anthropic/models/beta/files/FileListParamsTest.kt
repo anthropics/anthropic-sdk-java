@@ -13,9 +13,9 @@ internal class FileListParamsTest {
     @Test
     fun create() {
         FileListParams.builder()
-            .afterId("after_id")
-            .beforeId("before_id")
+            .addId("string")
             .limit(1L)
+            .page("page")
             .scopeId("scope_id")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .build()
@@ -25,9 +25,9 @@ internal class FileListParamsTest {
     fun headers() {
         val params =
             FileListParams.builder()
-                .afterId("after_id")
-                .beforeId("before_id")
+                .addId("string")
                 .limit(1L)
+                .page("page")
                 .scopeId("scope_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
@@ -53,9 +53,9 @@ internal class FileListParamsTest {
     fun queryParams() {
         val params =
             FileListParams.builder()
-                .afterId("after_id")
-                .beforeId("before_id")
+                .addId("string")
                 .limit(1L)
+                .page("page")
                 .scopeId("scope_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .build()
@@ -65,9 +65,9 @@ internal class FileListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("after_id", "after_id")
-                    .put("before_id", "before_id")
+                    .put("ids[]", "string")
                     .put("limit", "1")
+                    .put("page", "page")
                     .put("scope_id", "scope_id")
                     .build()
             )

@@ -7,6 +7,7 @@ import com.anthropic.models.beta.messages.BetaCacheCreation
 import com.anthropic.models.beta.messages.BetaCitationCharLocation
 import com.anthropic.models.beta.messages.BetaClearToolUses20250919EditResponse
 import com.anthropic.models.beta.messages.BetaContainer
+import com.anthropic.models.beta.messages.BetaContainerSkill
 import com.anthropic.models.beta.messages.BetaContextManagementResponse
 import com.anthropic.models.beta.messages.BetaDiagnostics
 import com.anthropic.models.beta.messages.BetaFallbackCreditRedeemed
@@ -16,7 +17,6 @@ import com.anthropic.models.beta.messages.BetaMessageIterationUsage
 import com.anthropic.models.beta.messages.BetaOutputTokensDetails
 import com.anthropic.models.beta.messages.BetaRefusalStopDetails
 import com.anthropic.models.beta.messages.BetaServerToolUsage
-import com.anthropic.models.beta.messages.BetaSkill
 import com.anthropic.models.beta.messages.BetaStopReason
 import com.anthropic.models.beta.messages.BetaTextBlock
 import com.anthropic.models.beta.messages.BetaUsage
@@ -41,9 +41,9 @@ internal class BetaMessageBatchIndividualResponseTest {
                                 .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .addSkill(
-                                    BetaSkill.builder()
+                                    BetaContainerSkill.builder()
                                         .skillId("pdf")
-                                        .type(BetaSkill.Type.ANTHROPIC)
+                                        .type(BetaContainerSkill.Type.ANTHROPIC)
                                         .version("latest")
                                         .build()
                                 )
@@ -150,9 +150,9 @@ internal class BetaMessageBatchIndividualResponseTest {
                                 .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .addSkill(
-                                    BetaSkill.builder()
+                                    BetaContainerSkill.builder()
                                         .skillId("pdf")
-                                        .type(BetaSkill.Type.ANTHROPIC)
+                                        .type(BetaContainerSkill.Type.ANTHROPIC)
                                         .version("latest")
                                         .build()
                                 )
@@ -263,9 +263,9 @@ internal class BetaMessageBatchIndividualResponseTest {
                                 .id("container_011CpZohnwH4vuy7gazohgSP")
                                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .addSkill(
-                                    BetaSkill.builder()
+                                    BetaContainerSkill.builder()
                                         .skillId("pdf")
-                                        .type(BetaSkill.Type.ANTHROPIC)
+                                        .type(BetaContainerSkill.Type.ANTHROPIC)
                                         .version("latest")
                                         .build()
                                 )

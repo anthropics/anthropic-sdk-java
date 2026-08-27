@@ -22,8 +22,7 @@ import kotlin.jvm.optionals.getOrNull
 class VersionListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val data: JsonField<List<VersionListResponse>>,
-    private val hasMore: JsonField<Boolean>,
+    private val data: JsonField<List<BetaSkillVersion>>,
     private val nextPage: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -32,29 +31,23 @@ private constructor(
     private constructor(
         @JsonProperty("data")
         @ExcludeMissing
-        data: JsonField<List<VersionListResponse>> = JsonMissing.of(),
-        @JsonProperty("has_more") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
+        data: JsonField<List<BetaSkillVersion>> = JsonMissing.of(),
         @JsonProperty("next_page") @ExcludeMissing nextPage: JsonField<String> = JsonMissing.of(),
-    ) : this(data, hasMore, nextPage, mutableMapOf())
+    ) : this(data, nextPage, mutableMapOf())
 
     /**
-     * List of skill versions.
+     * List of skills.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun data(): List<VersionListResponse> = data.getRequired("data")
+    fun data(): List<BetaSkillVersion> = data.getRequired("data")
 
     /**
-     * Indicates if there are more results in the requested page direction.
+     * Token for fetching the next page of results.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun hasMore(): Boolean = hasMore.getRequired("has_more")
-
-    /**
-     * Token to provide in as `page` in the subsequent request to retrieve the next page of data.
+     * If `null`, there are no more results available. Pass this value to the `page` parameter in
+     * the next request to get the next page.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -66,14 +59,7 @@ private constructor(
      *
      * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<VersionListResponse>> = data
-
-    /**
-     * Returns the raw JSON value of [hasMore].
-     *
-     * Unlike [hasMore], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("has_more") @ExcludeMissing fun _hasMore(): JsonField<Boolean> = hasMore
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<BetaSkillVersion>> = data
 
     /**
      * Returns the raw JSON value of [nextPage].
@@ -102,7 +88,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .data()
-         * .hasMore()
          * .nextPage()
          * ```
          */
@@ -112,8 +97,7 @@ private constructor(
     /** A builder for [VersionListPageResponse]. */
     class Builder internal constructor() {
 
-        private var data: JsonField<MutableList<VersionListResponse>>? = null
-        private var hasMore: JsonField<Boolean>? = null
+        private var data: JsonField<MutableList<BetaSkillVersion>>? = null
         private var nextPage: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -123,51 +107,41 @@ private constructor(
                 versionListPageResponse.data
                     .map { it.toMutableList() }
                     .takeUnless { it.isMissing() }
-            hasMore = versionListPageResponse.hasMore
             nextPage = versionListPageResponse.nextPage
             additionalProperties = versionListPageResponse.additionalProperties.toMutableMap()
         }
 
-        /** List of skill versions. */
-        fun data(data: List<VersionListResponse>) = data(JsonField.of(data))
+        /** List of skills. */
+        fun data(data: List<BetaSkillVersion>) = data(JsonField.of(data))
 
         /**
          * Sets [Builder.data] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.data] with a well-typed `List<VersionListResponse>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.data] with a well-typed `List<BetaSkillVersion>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun data(data: JsonField<List<VersionListResponse>>) = apply {
+        fun data(data: JsonField<List<BetaSkillVersion>>) = apply {
             this.data = data.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [VersionListResponse] to [Builder.data].
+         * Adds a single [BetaSkillVersion] to [Builder.data].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addData(data: VersionListResponse) = apply {
+        fun addData(data: BetaSkillVersion) = apply {
             this.data =
                 (this.data ?: JsonField.of(mutableListOf())).also {
                     checkKnown("data", it).add(data)
                 }
         }
 
-        /** Indicates if there are more results in the requested page direction. */
-        fun hasMore(hasMore: Boolean) = hasMore(JsonField.of(hasMore))
-
         /**
-         * Sets [Builder.hasMore] to an arbitrary JSON value.
+         * Token for fetching the next page of results.
          *
-         * You should usually call [Builder.hasMore] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
-
-        /**
-         * Token to provide in as `page` in the subsequent request to retrieve the next page of
-         * data.
+         * If `null`, there are no more results available. Pass this value to the `page` parameter
+         * in the next request to get the next page.
          */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 
@@ -209,7 +183,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .data()
-         * .hasMore()
          * .nextPage()
          * ```
          *
@@ -218,7 +191,6 @@ private constructor(
         fun build(): VersionListPageResponse =
             VersionListPageResponse(
                 checkRequired("data", data).map { it.toImmutable() },
-                checkRequired("hasMore", hasMore),
                 checkRequired("nextPage", nextPage),
                 additionalProperties.toMutableMap(),
             )
@@ -240,7 +212,6 @@ private constructor(
         }
 
         data().forEach { it.validate() }
-        hasMore()
         nextPage()
         validated = true
     }
@@ -261,7 +232,6 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (hasMore.asKnown().isPresent) 1 else 0) +
             (if (nextPage.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
@@ -271,17 +241,14 @@ private constructor(
 
         return other is VersionListPageResponse &&
             data == other.data &&
-            hasMore == other.hasMore &&
             nextPage == other.nextPage &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(data, hasMore, nextPage, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(data, nextPage, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "VersionListPageResponse{data=$data, hasMore=$hasMore, nextPage=$nextPage, additionalProperties=$additionalProperties}"
+        "VersionListPageResponse{data=$data, nextPage=$nextPage, additionalProperties=$additionalProperties}"
 }

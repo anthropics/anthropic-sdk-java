@@ -36,7 +36,7 @@ internal class VersionServiceAsyncTest {
                 .build()
         val versionServiceAsync = client.beta().skills().versions()
 
-        val versionFuture =
+        val betaSkillVersionFuture =
             versionServiceAsync.create(
                 VersionCreateParams.builder()
                     .skillId("skill_id")
@@ -45,8 +45,8 @@ internal class VersionServiceAsyncTest {
                     .build()
             )
 
-        val version = versionFuture.get()
-        version.validate()
+        val betaSkillVersion = betaSkillVersionFuture.get()
+        betaSkillVersion.validate()
     }
 
     @Test
@@ -58,7 +58,7 @@ internal class VersionServiceAsyncTest {
                 .build()
         val versionServiceAsync = client.beta().skills().versions()
 
-        val versionFuture =
+        val betaSkillVersionFuture =
             versionServiceAsync.retrieve(
                 VersionRetrieveParams.builder()
                     .skillId("skill_id")
@@ -67,8 +67,8 @@ internal class VersionServiceAsyncTest {
                     .build()
             )
 
-        val version = versionFuture.get()
-        version.validate()
+        val betaSkillVersion = betaSkillVersionFuture.get()
+        betaSkillVersion.validate()
     }
 
     @Test
@@ -95,7 +95,7 @@ internal class VersionServiceAsyncTest {
                 .build()
         val versionServiceAsync = client.beta().skills().versions()
 
-        val versionFuture =
+        val betaDeletedSkillVersionFuture =
             versionServiceAsync.delete(
                 VersionDeleteParams.builder()
                     .skillId("skill_id")
@@ -104,8 +104,8 @@ internal class VersionServiceAsyncTest {
                     .build()
             )
 
-        val version = versionFuture.get()
-        version.validate()
+        val betaDeletedSkillVersion = betaDeletedSkillVersionFuture.get()
+        betaDeletedSkillVersion.validate()
     }
 
     @Test

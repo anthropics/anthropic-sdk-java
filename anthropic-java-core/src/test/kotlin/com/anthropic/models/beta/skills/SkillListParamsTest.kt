@@ -13,7 +13,7 @@ internal class SkillListParamsTest {
     @Test
     fun create() {
         SkillListParams.builder()
-            .limit(0L)
+            .limit(1L)
             .page("page")
             .source("source")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
@@ -24,7 +24,7 @@ internal class SkillListParamsTest {
     fun headers() {
         val params =
             SkillListParams.builder()
-                .limit(0L)
+                .limit(1L)
                 .page("page")
                 .source("source")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
@@ -51,7 +51,7 @@ internal class SkillListParamsTest {
     fun queryParams() {
         val params =
             SkillListParams.builder()
-                .limit(0L)
+                .limit(1L)
                 .page("page")
                 .source("source")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
@@ -62,7 +62,7 @@ internal class SkillListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("limit", "0")
+                    .put("limit", "1")
                     .put("page", "page")
                     .put("source", "source")
                     .build()

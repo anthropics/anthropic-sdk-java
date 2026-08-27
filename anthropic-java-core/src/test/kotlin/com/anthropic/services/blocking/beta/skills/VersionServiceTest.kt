@@ -36,7 +36,7 @@ internal class VersionServiceTest {
                 .build()
         val versionService = client.beta().skills().versions()
 
-        val version =
+        val betaSkillVersion =
             versionService.create(
                 VersionCreateParams.builder()
                     .skillId("skill_id")
@@ -45,7 +45,7 @@ internal class VersionServiceTest {
                     .build()
             )
 
-        version.validate()
+        betaSkillVersion.validate()
     }
 
     @Test
@@ -57,7 +57,7 @@ internal class VersionServiceTest {
                 .build()
         val versionService = client.beta().skills().versions()
 
-        val version =
+        val betaSkillVersion =
             versionService.retrieve(
                 VersionRetrieveParams.builder()
                     .skillId("skill_id")
@@ -66,7 +66,7 @@ internal class VersionServiceTest {
                     .build()
             )
 
-        version.validate()
+        betaSkillVersion.validate()
     }
 
     @Test
@@ -92,7 +92,7 @@ internal class VersionServiceTest {
                 .build()
         val versionService = client.beta().skills().versions()
 
-        val version =
+        val betaDeletedSkillVersion =
             versionService.delete(
                 VersionDeleteParams.builder()
                     .skillId("skill_id")
@@ -101,7 +101,7 @@ internal class VersionServiceTest {
                     .build()
             )
 
-        version.validate()
+        betaDeletedSkillVersion.validate()
     }
 
     @Test

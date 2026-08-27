@@ -6,15 +6,14 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.models.beta.skills.versions.BetaDeletedSkillVersion
+import com.anthropic.models.beta.skills.versions.BetaSkillVersion
 import com.anthropic.models.beta.skills.versions.VersionCreateParams
-import com.anthropic.models.beta.skills.versions.VersionCreateResponse
 import com.anthropic.models.beta.skills.versions.VersionDeleteParams
-import com.anthropic.models.beta.skills.versions.VersionDeleteResponse
 import com.anthropic.models.beta.skills.versions.VersionDownloadParams
 import com.anthropic.models.beta.skills.versions.VersionListPage
 import com.anthropic.models.beta.skills.versions.VersionListParams
 import com.anthropic.models.beta.skills.versions.VersionRetrieveParams
-import com.anthropic.models.beta.skills.versions.VersionRetrieveResponse
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -33,7 +32,7 @@ interface VersionService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService
 
     /** Create Skill Version */
-    fun create(skillId: String, params: VersionCreateParams): VersionCreateResponse =
+    fun create(skillId: String, params: VersionCreateParams): BetaSkillVersion =
         create(skillId, params, RequestOptions.none())
 
     /** @see create */
@@ -41,20 +40,20 @@ interface VersionService {
         skillId: String,
         params: VersionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionCreateResponse = create(params.toBuilder().skillId(skillId).build(), requestOptions)
+    ): BetaSkillVersion = create(params.toBuilder().skillId(skillId).build(), requestOptions)
 
     /** @see create */
-    fun create(params: VersionCreateParams): VersionCreateResponse =
+    fun create(params: VersionCreateParams): BetaSkillVersion =
         create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: VersionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionCreateResponse
+    ): BetaSkillVersion
 
     /** Get Skill Version */
-    fun retrieve(version: String, params: VersionRetrieveParams): VersionRetrieveResponse =
+    fun retrieve(version: String, params: VersionRetrieveParams): BetaSkillVersion =
         retrieve(version, params, RequestOptions.none())
 
     /** @see retrieve */
@@ -62,18 +61,17 @@ interface VersionService {
         version: String,
         params: VersionRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionRetrieveResponse =
-        retrieve(params.toBuilder().version(version).build(), requestOptions)
+    ): BetaSkillVersion = retrieve(params.toBuilder().version(version).build(), requestOptions)
 
     /** @see retrieve */
-    fun retrieve(params: VersionRetrieveParams): VersionRetrieveResponse =
+    fun retrieve(params: VersionRetrieveParams): BetaSkillVersion =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: VersionRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionRetrieveResponse
+    ): BetaSkillVersion
 
     /** List Skill Versions */
     fun list(skillId: String): VersionListPage = list(skillId, VersionListParams.none())
@@ -105,7 +103,7 @@ interface VersionService {
         list(skillId, VersionListParams.none(), requestOptions)
 
     /** Delete Skill Version */
-    fun delete(version: String, params: VersionDeleteParams): VersionDeleteResponse =
+    fun delete(version: String, params: VersionDeleteParams): BetaDeletedSkillVersion =
         delete(version, params, RequestOptions.none())
 
     /** @see delete */
@@ -113,17 +111,17 @@ interface VersionService {
         version: String,
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionDeleteResponse = delete(params.toBuilder().version(version).build(), requestOptions)
+    ): BetaDeletedSkillVersion = delete(params.toBuilder().version(version).build(), requestOptions)
 
     /** @see delete */
-    fun delete(params: VersionDeleteParams): VersionDeleteResponse =
+    fun delete(params: VersionDeleteParams): BetaDeletedSkillVersion =
         delete(params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionDeleteResponse
+    ): BetaDeletedSkillVersion
 
     /** Download a skill version's content as a zip archive. */
     @MustBeClosed
@@ -168,7 +166,7 @@ interface VersionService {
         fun create(
             skillId: String,
             params: VersionCreateParams,
-        ): HttpResponseFor<VersionCreateResponse> = create(skillId, params, RequestOptions.none())
+        ): HttpResponseFor<BetaSkillVersion> = create(skillId, params, RequestOptions.none())
 
         /** @see create */
         @MustBeClosed
@@ -176,12 +174,12 @@ interface VersionService {
             skillId: String,
             params: VersionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionCreateResponse> =
+        ): HttpResponseFor<BetaSkillVersion> =
             create(params.toBuilder().skillId(skillId).build(), requestOptions)
 
         /** @see create */
         @MustBeClosed
-        fun create(params: VersionCreateParams): HttpResponseFor<VersionCreateResponse> =
+        fun create(params: VersionCreateParams): HttpResponseFor<BetaSkillVersion> =
             create(params, RequestOptions.none())
 
         /** @see create */
@@ -189,7 +187,7 @@ interface VersionService {
         fun create(
             params: VersionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionCreateResponse>
+        ): HttpResponseFor<BetaSkillVersion>
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}?beta=true`,
@@ -199,8 +197,7 @@ interface VersionService {
         fun retrieve(
             version: String,
             params: VersionRetrieveParams,
-        ): HttpResponseFor<VersionRetrieveResponse> =
-            retrieve(version, params, RequestOptions.none())
+        ): HttpResponseFor<BetaSkillVersion> = retrieve(version, params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
@@ -208,12 +205,12 @@ interface VersionService {
             version: String,
             params: VersionRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionRetrieveResponse> =
+        ): HttpResponseFor<BetaSkillVersion> =
             retrieve(params.toBuilder().version(version).build(), requestOptions)
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(params: VersionRetrieveParams): HttpResponseFor<VersionRetrieveResponse> =
+        fun retrieve(params: VersionRetrieveParams): HttpResponseFor<BetaSkillVersion> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
@@ -221,7 +218,7 @@ interface VersionService {
         fun retrieve(
             params: VersionRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionRetrieveResponse>
+        ): HttpResponseFor<BetaSkillVersion>
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions?beta=true`, but is
@@ -276,7 +273,7 @@ interface VersionService {
         fun delete(
             version: String,
             params: VersionDeleteParams,
-        ): HttpResponseFor<VersionDeleteResponse> = delete(version, params, RequestOptions.none())
+        ): HttpResponseFor<BetaDeletedSkillVersion> = delete(version, params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
@@ -284,12 +281,12 @@ interface VersionService {
             version: String,
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionDeleteResponse> =
+        ): HttpResponseFor<BetaDeletedSkillVersion> =
             delete(params.toBuilder().version(version).build(), requestOptions)
 
         /** @see delete */
         @MustBeClosed
-        fun delete(params: VersionDeleteParams): HttpResponseFor<VersionDeleteResponse> =
+        fun delete(params: VersionDeleteParams): HttpResponseFor<BetaDeletedSkillVersion> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
@@ -297,7 +294,7 @@ interface VersionService {
         fun delete(
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionDeleteResponse>
+        ): HttpResponseFor<BetaDeletedSkillVersion>
 
         /**
          * Returns a raw HTTP response for `get

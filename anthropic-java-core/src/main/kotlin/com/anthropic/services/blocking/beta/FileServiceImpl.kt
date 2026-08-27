@@ -8,7 +8,6 @@ import com.anthropic.core.checkRequired
 import com.anthropic.core.handlers.errorBodyHandler
 import com.anthropic.core.handlers.errorHandler
 import com.anthropic.core.handlers.jsonHandler
-import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
@@ -31,12 +30,6 @@ import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class FileServiceImpl internal constructor(private val clientOptions: ClientOptions) : FileService {
-
-    companion object {
-
-        private val DEFAULT_HEADERS =
-            Headers.builder().put("anthropic-beta", "files-api-2025-04-14").build()
-    }
 
     private val withRawResponse: FileService.WithRawResponse by lazy {
         WithRawResponseImpl(clientOptions)
@@ -102,7 +95,6 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
                     .putQueryParam("beta", "true")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -141,7 +133,6 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files", params._pathParam(0))
                     .putQueryParam("beta", "true")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
@@ -171,7 +162,6 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files", params._pathParam(0), "content")
                     .putQueryParam("beta", "true")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "application/binary")
                     .build()
                     .prepare(clientOptions, params)
@@ -196,7 +186,6 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files", params._pathParam(0))
                     .putQueryParam("beta", "true")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -225,7 +214,6 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files")
                     .putQueryParam("beta", "true")
-                    .putAllHeaders(DEFAULT_HEADERS)
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
