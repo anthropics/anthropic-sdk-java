@@ -23,17 +23,17 @@ internal class SkillServiceAsyncTest {
                 .build()
         val skillServiceAsync = client.beta().skills()
 
-        val skillFuture =
+        val betaSkillFuture =
             skillServiceAsync.create(
                 SkillCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .addFile("Example data".byteInputStream())
-                    .displayTitle("display_title")
+                    .displayName("display_name")
                     .build()
             )
 
-        val skill = skillFuture.get()
-        skill.validate()
+        val betaSkill = betaSkillFuture.get()
+        betaSkill.validate()
     }
 
     @Test
@@ -45,7 +45,7 @@ internal class SkillServiceAsyncTest {
                 .build()
         val skillServiceAsync = client.beta().skills()
 
-        val skillFuture =
+        val betaSkillFuture =
             skillServiceAsync.retrieve(
                 SkillRetrieveParams.builder()
                     .skillId("skill_id")
@@ -53,8 +53,8 @@ internal class SkillServiceAsyncTest {
                     .build()
             )
 
-        val skill = skillFuture.get()
-        skill.validate()
+        val betaSkill = betaSkillFuture.get()
+        betaSkill.validate()
     }
 
     @Test
@@ -81,7 +81,7 @@ internal class SkillServiceAsyncTest {
                 .build()
         val skillServiceAsync = client.beta().skills()
 
-        val skillFuture =
+        val betaDeletedSkillFuture =
             skillServiceAsync.delete(
                 SkillDeleteParams.builder()
                     .skillId("skill_id")
@@ -89,7 +89,7 @@ internal class SkillServiceAsyncTest {
                     .build()
             )
 
-        val skill = skillFuture.get()
-        skill.validate()
+        val betaDeletedSkill = betaDeletedSkillFuture.get()
+        betaDeletedSkill.validate()
     }
 }

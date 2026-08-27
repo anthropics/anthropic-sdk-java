@@ -28,6 +28,7 @@ private constructor(
     private val sizeBytes: JsonField<Long>,
     private val type: JsonValue,
     private val downloadable: JsonField<Boolean>,
+    private val expiresAt: JsonField<OffsetDateTime>,
     private val scope: JsonField<BetaFileScope>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -45,6 +46,9 @@ private constructor(
         @JsonProperty("downloadable")
         @ExcludeMissing
         downloadable: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("expires_at")
+        @ExcludeMissing
+        expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("scope") @ExcludeMissing scope: JsonField<BetaFileScope> = JsonMissing.of(),
     ) : this(
         id,
@@ -54,6 +58,7 @@ private constructor(
         sizeBytes,
         type,
         downloadable,
+        expiresAt,
         scope,
         mutableMapOf(),
     )
@@ -124,6 +129,16 @@ private constructor(
     fun downloadable(): Optional<Boolean> = downloadable.getOptional("downloadable")
 
     /**
+     * RFC 3339 datetime string representing when the file will expire and become unavailable for
+     * download. Null if the file does not expire. For files uploaded with `expires_in_seconds`,
+     * this is the upload time plus that value.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expires_at")
+
+    /**
      * The scope of this file, indicating the context in which it was created (e.g., a session).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -178,6 +193,15 @@ private constructor(
     fun _downloadable(): JsonField<Boolean> = downloadable
 
     /**
+     * Returns the raw JSON value of [expiresAt].
+     *
+     * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("expires_at")
+    @ExcludeMissing
+    fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
+
+    /**
      * Returns the raw JSON value of [scope].
      *
      * Unlike [scope], this method doesn't throw if the JSON field has an unexpected type.
@@ -223,6 +247,7 @@ private constructor(
         private var sizeBytes: JsonField<Long>? = null
         private var type: JsonValue = JsonValue.from("file")
         private var downloadable: JsonField<Boolean> = JsonMissing.of()
+        private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var scope: JsonField<BetaFileScope> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -235,6 +260,7 @@ private constructor(
             sizeBytes = betaFileMetadata.sizeBytes
             type = betaFileMetadata.type
             downloadable = betaFileMetadata.downloadable
+            expiresAt = betaFileMetadata.expiresAt
             scope = betaFileMetadata.scope
             additionalProperties = betaFileMetadata.additionalProperties.toMutableMap()
         }
@@ -328,6 +354,25 @@ private constructor(
         }
 
         /**
+         * RFC 3339 datetime string representing when the file will expire and become unavailable
+         * for download. Null if the file does not expire. For files uploaded with
+         * `expires_in_seconds`, this is the upload time plus that value.
+         */
+        fun expiresAt(expiresAt: OffsetDateTime?) = expiresAt(JsonField.ofNullable(expiresAt))
+
+        /** Alias for calling [Builder.expiresAt] with `expiresAt.orElse(null)`. */
+        fun expiresAt(expiresAt: Optional<OffsetDateTime>) = expiresAt(expiresAt.getOrNull())
+
+        /**
+         * Sets [Builder.expiresAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.expiresAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
+
+        /**
          * The scope of this file, indicating the context in which it was created (e.g., a session).
          */
         fun scope(scope: BetaFileScope?) = scope(JsonField.ofNullable(scope))
@@ -388,6 +433,7 @@ private constructor(
                 checkRequired("sizeBytes", sizeBytes),
                 type,
                 downloadable,
+                expiresAt,
                 scope,
                 additionalProperties.toMutableMap(),
             )
@@ -419,6 +465,7 @@ private constructor(
             }
         }
         downloadable()
+        expiresAt()
         scope().ifPresent { it.validate() }
         validated = true
     }
@@ -445,6 +492,7 @@ private constructor(
             (if (sizeBytes.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("file")) 1 else 0 } +
             (if (downloadable.asKnown().isPresent) 1 else 0) +
+            (if (expiresAt.asKnown().isPresent) 1 else 0) +
             (scope.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
@@ -460,6 +508,7 @@ private constructor(
             sizeBytes == other.sizeBytes &&
             type == other.type &&
             downloadable == other.downloadable &&
+            expiresAt == other.expiresAt &&
             scope == other.scope &&
             additionalProperties == other.additionalProperties
     }
@@ -473,6 +522,7 @@ private constructor(
             sizeBytes,
             type,
             downloadable,
+            expiresAt,
             scope,
             additionalProperties,
         )
@@ -481,5 +531,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaFileMetadata{id=$id, createdAt=$createdAt, filename=$filename, mimeType=$mimeType, sizeBytes=$sizeBytes, type=$type, downloadable=$downloadable, scope=$scope, additionalProperties=$additionalProperties}"
+        "BetaFileMetadata{id=$id, createdAt=$createdAt, filename=$filename, mimeType=$mimeType, sizeBytes=$sizeBytes, type=$type, downloadable=$downloadable, expiresAt=$expiresAt, scope=$scope, additionalProperties=$additionalProperties}"
 }

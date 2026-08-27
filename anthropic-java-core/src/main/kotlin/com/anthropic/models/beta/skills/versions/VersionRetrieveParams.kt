@@ -30,9 +30,11 @@ private constructor(
     fun skillId(): String = skillId
 
     /**
-     * Version identifier for the skill.
+     * Identifies the skill version: a version ID, or the literal `latest` for the skill's most
+     * recent version.
      *
-     * Each version is identified by a Unix epoch timestamp (e.g., "1759178010641129").
+     * Requests carrying the `skills-2025-10-02` beta header address versions by their Unix epoch
+     * timestamp instead (e.g., "1759178010641129").
      */
     fun version(): Optional<String> = Optional.ofNullable(version)
 
@@ -86,9 +88,11 @@ private constructor(
         fun skillId(skillId: String) = apply { this.skillId = skillId }
 
         /**
-         * Version identifier for the skill.
+         * Identifies the skill version: a version ID, or the literal `latest` for the skill's most
+         * recent version.
          *
-         * Each version is identified by a Unix epoch timestamp (e.g., "1759178010641129").
+         * Requests carrying the `skills-2025-10-02` beta header address versions by their Unix
+         * epoch timestamp instead (e.g., "1759178010641129").
          */
         fun version(version: String?) = apply { this.version = version }
 

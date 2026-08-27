@@ -12,41 +12,39 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 
-class VersionListResponse
+class BetaSkillVersion
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
-    private val createdAt: JsonField<String>,
+    private val createdAt: JsonField<OffsetDateTime>,
     private val description: JsonField<String>,
-    private val directory: JsonField<String>,
     private val name: JsonField<String>,
     private val skillId: JsonField<String>,
-    private val type: JsonField<String>,
-    private val version: JsonField<String>,
+    private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("created_at") @ExcludeMissing createdAt: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("created_at")
+        @ExcludeMissing
+        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("directory") @ExcludeMissing directory: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("skill_id") @ExcludeMissing skillId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("version") @ExcludeMissing version: JsonField<String> = JsonMissing.of(),
-    ) : this(id, createdAt, description, directory, name, skillId, type, version, mutableMapOf())
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(id, createdAt, description, name, skillId, type, mutableMapOf())
 
     /**
-     * Unique identifier for the skill version.
-     *
-     * The format and length of IDs may change over time.
+     * Unique identifier for this Skill Version. The id addresses the version in paths and pins it
+     * in references.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -54,12 +52,12 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * ISO 8601 timestamp of when the skill version was created.
+     * ISO 8601 timestamp of when the skill was created.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun createdAt(): String = createdAt.getRequired("created_at")
+    fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
      * Description of the skill version.
@@ -72,19 +70,10 @@ private constructor(
     fun description(): String = description.getRequired("description")
 
     /**
-     * Directory name of the skill version.
-     *
-     * This is the top-level directory name that was extracted from the uploaded files.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun directory(): String = directory.getRequired("directory")
-
-    /**
-     * Human-readable name of the skill version.
-     *
-     * This is extracted from the SKILL.md file in the skill upload.
+     * The Skill's immutable kebab-case slug, set at creation from the first upload's SKILL.md
+     * frontmatter `name` (or its enclosing directory). Every later upload must resolve to the same
+     * value. Also the top-level directory of the Skill's mounted files and the base name of a
+     * downloaded archive.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -92,7 +81,9 @@ private constructor(
     fun name(): String = name.getRequired("name")
 
     /**
-     * Identifier for the skill that this version belongs to.
+     * Unique identifier for the skill.
+     *
+     * The format and length of IDs may change over time.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -104,20 +95,15 @@ private constructor(
      *
      * For Skill Versions, this is always `"skill_version"`.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun type(): String = type.getRequired("type")
-
-    /**
-     * Version identifier for the skill.
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("skill_version")
+     * ```
      *
-     * Each version is identified by a Unix epoch timestamp (e.g., "1759178010641129").
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
-    fun version(): String = version.getRequired("version")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * Returns the raw JSON value of [id].
@@ -131,7 +117,9 @@ private constructor(
      *
      * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("created_at") @ExcludeMissing fun _createdAt(): JsonField<String> = createdAt
+    @JsonProperty("created_at")
+    @ExcludeMissing
+    fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
     /**
      * Returns the raw JSON value of [description].
@@ -139,13 +127,6 @@ private constructor(
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
-
-    /**
-     * Returns the raw JSON value of [directory].
-     *
-     * Unlike [directory], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("directory") @ExcludeMissing fun _directory(): JsonField<String> = directory
 
     /**
      * Returns the raw JSON value of [name].
@@ -160,20 +141,6 @@ private constructor(
      * Unlike [skillId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("skill_id") @ExcludeMissing fun _skillId(): JsonField<String> = skillId
-
-    /**
-     * Returns the raw JSON value of [type].
-     *
-     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<String> = type
-
-    /**
-     * Returns the raw JSON value of [version].
-     *
-     * Unlike [version], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("version") @ExcludeMissing fun _version(): JsonField<String> = version
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -190,53 +157,45 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [VersionListResponse].
+         * Returns a mutable builder for constructing an instance of [BetaSkillVersion].
          *
          * The following fields are required:
          * ```java
          * .id()
          * .createdAt()
          * .description()
-         * .directory()
          * .name()
          * .skillId()
-         * .type()
-         * .version()
          * ```
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [VersionListResponse]. */
+    /** A builder for [BetaSkillVersion]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var createdAt: JsonField<String>? = null
+        private var createdAt: JsonField<OffsetDateTime>? = null
         private var description: JsonField<String>? = null
-        private var directory: JsonField<String>? = null
         private var name: JsonField<String>? = null
         private var skillId: JsonField<String>? = null
-        private var type: JsonField<String>? = null
-        private var version: JsonField<String>? = null
+        private var type: JsonValue = JsonValue.from("skill_version")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(versionListResponse: VersionListResponse) = apply {
-            id = versionListResponse.id
-            createdAt = versionListResponse.createdAt
-            description = versionListResponse.description
-            directory = versionListResponse.directory
-            name = versionListResponse.name
-            skillId = versionListResponse.skillId
-            type = versionListResponse.type
-            version = versionListResponse.version
-            additionalProperties = versionListResponse.additionalProperties.toMutableMap()
+        internal fun from(betaSkillVersion: BetaSkillVersion) = apply {
+            id = betaSkillVersion.id
+            createdAt = betaSkillVersion.createdAt
+            description = betaSkillVersion.description
+            name = betaSkillVersion.name
+            skillId = betaSkillVersion.skillId
+            type = betaSkillVersion.type
+            additionalProperties = betaSkillVersion.additionalProperties.toMutableMap()
         }
 
         /**
-         * Unique identifier for the skill version.
-         *
-         * The format and length of IDs may change over time.
+         * Unique identifier for this Skill Version. The id addresses the version in paths and pins
+         * it in references.
          */
         fun id(id: String) = id(JsonField.of(id))
 
@@ -248,17 +207,17 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** ISO 8601 timestamp of when the skill version was created. */
-        fun createdAt(createdAt: String) = createdAt(JsonField.of(createdAt))
+        /** ISO 8601 timestamp of when the skill was created. */
+        fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
          * Sets [Builder.createdAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.createdAt] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun createdAt(createdAt: JsonField<String>) = apply { this.createdAt = createdAt }
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /**
          * Description of the skill version.
@@ -277,25 +236,10 @@ private constructor(
         fun description(description: JsonField<String>) = apply { this.description = description }
 
         /**
-         * Directory name of the skill version.
-         *
-         * This is the top-level directory name that was extracted from the uploaded files.
-         */
-        fun directory(directory: String) = directory(JsonField.of(directory))
-
-        /**
-         * Sets [Builder.directory] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.directory] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun directory(directory: JsonField<String>) = apply { this.directory = directory }
-
-        /**
-         * Human-readable name of the skill version.
-         *
-         * This is extracted from the SKILL.md file in the skill upload.
+         * The Skill's immutable kebab-case slug, set at creation from the first upload's SKILL.md
+         * frontmatter `name` (or its enclosing directory). Every later upload must resolve to the
+         * same value. Also the top-level directory of the Skill's mounted files and the base name
+         * of a downloaded archive.
          */
         fun name(name: String) = name(JsonField.of(name))
 
@@ -307,7 +251,11 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
-        /** Identifier for the skill that this version belongs to. */
+        /**
+         * Unique identifier for the skill.
+         *
+         * The format and length of IDs may change over time.
+         */
         fun skillId(skillId: String) = skillId(JsonField.of(skillId))
 
         /**
@@ -319,34 +267,18 @@ private constructor(
         fun skillId(skillId: JsonField<String>) = apply { this.skillId = skillId }
 
         /**
-         * Object type.
+         * Sets the field to an arbitrary JSON value.
          *
-         * For Skill Versions, this is always `"skill_version"`.
-         */
-        fun type(type: String) = type(JsonField.of(type))
-
-        /**
-         * Sets [Builder.type] to an arbitrary JSON value.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("skill_version")
+         * ```
          *
-         * You should usually call [Builder.type] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun type(type: JsonField<String>) = apply { this.type = type }
-
-        /**
-         * Version identifier for the skill.
-         *
-         * Each version is identified by a Unix epoch timestamp (e.g., "1759178010641129").
-         */
-        fun version(version: String) = version(JsonField.of(version))
-
-        /**
-         * Sets [Builder.version] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.version] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun version(version: JsonField<String>) = apply { this.version = version }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -368,7 +300,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [VersionListResponse].
+         * Returns an immutable instance of [BetaSkillVersion].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -377,25 +309,20 @@ private constructor(
          * .id()
          * .createdAt()
          * .description()
-         * .directory()
          * .name()
          * .skillId()
-         * .type()
-         * .version()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): VersionListResponse =
-            VersionListResponse(
+        fun build(): BetaSkillVersion =
+            BetaSkillVersion(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("description", description),
-                checkRequired("directory", directory),
                 checkRequired("name", name),
                 checkRequired("skillId", skillId),
-                checkRequired("type", type),
-                checkRequired("version", version),
+                type,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -410,7 +337,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): VersionListResponse = apply {
+    fun validate(): BetaSkillVersion = apply {
         if (validated) {
             return@apply
         }
@@ -418,11 +345,13 @@ private constructor(
         id()
         createdAt()
         description()
-        directory()
         name()
         skillId()
-        type()
-        version()
+        _type().let {
+            if (it != JsonValue.from("skill_version")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         validated = true
     }
 
@@ -444,45 +373,31 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
-            (if (directory.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (skillId.asKnown().isPresent) 1 else 0) +
-            (if (type.asKnown().isPresent) 1 else 0) +
-            (if (version.asKnown().isPresent) 1 else 0)
+            type.let { if (it == JsonValue.from("skill_version")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is VersionListResponse &&
+        return other is BetaSkillVersion &&
             id == other.id &&
             createdAt == other.createdAt &&
             description == other.description &&
-            directory == other.directory &&
             name == other.name &&
             skillId == other.skillId &&
             type == other.type &&
-            version == other.version &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
-            id,
-            createdAt,
-            description,
-            directory,
-            name,
-            skillId,
-            type,
-            version,
-            additionalProperties,
-        )
+        Objects.hash(id, createdAt, description, name, skillId, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "VersionListResponse{id=$id, createdAt=$createdAt, description=$description, directory=$directory, name=$name, skillId=$skillId, type=$type, version=$version, additionalProperties=$additionalProperties}"
+        "BetaSkillVersion{id=$id, createdAt=$createdAt, description=$description, name=$name, skillId=$skillId, type=$type, additionalProperties=$additionalProperties}"
 }

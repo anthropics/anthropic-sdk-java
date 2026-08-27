@@ -26,7 +26,7 @@ class BetaContainer
 private constructor(
     private val id: JsonField<String>,
     private val expiresAt: JsonField<OffsetDateTime>,
-    private val skills: JsonField<List<BetaSkill>>,
+    private val skills: JsonField<List<BetaContainerSkill>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -38,7 +38,7 @@ private constructor(
         expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("skills")
         @ExcludeMissing
-        skills: JsonField<List<BetaSkill>> = JsonMissing.of(),
+        skills: JsonField<List<BetaContainerSkill>> = JsonMissing.of(),
     ) : this(id, expiresAt, skills, mutableMapOf())
 
     /**
@@ -63,7 +63,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun skills(): Optional<List<BetaSkill>> = skills.getOptional("skills")
+    fun skills(): Optional<List<BetaContainerSkill>> = skills.getOptional("skills")
 
     /**
      * Returns the raw JSON value of [id].
@@ -86,7 +86,9 @@ private constructor(
      *
      * Unlike [skills], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("skills") @ExcludeMissing fun _skills(): JsonField<List<BetaSkill>> = skills
+    @JsonProperty("skills")
+    @ExcludeMissing
+    fun _skills(): JsonField<List<BetaContainerSkill>> = skills
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -120,7 +122,7 @@ private constructor(
 
         private var id: JsonField<String>? = null
         private var expiresAt: JsonField<OffsetDateTime>? = null
-        private var skills: JsonField<MutableList<BetaSkill>>? = null
+        private var skills: JsonField<MutableList<BetaContainerSkill>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -155,28 +157,28 @@ private constructor(
         fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
 
         /** Skills loaded in the container */
-        fun skills(skills: List<BetaSkill>?) = skills(JsonField.ofNullable(skills))
+        fun skills(skills: List<BetaContainerSkill>?) = skills(JsonField.ofNullable(skills))
 
         /** Alias for calling [Builder.skills] with `skills.orElse(null)`. */
-        fun skills(skills: Optional<List<BetaSkill>>) = skills(skills.getOrNull())
+        fun skills(skills: Optional<List<BetaContainerSkill>>) = skills(skills.getOrNull())
 
         /**
          * Sets [Builder.skills] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.skills] with a well-typed `List<BetaSkill>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.skills] with a well-typed `List<BetaContainerSkill>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
-        fun skills(skills: JsonField<List<BetaSkill>>) = apply {
+        fun skills(skills: JsonField<List<BetaContainerSkill>>) = apply {
             this.skills = skills.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [BetaSkill] to [skills].
+         * Adds a single [BetaContainerSkill] to [skills].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addSkill(skill: BetaSkill) = apply {
+        fun addSkill(skill: BetaContainerSkill) = apply {
             skills =
                 (skills ?: JsonField.of(mutableListOf())).also {
                     checkKnown("skills", it).add(skill)

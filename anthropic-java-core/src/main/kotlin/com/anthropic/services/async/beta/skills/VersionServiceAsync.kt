@@ -6,15 +6,14 @@ import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.models.beta.skills.versions.BetaDeletedSkillVersion
+import com.anthropic.models.beta.skills.versions.BetaSkillVersion
 import com.anthropic.models.beta.skills.versions.VersionCreateParams
-import com.anthropic.models.beta.skills.versions.VersionCreateResponse
 import com.anthropic.models.beta.skills.versions.VersionDeleteParams
-import com.anthropic.models.beta.skills.versions.VersionDeleteResponse
 import com.anthropic.models.beta.skills.versions.VersionDownloadParams
 import com.anthropic.models.beta.skills.versions.VersionListPageAsync
 import com.anthropic.models.beta.skills.versions.VersionListParams
 import com.anthropic.models.beta.skills.versions.VersionRetrieveParams
-import com.anthropic.models.beta.skills.versions.VersionRetrieveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -33,52 +32,50 @@ interface VersionServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionServiceAsync
 
     /** Create Skill Version */
-    fun create(
-        skillId: String,
-        params: VersionCreateParams,
-    ): CompletableFuture<VersionCreateResponse> = create(skillId, params, RequestOptions.none())
+    fun create(skillId: String, params: VersionCreateParams): CompletableFuture<BetaSkillVersion> =
+        create(skillId, params, RequestOptions.none())
 
     /** @see create */
     fun create(
         skillId: String,
         params: VersionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionCreateResponse> =
+    ): CompletableFuture<BetaSkillVersion> =
         create(params.toBuilder().skillId(skillId).build(), requestOptions)
 
     /** @see create */
-    fun create(params: VersionCreateParams): CompletableFuture<VersionCreateResponse> =
+    fun create(params: VersionCreateParams): CompletableFuture<BetaSkillVersion> =
         create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: VersionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionCreateResponse>
+    ): CompletableFuture<BetaSkillVersion>
 
     /** Get Skill Version */
     fun retrieve(
         version: String,
         params: VersionRetrieveParams,
-    ): CompletableFuture<VersionRetrieveResponse> = retrieve(version, params, RequestOptions.none())
+    ): CompletableFuture<BetaSkillVersion> = retrieve(version, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         version: String,
         params: VersionRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionRetrieveResponse> =
+    ): CompletableFuture<BetaSkillVersion> =
         retrieve(params.toBuilder().version(version).build(), requestOptions)
 
     /** @see retrieve */
-    fun retrieve(params: VersionRetrieveParams): CompletableFuture<VersionRetrieveResponse> =
+    fun retrieve(params: VersionRetrieveParams): CompletableFuture<BetaSkillVersion> =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: VersionRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionRetrieveResponse>
+    ): CompletableFuture<BetaSkillVersion>
 
     /** List Skill Versions */
     fun list(skillId: String): CompletableFuture<VersionListPageAsync> =
@@ -119,25 +116,25 @@ interface VersionServiceAsync {
     fun delete(
         version: String,
         params: VersionDeleteParams,
-    ): CompletableFuture<VersionDeleteResponse> = delete(version, params, RequestOptions.none())
+    ): CompletableFuture<BetaDeletedSkillVersion> = delete(version, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         version: String,
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionDeleteResponse> =
+    ): CompletableFuture<BetaDeletedSkillVersion> =
         delete(params.toBuilder().version(version).build(), requestOptions)
 
     /** @see delete */
-    fun delete(params: VersionDeleteParams): CompletableFuture<VersionDeleteResponse> =
+    fun delete(params: VersionDeleteParams): CompletableFuture<BetaDeletedSkillVersion> =
         delete(params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionDeleteResponse>
+    ): CompletableFuture<BetaDeletedSkillVersion>
 
     /** Download a skill version's content as a zip archive. */
     fun download(version: String, params: VersionDownloadParams): CompletableFuture<HttpResponse> =
@@ -182,7 +179,7 @@ interface VersionServiceAsync {
         fun create(
             skillId: String,
             params: VersionCreateParams,
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaSkillVersion>> =
             create(skillId, params, RequestOptions.none())
 
         /** @see create */
@@ -190,20 +187,20 @@ interface VersionServiceAsync {
             skillId: String,
             params: VersionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaSkillVersion>> =
             create(params.toBuilder().skillId(skillId).build(), requestOptions)
 
         /** @see create */
         fun create(
             params: VersionCreateParams
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaSkillVersion>> =
             create(params, RequestOptions.none())
 
         /** @see create */
         fun create(
             params: VersionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionCreateResponse>>
+        ): CompletableFuture<HttpResponseFor<BetaSkillVersion>>
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions/{version}?beta=true`,
@@ -212,7 +209,7 @@ interface VersionServiceAsync {
         fun retrieve(
             version: String,
             params: VersionRetrieveParams,
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaSkillVersion>> =
             retrieve(version, params, RequestOptions.none())
 
         /** @see retrieve */
@@ -220,20 +217,20 @@ interface VersionServiceAsync {
             version: String,
             params: VersionRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaSkillVersion>> =
             retrieve(params.toBuilder().version(version).build(), requestOptions)
 
         /** @see retrieve */
         fun retrieve(
             params: VersionRetrieveParams
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaSkillVersion>> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             params: VersionRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>>
+        ): CompletableFuture<HttpResponseFor<BetaSkillVersion>>
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}/versions?beta=true`, but is
@@ -284,7 +281,7 @@ interface VersionServiceAsync {
         fun delete(
             version: String,
             params: VersionDeleteParams,
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedSkillVersion>> =
             delete(version, params, RequestOptions.none())
 
         /** @see delete */
@@ -292,20 +289,20 @@ interface VersionServiceAsync {
             version: String,
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedSkillVersion>> =
             delete(params.toBuilder().version(version).build(), requestOptions)
 
         /** @see delete */
         fun delete(
             params: VersionDeleteParams
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedSkillVersion>> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
         fun delete(
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>>
+        ): CompletableFuture<HttpResponseFor<BetaDeletedSkillVersion>>
 
         /**
          * Returns a raw HTTP response for `get

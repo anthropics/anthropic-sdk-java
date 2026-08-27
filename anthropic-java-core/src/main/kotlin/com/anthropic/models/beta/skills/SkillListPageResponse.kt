@@ -22,20 +22,16 @@ import kotlin.jvm.optionals.getOrNull
 class SkillListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val data: JsonField<List<SkillListResponse>>,
-    private val hasMore: JsonField<Boolean>,
+    private val data: JsonField<List<BetaSkill>>,
     private val nextPage: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("data")
-        @ExcludeMissing
-        data: JsonField<List<SkillListResponse>> = JsonMissing.of(),
-        @JsonProperty("has_more") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("data") @ExcludeMissing data: JsonField<List<BetaSkill>> = JsonMissing.of(),
         @JsonProperty("next_page") @ExcludeMissing nextPage: JsonField<String> = JsonMissing.of(),
-    ) : this(data, hasMore, nextPage, mutableMapOf())
+    ) : this(data, nextPage, mutableMapOf())
 
     /**
      * List of skills.
@@ -43,17 +39,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun data(): List<SkillListResponse> = data.getRequired("data")
-
-    /**
-     * Whether there are more results available.
-     *
-     * If `true`, there are additional results that can be fetched using the `next_page` token.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun hasMore(): Boolean = hasMore.getRequired("has_more")
+    fun data(): List<BetaSkill> = data.getRequired("data")
 
     /**
      * Token for fetching the next page of results.
@@ -71,14 +57,7 @@ private constructor(
      *
      * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<SkillListResponse>> = data
-
-    /**
-     * Returns the raw JSON value of [hasMore].
-     *
-     * Unlike [hasMore], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("has_more") @ExcludeMissing fun _hasMore(): JsonField<Boolean> = hasMore
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<BetaSkill>> = data
 
     /**
      * Returns the raw JSON value of [nextPage].
@@ -107,7 +86,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .data()
-         * .hasMore()
          * .nextPage()
          * ```
          */
@@ -117,8 +95,7 @@ private constructor(
     /** A builder for [SkillListPageResponse]. */
     class Builder internal constructor() {
 
-        private var data: JsonField<MutableList<SkillListResponse>>? = null
-        private var hasMore: JsonField<Boolean>? = null
+        private var data: JsonField<MutableList<BetaSkill>>? = null
         private var nextPage: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -126,51 +103,35 @@ private constructor(
         internal fun from(skillListPageResponse: SkillListPageResponse) = apply {
             data =
                 skillListPageResponse.data.map { it.toMutableList() }.takeUnless { it.isMissing() }
-            hasMore = skillListPageResponse.hasMore
             nextPage = skillListPageResponse.nextPage
             additionalProperties = skillListPageResponse.additionalProperties.toMutableMap()
         }
 
         /** List of skills. */
-        fun data(data: List<SkillListResponse>) = data(JsonField.of(data))
+        fun data(data: List<BetaSkill>) = data(JsonField.of(data))
 
         /**
          * Sets [Builder.data] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.data] with a well-typed `List<SkillListResponse>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.data] with a well-typed `List<BetaSkill>` value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun data(data: JsonField<List<SkillListResponse>>) = apply {
+        fun data(data: JsonField<List<BetaSkill>>) = apply {
             this.data = data.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [SkillListResponse] to [Builder.data].
+         * Adds a single [BetaSkill] to [Builder.data].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addData(data: SkillListResponse) = apply {
+        fun addData(data: BetaSkill) = apply {
             this.data =
                 (this.data ?: JsonField.of(mutableListOf())).also {
                     checkKnown("data", it).add(data)
                 }
         }
-
-        /**
-         * Whether there are more results available.
-         *
-         * If `true`, there are additional results that can be fetched using the `next_page` token.
-         */
-        fun hasMore(hasMore: Boolean) = hasMore(JsonField.of(hasMore))
-
-        /**
-         * Sets [Builder.hasMore] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.hasMore] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
 
         /**
          * Token for fetching the next page of results.
@@ -218,7 +179,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .data()
-         * .hasMore()
          * .nextPage()
          * ```
          *
@@ -227,7 +187,6 @@ private constructor(
         fun build(): SkillListPageResponse =
             SkillListPageResponse(
                 checkRequired("data", data).map { it.toImmutable() },
-                checkRequired("hasMore", hasMore),
                 checkRequired("nextPage", nextPage),
                 additionalProperties.toMutableMap(),
             )
@@ -249,7 +208,6 @@ private constructor(
         }
 
         data().forEach { it.validate() }
-        hasMore()
         nextPage()
         validated = true
     }
@@ -270,7 +228,6 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (hasMore.asKnown().isPresent) 1 else 0) +
             (if (nextPage.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
@@ -280,17 +237,14 @@ private constructor(
 
         return other is SkillListPageResponse &&
             data == other.data &&
-            hasMore == other.hasMore &&
             nextPage == other.nextPage &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(data, hasMore, nextPage, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(data, nextPage, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SkillListPageResponse{data=$data, hasMore=$hasMore, nextPage=$nextPage, additionalProperties=$additionalProperties}"
+        "SkillListPageResponse{data=$data, nextPage=$nextPage, additionalProperties=$additionalProperties}"
 }

@@ -16,14 +16,14 @@ private constructor(
     private val service: VersionService,
     private val params: VersionListParams,
     private val response: VersionListPageResponse,
-) : Page<VersionListResponse> {
+) : Page<BetaSkillVersion> {
 
     /**
      * Delegates to [VersionListPageResponse], but gracefully handles missing data.
      *
      * @see VersionListPageResponse.data
      */
-    fun data(): List<VersionListResponse> =
+    fun data(): List<BetaSkillVersion> =
         response._data().getOptional("data").getOrNull() ?: emptyList()
 
     /**
@@ -33,7 +33,7 @@ private constructor(
      */
     fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")
 
-    override fun items(): List<VersionListResponse> = data()
+    override fun items(): List<BetaSkillVersion> = data()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
 
@@ -46,7 +46,7 @@ private constructor(
 
     override fun nextPage(): VersionListPage = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager<VersionListResponse> = AutoPager.from(this)
+    fun autoPager(): AutoPager<BetaSkillVersion> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
     fun params(): VersionListParams = params

@@ -25,7 +25,7 @@ private constructor(
     /**
      * Number of results to return per page.
      *
-     * Maximum value is 100. Defaults to 20.
+     * Ranges from `1` to `1000`. Defaults to `20`.
      */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
@@ -87,7 +87,7 @@ private constructor(
         /**
          * Number of results to return per page.
          *
-         * Maximum value is 100. Defaults to 20.
+         * Ranges from `1` to `1000`. Defaults to `20`.
          */
         fun limit(limit: Long?) = apply { this.limit = limit }
 

@@ -48,14 +48,13 @@ private constructor(
     fun files(): List<InputStream> = body.files()
 
     /**
-     * Display title for the skill.
-     *
-     * This is a human-readable label that is not included in the prompt sent to the model.
+     * Human-readable, single-line label for the Skill. Maximum 255 characters. Always set: derived
+     * from the SKILL.md frontmatter `name` when omitted at creation. Not unique.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun displayTitle(): Optional<String> = body.displayTitle()
+    fun displayName(): Optional<String> = body.displayName()
 
     /**
      * Returns the raw multipart value of [files].
@@ -65,12 +64,12 @@ private constructor(
     fun _files(): MultipartField<List<InputStream>> = body._files()
 
     /**
-     * Returns the raw multipart value of [displayTitle].
+     * Returns the raw multipart value of [displayName].
      *
-     * Unlike [displayTitle], this method doesn't throw if the multipart field has an unexpected
+     * Unlike [displayName], this method doesn't throw if the multipart field has an unexpected
      * type.
      */
-    fun _displayTitle(): MultipartField<String> = body._displayTitle()
+    fun _displayName(): MultipartField<String> = body._displayName()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -141,7 +140,7 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [files]
-         * - [displayTitle]
+         * - [displayName]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -186,24 +185,23 @@ private constructor(
         fun addFile(path: Path) = apply { body.addFile(path) }
 
         /**
-         * Display title for the skill.
-         *
-         * This is a human-readable label that is not included in the prompt sent to the model.
+         * Human-readable, single-line label for the Skill. Maximum 255 characters. Always set:
+         * derived from the SKILL.md frontmatter `name` when omitted at creation. Not unique.
          */
-        fun displayTitle(displayTitle: String?) = apply { body.displayTitle(displayTitle) }
+        fun displayName(displayName: String?) = apply { body.displayName(displayName) }
 
-        /** Alias for calling [Builder.displayTitle] with `displayTitle.orElse(null)`. */
-        fun displayTitle(displayTitle: Optional<String>) = displayTitle(displayTitle.getOrNull())
+        /** Alias for calling [Builder.displayName] with `displayName.orElse(null)`. */
+        fun displayName(displayName: Optional<String>) = displayName(displayName.getOrNull())
 
         /**
-         * Sets [Builder.displayTitle] to an arbitrary multipart value.
+         * Sets [Builder.displayName] to an arbitrary multipart value.
          *
-         * You should usually call [Builder.displayTitle] with a well-typed [String] value instead.
+         * You should usually call [Builder.displayName] with a well-typed [String] value instead.
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
-        fun displayTitle(displayTitle: MultipartField<String>) = apply {
-            body.displayTitle(displayTitle)
+        fun displayName(displayName: MultipartField<String>) = apply {
+            body.displayName(displayName)
         }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -345,7 +343,7 @@ private constructor(
     }
 
     fun _body(): Map<String, MultipartField<*>> =
-        (mapOf("files" to _files(), "display_title" to _displayTitle()) +
+        (mapOf("files" to _files(), "display_name" to _displayName()) +
                 _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
             .toImmutable()
 
@@ -362,7 +360,7 @@ private constructor(
     class Body
     private constructor(
         private val files: MultipartField<List<InputStream>>,
-        private val displayTitle: MultipartField<String>,
+        private val displayName: MultipartField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -378,14 +376,13 @@ private constructor(
         fun files(): List<InputStream> = files.value.getRequired("files")
 
         /**
-         * Display title for the skill.
-         *
-         * This is a human-readable label that is not included in the prompt sent to the model.
+         * Human-readable, single-line label for the Skill. Maximum 255 characters. Always set:
+         * derived from the SKILL.md frontmatter `name` when omitted at creation. Not unique.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun displayTitle(): Optional<String> = displayTitle.value.getOptional("display_title")
+        fun displayName(): Optional<String> = displayName.value.getOptional("display_name")
 
         /**
          * Returns the raw multipart value of [files].
@@ -397,14 +394,14 @@ private constructor(
         fun _files(): MultipartField<List<InputStream>> = files
 
         /**
-         * Returns the raw multipart value of [displayTitle].
+         * Returns the raw multipart value of [displayName].
          *
-         * Unlike [displayTitle], this method doesn't throw if the multipart field has an unexpected
+         * Unlike [displayName], this method doesn't throw if the multipart field has an unexpected
          * type.
          */
-        @JsonProperty("display_title")
+        @JsonProperty("display_name")
         @ExcludeMissing
-        fun _displayTitle(): MultipartField<String> = displayTitle
+        fun _displayName(): MultipartField<String> = displayName
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -441,13 +438,13 @@ private constructor(
         class Builder internal constructor() {
 
             private var files: MultipartField<MutableList<InputStream>>? = null
-            private var displayTitle: MultipartField<String> = MultipartField.of(null)
+            private var displayName: MultipartField<String> = MultipartField.of(null)
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 files = body.files.map { it.toMutableList() }
-                displayTitle = body.displayTitle
+                displayName = body.displayName
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -508,25 +505,23 @@ private constructor(
             fun addFile(path: Path) = addFile(path.inputStream())
 
             /**
-             * Display title for the skill.
-             *
-             * This is a human-readable label that is not included in the prompt sent to the model.
+             * Human-readable, single-line label for the Skill. Maximum 255 characters. Always set:
+             * derived from the SKILL.md frontmatter `name` when omitted at creation. Not unique.
              */
-            fun displayTitle(displayTitle: String?) = displayTitle(MultipartField.of(displayTitle))
+            fun displayName(displayName: String?) = displayName(MultipartField.of(displayName))
 
-            /** Alias for calling [Builder.displayTitle] with `displayTitle.orElse(null)`. */
-            fun displayTitle(displayTitle: Optional<String>) =
-                displayTitle(displayTitle.getOrNull())
+            /** Alias for calling [Builder.displayName] with `displayName.orElse(null)`. */
+            fun displayName(displayName: Optional<String>) = displayName(displayName.getOrNull())
 
             /**
-             * Sets [Builder.displayTitle] to an arbitrary multipart value.
+             * Sets [Builder.displayName] to an arbitrary multipart value.
              *
-             * You should usually call [Builder.displayTitle] with a well-typed [String] value
+             * You should usually call [Builder.displayName] with a well-typed [String] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun displayTitle(displayTitle: MultipartField<String>) = apply {
-                this.displayTitle = displayTitle
+            fun displayName(displayName: MultipartField<String>) = apply {
+                this.displayName = displayName
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -563,7 +558,7 @@ private constructor(
             fun build(): Body =
                 Body(
                     checkRequired("files", files).map { it.toImmutable() },
-                    displayTitle,
+                    displayName,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -585,7 +580,7 @@ private constructor(
             }
 
             files()
-            displayTitle()
+            displayName()
             validated = true
         }
 
@@ -604,18 +599,16 @@ private constructor(
 
             return other is Body &&
                 files == other.files &&
-                displayTitle == other.displayTitle &&
+                displayName == other.displayName &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(files, displayTitle, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(files, displayName, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{files=$files, displayTitle=$displayTitle, additionalProperties=$additionalProperties}"
+            "Body{files=$files, displayName=$displayName, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

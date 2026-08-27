@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.models.beta.messages
+package com.anthropic.models.beta.skills
 
 import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
@@ -17,33 +17,26 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** A skill that was loaded in a container (response model). */
-class BetaSkill
+class BetaSkillSource
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val skillId: JsonField<String>,
     private val type: JsonField<Type>,
-    private val version: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("skill_id") @ExcludeMissing skillId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-        @JsonProperty("version") @ExcludeMissing version: JsonField<String> = JsonMissing.of(),
-    ) : this(skillId, type, version, mutableMapOf())
+        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of()
+    ) : this(type, mutableMapOf())
 
     /**
-     * Skill ID
+     * Where the Skill comes from.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun skillId(): String = skillId.getRequired("skill_id")
-
-    /**
-     * Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined)
+     * Possible values:
+     * * `"custom"`: authored by the platform user; private to their workspace
+     * * `"anthropic"`: published by Anthropic; shared and read-only
+     * * `"anthropic_example"`: Anthropic-published sample Skill
+     * * `"plugin"`: resolved from an installed plugin
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -51,33 +44,11 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * The resolved version: a skill version ID for custom skills.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun version(): String = version.getRequired("version")
-
-    /**
-     * Returns the raw JSON value of [skillId].
-     *
-     * Unlike [skillId], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("skill_id") @ExcludeMissing fun _skillId(): JsonField<String> = skillId
-
-    /**
      * Returns the raw JSON value of [type].
      *
      * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-    /**
-     * Returns the raw JSON value of [version].
-     *
-     * Unlike [version], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("version") @ExcludeMissing fun _version(): JsonField<String> = version
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -94,46 +65,43 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [BetaSkill].
+         * Returns a mutable builder for constructing an instance of [BetaSkillSource].
          *
          * The following fields are required:
          * ```java
-         * .skillId()
          * .type()
-         * .version()
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaSkillSource] with the required [type] set to the
+         * given value.
+         */
+        @JvmStatic fun of(type: Type) = builder().type(type).build()
     }
 
-    /** A builder for [BetaSkill]. */
+    /** A builder for [BetaSkillSource]. */
     class Builder internal constructor() {
 
-        private var skillId: JsonField<String>? = null
         private var type: JsonField<Type>? = null
-        private var version: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaSkill: BetaSkill) = apply {
-            skillId = betaSkill.skillId
-            type = betaSkill.type
-            version = betaSkill.version
-            additionalProperties = betaSkill.additionalProperties.toMutableMap()
+        internal fun from(betaSkillSource: BetaSkillSource) = apply {
+            type = betaSkillSource.type
+            additionalProperties = betaSkillSource.additionalProperties.toMutableMap()
         }
 
-        /** Skill ID */
-        fun skillId(skillId: String) = skillId(JsonField.of(skillId))
-
         /**
-         * Sets [Builder.skillId] to an arbitrary JSON value.
+         * Where the Skill comes from.
          *
-         * You should usually call [Builder.skillId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * Possible values:
+         * * `"custom"`: authored by the platform user; private to their workspace
+         * * `"anthropic"`: published by Anthropic; shared and read-only
+         * * `"anthropic_example"`: Anthropic-published sample Skill
+         * * `"plugin"`: resolved from an installed plugin
          */
-        fun skillId(skillId: JsonField<String>) = apply { this.skillId = skillId }
-
-        /** Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined) */
         fun type(type: Type) = type(JsonField.of(type))
 
         /**
@@ -143,17 +111,6 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
-
-        /** The resolved version: a skill version ID for custom skills. */
-        fun version(version: String) = version(JsonField.of(version))
-
-        /**
-         * Sets [Builder.version] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.version] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun version(version: JsonField<String>) = apply { this.version = version }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -175,26 +132,19 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaSkill].
+         * Returns an immutable instance of [BetaSkillSource].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
-         * .skillId()
          * .type()
-         * .version()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BetaSkill =
-            BetaSkill(
-                checkRequired("skillId", skillId),
-                checkRequired("type", type),
-                checkRequired("version", version),
-                additionalProperties.toMutableMap(),
-            )
+        fun build(): BetaSkillSource =
+            BetaSkillSource(checkRequired("type", type), additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -207,14 +157,12 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BetaSkill = apply {
+    fun validate(): BetaSkillSource = apply {
         if (validated) {
             return@apply
         }
 
-        skillId()
         type().validate()
-        version()
         validated = true
     }
 
@@ -231,13 +179,17 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
-    internal fun validity(): Int =
-        (if (skillId.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (version.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic internal fun validity(): Int = (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Type of skill - either 'anthropic' (built-in) or 'custom' (user-defined) */
+    /**
+     * Where the Skill comes from.
+     *
+     * Possible values:
+     * * `"custom"`: authored by the platform user; private to their workspace
+     * * `"anthropic"`: published by Anthropic; shared and read-only
+     * * `"anthropic_example"`: Anthropic-published sample Skill
+     * * `"plugin"`: resolved from an installed plugin
+     */
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -252,9 +204,13 @@ private constructor(
 
         companion object {
 
+            @JvmField val CUSTOM = of("custom")
+
             @JvmField val ANTHROPIC = of("anthropic")
 
-            @JvmField val CUSTOM = of("custom")
+            @JvmField val ANTHROPIC_EXAMPLE = of("anthropic_example")
+
+            @JvmField val PLUGIN = of("plugin")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
@@ -265,8 +221,10 @@ private constructor(
 
         /** An enum containing [Type]'s known values. */
         enum class Known {
-            ANTHROPIC,
             CUSTOM,
+            ANTHROPIC,
+            ANTHROPIC_EXAMPLE,
+            PLUGIN,
         }
 
         /**
@@ -279,8 +237,10 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
-            ANTHROPIC,
             CUSTOM,
+            ANTHROPIC,
+            ANTHROPIC_EXAMPLE,
+            PLUGIN,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -294,8 +254,10 @@ private constructor(
          */
         fun value(): Value =
             when (this) {
-                ANTHROPIC -> Value.ANTHROPIC
                 CUSTOM -> Value.CUSTOM
+                ANTHROPIC -> Value.ANTHROPIC
+                ANTHROPIC_EXAMPLE -> Value.ANTHROPIC_EXAMPLE
+                PLUGIN -> Value.PLUGIN
                 else -> Value._UNKNOWN
             }
 
@@ -310,8 +272,10 @@ private constructor(
          */
         fun known(): Known =
             when (this) {
-                ANTHROPIC -> Known.ANTHROPIC
                 CUSTOM -> Known.CUSTOM
+                ANTHROPIC -> Known.ANTHROPIC
+                ANTHROPIC_EXAMPLE -> Known.ANTHROPIC_EXAMPLE
+                PLUGIN -> Known.PLUGIN
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 
@@ -383,17 +347,15 @@ private constructor(
             return true
         }
 
-        return other is BetaSkill &&
-            skillId == other.skillId &&
+        return other is BetaSkillSource &&
             type == other.type &&
-            version == other.version &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(skillId, type, version, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaSkill{skillId=$skillId, type=$type, version=$version, additionalProperties=$additionalProperties}"
+        "BetaSkillSource{type=$type, additionalProperties=$additionalProperties}"
 }

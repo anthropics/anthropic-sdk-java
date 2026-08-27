@@ -19,14 +19,14 @@ private constructor(
     private val streamHandlerExecutor: Executor,
     private val params: VersionListParams,
     private val response: VersionListPageResponse,
-) : PageAsync<VersionListResponse> {
+) : PageAsync<BetaSkillVersion> {
 
     /**
      * Delegates to [VersionListPageResponse], but gracefully handles missing data.
      *
      * @see VersionListPageResponse.data
      */
-    fun data(): List<VersionListResponse> =
+    fun data(): List<BetaSkillVersion> =
         response._data().getOptional("data").getOrNull() ?: emptyList()
 
     /**
@@ -36,7 +36,7 @@ private constructor(
      */
     fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")
 
-    override fun items(): List<VersionListResponse> = data()
+    override fun items(): List<BetaSkillVersion> = data()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
 
@@ -50,7 +50,7 @@ private constructor(
     override fun nextPage(): CompletableFuture<VersionListPageAsync> =
         service.list(nextPageParams())
 
-    fun autoPager(): AutoPagerAsync<VersionListResponse> =
+    fun autoPager(): AutoPagerAsync<BetaSkillVersion> =
         AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
