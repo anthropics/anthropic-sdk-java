@@ -50,9 +50,24 @@ private constructor(
 
     override fun items(): List<BetaWorkspaceMember> = data()
 
-    override fun hasNextPage(): Boolean = items().isNotEmpty() && lastId().isPresent
+    override fun hasNextPage(): Boolean {
+        if (items().isEmpty()) {
+            return false
+        }
+        if (hasMore().getOrNull() == false) {
+            return false
+        }
+
+        return if (params.beforeId().isPresent) firstId().isPresent else lastId().isPresent
+    }
 
     fun nextPageParams(): MemberListParams {
+        if (params.beforeId().isPresent) {
+            val previousCursor =
+                firstId().getOrNull()
+                    ?: throw IllegalStateException("Cannot construct next page params")
+            return params.toBuilder().beforeId(previousCursor).build()
+        }
         val nextCursor =
             lastId().getOrNull() ?: throw IllegalStateException("Cannot construct next page params")
         return params.toBuilder().afterId(nextCursor).build()
