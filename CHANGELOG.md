@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.59.0 (2026-08-27)
+
+Full Changelog: [v2.58.0...v2.59.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.58.0...v2.59.0)
+
+### Features
+
+* **api:** beta files/skills namespaces use GA shapes; drop dated beta header pins ([e4e0e25](https://github.com/anthropics/anthropic-sdk-java/commit/e4e0e25fec796e85210995c8f69b4ed69015e0ef))
+
+
+### Bug Fixes
+
+* **aws,bedrock:** don't consume the request body while SigV4 signing ([#257](https://github.com/anthropics/anthropic-sdk-java/issues/257)) ([95238b1](https://github.com/anthropics/anthropic-sdk-java/commit/95238b1cdcf8c0684e54ee7660f34f20dc9c0de1))
+* **client:** page backward via before_id and stop on has_more=false ([81f16e7](https://github.com/anthropics/anthropic-sdk-java/commit/81f16e718b5915ae676f4e393dac1b5827e3b26b))
+* **webhooks:** require headers to be passed to `unwrap()` ([4b43e22](https://github.com/anthropics/anthropic-sdk-java/commit/4b43e22ce0a8c44fc5437f7daf7509f2ce6c2c05))
+
+
+### Documentation
+
+* **api:** clarify pagination on the organization rate-limit list endpoints ([1d0e987](https://github.com/anthropics/anthropic-sdk-java/commit/1d0e9877c2a9d4c8b7126436d23774f6e66f6e71))
+
 ## 2.58.0 (2026-08-26)
 
 Full Changelog: [v2.57.0...v2.58.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.57.0...v2.58.0)
