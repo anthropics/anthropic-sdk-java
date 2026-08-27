@@ -44,7 +44,8 @@ private constructor(
     fun data(): List<BetaOrganizationRateLimit> = data.getRequired("data")
 
     /**
-     * Token to provide in as `page` in the subsequent request to retrieve the next page of data.
+     * Opaque cursor for the next page of results, or `null` when no entries remain beyond this
+     * response.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -137,8 +138,8 @@ private constructor(
         }
 
         /**
-         * Token to provide in as `page` in the subsequent request to retrieve the next page of
-         * data.
+         * Opaque cursor for the next page of results, or `null` when no entries remain beyond this
+         * response.
          */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 

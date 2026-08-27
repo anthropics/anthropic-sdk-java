@@ -31,8 +31,8 @@ interface RateLimitService {
      * without overrides inherit the organization limits and are not listed; use `GET
      * /v1/organizations/rate_limits` to see those.
      *
-     * This endpoint currently returns every matching entry in a single page regardless of `limit`;
-     * follow `next_page` so that clients keep working when pagination is enabled.
+     * When `limit` is omitted, every matching entry is returned in a single page; when `limit`
+     * truncates the result, follow `next_page` to fetch the remaining entries.
      */
     fun list(workspaceId: String): RateLimitListPage = list(workspaceId, RateLimitListParams.none())
 
