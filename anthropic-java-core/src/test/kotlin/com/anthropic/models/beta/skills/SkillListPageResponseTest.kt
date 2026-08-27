@@ -4,6 +4,7 @@ package com.anthropic.models.beta.skills
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -14,34 +15,30 @@ internal class SkillListPageResponseTest {
         val skillListPageResponse =
             SkillListPageResponse.builder()
                 .addData(
-                    SkillListResponse.builder()
+                    BetaSkill.builder()
                         .id("skill_01JAbcdefghijklmnopqrstuvw")
-                        .createdAt("2024-10-30T23:58:27.427722Z")
-                        .displayTitle("My Custom Skill")
-                        .latestVersion("1759178010641129")
-                        .source("custom")
-                        .type("type")
-                        .updatedAt("2024-10-30T23:58:27.427722Z")
+                        .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
+                        .displayName("display_name")
+                        .latestVersionId("latest_version_id")
+                        .source(BetaSkillSource.of(BetaSkillSource.Type.CUSTOM))
+                        .updatedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                         .build()
                 )
-                .hasMore(true)
-                .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
+                .nextPage("next_page")
                 .build()
 
         assertThat(skillListPageResponse.data())
             .containsExactly(
-                SkillListResponse.builder()
+                BetaSkill.builder()
                     .id("skill_01JAbcdefghijklmnopqrstuvw")
-                    .createdAt("2024-10-30T23:58:27.427722Z")
-                    .displayTitle("My Custom Skill")
-                    .latestVersion("1759178010641129")
-                    .source("custom")
-                    .type("type")
-                    .updatedAt("2024-10-30T23:58:27.427722Z")
+                    .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
+                    .displayName("display_name")
+                    .latestVersionId("latest_version_id")
+                    .source(BetaSkillSource.of(BetaSkillSource.Type.CUSTOM))
+                    .updatedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                     .build()
             )
-        assertThat(skillListPageResponse.hasMore()).isEqualTo(true)
-        assertThat(skillListPageResponse.nextPage()).contains("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
+        assertThat(skillListPageResponse.nextPage()).contains("next_page")
     }
 
     @Test
@@ -50,18 +47,16 @@ internal class SkillListPageResponseTest {
         val skillListPageResponse =
             SkillListPageResponse.builder()
                 .addData(
-                    SkillListResponse.builder()
+                    BetaSkill.builder()
                         .id("skill_01JAbcdefghijklmnopqrstuvw")
-                        .createdAt("2024-10-30T23:58:27.427722Z")
-                        .displayTitle("My Custom Skill")
-                        .latestVersion("1759178010641129")
-                        .source("custom")
-                        .type("type")
-                        .updatedAt("2024-10-30T23:58:27.427722Z")
+                        .createdAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
+                        .displayName("display_name")
+                        .latestVersionId("latest_version_id")
+                        .source(BetaSkillSource.of(BetaSkillSource.Type.CUSTOM))
+                        .updatedAt(OffsetDateTime.parse("2024-10-30T23:58:27.427722Z"))
                         .build()
                 )
-                .hasMore(true)
-                .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
+                .nextPage("next_page")
                 .build()
 
         val roundtrippedSkillListPageResponse =

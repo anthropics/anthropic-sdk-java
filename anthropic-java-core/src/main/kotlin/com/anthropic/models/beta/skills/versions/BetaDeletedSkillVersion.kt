@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.anthropic.models.beta.skills
+package com.anthropic.models.beta.skills.versions
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -15,24 +15,23 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class SkillDeleteResponse
+class BetaDeletedSkillVersion
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
-    private val type: JsonField<String>,
+    private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
     ) : this(id, type, mutableMapOf())
 
     /**
-     * Unique identifier for the skill.
-     *
-     * The format and length of IDs may change over time.
+     * Unique identifier for this Skill Version. The id addresses the version in paths and pins it
+     * in references.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -42,12 +41,17 @@ private constructor(
     /**
      * Deleted object type.
      *
-     * For Skills, this is always `"skill_deleted"`.
+     * For Skill Versions, this is always `"skill_version_deleted"`.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("skill_version_deleted")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
-    fun type(): String = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * Returns the raw JSON value of [id].
@@ -55,13 +59,6 @@ private constructor(
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
-
-    /**
-     * Returns the raw JSON value of [type].
-     *
-     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<String> = type
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -78,35 +75,39 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [SkillDeleteResponse].
+         * Returns a mutable builder for constructing an instance of [BetaDeletedSkillVersion].
          *
          * The following fields are required:
          * ```java
          * .id()
-         * .type()
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaDeletedSkillVersion] with the required [id] set to
+         * the given value.
+         */
+        @JvmStatic fun of(id: String) = builder().id(id).build()
     }
 
-    /** A builder for [SkillDeleteResponse]. */
+    /** A builder for [BetaDeletedSkillVersion]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var type: JsonField<String>? = null
+        private var type: JsonValue = JsonValue.from("skill_version_deleted")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(skillDeleteResponse: SkillDeleteResponse) = apply {
-            id = skillDeleteResponse.id
-            type = skillDeleteResponse.type
-            additionalProperties = skillDeleteResponse.additionalProperties.toMutableMap()
+        internal fun from(betaDeletedSkillVersion: BetaDeletedSkillVersion) = apply {
+            id = betaDeletedSkillVersion.id
+            type = betaDeletedSkillVersion.type
+            additionalProperties = betaDeletedSkillVersion.additionalProperties.toMutableMap()
         }
 
         /**
-         * Unique identifier for the skill.
-         *
-         * The format and length of IDs may change over time.
+         * Unique identifier for this Skill Version. The id addresses the version in paths and pins
+         * it in references.
          */
         fun id(id: String) = id(JsonField.of(id))
 
@@ -119,19 +120,18 @@ private constructor(
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         /**
-         * Deleted object type.
+         * Sets the field to an arbitrary JSON value.
          *
-         * For Skills, this is always `"skill_deleted"`.
-         */
-        fun type(type: String) = type(JsonField.of(type))
-
-        /**
-         * Sets [Builder.type] to an arbitrary JSON value.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("skill_version_deleted")
+         * ```
          *
-         * You should usually call [Builder.type] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun type(type: JsonField<String>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -153,22 +153,21 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [SkillDeleteResponse].
+         * Returns an immutable instance of [BetaDeletedSkillVersion].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
          * .id()
-         * .type()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): SkillDeleteResponse =
-            SkillDeleteResponse(
+        fun build(): BetaDeletedSkillVersion =
+            BetaDeletedSkillVersion(
                 checkRequired("id", id),
-                checkRequired("type", type),
+                type,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -183,13 +182,17 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): SkillDeleteResponse = apply {
+    fun validate(): BetaDeletedSkillVersion = apply {
         if (validated) {
             return@apply
         }
 
         id()
-        type()
+        _type().let {
+            if (it != JsonValue.from("skill_version_deleted")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         validated = true
     }
 
@@ -208,14 +211,15 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) + (if (type.asKnown().isPresent) 1 else 0)
+        (if (id.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("skill_version_deleted")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is SkillDeleteResponse &&
+        return other is BetaDeletedSkillVersion &&
             id == other.id &&
             type == other.type &&
             additionalProperties == other.additionalProperties
@@ -226,5 +230,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SkillDeleteResponse{id=$id, type=$type, additionalProperties=$additionalProperties}"
+        "BetaDeletedSkillVersion{id=$id, type=$type, additionalProperties=$additionalProperties}"
 }

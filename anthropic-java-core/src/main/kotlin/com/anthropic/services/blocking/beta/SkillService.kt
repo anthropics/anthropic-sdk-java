@@ -5,14 +5,13 @@ package com.anthropic.services.blocking.beta
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.models.beta.skills.BetaDeletedSkill
+import com.anthropic.models.beta.skills.BetaSkill
 import com.anthropic.models.beta.skills.SkillCreateParams
-import com.anthropic.models.beta.skills.SkillCreateResponse
 import com.anthropic.models.beta.skills.SkillDeleteParams
-import com.anthropic.models.beta.skills.SkillDeleteResponse
 import com.anthropic.models.beta.skills.SkillListPage
 import com.anthropic.models.beta.skills.SkillListParams
 import com.anthropic.models.beta.skills.SkillRetrieveParams
-import com.anthropic.models.beta.skills.SkillRetrieveResponse
 import com.anthropic.services.blocking.beta.skills.VersionService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
@@ -34,44 +33,41 @@ interface SkillService {
     fun versions(): VersionService
 
     /** Create Skill */
-    fun create(params: SkillCreateParams): SkillCreateResponse =
-        create(params, RequestOptions.none())
+    fun create(params: SkillCreateParams): BetaSkill = create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: SkillCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): SkillCreateResponse
+    ): BetaSkill
 
     /** Get Skill */
-    fun retrieve(skillId: String): SkillRetrieveResponse =
-        retrieve(skillId, SkillRetrieveParams.none())
+    fun retrieve(skillId: String): BetaSkill = retrieve(skillId, SkillRetrieveParams.none())
 
     /** @see retrieve */
     fun retrieve(
         skillId: String,
         params: SkillRetrieveParams = SkillRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): SkillRetrieveResponse = retrieve(params.toBuilder().skillId(skillId).build(), requestOptions)
+    ): BetaSkill = retrieve(params.toBuilder().skillId(skillId).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         skillId: String,
         params: SkillRetrieveParams = SkillRetrieveParams.none(),
-    ): SkillRetrieveResponse = retrieve(skillId, params, RequestOptions.none())
+    ): BetaSkill = retrieve(skillId, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: SkillRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): SkillRetrieveResponse
+    ): BetaSkill
 
     /** @see retrieve */
-    fun retrieve(params: SkillRetrieveParams): SkillRetrieveResponse =
-        retrieve(params, RequestOptions.none())
+    fun retrieve(params: SkillRetrieveParams): BetaSkill = retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(skillId: String, requestOptions: RequestOptions): SkillRetrieveResponse =
+    fun retrieve(skillId: String, requestOptions: RequestOptions): BetaSkill =
         retrieve(skillId, SkillRetrieveParams.none(), requestOptions)
 
     /** List Skills */
@@ -92,33 +88,32 @@ interface SkillService {
         list(SkillListParams.none(), requestOptions)
 
     /** Delete Skill */
-    fun delete(skillId: String): SkillDeleteResponse = delete(skillId, SkillDeleteParams.none())
+    fun delete(skillId: String): BetaDeletedSkill = delete(skillId, SkillDeleteParams.none())
 
     /** @see delete */
     fun delete(
         skillId: String,
         params: SkillDeleteParams = SkillDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): SkillDeleteResponse = delete(params.toBuilder().skillId(skillId).build(), requestOptions)
+    ): BetaDeletedSkill = delete(params.toBuilder().skillId(skillId).build(), requestOptions)
 
     /** @see delete */
     fun delete(
         skillId: String,
         params: SkillDeleteParams = SkillDeleteParams.none(),
-    ): SkillDeleteResponse = delete(skillId, params, RequestOptions.none())
+    ): BetaDeletedSkill = delete(skillId, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: SkillDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): SkillDeleteResponse
+    ): BetaDeletedSkill
 
     /** @see delete */
-    fun delete(params: SkillDeleteParams): SkillDeleteResponse =
-        delete(params, RequestOptions.none())
+    fun delete(params: SkillDeleteParams): BetaDeletedSkill = delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(skillId: String, requestOptions: RequestOptions): SkillDeleteResponse =
+    fun delete(skillId: String, requestOptions: RequestOptions): BetaDeletedSkill =
         delete(skillId, SkillDeleteParams.none(), requestOptions)
 
     /** A view of [SkillService] that provides access to raw HTTP responses for each method. */
@@ -138,7 +133,7 @@ interface SkillService {
          * [SkillService.create].
          */
         @MustBeClosed
-        fun create(params: SkillCreateParams): HttpResponseFor<SkillCreateResponse> =
+        fun create(params: SkillCreateParams): HttpResponseFor<BetaSkill> =
             create(params, RequestOptions.none())
 
         /** @see create */
@@ -146,14 +141,14 @@ interface SkillService {
         fun create(
             params: SkillCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SkillCreateResponse>
+        ): HttpResponseFor<BetaSkill>
 
         /**
          * Returns a raw HTTP response for `get /v1/skills/{skill_id}?beta=true`, but is otherwise
          * the same as [SkillService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(skillId: String): HttpResponseFor<SkillRetrieveResponse> =
+        fun retrieve(skillId: String): HttpResponseFor<BetaSkill> =
             retrieve(skillId, SkillRetrieveParams.none())
 
         /** @see retrieve */
@@ -162,7 +157,7 @@ interface SkillService {
             skillId: String,
             params: SkillRetrieveParams = SkillRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SkillRetrieveResponse> =
+        ): HttpResponseFor<BetaSkill> =
             retrieve(params.toBuilder().skillId(skillId).build(), requestOptions)
 
         /** @see retrieve */
@@ -170,26 +165,23 @@ interface SkillService {
         fun retrieve(
             skillId: String,
             params: SkillRetrieveParams = SkillRetrieveParams.none(),
-        ): HttpResponseFor<SkillRetrieveResponse> = retrieve(skillId, params, RequestOptions.none())
+        ): HttpResponseFor<BetaSkill> = retrieve(skillId, params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: SkillRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SkillRetrieveResponse>
+        ): HttpResponseFor<BetaSkill>
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(params: SkillRetrieveParams): HttpResponseFor<SkillRetrieveResponse> =
+        fun retrieve(params: SkillRetrieveParams): HttpResponseFor<BetaSkill> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            skillId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<SkillRetrieveResponse> =
+        fun retrieve(skillId: String, requestOptions: RequestOptions): HttpResponseFor<BetaSkill> =
             retrieve(skillId, SkillRetrieveParams.none(), requestOptions)
 
         /**
@@ -220,7 +212,7 @@ interface SkillService {
          * otherwise the same as [SkillService.delete].
          */
         @MustBeClosed
-        fun delete(skillId: String): HttpResponseFor<SkillDeleteResponse> =
+        fun delete(skillId: String): HttpResponseFor<BetaDeletedSkill> =
             delete(skillId, SkillDeleteParams.none())
 
         /** @see delete */
@@ -229,7 +221,7 @@ interface SkillService {
             skillId: String,
             params: SkillDeleteParams = SkillDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SkillDeleteResponse> =
+        ): HttpResponseFor<BetaDeletedSkill> =
             delete(params.toBuilder().skillId(skillId).build(), requestOptions)
 
         /** @see delete */
@@ -237,18 +229,18 @@ interface SkillService {
         fun delete(
             skillId: String,
             params: SkillDeleteParams = SkillDeleteParams.none(),
-        ): HttpResponseFor<SkillDeleteResponse> = delete(skillId, params, RequestOptions.none())
+        ): HttpResponseFor<BetaDeletedSkill> = delete(skillId, params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
         fun delete(
             params: SkillDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SkillDeleteResponse>
+        ): HttpResponseFor<BetaDeletedSkill>
 
         /** @see delete */
         @MustBeClosed
-        fun delete(params: SkillDeleteParams): HttpResponseFor<SkillDeleteResponse> =
+        fun delete(params: SkillDeleteParams): HttpResponseFor<BetaDeletedSkill> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
@@ -256,7 +248,7 @@ interface SkillService {
         fun delete(
             skillId: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<SkillDeleteResponse> =
+        ): HttpResponseFor<BetaDeletedSkill> =
             delete(skillId, SkillDeleteParams.none(), requestOptions)
     }
 }

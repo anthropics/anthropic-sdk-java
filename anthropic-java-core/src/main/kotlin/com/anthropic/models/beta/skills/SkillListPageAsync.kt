@@ -19,15 +19,14 @@ private constructor(
     private val streamHandlerExecutor: Executor,
     private val params: SkillListParams,
     private val response: SkillListPageResponse,
-) : PageAsync<SkillListResponse> {
+) : PageAsync<BetaSkill> {
 
     /**
      * Delegates to [SkillListPageResponse], but gracefully handles missing data.
      *
      * @see SkillListPageResponse.data
      */
-    fun data(): List<SkillListResponse> =
-        response._data().getOptional("data").getOrNull() ?: emptyList()
+    fun data(): List<BetaSkill> = response._data().getOptional("data").getOrNull() ?: emptyList()
 
     /**
      * Delegates to [SkillListPageResponse], but gracefully handles missing data.
@@ -36,7 +35,7 @@ private constructor(
      */
     fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")
 
-    override fun items(): List<SkillListResponse> = data()
+    override fun items(): List<BetaSkill> = data()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
 
@@ -49,8 +48,7 @@ private constructor(
 
     override fun nextPage(): CompletableFuture<SkillListPageAsync> = service.list(nextPageParams())
 
-    fun autoPager(): AutoPagerAsync<SkillListResponse> =
-        AutoPagerAsync.from(this, streamHandlerExecutor)
+    fun autoPager(): AutoPagerAsync<BetaSkill> = AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
     fun params(): SkillListParams = params

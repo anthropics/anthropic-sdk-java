@@ -32,32 +32,19 @@ private constructor(
     /**
      * Delegates to [FileListPageResponse], but gracefully handles missing data.
      *
-     * @see FileListPageResponse.hasMore
+     * @see FileListPageResponse.nextPage
      */
-    fun hasMore(): Optional<Boolean> = response._hasMore().getOptional("has_more")
-
-    /**
-     * Delegates to [FileListPageResponse], but gracefully handles missing data.
-     *
-     * @see FileListPageResponse.firstId
-     */
-    fun firstId(): Optional<String> = response._firstId().getOptional("first_id")
-
-    /**
-     * Delegates to [FileListPageResponse], but gracefully handles missing data.
-     *
-     * @see FileListPageResponse.lastId
-     */
-    fun lastId(): Optional<String> = response._lastId().getOptional("last_id")
+    fun nextPageRaw(): Optional<String> = response._nextPage().getOptional("next_page")
 
     override fun items(): List<BetaFileMetadata> = data()
 
-    override fun hasNextPage(): Boolean = items().isNotEmpty() && lastId().isPresent
+    override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
 
     fun nextPageParams(): FileListParams {
         val nextCursor =
-            lastId().getOrNull() ?: throw IllegalStateException("Cannot construct next page params")
-        return params.toBuilder().afterId(nextCursor).build()
+            nextPageRaw().getOrNull()
+                ?: throw IllegalStateException("Cannot construct next page params")
+        return params.toBuilder().page(nextCursor).build()
     }
 
     override fun nextPage(): CompletableFuture<FileListPageAsync> = service.list(nextPageParams())

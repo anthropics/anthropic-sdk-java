@@ -23,9 +23,7 @@ class FileListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val data: JsonField<List<BetaFileMetadata>>,
-    private val firstId: JsonField<String>,
-    private val hasMore: JsonField<Boolean>,
-    private val lastId: JsonField<String>,
+    private val nextPage: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -34,10 +32,8 @@ private constructor(
         @JsonProperty("data")
         @ExcludeMissing
         data: JsonField<List<BetaFileMetadata>> = JsonMissing.of(),
-        @JsonProperty("first_id") @ExcludeMissing firstId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("has_more") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("last_id") @ExcludeMissing lastId: JsonField<String> = JsonMissing.of(),
-    ) : this(data, firstId, hasMore, lastId, mutableMapOf())
+        @JsonProperty("next_page") @ExcludeMissing nextPage: JsonField<String> = JsonMissing.of(),
+    ) : this(data, nextPage, mutableMapOf())
 
     /**
      * List of file metadata objects.
@@ -48,28 +44,13 @@ private constructor(
     fun data(): List<BetaFileMetadata> = data.getRequired("data")
 
     /**
-     * ID of the first file in this page of results.
+     * Opaque cursor for the next page. Supply as `?page=` to fetch the next page; null when there
+     * are no more results.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun firstId(): Optional<String> = firstId.getOptional("first_id")
-
-    /**
-     * Whether there are more results available.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun hasMore(): Optional<Boolean> = hasMore.getOptional("has_more")
-
-    /**
-     * ID of the last file in this page of results.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun lastId(): Optional<String> = lastId.getOptional("last_id")
+    fun nextPage(): Optional<String> = nextPage.getOptional("next_page")
 
     /**
      * Returns the raw JSON value of [data].
@@ -79,25 +60,11 @@ private constructor(
     @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<BetaFileMetadata>> = data
 
     /**
-     * Returns the raw JSON value of [firstId].
+     * Returns the raw JSON value of [nextPage].
      *
-     * Unlike [firstId], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [nextPage], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("first_id") @ExcludeMissing fun _firstId(): JsonField<String> = firstId
-
-    /**
-     * Returns the raw JSON value of [hasMore].
-     *
-     * Unlike [hasMore], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("has_more") @ExcludeMissing fun _hasMore(): JsonField<Boolean> = hasMore
-
-    /**
-     * Returns the raw JSON value of [lastId].
-     *
-     * Unlike [lastId], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("last_id") @ExcludeMissing fun _lastId(): JsonField<String> = lastId
+    @JsonProperty("next_page") @ExcludeMissing fun _nextPage(): JsonField<String> = nextPage
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -134,18 +101,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var data: JsonField<MutableList<BetaFileMetadata>>? = null
-        private var firstId: JsonField<String> = JsonMissing.of()
-        private var hasMore: JsonField<Boolean> = JsonMissing.of()
-        private var lastId: JsonField<String> = JsonMissing.of()
+        private var nextPage: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(fileListPageResponse: FileListPageResponse) = apply {
             data =
                 fileListPageResponse.data.map { it.toMutableList() }.takeUnless { it.isMissing() }
-            firstId = fileListPageResponse.firstId
-            hasMore = fileListPageResponse.hasMore
-            lastId = fileListPageResponse.lastId
+            nextPage = fileListPageResponse.nextPage
             additionalProperties = fileListPageResponse.additionalProperties.toMutableMap()
         }
 
@@ -175,44 +138,22 @@ private constructor(
                 }
         }
 
-        /** ID of the first file in this page of results. */
-        fun firstId(firstId: String?) = firstId(JsonField.ofNullable(firstId))
+        /**
+         * Opaque cursor for the next page. Supply as `?page=` to fetch the next page; null when
+         * there are no more results.
+         */
+        fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 
-        /** Alias for calling [Builder.firstId] with `firstId.orElse(null)`. */
-        fun firstId(firstId: Optional<String>) = firstId(firstId.getOrNull())
+        /** Alias for calling [Builder.nextPage] with `nextPage.orElse(null)`. */
+        fun nextPage(nextPage: Optional<String>) = nextPage(nextPage.getOrNull())
 
         /**
-         * Sets [Builder.firstId] to an arbitrary JSON value.
+         * Sets [Builder.nextPage] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.firstId] with a well-typed [String] value instead. This
+         * You should usually call [Builder.nextPage] with a well-typed [String] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun firstId(firstId: JsonField<String>) = apply { this.firstId = firstId }
-
-        /** Whether there are more results available. */
-        fun hasMore(hasMore: Boolean) = hasMore(JsonField.of(hasMore))
-
-        /**
-         * Sets [Builder.hasMore] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.hasMore] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
-
-        /** ID of the last file in this page of results. */
-        fun lastId(lastId: String?) = lastId(JsonField.ofNullable(lastId))
-
-        /** Alias for calling [Builder.lastId] with `lastId.orElse(null)`. */
-        fun lastId(lastId: Optional<String>) = lastId(lastId.getOrNull())
-
-        /**
-         * Sets [Builder.lastId] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.lastId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun lastId(lastId: JsonField<String>) = apply { this.lastId = lastId }
+        fun nextPage(nextPage: JsonField<String>) = apply { this.nextPage = nextPage }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -248,9 +189,7 @@ private constructor(
         fun build(): FileListPageResponse =
             FileListPageResponse(
                 checkRequired("data", data).map { it.toImmutable() },
-                firstId,
-                hasMore,
-                lastId,
+                nextPage,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -271,9 +210,7 @@ private constructor(
         }
 
         data().forEach { it.validate() }
-        firstId()
-        hasMore()
-        lastId()
+        nextPage()
         validated = true
     }
 
@@ -293,9 +230,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (firstId.asKnown().isPresent) 1 else 0) +
-            (if (hasMore.asKnown().isPresent) 1 else 0) +
-            (if (lastId.asKnown().isPresent) 1 else 0)
+            (if (nextPage.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -304,18 +239,14 @@ private constructor(
 
         return other is FileListPageResponse &&
             data == other.data &&
-            firstId == other.firstId &&
-            hasMore == other.hasMore &&
-            lastId == other.lastId &&
+            nextPage == other.nextPage &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(data, firstId, hasMore, lastId, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(data, nextPage, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FileListPageResponse{data=$data, firstId=$firstId, hasMore=$hasMore, lastId=$lastId, additionalProperties=$additionalProperties}"
+        "FileListPageResponse{data=$data, nextPage=$nextPage, additionalProperties=$additionalProperties}"
 }
