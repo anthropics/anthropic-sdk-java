@@ -49,4 +49,9 @@ dependencies {
     // `proguard.gradle.ProGuardTask` for `anthropic-java-ecosystem-test`.
     implementation(libs.proguard.gradle.plugin)
     implementation(libs.shadow.gradle.plugin)
+    constraints {
+        // shadow 8.3.8 declares log4j-core 2.24.1, which has known CVEs. proguard already brings
+        // in the newer catalog version, so require that instead.
+        implementation(libs.log4j.core)
+    }
 }

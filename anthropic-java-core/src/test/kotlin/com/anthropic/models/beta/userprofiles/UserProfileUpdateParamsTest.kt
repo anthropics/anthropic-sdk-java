@@ -5,6 +5,7 @@ package com.anthropic.models.beta.userprofiles
 import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -17,6 +18,7 @@ internal class UserProfileUpdateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
             .externalId("user_12345")
+            .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .metadata(
                 UserProfileUpdateParams.Metadata.builder()
                     .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -47,6 +49,7 @@ internal class UserProfileUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
+                .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .metadata(
                     UserProfileUpdateParams.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -84,6 +87,7 @@ internal class UserProfileUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
+                .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .metadata(
                     UserProfileUpdateParams.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -97,6 +101,8 @@ internal class UserProfileUpdateParamsTest {
 
         assertThat(body.accessType()).contains(UserProfileUpdateParams.AccessType.APPLICATION)
         assertThat(body.externalId()).contains("user_12345")
+        assertThat(body.externalUserOnboardedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(body.metadata())
             .contains(
                 UserProfileUpdateParams.Metadata.builder()

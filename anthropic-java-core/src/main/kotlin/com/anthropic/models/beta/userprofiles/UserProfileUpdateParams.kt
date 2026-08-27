@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -55,6 +56,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun externalId(): Optional<String> = body.externalId()
+
+    /**
+     * A timestamp in RFC 3339 format
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun externalUserOnboardedAt(): Optional<OffsetDateTime> = body.externalUserOnboardedAt()
 
     /**
      * Key-value pairs to merge into the stored metadata. Keys provided overwrite existing values.
@@ -97,6 +106,14 @@ private constructor(
      * Unlike [externalId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _externalId(): JsonField<String> = body._externalId()
+
+    /**
+     * Returns the raw JSON value of [externalUserOnboardedAt].
+     *
+     * Unlike [externalUserOnboardedAt], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    fun _externalUserOnboardedAt(): JsonField<OffsetDateTime> = body._externalUserOnboardedAt()
 
     /**
      * Returns the raw JSON value of [metadata].
@@ -192,9 +209,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [accessType]
          * - [externalId]
+         * - [externalUserOnboardedAt]
          * - [metadata]
          * - [name]
-         * - [relationship]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -236,6 +253,22 @@ private constructor(
          * value.
          */
         fun externalId(externalId: JsonField<String>) = apply { body.externalId(externalId) }
+
+        /** A timestamp in RFC 3339 format */
+        fun externalUserOnboardedAt(externalUserOnboardedAt: OffsetDateTime) = apply {
+            body.externalUserOnboardedAt(externalUserOnboardedAt)
+        }
+
+        /**
+         * Sets [Builder.externalUserOnboardedAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.externalUserOnboardedAt] with a well-typed
+         * [OffsetDateTime] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun externalUserOnboardedAt(externalUserOnboardedAt: JsonField<OffsetDateTime>) = apply {
+            body.externalUserOnboardedAt(externalUserOnboardedAt)
+        }
 
         /**
          * Key-value pairs to merge into the stored metadata. Keys provided overwrite existing
@@ -447,6 +480,7 @@ private constructor(
     private constructor(
         private val accessType: JsonField<AccessType>,
         private val externalId: JsonField<String>,
+        private val externalUserOnboardedAt: JsonField<OffsetDateTime>,
         private val metadata: JsonField<Metadata>,
         private val name: JsonField<String>,
         private val relationship: JsonField<Relationship>,
@@ -461,6 +495,9 @@ private constructor(
             @JsonProperty("external_id")
             @ExcludeMissing
             externalId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("external_user_onboarded_at")
+            @ExcludeMissing
+            externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -468,7 +505,15 @@ private constructor(
             @JsonProperty("relationship")
             @ExcludeMissing
             relationship: JsonField<Relationship> = JsonMissing.of(),
-        ) : this(accessType, externalId, metadata, name, relationship, mutableMapOf())
+        ) : this(
+            accessType,
+            externalId,
+            externalUserOnboardedAt,
+            metadata,
+            name,
+            relationship,
+            mutableMapOf(),
+        )
 
         /**
          * How the platform uses the API on behalf of the entity this profile represents.
@@ -489,6 +534,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun externalId(): Optional<String> = externalId.getOptional("external_id")
+
+        /**
+         * A timestamp in RFC 3339 format
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun externalUserOnboardedAt(): Optional<OffsetDateTime> =
+            externalUserOnboardedAt.getOptional("external_user_onboarded_at")
 
         /**
          * Key-value pairs to merge into the stored metadata. Keys provided overwrite existing
@@ -538,6 +592,16 @@ private constructor(
         fun _externalId(): JsonField<String> = externalId
 
         /**
+         * Returns the raw JSON value of [externalUserOnboardedAt].
+         *
+         * Unlike [externalUserOnboardedAt], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("external_user_onboarded_at")
+        @ExcludeMissing
+        fun _externalUserOnboardedAt(): JsonField<OffsetDateTime> = externalUserOnboardedAt
+
+        /**
          * Returns the raw JSON value of [metadata].
          *
          * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -584,6 +648,7 @@ private constructor(
 
             private var accessType: JsonField<AccessType> = JsonMissing.of()
             private var externalId: JsonField<String> = JsonMissing.of()
+            private var externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var relationship: JsonField<Relationship> = JsonMissing.of()
@@ -593,6 +658,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 accessType = body.accessType
                 externalId = body.externalId
+                externalUserOnboardedAt = body.externalUserOnboardedAt
                 metadata = body.metadata
                 name = body.name
                 relationship = body.relationship
@@ -638,6 +704,22 @@ private constructor(
              * supported value.
              */
             fun externalId(externalId: JsonField<String>) = apply { this.externalId = externalId }
+
+            /** A timestamp in RFC 3339 format */
+            fun externalUserOnboardedAt(externalUserOnboardedAt: OffsetDateTime) =
+                externalUserOnboardedAt(JsonField.of(externalUserOnboardedAt))
+
+            /**
+             * Sets [Builder.externalUserOnboardedAt] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.externalUserOnboardedAt] with a well-typed
+             * [OffsetDateTime] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun externalUserOnboardedAt(externalUserOnboardedAt: JsonField<OffsetDateTime>) =
+                apply {
+                    this.externalUserOnboardedAt = externalUserOnboardedAt
+                }
 
             /**
              * Key-value pairs to merge into the stored metadata. Keys provided overwrite existing
@@ -725,6 +807,7 @@ private constructor(
                 Body(
                     accessType,
                     externalId,
+                    externalUserOnboardedAt,
                     metadata,
                     name,
                     relationship,
@@ -750,6 +833,7 @@ private constructor(
 
             accessType().ifPresent { it.validate() }
             externalId()
+            externalUserOnboardedAt()
             metadata().ifPresent { it.validate() }
             name()
             relationship().ifPresent { it.validate() }
@@ -774,6 +858,7 @@ private constructor(
         internal fun validity(): Int =
             (accessType.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (externalId.asKnown().isPresent) 1 else 0) +
+                (if (externalUserOnboardedAt.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (relationship.asKnown().getOrNull()?.validity() ?: 0)
@@ -786,6 +871,7 @@ private constructor(
             return other is Body &&
                 accessType == other.accessType &&
                 externalId == other.externalId &&
+                externalUserOnboardedAt == other.externalUserOnboardedAt &&
                 metadata == other.metadata &&
                 name == other.name &&
                 relationship == other.relationship &&
@@ -793,13 +879,21 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(accessType, externalId, metadata, name, relationship, additionalProperties)
+            Objects.hash(
+                accessType,
+                externalId,
+                externalUserOnboardedAt,
+                metadata,
+                name,
+                relationship,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{accessType=$accessType, externalId=$externalId, metadata=$metadata, name=$name, relationship=$relationship, additionalProperties=$additionalProperties}"
+            "Body{accessType=$accessType, externalId=$externalId, externalUserOnboardedAt=$externalUserOnboardedAt, metadata=$metadata, name=$name, relationship=$relationship, additionalProperties=$additionalProperties}"
     }
 
     /**

@@ -31,6 +31,7 @@ private constructor(
     private val updatedAt: JsonField<OffsetDateTime>,
     private val accessType: JsonField<AccessType>,
     private val externalId: JsonField<String>,
+    private val externalUserOnboardedAt: JsonField<OffsetDateTime>,
     private val name: JsonField<String>,
     private val relationship: JsonField<Relationship>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -56,6 +57,9 @@ private constructor(
         @JsonProperty("external_id")
         @ExcludeMissing
         externalId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("external_user_onboarded_at")
+        @ExcludeMissing
+        externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("relationship")
         @ExcludeMissing
@@ -69,6 +73,7 @@ private constructor(
         updatedAt,
         accessType,
         externalId,
+        externalUserOnboardedAt,
         name,
         relationship,
         mutableMapOf(),
@@ -141,6 +146,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun externalId(): Optional<String> = externalId.getOptional("external_id")
+
+    /**
+     * A timestamp in RFC 3339 format
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun externalUserOnboardedAt(): Optional<OffsetDateTime> =
+        externalUserOnboardedAt.getOptional("external_user_onboarded_at")
 
     /**
      * Real-world name of the entity this profile represents (company or individual). For a
@@ -227,6 +241,16 @@ private constructor(
     @JsonProperty("external_id") @ExcludeMissing fun _externalId(): JsonField<String> = externalId
 
     /**
+     * Returns the raw JSON value of [externalUserOnboardedAt].
+     *
+     * Unlike [externalUserOnboardedAt], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("external_user_onboarded_at")
+    @ExcludeMissing
+    fun _externalUserOnboardedAt(): JsonField<OffsetDateTime> = externalUserOnboardedAt
+
+    /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
@@ -283,6 +307,7 @@ private constructor(
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var accessType: JsonField<AccessType> = JsonMissing.of()
         private var externalId: JsonField<String> = JsonMissing.of()
+        private var externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
         private var relationship: JsonField<Relationship> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -297,6 +322,7 @@ private constructor(
             updatedAt = betaUserProfile.updatedAt
             accessType = betaUserProfile.accessType
             externalId = betaUserProfile.externalId
+            externalUserOnboardedAt = betaUserProfile.externalUserOnboardedAt
             name = betaUserProfile.name
             relationship = betaUserProfile.relationship
             additionalProperties = betaUserProfile.additionalProperties.toMutableMap()
@@ -412,6 +438,28 @@ private constructor(
          */
         fun externalId(externalId: JsonField<String>) = apply { this.externalId = externalId }
 
+        /** A timestamp in RFC 3339 format */
+        fun externalUserOnboardedAt(externalUserOnboardedAt: OffsetDateTime?) =
+            externalUserOnboardedAt(JsonField.ofNullable(externalUserOnboardedAt))
+
+        /**
+         * Alias for calling [Builder.externalUserOnboardedAt] with
+         * `externalUserOnboardedAt.orElse(null)`.
+         */
+        fun externalUserOnboardedAt(externalUserOnboardedAt: Optional<OffsetDateTime>) =
+            externalUserOnboardedAt(externalUserOnboardedAt.getOrNull())
+
+        /**
+         * Sets [Builder.externalUserOnboardedAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.externalUserOnboardedAt] with a well-typed
+         * [OffsetDateTime] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun externalUserOnboardedAt(externalUserOnboardedAt: JsonField<OffsetDateTime>) = apply {
+            this.externalUserOnboardedAt = externalUserOnboardedAt
+        }
+
         /**
          * Real-world name of the entity this profile represents (company or individual). For a
          * resold-to company (`access_type` `passthrough`, or `relationship` `resold` under the
@@ -494,6 +542,7 @@ private constructor(
                 checkRequired("updatedAt", updatedAt),
                 accessType,
                 externalId,
+                externalUserOnboardedAt,
                 name,
                 relationship,
                 additionalProperties.toMutableMap(),
@@ -523,6 +572,7 @@ private constructor(
         updatedAt()
         accessType().ifPresent { it.validate() }
         externalId()
+        externalUserOnboardedAt()
         name()
         relationship().ifPresent { it.validate() }
         validated = true
@@ -551,6 +601,7 @@ private constructor(
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (accessType.asKnown().getOrNull()?.validity() ?: 0) +
             (if (externalId.asKnown().isPresent) 1 else 0) +
+            (if (externalUserOnboardedAt.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (relationship.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -1228,6 +1279,7 @@ private constructor(
             updatedAt == other.updatedAt &&
             accessType == other.accessType &&
             externalId == other.externalId &&
+            externalUserOnboardedAt == other.externalUserOnboardedAt &&
             name == other.name &&
             relationship == other.relationship &&
             additionalProperties == other.additionalProperties
@@ -1243,6 +1295,7 @@ private constructor(
             updatedAt,
             accessType,
             externalId,
+            externalUserOnboardedAt,
             name,
             relationship,
             additionalProperties,
@@ -1252,5 +1305,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaUserProfile{id=$id, createdAt=$createdAt, metadata=$metadata, trustGrants=$trustGrants, type=$type, updatedAt=$updatedAt, accessType=$accessType, externalId=$externalId, name=$name, relationship=$relationship, additionalProperties=$additionalProperties}"
+        "BetaUserProfile{id=$id, createdAt=$createdAt, metadata=$metadata, trustGrants=$trustGrants, type=$type, updatedAt=$updatedAt, accessType=$accessType, externalId=$externalId, externalUserOnboardedAt=$externalUserOnboardedAt, name=$name, relationship=$relationship, additionalProperties=$additionalProperties}"
 }
