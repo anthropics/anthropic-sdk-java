@@ -29,7 +29,6 @@ internal class BetaUserProfileTest {
                 .externalId("user_12345")
                 .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                 .name("Example User")
-                .relationship(BetaUserProfile.Relationship.EXTERNAL)
                 .build()
 
         assertThat(betaUserProfile.id()).isEqualTo("uprof_011CZkZCu8hGbp5mYRQgUmz9")
@@ -50,7 +49,6 @@ internal class BetaUserProfileTest {
         assertThat(betaUserProfile.externalUserOnboardedAt())
             .contains(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
         assertThat(betaUserProfile.name()).contains("Example User")
-        assertThat(betaUserProfile.relationship()).contains(BetaUserProfile.Relationship.EXTERNAL)
     }
 
     @Test
@@ -72,7 +70,6 @@ internal class BetaUserProfileTest {
                 .externalId("user_12345")
                 .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                 .name("Example User")
-                .relationship(BetaUserProfile.Relationship.EXTERNAL)
                 .build()
 
         val roundtrippedBetaUserProfile =

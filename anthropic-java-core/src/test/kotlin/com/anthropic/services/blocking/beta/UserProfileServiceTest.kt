@@ -35,7 +35,6 @@ internal class UserProfileServiceTest {
                     .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                     .metadata(UserProfileCreateParams.Metadata.builder().build())
                     .name("x")
-                    .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
                     .build()
             )
 
@@ -85,7 +84,6 @@ internal class UserProfileServiceTest {
                             .build()
                     )
                     .name("x")
-                    .relationship(UserProfileUpdateParams.Relationship.EXTERNAL)
                     .build()
             )
 

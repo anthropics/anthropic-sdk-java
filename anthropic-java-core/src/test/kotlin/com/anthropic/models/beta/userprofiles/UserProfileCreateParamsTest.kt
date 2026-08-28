@@ -19,7 +19,6 @@ internal class UserProfileCreateParamsTest {
             .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
             .metadata(UserProfileCreateParams.Metadata.builder().build())
             .name("x")
-            .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
             .build()
     }
 
@@ -33,7 +32,6 @@ internal class UserProfileCreateParamsTest {
                 .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                 .metadata(UserProfileCreateParams.Metadata.builder().build())
                 .name("x")
-                .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
                 .build()
 
         val headers = params._headers()
@@ -63,7 +61,6 @@ internal class UserProfileCreateParamsTest {
                 .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                 .metadata(UserProfileCreateParams.Metadata.builder().build())
                 .name("x")
-                .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
                 .build()
 
         val body = params._body()
@@ -74,7 +71,6 @@ internal class UserProfileCreateParamsTest {
             .contains(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
         assertThat(body.metadata()).contains(UserProfileCreateParams.Metadata.builder().build())
         assertThat(body.name()).contains("x")
-        assertThat(body.relationship()).contains(UserProfileCreateParams.Relationship.EXTERNAL)
     }
 
     @Test

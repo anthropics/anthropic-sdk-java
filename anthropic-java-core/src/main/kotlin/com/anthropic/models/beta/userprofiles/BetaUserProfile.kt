@@ -33,7 +33,6 @@ private constructor(
     private val externalId: JsonField<String>,
     private val externalUserOnboardedAt: JsonField<OffsetDateTime>,
     private val name: JsonField<String>,
-    private val relationship: JsonField<Relationship>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -61,9 +60,6 @@ private constructor(
         @ExcludeMissing
         externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("relationship")
-        @ExcludeMissing
-        relationship: JsonField<Relationship> = JsonMissing.of(),
     ) : this(
         id,
         createdAt,
@@ -75,7 +71,6 @@ private constructor(
         externalId,
         externalUserOnboardedAt,
         name,
-        relationship,
         mutableMapOf(),
     )
 
@@ -157,24 +152,14 @@ private constructor(
         externalUserOnboardedAt.getOptional("external_user_onboarded_at")
 
     /**
-     * Real-world name of the entity this profile represents (company or individual). For a
-     * resold-to company (`access_type` `passthrough`, or `relationship` `resold` under the
-     * `user-profiles-2026-03-24` header) this is that company's name.
+     * Real-world name of the entity this profile represents (company or individual). For a company
+     * the platform resells Claude access to (`access_type` `passthrough`) this is that company's
+     * name.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun name(): Optional<String> = name.getOptional("name")
-
-    /**
-     * How the entity behind a user profile relates to the platform that owns the API key.
-     * `external`: an individual end-user of the platform. `resold`: a company the platform resells
-     * Claude access to. `internal`: the platform's own usage.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun relationship(): Optional<Relationship> = relationship.getOptional("relationship")
 
     /**
      * Returns the raw JSON value of [id].
@@ -257,15 +242,6 @@ private constructor(
      */
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
-    /**
-     * Returns the raw JSON value of [relationship].
-     *
-     * Unlike [relationship], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("relationship")
-    @ExcludeMissing
-    fun _relationship(): JsonField<Relationship> = relationship
-
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -309,7 +285,6 @@ private constructor(
         private var externalId: JsonField<String> = JsonMissing.of()
         private var externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
-        private var relationship: JsonField<Relationship> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -324,7 +299,6 @@ private constructor(
             externalId = betaUserProfile.externalId
             externalUserOnboardedAt = betaUserProfile.externalUserOnboardedAt
             name = betaUserProfile.name
-            relationship = betaUserProfile.relationship
             additionalProperties = betaUserProfile.additionalProperties.toMutableMap()
         }
 
@@ -462,8 +436,8 @@ private constructor(
 
         /**
          * Real-world name of the entity this profile represents (company or individual). For a
-         * resold-to company (`access_type` `passthrough`, or `relationship` `resold` under the
-         * `user-profiles-2026-03-24` header) this is that company's name.
+         * company the platform resells Claude access to (`access_type` `passthrough`) this is that
+         * company's name.
          */
         fun name(name: String?) = name(JsonField.ofNullable(name))
 
@@ -477,24 +451,6 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
-
-        /**
-         * How the entity behind a user profile relates to the platform that owns the API key.
-         * `external`: an individual end-user of the platform. `resold`: a company the platform
-         * resells Claude access to. `internal`: the platform's own usage.
-         */
-        fun relationship(relationship: Relationship) = relationship(JsonField.of(relationship))
-
-        /**
-         * Sets [Builder.relationship] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.relationship] with a well-typed [Relationship] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun relationship(relationship: JsonField<Relationship>) = apply {
-            this.relationship = relationship
-        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -544,7 +500,6 @@ private constructor(
                 externalId,
                 externalUserOnboardedAt,
                 name,
-                relationship,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -574,7 +529,6 @@ private constructor(
         externalId()
         externalUserOnboardedAt()
         name()
-        relationship().ifPresent { it.validate() }
         validated = true
     }
 
@@ -602,8 +556,7 @@ private constructor(
             (accessType.asKnown().getOrNull()?.validity() ?: 0) +
             (if (externalId.asKnown().isPresent) 1 else 0) +
             (if (externalUserOnboardedAt.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
-            (relationship.asKnown().getOrNull()?.validity() ?: 0)
+            (if (name.asKnown().isPresent) 1 else 0)
 
     /**
      * Arbitrary key-value metadata. Maximum 16 pairs, keys up to 64 chars, values up to 512 chars.
@@ -1111,160 +1064,6 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /**
-     * How the entity behind a user profile relates to the platform that owns the API key.
-     * `external`: an individual end-user of the platform. `resold`: a company the platform resells
-     * Claude access to. `internal`: the platform's own usage.
-     */
-    class Relationship @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val EXTERNAL = of("external")
-
-            @JvmField val RESOLD = of("resold")
-
-            @JvmField val INTERNAL = of("internal")
-
-            @JvmStatic fun of(value: String) = Relationship(JsonField.of(value))
-
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Relationship =
-                value.asString().getOrNull()?.let { of(it) } ?: Relationship(value)
-        }
-
-        /** An enum containing [Relationship]'s known values. */
-        enum class Known {
-            EXTERNAL,
-            RESOLD,
-            INTERNAL,
-        }
-
-        /**
-         * An enum containing [Relationship]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Relationship] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            EXTERNAL,
-            RESOLD,
-            INTERNAL,
-            /**
-             * An enum member indicating that [Relationship] was instantiated with an unknown value.
-             */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                EXTERNAL -> Value.EXTERNAL
-                RESOLD -> Value.RESOLD
-                INTERNAL -> Value.INTERNAL
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                EXTERNAL -> Known.EXTERNAL
-                RESOLD -> Known.RESOLD
-                INTERNAL -> Known.INTERNAL
-                else -> throw AnthropicInvalidDataException("Unknown Relationship: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): Relationship = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Relationship && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -1281,7 +1080,6 @@ private constructor(
             externalId == other.externalId &&
             externalUserOnboardedAt == other.externalUserOnboardedAt &&
             name == other.name &&
-            relationship == other.relationship &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1297,7 +1095,6 @@ private constructor(
             externalId,
             externalUserOnboardedAt,
             name,
-            relationship,
             additionalProperties,
         )
     }
@@ -1305,5 +1102,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaUserProfile{id=$id, createdAt=$createdAt, metadata=$metadata, trustGrants=$trustGrants, type=$type, updatedAt=$updatedAt, accessType=$accessType, externalId=$externalId, externalUserOnboardedAt=$externalUserOnboardedAt, name=$name, relationship=$relationship, additionalProperties=$additionalProperties}"
+        "BetaUserProfile{id=$id, createdAt=$createdAt, metadata=$metadata, trustGrants=$trustGrants, type=$type, updatedAt=$updatedAt, accessType=$accessType, externalId=$externalId, externalUserOnboardedAt=$externalUserOnboardedAt, name=$name, additionalProperties=$additionalProperties}"
 }
