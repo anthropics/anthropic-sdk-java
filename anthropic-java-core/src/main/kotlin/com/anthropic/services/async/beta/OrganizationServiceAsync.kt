@@ -8,6 +8,7 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.organization.BetaOrganization
 import com.anthropic.models.beta.organization.OrganizationRetrieveParams
 import com.anthropic.services.async.beta.organization.ApiKeyServiceAsync
+import com.anthropic.services.async.beta.organization.ComplianceSettingServiceAsync
 import com.anthropic.services.async.beta.organization.ExternalKeyServiceAsync
 import com.anthropic.services.async.beta.organization.FederationServiceAsync
 import com.anthropic.services.async.beta.organization.InviteServiceAsync
@@ -47,6 +48,8 @@ interface OrganizationServiceAsync {
     fun workspaces(): WorkspaceServiceAsync
 
     fun rateLimits(): RateLimitServiceAsync
+
+    fun complianceSettings(): ComplianceSettingServiceAsync
 
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): CompletableFuture<BetaOrganization> =
@@ -97,6 +100,8 @@ interface OrganizationServiceAsync {
         fun workspaces(): WorkspaceServiceAsync.WithRawResponse
 
         fun rateLimits(): RateLimitServiceAsync.WithRawResponse
+
+        fun complianceSettings(): ComplianceSettingServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/me?beta=true`, but is otherwise
