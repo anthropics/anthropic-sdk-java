@@ -120,7 +120,7 @@ private constructor(
     fun error(): Optional<Error> = error.getOptional("error")
 
     /**
-     * Populated on success. Null on creation failure. Exactly one of session_id or error is
+     * Populated on success. Null on creation failure. Exactly one of `session_id` or `error` is
      * non-null.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -701,7 +701,7 @@ private constructor(
             )
 
         /**
-         * Populated on success. Null on creation failure. Exactly one of session_id or error is
+         * Populated on success. Null on creation failure. Exactly one of `session_id` or `error` is
          * non-null.
          */
         fun sessionId(sessionId: String?) = sessionId(JsonField.ofNullable(sessionId))

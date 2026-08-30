@@ -19,7 +19,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Paginated list of deployment runs. Sorted by created_at descending (most recent first). */
+/** Paginated list of deployment runs. Sorted by `created_at` descending (most recent first). */
 class DeploymentRunListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

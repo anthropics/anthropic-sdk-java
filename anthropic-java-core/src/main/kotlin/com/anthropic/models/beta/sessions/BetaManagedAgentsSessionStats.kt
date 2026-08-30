@@ -35,7 +35,7 @@ private constructor(
     ) : this(activeSeconds, durationSeconds, mutableMapOf())
 
     /**
-     * Cumulative time in seconds the session spent in running status. Excludes idle time.
+     * Cumulative time in seconds the session spent in `running` status. Excludes idle time.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -104,7 +104,7 @@ private constructor(
             additionalProperties = betaManagedAgentsSessionStats.additionalProperties.toMutableMap()
         }
 
-        /** Cumulative time in seconds the session spent in running status. Excludes idle time. */
+        /** Cumulative time in seconds the session spent in `running` status. Excludes idle time. */
         fun activeSeconds(activeSeconds: Double) = activeSeconds(JsonField.of(activeSeconds))
 
         /**

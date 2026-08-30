@@ -27,7 +27,7 @@ private constructor(
     /** Maximum results per page. Defaults to 1000. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Opaque pagination cursor from a previous response's next_page. Forward-only. */
+    /** Opaque pagination cursor from a previous response's `next_page`. Forward-only. */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -87,7 +87,7 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Opaque pagination cursor from a previous response's next_page. Forward-only. */
+        /** Opaque pagination cursor from a previous response's `next_page`. Forward-only. */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
