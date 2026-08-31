@@ -53,8 +53,8 @@ private constructor(
     /**
      * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with `/`,
      * contain at least one non-empty segment, and be at most 1,024 bytes. Must not contain empty
-     * segments, `.` or `..` segments, control or format characters, and must be NFC-normalized.
-     * Paths are case-sensitive.
+     * segments, `.` or `..` segments, control or format characters, or the Unicode line and
+     * paragraph separators (U+2028, U+2029), and must be NFC-normalized. Paths are case-sensitive.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -185,8 +185,9 @@ private constructor(
         /**
          * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with `/`,
          * contain at least one non-empty segment, and be at most 1,024 bytes. Must not contain
-         * empty segments, `.` or `..` segments, control or format characters, and must be
-         * NFC-normalized. Paths are case-sensitive.
+         * empty segments, `.` or `..` segments, control or format characters, or the Unicode line
+         * and paragraph separators (U+2028, U+2029), and must be NFC-normalized. Paths are
+         * case-sensitive.
          */
         fun path(path: String) = apply { body.path(path) }
 
@@ -396,8 +397,9 @@ private constructor(
         /**
          * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with `/`,
          * contain at least one non-empty segment, and be at most 1,024 bytes. Must not contain
-         * empty segments, `.` or `..` segments, control or format characters, and must be
-         * NFC-normalized. Paths are case-sensitive.
+         * empty segments, `.` or `..` segments, control or format characters, or the Unicode line
+         * and paragraph separators (U+2028, U+2029), and must be NFC-normalized. Paths are
+         * case-sensitive.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -479,8 +481,9 @@ private constructor(
             /**
              * Hierarchical path for the new memory, e.g. `/projects/foo/notes.md`. Must start with
              * `/`, contain at least one non-empty segment, and be at most 1,024 bytes. Must not
-             * contain empty segments, `.` or `..` segments, control or format characters, and must
-             * be NFC-normalized. Paths are case-sensitive.
+             * contain empty segments, `.` or `..` segments, control or format characters, or the
+             * Unicode line and paragraph separators (U+2028, U+2029), and must be NFC-normalized.
+             * Paths are case-sensitive.
              */
             fun path(path: String) = path(JsonField.of(path))
 
