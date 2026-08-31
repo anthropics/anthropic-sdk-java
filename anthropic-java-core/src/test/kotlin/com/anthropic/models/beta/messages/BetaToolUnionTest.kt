@@ -583,7 +583,6 @@ internal class BetaToolUnionTest {
     fun ofBrowserToolset20260801() {
         val browserToolset20260801 =
             BetaBrowserToolset20260801.builder()
-                .addAllowedCaller(BetaBrowserToolset20260801.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -804,7 +803,6 @@ internal class BetaToolUnionTest {
         val betaToolUnion =
             BetaToolUnion.ofBrowserToolset20260801(
                 BetaBrowserToolset20260801.builder()
-                    .addAllowedCaller(BetaBrowserToolset20260801.AllowedCaller.DIRECT)
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -1446,7 +1444,6 @@ internal class BetaToolUnionTest {
     fun ofComputerToolset20260801() {
         val computerToolset20260801 =
             BetaComputerToolset20260801.builder()
-                .addAllowedCaller(BetaComputerToolset20260801.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -1595,7 +1592,6 @@ internal class BetaToolUnionTest {
         val betaToolUnion =
             BetaToolUnion.ofComputerToolset20260801(
                 BetaComputerToolset20260801.builder()
-                    .addAllowedCaller(BetaComputerToolset20260801.AllowedCaller.DIRECT)
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)

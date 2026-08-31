@@ -4,7 +4,6 @@ package com.anthropic.models.beta.messages
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -14,7 +13,6 @@ internal class BetaComputerToolset20260801Test {
     fun create() {
         val betaComputerToolset20260801 =
             BetaComputerToolset20260801.builder()
-                .addAllowedCaller(BetaComputerToolset20260801.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -125,8 +123,6 @@ internal class BetaComputerToolset20260801Test {
                 )
                 .build()
 
-        assertThat(betaComputerToolset20260801.allowedCallers().getOrNull())
-            .containsExactly(BetaComputerToolset20260801.AllowedCaller.DIRECT)
         assertThat(betaComputerToolset20260801.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
@@ -217,25 +213,10 @@ internal class BetaComputerToolset20260801Test {
     }
 
     @Test
-    fun addToUnsetListsOnToBuilder() {
-        val baseBetaComputerToolset20260801 = BetaComputerToolset20260801.builder().build()
-
-        val betaComputerToolset20260801 =
-            baseBetaComputerToolset20260801
-                .toBuilder()
-                .addAllowedCaller(BetaComputerToolset20260801.AllowedCaller.DIRECT)
-                .build()
-
-        assertThat(betaComputerToolset20260801.allowedCallers().getOrNull())
-            .containsExactly(BetaComputerToolset20260801.AllowedCaller.DIRECT)
-    }
-
-    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaComputerToolset20260801 =
             BetaComputerToolset20260801.builder()
-                .addAllowedCaller(BetaComputerToolset20260801.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)

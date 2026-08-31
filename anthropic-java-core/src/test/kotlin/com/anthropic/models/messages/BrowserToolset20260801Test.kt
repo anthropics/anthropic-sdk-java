@@ -4,7 +4,6 @@ package com.anthropic.models.messages
 
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -14,7 +13,6 @@ internal class BrowserToolset20260801Test {
     fun create() {
         val browserToolset20260801 =
             BrowserToolset20260801.builder()
-                .addAllowedCaller(BrowserToolset20260801.AllowedCaller.DIRECT)
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -158,8 +156,6 @@ internal class BrowserToolset20260801Test {
                 )
                 .build()
 
-        assertThat(browserToolset20260801.allowedCallers().getOrNull())
-            .containsExactly(BrowserToolset20260801.AllowedCaller.DIRECT)
         assertThat(browserToolset20260801.cacheControl())
             .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
         assertThat(browserToolset20260801.configs())
@@ -256,25 +252,10 @@ internal class BrowserToolset20260801Test {
     }
 
     @Test
-    fun addToUnsetListsOnToBuilder() {
-        val baseBrowserToolset20260801 = BrowserToolset20260801.builder().build()
-
-        val browserToolset20260801 =
-            baseBrowserToolset20260801
-                .toBuilder()
-                .addAllowedCaller(BrowserToolset20260801.AllowedCaller.DIRECT)
-                .build()
-
-        assertThat(browserToolset20260801.allowedCallers().getOrNull())
-            .containsExactly(BrowserToolset20260801.AllowedCaller.DIRECT)
-    }
-
-    @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val browserToolset20260801 =
             BrowserToolset20260801.builder()
-                .addAllowedCaller(BrowserToolset20260801.AllowedCaller.DIRECT)
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
