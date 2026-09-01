@@ -1,5 +1,43 @@
 # Changelog
 
+## 2.60.0 (2026-09-01)
+
+Full Changelog: [v2.59.0...v2.60.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.59.0...v2.60.0)
+
+### Features
+
+* **api:** add external_user_onboarded_at to user profiles ([2aa81c0](https://github.com/anthropics/anthropic-sdk-java/commit/2aa81c05e554472d0f72e5b73de986b33e2266f0))
+* **api:** add support for claude-fable-5-1 and claude-mythos-5-1 ([f41a324](https://github.com/anthropics/anthropic-sdk-java/commit/f41a32456443d5b9f2288199e34d70860b0bae55))
+* **api:** add support for organization compliance settings in the Admin API ([4b64a84](https://github.com/anthropics/anthropic-sdk-java/commit/4b64a841b66de4d0197bbd7ccc1e272464f5143b))
+* **api:** support pagination on organization rate limit list endpoints ([2aa81c0](https://github.com/anthropics/anthropic-sdk-java/commit/2aa81c05e554472d0f72e5b73de986b33e2266f0))
+* **user_profiles:** sort the user profile list by name with order_by=name ([931543e](https://github.com/anthropics/anthropic-sdk-java/commit/931543ef60e398cbc28ca8d8e810cdd182ff210f))
+
+
+### Bug Fixes
+
+* **api:** mark the beta header required on Admin API Tunnel operations ([898dabf](https://github.com/anthropics/anthropic-sdk-java/commit/898dabf8acb13bac695777da3f78571f0a5e9846))
+* **api:** remove unsupported allowed_callers from the toolset entries ([53bd597](https://github.com/anthropics/anthropic-sdk-java/commit/53bd597bcd99d4ae861af5b8e375647d0b3725fc))
+* **client:** include non-JSON error response bodies in API errors ([04045b5](https://github.com/anthropics/anthropic-sdk-java/commit/04045b50ac0e83f7481e7e319d3a1a944d0c9a77))
+
+
+### Chores
+
+* **api:** remove unreleased thinking prefix_mismatched_behavior param ([e01193a](https://github.com/anthropics/anthropic-sdk-java/commit/e01193ad4efa86141eb115787c6e87c9a69db97a))
+* **api:** remove user profile relationship in favor of access_type ([e01193a](https://github.com/anthropics/anthropic-sdk-java/commit/e01193ad4efa86141eb115787c6e87c9a69db97a))
+* **ci:** keep the Maven artifact upload steps under stlc ([7437d73](https://github.com/anthropics/anthropic-sdk-java/commit/7437d737025533130c661ad131ba4a5183029afa))
+* **docs:** clarify disallowed characters in memory paths ([20582c1](https://github.com/anthropics/anthropic-sdk-java/commit/20582c1f6eba79094ee9faa87b936e7658924797))
+* **internal:** add browser-stubbed internal/node module and lint rule for Node built-in imports ([2aa81c0](https://github.com/anthropics/anthropic-sdk-java/commit/2aa81c05e554472d0f72e5b73de986b33e2266f0))
+* **internal:** pin JAVA_HOME for detekt-rules tests and relax UnusedPrivateProperty for tests/examples ([2aa81c0](https://github.com/anthropics/anthropic-sdk-java/commit/2aa81c05e554472d0f72e5b73de986b33e2266f0))
+* **internal:** read the request id shown in Terraform error diagnostics from the response header ([2aa81c0](https://github.com/anthropics/anthropic-sdk-java/commit/2aa81c05e554472d0f72e5b73de986b33e2266f0))
+* **internal:** remove discriminator support from PropertyInfo ([4b64a84](https://github.com/anthropics/anthropic-sdk-java/commit/4b64a841b66de4d0197bbd7ccc1e272464f5143b))
+
+
+### Documentation
+
+* **api:** backtick identifiers in managed-agents API descriptions ([db40558](https://github.com/anthropics/anthropic-sdk-java/commit/db40558f3b6a6f8e12ea5642bfa4566d24addfc3))
+* **api:** describe external_key_id and compartment_id behavior on Claude Platform on AWS ([5eefbe1](https://github.com/anthropics/anthropic-sdk-java/commit/5eefbe1b52029ae82bedffebb7d7151afe6b8445))
+* **changelog:** detail the beta files/skills GA-shape change ([#398](https://github.com/anthropics/anthropic-sdk-java/issues/398)) ([0105936](https://github.com/anthropics/anthropic-sdk-java/commit/010593670e712311e0d5e657206c0fb71c2c0fa1))
+
 ## 2.59.0 (2026-08-27)
 
 Full Changelog: [v2.58.0...v2.59.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.58.0...v2.59.0)
