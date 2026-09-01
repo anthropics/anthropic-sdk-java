@@ -51,9 +51,12 @@ private constructor(
      * ID of the customer-managed encryption key (CMEK) configuration to use for this Workspace.
      * Setting this field requires CMEK to be enabled for your organization. When set, data stored
      * for this Workspace is encrypted with the referenced key. Create key configurations with the
-     * External Keys API. This field is write-once: once a key is attached to a Workspace it cannot
-     * be detached or replaced. To rotate key material, rotate the underlying key on your cloud KMS;
-     * the `external_key_id` stays the same.
+     * External Keys API. On Claude Platform on AWS the value is the AWS KMS key ARN, and the key
+     * must be a single-Region key in the same AWS account and Region as the Workspace. On that
+     * platform the key is validated against this Workspace when it is attached, so a key-policy
+     * problem is reported as an error on this request. This field is write-once: once a key is
+     * attached to a Workspace it cannot be detached or replaced. To rotate key material, rotate the
+     * underlying key on your cloud KMS; the `external_key_id` stays the same.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -202,9 +205,13 @@ private constructor(
          * ID of the customer-managed encryption key (CMEK) configuration to use for this Workspace.
          * Setting this field requires CMEK to be enabled for your organization. When set, data
          * stored for this Workspace is encrypted with the referenced key. Create key configurations
-         * with the External Keys API. This field is write-once: once a key is attached to a
-         * Workspace it cannot be detached or replaced. To rotate key material, rotate the
-         * underlying key on your cloud KMS; the `external_key_id` stays the same.
+         * with the External Keys API. On Claude Platform on AWS the value is the AWS KMS key ARN,
+         * and the key must be a single-Region key in the same AWS account and Region as the
+         * Workspace. On that platform the key is validated against this Workspace when it is
+         * attached, so a key-policy problem is reported as an error on this request. This field is
+         * write-once: once a key is attached to a Workspace it cannot be detached or replaced. To
+         * rotate key material, rotate the underlying key on your cloud KMS; the `external_key_id`
+         * stays the same.
          */
         fun externalKeyId(externalKeyId: String) = apply { body.externalKeyId(externalKeyId) }
 
@@ -435,9 +442,13 @@ private constructor(
          * ID of the customer-managed encryption key (CMEK) configuration to use for this Workspace.
          * Setting this field requires CMEK to be enabled for your organization. When set, data
          * stored for this Workspace is encrypted with the referenced key. Create key configurations
-         * with the External Keys API. This field is write-once: once a key is attached to a
-         * Workspace it cannot be detached or replaced. To rotate key material, rotate the
-         * underlying key on your cloud KMS; the `external_key_id` stays the same.
+         * with the External Keys API. On Claude Platform on AWS the value is the AWS KMS key ARN,
+         * and the key must be a single-Region key in the same AWS account and Region as the
+         * Workspace. On that platform the key is validated against this Workspace when it is
+         * attached, so a key-policy problem is reported as an error on this request. This field is
+         * write-once: once a key is attached to a Workspace it cannot be detached or replaced. To
+         * rotate key material, rotate the underlying key on your cloud KMS; the `external_key_id`
+         * stays the same.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -579,9 +590,13 @@ private constructor(
              * ID of the customer-managed encryption key (CMEK) configuration to use for this
              * Workspace. Setting this field requires CMEK to be enabled for your organization. When
              * set, data stored for this Workspace is encrypted with the referenced key. Create key
-             * configurations with the External Keys API. This field is write-once: once a key is
-             * attached to a Workspace it cannot be detached or replaced. To rotate key material,
-             * rotate the underlying key on your cloud KMS; the `external_key_id` stays the same.
+             * configurations with the External Keys API. On Claude Platform on AWS the value is the
+             * AWS KMS key ARN, and the key must be a single-Region key in the same AWS account and
+             * Region as the Workspace. On that platform the key is validated against this Workspace
+             * when it is attached, so a key-policy problem is reported as an error on this request.
+             * This field is write-once: once a key is attached to a Workspace it cannot be detached
+             * or replaced. To rotate key material, rotate the underlying key on your cloud KMS; the
+             * `external_key_id` stays the same.
              */
             fun externalKeyId(externalKeyId: String) = externalKeyId(JsonField.of(externalKeyId))
 
