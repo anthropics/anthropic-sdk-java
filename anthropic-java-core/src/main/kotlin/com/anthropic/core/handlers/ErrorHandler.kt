@@ -5,6 +5,7 @@
 package com.anthropic.core.handlers
 
 import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonString
 import com.anthropic.core.JsonValue
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
@@ -16,19 +17,33 @@ import com.anthropic.errors.RateLimitException
 import com.anthropic.errors.UnauthorizedException
 import com.anthropic.errors.UnexpectedStatusCodeException
 import com.anthropic.errors.UnprocessableEntityException
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 
 @JvmSynthetic
 internal fun errorBodyHandler(jsonMapper: JsonMapper): Handler<JsonValue> {
-    val handler = jsonHandler<JsonValue>(jsonMapper)
+    val reader =
+        jsonMapper
+            .readerFor(jacksonTypeRef<JsonValue>())
+            .with(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
 
     return object : Handler<JsonValue> {
-        override fun handle(response: HttpResponse): JsonValue =
-            try {
-                handler.handle(response)
+        override fun handle(response: HttpResponse): JsonValue {
+            val body =
+                try {
+                    response.body().readBytes()
+                } catch (e: Exception) {
+                    return JsonMissing.of()
+                }
+            return try {
+                reader.readValue<JsonValue>(body)
             } catch (e: Exception) {
-                JsonMissing.of()
+                // Not JSON (e.g. a plain-text gateway error), so keep the raw text.
+                if (body.isEmpty()) JsonMissing.of()
+                else JsonString.of(body.toString(Charsets.UTF_8))
             }
+        }
     }
 }
 
