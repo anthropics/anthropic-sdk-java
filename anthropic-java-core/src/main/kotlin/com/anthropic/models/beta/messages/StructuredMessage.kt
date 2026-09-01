@@ -63,6 +63,10 @@ internal constructor(
     /** @see BetaMessage.usage */
     fun usage(): BetaUsage = rawMessage.usage()
 
+    /** @see BetaMessage.inputTransformations */
+    fun inputTransformations(): Optional<List<BetaThinkingDroppedInputTransformation>> =
+        rawMessage.inputTransformations()
+
     /** @see BetaMessage._id */
     fun _id(): JsonField<String> = rawMessage._id()
 
@@ -93,6 +97,10 @@ internal constructor(
 
     /** @see BetaMessage._usage */
     fun _usage(): JsonField<BetaUsage> = rawMessage._usage()
+
+    /** @see BetaMessage._inputTransformations */
+    fun _inputTransformations(): JsonField<List<BetaThinkingDroppedInputTransformation>> =
+        rawMessage._inputTransformations()
 
     /** @see BetaMessage._additionalProperties */
     fun _additionalProperties(): Map<String, JsonValue> = rawMessage._additionalProperties()

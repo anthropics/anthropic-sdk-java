@@ -20,7 +20,7 @@ internal class BetaFallbacksParamTest {
         val fallbackParams =
             listOf(
                 BetaFallbackParam.builder()
-                    .model(Model.CLAUDE_SONNET_5)
+                    .model(Model.CLAUDE_FABLE_5_1)
                     .maxTokens(0L)
                     .outputConfig(
                         BetaOutputConfig.builder()
@@ -41,6 +41,13 @@ internal class BetaFallbacksParamTest {
                     .thinking(
                         BetaThinkingConfigEnabled.builder()
                             .budgetTokens(1024L)
+                            .blockBinding(
+                                BetaThinkingBlockBinding.builder()
+                                    .prefixMismatchBehavior(
+                                        BetaThinkingPrefixMismatchBehavior.ERROR
+                                    )
+                                    .build()
+                            )
                             .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
                             .build()
                     )
@@ -60,7 +67,7 @@ internal class BetaFallbacksParamTest {
             BetaFallbacksParam.ofFallbackParams(
                 listOf(
                     BetaFallbackParam.builder()
-                        .model(Model.CLAUDE_SONNET_5)
+                        .model(Model.CLAUDE_FABLE_5_1)
                         .maxTokens(0L)
                         .outputConfig(
                             BetaOutputConfig.builder()
@@ -81,6 +88,13 @@ internal class BetaFallbacksParamTest {
                         .thinking(
                             BetaThinkingConfigEnabled.builder()
                                 .budgetTokens(1024L)
+                                .blockBinding(
+                                    BetaThinkingBlockBinding.builder()
+                                        .prefixMismatchBehavior(
+                                            BetaThinkingPrefixMismatchBehavior.ERROR
+                                        )
+                                        .build()
+                                )
                                 .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
                                 .build()
                         )

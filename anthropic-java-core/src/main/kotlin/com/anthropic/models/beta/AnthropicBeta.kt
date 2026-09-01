@@ -108,6 +108,17 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val CE_USER_MANAGEMENT_2026_07_13 = of("ce-user-management-2026-07-13")
 
+        @JvmField
+        val MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01 =
+            of("mid-conversation-output-config-2026-07-01")
+
+        @JvmField
+        val THINKING_BINDING_CONTROLS_2026_08_01 = of("thinking-binding-controls-2026-08-01")
+
+        @JvmField
+        val MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21 =
+            of("mid-conversation-system-clear-at-2026-08-21")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
 
         @JvmSynthetic
@@ -158,6 +169,9 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         TASK_BUDGETS_2026_03_13,
         THINKING_DISPLAY_UPDATES_2026_08_18,
         CE_USER_MANAGEMENT_2026_07_13,
+        MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01,
+        THINKING_BINDING_CONTROLS_2026_08_01,
+        MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21,
     }
 
     /**
@@ -211,6 +225,9 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         TASK_BUDGETS_2026_03_13,
         THINKING_DISPLAY_UPDATES_2026_08_18,
         CE_USER_MANAGEMENT_2026_07_13,
+        MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01,
+        THINKING_BINDING_CONTROLS_2026_08_01,
+        MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -269,6 +286,11 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             TASK_BUDGETS_2026_03_13 -> Value.TASK_BUDGETS_2026_03_13
             THINKING_DISPLAY_UPDATES_2026_08_18 -> Value.THINKING_DISPLAY_UPDATES_2026_08_18
             CE_USER_MANAGEMENT_2026_07_13 -> Value.CE_USER_MANAGEMENT_2026_07_13
+            MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01 ->
+                Value.MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01
+            THINKING_BINDING_CONTROLS_2026_08_01 -> Value.THINKING_BINDING_CONTROLS_2026_08_01
+            MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21 ->
+                Value.MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21
             else -> Value._UNKNOWN
         }
 
@@ -325,6 +347,11 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             TASK_BUDGETS_2026_03_13 -> Known.TASK_BUDGETS_2026_03_13
             THINKING_DISPLAY_UPDATES_2026_08_18 -> Known.THINKING_DISPLAY_UPDATES_2026_08_18
             CE_USER_MANAGEMENT_2026_07_13 -> Known.CE_USER_MANAGEMENT_2026_07_13
+            MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01 ->
+                Known.MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01
+            THINKING_BINDING_CONTROLS_2026_08_01 -> Known.THINKING_BINDING_CONTROLS_2026_08_01
+            MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21 ->
+                Known.MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

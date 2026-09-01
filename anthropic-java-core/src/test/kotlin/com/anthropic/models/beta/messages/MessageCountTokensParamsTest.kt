@@ -17,7 +17,18 @@ internal class MessageCountTokensParamsTest {
         MessageCountTokensParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .userProfileId("anthropic-user-profile-id")
-            .addUserMessage("Hello, world")
+            .addMessage(
+                BetaMessageParam.builder()
+                    .content("Hello, world")
+                    .role(BetaMessageParam.Role.USER)
+                    .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+                    .outputConfig(
+                        BetaSystemMessageOutputConfig.builder()
+                            .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                            .build()
+                    )
+                    .build()
+            )
             .model(Model.CLAUDE_OPUS_5)
             .cacheControl(
                 BetaCacheControlEphemeral.builder()
@@ -94,6 +105,11 @@ internal class MessageCountTokensParamsTest {
             )
             .thinking(
                 BetaThinkingConfigAdaptive.builder()
+                    .blockBinding(
+                        BetaThinkingBlockBinding.builder()
+                            .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                            .build()
+                    )
                     .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                     .build()
             )
@@ -139,7 +155,18 @@ internal class MessageCountTokensParamsTest {
             MessageCountTokensParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .userProfileId("anthropic-user-profile-id")
-                .addUserMessage("Hello, world")
+                .addMessage(
+                    BetaMessageParam.builder()
+                        .content("Hello, world")
+                        .role(BetaMessageParam.Role.USER)
+                        .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+                        .outputConfig(
+                            BetaSystemMessageOutputConfig.builder()
+                                .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                                .build()
+                        )
+                        .build()
+                )
                 .model(Model.CLAUDE_OPUS_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -218,6 +245,11 @@ internal class MessageCountTokensParamsTest {
                 )
                 .thinking(
                     BetaThinkingConfigAdaptive.builder()
+                        .blockBinding(
+                            BetaThinkingBlockBinding.builder()
+                                .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                                .build()
+                        )
                         .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                         .build()
                 )
@@ -286,7 +318,18 @@ internal class MessageCountTokensParamsTest {
             MessageCountTokensParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .userProfileId("anthropic-user-profile-id")
-                .addUserMessage("Hello, world")
+                .addMessage(
+                    BetaMessageParam.builder()
+                        .content("Hello, world")
+                        .role(BetaMessageParam.Role.USER)
+                        .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+                        .outputConfig(
+                            BetaSystemMessageOutputConfig.builder()
+                                .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                                .build()
+                        )
+                        .build()
+                )
                 .model(Model.CLAUDE_OPUS_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -365,6 +408,11 @@ internal class MessageCountTokensParamsTest {
                 )
                 .thinking(
                     BetaThinkingConfigAdaptive.builder()
+                        .blockBinding(
+                            BetaThinkingBlockBinding.builder()
+                                .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                                .build()
+                        )
                         .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                         .build()
                 )
@@ -410,6 +458,12 @@ internal class MessageCountTokensParamsTest {
                 BetaMessageParam.builder()
                     .content("Hello, world")
                     .role(BetaMessageParam.Role.USER)
+                    .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+                    .outputConfig(
+                        BetaSystemMessageOutputConfig.builder()
+                            .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                            .build()
+                    )
                     .build()
             )
         assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5)
@@ -498,6 +552,11 @@ internal class MessageCountTokensParamsTest {
             .contains(
                 BetaThinkingConfigParam.ofAdaptive(
                     BetaThinkingConfigAdaptive.builder()
+                        .blockBinding(
+                            BetaThinkingBlockBinding.builder()
+                                .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                                .build()
+                        )
                         .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                         .build()
                 )

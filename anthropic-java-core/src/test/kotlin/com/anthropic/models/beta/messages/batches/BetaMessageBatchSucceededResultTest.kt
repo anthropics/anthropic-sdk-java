@@ -19,6 +19,7 @@ import com.anthropic.models.beta.messages.BetaRefusalStopDetails
 import com.anthropic.models.beta.messages.BetaServerToolUsage
 import com.anthropic.models.beta.messages.BetaStopReason
 import com.anthropic.models.beta.messages.BetaTextBlock
+import com.anthropic.models.beta.messages.BetaThinkingDroppedInputTransformation
 import com.anthropic.models.beta.messages.BetaUsage
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
@@ -115,7 +116,7 @@ internal class BetaMessageBatchSucceededResultTest {
                                     .cacheCreationInputTokens(0L)
                                     .cacheReadInputTokens(0L)
                                     .inputTokens(0L)
-                                    .model(Model.CLAUDE_SONNET_5)
+                                    .model(Model.CLAUDE_FABLE_5_1)
                                     .outputTokens(0L)
                                     .build()
                             )
@@ -129,6 +130,14 @@ internal class BetaMessageBatchSucceededResultTest {
                             )
                             .serviceTier(BetaUsage.ServiceTier.STANDARD)
                             .speed(BetaUsage.Speed.STANDARD)
+                            .build()
+                    )
+                    .addInputTransformation(
+                        BetaThinkingDroppedInputTransformation.builder()
+                            .path("path")
+                            .reason(
+                                BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
+                            )
                             .build()
                     )
                     .build()
@@ -219,7 +228,7 @@ internal class BetaMessageBatchSucceededResultTest {
                                     .cacheCreationInputTokens(0L)
                                     .cacheReadInputTokens(0L)
                                     .inputTokens(0L)
-                                    .model(Model.CLAUDE_SONNET_5)
+                                    .model(Model.CLAUDE_FABLE_5_1)
                                     .outputTokens(0L)
                                     .build()
                             )
@@ -233,6 +242,14 @@ internal class BetaMessageBatchSucceededResultTest {
                             )
                             .serviceTier(BetaUsage.ServiceTier.STANDARD)
                             .speed(BetaUsage.Speed.STANDARD)
+                            .build()
+                    )
+                    .addInputTransformation(
+                        BetaThinkingDroppedInputTransformation.builder()
+                            .path("path")
+                            .reason(
+                                BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
+                            )
                             .build()
                     )
                     .build()
@@ -327,7 +344,7 @@ internal class BetaMessageBatchSucceededResultTest {
                                     .cacheCreationInputTokens(0L)
                                     .cacheReadInputTokens(0L)
                                     .inputTokens(0L)
-                                    .model(Model.CLAUDE_SONNET_5)
+                                    .model(Model.CLAUDE_FABLE_5_1)
                                     .outputTokens(0L)
                                     .build()
                             )
@@ -341,6 +358,14 @@ internal class BetaMessageBatchSucceededResultTest {
                             )
                             .serviceTier(BetaUsage.ServiceTier.STANDARD)
                             .speed(BetaUsage.Speed.STANDARD)
+                            .build()
+                    )
+                    .addInputTransformation(
+                        BetaThinkingDroppedInputTransformation.builder()
+                            .path("path")
+                            .reason(
+                                BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
+                            )
                             .build()
                     )
                     .build()

@@ -13,9 +13,20 @@ internal class BetaThinkingConfigAdaptiveTest {
     fun create() {
         val betaThinkingConfigAdaptive =
             BetaThinkingConfigAdaptive.builder()
+                .blockBinding(
+                    BetaThinkingBlockBinding.builder()
+                        .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                        .build()
+                )
                 .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                 .build()
 
+        assertThat(betaThinkingConfigAdaptive.blockBinding())
+            .contains(
+                BetaThinkingBlockBinding.builder()
+                    .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                    .build()
+            )
         assertThat(betaThinkingConfigAdaptive.display())
             .contains(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
     }
@@ -25,6 +36,11 @@ internal class BetaThinkingConfigAdaptiveTest {
         val jsonMapper = jsonMapper()
         val betaThinkingConfigAdaptive =
             BetaThinkingConfigAdaptive.builder()
+                .blockBinding(
+                    BetaThinkingBlockBinding.builder()
+                        .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                        .build()
+                )
                 .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                 .build()
 

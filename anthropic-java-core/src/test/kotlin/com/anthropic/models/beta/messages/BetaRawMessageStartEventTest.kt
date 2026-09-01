@@ -98,7 +98,7 @@ internal class BetaRawMessageStartEventTest {
                                     .cacheCreationInputTokens(0L)
                                     .cacheReadInputTokens(0L)
                                     .inputTokens(0L)
-                                    .model(Model.CLAUDE_SONNET_5)
+                                    .model(Model.CLAUDE_FABLE_5_1)
                                     .outputTokens(0L)
                                     .build()
                             )
@@ -112,6 +112,14 @@ internal class BetaRawMessageStartEventTest {
                             )
                             .serviceTier(BetaUsage.ServiceTier.STANDARD)
                             .speed(BetaUsage.Speed.STANDARD)
+                            .build()
+                    )
+                    .addInputTransformation(
+                        BetaThinkingDroppedInputTransformation.builder()
+                            .path("path")
+                            .reason(
+                                BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
+                            )
                             .build()
                     )
                     .build()
@@ -202,7 +210,7 @@ internal class BetaRawMessageStartEventTest {
                                     .cacheCreationInputTokens(0L)
                                     .cacheReadInputTokens(0L)
                                     .inputTokens(0L)
-                                    .model(Model.CLAUDE_SONNET_5)
+                                    .model(Model.CLAUDE_FABLE_5_1)
                                     .outputTokens(0L)
                                     .build()
                             )
@@ -216,6 +224,14 @@ internal class BetaRawMessageStartEventTest {
                             )
                             .serviceTier(BetaUsage.ServiceTier.STANDARD)
                             .speed(BetaUsage.Speed.STANDARD)
+                            .build()
+                    )
+                    .addInputTransformation(
+                        BetaThinkingDroppedInputTransformation.builder()
+                            .path("path")
+                            .reason(
+                                BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
+                            )
                             .build()
                     )
                     .build()
@@ -310,7 +326,7 @@ internal class BetaRawMessageStartEventTest {
                                     .cacheCreationInputTokens(0L)
                                     .cacheReadInputTokens(0L)
                                     .inputTokens(0L)
-                                    .model(Model.CLAUDE_SONNET_5)
+                                    .model(Model.CLAUDE_FABLE_5_1)
                                     .outputTokens(0L)
                                     .build()
                             )
@@ -324,6 +340,14 @@ internal class BetaRawMessageStartEventTest {
                             )
                             .serviceTier(BetaUsage.ServiceTier.STANDARD)
                             .speed(BetaUsage.Speed.STANDARD)
+                            .build()
+                    )
+                    .addInputTransformation(
+                        BetaThinkingDroppedInputTransformation.builder()
+                            .path("path")
+                            .reason(
+                                BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
+                            )
                             .build()
                     )
                     .build()

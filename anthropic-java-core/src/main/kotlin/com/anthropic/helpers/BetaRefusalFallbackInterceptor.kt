@@ -1095,7 +1095,8 @@ private class FallbackStreamSplicer(
      * The initial stream (`splice == null`) is forwarded in its original wire bytes; a spliced hop
      * (`splice` set) has its message_start suppressed (the client already saw the initial one), its
      * block indices shifted by [indexBase], and its terminal message_delta's usage rewritten to the
-     * `usage.iterations` chain shape.
+     * `usage.iterations` chain shape, with that message_start's `input_transformations` copied onto
+     * it.
      *
      * A refusal that can be chained — it carries a `fallback_credit_token` and a fallback entry
      * remains — ends the hop early: open blocks are closed, the terminal message_delta +
@@ -1114,6 +1115,9 @@ private class FallbackStreamSplicer(
         val tracker = BlockTracker(indexBase)
         var model: String? = null
         var startUsage: ObjectNode? = null
+        // `input_transformations` from a spliced fallback's `message_start`, which is not
+        // re-emitted. Copied onto the emitted message_delta, as a server-side fallback does.
+        var startInputTransformations: JsonNode? = null
 
         rawSseHandler(jsonMapper).handle(response).use { sseStream ->
             events@ for (sse in sseStream.stream().asSequence()) {
@@ -1143,6 +1147,10 @@ private class FallbackStreamSplicer(
                             message?._usage()?.asKnown()?.getOrNull()?.let {
                                 jsonMapper.valueToTree<ObjectNode>(it)
                             }
+                        val startMessage = event.path("message")
+                        if (startMessage.has("input_transformations")) {
+                            startInputTransformations = startMessage.get("input_transformations")
+                        }
                         if (splice != null) {
                             continue@events
                         }
@@ -1199,6 +1207,7 @@ private class FallbackStreamSplicer(
                                             deltaEvent,
                                             delta,
                                             details,
+                                            startInputTransformations.takeIf { splice != null },
                                         ),
                                     model,
                                     tracker.blocks,
@@ -1229,6 +1238,12 @@ private class FallbackStreamSplicer(
                             chain.add(entry)
                             usage.set<JsonNode>("iterations", chain)
                             event.set<JsonNode>("usage", usage)
+                            val inputTransformations = startInputTransformations
+                            if (
+                                !event.has("input_transformations") && inputTransformations != null
+                            ) {
+                                event.set<JsonNode>("input_transformations", inputTransformations)
+                            }
                             yield(emit(event))
                             continue@events
                         }
@@ -1317,9 +1332,8 @@ private class FallbackStreamSplicer(
      * `recommended_model` pointed at the hop last tried and its usage backfilled from its
      * message_start (injected raw: the merged usage is the wire shape, not a typed value).
      */
-    private fun heldRefusalDelta(refusal: Refusal, recommendedModel: String): ByteArray =
-        emit(
-            "message_delta",
+    private fun heldRefusalDelta(refusal: Refusal, recommendedModel: String): ByteArray {
+        val builder =
             refusal.event
                 .toBuilder()
                 .delta(
@@ -1331,8 +1345,14 @@ private class FallbackStreamSplicer(
                         .build()
                 )
                 .usage(JsonValue.fromJsonNode(refusal.usage))
-                .build(),
-        )
+        // The spliced fallback's message_start was not re-emitted, so copy its
+        // `input_transformations` onto this delta unless the delta already has its own.
+        val inputTransformations = refusal.inputTransformations
+        if (inputTransformations != null && refusal.event._inputTransformations().isMissing()) {
+            builder.inputTransformations(JsonValue.fromJsonNode(inputTransformations))
+        }
+        return emit("message_delta", builder.build())
+    }
 
     private fun messageStop(): ByteArray =
         emit("message_stop", BetaRawMessageStopEvent.builder().build())
@@ -1434,6 +1454,12 @@ private class FallbackStreamSplicer(
         /** [event]'s delta and refusal stop details, rebuilt into it when it's surfaced. */
         val delta: BetaRawMessageDeltaEvent.Delta,
         val details: BetaRefusalStopDetails,
+        /**
+         * The `input_transformations` from a spliced fallback hop's suppressed `message_start`
+         * event. Retained so the field can be forwarded onto the replayed refusal `message_delta`
+         * event ([event]); `null` for the initial stream.
+         */
+        val inputTransformations: JsonNode?,
     )
 
     /** A response content block being accumulated from its streaming deltas. */

@@ -555,6 +555,23 @@ private constructor(
                 }
             )
 
+        fun blockBinding(): Optional<BetaThinkingBlockBinding> =
+            accept(
+                object : Visitor<Optional<BetaThinkingBlockBinding>> {
+                    override fun visitEnabled(
+                        enabled: BetaThinkingConfigEnabled
+                    ): Optional<BetaThinkingBlockBinding> = enabled.blockBinding()
+
+                    override fun visitDisabled(
+                        disabled: BetaThinkingConfigDisabled
+                    ): Optional<BetaThinkingBlockBinding> = Optional.empty()
+
+                    override fun visitAdaptive(
+                        adaptive: BetaThinkingConfigAdaptive
+                    ): Optional<BetaThinkingBlockBinding> = adaptive.blockBinding()
+                }
+            )
+
         fun enabled(): Optional<BetaThinkingConfigEnabled> = Optional.ofNullable(enabled)
 
         fun disabled(): Optional<BetaThinkingConfigDisabled> = Optional.ofNullable(disabled)

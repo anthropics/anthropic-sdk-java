@@ -6,7 +6,9 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
+import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
+import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -24,6 +26,7 @@ private constructor(
     private val delta: JsonField<Delta>,
     private val type: JsonValue,
     private val usage: JsonField<BetaMessageDeltaUsage>,
+    private val inputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -37,7 +40,11 @@ private constructor(
         @JsonProperty("usage")
         @ExcludeMissing
         usage: JsonField<BetaMessageDeltaUsage> = JsonMissing.of(),
-    ) : this(contextManagement, delta, type, usage, mutableMapOf())
+        @JsonProperty("input_transformations")
+        @ExcludeMissing
+        inputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>> =
+            JsonMissing.of(),
+    ) : this(contextManagement, delta, type, usage, inputTransformations, mutableMapOf())
 
     /**
      * Information about context management strategies applied during the request
@@ -87,6 +94,27 @@ private constructor(
     fun usage(): BetaMessageDeltaUsage = usage.getRequired("usage")
 
     /**
+     * Changes the API made to the request's input before showing it to the model: one entry per
+     * change, in request order. Today the only entry type is `thinking_dropped` — a `thinking`,
+     * `redacted_thinking` or `connector_text` block from the request's `messages` that was removed
+     * from the prompt instead of being shown to the model because it failed a binding check. More
+     * entry types may be added over time; ignore types you do not recognize.
+     *
+     * Requires `anthropic-beta: thinking-binding-controls-2026-08-01`. Present on every such
+     * response from a model that supports extended thinking, as `[]` when nothing was changed;
+     * without the beta, blocks are removed all the same but nothing is reported. Removed blocks
+     * contribute nothing to `usage.input_tokens`. When streaming, the array is final in
+     * `message_start`; the final `message_delta` event carries it only when a server-side model
+     * fallback happened mid-stream, in which case it holds the serving model's entries and replaces
+     * the one in `message_start`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun inputTransformations(): Optional<List<BetaThinkingDroppedInputTransformation>> =
+        inputTransformations.getOptional("input_transformations")
+
+    /**
      * Returns the raw JSON value of [contextManagement].
      *
      * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
@@ -109,6 +137,17 @@ private constructor(
      * Unlike [usage], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("usage") @ExcludeMissing fun _usage(): JsonField<BetaMessageDeltaUsage> = usage
+
+    /**
+     * Returns the raw JSON value of [inputTransformations].
+     *
+     * Unlike [inputTransformations], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("input_transformations")
+    @ExcludeMissing
+    fun _inputTransformations(): JsonField<List<BetaThinkingDroppedInputTransformation>> =
+        inputTransformations
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -144,6 +183,9 @@ private constructor(
         private var delta: JsonField<Delta>? = null
         private var type: JsonValue = JsonValue.from("message_delta")
         private var usage: JsonField<BetaMessageDeltaUsage>? = null
+        private var inputTransformations:
+            JsonField<MutableList<BetaThinkingDroppedInputTransformation>>? =
+            null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -152,6 +194,10 @@ private constructor(
             delta = betaRawMessageDeltaEvent.delta
             type = betaRawMessageDeltaEvent.type
             usage = betaRawMessageDeltaEvent.usage
+            inputTransformations =
+                betaRawMessageDeltaEvent.inputTransformations
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
             additionalProperties = betaRawMessageDeltaEvent.additionalProperties.toMutableMap()
         }
 
@@ -226,6 +272,57 @@ private constructor(
          */
         fun usage(usage: JsonField<BetaMessageDeltaUsage>) = apply { this.usage = usage }
 
+        /**
+         * Changes the API made to the request's input before showing it to the model: one entry per
+         * change, in request order. Today the only entry type is `thinking_dropped` — a `thinking`,
+         * `redacted_thinking` or `connector_text` block from the request's `messages` that was
+         * removed from the prompt instead of being shown to the model because it failed a binding
+         * check. More entry types may be added over time; ignore types you do not recognize.
+         *
+         * Requires `anthropic-beta: thinking-binding-controls-2026-08-01`. Present on every such
+         * response from a model that supports extended thinking, as `[]` when nothing was changed;
+         * without the beta, blocks are removed all the same but nothing is reported. Removed blocks
+         * contribute nothing to `usage.input_tokens`. When streaming, the array is final in
+         * `message_start`; the final `message_delta` event carries it only when a server-side model
+         * fallback happened mid-stream, in which case it holds the serving model's entries and
+         * replaces the one in `message_start`.
+         */
+        fun inputTransformations(
+            inputTransformations: List<BetaThinkingDroppedInputTransformation>?
+        ) = inputTransformations(JsonField.ofNullable(inputTransformations))
+
+        /**
+         * Alias for calling [Builder.inputTransformations] with
+         * `inputTransformations.orElse(null)`.
+         */
+        fun inputTransformations(
+            inputTransformations: Optional<List<BetaThinkingDroppedInputTransformation>>
+        ) = inputTransformations(inputTransformations.getOrNull())
+
+        /**
+         * Sets [Builder.inputTransformations] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inputTransformations] with a well-typed
+         * `List<BetaThinkingDroppedInputTransformation>` value instead. This method is primarily
+         * for setting the field to an undocumented or not yet supported value.
+         */
+        fun inputTransformations(
+            inputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>>
+        ) = apply { this.inputTransformations = inputTransformations.map { it.toMutableList() } }
+
+        /**
+         * Adds a single [BetaThinkingDroppedInputTransformation] to [inputTransformations].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addInputTransformation(inputTransformation: BetaThinkingDroppedInputTransformation) =
+            apply {
+                inputTransformations =
+                    (inputTransformations ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("inputTransformations", it).add(inputTransformation)
+                    }
+            }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -265,6 +362,7 @@ private constructor(
                 checkRequired("delta", delta),
                 type,
                 checkRequired("usage", usage),
+                (inputTransformations ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -292,6 +390,7 @@ private constructor(
             }
         }
         usage().validate()
+        inputTransformations().ifPresent { it.forEach { it.validate() } }
         validated = true
     }
 
@@ -313,7 +412,8 @@ private constructor(
         (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
             (delta.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("message_delta")) 1 else 0 } +
-            (usage.asKnown().getOrNull()?.validity() ?: 0)
+            (usage.asKnown().getOrNull()?.validity() ?: 0) +
+            (inputTransformations.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
     class Delta
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -646,15 +746,23 @@ private constructor(
             delta == other.delta &&
             type == other.type &&
             usage == other.usage &&
+            inputTransformations == other.inputTransformations &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(contextManagement, delta, type, usage, additionalProperties)
+        Objects.hash(
+            contextManagement,
+            delta,
+            type,
+            usage,
+            inputTransformations,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaRawMessageDeltaEvent{contextManagement=$contextManagement, delta=$delta, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
+        "BetaRawMessageDeltaEvent{contextManagement=$contextManagement, delta=$delta, type=$type, usage=$usage, inputTransformations=$inputTransformations, additionalProperties=$additionalProperties}"
 }

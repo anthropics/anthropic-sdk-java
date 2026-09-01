@@ -15,15 +15,15 @@ internal class BetaFallbackBlockParamTest {
     fun create() {
         val betaFallbackBlockParam =
             BetaFallbackBlockParam.builder()
-                .from(BetaFallbackInfoParam.of(Model.CLAUDE_SONNET_5))
-                .to(BetaFallbackInfoParam.of(Model.CLAUDE_SONNET_5))
+                .from(BetaFallbackInfoParam.of(Model.CLAUDE_FABLE_5_1))
+                .to(BetaFallbackInfoParam.of(Model.CLAUDE_FABLE_5_1))
                 .trigger(JsonValue.from(mapOf<String, Any>()))
                 .build()
 
         assertThat(betaFallbackBlockParam.from())
-            .isEqualTo(BetaFallbackInfoParam.of(Model.CLAUDE_SONNET_5))
+            .isEqualTo(BetaFallbackInfoParam.of(Model.CLAUDE_FABLE_5_1))
         assertThat(betaFallbackBlockParam.to())
-            .isEqualTo(BetaFallbackInfoParam.of(Model.CLAUDE_SONNET_5))
+            .isEqualTo(BetaFallbackInfoParam.of(Model.CLAUDE_FABLE_5_1))
         assertThat(betaFallbackBlockParam._trigger())
             .isEqualTo(JsonValue.from(mapOf<String, Any>()))
     }
@@ -33,8 +33,8 @@ internal class BetaFallbackBlockParamTest {
         val jsonMapper = jsonMapper()
         val betaFallbackBlockParam =
             BetaFallbackBlockParam.builder()
-                .from(BetaFallbackInfoParam.of(Model.CLAUDE_SONNET_5))
-                .to(BetaFallbackInfoParam.of(Model.CLAUDE_SONNET_5))
+                .from(BetaFallbackInfoParam.of(Model.CLAUDE_FABLE_5_1))
+                .to(BetaFallbackInfoParam.of(Model.CLAUDE_FABLE_5_1))
                 .trigger(JsonValue.from(mapOf<String, Any>()))
                 .build()
 

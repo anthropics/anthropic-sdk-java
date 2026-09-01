@@ -6,6 +6,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -76,7 +77,7 @@ internal class BetaRawMessageDeltaEventTest {
                                 .cacheCreationInputTokens(0L)
                                 .cacheReadInputTokens(0L)
                                 .inputTokens(0L)
-                                .model(Model.CLAUDE_SONNET_5)
+                                .model(Model.CLAUDE_FABLE_5_1)
                                 .outputTokens(0L)
                                 .build()
                         )
@@ -87,6 +88,14 @@ internal class BetaRawMessageDeltaEventTest {
                                 .webFetchRequests(2L)
                                 .webSearchRequests(0L)
                                 .build()
+                        )
+                        .build()
+                )
+                .addInputTransformation(
+                    BetaThinkingDroppedInputTransformation.builder()
+                        .path("path")
+                        .reason(
+                            BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
                         )
                         .build()
                 )
@@ -156,7 +165,7 @@ internal class BetaRawMessageDeltaEventTest {
                             .cacheCreationInputTokens(0L)
                             .cacheReadInputTokens(0L)
                             .inputTokens(0L)
-                            .model(Model.CLAUDE_SONNET_5)
+                            .model(Model.CLAUDE_FABLE_5_1)
                             .outputTokens(0L)
                             .build()
                     )
@@ -168,6 +177,116 @@ internal class BetaRawMessageDeltaEventTest {
                             .webSearchRequests(0L)
                             .build()
                     )
+                    .build()
+            )
+        assertThat(betaRawMessageDeltaEvent.inputTransformations().getOrNull())
+            .containsExactly(
+                BetaThinkingDroppedInputTransformation.builder()
+                    .path("path")
+                    .reason(BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH)
+                    .build()
+            )
+    }
+
+    @Test
+    fun addToUnsetListsOnToBuilder() {
+        val baseBetaRawMessageDeltaEvent =
+            BetaRawMessageDeltaEvent.builder()
+                .contextManagement(
+                    BetaContextManagementResponse.builder()
+                        .addAppliedEdit(
+                            BetaClearToolUses20250919EditResponse.builder()
+                                .clearedInputTokens(0L)
+                                .clearedToolUses(0L)
+                                .build()
+                        )
+                        .build()
+                )
+                .delta(
+                    BetaRawMessageDeltaEvent.Delta.builder()
+                        .container(
+                            BetaContainer.builder()
+                                .id("container_011CpZohnwH4vuy7gazohgSP")
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .addSkill(
+                                    BetaContainerSkill.builder()
+                                        .skillId("pdf")
+                                        .type(BetaContainerSkill.Type.ANTHROPIC)
+                                        .version("latest")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .stopDetails(
+                            BetaRefusalStopDetails.builder()
+                                .category(BetaRefusalStopDetails.Category.CYBER)
+                                .explanation(
+                                    "This request was declined because it conflicts with Anthropic's Usage Policy."
+                                )
+                                .fallbackCreditToken("QW50aHJvcGljL0NsYXVkZQ==")
+                                .fallbackHasPrefillClaim(true)
+                                .recommendedModel("claude-opus-4-8")
+                                .build()
+                        )
+                        .stopReason(BetaStopReason.END_TURN)
+                        .stopSequence("stop_sequence")
+                        .build()
+                )
+                .usage(
+                    BetaMessageDeltaUsage.builder()
+                        .cacheCreationInputTokens(2051L)
+                        .cacheReadInputTokens(2051L)
+                        .fallbackCredit(
+                            BetaFallbackCreditUsage.builder()
+                                .status(BetaFallbackCreditRedeemed.builder().build())
+                                .build()
+                        )
+                        .inputTokens(2095L)
+                        .addIteration(
+                            BetaMessageIterationUsage.builder()
+                                .cacheCreation(
+                                    BetaCacheCreation.builder()
+                                        .ephemeral1hInputTokens(0L)
+                                        .ephemeral5mInputTokens(0L)
+                                        .build()
+                                )
+                                .cacheCreationInputTokens(0L)
+                                .cacheReadInputTokens(0L)
+                                .inputTokens(0L)
+                                .model(Model.CLAUDE_FABLE_5_1)
+                                .outputTokens(0L)
+                                .build()
+                        )
+                        .outputTokens(503L)
+                        .outputTokensDetails(BetaOutputTokensDetails.of(0L))
+                        .serverToolUse(
+                            BetaServerToolUsage.builder()
+                                .webFetchRequests(2L)
+                                .webSearchRequests(0L)
+                                .build()
+                        )
+                        .build()
+                )
+                .build()
+
+        val betaRawMessageDeltaEvent =
+            baseBetaRawMessageDeltaEvent
+                .toBuilder()
+                .addInputTransformation(
+                    BetaThinkingDroppedInputTransformation.builder()
+                        .path("path")
+                        .reason(
+                            BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
+                        )
+                        .build()
+                )
+                .build()
+
+        assertThat(betaRawMessageDeltaEvent.inputTransformations().getOrNull())
+            .containsExactly(
+                BetaThinkingDroppedInputTransformation.builder()
+                    .path("path")
+                    .reason(BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH)
                     .build()
             )
     }
@@ -238,7 +357,7 @@ internal class BetaRawMessageDeltaEventTest {
                                 .cacheCreationInputTokens(0L)
                                 .cacheReadInputTokens(0L)
                                 .inputTokens(0L)
-                                .model(Model.CLAUDE_SONNET_5)
+                                .model(Model.CLAUDE_FABLE_5_1)
                                 .outputTokens(0L)
                                 .build()
                         )
@@ -249,6 +368,14 @@ internal class BetaRawMessageDeltaEventTest {
                                 .webFetchRequests(2L)
                                 .webSearchRequests(0L)
                                 .build()
+                        )
+                        .build()
+                )
+                .addInputTransformation(
+                    BetaThinkingDroppedInputTransformation.builder()
+                        .path("path")
+                        .reason(
+                            BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
                         )
                         .build()
                 )
