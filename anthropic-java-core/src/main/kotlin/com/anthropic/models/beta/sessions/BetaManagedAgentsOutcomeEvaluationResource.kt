@@ -19,7 +19,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Evaluation state for a single outcome defined via a define_outcome event. */
+/** Evaluation state for a single outcome defined via a `define_outcome` event. */
 class BetaManagedAgentsOutcomeEvaluationResource
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -76,8 +76,9 @@ private constructor(
     fun description(): String = description.getRequired("description")
 
     /**
-     * Grader's verdict text from the most recent evaluation. For satisfied, explains why criteria
-     * are met; for needs_revision (intermediate), what's missing; for failed, why unrecoverable.
+     * Grader's verdict text from the most recent evaluation. For `satisfied`, explains why criteria
+     * are met; for `needs_revision` (intermediate), what's missing; for `failed`, why
+     * unrecoverable.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -258,8 +259,8 @@ private constructor(
         fun description(description: JsonField<String>) = apply { this.description = description }
 
         /**
-         * Grader's verdict text from the most recent evaluation. For satisfied, explains why
-         * criteria are met; for needs_revision (intermediate), what's missing; for failed, why
+         * Grader's verdict text from the most recent evaluation. For `satisfied`, explains why
+         * criteria are met; for `needs_revision` (intermediate), what's missing; for `failed`, why
          * unrecoverable.
          */
         fun explanation(explanation: String?) = explanation(JsonField.ofNullable(explanation))

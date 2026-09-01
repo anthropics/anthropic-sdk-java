@@ -168,7 +168,7 @@ private constructor(
     fun metadata(): Metadata = metadata.getRequired("metadata")
 
     /**
-     * Per-outcome evaluation state. One entry per define_outcome event sent to the session.
+     * Per-outcome evaluation state. One entry per `define_outcome` event sent to the session.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -593,7 +593,9 @@ private constructor(
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
-        /** Per-outcome evaluation state. One entry per define_outcome event sent to the session. */
+        /**
+         * Per-outcome evaluation state. One entry per `define_outcome` event sent to the session.
+         */
         fun outcomeEvaluations(
             outcomeEvaluations: List<BetaManagedAgentsOutcomeEvaluationResource>
         ) = outcomeEvaluations(JsonField.of(outcomeEvaluations))

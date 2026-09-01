@@ -46,6 +46,7 @@ maven-publish-gradle-plugin = { module = "com.vanniktech:gradle-maven-publish-pl
 dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 proguard-gradle-plugin = { module = "com.guardsquare:proguard-gradle", version.ref = "proguard" }
 shadow-gradle-plugin = { module = "com.gradleup.shadow:shadow-gradle-plugin", version.ref = "shadow" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version = "2.25.3" }
 
 assertj = { module = "org.assertj:assertj-core", version = "3.27.7" }
 awssdk-auth = { module = "software.amazon.awssdk:auth" }

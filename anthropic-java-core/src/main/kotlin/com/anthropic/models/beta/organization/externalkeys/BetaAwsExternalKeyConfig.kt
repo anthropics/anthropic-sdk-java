@@ -36,7 +36,9 @@ private constructor(
     ) : this(kmsArn, type, region, roleArn, mutableMapOf())
 
     /**
-     * Full ARN of the AWS KMS key.
+     * Full ARN of the AWS KMS key. On Claude Platform on AWS the key must be a single-Region key in
+     * your organization's own AWS account; cross-account keys, multi-Region keys, and alias ARNs
+     * are rejected.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -63,8 +65,9 @@ private constructor(
     fun region(): Optional<String> = region.getOptional("region")
 
     /**
-     * IAM role ARN. Deprecated — Anthropic reaches the KMS key via a managed intermediate role;
-     * this field is ignored.
+     * IAM role ARN. Deprecated — Anthropic reaches the KMS key through its own intermediate role
+     * (or, on Claude Platform on AWS, with credentials AWS issues for the Workspace); this field is
+     * ignored.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -144,7 +147,11 @@ private constructor(
             additionalProperties = betaAwsExternalKeyConfig.additionalProperties.toMutableMap()
         }
 
-        /** Full ARN of the AWS KMS key. */
+        /**
+         * Full ARN of the AWS KMS key. On Claude Platform on AWS the key must be a single-Region
+         * key in your organization's own AWS account; cross-account keys, multi-Region keys, and
+         * alias ARNs are rejected.
+         */
         fun kmsArn(kmsArn: String) = kmsArn(JsonField.of(kmsArn))
 
         /**
@@ -184,8 +191,9 @@ private constructor(
         fun region(region: JsonField<String>) = apply { this.region = region }
 
         /**
-         * IAM role ARN. Deprecated — Anthropic reaches the KMS key via a managed intermediate role;
-         * this field is ignored.
+         * IAM role ARN. Deprecated — Anthropic reaches the KMS key through its own intermediate
+         * role (or, on Claude Platform on AWS, with credentials AWS issues for the Workspace); this
+         * field is ignored.
          */
         @Deprecated("deprecated")
         fun roleArn(roleArn: String?) = roleArn(JsonField.ofNullable(roleArn))

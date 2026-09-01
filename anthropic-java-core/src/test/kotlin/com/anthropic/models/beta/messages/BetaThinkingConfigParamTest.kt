@@ -19,6 +19,11 @@ internal class BetaThinkingConfigParamTest {
         val enabled =
             BetaThinkingConfigEnabled.builder()
                 .budgetTokens(1024L)
+                .blockBinding(
+                    BetaThinkingBlockBinding.builder()
+                        .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                        .build()
+                )
                 .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
                 .build()
 
@@ -36,6 +41,11 @@ internal class BetaThinkingConfigParamTest {
             BetaThinkingConfigParam.ofEnabled(
                 BetaThinkingConfigEnabled.builder()
                     .budgetTokens(1024L)
+                    .blockBinding(
+                        BetaThinkingBlockBinding.builder()
+                            .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                            .build()
+                    )
                     .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
                     .build()
             )
@@ -79,6 +89,11 @@ internal class BetaThinkingConfigParamTest {
     fun ofAdaptive() {
         val adaptive =
             BetaThinkingConfigAdaptive.builder()
+                .blockBinding(
+                    BetaThinkingBlockBinding.builder()
+                        .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                        .build()
+                )
                 .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                 .build()
 
@@ -95,6 +110,11 @@ internal class BetaThinkingConfigParamTest {
         val betaThinkingConfigParam =
             BetaThinkingConfigParam.ofAdaptive(
                 BetaThinkingConfigAdaptive.builder()
+                    .blockBinding(
+                        BetaThinkingBlockBinding.builder()
+                            .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                            .build()
+                    )
                     .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                     .build()
             )

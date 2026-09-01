@@ -13,13 +13,17 @@ import com.anthropic.models.beta.messages.BetaContextManagementConfig
 import com.anthropic.models.beta.messages.BetaDiagnosticsParam
 import com.anthropic.models.beta.messages.BetaInputTokensClearAtLeast
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
+import com.anthropic.models.beta.messages.BetaMessageParam
 import com.anthropic.models.beta.messages.BetaMetadata
 import com.anthropic.models.beta.messages.BetaOutputConfig
 import com.anthropic.models.beta.messages.BetaRequestMcpServerToolConfiguration
 import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
 import com.anthropic.models.beta.messages.BetaSkillParams
+import com.anthropic.models.beta.messages.BetaSystemMessageOutputConfig
 import com.anthropic.models.beta.messages.BetaTextBlockParam
+import com.anthropic.models.beta.messages.BetaThinkingBlockBinding
 import com.anthropic.models.beta.messages.BetaThinkingConfigAdaptive
+import com.anthropic.models.beta.messages.BetaThinkingPrefixMismatchBehavior
 import com.anthropic.models.beta.messages.BetaTokenTaskBudget
 import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.beta.messages.BetaToolChoiceAuto
@@ -41,7 +45,18 @@ internal class BatchCreateParamsTest {
                     .params(
                         BatchCreateParams.Request.Params.builder()
                             .maxTokens(1024L)
-                            .addUserMessage("Hello, world")
+                            .addMessage(
+                                BetaMessageParam.builder()
+                                    .content("Hello, world")
+                                    .role(BetaMessageParam.Role.USER)
+                                    .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+                                    .outputConfig(
+                                        BetaSystemMessageOutputConfig.builder()
+                                            .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .model(Model.CLAUDE_OPUS_5)
                             .cacheControl(
                                 BetaCacheControlEphemeral.builder()
@@ -152,6 +167,13 @@ internal class BatchCreateParamsTest {
                             .temperature(1.0)
                             .thinking(
                                 BetaThinkingConfigAdaptive.builder()
+                                    .blockBinding(
+                                        BetaThinkingBlockBinding.builder()
+                                            .prefixMismatchBehavior(
+                                                BetaThinkingPrefixMismatchBehavior.ERROR
+                                            )
+                                            .build()
+                                    )
                                     .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                                     .build()
                             )
@@ -217,7 +239,18 @@ internal class BatchCreateParamsTest {
                         .params(
                             BatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
-                                .addUserMessage("Hello, world")
+                                .addMessage(
+                                    BetaMessageParam.builder()
+                                        .content("Hello, world")
+                                        .role(BetaMessageParam.Role.USER)
+                                        .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+                                        .outputConfig(
+                                            BetaSystemMessageOutputConfig.builder()
+                                                .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .model(Model.CLAUDE_OPUS_5)
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
@@ -333,6 +366,13 @@ internal class BatchCreateParamsTest {
                                 .temperature(1.0)
                                 .thinking(
                                     BetaThinkingConfigAdaptive.builder()
+                                        .blockBinding(
+                                            BetaThinkingBlockBinding.builder()
+                                                .prefixMismatchBehavior(
+                                                    BetaThinkingPrefixMismatchBehavior.ERROR
+                                                )
+                                                .build()
+                                        )
                                         .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                                         .build()
                                 )
@@ -433,7 +473,18 @@ internal class BatchCreateParamsTest {
                         .params(
                             BatchCreateParams.Request.Params.builder()
                                 .maxTokens(1024L)
-                                .addUserMessage("Hello, world")
+                                .addMessage(
+                                    BetaMessageParam.builder()
+                                        .content("Hello, world")
+                                        .role(BetaMessageParam.Role.USER)
+                                        .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+                                        .outputConfig(
+                                            BetaSystemMessageOutputConfig.builder()
+                                                .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .model(Model.CLAUDE_OPUS_5)
                                 .cacheControl(
                                     BetaCacheControlEphemeral.builder()
@@ -549,6 +600,13 @@ internal class BatchCreateParamsTest {
                                 .temperature(1.0)
                                 .thinking(
                                     BetaThinkingConfigAdaptive.builder()
+                                        .blockBinding(
+                                            BetaThinkingBlockBinding.builder()
+                                                .prefixMismatchBehavior(
+                                                    BetaThinkingPrefixMismatchBehavior.ERROR
+                                                )
+                                                .build()
+                                        )
                                         .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                                         .build()
                                 )
@@ -612,7 +670,18 @@ internal class BatchCreateParamsTest {
                     .params(
                         BatchCreateParams.Request.Params.builder()
                             .maxTokens(1024L)
-                            .addUserMessage("Hello, world")
+                            .addMessage(
+                                BetaMessageParam.builder()
+                                    .content("Hello, world")
+                                    .role(BetaMessageParam.Role.USER)
+                                    .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+                                    .outputConfig(
+                                        BetaSystemMessageOutputConfig.builder()
+                                            .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .model(Model.CLAUDE_OPUS_5)
                             .cacheControl(
                                 BetaCacheControlEphemeral.builder()
@@ -723,6 +792,13 @@ internal class BatchCreateParamsTest {
                             .temperature(1.0)
                             .thinking(
                                 BetaThinkingConfigAdaptive.builder()
+                                    .blockBinding(
+                                        BetaThinkingBlockBinding.builder()
+                                            .prefixMismatchBehavior(
+                                                BetaThinkingPrefixMismatchBehavior.ERROR
+                                            )
+                                            .build()
+                                    )
                                     .display(BetaThinkingConfigAdaptive.Display.SUMMARIZED)
                                     .build()
                             )

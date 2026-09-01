@@ -21,6 +21,7 @@ class BetaThinkingConfigAdaptive
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val type: JsonValue,
+    private val blockBinding: JsonField<BetaThinkingBlockBinding>,
     private val display: JsonField<Display>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -28,8 +29,11 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("block_binding")
+        @ExcludeMissing
+        blockBinding: JsonField<BetaThinkingBlockBinding> = JsonMissing.of(),
         @JsonProperty("display") @ExcludeMissing display: JsonField<Display> = JsonMissing.of(),
-    ) : this(type, display, mutableMapOf())
+    ) : this(type, blockBinding, display, mutableMapOf())
 
     /**
      * Expected to always return the following:
@@ -43,6 +47,16 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
+     * Controls for block binding: what happens when a thinking block this request sends back fails
+     * the conversation check. Every field is optional; an empty object means every default.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun blockBinding(): Optional<BetaThinkingBlockBinding> =
+        blockBinding.getOptional("block_binding")
+
+    /**
      * Controls how thinking content appears in the response. When set to `summarized`, thinking is
      * returned normally. When set to `omitted`, thinking content is redacted but a signature is
      * returned for multi-turn continuity. Defaults to `summarized`.
@@ -51,6 +65,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun display(): Optional<Display> = display.getOptional("display")
+
+    /**
+     * Returns the raw JSON value of [blockBinding].
+     *
+     * Unlike [blockBinding], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("block_binding")
+    @ExcludeMissing
+    fun _blockBinding(): JsonField<BetaThinkingBlockBinding> = blockBinding
 
     /**
      * Returns the raw JSON value of [display].
@@ -83,12 +106,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var type: JsonValue = JsonValue.from("adaptive")
+        private var blockBinding: JsonField<BetaThinkingBlockBinding> = JsonMissing.of()
         private var display: JsonField<Display> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(betaThinkingConfigAdaptive: BetaThinkingConfigAdaptive) = apply {
             type = betaThinkingConfigAdaptive.type
+            blockBinding = betaThinkingConfigAdaptive.blockBinding
             display = betaThinkingConfigAdaptive.display
             additionalProperties = betaThinkingConfigAdaptive.additionalProperties.toMutableMap()
         }
@@ -106,6 +131,29 @@ private constructor(
          * value.
          */
         fun type(type: JsonValue) = apply { this.type = type }
+
+        /**
+         * Controls for block binding: what happens when a thinking block this request sends back
+         * fails the conversation check. Every field is optional; an empty object means every
+         * default.
+         */
+        fun blockBinding(blockBinding: BetaThinkingBlockBinding?) =
+            blockBinding(JsonField.ofNullable(blockBinding))
+
+        /** Alias for calling [Builder.blockBinding] with `blockBinding.orElse(null)`. */
+        fun blockBinding(blockBinding: Optional<BetaThinkingBlockBinding>) =
+            blockBinding(blockBinding.getOrNull())
+
+        /**
+         * Sets [Builder.blockBinding] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.blockBinding] with a well-typed
+         * [BetaThinkingBlockBinding] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun blockBinding(blockBinding: JsonField<BetaThinkingBlockBinding>) = apply {
+            this.blockBinding = blockBinding
+        }
 
         /**
          * Controls how thinking content appears in the response. When set to `summarized`, thinking
@@ -150,7 +198,12 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): BetaThinkingConfigAdaptive =
-            BetaThinkingConfigAdaptive(type, display, additionalProperties.toMutableMap())
+            BetaThinkingConfigAdaptive(
+                type,
+                blockBinding,
+                display,
+                additionalProperties.toMutableMap(),
+            )
     }
 
     private var validated: Boolean = false
@@ -173,6 +226,7 @@ private constructor(
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
+        blockBinding().ifPresent { it.validate() }
         display().ifPresent { it.validate() }
         validated = true
     }
@@ -193,6 +247,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         type.let { if (it == JsonValue.from("adaptive")) 1 else 0 } +
+            (blockBinding.asKnown().getOrNull()?.validity() ?: 0) +
             (display.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
@@ -353,14 +408,17 @@ private constructor(
 
         return other is BetaThinkingConfigAdaptive &&
             type == other.type &&
+            blockBinding == other.blockBinding &&
             display == other.display &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(type, display, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(type, blockBinding, display, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaThinkingConfigAdaptive{type=$type, display=$display, additionalProperties=$additionalProperties}"
+        "BetaThinkingConfigAdaptive{type=$type, blockBinding=$blockBinding, display=$display, additionalProperties=$additionalProperties}"
 }

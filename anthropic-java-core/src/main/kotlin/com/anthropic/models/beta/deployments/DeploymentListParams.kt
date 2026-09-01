@@ -47,8 +47,8 @@ private constructor(
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /**
-     * Filter by status: active or paused. Omit for both. To include archived deployments, use
-     * include_archived instead; the two cannot be combined.
+     * Filter by status: `active` or `paused`. Omit for both. To include archived deployments, use
+     * `include_archived` instead; the two cannot be combined.
      */
     fun status(): Optional<BetaManagedAgentsDeploymentStatus> = Optional.ofNullable(status)
 
@@ -155,8 +155,8 @@ private constructor(
         fun page(page: Optional<String>) = page(page.getOrNull())
 
         /**
-         * Filter by status: active or paused. Omit for both. To include archived deployments, use
-         * include_archived instead; the two cannot be combined.
+         * Filter by status: `active` or `paused`. Omit for both. To include archived deployments,
+         * use `include_archived` instead; the two cannot be combined.
          */
         fun status(status: BetaManagedAgentsDeploymentStatus?) = apply { this.status = status }
 

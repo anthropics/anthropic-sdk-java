@@ -14,10 +14,21 @@ internal class BetaThinkingConfigEnabledTest {
         val betaThinkingConfigEnabled =
             BetaThinkingConfigEnabled.builder()
                 .budgetTokens(1024L)
+                .blockBinding(
+                    BetaThinkingBlockBinding.builder()
+                        .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                        .build()
+                )
                 .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
                 .build()
 
         assertThat(betaThinkingConfigEnabled.budgetTokens()).isEqualTo(1024L)
+        assertThat(betaThinkingConfigEnabled.blockBinding())
+            .contains(
+                BetaThinkingBlockBinding.builder()
+                    .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                    .build()
+            )
         assertThat(betaThinkingConfigEnabled.display())
             .contains(BetaThinkingConfigEnabled.Display.SUMMARIZED)
     }
@@ -28,6 +39,11 @@ internal class BetaThinkingConfigEnabledTest {
         val betaThinkingConfigEnabled =
             BetaThinkingConfigEnabled.builder()
                 .budgetTokens(1024L)
+                .blockBinding(
+                    BetaThinkingBlockBinding.builder()
+                        .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                        .build()
+                )
                 .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
                 .build()
 

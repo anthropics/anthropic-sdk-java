@@ -10,6 +10,7 @@ import com.anthropic.models.beta.messages.*
 import com.anthropic.models.beta.messages.BetaRawContentBlockStartEvent.ContentBlock
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.databind.JsonNode
+import java.util.Optional
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -727,7 +728,18 @@ internal class BetaMessageAccumulatorTest {
     fun messageDeltaAppliesContextManagementAndContainer() {
         // `context_management` (a top-level key of the `message_delta` event, not of its `delta`)
         // and `container` are never sent on `message_start`, so that event is their only source.
+        // `input_transformations` on `message_delta` replaces the `message_start` value.
         val accumulator = BetaMessageAccumulator.create()
+        val startInputTransformation =
+            inputTransformation(
+                "messages.2.content.0",
+                BetaThinkingDroppedInputTransformation.Reason.PREFIX_BINDING_MISMATCH,
+            )
+        val deltaInputTransformation =
+            inputTransformation(
+                "messages.0.content.0",
+                BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH,
+            )
         val container =
             BetaContainer.builder()
                 .id("container-id")
@@ -759,6 +771,7 @@ internal class BetaMessageAccumulatorTest {
                             .container(null as BetaContainer?)
                             .contextManagement(null as BetaContextManagementResponse?)
                             .diagnostics(null)
+                            .inputTransformations(listOf(startInputTransformation))
                             .build()
                     )
                     .build()
@@ -768,6 +781,7 @@ internal class BetaMessageAccumulatorTest {
             BetaRawMessageStreamEvent.ofMessageDelta(
                 BetaRawMessageDeltaEvent.builder()
                     .contextManagement(contextManagement)
+                    .inputTransformations(listOf(deltaInputTransformation))
                     .delta(
                         BetaRawMessageDeltaEvent.Delta.builder()
                             .container(container)
@@ -804,12 +818,37 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(message.contextManagement()).hasValue(contextManagement)
         assertThat(message.container()).hasValue(container)
+        assertThat(message.inputTransformations()).hasValue(listOf(deltaInputTransformation))
         assertThat(message.usage().outputTokens()).isEqualTo(96L)
         assertThat(message.usage().inputTokens()).isEqualTo(101L)
         assertThat(message.usage().outputTokensDetails().get().thinkingTokens()).isEqualTo(64L)
         // Never re-sent on `message_delta`, so these must survive from `message_start`.
         assertThat(message.usage().serviceTier()).hasValue(BetaUsage.ServiceTier.STANDARD)
         assertThat(message.usage().cacheCreation().get().ephemeral5mInputTokens()).isEqualTo(0L)
+    }
+
+    @Test
+    fun messageDeltaInputTransformationsReplaceMessageStartListOnlyWhenPresent() {
+        // `input_transformations` is on `message_delta` only after a mid-stream model fallback: the
+        // key is omitted otherwise (never `null`), may be an empty list, and replaces (never merges
+        // with) the `message_start` list.
+        val x =
+            inputTransformation(
+                "messages.0.content.0",
+                BetaThinkingDroppedInputTransformation.Reason.PREFIX_BINDING_MISMATCH,
+            )
+        val y =
+            inputTransformation(
+                "messages.2.content.0",
+                BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH,
+            )
+
+        assertThat(accumulateInputTransformations(JsonField.of(listOf(x)), NOT_SET))
+            .hasValue(listOf(x))
+        assertThat(accumulateInputTransformations(JsonField.of(listOf(x)), JsonField.of(listOf(y))))
+            .hasValue(listOf(y))
+        assertThat(accumulateInputTransformations(JsonField.of(listOf(x)), JsonField.of(listOf())))
+            .hasValue(listOf())
     }
 
     @Test
@@ -1444,7 +1483,9 @@ internal class BetaMessageAccumulatorTest {
     // In all the following test fixture factory functions, the `type` property (where relevant) is
     // not set explicitly, as it always has an appropriate non-null default value.
 
-    private fun messageStartEvent() =
+    private fun messageStartEvent(
+        inputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>> = NOT_SET
+    ) =
         BetaRawMessageStreamEvent.ofMessageStart(
             BetaRawMessageStartEvent.builder()
                 .message(
@@ -1478,6 +1519,7 @@ internal class BetaMessageAccumulatorTest {
                                 .build()
                         )
                         .diagnostics(null)
+                        .inputTransformations(inputTransformations)
                         // The default non-null value for `role` suffices.
                         .build()
                 )
@@ -1504,6 +1546,9 @@ internal class BetaMessageAccumulatorTest {
      * @param stopSequence The behavior follows the pattern of [stopReason].
      * @param outputTokens The number of output tokens to _add_ to the current count of output
      *   tokens already accumulated by the message.
+     * @param inputTransformations Follows the pattern of [stopReason], except that `SET_TO_NULL` is
+     *   ignored like `NOT_SET` (the accumulated list is left unchanged) — the API omits the key
+     *   rather than sending `null`.
      */
     private fun messageDeltaEvent(
         stopReason: JsonField<BetaStopReason> = NOT_SET,
@@ -1513,6 +1558,7 @@ internal class BetaMessageAccumulatorTest {
         cacheCreationInputTokens: Long = 0L,
         cacheReadInputTokens: Long = 0L,
         webSearchRequests: Long = 0L,
+        inputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>> = NOT_SET,
     ) =
         BetaRawMessageStreamEvent.ofMessageDelta(
             BetaRawMessageDeltaEvent.builder()
@@ -1559,11 +1605,43 @@ internal class BetaMessageAccumulatorTest {
                         .iterations(null)
                         .build()
                 )
+                .inputTransformations(inputTransformations)
                 .build()
         )
 
     private fun messageStopEvent() =
         BetaRawMessageStreamEvent.ofMessageStop(BetaRawMessageStopEvent.builder().build())
+
+    private fun inputTransformation(
+        path: String,
+        reason: BetaThinkingDroppedInputTransformation.Reason,
+    ) = BetaThinkingDroppedInputTransformation.builder().path(path).reason(reason).build()
+
+    /**
+     * Accumulates a `message_start` event, one `message_delta` event and a `message_stop` event and
+     * returns the `input_transformations` of the accumulated message.
+     *
+     * @param startInputTransformations The `input_transformations` of the `message_start` message.
+     * @param deltaInputTransformations The `input_transformations` of the `message_delta` event;
+     *   `NOT_SET` omits the key, as the API does when no model fallback happened.
+     */
+    private fun accumulateInputTransformations(
+        startInputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>>,
+        deltaInputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>>,
+    ): Optional<List<BetaThinkingDroppedInputTransformation>> {
+        val accumulator = BetaMessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent(inputTransformations = startInputTransformations))
+        accumulator.accumulate(
+            messageDeltaEvent(
+                stopReason = JsonField.of(BetaStopReason.END_TURN),
+                inputTransformations = deltaInputTransformations,
+            )
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        return accumulator.message().inputTransformations()
+    }
 
     /**
      * @param citationPageNumber Omit (or use `null`) to create a text content block without any

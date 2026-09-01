@@ -4,6 +4,7 @@ package com.anthropic.models.beta.userprofiles
 
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -15,9 +16,9 @@ internal class UserProfileCreateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .accessType(UserProfileCreateParams.AccessType.APPLICATION)
             .externalId("user_12345")
+            .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
             .metadata(UserProfileCreateParams.Metadata.builder().build())
             .name("x")
-            .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
             .build()
     }
 
@@ -28,9 +29,9 @@ internal class UserProfileCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
+                .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                 .metadata(UserProfileCreateParams.Metadata.builder().build())
                 .name("x")
-                .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
                 .build()
 
         val headers = params._headers()
@@ -57,18 +58,19 @@ internal class UserProfileCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
+                .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                 .metadata(UserProfileCreateParams.Metadata.builder().build())
                 .name("x")
-                .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
                 .build()
 
         val body = params._body()
 
         assertThat(body.accessType()).contains(UserProfileCreateParams.AccessType.APPLICATION)
         assertThat(body.externalId()).contains("user_12345")
+        assertThat(body.externalUserOnboardedAt())
+            .contains(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
         assertThat(body.metadata()).contains(UserProfileCreateParams.Metadata.builder().build())
         assertThat(body.name()).contains("x")
-        assertThat(body.relationship()).contains(UserProfileCreateParams.Relationship.EXTERNAL)
     }
 
     @Test

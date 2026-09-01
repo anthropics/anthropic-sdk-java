@@ -29,7 +29,7 @@ private constructor(
      */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Opaque cursor from a previous response's next_page field. */
+    /** Opaque cursor from a previous response's `next_page` field. */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -92,7 +92,7 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Opaque cursor from a previous response's next_page field. */
+        /** Opaque cursor from a previous response's `next_page` field. */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */

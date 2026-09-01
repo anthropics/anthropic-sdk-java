@@ -8,6 +8,7 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.organization.BetaOrganization
 import com.anthropic.models.beta.organization.OrganizationRetrieveParams
 import com.anthropic.services.blocking.beta.organization.ApiKeyService
+import com.anthropic.services.blocking.beta.organization.ComplianceSettingService
 import com.anthropic.services.blocking.beta.organization.ExternalKeyService
 import com.anthropic.services.blocking.beta.organization.FederationService
 import com.anthropic.services.blocking.beta.organization.InviteService
@@ -47,6 +48,8 @@ interface OrganizationService {
     fun workspaces(): WorkspaceService
 
     fun rateLimits(): RateLimitService
+
+    fun complianceSettings(): ComplianceSettingService
 
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): BetaOrganization = retrieve(OrganizationRetrieveParams.none())
@@ -95,6 +98,8 @@ interface OrganizationService {
         fun workspaces(): WorkspaceService.WithRawResponse
 
         fun rateLimits(): RateLimitService.WithRawResponse
+
+        fun complianceSettings(): ComplianceSettingService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/me?beta=true`, but is otherwise

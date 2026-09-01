@@ -56,8 +56,9 @@ private constructor(
     /**
      * New path for the memory (a rename). Must start with `/`, contain at least one non-empty
      * segment, and be at most 1,024 bytes. Must not contain empty segments, `.` or `..` segments,
-     * control or format characters, and must be NFC-normalized. Paths are case-sensitive. The
-     * memory's `id` is preserved across renames. Omit to leave the path unchanged.
+     * control or format characters, or the Unicode line and paragraph separators (U+2028, U+2029),
+     * and must be NFC-normalized. Paths are case-sensitive. The memory's `id` is preserved across
+     * renames. Omit to leave the path unchanged.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -210,9 +211,9 @@ private constructor(
         /**
          * New path for the memory (a rename). Must start with `/`, contain at least one non-empty
          * segment, and be at most 1,024 bytes. Must not contain empty segments, `.` or `..`
-         * segments, control or format characters, and must be NFC-normalized. Paths are
-         * case-sensitive. The memory's `id` is preserved across renames. Omit to leave the path
-         * unchanged.
+         * segments, control or format characters, or the Unicode line and paragraph separators
+         * (U+2028, U+2029), and must be NFC-normalized. Paths are case-sensitive. The memory's `id`
+         * is preserved across renames. Omit to leave the path unchanged.
          */
         fun path(path: String?) = apply { body.path(path) }
 
@@ -453,9 +454,9 @@ private constructor(
         /**
          * New path for the memory (a rename). Must start with `/`, contain at least one non-empty
          * segment, and be at most 1,024 bytes. Must not contain empty segments, `.` or `..`
-         * segments, control or format characters, and must be NFC-normalized. Paths are
-         * case-sensitive. The memory's `id` is preserved across renames. Omit to leave the path
-         * unchanged.
+         * segments, control or format characters, or the Unicode line and paragraph separators
+         * (U+2028, U+2029), and must be NFC-normalized. Paths are case-sensitive. The memory's `id`
+         * is preserved across renames. Omit to leave the path unchanged.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -554,9 +555,9 @@ private constructor(
             /**
              * New path for the memory (a rename). Must start with `/`, contain at least one
              * non-empty segment, and be at most 1,024 bytes. Must not contain empty segments, `.`
-             * or `..` segments, control or format characters, and must be NFC-normalized. Paths are
-             * case-sensitive. The memory's `id` is preserved across renames. Omit to leave the path
-             * unchanged.
+             * or `..` segments, control or format characters, or the Unicode line and paragraph
+             * separators (U+2028, U+2029), and must be NFC-normalized. Paths are case-sensitive.
+             * The memory's `id` is preserved across renames. Omit to leave the path unchanged.
              */
             fun path(path: String?) = path(JsonField.ofNullable(path))
 

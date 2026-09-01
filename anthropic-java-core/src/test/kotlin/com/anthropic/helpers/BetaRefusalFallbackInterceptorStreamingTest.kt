@@ -81,7 +81,10 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
         // message_start is suppressed.
         assertThat(events.count { it.path("type").asText() == "message_start" }).isEqualTo(1)
         assertThat(events.count { it.path("type").asText() == "message_stop" }).isEqualTo(1)
-        assertThat(events.count { it.path("type").asText() == "message_delta" }).isEqualTo(1)
+        val deltas = events.filter { it.path("type").asText() == "message_delta" }
+        assertThat(deltas).hasSize(1)
+        // B's message_start carries no `input_transformations`, so nothing is forwarded.
+        assertThat(deltas[0].has("input_transformations")).isFalse()
     }
 
     @ParameterizedTest
@@ -818,6 +821,125 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
             .containsExactly("message" to FABLE_MODEL, "fallback_message" to FALLBACK_MODEL)
     }
 
+    // --- input_transformations ---
+
+    private val B_TRANSFORMATIONS =
+        """[{"type":"thinking_dropped","path":"messages.1.content.0","reason":"model_binding_mismatch"}]"""
+
+    /** A fallback hop's message_start carrying its own `input_transformations`. */
+    private fun hopStartWithTransformations(): String =
+        event(
+            """{"type":"message_start","message":{"id":"msg_b","type":"message","role":"assistant","model":"$FALLBACK_MODEL","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":12,"output_tokens":1},"input_transformations":$B_TRANSFORMATIONS}}"""
+        )
+
+    /**
+     * A serving fallback whose message_start (not re-emitted when spliced) carries its own
+     * `input_transformations`; [deltaExtra] is appended inside its final message_delta.
+     */
+    private fun hopServing(deltaExtra: String = ""): String =
+        hopStartWithTransformations() +
+            event(
+                """{"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}"""
+            ) +
+            event(
+                """{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Served by B."}}"""
+            ) +
+            event("""{"type":"content_block_stop","index":0}""") +
+            event(
+                """{"type":"message_delta","delta":{"stop_reason":"end_turn","stop_sequence":null},"usage":{"output_tokens":5}$deltaExtra}"""
+            ) +
+            event("""{"type":"message_stop"}""")
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun theSplicedTerminalDeltaCarriesTheFallbackHopsInputTransformations(async: Boolean) {
+        val httpClient = FakeHttpClient(sse(STREAM_A), sse(hopServing()))
+
+        val events = consume(httpClient.intercepted(FALLBACK_MODEL), async)
+
+        // B's message_start is not re-emitted, so its list is copied onto the emitted
+        // message_delta, matching what a server-side mid-stream fallback sends.
+        assertThat(events.count { it.path("type").asText() == "message_start" }).isEqualTo(1)
+        val deltas = events.filter { it.path("type").asText() == "message_delta" }
+        assertThat(deltas).hasSize(1)
+        assertThat(deltas[0].path("delta").path("stop_reason").asText()).isEqualTo("end_turn")
+        assertThat(deltas[0].path("input_transformations").toString()).isEqualTo(B_TRANSFORMATIONS)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun aTerminalDeltaThatAlreadyCarriesInputTransformationsIsLeftAsIs(async: Boolean) {
+        val httpClient =
+            FakeHttpClient(sse(STREAM_A), sse(hopServing(""","input_transformations":[]""")))
+
+        val events = consume(httpClient.intercepted(FALLBACK_MODEL), async)
+
+        val deltas = events.filter { it.path("type").asText() == "message_delta" }
+        assertThat(deltas).hasSize(1)
+        assertThat(deltas[0].path("input_transformations").toString()).isEqualTo("[]")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun aHeldRefusalDeltaCarriesTheRefusedHopsInputTransformations(async: Boolean) {
+        // B (spliced, message_start not re-emitted) contributes a block then refuses with a
+        // fresh token; C's request throws, so B's held refusal closes the stream.
+        val hopRefusalWithTransformations =
+            hopRefusal.replace(messageStart(), hopStartWithTransformations())
+        val httpClient =
+            FakeHttpClient(
+                sse(STREAM_A),
+                sse(hopRefusalWithTransformations),
+                Failure(IOException("connection reset")),
+            )
+
+        var events: List<ObjectNode>? = null
+        val stderr = captureStderr {
+            events = consume(httpClient.intercepted(FALLBACK_MODEL, SECOND_MODEL), async)
+        }
+
+        assertThat(stderr).contains("fallback request to $SECOND_MODEL failed")
+        val deltas = events!!.filter { it.path("type").asText() == "message_delta" }
+        assertThat(deltas).hasSize(1)
+        assertThat(deltas[0].path("delta").path("stop_reason").asText()).isEqualTo("refusal")
+        assertThat(deltas[0].path("delta").path("stop_details").path("recommended_model").asText())
+            .isEqualTo(SECOND_MODEL)
+        assertThat(deltas[0].path("input_transformations").toString()).isEqualTo(B_TRANSFORMATIONS)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun aHeldRefusalDeltasOwnInputTransformationsWinOverItsSuppressedStarts(async: Boolean) {
+        // B's message_start (not re-emitted) carries a list, but its refusal delta already has
+        // its own (empty) one; C's request throws, so the held delta is emitted with its own list.
+        val hopRefusalWithBoth =
+            hopRefusal
+                .replace(messageStart(), hopStartWithTransformations())
+                .replace(
+                    refusalDelta("tok_b"),
+                    refusalDelta("tok_b", deltaExtra = ""","input_transformations":[]"""),
+                )
+        val httpClient =
+            FakeHttpClient(
+                sse(STREAM_A),
+                sse(hopRefusalWithBoth),
+                Failure(IOException("connection reset")),
+            )
+
+        var events: List<ObjectNode>? = null
+        val stderr = captureStderr {
+            events = consume(httpClient.intercepted(FALLBACK_MODEL, SECOND_MODEL), async)
+        }
+
+        assertThat(stderr).contains("fallback request to $SECOND_MODEL failed")
+        val deltas = events!!.filter { it.path("type").asText() == "message_delta" }
+        assertThat(deltas).hasSize(1)
+        assertThat(deltas[0].path("delta").path("stop_reason").asText()).isEqualTo("refusal")
+        assertThat(deltas[0].path("input_transformations").toString()).isEqualTo("[]")
+    }
+
     // --- tool-use refusals ---
 
     @ParameterizedTest
@@ -862,10 +984,15 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
             """{"type":"message_start","message":{"id":"msg_a","type":"message","role":"assistant","model":"$FABLE_MODEL","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":12,"output_tokens":1}}}"""
         )
 
-    private fun refusalDelta(token: String?, hasPrefillClaim: Boolean = true): String {
+    /** A refusal message_delta; [deltaExtra] is appended inside the event payload. */
+    private fun refusalDelta(
+        token: String?,
+        hasPrefillClaim: Boolean = true,
+        deltaExtra: String = "",
+    ): String {
         val tokenJson = token?.let { "\"$it\"" } ?: "null"
         return event(
-            """{"type":"message_delta","delta":{"stop_reason":"refusal","stop_sequence":null,"stop_details":{"type":"refusal","category":null,"explanation":null,"fallback_credit_token":$tokenJson,"fallback_has_prefill_claim":$hasPrefillClaim}},"usage":{"output_tokens":20}}"""
+            """{"type":"message_delta","delta":{"stop_reason":"refusal","stop_sequence":null,"stop_details":{"type":"refusal","category":null,"explanation":null,"fallback_credit_token":$tokenJson,"fallback_has_prefill_claim":$hasPrefillClaim}},"usage":{"output_tokens":20}$deltaExtra}"""
         )
     }
 

@@ -18,6 +18,8 @@ import com.anthropic.models.beta.organization.BetaOrganization
 import com.anthropic.models.beta.organization.OrganizationRetrieveParams
 import com.anthropic.services.blocking.beta.organization.ApiKeyService
 import com.anthropic.services.blocking.beta.organization.ApiKeyServiceImpl
+import com.anthropic.services.blocking.beta.organization.ComplianceSettingService
+import com.anthropic.services.blocking.beta.organization.ComplianceSettingServiceImpl
 import com.anthropic.services.blocking.beta.organization.ExternalKeyService
 import com.anthropic.services.blocking.beta.organization.ExternalKeyServiceImpl
 import com.anthropic.services.blocking.beta.organization.FederationService
@@ -59,6 +61,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
     private val rateLimits: RateLimitService by lazy { RateLimitServiceImpl(clientOptions) }
 
+    private val complianceSettings: ComplianceSettingService by lazy {
+        ComplianceSettingServiceImpl(clientOptions)
+    }
+
     override fun withRawResponse(): OrganizationService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrganizationService =
@@ -79,6 +85,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
     override fun workspaces(): WorkspaceService = workspaces
 
     override fun rateLimits(): RateLimitService = rateLimits
+
+    override fun complianceSettings(): ComplianceSettingService = complianceSettings
 
     override fun retrieve(
         params: OrganizationRetrieveParams,
@@ -125,6 +133,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
             RateLimitServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val complianceSettings: ComplianceSettingService.WithRawResponse by lazy {
+            ComplianceSettingServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): OrganizationService.WithRawResponse =
@@ -147,6 +159,9 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
         override fun workspaces(): WorkspaceService.WithRawResponse = workspaces
 
         override fun rateLimits(): RateLimitService.WithRawResponse = rateLimits
+
+        override fun complianceSettings(): ComplianceSettingService.WithRawResponse =
+            complianceSettings
 
         private val retrieveHandler: Handler<BetaOrganization> =
             jsonHandler<BetaOrganization>(clientOptions.jsonMapper)

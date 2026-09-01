@@ -311,6 +311,13 @@ class BetaMessageAccumulator private constructor() {
                             .contextManagement(messageDelta.contextManagement().get())
                     }
 
+                    // Only sent on `message_delta` after a mid-stream model fallback, in which case
+                    // it replaces the value from `message_start`.
+                    if (messageDelta.inputTransformations().isPresent) {
+                        requireMessageBuilder()
+                            .inputTransformations(messageDelta.inputTransformations().get())
+                    }
+
                     messageUsage = mergeMessageUsage(requireMessageUsage(), messageDelta.usage())
                 }
 

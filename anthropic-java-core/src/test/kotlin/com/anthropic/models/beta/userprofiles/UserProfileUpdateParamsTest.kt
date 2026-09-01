@@ -5,6 +5,7 @@ package com.anthropic.models.beta.userprofiles
 import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -17,13 +18,13 @@ internal class UserProfileUpdateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
             .externalId("user_12345")
+            .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .metadata(
                 UserProfileUpdateParams.Metadata.builder()
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
             .name("x")
-            .relationship(UserProfileUpdateParams.Relationship.EXTERNAL)
             .build()
     }
 
@@ -47,13 +48,13 @@ internal class UserProfileUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
+                .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .metadata(
                     UserProfileUpdateParams.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
                 .name("x")
-                .relationship(UserProfileUpdateParams.Relationship.EXTERNAL)
                 .build()
 
         val headers = params._headers()
@@ -84,19 +85,21 @@ internal class UserProfileUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
+                .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .metadata(
                     UserProfileUpdateParams.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
                 .name("x")
-                .relationship(UserProfileUpdateParams.Relationship.EXTERNAL)
                 .build()
 
         val body = params._body()
 
         assertThat(body.accessType()).contains(UserProfileUpdateParams.AccessType.APPLICATION)
         assertThat(body.externalId()).contains("user_12345")
+        assertThat(body.externalUserOnboardedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(body.metadata())
             .contains(
                 UserProfileUpdateParams.Metadata.builder()
@@ -104,7 +107,6 @@ internal class UserProfileUpdateParamsTest {
                     .build()
             )
         assertThat(body.name()).contains("x")
-        assertThat(body.relationship()).contains(UserProfileUpdateParams.Relationship.EXTERNAL)
     }
 
     @Test

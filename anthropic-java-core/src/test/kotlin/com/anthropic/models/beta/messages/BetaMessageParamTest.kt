@@ -37,6 +37,12 @@ internal class BetaMessageParamTest {
                     )
                 )
                 .role(BetaMessageParam.Role.USER)
+                .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+                .outputConfig(
+                    BetaSystemMessageOutputConfig.builder()
+                        .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                        .build()
+                )
                 .build()
 
         assertThat(betaMessageParam.content())
@@ -66,6 +72,13 @@ internal class BetaMessageParamTest {
                 )
             )
         assertThat(betaMessageParam.role()).isEqualTo(BetaMessageParam.Role.USER)
+        assertThat(betaMessageParam.clearAt()).contains(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+        assertThat(betaMessageParam.outputConfig())
+            .contains(
+                BetaSystemMessageOutputConfig.builder()
+                    .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                    .build()
+            )
     }
 
     @Test
@@ -97,6 +110,12 @@ internal class BetaMessageParamTest {
                     )
                 )
                 .role(BetaMessageParam.Role.USER)
+                .clearAt(BetaMessageParam.ClearAt.NEXT_USER_MESSAGE)
+                .outputConfig(
+                    BetaSystemMessageOutputConfig.builder()
+                        .effort(BetaSystemMessageOutputConfig.Effort.LOW)
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaMessageParam =

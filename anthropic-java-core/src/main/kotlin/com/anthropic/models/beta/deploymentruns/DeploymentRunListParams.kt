@@ -44,13 +44,13 @@ private constructor(
 
     /**
      * Filter to a specific deployment. Omit to list across all deployments in the workspace.
-     * Filtering by a non-existent deployment_id returns 200 with empty data.
+     * Filtering by a non-existent `deployment_id` returns 200 with empty data.
      */
     fun deploymentId(): Optional<String> = Optional.ofNullable(deploymentId)
 
     /**
-     * Filter: true for runs with non-null error, false for runs with non-null session_id. Omit for
-     * all.
+     * Filter: true for runs with non-null `error`, false for runs with non-null `session_id`. Omit
+     * for all.
      */
     fun hasError(): Optional<Boolean> = Optional.ofNullable(hasError)
 
@@ -58,7 +58,7 @@ private constructor(
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
     /**
-     * Opaque pagination cursor. Pass next_page from the previous response. Invalid or expired
+     * Opaque pagination cursor. Pass `next_page` from the previous response. Invalid or expired
      * cursors return 400.
      */
     fun page(): Optional<String> = Optional.ofNullable(page)
@@ -147,7 +147,7 @@ private constructor(
 
         /**
          * Filter to a specific deployment. Omit to list across all deployments in the workspace.
-         * Filtering by a non-existent deployment_id returns 200 with empty data.
+         * Filtering by a non-existent `deployment_id` returns 200 with empty data.
          */
         fun deploymentId(deploymentId: String?) = apply { this.deploymentId = deploymentId }
 
@@ -155,8 +155,8 @@ private constructor(
         fun deploymentId(deploymentId: Optional<String>) = deploymentId(deploymentId.getOrNull())
 
         /**
-         * Filter: true for runs with non-null error, false for runs with non-null session_id. Omit
-         * for all.
+         * Filter: true for runs with non-null `error`, false for runs with non-null `session_id`.
+         * Omit for all.
          */
         fun hasError(hasError: Boolean?) = apply { this.hasError = hasError }
 
@@ -184,7 +184,7 @@ private constructor(
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
         /**
-         * Opaque pagination cursor. Pass next_page from the previous response. Invalid or expired
+         * Opaque pagination cursor. Pass `next_page` from the previous response. Invalid or expired
          * cursors return 400.
          */
         fun page(page: String?) = apply { this.page = page }

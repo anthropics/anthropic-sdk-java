@@ -64,12 +64,12 @@ private constructor(
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
     /**
-     * Sort direction for results, ordered by the event's `processed_at`. Defaults to asc
+     * Sort direction for results, ordered by the event's `processed_at`. Defaults to `asc`
      * (chronological).
      */
     fun order(): Optional<Order> = Optional.ofNullable(order)
 
-    /** Opaque pagination cursor from a previous response's next_page. */
+    /** Opaque pagination cursor from a previous response's `next_page`. */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /**
@@ -188,7 +188,7 @@ private constructor(
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
         /**
-         * Sort direction for results, ordered by the event's `processed_at`. Defaults to asc
+         * Sort direction for results, ordered by the event's `processed_at`. Defaults to `asc`
          * (chronological).
          */
         fun order(order: Order?) = apply { this.order = order }
@@ -196,7 +196,7 @@ private constructor(
         /** Alias for calling [Builder.order] with `order.orElse(null)`. */
         fun order(order: Optional<Order>) = order(order.getOrNull())
 
-        /** Opaque pagination cursor from a previous response's next_page. */
+        /** Opaque pagination cursor from a previous response's `next_page`. */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
@@ -400,7 +400,7 @@ private constructor(
             .build()
 
     /**
-     * Sort direction for results, ordered by the event's `processed_at`. Defaults to asc
+     * Sort direction for results, ordered by the event's `processed_at`. Defaults to `asc`
      * (chronological).
      */
     class Order @JsonCreator private constructor(private val value: JsonField<String>) : Enum {

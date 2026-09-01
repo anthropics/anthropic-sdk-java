@@ -27,8 +27,8 @@ internal class BetaUserProfileTest {
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .accessType(BetaUserProfile.AccessType.APPLICATION)
                 .externalId("user_12345")
+                .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                 .name("Example User")
-                .relationship(BetaUserProfile.Relationship.EXTERNAL)
                 .build()
 
         assertThat(betaUserProfile.id()).isEqualTo("uprof_011CZkZCu8hGbp5mYRQgUmz9")
@@ -46,8 +46,9 @@ internal class BetaUserProfileTest {
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaUserProfile.accessType()).contains(BetaUserProfile.AccessType.APPLICATION)
         assertThat(betaUserProfile.externalId()).contains("user_12345")
+        assertThat(betaUserProfile.externalUserOnboardedAt())
+            .contains(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
         assertThat(betaUserProfile.name()).contains("Example User")
-        assertThat(betaUserProfile.relationship()).contains(BetaUserProfile.Relationship.EXTERNAL)
     }
 
     @Test
@@ -67,8 +68,8 @@ internal class BetaUserProfileTest {
                 .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .accessType(BetaUserProfile.AccessType.APPLICATION)
                 .externalId("user_12345")
+                .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                 .name("Example User")
-                .relationship(BetaUserProfile.Relationship.EXTERNAL)
                 .build()
 
         val roundtrippedBetaUserProfile =

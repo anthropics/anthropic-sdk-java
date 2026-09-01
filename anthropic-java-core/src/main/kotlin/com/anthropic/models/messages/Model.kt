@@ -27,6 +27,18 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     companion object {
 
+        /**
+         * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
+         * enterprise workflows
+         */
+        @JvmField val CLAUDE_FABLE_5_1 = of("claude-fable-5-1")
+
+        /**
+         * Our most capable model for cybersecurity and biology research, available through trusted
+         * access programs
+         */
+        @JvmField val CLAUDE_MYTHOS_5_1 = of("claude-mythos-5-1")
+
         /** High-performance model for coding and agents */
         @JvmField val CLAUDE_SONNET_5 = of("claude-sonnet-5")
 
@@ -85,6 +97,16 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     /** An enum containing [Model]'s known values. */
     enum class Known {
+        /**
+         * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
+         * enterprise workflows
+         */
+        CLAUDE_FABLE_5_1,
+        /**
+         * Our most capable model for cybersecurity and biology research, available through trusted
+         * access programs
+         */
+        CLAUDE_MYTHOS_5_1,
         /** High-performance model for coding and agents */
         CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
@@ -130,6 +152,16 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /**
+         * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
+         * enterprise workflows
+         */
+        CLAUDE_FABLE_5_1,
+        /**
+         * Our most capable model for cybersecurity and biology research, available through trusted
+         * access programs
+         */
+        CLAUDE_MYTHOS_5_1,
         /** High-performance model for coding and agents */
         CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
@@ -176,6 +208,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_FABLE_5_1 -> Value.CLAUDE_FABLE_5_1
+            CLAUDE_MYTHOS_5_1 -> Value.CLAUDE_MYTHOS_5_1
             CLAUDE_SONNET_5 -> Value.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Value.CLAUDE_FABLE_5
             CLAUDE_MYTHOS_5 -> Value.CLAUDE_MYTHOS_5
@@ -204,6 +238,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_FABLE_5_1 -> Known.CLAUDE_FABLE_5_1
+            CLAUDE_MYTHOS_5_1 -> Known.CLAUDE_MYTHOS_5_1
             CLAUDE_SONNET_5 -> Known.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Known.CLAUDE_FABLE_5
             CLAUDE_MYTHOS_5 -> Known.CLAUDE_MYTHOS_5

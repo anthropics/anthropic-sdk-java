@@ -41,7 +41,7 @@ private constructor(
     /** Filter sessions created with this agent ID. */
     fun agentId(): Optional<String> = Optional.ofNullable(agentId)
 
-    /** Filter by agent version. Only applies when agent_id is also set. */
+    /** Filter by agent version. Only applies when `agent_id` is also set. */
     fun agentVersion(): Optional<Int> = Optional.ofNullable(agentVersion)
 
     /** Return sessions created after this time (exclusive). */
@@ -65,10 +65,10 @@ private constructor(
     /** Maximum number of results to return. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Filter sessions whose resources contain a memory_store with this memory store ID. */
+    /** Filter sessions whose resources contain a `memory_store` with this memory store ID. */
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
-    /** Sort direction for results, ordered by created_at. Defaults to desc (newest first). */
+    /** Sort direction for results, ordered by `created_at`. Defaults to `desc` (newest first). */
     fun order(): Optional<Order> = Optional.ofNullable(order)
 
     /** Opaque pagination cursor from a previous response. */
@@ -142,7 +142,7 @@ private constructor(
         /** Alias for calling [Builder.agentId] with `agentId.orElse(null)`. */
         fun agentId(agentId: Optional<String>) = agentId(agentId.getOrNull())
 
-        /** Filter by agent version. Only applies when agent_id is also set. */
+        /** Filter by agent version. Only applies when `agent_id` is also set. */
         fun agentVersion(agentVersion: Int?) = apply { this.agentVersion = agentVersion }
 
         /**
@@ -218,14 +218,16 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Filter sessions whose resources contain a memory_store with this memory store ID. */
+        /** Filter sessions whose resources contain a `memory_store` with this memory store ID. */
         fun memoryStoreId(memoryStoreId: String?) = apply { this.memoryStoreId = memoryStoreId }
 
         /** Alias for calling [Builder.memoryStoreId] with `memoryStoreId.orElse(null)`. */
         fun memoryStoreId(memoryStoreId: Optional<String>) =
             memoryStoreId(memoryStoreId.getOrNull())
 
-        /** Sort direction for results, ordered by created_at. Defaults to desc (newest first). */
+        /**
+         * Sort direction for results, ordered by `created_at`. Defaults to `desc` (newest first).
+         */
         fun order(order: Order?) = apply { this.order = order }
 
         /** Alias for calling [Builder.order] with `order.orElse(null)`. */
@@ -436,7 +438,7 @@ private constructor(
             }
             .build()
 
-    /** Sort direction for results, ordered by created_at. Defaults to desc (newest first). */
+    /** Sort direction for results, ordered by `created_at`. Defaults to `desc` (newest first). */
     class Order @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

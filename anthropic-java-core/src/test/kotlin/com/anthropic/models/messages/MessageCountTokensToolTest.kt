@@ -454,7 +454,6 @@ internal class MessageCountTokensToolTest {
     fun ofBrowserToolset20260801() {
         val browserToolset20260801 =
             BrowserToolset20260801.builder()
-                .addAllowedCaller(BrowserToolset20260801.AllowedCaller.DIRECT)
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -630,7 +629,6 @@ internal class MessageCountTokensToolTest {
         val messageCountTokensTool =
             MessageCountTokensTool.ofBrowserToolset20260801(
                 BrowserToolset20260801.builder()
-                    .addAllowedCaller(BrowserToolset20260801.AllowedCaller.DIRECT)
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)
@@ -900,7 +898,6 @@ internal class MessageCountTokensToolTest {
     fun ofComputerToolset20260801() {
         val computerToolset20260801 =
             ComputerToolset20260801.builder()
-                .addAllowedCaller(ComputerToolset20260801.AllowedCaller.DIRECT)
                 .cacheControl(
                     CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build()
                 )
@@ -1019,7 +1016,6 @@ internal class MessageCountTokensToolTest {
         val messageCountTokensTool =
             MessageCountTokensTool.ofComputerToolset20260801(
                 ComputerToolset20260801.builder()
-                    .addAllowedCaller(ComputerToolset20260801.AllowedCaller.DIRECT)
                     .cacheControl(
                         CacheControlEphemeral.builder()
                             .ttl(CacheControlEphemeral.Ttl.TTL_5M)

@@ -20,6 +20,7 @@ class UserProfileListParams
 private constructor(
     private val limit: Int?,
     private val order: Order?,
+    private val orderBy: OrderBy?,
     private val page: String?,
     private val betas: List<AnthropicBeta>?,
     private val additionalHeaders: Headers,
@@ -31,6 +32,9 @@ private constructor(
 
     /** Query parameter for order */
     fun order(): Optional<Order> = Optional.ofNullable(order)
+
+    /** Query parameter for order_by */
+    fun orderBy(): Optional<OrderBy> = Optional.ofNullable(orderBy)
 
     /** Query parameter for page */
     fun page(): Optional<String> = Optional.ofNullable(page)
@@ -59,6 +63,7 @@ private constructor(
 
         private var limit: Int? = null
         private var order: Order? = null
+        private var orderBy: OrderBy? = null
         private var page: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -68,6 +73,7 @@ private constructor(
         internal fun from(userProfileListParams: UserProfileListParams) = apply {
             limit = userProfileListParams.limit
             order = userProfileListParams.order
+            orderBy = userProfileListParams.orderBy
             page = userProfileListParams.page
             betas = userProfileListParams.betas?.toMutableList()
             additionalHeaders = userProfileListParams.additionalHeaders.toBuilder()
@@ -92,6 +98,12 @@ private constructor(
 
         /** Alias for calling [Builder.order] with `order.orElse(null)`. */
         fun order(order: Optional<Order>) = order(order.getOrNull())
+
+        /** Query parameter for order_by */
+        fun orderBy(orderBy: OrderBy?) = apply { this.orderBy = orderBy }
+
+        /** Alias for calling [Builder.orderBy] with `orderBy.orElse(null)`. */
+        fun orderBy(orderBy: Optional<OrderBy>) = orderBy(orderBy.getOrNull())
 
         /** Query parameter for page */
         fun page(page: String?) = apply { this.page = page }
@@ -230,6 +242,7 @@ private constructor(
             UserProfileListParams(
                 limit,
                 order,
+                orderBy,
                 page,
                 betas?.toImmutable(),
                 additionalHeaders.build(),
@@ -250,6 +263,7 @@ private constructor(
             .apply {
                 limit?.let { put("limit", it.toString()) }
                 order?.let { put("order", it.toString()) }
+                orderBy?.let { put("order_by", it.toString()) }
                 page?.let { put("page", it) }
                 putAll(additionalQueryParams)
             }
@@ -396,6 +410,147 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /** Query parameter for order_by */
+    class OrderBy @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val CREATED_AT = of("created_at")
+
+            @JvmField val NAME = of("name")
+
+            @JvmStatic fun of(value: String) = OrderBy(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): OrderBy =
+                value.asString().getOrNull()?.let { of(it) } ?: OrderBy(value)
+        }
+
+        /** An enum containing [OrderBy]'s known values. */
+        enum class Known {
+            CREATED_AT,
+            NAME,
+        }
+
+        /**
+         * An enum containing [OrderBy]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [OrderBy] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            CREATED_AT,
+            NAME,
+            /** An enum member indicating that [OrderBy] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                CREATED_AT -> Value.CREATED_AT
+                NAME -> Value.NAME
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                CREATED_AT -> Known.CREATED_AT
+                NAME -> Known.NAME
+                else -> throw AnthropicInvalidDataException("Unknown OrderBy: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): OrderBy = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is OrderBy && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -404,6 +559,7 @@ private constructor(
         return other is UserProfileListParams &&
             limit == other.limit &&
             order == other.order &&
+            orderBy == other.orderBy &&
             page == other.page &&
             betas == other.betas &&
             additionalHeaders == other.additionalHeaders &&
@@ -411,8 +567,8 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(limit, order, page, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(limit, order, orderBy, page, betas, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "UserProfileListParams{limit=$limit, order=$order, page=$page, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UserProfileListParams{limit=$limit, order=$order, orderBy=$orderBy, page=$page, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -15,7 +15,7 @@ internal class BetaFallbackParamTest {
     fun create() {
         val betaFallbackParam =
             BetaFallbackParam.builder()
-                .model(Model.CLAUDE_SONNET_5)
+                .model(Model.CLAUDE_FABLE_5_1)
                 .maxTokens(0L)
                 .outputConfig(
                     BetaOutputConfig.builder()
@@ -36,12 +36,17 @@ internal class BetaFallbackParamTest {
                 .thinking(
                     BetaThinkingConfigEnabled.builder()
                         .budgetTokens(1024L)
+                        .blockBinding(
+                            BetaThinkingBlockBinding.builder()
+                                .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                                .build()
+                        )
                         .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
                         .build()
                 )
                 .build()
 
-        assertThat(betaFallbackParam.model()).isEqualTo(Model.CLAUDE_SONNET_5)
+        assertThat(betaFallbackParam.model()).isEqualTo(Model.CLAUDE_FABLE_5_1)
         assertThat(betaFallbackParam.maxTokens()).contains(0L)
         assertThat(betaFallbackParam.outputConfig())
             .contains(
@@ -63,6 +68,11 @@ internal class BetaFallbackParamTest {
                 BetaFallbackParam.Thinking.ofEnabled(
                     BetaThinkingConfigEnabled.builder()
                         .budgetTokens(1024L)
+                        .blockBinding(
+                            BetaThinkingBlockBinding.builder()
+                                .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                                .build()
+                        )
                         .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
                         .build()
                 )
@@ -74,7 +84,7 @@ internal class BetaFallbackParamTest {
         val jsonMapper = jsonMapper()
         val betaFallbackParam =
             BetaFallbackParam.builder()
-                .model(Model.CLAUDE_SONNET_5)
+                .model(Model.CLAUDE_FABLE_5_1)
                 .maxTokens(0L)
                 .outputConfig(
                     BetaOutputConfig.builder()
@@ -95,6 +105,11 @@ internal class BetaFallbackParamTest {
                 .thinking(
                     BetaThinkingConfigEnabled.builder()
                         .budgetTokens(1024L)
+                        .blockBinding(
+                            BetaThinkingBlockBinding.builder()
+                                .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                                .build()
+                        )
                         .display(BetaThinkingConfigEnabled.Display.SUMMARIZED)
                         .build()
                 )

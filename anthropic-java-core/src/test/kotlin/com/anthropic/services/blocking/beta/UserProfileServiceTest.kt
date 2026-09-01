@@ -10,6 +10,7 @@ import com.anthropic.models.beta.userprofiles.UserProfileCreateEnrollmentUrlPara
 import com.anthropic.models.beta.userprofiles.UserProfileCreateParams
 import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
 import com.anthropic.models.beta.userprofiles.UserProfileUpdateParams
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -31,9 +32,9 @@ internal class UserProfileServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                     .externalId("user_12345")
+                    .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                     .metadata(UserProfileCreateParams.Metadata.builder().build())
                     .name("x")
-                    .relationship(UserProfileCreateParams.Relationship.EXTERNAL)
                     .build()
             )
 
@@ -76,13 +77,13 @@ internal class UserProfileServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                     .externalId("user_12345")
+                    .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .metadata(
                         UserProfileUpdateParams.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
                     .name("x")
-                    .relationship(UserProfileUpdateParams.Relationship.EXTERNAL)
                     .build()
             )
 
