@@ -37,7 +37,9 @@ private constructor(
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
-     * The file to upload
+     * The file to upload. Only the final path component of the part's `filename` is kept; an absent
+     * or empty `filename` is replaced with `unnamed` plus the extension for the file's stored
+     * `mime_type`, when known.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -141,7 +143,11 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** The file to upload */
+        /**
+         * The file to upload. Only the final path component of the part's `filename` is kept; an
+         * absent or empty `filename` is replaced with `unnamed` plus the extension for the file's
+         * stored `mime_type`, when known.
+         */
         fun file(file: InputStream) = apply { body.file(file) }
 
         /**
@@ -153,10 +159,18 @@ private constructor(
          */
         fun file(file: MultipartField<InputStream>) = apply { body.file(file) }
 
-        /** The file to upload */
+        /**
+         * The file to upload. Only the final path component of the part's `filename` is kept; an
+         * absent or empty `filename` is replaced with `unnamed` plus the extension for the file's
+         * stored `mime_type`, when known.
+         */
         fun file(file: ByteArray) = apply { body.file(file) }
 
-        /** The file to upload */
+        /**
+         * The file to upload. Only the final path component of the part's `filename` is kept; an
+         * absent or empty `filename` is replaced with `unnamed` plus the extension for the file's
+         * stored `mime_type`, when known.
+         */
         fun file(path: Path) = apply { body.file(path) }
 
         /**
@@ -339,7 +353,9 @@ private constructor(
     ) {
 
         /**
-         * The file to upload
+         * The file to upload. Only the final path component of the part's `filename` is kept; an
+         * absent or empty `filename` is replaced with `unnamed` plus the extension for the file's
+         * stored `mime_type`, when known.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -418,7 +434,11 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** The file to upload */
+            /**
+             * The file to upload. Only the final path component of the part's `filename` is kept;
+             * an absent or empty `filename` is replaced with `unnamed` plus the extension for the
+             * file's stored `mime_type`, when known.
+             */
             fun file(file: InputStream) = file(MultipartField.of(file))
 
             /**
@@ -430,10 +450,18 @@ private constructor(
              */
             fun file(file: MultipartField<InputStream>) = apply { this.file = file }
 
-            /** The file to upload */
+            /**
+             * The file to upload. Only the final path component of the part's `filename` is kept;
+             * an absent or empty `filename` is replaced with `unnamed` plus the extension for the
+             * file's stored `mime_type`, when known.
+             */
             fun file(file: ByteArray) = file(file.inputStream())
 
-            /** The file to upload */
+            /**
+             * The file to upload. Only the final path component of the part's `filename` is kept;
+             * an absent or empty `filename` is replaced with `unnamed` plus the extension for the
+             * file's stored `mime_type`, when known.
+             */
             fun file(path: Path) =
                 file(
                     MultipartField.builder<InputStream>()
