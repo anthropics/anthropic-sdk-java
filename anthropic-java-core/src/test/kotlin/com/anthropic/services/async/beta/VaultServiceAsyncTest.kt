@@ -31,6 +31,7 @@ internal class VaultServiceAsyncTest {
             vaultServiceAsync.create(
                 VaultCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .displayName("Example vault")
                     .metadata(
                         VaultCreateParams.Metadata.builder()
@@ -58,6 +59,7 @@ internal class VaultServiceAsyncTest {
                 VaultRetrieveParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -79,6 +81,7 @@ internal class VaultServiceAsyncTest {
                 VaultUpdateParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .displayName("Example vault")
                     .metadata(
                         VaultUpdateParams.Metadata.builder()
@@ -122,6 +125,7 @@ internal class VaultServiceAsyncTest {
                 VaultDeleteParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -143,6 +147,7 @@ internal class VaultServiceAsyncTest {
                 VaultArchiveParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

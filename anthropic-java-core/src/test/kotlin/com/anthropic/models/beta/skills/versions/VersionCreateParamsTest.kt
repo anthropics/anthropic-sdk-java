@@ -16,6 +16,7 @@ internal class VersionCreateParamsTest {
         VersionCreateParams.builder()
             .skillId("skill_id")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
             .build()
     }
@@ -39,6 +40,7 @@ internal class VersionCreateParamsTest {
             VersionCreateParams.builder()
                 .skillId("skill_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
                 .build()
 
@@ -46,7 +48,10 @@ internal class VersionCreateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -69,6 +74,7 @@ internal class VersionCreateParamsTest {
             VersionCreateParams.builder()
                 .skillId("skill_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
                 .build()
 

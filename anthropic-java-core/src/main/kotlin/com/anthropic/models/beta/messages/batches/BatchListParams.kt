@@ -23,6 +23,7 @@ private constructor(
     private val beforeId: String?,
     private val limit: Long?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -49,6 +50,8 @@ private constructor(
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
+
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -72,6 +75,7 @@ private constructor(
         private var beforeId: String? = null
         private var limit: Long? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -81,6 +85,7 @@ private constructor(
             beforeId = batchListParams.beforeId
             limit = batchListParams.limit
             betas = batchListParams.betas?.toMutableList()
+            workspaceId = batchListParams.workspaceId
             additionalHeaders = batchListParams.additionalHeaders.toBuilder()
             additionalQueryParams = batchListParams.additionalQueryParams.toBuilder()
         }
@@ -143,6 +148,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -253,6 +263,7 @@ private constructor(
                 beforeId,
                 limit,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -262,6 +273,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -286,13 +298,22 @@ private constructor(
             beforeId == other.beforeId &&
             limit == other.limit &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(afterId, beforeId, limit, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            afterId,
+            beforeId,
+            limit,
+            betas,
+            workspaceId,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "BatchListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "BatchListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -235,6 +235,8 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("topP", JsonField.of(0.9)),
                 DelegationWriteTestCase("userProfileId", "uprof_test"),
                 DelegationWriteTestCase("userProfileId", Optional.of("uprof_test")),
+                DelegationWriteTestCase("workspaceId", "wrkspc_test"),
+                DelegationWriteTestCase("workspaceId", Optional.of("wrkspc_test")),
                 DelegationWriteTestCase(
                     "additionalBodyProperties",
                     mapOf("k" to JsonValue.from("v")),

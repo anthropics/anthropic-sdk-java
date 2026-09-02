@@ -310,6 +310,8 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("topP", JSON_FIELD),
                 DelegationWriteTestCase("userProfileId", STRING),
                 DelegationWriteTestCase("userProfileId", OPTIONAL),
+                DelegationWriteTestCase("workspaceId", STRING),
+                DelegationWriteTestCase("workspaceId", OPTIONAL),
                 DelegationWriteTestCase("additionalBodyProperties", MAP),
                 DelegationWriteTestCase("putAdditionalBodyProperty", STRING, JSON_VALUE),
                 DelegationWriteTestCase("putAllAdditionalBodyProperties", MAP),

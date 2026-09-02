@@ -34,6 +34,7 @@ class TunnelRotateTokenParams
 private constructor(
     private val tunnelId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -43,6 +44,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Optional free-text reason for the rotation, recorded for audit.
@@ -82,6 +85,7 @@ private constructor(
 
         private var tunnelId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -90,6 +94,7 @@ private constructor(
         internal fun from(tunnelRotateTokenParams: TunnelRotateTokenParams) = apply {
             tunnelId = tunnelRotateTokenParams.tunnelId
             betas = tunnelRotateTokenParams.betas?.toMutableList()
+            workspaceId = tunnelRotateTokenParams.workspaceId
             body = tunnelRotateTokenParams.body.toBuilder()
             additionalHeaders = tunnelRotateTokenParams.additionalHeaders.toBuilder()
             additionalQueryParams = tunnelRotateTokenParams.additionalQueryParams.toBuilder()
@@ -123,6 +128,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -273,6 +283,7 @@ private constructor(
             TunnelRotateTokenParams(
                 tunnelId,
                 betas?.toImmutable(),
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -291,6 +302,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -457,14 +469,15 @@ private constructor(
         return other is TunnelRotateTokenParams &&
             tunnelId == other.tunnelId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(tunnelId, betas, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(tunnelId, betas, workspaceId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "TunnelRotateTokenParams{tunnelId=$tunnelId, betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "TunnelRotateTokenParams{tunnelId=$tunnelId, betas=$betas, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

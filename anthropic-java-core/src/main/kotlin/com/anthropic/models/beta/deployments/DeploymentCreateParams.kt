@@ -49,6 +49,7 @@ import kotlin.jvm.optionals.getOrNull
 class DeploymentCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -56,6 +57,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Agent to deploy. Accepts the `agent` ID string, which pins the latest version, or an `agent`
@@ -242,6 +245,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -249,6 +253,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(deploymentCreateParams: DeploymentCreateParams) = apply {
             betas = deploymentCreateParams.betas?.toMutableList()
+            workspaceId = deploymentCreateParams.workspaceId
             body = deploymentCreateParams.body.toBuilder()
             additionalHeaders = deploymentCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = deploymentCreateParams.additionalQueryParams.toBuilder()
@@ -277,6 +282,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -718,6 +728,7 @@ private constructor(
         fun build(): DeploymentCreateParams =
             DeploymentCreateParams(
                 betas?.toImmutable(),
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -730,6 +741,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -2366,14 +2378,15 @@ private constructor(
 
         return other is DeploymentCreateParams &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(betas, workspaceId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "DeploymentCreateParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "DeploymentCreateParams{betas=$betas, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -28,6 +28,7 @@ internal class DeploymentRunServiceTest {
                 DeploymentRunRetrieveParams.builder()
                     .deploymentRunId("deployment_run_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

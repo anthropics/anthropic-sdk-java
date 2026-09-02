@@ -4,6 +4,9 @@ package com.anthropic.services.async
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
+import com.anthropic.models.files.FileDeleteParams
+import com.anthropic.models.files.FileDownloadParams
+import com.anthropic.models.files.FileRetrieveMetadataParams
 import com.anthropic.models.files.FileUploadParams
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
 import com.github.tomakehurst.wiremock.client.WireMock.get
@@ -45,7 +48,13 @@ internal class FileServiceAsyncTest {
                 .build()
         val fileServiceAsync = client.files()
 
-        val deletedFileFuture = fileServiceAsync.delete("file_id")
+        val deletedFileFuture =
+            fileServiceAsync.delete(
+                FileDeleteParams.builder()
+                    .fileId("file_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
 
         val deletedFile = deletedFileFuture.get()
         deletedFile.validate()
@@ -61,7 +70,13 @@ internal class FileServiceAsyncTest {
         val fileServiceAsync = client.files()
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val responseFuture = fileServiceAsync.download("file_id")
+        val responseFuture =
+            fileServiceAsync.download(
+                FileDownloadParams.builder()
+                    .fileId("file_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
 
         val response = responseFuture.get()
         assertThat(response.body()).hasContent("abc")
@@ -76,7 +91,13 @@ internal class FileServiceAsyncTest {
                 .build()
         val fileServiceAsync = client.files()
 
-        val fileMetadataFuture = fileServiceAsync.retrieveMetadata("file_id")
+        val fileMetadataFuture =
+            fileServiceAsync.retrieveMetadata(
+                FileRetrieveMetadataParams.builder()
+                    .fileId("file_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
 
         val fileMetadata = fileMetadataFuture.get()
         fileMetadata.validate()
@@ -94,6 +115,7 @@ internal class FileServiceAsyncTest {
         val fileMetadataFuture =
             fileServiceAsync.upload(
                 FileUploadParams.builder()
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .file("Example data".byteInputStream())
                     .expiresInSeconds(3600L)
                     .build()

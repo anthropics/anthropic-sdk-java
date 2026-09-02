@@ -16,6 +16,7 @@ private constructor(
     private val ids: List<String>?,
     private val limit: Long?,
     private val page: String?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -37,6 +38,8 @@ private constructor(
 
     /** Opaque page cursor returned in a prior list response's `next_page`. Prefixed `page_`. */
     fun page(): Optional<String> = Optional.ofNullable(page)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -60,6 +63,7 @@ private constructor(
         private var ids: MutableList<String>? = null
         private var limit: Long? = null
         private var page: String? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -68,6 +72,7 @@ private constructor(
             ids = fileListParams.ids?.toMutableList()
             limit = fileListParams.limit
             page = fileListParams.page
+            workspaceId = fileListParams.workspaceId
             additionalHeaders = fileListParams.additionalHeaders.toBuilder()
             additionalQueryParams = fileListParams.additionalQueryParams.toBuilder()
         }
@@ -112,6 +117,11 @@ private constructor(
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -221,12 +231,19 @@ private constructor(
                 ids?.toImmutable(),
                 limit,
                 page,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
@@ -247,13 +264,14 @@ private constructor(
             ids == other.ids &&
             limit == other.limit &&
             page == other.page &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(ids, limit, page, additionalHeaders, additionalQueryParams)
+        Objects.hash(ids, limit, page, workspaceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "FileListParams{ids=$ids, limit=$limit, page=$page, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "FileListParams{ids=$ids, limit=$limit, page=$page, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

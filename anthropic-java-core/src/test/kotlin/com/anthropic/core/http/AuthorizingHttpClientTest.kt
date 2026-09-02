@@ -131,6 +131,59 @@ internal class AuthorizingHttpClientTest {
 
     @ParameterizedTest
     @ValueSource(booleans = [false, true])
+    fun workspaceIdAddedWhenRequestHasNone(async: Boolean) {
+        val executedRequests = mutableListOf<HttpRequest>()
+        val authorizingClient =
+            AuthorizingHttpClient.builder()
+                .httpClient(createMockHttpClient(200, executedRequests))
+                .tokenProvider(createTokenProvider("oauth-token-123"))
+                .workspaceId("wrkspc_client")
+                .build()
+
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl("https://api.anthropic.com")
+                .addPathSegment("messages")
+                .build()
+
+        val response = authorizingClient.execute(request, async)
+
+        assertThat(executedRequests[0].headers.values("anthropic-workspace-id"))
+            .containsExactly("wrkspc_client")
+        response.close()
+        assertNoResponseLeaks()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun requestWorkspaceIdWinsOverClientWorkspaceId(async: Boolean) {
+        val executedRequests = mutableListOf<HttpRequest>()
+        val authorizingClient =
+            AuthorizingHttpClient.builder()
+                .httpClient(createMockHttpClient(200, executedRequests))
+                .tokenProvider(createTokenProvider("oauth-token-123"))
+                .workspaceId("wrkspc_client")
+                .build()
+
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl("https://api.anthropic.com")
+                .addPathSegment("messages")
+                .putHeader("anthropic-workspace-id", "wrkspc_request")
+                .build()
+
+        val response = authorizingClient.execute(request, async)
+
+        assertThat(executedRequests[0].headers.values("anthropic-workspace-id"))
+            .containsExactly("wrkspc_request")
+        response.close()
+        assertNoResponseLeaks()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
     fun on401ResponseRetriesWithFreshToken(async: Boolean) {
         val requestedForceRefresh = mutableListOf<Boolean>()
         val tokenProvider =

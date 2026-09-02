@@ -14,6 +14,7 @@ internal class MessageCountTokensParamsTest {
     fun create() {
         MessageCountTokensParams.builder()
             .userProfileId("anthropic-user-profile-id")
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_5)
             .cacheControl(
@@ -98,6 +99,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .userProfileId("anthropic-user-profile-id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_5)
                 .cacheControl(
@@ -182,6 +184,7 @@ internal class MessageCountTokensParamsTest {
             .isEqualTo(
                 Headers.builder()
                     .put("anthropic-user-profile-id", "anthropic-user-profile-id")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
     }
@@ -204,6 +207,7 @@ internal class MessageCountTokensParamsTest {
         val params =
             MessageCountTokensParams.builder()
                 .userProfileId("anthropic-user-profile-id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_5)
                 .cacheControl(

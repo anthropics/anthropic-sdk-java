@@ -40,6 +40,7 @@ internal class DeploymentServiceAsyncTest {
             deploymentServiceAsync.create(
                 DeploymentCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .agent("string")
                     .environmentId("x")
                     .addUserMessageInitialEvent(
@@ -107,6 +108,7 @@ internal class DeploymentServiceAsyncTest {
                 DeploymentRetrieveParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -128,6 +130,7 @@ internal class DeploymentServiceAsyncTest {
                 DeploymentUpdateParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .agent("string")
                     .budget(
                         BetaManagedAgentsBudgetLimit.builder()
@@ -210,6 +213,7 @@ internal class DeploymentServiceAsyncTest {
                 DeploymentArchiveParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -231,6 +235,7 @@ internal class DeploymentServiceAsyncTest {
                 DeploymentPauseParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -252,6 +257,7 @@ internal class DeploymentServiceAsyncTest {
                 DeploymentRunParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -273,6 +279,7 @@ internal class DeploymentServiceAsyncTest {
                 DeploymentUnpauseParams.builder()
                     .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

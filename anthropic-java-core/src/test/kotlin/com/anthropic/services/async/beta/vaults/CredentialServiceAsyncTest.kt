@@ -38,6 +38,7 @@ internal class CredentialServiceAsyncTest {
                 CredentialCreateParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .auth(
                         BetaManagedAgentsStaticBearerCreateParams.builder()
                             .token("bearer_exampletoken")
@@ -73,6 +74,7 @@ internal class CredentialServiceAsyncTest {
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -95,6 +97,7 @@ internal class CredentialServiceAsyncTest {
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .auth(
                         BetaManagedAgentsMcpOAuthUpdateParams.builder()
                             .type(BetaManagedAgentsMcpOAuthUpdateParams.Type.MCP_OAUTH)
@@ -162,6 +165,7 @@ internal class CredentialServiceAsyncTest {
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -184,6 +188,7 @@ internal class CredentialServiceAsyncTest {
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -207,6 +212,7 @@ internal class CredentialServiceAsyncTest {
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

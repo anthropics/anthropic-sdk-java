@@ -4,6 +4,9 @@ package com.anthropic.services.blocking
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.models.files.FileDeleteParams
+import com.anthropic.models.files.FileDownloadParams
+import com.anthropic.models.files.FileRetrieveMetadataParams
 import com.anthropic.models.files.FileUploadParams
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
 import com.github.tomakehurst.wiremock.client.WireMock.get
@@ -44,7 +47,13 @@ internal class FileServiceTest {
                 .build()
         val fileService = client.files()
 
-        val deletedFile = fileService.delete("file_id")
+        val deletedFile =
+            fileService.delete(
+                FileDeleteParams.builder()
+                    .fileId("file_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
 
         deletedFile.validate()
     }
@@ -59,7 +68,13 @@ internal class FileServiceTest {
         val fileService = client.files()
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val response = fileService.download("file_id")
+        val response =
+            fileService.download(
+                FileDownloadParams.builder()
+                    .fileId("file_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
 
         assertThat(response.body()).hasContent("abc")
     }
@@ -73,7 +88,13 @@ internal class FileServiceTest {
                 .build()
         val fileService = client.files()
 
-        val fileMetadata = fileService.retrieveMetadata("file_id")
+        val fileMetadata =
+            fileService.retrieveMetadata(
+                FileRetrieveMetadataParams.builder()
+                    .fileId("file_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
 
         fileMetadata.validate()
     }
@@ -90,6 +111,7 @@ internal class FileServiceTest {
         val fileMetadata =
             fileService.upload(
                 FileUploadParams.builder()
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .file("Example data".byteInputStream())
                     .expiresInSeconds(3600L)
                     .build()

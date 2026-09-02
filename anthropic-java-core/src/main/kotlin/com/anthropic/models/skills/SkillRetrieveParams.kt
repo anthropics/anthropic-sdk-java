@@ -13,6 +13,7 @@ import kotlin.jvm.optionals.getOrNull
 class SkillRetrieveParams
 private constructor(
     private val skillId: String?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -23,6 +24,8 @@ private constructor(
      * The format and length of IDs may change over time.
      */
     fun skillId(): Optional<String> = Optional.ofNullable(skillId)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -44,12 +47,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var skillId: String? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(skillRetrieveParams: SkillRetrieveParams) = apply {
             skillId = skillRetrieveParams.skillId
+            workspaceId = skillRetrieveParams.workspaceId
             additionalHeaders = skillRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = skillRetrieveParams.additionalQueryParams.toBuilder()
         }
@@ -63,6 +68,11 @@ private constructor(
 
         /** Alias for calling [Builder.skillId] with `skillId.orElse(null)`. */
         fun skillId(skillId: Optional<String>) = skillId(skillId.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -168,7 +178,12 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): SkillRetrieveParams =
-            SkillRetrieveParams(skillId, additionalHeaders.build(), additionalQueryParams.build())
+            SkillRetrieveParams(
+                skillId,
+                workspaceId,
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
     }
 
     fun _pathParam(index: Int): String =
@@ -177,7 +192,13 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -188,12 +209,14 @@ private constructor(
 
         return other is SkillRetrieveParams &&
             skillId == other.skillId &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(skillId, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(skillId, workspaceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "SkillRetrieveParams{skillId=$skillId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SkillRetrieveParams{skillId=$skillId, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

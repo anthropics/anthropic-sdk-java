@@ -49,6 +49,7 @@ class MessageCountTokensParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
     private val userProfileId: String?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -62,6 +63,8 @@ private constructor(
      * than your organization. Requires the `user-profiles` beta header.
      */
     fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Input messages.
@@ -422,6 +425,7 @@ private constructor(
 
         private var betas: MutableList<AnthropicBeta>? = null
         private var userProfileId: String? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -430,6 +434,7 @@ private constructor(
         internal fun from(messageCountTokensParams: MessageCountTokensParams) = apply {
             betas = messageCountTokensParams.betas?.toMutableList()
             userProfileId = messageCountTokensParams.userProfileId
+            workspaceId = messageCountTokensParams.workspaceId
             body = messageCountTokensParams.body.toBuilder()
             additionalHeaders = messageCountTokensParams.additionalHeaders.toBuilder()
             additionalQueryParams = messageCountTokensParams.additionalQueryParams.toBuilder()
@@ -468,6 +473,11 @@ private constructor(
         /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
         fun userProfileId(userProfileId: Optional<String>) =
             userProfileId(userProfileId.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -1337,6 +1347,7 @@ private constructor(
             MessageCountTokensParams(
                 betas?.toImmutable(),
                 userProfileId,
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -1350,6 +1361,7 @@ private constructor(
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
                 userProfileId?.let { put("anthropic-user-profile-id", it) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -5956,14 +5968,22 @@ private constructor(
         return other is MessageCountTokensParams &&
             betas == other.betas &&
             userProfileId == other.userProfileId &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(betas, userProfileId, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            betas,
+            userProfileId,
+            workspaceId,
+            body,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "MessageCountTokensParams{betas=$betas, userProfileId=$userProfileId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MessageCountTokensParams{betas=$betas, userProfileId=$userProfileId, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

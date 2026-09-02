@@ -14,6 +14,7 @@ internal class CertificateCreateParamsTest {
         CertificateCreateParams.builder()
             .tunnelId("tunnel_id")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .caCertificatePem("ca_certificate_pem")
             .build()
     }
@@ -37,6 +38,7 @@ internal class CertificateCreateParamsTest {
             CertificateCreateParams.builder()
                 .tunnelId("tunnel_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .caCertificatePem("ca_certificate_pem")
                 .build()
 
@@ -44,7 +46,10 @@ internal class CertificateCreateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -67,6 +72,7 @@ internal class CertificateCreateParamsTest {
             CertificateCreateParams.builder()
                 .tunnelId("tunnel_id")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .caCertificatePem("ca_certificate_pem")
                 .build()
 

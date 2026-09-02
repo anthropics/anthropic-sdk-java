@@ -53,6 +53,7 @@ internal class EventServiceAsyncTest {
                     .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
                     .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

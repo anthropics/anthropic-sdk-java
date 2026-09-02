@@ -15,6 +15,7 @@ internal class ResourceUpdateParamsTest {
             .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
             .resourceId("sesrsc_011CZkZBJq5dWxk9fVLNcPht")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .authorizationToken("ghp_exampletoken")
             .build()
     }
@@ -41,6 +42,7 @@ internal class ResourceUpdateParamsTest {
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                 .resourceId("sesrsc_011CZkZBJq5dWxk9fVLNcPht")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .authorizationToken("ghp_exampletoken")
                 .build()
 
@@ -48,7 +50,10 @@ internal class ResourceUpdateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -73,6 +78,7 @@ internal class ResourceUpdateParamsTest {
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                 .resourceId("sesrsc_011CZkZBJq5dWxk9fVLNcPht")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .authorizationToken("ghp_exampletoken")
                 .build()
 

@@ -16,6 +16,7 @@ internal class MemoryCreateParamsTest {
             .memoryStoreId("memory_store_id")
             .view(BetaManagedAgentsMemoryView.BASIC)
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .content("content")
             .path("xx")
             .build()
@@ -42,6 +43,7 @@ internal class MemoryCreateParamsTest {
                 .memoryStoreId("memory_store_id")
                 .view(BetaManagedAgentsMemoryView.BASIC)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .content("content")
                 .path("xx")
                 .build()
@@ -50,7 +52,10 @@ internal class MemoryCreateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -75,6 +80,7 @@ internal class MemoryCreateParamsTest {
                 .memoryStoreId("memory_store_id")
                 .view(BetaManagedAgentsMemoryView.BASIC)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .content("content")
                 .path("xx")
                 .build()
@@ -105,6 +111,7 @@ internal class MemoryCreateParamsTest {
                 .memoryStoreId("memory_store_id")
                 .view(BetaManagedAgentsMemoryView.BASIC)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .content("content")
                 .path("xx")
                 .build()

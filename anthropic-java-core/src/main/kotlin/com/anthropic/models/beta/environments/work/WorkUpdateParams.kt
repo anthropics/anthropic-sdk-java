@@ -25,6 +25,7 @@ private constructor(
     private val environmentId: String,
     private val workId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val betaSelfHostedWorkUpdateRequest: BetaSelfHostedWorkUpdateRequest,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -36,6 +37,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Request to update work item metadata. */
     fun betaSelfHostedWorkUpdateRequest(): BetaSelfHostedWorkUpdateRequest =
@@ -72,6 +75,7 @@ private constructor(
         private var environmentId: String? = null
         private var workId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var betaSelfHostedWorkUpdateRequest: BetaSelfHostedWorkUpdateRequest? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -81,6 +85,7 @@ private constructor(
             environmentId = workUpdateParams.environmentId
             workId = workUpdateParams.workId
             betas = workUpdateParams.betas?.toMutableList()
+            workspaceId = workUpdateParams.workspaceId
             betaSelfHostedWorkUpdateRequest = workUpdateParams.betaSelfHostedWorkUpdateRequest
             additionalHeaders = workUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = workUpdateParams.additionalQueryParams.toBuilder()
@@ -116,6 +121,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /** Request to update work item metadata. */
         fun betaSelfHostedWorkUpdateRequest(
@@ -238,6 +248,7 @@ private constructor(
                 checkRequired("environmentId", environmentId),
                 workId,
                 betas?.toImmutable(),
+                workspaceId,
                 checkRequired("betaSelfHostedWorkUpdateRequest", betaSelfHostedWorkUpdateRequest),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -257,6 +268,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -272,6 +284,7 @@ private constructor(
             environmentId == other.environmentId &&
             workId == other.workId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             betaSelfHostedWorkUpdateRequest == other.betaSelfHostedWorkUpdateRequest &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -282,11 +295,12 @@ private constructor(
             environmentId,
             workId,
             betas,
+            workspaceId,
             betaSelfHostedWorkUpdateRequest,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "WorkUpdateParams{environmentId=$environmentId, workId=$workId, betas=$betas, betaSelfHostedWorkUpdateRequest=$betaSelfHostedWorkUpdateRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "WorkUpdateParams{environmentId=$environmentId, workId=$workId, betas=$betas, workspaceId=$workspaceId, betaSelfHostedWorkUpdateRequest=$betaSelfHostedWorkUpdateRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

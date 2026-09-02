@@ -19,6 +19,7 @@ class ResourceAddParams
 private constructor(
     private val sessionId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val betaManagedAgentsFileResourceParams: BetaManagedAgentsFileResourceParams,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -28,6 +29,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Mount a file uploaded via the Files API into the session. */
     fun betaManagedAgentsFileResourceParams(): BetaManagedAgentsFileResourceParams =
@@ -62,6 +65,7 @@ private constructor(
 
         private var sessionId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var betaManagedAgentsFileResourceParams: BetaManagedAgentsFileResourceParams? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -70,6 +74,7 @@ private constructor(
         internal fun from(resourceAddParams: ResourceAddParams) = apply {
             sessionId = resourceAddParams.sessionId
             betas = resourceAddParams.betas?.toMutableList()
+            workspaceId = resourceAddParams.workspaceId
             betaManagedAgentsFileResourceParams =
                 resourceAddParams.betaManagedAgentsFileResourceParams
             additionalHeaders = resourceAddParams.additionalHeaders.toBuilder()
@@ -104,6 +109,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /** Mount a file uploaded via the Files API into the session. */
         fun betaManagedAgentsFileResourceParams(
@@ -241,6 +251,7 @@ private constructor(
             ResourceAddParams(
                 sessionId,
                 betas?.toImmutable(),
+                workspaceId,
                 checkRequired(
                     "betaManagedAgentsFileResourceParams",
                     betaManagedAgentsFileResourceParams,
@@ -262,6 +273,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -276,6 +288,7 @@ private constructor(
         return other is ResourceAddParams &&
             sessionId == other.sessionId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             betaManagedAgentsFileResourceParams == other.betaManagedAgentsFileResourceParams &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -285,11 +298,12 @@ private constructor(
         Objects.hash(
             sessionId,
             betas,
+            workspaceId,
             betaManagedAgentsFileResourceParams,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "ResourceAddParams{sessionId=$sessionId, betas=$betas, betaManagedAgentsFileResourceParams=$betaManagedAgentsFileResourceParams, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ResourceAddParams{sessionId=$sessionId, betas=$betas, workspaceId=$workspaceId, betaManagedAgentsFileResourceParams=$betaManagedAgentsFileResourceParams, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

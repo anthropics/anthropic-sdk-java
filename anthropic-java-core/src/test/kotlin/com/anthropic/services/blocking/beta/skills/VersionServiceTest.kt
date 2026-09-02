@@ -41,6 +41,7 @@ internal class VersionServiceTest {
                 VersionCreateParams.builder()
                     .skillId("skill_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
                     .build()
             )
@@ -63,6 +64,7 @@ internal class VersionServiceTest {
                     .skillId("skill_id")
                     .version("version")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -98,6 +100,7 @@ internal class VersionServiceTest {
                     .skillId("skill_id")
                     .version("version")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -120,6 +123,7 @@ internal class VersionServiceTest {
                     .skillId("skill_id")
                     .version("version")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

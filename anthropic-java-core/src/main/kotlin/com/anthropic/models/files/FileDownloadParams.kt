@@ -13,12 +13,15 @@ import kotlin.jvm.optionals.getOrNull
 class FileDownloadParams
 private constructor(
     private val fileId: String?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     /** ID of the File. */
     fun fileId(): Optional<String> = Optional.ofNullable(fileId)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -40,12 +43,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var fileId: String? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(fileDownloadParams: FileDownloadParams) = apply {
             fileId = fileDownloadParams.fileId
+            workspaceId = fileDownloadParams.workspaceId
             additionalHeaders = fileDownloadParams.additionalHeaders.toBuilder()
             additionalQueryParams = fileDownloadParams.additionalQueryParams.toBuilder()
         }
@@ -55,6 +60,11 @@ private constructor(
 
         /** Alias for calling [Builder.fileId] with `fileId.orElse(null)`. */
         fun fileId(fileId: Optional<String>) = fileId(fileId.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -160,7 +170,12 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): FileDownloadParams =
-            FileDownloadParams(fileId, additionalHeaders.build(), additionalQueryParams.build())
+            FileDownloadParams(
+                fileId,
+                workspaceId,
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
     }
 
     fun _pathParam(index: Int): String =
@@ -169,7 +184,13 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -180,12 +201,14 @@ private constructor(
 
         return other is FileDownloadParams &&
             fileId == other.fileId &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(fileId, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(fileId, workspaceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "FileDownloadParams{fileId=$fileId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "FileDownloadParams{fileId=$fileId, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

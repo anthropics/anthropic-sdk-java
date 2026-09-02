@@ -15,6 +15,7 @@ import kotlin.jvm.optionals.getOrNull
 class FileDeleteParams
 private constructor(
     private val fileId: String?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
@@ -22,6 +23,8 @@ private constructor(
 
     /** ID of the File. */
     fun fileId(): Optional<String> = Optional.ofNullable(fileId)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -46,6 +49,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var fileId: String? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -53,6 +57,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(fileDeleteParams: FileDeleteParams) = apply {
             fileId = fileDeleteParams.fileId
+            workspaceId = fileDeleteParams.workspaceId
             additionalHeaders = fileDeleteParams.additionalHeaders.toBuilder()
             additionalQueryParams = fileDeleteParams.additionalQueryParams.toBuilder()
             additionalBodyProperties = fileDeleteParams.additionalBodyProperties.toMutableMap()
@@ -63,6 +68,11 @@ private constructor(
 
         /** Alias for calling [Builder.fileId] with `fileId.orElse(null)`. */
         fun fileId(fileId: Optional<String>) = fileId(fileId.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -192,6 +202,7 @@ private constructor(
         fun build(): FileDeleteParams =
             FileDeleteParams(
                 fileId,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -207,7 +218,13 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -218,14 +235,21 @@ private constructor(
 
         return other is FileDeleteParams &&
             fileId == other.fileId &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
     }
 
     override fun hashCode(): Int =
-        Objects.hash(fileId, additionalHeaders, additionalQueryParams, additionalBodyProperties)
+        Objects.hash(
+            fileId,
+            workspaceId,
+            additionalHeaders,
+            additionalQueryParams,
+            additionalBodyProperties,
+        )
 
     override fun toString() =
-        "FileDeleteParams{fileId=$fileId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "FileDeleteParams{fileId=$fileId, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

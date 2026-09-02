@@ -33,6 +33,7 @@ internal class ResourceServiceTest {
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .resourceId("sesrsc_011CZkZBJq5dWxk9fVLNcPht")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -55,6 +56,7 @@ internal class ResourceServiceTest {
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .resourceId("sesrsc_011CZkZBJq5dWxk9fVLNcPht")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .authorizationToken("ghp_exampletoken")
                     .build()
             )
@@ -93,6 +95,7 @@ internal class ResourceServiceTest {
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .resourceId("sesrsc_011CZkZBJq5dWxk9fVLNcPht")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -114,6 +117,7 @@ internal class ResourceServiceTest {
                 ResourceAddParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .betaManagedAgentsFileResourceParams(
                         BetaManagedAgentsFileResourceParams.builder()
                             .fileId("file_011CNha8iCJcU1wXNR6q4V8w")

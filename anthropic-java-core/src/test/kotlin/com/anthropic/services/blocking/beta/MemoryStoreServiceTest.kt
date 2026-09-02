@@ -31,6 +31,7 @@ internal class MemoryStoreServiceTest {
             memoryStoreService.create(
                 MemoryStoreCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .name("x")
                     .description("description")
                     .metadata(
@@ -58,6 +59,7 @@ internal class MemoryStoreServiceTest {
                 MemoryStoreRetrieveParams.builder()
                     .memoryStoreId("memory_store_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -78,6 +80,7 @@ internal class MemoryStoreServiceTest {
                 MemoryStoreUpdateParams.builder()
                     .memoryStoreId("memory_store_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .description("description")
                     .metadata(
                         MemoryStoreUpdateParams.Metadata.builder()
@@ -120,6 +123,7 @@ internal class MemoryStoreServiceTest {
                 MemoryStoreDeleteParams.builder()
                     .memoryStoreId("memory_store_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -140,6 +144,7 @@ internal class MemoryStoreServiceTest {
                 MemoryStoreArchiveParams.builder()
                     .memoryStoreId("memory_store_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

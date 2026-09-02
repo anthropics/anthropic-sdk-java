@@ -40,6 +40,7 @@ internal class AgentServiceAsyncTest {
             agentServiceAsync.create(
                 AgentCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                     .name("My First Agent")
                     .description("A general-purpose starter agent.")
@@ -128,6 +129,7 @@ internal class AgentServiceAsyncTest {
                     .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                     .version(0)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -149,6 +151,7 @@ internal class AgentServiceAsyncTest {
                 AgentUpdateParams.builder()
                     .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .description("updated")
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
@@ -263,6 +266,7 @@ internal class AgentServiceAsyncTest {
                 AgentArchiveParams.builder()
                     .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

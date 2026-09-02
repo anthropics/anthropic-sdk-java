@@ -26,6 +26,7 @@ internal class ModelServiceAsyncTest {
                 ModelRetrieveParams.builder()
                     .modelId("model_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

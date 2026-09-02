@@ -23,6 +23,7 @@ private constructor(
     private val page: String?,
     private val statuses: List<BetaDreamStatus>?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -57,6 +58,8 @@ private constructor(
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
+
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -83,6 +86,7 @@ private constructor(
         private var page: String? = null
         private var statuses: MutableList<BetaDreamStatus>? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -95,6 +99,7 @@ private constructor(
             page = dreamListParams.page
             statuses = dreamListParams.statuses?.toMutableList()
             betas = dreamListParams.betas?.toMutableList()
+            workspaceId = dreamListParams.workspaceId
             additionalHeaders = dreamListParams.additionalHeaders.toBuilder()
             additionalQueryParams = dreamListParams.additionalQueryParams.toBuilder()
         }
@@ -197,6 +202,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -310,6 +320,7 @@ private constructor(
                 page,
                 statuses?.toImmutable(),
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -319,6 +330,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -353,6 +365,7 @@ private constructor(
             page == other.page &&
             statuses == other.statuses &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -366,10 +379,11 @@ private constructor(
             page,
             statuses,
             betas,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "DreamListParams{createdAtGt=$createdAtGt, createdAtLt=$createdAtLt, includeArchived=$includeArchived, limit=$limit, page=$page, statuses=$statuses, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "DreamListParams{createdAtGt=$createdAtGt, createdAtLt=$createdAtLt, includeArchived=$includeArchived, limit=$limit, page=$page, statuses=$statuses, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

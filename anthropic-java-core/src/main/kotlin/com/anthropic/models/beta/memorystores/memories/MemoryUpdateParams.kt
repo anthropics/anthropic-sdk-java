@@ -29,6 +29,7 @@ private constructor(
     private val memoryId: String?,
     private val view: BetaManagedAgentsMemoryView?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -43,6 +44,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * New UTF-8 text content for the memory. Maximum 100 kB (102,400 bytes). Omit to leave the
@@ -128,6 +131,7 @@ private constructor(
         private var memoryId: String? = null
         private var view: BetaManagedAgentsMemoryView? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -138,6 +142,7 @@ private constructor(
             memoryId = memoryUpdateParams.memoryId
             view = memoryUpdateParams.view
             betas = memoryUpdateParams.betas?.toMutableList()
+            workspaceId = memoryUpdateParams.workspaceId
             body = memoryUpdateParams.body.toBuilder()
             additionalHeaders = memoryUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = memoryUpdateParams.additionalQueryParams.toBuilder()
@@ -179,6 +184,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -385,6 +395,7 @@ private constructor(
                 memoryId,
                 view,
                 betas?.toImmutable(),
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -404,6 +415,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -696,6 +708,7 @@ private constructor(
             memoryId == other.memoryId &&
             view == other.view &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -707,11 +720,12 @@ private constructor(
             memoryId,
             view,
             betas,
+            workspaceId,
             body,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "MemoryUpdateParams{memoryStoreId=$memoryStoreId, memoryId=$memoryId, view=$view, betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MemoryUpdateParams{memoryStoreId=$memoryStoreId, memoryId=$memoryId, view=$view, betas=$betas, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

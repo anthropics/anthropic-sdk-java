@@ -24,6 +24,7 @@ private constructor(
     private val tunnelId: String,
     private val certificateId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -34,6 +35,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -62,6 +65,7 @@ private constructor(
         private var tunnelId: String? = null
         private var certificateId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -70,6 +74,7 @@ private constructor(
             tunnelId = certificateRetrieveParams.tunnelId
             certificateId = certificateRetrieveParams.certificateId
             betas = certificateRetrieveParams.betas?.toMutableList()
+            workspaceId = certificateRetrieveParams.workspaceId
             additionalHeaders = certificateRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = certificateRetrieveParams.additionalQueryParams.toBuilder()
         }
@@ -105,6 +110,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -221,6 +231,7 @@ private constructor(
                 checkRequired("tunnelId", tunnelId),
                 certificateId,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -237,6 +248,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -252,13 +264,21 @@ private constructor(
             tunnelId == other.tunnelId &&
             certificateId == other.certificateId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(tunnelId, certificateId, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            tunnelId,
+            certificateId,
+            betas,
+            workspaceId,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "CertificateRetrieveParams{tunnelId=$tunnelId, certificateId=$certificateId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CertificateRetrieveParams{tunnelId=$tunnelId, certificateId=$certificateId, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

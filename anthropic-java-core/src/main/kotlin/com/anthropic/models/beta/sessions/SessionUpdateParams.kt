@@ -28,6 +28,7 @@ class SessionUpdateParams
 private constructor(
     private val sessionId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -37,6 +38,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Mid-session agent configuration update. Only `tools` and `mcp_servers` are updatable. Full
@@ -141,6 +144,7 @@ private constructor(
 
         private var sessionId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -149,6 +153,7 @@ private constructor(
         internal fun from(sessionUpdateParams: SessionUpdateParams) = apply {
             sessionId = sessionUpdateParams.sessionId
             betas = sessionUpdateParams.betas?.toMutableList()
+            workspaceId = sessionUpdateParams.workspaceId
             body = sessionUpdateParams.body.toBuilder()
             additionalHeaders = sessionUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = sessionUpdateParams.additionalQueryParams.toBuilder()
@@ -182,6 +187,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -424,6 +434,7 @@ private constructor(
             SessionUpdateParams(
                 sessionId,
                 betas?.toImmutable(),
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -442,6 +453,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -943,14 +955,15 @@ private constructor(
         return other is SessionUpdateParams &&
             sessionId == other.sessionId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(sessionId, betas, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(sessionId, betas, workspaceId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "SessionUpdateParams{sessionId=$sessionId, betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SessionUpdateParams{sessionId=$sessionId, betas=$betas, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

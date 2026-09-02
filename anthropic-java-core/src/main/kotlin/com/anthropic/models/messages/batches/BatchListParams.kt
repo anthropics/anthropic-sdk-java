@@ -20,6 +20,7 @@ private constructor(
     private val afterId: String?,
     private val beforeId: String?,
     private val limit: Long?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -43,6 +44,8 @@ private constructor(
      */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
+
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -65,6 +68,7 @@ private constructor(
         private var afterId: String? = null
         private var beforeId: String? = null
         private var limit: Long? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -73,6 +77,7 @@ private constructor(
             afterId = batchListParams.afterId
             beforeId = batchListParams.beforeId
             limit = batchListParams.limit
+            workspaceId = batchListParams.workspaceId
             additionalHeaders = batchListParams.additionalHeaders.toBuilder()
             additionalQueryParams = batchListParams.additionalQueryParams.toBuilder()
         }
@@ -111,6 +116,11 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -220,12 +230,19 @@ private constructor(
                 afterId,
                 beforeId,
                 limit,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
@@ -246,13 +263,21 @@ private constructor(
             afterId == other.afterId &&
             beforeId == other.beforeId &&
             limit == other.limit &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(afterId, beforeId, limit, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            afterId,
+            beforeId,
+            limit,
+            workspaceId,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "BatchListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "BatchListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

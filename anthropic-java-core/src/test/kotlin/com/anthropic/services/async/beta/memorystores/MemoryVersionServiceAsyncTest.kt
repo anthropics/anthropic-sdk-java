@@ -31,6 +31,7 @@ internal class MemoryVersionServiceAsyncTest {
                     .memoryVersionId("memory_version_id")
                     .view(BetaManagedAgentsMemoryView.BASIC)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -69,6 +70,7 @@ internal class MemoryVersionServiceAsyncTest {
                     .memoryStoreId("memory_store_id")
                     .memoryVersionId("memory_version_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

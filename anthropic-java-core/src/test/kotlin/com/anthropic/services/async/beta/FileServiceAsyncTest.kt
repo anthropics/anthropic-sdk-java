@@ -54,6 +54,7 @@ internal class FileServiceAsyncTest {
                 FileDeleteParams.builder()
                     .fileId("file_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -76,6 +77,7 @@ internal class FileServiceAsyncTest {
                 FileDownloadParams.builder()
                     .fileId("file_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -97,6 +99,7 @@ internal class FileServiceAsyncTest {
                 FileRetrieveMetadataParams.builder()
                     .fileId("file_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -117,6 +120,7 @@ internal class FileServiceAsyncTest {
             fileServiceAsync.upload(
                 FileUploadParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .file("Example data".byteInputStream())
                     .expiresInSeconds(3600L)
                     .build()

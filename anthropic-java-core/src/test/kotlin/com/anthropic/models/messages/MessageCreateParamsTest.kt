@@ -14,6 +14,7 @@ internal class MessageCreateParamsTest {
     fun create() {
         MessageCreateParams.builder()
             .userProfileId("anthropic-user-profile-id")
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .maxTokens(1024L)
             .addUserMessage("Hello, world")
             .model(Model.CLAUDE_OPUS_5)
@@ -118,6 +119,7 @@ internal class MessageCreateParamsTest {
         val params =
             MessageCreateParams.builder()
                 .userProfileId("anthropic-user-profile-id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_5)
@@ -222,6 +224,7 @@ internal class MessageCreateParamsTest {
             .isEqualTo(
                 Headers.builder()
                     .put("anthropic-user-profile-id", "anthropic-user-profile-id")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
     }
@@ -245,6 +248,7 @@ internal class MessageCreateParamsTest {
         val params =
             MessageCreateParams.builder()
                 .userProfileId("anthropic-user-profile-id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
                 .model(Model.CLAUDE_OPUS_5)

@@ -23,10 +23,13 @@ import kotlin.jvm.optionals.getOrNull
 /** Create Skill */
 class SkillCreateParams
 private constructor(
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Files to upload for the skill.
@@ -79,16 +82,23 @@ private constructor(
     /** A builder for [SkillCreateParams]. */
     class Builder internal constructor() {
 
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(skillCreateParams: SkillCreateParams) = apply {
+            workspaceId = skillCreateParams.workspaceId
             body = skillCreateParams.body.toBuilder()
             additionalHeaders = skillCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = skillCreateParams.additionalQueryParams.toBuilder()
         }
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -262,6 +272,7 @@ private constructor(
          */
         fun build(): SkillCreateParams =
             SkillCreateParams(
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -273,7 +284,13 @@ private constructor(
                 _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
             .toImmutable()
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -485,13 +502,15 @@ private constructor(
         }
 
         return other is SkillCreateParams &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(workspaceId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "SkillCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SkillCreateParams{workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

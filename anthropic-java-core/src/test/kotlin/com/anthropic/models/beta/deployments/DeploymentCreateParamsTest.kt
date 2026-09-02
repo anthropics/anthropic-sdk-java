@@ -21,6 +21,7 @@ internal class DeploymentCreateParamsTest {
     fun create() {
         DeploymentCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .agent("string")
             .environmentId("x")
             .addUserMessageInitialEvent(
@@ -74,6 +75,7 @@ internal class DeploymentCreateParamsTest {
         val params =
             DeploymentCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .agent("string")
                 .environmentId("x")
                 .addUserMessageInitialEvent(
@@ -125,7 +127,10 @@ internal class DeploymentCreateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -158,6 +163,7 @@ internal class DeploymentCreateParamsTest {
         val params =
             DeploymentCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .agent("string")
                 .environmentId("x")
                 .addUserMessageInitialEvent(

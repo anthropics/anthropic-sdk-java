@@ -25,6 +25,7 @@ class VersionCreateParams
 private constructor(
     private val skillId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -39,6 +40,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Files to upload for the skill.
@@ -76,6 +79,7 @@ private constructor(
 
         private var skillId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -84,6 +88,7 @@ private constructor(
         internal fun from(versionCreateParams: VersionCreateParams) = apply {
             skillId = versionCreateParams.skillId
             betas = versionCreateParams.betas?.toMutableList()
+            workspaceId = versionCreateParams.workspaceId
             body = versionCreateParams.body.toBuilder()
             additionalHeaders = versionCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = versionCreateParams.additionalQueryParams.toBuilder()
@@ -122,6 +127,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -276,6 +286,7 @@ private constructor(
             VersionCreateParams(
                 skillId,
                 betas?.toImmutable(),
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -297,6 +308,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -467,14 +479,15 @@ private constructor(
         return other is VersionCreateParams &&
             skillId == other.skillId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(skillId, betas, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(skillId, betas, workspaceId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "VersionCreateParams{skillId=$skillId, betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "VersionCreateParams{skillId=$skillId, betas=$betas, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

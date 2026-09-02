@@ -19,6 +19,7 @@ private constructor(
     private val memoryStoreId: String,
     private val memoryVersionId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
@@ -30,6 +31,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -61,6 +64,7 @@ private constructor(
         private var memoryStoreId: String? = null
         private var memoryVersionId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -70,6 +74,7 @@ private constructor(
             memoryStoreId = memoryVersionRedactParams.memoryStoreId
             memoryVersionId = memoryVersionRedactParams.memoryVersionId
             betas = memoryVersionRedactParams.betas?.toMutableList()
+            workspaceId = memoryVersionRedactParams.workspaceId
             additionalHeaders = memoryVersionRedactParams.additionalHeaders.toBuilder()
             additionalQueryParams = memoryVersionRedactParams.additionalQueryParams.toBuilder()
             additionalBodyProperties =
@@ -109,6 +114,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -247,6 +257,7 @@ private constructor(
                 checkRequired("memoryStoreId", memoryStoreId),
                 memoryVersionId,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -267,6 +278,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -282,6 +294,7 @@ private constructor(
             memoryStoreId == other.memoryStoreId &&
             memoryVersionId == other.memoryVersionId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
@@ -292,11 +305,12 @@ private constructor(
             memoryStoreId,
             memoryVersionId,
             betas,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
             additionalBodyProperties,
         )
 
     override fun toString() =
-        "MemoryVersionRedactParams{memoryStoreId=$memoryStoreId, memoryVersionId=$memoryVersionId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "MemoryVersionRedactParams{memoryStoreId=$memoryStoreId, memoryVersionId=$memoryVersionId, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

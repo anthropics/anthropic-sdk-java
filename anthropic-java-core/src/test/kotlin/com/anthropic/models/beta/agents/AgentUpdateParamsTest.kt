@@ -17,6 +17,7 @@ internal class AgentUpdateParamsTest {
         AgentUpdateParams.builder()
             .agentId("agent_011CZkYpogX7uDKUyvBTophP")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .description("updated")
             .addMcpServer(
                 BetaManagedAgentsUrlMcpServerParams.builder()
@@ -107,6 +108,7 @@ internal class AgentUpdateParamsTest {
             AgentUpdateParams.builder()
                 .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .description("updated")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
@@ -188,7 +190,10 @@ internal class AgentUpdateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -207,6 +212,7 @@ internal class AgentUpdateParamsTest {
             AgentUpdateParams.builder()
                 .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .description("updated")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()

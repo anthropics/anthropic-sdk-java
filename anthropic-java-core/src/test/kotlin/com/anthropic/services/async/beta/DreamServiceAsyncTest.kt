@@ -29,6 +29,7 @@ internal class DreamServiceAsyncTest {
             dreamServiceAsync.create(
                 DreamCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addMemoryStoreInput("x")
                     .model("string")
                     .instructions("x")
@@ -56,6 +57,7 @@ internal class DreamServiceAsyncTest {
                 DreamRetrieveParams.builder()
                     .dreamId("dream_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -92,6 +94,7 @@ internal class DreamServiceAsyncTest {
                 DreamArchiveParams.builder()
                     .dreamId("dream_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -113,6 +116,7 @@ internal class DreamServiceAsyncTest {
                 DreamCancelParams.builder()
                     .dreamId("dream_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

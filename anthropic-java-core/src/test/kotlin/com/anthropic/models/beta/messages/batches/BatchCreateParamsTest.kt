@@ -39,6 +39,7 @@ internal class BatchCreateParamsTest {
         BatchCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .userProfileId("anthropic-user-profile-id")
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .addRequest(
                 BatchCreateParams.Request.builder()
                     .customId("my-custom-id-1")
@@ -233,6 +234,7 @@ internal class BatchCreateParamsTest {
             BatchCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .userProfileId("anthropic-user-profile-id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .addRequest(
                     BatchCreateParams.Request.builder()
                         .customId("my-custom-id-1")
@@ -434,6 +436,7 @@ internal class BatchCreateParamsTest {
                 Headers.builder()
                     .put("anthropic-beta", "message-batches-2024-09-24")
                     .put("anthropic-user-profile-id", "anthropic-user-profile-id")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
     }
@@ -467,6 +470,7 @@ internal class BatchCreateParamsTest {
             BatchCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .userProfileId("anthropic-user-profile-id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .addRequest(
                     BatchCreateParams.Request.builder()
                         .customId("my-custom-id-1")

@@ -17,6 +17,7 @@ class VaultArchiveParams
 private constructor(
     private val vaultId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
@@ -26,6 +27,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -51,6 +54,7 @@ private constructor(
 
         private var vaultId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -59,6 +63,7 @@ private constructor(
         internal fun from(vaultArchiveParams: VaultArchiveParams) = apply {
             vaultId = vaultArchiveParams.vaultId
             betas = vaultArchiveParams.betas?.toMutableList()
+            workspaceId = vaultArchiveParams.workspaceId
             additionalHeaders = vaultArchiveParams.additionalHeaders.toBuilder()
             additionalQueryParams = vaultArchiveParams.additionalQueryParams.toBuilder()
             additionalBodyProperties = vaultArchiveParams.additionalBodyProperties.toMutableMap()
@@ -92,6 +97,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -222,6 +232,7 @@ private constructor(
             VaultArchiveParams(
                 vaultId,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -241,6 +252,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -255,6 +267,7 @@ private constructor(
         return other is VaultArchiveParams &&
             vaultId == other.vaultId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
@@ -264,11 +277,12 @@ private constructor(
         Objects.hash(
             vaultId,
             betas,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
             additionalBodyProperties,
         )
 
     override fun toString() =
-        "VaultArchiveParams{vaultId=$vaultId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "VaultArchiveParams{vaultId=$vaultId, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

@@ -15,6 +15,7 @@ private constructor(
     private val limit: Long?,
     private val page: String?,
     private val source: String?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -42,6 +43,8 @@ private constructor(
      */
     fun source(): Optional<String> = Optional.ofNullable(source)
 
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
+
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -64,6 +67,7 @@ private constructor(
         private var limit: Long? = null
         private var page: String? = null
         private var source: String? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -72,6 +76,7 @@ private constructor(
             limit = skillListParams.limit
             page = skillListParams.page
             source = skillListParams.source
+            workspaceId = skillListParams.workspaceId
             additionalHeaders = skillListParams.additionalHeaders.toBuilder()
             additionalQueryParams = skillListParams.additionalQueryParams.toBuilder()
         }
@@ -115,6 +120,11 @@ private constructor(
 
         /** Alias for calling [Builder.source] with `source.orElse(null)`. */
         fun source(source: Optional<String>) = source(source.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -224,12 +234,19 @@ private constructor(
                 limit,
                 page,
                 source,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
@@ -250,13 +267,14 @@ private constructor(
             limit == other.limit &&
             page == other.page &&
             source == other.source &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(limit, page, source, additionalHeaders, additionalQueryParams)
+        Objects.hash(limit, page, source, workspaceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "SkillListParams{limit=$limit, page=$page, source=$source, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SkillListParams{limit=$limit, page=$page, source=$source, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

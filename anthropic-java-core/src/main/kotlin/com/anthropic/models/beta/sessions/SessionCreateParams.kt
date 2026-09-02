@@ -42,6 +42,7 @@ import kotlin.jvm.optionals.getOrNull
 class SessionCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -49,6 +50,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Agent identifier. Accepts the `agent` ID string, which pins the latest version for the
@@ -202,6 +205,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -209,6 +213,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(sessionCreateParams: SessionCreateParams) = apply {
             betas = sessionCreateParams.betas?.toMutableList()
+            workspaceId = sessionCreateParams.workspaceId
             body = sessionCreateParams.body.toBuilder()
             additionalHeaders = sessionCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = sessionCreateParams.additionalQueryParams.toBuilder()
@@ -237,6 +242,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -619,6 +629,7 @@ private constructor(
         fun build(): SessionCreateParams =
             SessionCreateParams(
                 betas?.toImmutable(),
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -631,6 +642,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -2674,14 +2686,15 @@ private constructor(
 
         return other is SessionCreateParams &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(betas, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(betas, workspaceId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "SessionCreateParams{betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SessionCreateParams{betas=$betas, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

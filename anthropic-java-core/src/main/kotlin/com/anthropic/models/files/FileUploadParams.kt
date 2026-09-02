@@ -21,14 +21,18 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.io.path.inputStream
 import kotlin.io.path.name
+import kotlin.jvm.optionals.getOrNull
 
 /** Upload File */
 class FileUploadParams
 private constructor(
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * The file to upload. Only the final path component of the part's `filename` is kept; an absent
@@ -90,16 +94,23 @@ private constructor(
     /** A builder for [FileUploadParams]. */
     class Builder internal constructor() {
 
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(fileUploadParams: FileUploadParams) = apply {
+            workspaceId = fileUploadParams.workspaceId
             body = fileUploadParams.body.toBuilder()
             additionalHeaders = fileUploadParams.additionalHeaders.toBuilder()
             additionalQueryParams = fileUploadParams.additionalQueryParams.toBuilder()
         }
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -290,7 +301,12 @@ private constructor(
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): FileUploadParams =
-            FileUploadParams(body.build(), additionalHeaders.build(), additionalQueryParams.build())
+            FileUploadParams(
+                workspaceId,
+                body.build(),
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
     }
 
     fun _body(): Map<String, MultipartField<*>> =
@@ -298,7 +314,13 @@ private constructor(
                 _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
             .toImmutable()
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -540,13 +562,15 @@ private constructor(
         }
 
         return other is FileUploadParams &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(workspaceId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "FileUploadParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "FileUploadParams{workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
