@@ -26,7 +26,7 @@ import kotlin.jvm.optionals.getOrNull
  * Identifies who performed a write or redact operation. Captured at write time on the
  * `memory_version` row. The API key that created a session is not recorded on agent writes;
  * attribution answers who made the write, not who is ultimately responsible. Look up session
- * provenance separately via the [Sessions API](/en/api/sessions-retrieve).
+ * provenance separately via the [Sessions API](/en/api/beta/sessions/retrieve).
  */
 @JsonDeserialize(using = BetaManagedAgentsActor.Deserializer::class)
 @JsonSerialize(using = BetaManagedAgentsActor.Serializer::class)
