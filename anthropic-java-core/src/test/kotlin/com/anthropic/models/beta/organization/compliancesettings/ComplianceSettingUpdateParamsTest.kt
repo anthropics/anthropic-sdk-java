@@ -25,7 +25,7 @@ internal class ComplianceSettingUpdateParamsTest {
 
         assertThat(body.state())
             .isEqualTo(
-                ComplianceSettingUpdateParams.State.ofEnabled(
+                BetaComplianceSettingsStateParam.ofEnabled(
                     BetaComplianceSettingsStateEnabledParam.builder().build()
                 )
             )

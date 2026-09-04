@@ -18,7 +18,7 @@ internal class BetaComplianceSettingsTest {
 
         assertThat(betaComplianceSettings.state())
             .isEqualTo(
-                BetaComplianceSettings.State.ofEnabled(
+                BetaComplianceSettingsState.ofEnabled(
                     BetaComplianceSettingsStateEnabled.builder().build()
                 )
             )
