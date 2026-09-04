@@ -102,7 +102,7 @@ private constructor(
         } else {
             builder.replaceHeaders(HEADER_BETA, (existingBeta + OAUTH_BETA).joinToString(","))
         }
-        if (workspaceId != null) {
+        if (workspaceId != null && !request.headers.names().contains(HEADER_WORKSPACE_ID)) {
             builder.putHeader(HEADER_WORKSPACE_ID, workspaceId)
         }
         return builder.build()

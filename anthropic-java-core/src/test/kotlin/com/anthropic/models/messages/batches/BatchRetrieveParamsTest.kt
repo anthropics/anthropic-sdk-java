@@ -2,6 +2,7 @@
 
 package com.anthropic.models.messages.batches
 
+import com.anthropic.core.http.Headers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,7 +10,10 @@ internal class BatchRetrieveParamsTest {
 
     @Test
     fun create() {
-        BatchRetrieveParams.builder().messageBatchId("message_batch_id").build()
+        BatchRetrieveParams.builder()
+            .messageBatchId("message_batch_id")
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+            .build()
     }
 
     @Test
@@ -19,5 +23,32 @@ internal class BatchRetrieveParamsTest {
         assertThat(params._pathParam(0)).isEqualTo("message_batch_id")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
+    }
+
+    @Test
+    fun headers() {
+        val params =
+            BatchRetrieveParams.builder()
+                .messageBatchId("message_batch_id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                .build()
+
+        val headers = params._headers()
+
+        assertThat(headers)
+            .isEqualTo(
+                Headers.builder()
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
+    }
+
+    @Test
+    fun headersWithoutOptionalFields() {
+        val params = BatchRetrieveParams.builder().messageBatchId("message_batch_id").build()
+
+        val headers = params._headers()
+
+        assertThat(headers).isEqualTo(Headers.builder().build())
     }
 }

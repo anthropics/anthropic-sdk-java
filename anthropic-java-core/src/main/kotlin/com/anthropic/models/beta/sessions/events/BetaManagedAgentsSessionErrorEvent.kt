@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -422,6 +423,9 @@ private constructor(
                     override fun visitCredentialHostUnreachable(
                         credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
                     ): String = credentialHostUnreachable.message()
+
+                    override fun unknown(json: JsonValue?): String =
+                        json.getProperty<String>("message").getRequired("message")
                 }
             )
 
@@ -459,6 +463,9 @@ private constructor(
                     override fun visitCredentialHostUnreachable(
                         credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
                     ): Optional<String> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("mcp_server_name").asKnown()
                 }
             )
 

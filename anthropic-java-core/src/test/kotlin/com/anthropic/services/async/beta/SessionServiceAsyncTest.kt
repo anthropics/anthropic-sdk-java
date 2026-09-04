@@ -43,6 +43,7 @@ internal class SessionServiceAsyncTest {
             sessionServiceAsync.create(
                 SessionCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .agent("agent_011CZkYpogX7uDKUyvBTophP")
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .budget(
@@ -101,6 +102,7 @@ internal class SessionServiceAsyncTest {
                 SessionRetrieveParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -122,6 +124,7 @@ internal class SessionServiceAsyncTest {
                 SessionUpdateParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .agent(
                         BetaManagedAgentsSessionAgentUpdate.builder()
                             .addMcpServer(
@@ -189,7 +192,7 @@ internal class SessionServiceAsyncTest {
         betaManagedAgentsSession.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -219,6 +222,7 @@ internal class SessionServiceAsyncTest {
                 SessionDeleteParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -240,6 +244,7 @@ internal class SessionServiceAsyncTest {
                 SessionArchiveParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

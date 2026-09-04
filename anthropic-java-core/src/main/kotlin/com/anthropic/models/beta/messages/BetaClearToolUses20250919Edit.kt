@@ -12,6 +12,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkKnown
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -681,6 +682,9 @@ private constructor(
 
                     override fun visitToolUses(toolUses: BetaToolUsesTrigger): Long =
                         toolUses.value()
+
+                    override fun unknown(json: JsonValue?): Long =
+                        json.getProperty<Long>("value").getRequired("value")
                 }
             )
 

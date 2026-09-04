@@ -33,6 +33,7 @@ internal class MemoryServiceAsyncTest {
                     .memoryStoreId("memory_store_id")
                     .view(BetaManagedAgentsMemoryView.BASIC)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .content("content")
                     .path("xx")
                     .build()
@@ -58,6 +59,7 @@ internal class MemoryServiceAsyncTest {
                     .memoryId("memory_id")
                     .view(BetaManagedAgentsMemoryView.BASIC)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -81,6 +83,7 @@ internal class MemoryServiceAsyncTest {
                     .memoryId("memory_id")
                     .view(BetaManagedAgentsMemoryView.BASIC)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .content("content")
                     .path("xx")
                     .precondition(
@@ -96,7 +99,7 @@ internal class MemoryServiceAsyncTest {
         betaManagedAgentsMemory.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -128,6 +131,7 @@ internal class MemoryServiceAsyncTest {
                     .memoryId("memory_id")
                     .expectedContentSha256("expected_content_sha256")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

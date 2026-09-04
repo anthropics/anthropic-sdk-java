@@ -148,6 +148,54 @@ internal class ResourceRetrieveResponseTest {
         assertThat(roundtrippedResourceRetrieveResponse).isEqualTo(resourceRetrieveResponse)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val resourceRetrieveResponse =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to "sesrsc_011CZkZCKr6eXyl0gWMOdQiu",
+                            "created_at" to "2026-03-15T10:00:00Z",
+                            "mount_path" to "/workspace/example-repo",
+                            "updated_at" to "2026-03-15T10:00:00Z",
+                        )
+                    ),
+                    jacksonTypeRef<ResourceRetrieveResponse>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { resourceRetrieveResponse.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(resourceRetrieveResponse.id()).contains("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+        assertThat(resourceRetrieveResponse.createdAt())
+            .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+        assertThat(resourceRetrieveResponse.mountPath()).contains("/workspace/example-repo")
+        assertThat(resourceRetrieveResponse.updatedAt())
+            .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+
+        val mismatchedResourceRetrieveResponse =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to listOf("invalid"),
+                            "created_at" to listOf("invalid"),
+                            "mount_path" to listOf("invalid"),
+                            "updated_at" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<ResourceRetrieveResponse>(),
+                )
+
+        assertThat(mismatchedResourceRetrieveResponse.id()).isEmpty
+        assertThat(mismatchedResourceRetrieveResponse.createdAt()).isEmpty
+        assertThat(mismatchedResourceRetrieveResponse.mountPath()).isEmpty
+        assertThat(mismatchedResourceRetrieveResponse.updatedAt()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -164,5 +212,10 @@ internal class ResourceRetrieveResponseTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { resourceRetrieveResponse.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(resourceRetrieveResponse.id()).isEmpty
+        assertThat(resourceRetrieveResponse.createdAt()).isEmpty
+        assertThat(resourceRetrieveResponse.mountPath()).isEmpty
+        assertThat(resourceRetrieveResponse.updatedAt()).isEmpty
     }
 }

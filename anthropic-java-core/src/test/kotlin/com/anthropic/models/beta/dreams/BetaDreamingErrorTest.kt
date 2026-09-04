@@ -348,6 +348,32 @@ internal class BetaDreamingErrorTest {
         assertThat(roundtrippedBetaDreamingError).isEqualTo(betaDreamingError)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaDreamingError =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(mapOf("type" to "unknown_variant", "message" to "message")),
+                    jacksonTypeRef<BetaDreamingError>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaDreamingError.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaDreamingError.message()).contains("message")
+
+        val mismatchedBetaDreamingError =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "message" to listOf("invalid"))
+                    ),
+                    jacksonTypeRef<BetaDreamingError>(),
+                )
+
+        assertThat(mismatchedBetaDreamingError.message()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -364,5 +390,7 @@ internal class BetaDreamingErrorTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { betaDreamingError.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaDreamingError.message()).isEmpty
     }
 }

@@ -15,6 +15,7 @@ internal class VaultUpdateParamsTest {
         VaultUpdateParams.builder()
             .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .displayName("Example vault")
             .metadata(
                 VaultUpdateParams.Metadata.builder()
@@ -39,6 +40,7 @@ internal class VaultUpdateParamsTest {
             VaultUpdateParams.builder()
                 .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .displayName("Example vault")
                 .metadata(
                     VaultUpdateParams.Metadata.builder()
@@ -51,7 +53,10 @@ internal class VaultUpdateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -70,6 +75,7 @@ internal class VaultUpdateParamsTest {
             VaultUpdateParams.builder()
                 .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .displayName("Example vault")
                 .metadata(
                     VaultUpdateParams.Metadata.builder()

@@ -136,6 +136,37 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
             .isEqualTo(betaManagedAgentsSessionResourceConfig)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaManagedAgentsSessionResourceConfig =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "mount_path" to "mount_path")
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsSessionResourceConfig>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> {
+                betaManagedAgentsSessionResourceConfig.validate()
+            }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsSessionResourceConfig.mountPath()).contains("mount_path")
+
+        val mismatchedBetaManagedAgentsSessionResourceConfig =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "mount_path" to listOf("invalid"))
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsSessionResourceConfig>(),
+                )
+
+        assertThat(mismatchedBetaManagedAgentsSessionResourceConfig.mountPath()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -159,5 +190,7 @@ internal class BetaManagedAgentsSessionResourceConfigTest {
                 betaManagedAgentsSessionResourceConfig.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsSessionResourceConfig.mountPath()).isEmpty
     }
 }

@@ -38,6 +38,7 @@ internal class CredentialServiceTest {
                 CredentialCreateParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .auth(
                         BetaManagedAgentsStaticBearerCreateParams.builder()
                             .token("bearer_exampletoken")
@@ -72,6 +73,7 @@ internal class CredentialServiceTest {
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -93,6 +95,7 @@ internal class CredentialServiceTest {
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .auth(
                         BetaManagedAgentsMcpOAuthUpdateParams.builder()
                             .type(BetaManagedAgentsMcpOAuthUpdateParams.Type.MCP_OAUTH)
@@ -128,7 +131,7 @@ internal class CredentialServiceTest {
         betaManagedAgentsCredential.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -158,6 +161,7 @@ internal class CredentialServiceTest {
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -179,6 +183,7 @@ internal class CredentialServiceTest {
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -201,6 +206,7 @@ internal class CredentialServiceTest {
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

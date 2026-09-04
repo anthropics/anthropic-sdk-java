@@ -22,6 +22,7 @@ internal class DeploymentUpdateParamsTest {
         DeploymentUpdateParams.builder()
             .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .agent("string")
             .budget(
                 BetaManagedAgentsBudgetLimit.builder()
@@ -86,6 +87,7 @@ internal class DeploymentUpdateParamsTest {
             DeploymentUpdateParams.builder()
                 .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .agent("string")
                 .budget(
                     BetaManagedAgentsBudgetLimit.builder()
@@ -137,7 +139,10 @@ internal class DeploymentUpdateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -157,6 +162,7 @@ internal class DeploymentUpdateParamsTest {
             DeploymentUpdateParams.builder()
                 .deploymentId("depl_011CZkZcDH3vPqd7xnEfwTai")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .agent("string")
                 .budget(
                     BetaManagedAgentsBudgetLimit.builder()

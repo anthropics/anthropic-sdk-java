@@ -20,6 +20,7 @@ private constructor(
     private val limit: Int?,
     private val page: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -36,6 +37,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -66,6 +69,7 @@ private constructor(
         private var limit: Int? = null
         private var page: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -76,6 +80,7 @@ private constructor(
             limit = eventListParams.limit
             page = eventListParams.page
             betas = eventListParams.betas?.toMutableList()
+            workspaceId = eventListParams.workspaceId
             additionalHeaders = eventListParams.additionalHeaders.toBuilder()
             additionalQueryParams = eventListParams.additionalQueryParams.toBuilder()
         }
@@ -129,6 +134,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -247,6 +257,7 @@ private constructor(
                 limit,
                 page,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -263,6 +274,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -287,6 +299,7 @@ private constructor(
             limit == other.limit &&
             page == other.page &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -298,10 +311,11 @@ private constructor(
             limit,
             page,
             betas,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "EventListParams{sessionId=$sessionId, threadId=$threadId, limit=$limit, page=$page, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "EventListParams{sessionId=$sessionId, threadId=$threadId, limit=$limit, page=$page, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -30,6 +30,7 @@ internal class TunnelServiceTest {
             tunnelService.create(
                 TunnelCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .displayName("x")
                     .build()
             )
@@ -37,7 +38,7 @@ internal class TunnelServiceTest {
         betaTunnel.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun retrieve() {
         val client =
@@ -52,13 +53,14 @@ internal class TunnelServiceTest {
                 TunnelRetrieveParams.builder()
                     .tunnelId("tunnel_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
         betaTunnel.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -87,6 +89,7 @@ internal class TunnelServiceTest {
                 TunnelArchiveParams.builder()
                     .tunnelId("tunnel_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -107,6 +110,7 @@ internal class TunnelServiceTest {
                 TunnelRevealTokenParams.builder()
                     .tunnelId("tunnel_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -127,6 +131,7 @@ internal class TunnelServiceTest {
                 TunnelRotateTokenParams.builder()
                     .tunnelId("tunnel_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .reason("reason")
                     .build()
             )

@@ -155,6 +155,44 @@ internal class BetaBrowserStateChangeTest {
         assertThat(roundtrippedBetaBrowserStateChange).isEqualTo(betaBrowserStateChange)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaBrowserStateChange =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "download_id" to "download_id",
+                            "url" to "url",
+                        )
+                    ),
+                    jacksonTypeRef<BetaBrowserStateChange>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaBrowserStateChange.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaBrowserStateChange.downloadId()).contains("download_id")
+        assertThat(betaBrowserStateChange.url()).contains("url")
+
+        val mismatchedBetaBrowserStateChange =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "download_id" to listOf("invalid"),
+                            "url" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaBrowserStateChange>(),
+                )
+
+        assertThat(mismatchedBetaBrowserStateChange.downloadId()).isEmpty
+        assertThat(mismatchedBetaBrowserStateChange.url()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -171,5 +209,8 @@ internal class BetaBrowserStateChangeTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { betaBrowserStateChange.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaBrowserStateChange.downloadId()).isEmpty
+        assertThat(betaBrowserStateChange.url()).isEmpty
     }
 }

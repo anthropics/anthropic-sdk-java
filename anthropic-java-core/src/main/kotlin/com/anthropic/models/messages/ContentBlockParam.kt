@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
@@ -171,6 +172,9 @@ private constructor(
                 override fun visitContainerUpload(
                     containerUpload: ContainerUploadBlockParam
                 ): Optional<CacheControlEphemeral> = containerUpload.cacheControl()
+
+                override fun unknown(json: JsonValue?): Optional<CacheControlEphemeral> =
+                    json.getProperty<CacheControlEphemeral>("cache_control").asKnown()
             }
         )
 
@@ -232,6 +236,9 @@ private constructor(
                 override fun visitContainerUpload(
                     containerUpload: ContainerUploadBlockParam
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("title").asKnown()
             }
         )
 
@@ -293,6 +300,9 @@ private constructor(
                 override fun visitContainerUpload(
                     containerUpload: ContainerUploadBlockParam
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("id").asKnown()
             }
         )
 
@@ -354,6 +364,9 @@ private constructor(
                 override fun visitContainerUpload(
                     containerUpload: ContainerUploadBlockParam
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("toolset_name").asKnown()
             }
         )
 
@@ -415,6 +428,9 @@ private constructor(
                 override fun visitContainerUpload(
                     containerUpload: ContainerUploadBlockParam
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("tool_use_id").asKnown()
             }
         )
 

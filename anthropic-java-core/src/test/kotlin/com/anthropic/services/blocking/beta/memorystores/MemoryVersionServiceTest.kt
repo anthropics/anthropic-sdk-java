@@ -31,13 +31,14 @@ internal class MemoryVersionServiceTest {
                     .memoryVersionId("memory_version_id")
                     .view(BetaManagedAgentsMemoryView.BASIC)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
         betaManagedAgentsMemoryVersion.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -67,6 +68,7 @@ internal class MemoryVersionServiceTest {
                     .memoryStoreId("memory_store_id")
                     .memoryVersionId("memory_version_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

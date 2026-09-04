@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -488,6 +489,9 @@ private constructor(
                     override fun visitClientSecretPost(
                         clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostParam
                     ): Optional<String> = Optional.of(clientSecretPost.clientSecret())
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("client_secret").asKnown()
                 }
             )
 

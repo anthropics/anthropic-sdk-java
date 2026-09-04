@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.BetaApiError
 import com.anthropic.models.beta.BetaAuthenticationError
@@ -136,6 +137,9 @@ private constructor(
                 override fun visitConflict(
                     conflict: BetaManagedAgentsConflictError
                 ): Optional<String> = conflict.message()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("message").asKnown()
             }
         )
 

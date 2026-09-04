@@ -229,6 +229,60 @@ internal class TextCitationParamTest {
         assertThat(roundtrippedTextCitationParam).isEqualTo(textCitationParam)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val textCitationParam =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "cited_text" to "The grass is green. The sky is blue.",
+                            "document_index" to 0,
+                            "document_title" to "x",
+                            "end_block_index" to 0,
+                            "start_block_index" to 0,
+                            "title" to "x",
+                        )
+                    ),
+                    jacksonTypeRef<TextCitationParam>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { textCitationParam.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(textCitationParam.citedText()).isEqualTo("The grass is green. The sky is blue.")
+        assertThat(textCitationParam.documentIndex()).contains(0L)
+        assertThat(textCitationParam.documentTitle()).contains("x")
+        assertThat(textCitationParam.endBlockIndex()).contains(0L)
+        assertThat(textCitationParam.startBlockIndex()).contains(0L)
+        assertThat(textCitationParam.title()).contains("x")
+
+        val mismatchedTextCitationParam =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "cited_text" to listOf("invalid"),
+                            "document_index" to listOf("invalid"),
+                            "document_title" to listOf("invalid"),
+                            "end_block_index" to listOf("invalid"),
+                            "start_block_index" to listOf("invalid"),
+                            "title" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<TextCitationParam>(),
+                )
+
+        assertThrows<AnthropicInvalidDataException> { mismatchedTextCitationParam.citedText() }
+        assertThat(mismatchedTextCitationParam.documentIndex()).isEmpty
+        assertThat(mismatchedTextCitationParam.documentTitle()).isEmpty
+        assertThat(mismatchedTextCitationParam.endBlockIndex()).isEmpty
+        assertThat(mismatchedTextCitationParam.startBlockIndex()).isEmpty
+        assertThat(mismatchedTextCitationParam.title()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -245,5 +299,12 @@ internal class TextCitationParamTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { textCitationParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThrows<AnthropicInvalidDataException> { textCitationParam.citedText() }
+        assertThat(textCitationParam.documentIndex()).isEmpty
+        assertThat(textCitationParam.documentTitle()).isEmpty
+        assertThat(textCitationParam.endBlockIndex()).isEmpty
+        assertThat(textCitationParam.startBlockIndex()).isEmpty
+        assertThat(textCitationParam.title()).isEmpty
     }
 }

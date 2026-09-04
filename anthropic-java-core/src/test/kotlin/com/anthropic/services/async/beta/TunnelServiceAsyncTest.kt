@@ -30,6 +30,7 @@ internal class TunnelServiceAsyncTest {
             tunnelServiceAsync.create(
                 TunnelCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .displayName("x")
                     .build()
             )
@@ -38,7 +39,7 @@ internal class TunnelServiceAsyncTest {
         betaTunnel.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun retrieve() {
         val client =
@@ -53,6 +54,7 @@ internal class TunnelServiceAsyncTest {
                 TunnelRetrieveParams.builder()
                     .tunnelId("tunnel_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -60,7 +62,7 @@ internal class TunnelServiceAsyncTest {
         betaTunnel.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -90,6 +92,7 @@ internal class TunnelServiceAsyncTest {
                 TunnelArchiveParams.builder()
                     .tunnelId("tunnel_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -111,6 +114,7 @@ internal class TunnelServiceAsyncTest {
                 TunnelRevealTokenParams.builder()
                     .tunnelId("tunnel_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -132,6 +136,7 @@ internal class TunnelServiceAsyncTest {
                 TunnelRotateTokenParams.builder()
                     .tunnelId("tunnel_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .reason("reason")
                     .build()
             )

@@ -33,6 +33,7 @@ internal class EnvironmentServiceAsyncTest {
             environmentServiceAsync.create(
                 EnvironmentCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .name("python-data-analysis")
                     .config(
                         BetaCloudConfigParams.builder()
@@ -85,6 +86,7 @@ internal class EnvironmentServiceAsyncTest {
                 EnvironmentRetrieveParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -106,6 +108,7 @@ internal class EnvironmentServiceAsyncTest {
                 EnvironmentUpdateParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .config(
                         BetaCloudConfigParams.builder()
                             .networking(
@@ -173,6 +176,7 @@ internal class EnvironmentServiceAsyncTest {
                 EnvironmentDeleteParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -194,6 +198,7 @@ internal class EnvironmentServiceAsyncTest {
                 EnvironmentArchiveParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

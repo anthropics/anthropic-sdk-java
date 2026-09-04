@@ -153,6 +153,58 @@ internal class BetaManagedAgentsSessionResourceTest {
             .isEqualTo(betaManagedAgentsSessionResource)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaManagedAgentsSessionResource =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to "sesrsc_011CZkZCKr6eXyl0gWMOdQiu",
+                            "created_at" to "2026-03-15T10:00:00Z",
+                            "mount_path" to "/workspace/example-repo",
+                            "updated_at" to "2026-03-15T10:00:00Z",
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsSessionResource>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> {
+                betaManagedAgentsSessionResource.validate()
+            }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsSessionResource.id())
+            .contains("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+        assertThat(betaManagedAgentsSessionResource.createdAt())
+            .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+        assertThat(betaManagedAgentsSessionResource.mountPath()).contains("/workspace/example-repo")
+        assertThat(betaManagedAgentsSessionResource.updatedAt())
+            .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+
+        val mismatchedBetaManagedAgentsSessionResource =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to listOf("invalid"),
+                            "created_at" to listOf("invalid"),
+                            "mount_path" to listOf("invalid"),
+                            "updated_at" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsSessionResource>(),
+                )
+
+        assertThat(mismatchedBetaManagedAgentsSessionResource.id()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionResource.createdAt()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionResource.mountPath()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionResource.updatedAt()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -173,5 +225,10 @@ internal class BetaManagedAgentsSessionResourceTest {
                 betaManagedAgentsSessionResource.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsSessionResource.id()).isEmpty
+        assertThat(betaManagedAgentsSessionResource.createdAt()).isEmpty
+        assertThat(betaManagedAgentsSessionResource.mountPath()).isEmpty
+        assertThat(betaManagedAgentsSessionResource.updatedAt()).isEmpty
     }
 }

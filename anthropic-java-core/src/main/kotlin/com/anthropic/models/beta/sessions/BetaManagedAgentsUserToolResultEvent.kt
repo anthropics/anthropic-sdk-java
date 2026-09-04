@@ -12,6 +12,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsBase64DocumentSource
@@ -830,6 +831,9 @@ private constructor(
                     override fun visitSearchResult(
                         searchResult: BetaManagedAgentsSearchResultBlock
                     ): Optional<String> = Optional.of(searchResult.title())
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("title").asKnown()
                 }
             )
 

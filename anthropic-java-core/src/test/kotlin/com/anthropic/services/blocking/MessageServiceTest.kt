@@ -38,6 +38,7 @@ internal class MessageServiceTest {
             messageService.create(
                 MessageCreateParams.builder()
                     .userProfileId("anthropic-user-profile-id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_5)
@@ -160,6 +161,7 @@ internal class MessageServiceTest {
             messageService.createStreaming(
                 MessageCreateParams.builder()
                     .userProfileId("anthropic-user-profile-id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_5)
@@ -284,6 +286,7 @@ internal class MessageServiceTest {
             messageService.countTokens(
                 MessageCountTokensParams.builder()
                     .userProfileId("anthropic-user-profile-id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addUserMessage("Hello, world")
                     .model(Model.CLAUDE_OPUS_5)
                     .cacheControl(

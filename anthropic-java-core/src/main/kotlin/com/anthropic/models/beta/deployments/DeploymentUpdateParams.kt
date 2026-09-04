@@ -13,6 +13,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkKnown
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -49,6 +50,7 @@ class DeploymentUpdateParams
 private constructor(
     private val deploymentId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -58,6 +60,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Agent to deploy. Accepts the `agent` ID string, which re-pins to the latest version, or an
@@ -240,6 +244,7 @@ private constructor(
 
         private var deploymentId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -248,6 +253,7 @@ private constructor(
         internal fun from(deploymentUpdateParams: DeploymentUpdateParams) = apply {
             deploymentId = deploymentUpdateParams.deploymentId
             betas = deploymentUpdateParams.betas?.toMutableList()
+            workspaceId = deploymentUpdateParams.workspaceId
             body = deploymentUpdateParams.body.toBuilder()
             additionalHeaders = deploymentUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = deploymentUpdateParams.additionalQueryParams.toBuilder()
@@ -281,6 +287,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -724,6 +735,7 @@ private constructor(
             DeploymentUpdateParams(
                 deploymentId,
                 betas?.toImmutable(),
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -742,6 +754,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -1927,6 +1940,9 @@ private constructor(
                     override fun visitMemoryStore(
                         memoryStore: BetaManagedAgentsMemoryStoreResourceParam
                     ): Optional<String> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("mount_path").asKnown()
                 }
             )
 
@@ -2373,14 +2389,22 @@ private constructor(
         return other is DeploymentUpdateParams &&
             deploymentId == other.deploymentId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(deploymentId, betas, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            deploymentId,
+            betas,
+            workspaceId,
+            body,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "DeploymentUpdateParams{deploymentId=$deploymentId, betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "DeploymentUpdateParams{deploymentId=$deploymentId, betas=$betas, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

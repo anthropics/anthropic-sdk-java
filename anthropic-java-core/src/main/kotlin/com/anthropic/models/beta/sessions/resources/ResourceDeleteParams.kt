@@ -19,6 +19,7 @@ private constructor(
     private val sessionId: String,
     private val resourceId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
@@ -30,6 +31,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -61,6 +64,7 @@ private constructor(
         private var sessionId: String? = null
         private var resourceId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -70,6 +74,7 @@ private constructor(
             sessionId = resourceDeleteParams.sessionId
             resourceId = resourceDeleteParams.resourceId
             betas = resourceDeleteParams.betas?.toMutableList()
+            workspaceId = resourceDeleteParams.workspaceId
             additionalHeaders = resourceDeleteParams.additionalHeaders.toBuilder()
             additionalQueryParams = resourceDeleteParams.additionalQueryParams.toBuilder()
             additionalBodyProperties = resourceDeleteParams.additionalBodyProperties.toMutableMap()
@@ -105,6 +110,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -243,6 +253,7 @@ private constructor(
                 checkRequired("sessionId", sessionId),
                 resourceId,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -263,6 +274,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -278,6 +290,7 @@ private constructor(
             sessionId == other.sessionId &&
             resourceId == other.resourceId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
@@ -288,11 +301,12 @@ private constructor(
             sessionId,
             resourceId,
             betas,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
             additionalBodyProperties,
         )
 
     override fun toString() =
-        "ResourceDeleteParams{sessionId=$sessionId, resourceId=$resourceId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "ResourceDeleteParams{sessionId=$sessionId, resourceId=$resourceId, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

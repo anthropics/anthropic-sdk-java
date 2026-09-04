@@ -40,6 +40,7 @@ internal class AgentServiceTest {
             agentService.create(
                 AgentCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                     .name("My First Agent")
                     .description("A general-purpose starter agent.")
@@ -111,7 +112,7 @@ internal class AgentServiceTest {
         betaManagedAgentsAgent.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun retrieve() {
         val client =
@@ -127,6 +128,7 @@ internal class AgentServiceTest {
                     .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                     .version(0)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -147,6 +149,7 @@ internal class AgentServiceTest {
                 AgentUpdateParams.builder()
                     .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .description("updated")
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
@@ -230,7 +233,7 @@ internal class AgentServiceTest {
         betaManagedAgentsAgent.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -259,6 +262,7 @@ internal class AgentServiceTest {
                 AgentArchiveParams.builder()
                     .agentId("agent_011CZkYpogX7uDKUyvBTophP")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

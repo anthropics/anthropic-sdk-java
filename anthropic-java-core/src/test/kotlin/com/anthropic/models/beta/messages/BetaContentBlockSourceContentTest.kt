@@ -138,6 +138,43 @@ internal class BetaContentBlockSourceContentTest {
             .isEqualTo(betaContentBlockSourceContent)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaContentBlockSourceContent =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "cache_control" to mapOf("type" to "ephemeral", "ttl" to "5m"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaContentBlockSourceContent>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> { betaContentBlockSourceContent.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaContentBlockSourceContent.cacheControl())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
+
+        val mismatchedBetaContentBlockSourceContent =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "cache_control" to listOf("invalid"))
+                    ),
+                    jacksonTypeRef<BetaContentBlockSourceContent>(),
+                )
+
+        assertThat(mismatchedBetaContentBlockSourceContent.cacheControl()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -156,5 +193,7 @@ internal class BetaContentBlockSourceContentTest {
         val e =
             assertThrows<AnthropicInvalidDataException> { betaContentBlockSourceContent.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaContentBlockSourceContent.cacheControl()).isEmpty
     }
 }

@@ -29,6 +29,7 @@ internal class SkillServiceAsyncTest {
             skillServiceAsync.create(
                 SkillCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addFile(MultipartField.of<InputStream>("Example data".byteInputStream()))
                     .displayName("display_name")
                     .build()
@@ -52,6 +53,7 @@ internal class SkillServiceAsyncTest {
                 SkillRetrieveParams.builder()
                     .skillId("skill_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -88,6 +90,7 @@ internal class SkillServiceAsyncTest {
                 SkillDeleteParams.builder()
                     .skillId("skill_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

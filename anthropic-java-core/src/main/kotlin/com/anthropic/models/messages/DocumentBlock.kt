@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -344,6 +345,9 @@ private constructor(
                     override fun visitBase64(base64: Base64PdfSource): String = base64.data()
 
                     override fun visitText(text: PlainTextSource): String = text.data()
+
+                    override fun unknown(json: JsonValue?): String =
+                        json.getProperty<String>("data").getRequired("data")
                 }
             )
 

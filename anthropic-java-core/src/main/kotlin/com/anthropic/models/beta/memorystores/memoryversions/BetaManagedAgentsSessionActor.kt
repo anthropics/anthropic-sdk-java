@@ -37,7 +37,7 @@ private constructor(
 
     /**
      * ID of the session that performed the write (a `sesn_...` value). Look up the session via
-     * [Retrieve a session](/en/api/sessions-retrieve) for further provenance.
+     * [Retrieve a session](/en/api/beta/sessions/retrieve) for further provenance.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -107,7 +107,7 @@ private constructor(
 
         /**
          * ID of the session that performed the write (a `sesn_...` value). Look up the session via
-         * [Retrieve a session](/en/api/sessions-retrieve) for further provenance.
+         * [Retrieve a session](/en/api/beta/sessions/retrieve) for further provenance.
          */
         fun sessionId(sessionId: String) = sessionId(JsonField.of(sessionId))
 

@@ -704,6 +704,14 @@ internal constructor(
             paramsBuilder.userProfileId(userProfileId)
         }
 
+        /** @see MessageCreateParams.Builder.workspaceId */
+        fun workspaceId(workspaceId: String?) = apply { paramsBuilder.workspaceId(workspaceId) }
+
+        /** @see MessageCreateParams.Builder.workspaceId */
+        fun workspaceId(workspaceId: Optional<String>) = apply {
+            paramsBuilder.workspaceId(workspaceId)
+        }
+
         /** @see MessageCreateParams.Builder.additionalBodyProperties */
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             paramsBuilder.additionalBodyProperties(additionalBodyProperties)

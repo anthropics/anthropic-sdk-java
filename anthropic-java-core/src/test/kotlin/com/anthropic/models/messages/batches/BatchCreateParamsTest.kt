@@ -25,6 +25,7 @@ internal class BatchCreateParamsTest {
     fun create() {
         BatchCreateParams.builder()
             .userProfileId("anthropic-user-profile-id")
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .addRequest(
                 BatchCreateParams.Request.builder()
                     .customId("my-custom-id-1")
@@ -153,6 +154,7 @@ internal class BatchCreateParamsTest {
         val params =
             BatchCreateParams.builder()
                 .userProfileId("anthropic-user-profile-id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .addRequest(
                     BatchCreateParams.Request.builder()
                         .customId("my-custom-id-1")
@@ -286,6 +288,7 @@ internal class BatchCreateParamsTest {
             .isEqualTo(
                 Headers.builder()
                     .put("anthropic-user-profile-id", "anthropic-user-profile-id")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
     }
@@ -318,6 +321,7 @@ internal class BatchCreateParamsTest {
         val params =
             BatchCreateParams.builder()
                 .userProfileId("anthropic-user-profile-id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .addRequest(
                     BatchCreateParams.Request.builder()
                         .customId("my-custom-id-1")

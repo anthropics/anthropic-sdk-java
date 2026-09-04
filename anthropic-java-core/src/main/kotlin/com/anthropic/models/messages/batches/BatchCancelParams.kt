@@ -26,6 +26,7 @@ import kotlin.jvm.optionals.getOrNull
 class BatchCancelParams
 private constructor(
     private val messageBatchId: String?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
@@ -33,6 +34,8 @@ private constructor(
 
     /** ID of the Message Batch. */
     fun messageBatchId(): Optional<String> = Optional.ofNullable(messageBatchId)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -57,6 +60,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var messageBatchId: String? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -64,6 +68,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(batchCancelParams: BatchCancelParams) = apply {
             messageBatchId = batchCancelParams.messageBatchId
+            workspaceId = batchCancelParams.workspaceId
             additionalHeaders = batchCancelParams.additionalHeaders.toBuilder()
             additionalQueryParams = batchCancelParams.additionalQueryParams.toBuilder()
             additionalBodyProperties = batchCancelParams.additionalBodyProperties.toMutableMap()
@@ -75,6 +80,11 @@ private constructor(
         /** Alias for calling [Builder.messageBatchId] with `messageBatchId.orElse(null)`. */
         fun messageBatchId(messageBatchId: Optional<String>) =
             messageBatchId(messageBatchId.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -204,6 +214,7 @@ private constructor(
         fun build(): BatchCancelParams =
             BatchCancelParams(
                 messageBatchId,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -219,7 +230,13 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -230,6 +247,7 @@ private constructor(
 
         return other is BatchCancelParams &&
             messageBatchId == other.messageBatchId &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
@@ -238,11 +256,12 @@ private constructor(
     override fun hashCode(): Int =
         Objects.hash(
             messageBatchId,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
             additionalBodyProperties,
         )
 
     override fun toString() =
-        "BatchCancelParams{messageBatchId=$messageBatchId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "BatchCancelParams{messageBatchId=$messageBatchId, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

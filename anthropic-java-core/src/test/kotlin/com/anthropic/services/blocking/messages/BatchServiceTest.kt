@@ -17,7 +17,11 @@ import com.anthropic.models.messages.TextBlockParam
 import com.anthropic.models.messages.ThinkingConfigAdaptive
 import com.anthropic.models.messages.Tool
 import com.anthropic.models.messages.ToolChoiceAuto
+import com.anthropic.models.messages.batches.BatchCancelParams
 import com.anthropic.models.messages.batches.BatchCreateParams
+import com.anthropic.models.messages.batches.BatchDeleteParams
+import com.anthropic.models.messages.batches.BatchResultsParams
+import com.anthropic.models.messages.batches.BatchRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -37,6 +41,7 @@ internal class BatchServiceTest {
             batchService.create(
                 BatchCreateParams.builder()
                     .userProfileId("anthropic-user-profile-id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addRequest(
                         BatchCreateParams.Request.builder()
                             .customId("my-custom-id-1")
@@ -184,7 +189,13 @@ internal class BatchServiceTest {
                 .build()
         val batchService = client.messages().batches()
 
-        val messageBatch = batchService.retrieve("message_batch_id")
+        val messageBatch =
+            batchService.retrieve(
+                BatchRetrieveParams.builder()
+                    .messageBatchId("message_batch_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
 
         messageBatch.validate()
     }
@@ -212,7 +223,13 @@ internal class BatchServiceTest {
                 .build()
         val batchService = client.messages().batches()
 
-        val deletedMessageBatch = batchService.delete("message_batch_id")
+        val deletedMessageBatch =
+            batchService.delete(
+                BatchDeleteParams.builder()
+                    .messageBatchId("message_batch_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
 
         deletedMessageBatch.validate()
     }
@@ -226,7 +243,13 @@ internal class BatchServiceTest {
                 .build()
         val batchService = client.messages().batches()
 
-        val messageBatch = batchService.cancel("message_batch_id")
+        val messageBatch =
+            batchService.cancel(
+                BatchCancelParams.builder()
+                    .messageBatchId("message_batch_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
 
         messageBatch.validate()
     }
@@ -241,7 +264,12 @@ internal class BatchServiceTest {
         val batchService = client.messages().batches()
 
         val messageBatchIndividualResponseStreamResponse =
-            batchService.resultsStreaming("message_batch_id")
+            batchService.resultsStreaming(
+                BatchResultsParams.builder()
+                    .messageBatchId("message_batch_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
+            )
 
         messageBatchIndividualResponseStreamResponse.use {
             messageBatchIndividualResponseStreamResponse.stream().forEach {

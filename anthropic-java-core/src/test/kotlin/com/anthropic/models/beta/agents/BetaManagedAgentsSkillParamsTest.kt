@@ -86,6 +86,43 @@ internal class BetaManagedAgentsSkillParamsTest {
         assertThat(roundtrippedBetaManagedAgentsSkillParams).isEqualTo(betaManagedAgentsSkillParams)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaManagedAgentsSkillParams =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "skill_id" to "xlsx", "version" to "1")
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsSkillParams>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> { betaManagedAgentsSkillParams.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsSkillParams.skillId()).isEqualTo("xlsx")
+        assertThat(betaManagedAgentsSkillParams.version()).contains("1")
+
+        val mismatchedBetaManagedAgentsSkillParams =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "skill_id" to listOf("invalid"),
+                            "version" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsSkillParams>(),
+                )
+
+        assertThrows<AnthropicInvalidDataException> {
+            mismatchedBetaManagedAgentsSkillParams.skillId()
+        }
+        assertThat(mismatchedBetaManagedAgentsSkillParams.version()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -104,5 +141,8 @@ internal class BetaManagedAgentsSkillParamsTest {
         val e =
             assertThrows<AnthropicInvalidDataException> { betaManagedAgentsSkillParams.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThrows<AnthropicInvalidDataException> { betaManagedAgentsSkillParams.skillId() }
+        assertThat(betaManagedAgentsSkillParams.version()).isEmpty
     }
 }

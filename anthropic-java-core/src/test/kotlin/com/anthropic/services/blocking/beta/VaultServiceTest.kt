@@ -31,6 +31,7 @@ internal class VaultServiceTest {
             vaultService.create(
                 VaultCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .displayName("Example vault")
                     .metadata(
                         VaultCreateParams.Metadata.builder()
@@ -57,6 +58,7 @@ internal class VaultServiceTest {
                 VaultRetrieveParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -77,6 +79,7 @@ internal class VaultServiceTest {
                 VaultUpdateParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .displayName("Example vault")
                     .metadata(
                         VaultUpdateParams.Metadata.builder()
@@ -89,7 +92,7 @@ internal class VaultServiceTest {
         betaManagedAgentsVault.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -118,6 +121,7 @@ internal class VaultServiceTest {
                 VaultDeleteParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -138,6 +142,7 @@ internal class VaultServiceTest {
                 VaultArchiveParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

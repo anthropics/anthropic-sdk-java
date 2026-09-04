@@ -25,6 +25,7 @@ private constructor(
     private val environmentId: String,
     private val workId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val betaSelfHostedWorkStopRequest: BetaSelfHostedWorkStopRequest,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -36,6 +37,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Request to stop a work item. */
     fun betaSelfHostedWorkStopRequest(): BetaSelfHostedWorkStopRequest =
@@ -72,6 +75,7 @@ private constructor(
         private var environmentId: String? = null
         private var workId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var betaSelfHostedWorkStopRequest: BetaSelfHostedWorkStopRequest? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -81,6 +85,7 @@ private constructor(
             environmentId = workStopParams.environmentId
             workId = workStopParams.workId
             betas = workStopParams.betas?.toMutableList()
+            workspaceId = workStopParams.workspaceId
             betaSelfHostedWorkStopRequest = workStopParams.betaSelfHostedWorkStopRequest
             additionalHeaders = workStopParams.additionalHeaders.toBuilder()
             additionalQueryParams = workStopParams.additionalQueryParams.toBuilder()
@@ -116,6 +121,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /** Request to stop a work item. */
         fun betaSelfHostedWorkStopRequest(
@@ -238,6 +248,7 @@ private constructor(
                 checkRequired("environmentId", environmentId),
                 workId,
                 betas?.toImmutable(),
+                workspaceId,
                 checkRequired("betaSelfHostedWorkStopRequest", betaSelfHostedWorkStopRequest),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -257,6 +268,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -272,6 +284,7 @@ private constructor(
             environmentId == other.environmentId &&
             workId == other.workId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             betaSelfHostedWorkStopRequest == other.betaSelfHostedWorkStopRequest &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -282,11 +295,12 @@ private constructor(
             environmentId,
             workId,
             betas,
+            workspaceId,
             betaSelfHostedWorkStopRequest,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "WorkStopParams{environmentId=$environmentId, workId=$workId, betas=$betas, betaSelfHostedWorkStopRequest=$betaSelfHostedWorkStopRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "WorkStopParams{environmentId=$environmentId, workId=$workId, betas=$betas, workspaceId=$workspaceId, betaSelfHostedWorkStopRequest=$betaSelfHostedWorkStopRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

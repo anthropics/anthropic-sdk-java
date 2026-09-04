@@ -52,6 +52,7 @@ internal class MessageServiceTest {
                 MessageCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .userProfileId("anthropic-user-profile-id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .maxTokens(1024L)
                     .addMessage(
                         BetaMessageParam.builder()
@@ -239,6 +240,7 @@ internal class MessageServiceTest {
                 MessageCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .userProfileId("anthropic-user-profile-id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .maxTokens(1024L)
                     .addMessage(
                         BetaMessageParam.builder()
@@ -428,6 +430,7 @@ internal class MessageServiceTest {
                 MessageCountTokensParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .userProfileId("anthropic-user-profile-id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addMessage(
                         BetaMessageParam.builder()
                             .content("Hello, world")

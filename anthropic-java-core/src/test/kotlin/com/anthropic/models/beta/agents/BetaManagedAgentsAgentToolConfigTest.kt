@@ -6,6 +6,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -433,6 +434,48 @@ internal class BetaManagedAgentsAgentToolConfigTest {
             .isEqualTo(betaManagedAgentsAgentToolConfig)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaManagedAgentsAgentToolConfig =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "enabled" to true,
+                            "allowed_domains" to listOf("string"),
+                            "blocked_domains" to listOf("string"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsAgentToolConfig>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> {
+                betaManagedAgentsAgentToolConfig.validate()
+            }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsAgentToolConfig.enabled()).isEqualTo(true)
+        assertThat(betaManagedAgentsAgentToolConfig.allowedDomains().getOrNull())
+            .containsExactly("string")
+        assertThat(betaManagedAgentsAgentToolConfig.blockedDomains().getOrNull())
+            .containsExactly("string")
+
+        val mismatchedBetaManagedAgentsAgentToolConfig =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "enabled" to listOf("invalid"))
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsAgentToolConfig>(),
+                )
+
+        assertThrows<AnthropicInvalidDataException> {
+            mismatchedBetaManagedAgentsAgentToolConfig.enabled()
+        }
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -453,5 +496,9 @@ internal class BetaManagedAgentsAgentToolConfigTest {
                 betaManagedAgentsAgentToolConfig.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThrows<AnthropicInvalidDataException> { betaManagedAgentsAgentToolConfig.enabled() }
+        assertThat(betaManagedAgentsAgentToolConfig.allowedDomains()).isEmpty
+        assertThat(betaManagedAgentsAgentToolConfig.blockedDomains()).isEmpty
     }
 }

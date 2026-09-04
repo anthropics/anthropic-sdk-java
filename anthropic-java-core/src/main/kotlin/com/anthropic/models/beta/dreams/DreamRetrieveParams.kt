@@ -16,6 +16,7 @@ class DreamRetrieveParams
 private constructor(
     private val dreamId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -24,6 +25,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -46,6 +49,7 @@ private constructor(
 
         private var dreamId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -53,6 +57,7 @@ private constructor(
         internal fun from(dreamRetrieveParams: DreamRetrieveParams) = apply {
             dreamId = dreamRetrieveParams.dreamId
             betas = dreamRetrieveParams.betas?.toMutableList()
+            workspaceId = dreamRetrieveParams.workspaceId
             additionalHeaders = dreamRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = dreamRetrieveParams.additionalQueryParams.toBuilder()
         }
@@ -85,6 +90,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -193,6 +203,7 @@ private constructor(
             DreamRetrieveParams(
                 dreamId,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -208,6 +219,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -222,13 +234,14 @@ private constructor(
         return other is DreamRetrieveParams &&
             dreamId == other.dreamId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(dreamId, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(dreamId, betas, workspaceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "DreamRetrieveParams{dreamId=$dreamId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "DreamRetrieveParams{dreamId=$dreamId, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -175,7 +175,7 @@ private constructor(
      * Identifies who performed a write or redact operation. Captured at write time on the
      * `memory_version` row. The API key that created a session is not recorded on agent writes;
      * attribution answers who made the write, not who is ultimately responsible. Look up session
-     * provenance separately via the [Sessions API](/en/api/sessions-retrieve).
+     * provenance separately via the [Sessions API](/en/api/beta/sessions/retrieve).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -202,7 +202,7 @@ private constructor(
      * Identifies who performed a write or redact operation. Captured at write time on the
      * `memory_version` row. The API key that created a session is not recorded on agent writes;
      * attribution answers who made the write, not who is ultimately responsible. Look up session
-     * provenance separately via the [Sessions API](/en/api/sessions-retrieve).
+     * provenance separately via the [Sessions API](/en/api/beta/sessions/retrieve).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -539,7 +539,7 @@ private constructor(
          * Identifies who performed a write or redact operation. Captured at write time on the
          * `memory_version` row. The API key that created a session is not recorded on agent writes;
          * attribution answers who made the write, not who is ultimately responsible. Look up
-         * session provenance separately via the [Sessions API](/en/api/sessions-retrieve).
+         * session provenance separately via the [Sessions API](/en/api/beta/sessions/retrieve).
          */
         fun createdBy(createdBy: BetaManagedAgentsActor) = createdBy(JsonField.of(createdBy))
 
@@ -675,7 +675,7 @@ private constructor(
          * Identifies who performed a write or redact operation. Captured at write time on the
          * `memory_version` row. The API key that created a session is not recorded on agent writes;
          * attribution answers who made the write, not who is ultimately responsible. Look up
-         * session provenance separately via the [Sessions API](/en/api/sessions-retrieve).
+         * session provenance separately via the [Sessions API](/en/api/beta/sessions/retrieve).
          */
         fun redactedBy(redactedBy: BetaManagedAgentsActor) = redactedBy(JsonField.of(redactedBy))
 

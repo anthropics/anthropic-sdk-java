@@ -293,6 +293,32 @@ internal class ErrorObjectTest {
         assertThat(roundtrippedErrorObject).isEqualTo(errorObject)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val errorObject =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(mapOf("type" to "unknown_variant", "message" to "message")),
+                    jacksonTypeRef<ErrorObject>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { errorObject.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(errorObject.message()).isEqualTo("message")
+
+        val mismatchedErrorObject =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "message" to listOf("invalid"))
+                    ),
+                    jacksonTypeRef<ErrorObject>(),
+                )
+
+        assertThrows<AnthropicInvalidDataException> { mismatchedErrorObject.message() }
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -308,5 +334,7 @@ internal class ErrorObjectTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { errorObject.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThrows<AnthropicInvalidDataException> { errorObject.message() }
     }
 }

@@ -2046,5 +2046,16 @@ internal class ToolUnionTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { toolUnion.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(toolUnion.cacheControl()).isEmpty
+        assertThat(toolUnion.deferLoading()).isEmpty
+        assertThat(toolUnion.strict()).isEmpty
+        assertThat(toolUnion.allowedDomains()).isEmpty
+        assertThat(toolUnion.blockedDomains()).isEmpty
+        assertThat(toolUnion.maxUses()).isEmpty
+        assertThat(toolUnion.userLocation()).isEmpty
+        assertThat(toolUnion.citations()).isEmpty
+        assertThat(toolUnion.maxContentTokens()).isEmpty
+        assertThat(toolUnion.useCache()).isEmpty
     }
 }

@@ -14,6 +14,7 @@ internal class VaultCreateParamsTest {
     fun create() {
         VaultCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .displayName("Example vault")
             .metadata(
                 VaultCreateParams.Metadata.builder()
@@ -28,6 +29,7 @@ internal class VaultCreateParamsTest {
         val params =
             VaultCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .displayName("Example vault")
                 .metadata(
                     VaultCreateParams.Metadata.builder()
@@ -40,7 +42,10 @@ internal class VaultCreateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -58,6 +63,7 @@ internal class VaultCreateParamsTest {
         val params =
             VaultCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .displayName("Example vault")
                 .metadata(
                     VaultCreateParams.Metadata.builder()

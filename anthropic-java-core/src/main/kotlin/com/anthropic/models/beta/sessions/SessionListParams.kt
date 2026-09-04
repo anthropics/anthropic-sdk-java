@@ -34,6 +34,7 @@ private constructor(
     private val page: String?,
     private val statuses: List<Status>?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -80,6 +81,8 @@ private constructor(
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
+
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -113,6 +116,7 @@ private constructor(
         private var page: String? = null
         private var statuses: MutableList<Status>? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -132,6 +136,7 @@ private constructor(
             page = sessionListParams.page
             statuses = sessionListParams.statuses?.toMutableList()
             betas = sessionListParams.betas?.toMutableList()
+            workspaceId = sessionListParams.workspaceId
             additionalHeaders = sessionListParams.additionalHeaders.toBuilder()
             additionalQueryParams = sessionListParams.additionalQueryParams.toBuilder()
         }
@@ -278,6 +283,11 @@ private constructor(
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
+
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
             putAllAdditionalHeaders(additionalHeaders)
@@ -397,6 +407,7 @@ private constructor(
                 page,
                 statuses?.toImmutable(),
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -406,6 +417,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -752,6 +764,7 @@ private constructor(
             page == other.page &&
             statuses == other.statuses &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -772,10 +785,11 @@ private constructor(
             page,
             statuses,
             betas,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "SessionListParams{agentId=$agentId, agentVersion=$agentVersion, createdAtGt=$createdAtGt, createdAtGte=$createdAtGte, createdAtLt=$createdAtLt, createdAtLte=$createdAtLte, deploymentId=$deploymentId, includeArchived=$includeArchived, limit=$limit, memoryStoreId=$memoryStoreId, order=$order, page=$page, statuses=$statuses, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SessionListParams{agentId=$agentId, agentVersion=$agentVersion, createdAtGt=$createdAtGt, createdAtGte=$createdAtGte, createdAtLt=$createdAtLt, createdAtLte=$createdAtLte, deploymentId=$deploymentId, includeArchived=$includeArchived, limit=$limit, memoryStoreId=$memoryStoreId, order=$order, page=$page, statuses=$statuses, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

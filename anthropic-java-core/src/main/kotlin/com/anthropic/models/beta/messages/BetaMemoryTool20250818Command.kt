@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
@@ -87,6 +88,9 @@ private constructor(
                 override fun visitRename(
                     rename: BetaMemoryTool20250818RenameCommand
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("path").asKnown()
             }
         )
 

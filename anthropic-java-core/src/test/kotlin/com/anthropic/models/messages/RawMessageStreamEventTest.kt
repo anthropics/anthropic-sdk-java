@@ -453,6 +453,32 @@ internal class RawMessageStreamEventTest {
         assertThat(roundtrippedRawMessageStreamEvent).isEqualTo(rawMessageStreamEvent)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val rawMessageStreamEvent =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(mapOf("type" to "unknown_variant", "index" to 0)),
+                    jacksonTypeRef<RawMessageStreamEvent>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { rawMessageStreamEvent.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(rawMessageStreamEvent.index()).contains(0L)
+
+        val mismatchedRawMessageStreamEvent =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "index" to listOf("invalid"))
+                    ),
+                    jacksonTypeRef<RawMessageStreamEvent>(),
+                )
+
+        assertThat(mismatchedRawMessageStreamEvent.index()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -469,5 +495,7 @@ internal class RawMessageStreamEventTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { rawMessageStreamEvent.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(rawMessageStreamEvent.index()).isEmpty
     }
 }

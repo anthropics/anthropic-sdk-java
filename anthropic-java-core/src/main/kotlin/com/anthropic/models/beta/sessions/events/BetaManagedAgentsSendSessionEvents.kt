@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemMessageEvent
@@ -316,6 +317,9 @@ private constructor(
                     override fun visitSystemMessage(
                         systemMessage: BetaManagedAgentsSystemMessageEvent
                     ): String = systemMessage.id()
+
+                    override fun unknown(json: JsonValue?): String =
+                        json.getProperty<String>("id").getRequired("id")
                 }
             )
 
@@ -349,6 +353,9 @@ private constructor(
                     override fun visitSystemMessage(
                         systemMessage: BetaManagedAgentsSystemMessageEvent
                     ): Optional<OffsetDateTime> = systemMessage.processedAt()
+
+                    override fun unknown(json: JsonValue?): Optional<OffsetDateTime> =
+                        json.getProperty<OffsetDateTime>("processed_at").asKnown()
                 }
             )
 
@@ -382,6 +389,9 @@ private constructor(
                     override fun visitSystemMessage(
                         systemMessage: BetaManagedAgentsSystemMessageEvent
                     ): Optional<String> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("session_thread_id").asKnown()
                 }
             )
 
@@ -415,6 +425,9 @@ private constructor(
                     override fun visitSystemMessage(
                         systemMessage: BetaManagedAgentsSystemMessageEvent
                     ): Optional<String> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("tool_use_id").asKnown()
                 }
             )
 
@@ -448,6 +461,9 @@ private constructor(
                     override fun visitSystemMessage(
                         systemMessage: BetaManagedAgentsSystemMessageEvent
                     ): Optional<Boolean> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<Boolean> =
+                        json.getProperty<Boolean>("is_error").asKnown()
                 }
             )
 

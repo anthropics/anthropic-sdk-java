@@ -19,6 +19,7 @@ internal class SessionCreateParamsTest {
     fun create() {
         SessionCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .agent("agent_011CZkYpogX7uDKUyvBTophP")
             .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
             .budget(
@@ -64,6 +65,7 @@ internal class SessionCreateParamsTest {
         val params =
             SessionCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .agent("agent_011CZkYpogX7uDKUyvBTophP")
                 .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                 .budget(
@@ -107,7 +109,10 @@ internal class SessionCreateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -129,6 +134,7 @@ internal class SessionCreateParamsTest {
         val params =
             SessionCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .agent("agent_011CZkYpogX7uDKUyvBTophP")
                 .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                 .budget(

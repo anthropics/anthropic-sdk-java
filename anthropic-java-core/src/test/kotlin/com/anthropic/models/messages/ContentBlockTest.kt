@@ -597,6 +597,44 @@ internal class ContentBlockTest {
         assertThat(roundtrippedContentBlock).isEqualTo(contentBlock)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val contentBlock =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to "id",
+                            "tool_use_id" to "srvtoolu_SQfNkl1n_JR_",
+                        )
+                    ),
+                    jacksonTypeRef<ContentBlock>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { contentBlock.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(contentBlock.id()).contains("id")
+        assertThat(contentBlock.toolUseId()).contains("srvtoolu_SQfNkl1n_JR_")
+
+        val mismatchedContentBlock =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to listOf("invalid"),
+                            "tool_use_id" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<ContentBlock>(),
+                )
+
+        assertThat(mismatchedContentBlock.id()).isEmpty
+        assertThat(mismatchedContentBlock.toolUseId()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -612,5 +650,8 @@ internal class ContentBlockTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { contentBlock.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(contentBlock.id()).isEmpty
+        assertThat(contentBlock.toolUseId()).isEmpty
     }
 }

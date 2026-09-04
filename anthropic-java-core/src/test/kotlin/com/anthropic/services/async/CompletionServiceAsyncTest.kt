@@ -27,6 +27,7 @@ internal class CompletionServiceAsyncTest {
             completionServiceAsync.create(
                 CompletionCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .maxTokensToSample(256L)
                     .model(Model.CLAUDE_FABLE_5_1)
                     .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
@@ -57,6 +58,7 @@ internal class CompletionServiceAsyncTest {
             completionServiceAsync.createStreaming(
                 CompletionCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .maxTokensToSample(256L)
                     .model(Model.CLAUDE_FABLE_5_1)
                     .prompt("\n\nHuman: Hello, world!\n\nAssistant:")

@@ -1674,6 +1674,65 @@ internal class BetaContentBlockParamTest {
         assertThat(roundtrippedBetaContentBlockParam).isEqualTo(betaContentBlockParam)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaContentBlockParam =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "cache_control" to mapOf("type" to "ephemeral", "ttl" to "5m"),
+                            "title" to "x",
+                            "id" to "id",
+                            "toolset_name" to "toolset_name",
+                            "tool_use_id" to "tool_use_id",
+                            "is_error" to true,
+                        )
+                    ),
+                    jacksonTypeRef<BetaContentBlockParam>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaContentBlockParam.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaContentBlockParam.cacheControl())
+            .contains(
+                BetaCacheControlEphemeral.builder()
+                    .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                    .build()
+            )
+        assertThat(betaContentBlockParam.title()).contains("x")
+        assertThat(betaContentBlockParam.id()).contains("id")
+        assertThat(betaContentBlockParam.toolsetName()).contains("toolset_name")
+        assertThat(betaContentBlockParam.toolUseId()).contains("tool_use_id")
+        assertThat(betaContentBlockParam.isError()).contains(true)
+
+        val mismatchedBetaContentBlockParam =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "cache_control" to listOf("invalid"),
+                            "title" to listOf("invalid"),
+                            "id" to listOf("invalid"),
+                            "toolset_name" to listOf("invalid"),
+                            "tool_use_id" to listOf("invalid"),
+                            "is_error" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaContentBlockParam>(),
+                )
+
+        assertThat(mismatchedBetaContentBlockParam.cacheControl()).isEmpty
+        assertThat(mismatchedBetaContentBlockParam.title()).isEmpty
+        assertThat(mismatchedBetaContentBlockParam.id()).isEmpty
+        assertThat(mismatchedBetaContentBlockParam.toolsetName()).isEmpty
+        assertThat(mismatchedBetaContentBlockParam.toolUseId()).isEmpty
+        assertThat(mismatchedBetaContentBlockParam.isError()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -1690,5 +1749,12 @@ internal class BetaContentBlockParamTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { betaContentBlockParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaContentBlockParam.cacheControl()).isEmpty
+        assertThat(betaContentBlockParam.title()).isEmpty
+        assertThat(betaContentBlockParam.id()).isEmpty
+        assertThat(betaContentBlockParam.toolsetName()).isEmpty
+        assertThat(betaContentBlockParam.toolUseId()).isEmpty
+        assertThat(betaContentBlockParam.isError()).isEmpty
     }
 }

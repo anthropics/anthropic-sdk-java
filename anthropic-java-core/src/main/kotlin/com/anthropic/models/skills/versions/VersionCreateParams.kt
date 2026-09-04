@@ -23,6 +23,7 @@ import kotlin.jvm.optionals.getOrNull
 class VersionCreateParams
 private constructor(
     private val skillId: String?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -34,6 +35,8 @@ private constructor(
      * The format and length of IDs may change over time.
      */
     fun skillId(): Optional<String> = Optional.ofNullable(skillId)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Files to upload for the skill.
@@ -70,6 +73,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var skillId: String? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -77,6 +81,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(versionCreateParams: VersionCreateParams) = apply {
             skillId = versionCreateParams.skillId
+            workspaceId = versionCreateParams.workspaceId
             body = versionCreateParams.body.toBuilder()
             additionalHeaders = versionCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = versionCreateParams.additionalQueryParams.toBuilder()
@@ -91,6 +96,11 @@ private constructor(
 
         /** Alias for calling [Builder.skillId] with `skillId.orElse(null)`. */
         fun skillId(skillId: Optional<String>) = skillId(skillId.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -244,6 +254,7 @@ private constructor(
         fun build(): VersionCreateParams =
             VersionCreateParams(
                 skillId,
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -261,7 +272,13 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -428,14 +445,15 @@ private constructor(
 
         return other is VersionCreateParams &&
             skillId == other.skillId &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(skillId, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(skillId, workspaceId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "VersionCreateParams{skillId=$skillId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "VersionCreateParams{skillId=$skillId, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

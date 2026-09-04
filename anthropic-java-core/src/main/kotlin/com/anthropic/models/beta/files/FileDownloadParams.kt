@@ -16,6 +16,7 @@ class FileDownloadParams
 private constructor(
     private val fileId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -25,6 +26,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -47,6 +50,7 @@ private constructor(
 
         private var fileId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -54,6 +58,7 @@ private constructor(
         internal fun from(fileDownloadParams: FileDownloadParams) = apply {
             fileId = fileDownloadParams.fileId
             betas = fileDownloadParams.betas?.toMutableList()
+            workspaceId = fileDownloadParams.workspaceId
             additionalHeaders = fileDownloadParams.additionalHeaders.toBuilder()
             additionalQueryParams = fileDownloadParams.additionalQueryParams.toBuilder()
         }
@@ -87,6 +92,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -195,6 +205,7 @@ private constructor(
             FileDownloadParams(
                 fileId,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -210,6 +221,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -224,13 +236,14 @@ private constructor(
         return other is FileDownloadParams &&
             fileId == other.fileId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(fileId, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(fileId, betas, workspaceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "FileDownloadParams{fileId=$fileId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "FileDownloadParams{fileId=$fileId, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

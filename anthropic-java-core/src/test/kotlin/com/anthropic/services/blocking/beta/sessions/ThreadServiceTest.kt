@@ -29,13 +29,14 @@ internal class ThreadServiceTest {
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
         betaManagedAgentsSessionThread.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -65,6 +66,7 @@ internal class ThreadServiceTest {
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                     .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

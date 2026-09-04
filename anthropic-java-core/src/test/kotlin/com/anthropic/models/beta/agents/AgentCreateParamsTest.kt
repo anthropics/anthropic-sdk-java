@@ -16,6 +16,7 @@ internal class AgentCreateParamsTest {
     fun create() {
         AgentCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
             .name("My First Agent")
             .description("A general-purpose starter agent.")
@@ -86,6 +87,7 @@ internal class AgentCreateParamsTest {
         val params =
             AgentCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                 .name("My First Agent")
                 .description("A general-purpose starter agent.")
@@ -156,7 +158,10 @@ internal class AgentCreateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -178,6 +183,7 @@ internal class AgentCreateParamsTest {
         val params =
             AgentCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
                 .name("My First Agent")
                 .description("A general-purpose starter agent.")

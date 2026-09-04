@@ -13,6 +13,7 @@ internal class TunnelCreateParamsTest {
     fun create() {
         TunnelCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .displayName("x")
             .build()
     }
@@ -22,6 +23,7 @@ internal class TunnelCreateParamsTest {
         val params =
             TunnelCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .displayName("x")
                 .build()
 
@@ -29,7 +31,10 @@ internal class TunnelCreateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -47,6 +52,7 @@ internal class TunnelCreateParamsTest {
         val params =
             TunnelCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .displayName("x")
                 .build()
 

@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
@@ -437,6 +438,9 @@ private constructor(
                 override fun visitSessionBudgetReached(
                     sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
                 ): String = sessionBudgetReached.id()
+
+                override fun unknown(json: JsonValue?): String =
+                    json.getProperty<String>("id").getRequired("id")
             }
         )
 
@@ -618,6 +622,9 @@ private constructor(
                 override fun visitSessionBudgetReached(
                     sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
                 ): String = sessionBudgetReached.organizationId()
+
+                override fun unknown(json: JsonValue?): String =
+                    json.getProperty<String>("organization_id").getRequired("organization_id")
             }
         )
 
@@ -799,6 +806,9 @@ private constructor(
                 override fun visitSessionBudgetReached(
                     sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
                 ): String = sessionBudgetReached.workspaceId()
+
+                override fun unknown(json: JsonValue?): String =
+                    json.getProperty<String>("workspace_id").getRequired("workspace_id")
             }
         )
 
@@ -980,6 +990,9 @@ private constructor(
                 override fun visitSessionBudgetReached(
                     sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("session_thread_id").asKnown()
             }
         )
 
@@ -1161,6 +1174,9 @@ private constructor(
                 override fun visitSessionBudgetReached(
                     sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("vault_id").asKnown()
             }
         )
 

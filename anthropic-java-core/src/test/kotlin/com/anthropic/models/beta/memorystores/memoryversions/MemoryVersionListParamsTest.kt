@@ -27,6 +27,7 @@ internal class MemoryVersionListParamsTest {
             .sessionId("session_id")
             .view(BetaManagedAgentsMemoryView.BASIC)
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .build()
     }
 
@@ -55,13 +56,17 @@ internal class MemoryVersionListParamsTest {
                 .sessionId("session_id")
                 .view(BetaManagedAgentsMemoryView.BASIC)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 
         val headers = params._headers()
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -90,6 +95,7 @@ internal class MemoryVersionListParamsTest {
                 .sessionId("session_id")
                 .view(BetaManagedAgentsMemoryView.BASIC)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
 
         val queryParams = params._queryParams()

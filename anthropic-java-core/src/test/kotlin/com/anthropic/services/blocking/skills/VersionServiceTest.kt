@@ -27,6 +27,7 @@ internal class VersionServiceTest {
             versionService.create(
                 VersionCreateParams.builder()
                     .skillId("skill_id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addFile(MultipartField.of("Example data".byteInputStream()))
                     .build()
             )
@@ -45,7 +46,11 @@ internal class VersionServiceTest {
 
         val skillVersion =
             versionService.retrieve(
-                VersionRetrieveParams.builder().skillId("skill_id").version("version").build()
+                VersionRetrieveParams.builder()
+                    .skillId("skill_id")
+                    .version("version")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
 
         skillVersion.validate()
@@ -76,7 +81,11 @@ internal class VersionServiceTest {
 
         val deletedSkillVersion =
             versionService.delete(
-                VersionDeleteParams.builder().skillId("skill_id").version("version").build()
+                VersionDeleteParams.builder()
+                    .skillId("skill_id")
+                    .version("version")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
 
         deletedSkillVersion.validate()

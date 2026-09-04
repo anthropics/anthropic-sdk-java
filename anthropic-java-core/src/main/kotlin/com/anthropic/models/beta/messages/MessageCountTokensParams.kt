@@ -14,6 +14,7 @@ import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -49,6 +50,7 @@ class MessageCountTokensParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
     private val userProfileId: String?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -62,6 +64,8 @@ private constructor(
      * than your organization. Requires the `user-profiles` beta header.
      */
     fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Input messages.
@@ -422,6 +426,7 @@ private constructor(
 
         private var betas: MutableList<AnthropicBeta>? = null
         private var userProfileId: String? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -430,6 +435,7 @@ private constructor(
         internal fun from(messageCountTokensParams: MessageCountTokensParams) = apply {
             betas = messageCountTokensParams.betas?.toMutableList()
             userProfileId = messageCountTokensParams.userProfileId
+            workspaceId = messageCountTokensParams.workspaceId
             body = messageCountTokensParams.body.toBuilder()
             additionalHeaders = messageCountTokensParams.additionalHeaders.toBuilder()
             additionalQueryParams = messageCountTokensParams.additionalQueryParams.toBuilder()
@@ -468,6 +474,11 @@ private constructor(
         /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
         fun userProfileId(userProfileId: Optional<String>) =
             userProfileId(userProfileId.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -1337,6 +1348,7 @@ private constructor(
             MessageCountTokensParams(
                 betas?.toImmutable(),
                 userProfileId,
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -1350,6 +1362,7 @@ private constructor(
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
                 userProfileId?.let { put("anthropic-user-profile-id", it) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -3285,6 +3298,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<BetaCacheControlEphemeral> = betaMcpToolset.cacheControl()
+
+                    override fun unknown(json: JsonValue?): Optional<BetaCacheControlEphemeral> =
+                        json.getProperty<BetaCacheControlEphemeral>("cache_control").asKnown()
                 }
             )
 
@@ -3400,6 +3416,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<Boolean> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<Boolean> =
+                        json.getProperty<Boolean>("defer_loading").asKnown()
                 }
             )
 
@@ -3515,6 +3534,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<Boolean> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<Boolean> =
+                        json.getProperty<Boolean>("strict").asKnown()
                 }
             )
 
@@ -3630,6 +3652,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<Long> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<Long> =
+                        json.getProperty<Long>("display_height_px").asKnown()
                 }
             )
 
@@ -3745,6 +3770,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<Long> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<Long> =
+                        json.getProperty<Long>("display_width_px").asKnown()
                 }
             )
 
@@ -3860,6 +3888,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<Long> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<Long> =
+                        json.getProperty<Long>("display_number").asKnown()
                 }
             )
 
@@ -3976,6 +4007,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<List<String>> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<List<String>> =
+                        json.getProperty<List<String>>("allowed_domains").asKnown()
                 }
             )
 
@@ -4092,6 +4126,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<List<String>> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<List<String>> =
+                        json.getProperty<List<String>>("blocked_domains").asKnown()
                 }
             )
 
@@ -4207,6 +4244,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<Long> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<Long> =
+                        json.getProperty<Long>("max_uses").asKnown()
                 }
             )
 
@@ -4323,6 +4363,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<BetaUserLocation> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<BetaUserLocation> =
+                        json.getProperty<BetaUserLocation>("user_location").asKnown()
                 }
             )
 
@@ -4439,6 +4482,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<BetaCitationsConfigParam> =
+                        json.getProperty<BetaCitationsConfigParam>("citations").asKnown()
                 }
             )
 
@@ -4554,6 +4600,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<Long> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<Long> =
+                        json.getProperty<Long>("max_content_tokens").asKnown()
                 }
             )
 
@@ -4669,6 +4718,9 @@ private constructor(
                     override fun visitBetaMcpToolset(
                         betaMcpToolset: BetaMcpToolset
                     ): Optional<Boolean> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<Boolean> =
+                        json.getProperty<Boolean>("use_cache").asKnown()
                 }
             )
 
@@ -5956,14 +6008,22 @@ private constructor(
         return other is MessageCountTokensParams &&
             betas == other.betas &&
             userProfileId == other.userProfileId &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(betas, userProfileId, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            betas,
+            userProfileId,
+            workspaceId,
+            body,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "MessageCountTokensParams{betas=$betas, userProfileId=$userProfileId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MessageCountTokensParams{betas=$betas, userProfileId=$userProfileId, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

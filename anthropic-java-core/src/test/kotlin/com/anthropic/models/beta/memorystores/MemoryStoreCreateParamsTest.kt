@@ -14,6 +14,7 @@ internal class MemoryStoreCreateParamsTest {
     fun create() {
         MemoryStoreCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .name("x")
             .description("description")
             .metadata(
@@ -29,6 +30,7 @@ internal class MemoryStoreCreateParamsTest {
         val params =
             MemoryStoreCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .name("x")
                 .description("description")
                 .metadata(
@@ -42,7 +44,10 @@ internal class MemoryStoreCreateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -60,6 +65,7 @@ internal class MemoryStoreCreateParamsTest {
         val params =
             MemoryStoreCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .name("x")
                 .description("description")
                 .metadata(

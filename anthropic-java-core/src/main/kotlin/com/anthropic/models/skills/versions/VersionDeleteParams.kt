@@ -17,6 +17,7 @@ class VersionDeleteParams
 private constructor(
     private val skillId: String,
     private val version: String?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
@@ -36,6 +37,8 @@ private constructor(
      * timestamp instead (e.g., "1759178010641129").
      */
     fun version(): Optional<String> = Optional.ofNullable(version)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -66,6 +69,7 @@ private constructor(
 
         private var skillId: String? = null
         private var version: String? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -74,6 +78,7 @@ private constructor(
         internal fun from(versionDeleteParams: VersionDeleteParams) = apply {
             skillId = versionDeleteParams.skillId
             version = versionDeleteParams.version
+            workspaceId = versionDeleteParams.workspaceId
             additionalHeaders = versionDeleteParams.additionalHeaders.toBuilder()
             additionalQueryParams = versionDeleteParams.additionalQueryParams.toBuilder()
             additionalBodyProperties = versionDeleteParams.additionalBodyProperties.toMutableMap()
@@ -96,6 +101,11 @@ private constructor(
 
         /** Alias for calling [Builder.version] with `version.orElse(null)`. */
         fun version(version: Optional<String>) = version(version.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -233,6 +243,7 @@ private constructor(
             VersionDeleteParams(
                 checkRequired("skillId", skillId),
                 version,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -249,7 +260,13 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -261,6 +278,7 @@ private constructor(
         return other is VersionDeleteParams &&
             skillId == other.skillId &&
             version == other.version &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
@@ -270,11 +288,12 @@ private constructor(
         Objects.hash(
             skillId,
             version,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
             additionalBodyProperties,
         )
 
     override fun toString() =
-        "VersionDeleteParams{skillId=$skillId, version=$version, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "VersionDeleteParams{skillId=$skillId, version=$version, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

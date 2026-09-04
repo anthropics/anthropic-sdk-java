@@ -3272,6 +3272,95 @@ internal class BetaManagedAgentsSessionEventTest {
             .isEqualTo(betaManagedAgentsSessionEvent)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaManagedAgentsSessionEvent =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to "sevt_011CZkZGOp0iBcp4kaQSihUmy",
+                            "processed_at" to "2026-03-15T10:00:00Z",
+                            "session_thread_id" to "session_thread_id",
+                            "tool_use_id" to "tool_use_id",
+                            "is_error" to true,
+                            "name" to "name",
+                            "agent_name" to "Researcher",
+                            "iteration" to 0,
+                            "outcome_id" to "outc_011CZkZRSw2kEfs6ncTVljxP",
+                            "budget" to
+                                mapOf(
+                                    "max_list_cost" to
+                                        mapOf("amount" to "2500", "currency" to "USD"),
+                                    "type" to "limit",
+                                ),
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsSessionEvent>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> { betaManagedAgentsSessionEvent.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsSessionEvent.id()).isEqualTo("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+        assertThat(betaManagedAgentsSessionEvent.processedAt())
+            .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+        assertThat(betaManagedAgentsSessionEvent.sessionThreadId()).contains("session_thread_id")
+        assertThat(betaManagedAgentsSessionEvent.toolUseId()).contains("tool_use_id")
+        assertThat(betaManagedAgentsSessionEvent.isError()).contains(true)
+        assertThat(betaManagedAgentsSessionEvent.name()).contains("name")
+        assertThat(betaManagedAgentsSessionEvent.agentName()).contains("Researcher")
+        assertThat(betaManagedAgentsSessionEvent.iteration()).contains(0)
+        assertThat(betaManagedAgentsSessionEvent.outcomeId())
+            .contains("outc_011CZkZRSw2kEfs6ncTVljxP")
+        assertThat(betaManagedAgentsSessionEvent.budget())
+            .contains(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .maxListCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .build()
+            )
+
+        val mismatchedBetaManagedAgentsSessionEvent =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to listOf("invalid"),
+                            "processed_at" to listOf("invalid"),
+                            "session_thread_id" to listOf("invalid"),
+                            "tool_use_id" to listOf("invalid"),
+                            "is_error" to listOf("invalid"),
+                            "name" to listOf("invalid"),
+                            "agent_name" to listOf("invalid"),
+                            "iteration" to listOf("invalid"),
+                            "outcome_id" to listOf("invalid"),
+                            "budget" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsSessionEvent>(),
+                )
+
+        assertThrows<AnthropicInvalidDataException> { mismatchedBetaManagedAgentsSessionEvent.id() }
+        assertThat(mismatchedBetaManagedAgentsSessionEvent.processedAt()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionEvent.sessionThreadId()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionEvent.toolUseId()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionEvent.isError()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionEvent.name()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionEvent.agentName()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionEvent.iteration()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionEvent.outcomeId()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionEvent.budget()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -3290,5 +3379,16 @@ internal class BetaManagedAgentsSessionEventTest {
         val e =
             assertThrows<AnthropicInvalidDataException> { betaManagedAgentsSessionEvent.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThrows<AnthropicInvalidDataException> { betaManagedAgentsSessionEvent.id() }
+        assertThat(betaManagedAgentsSessionEvent.processedAt()).isEmpty
+        assertThat(betaManagedAgentsSessionEvent.sessionThreadId()).isEmpty
+        assertThat(betaManagedAgentsSessionEvent.toolUseId()).isEmpty
+        assertThat(betaManagedAgentsSessionEvent.isError()).isEmpty
+        assertThat(betaManagedAgentsSessionEvent.name()).isEmpty
+        assertThat(betaManagedAgentsSessionEvent.agentName()).isEmpty
+        assertThat(betaManagedAgentsSessionEvent.iteration()).isEmpty
+        assertThat(betaManagedAgentsSessionEvent.outcomeId()).isEmpty
+        assertThat(betaManagedAgentsSessionEvent.budget()).isEmpty
     }
 }

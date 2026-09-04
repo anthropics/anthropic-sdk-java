@@ -18,6 +18,7 @@ private constructor(
     private val sessionId: String?,
     private val eventDeltas: List<BetaManagedAgentsDeltaType>?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -38,6 +39,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -61,6 +64,7 @@ private constructor(
         private var sessionId: String? = null
         private var eventDeltas: MutableList<BetaManagedAgentsDeltaType>? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -69,6 +73,7 @@ private constructor(
             sessionId = eventStreamParams.sessionId
             eventDeltas = eventStreamParams.eventDeltas?.toMutableList()
             betas = eventStreamParams.betas?.toMutableList()
+            workspaceId = eventStreamParams.workspaceId
             additionalHeaders = eventStreamParams.additionalHeaders.toBuilder()
             additionalQueryParams = eventStreamParams.additionalQueryParams.toBuilder()
         }
@@ -128,6 +133,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -237,6 +247,7 @@ private constructor(
                 sessionId,
                 eventDeltas?.toImmutable(),
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -252,6 +263,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -273,13 +285,21 @@ private constructor(
             sessionId == other.sessionId &&
             eventDeltas == other.eventDeltas &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(sessionId, eventDeltas, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            sessionId,
+            eventDeltas,
+            betas,
+            workspaceId,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "EventStreamParams{sessionId=$sessionId, eventDeltas=$eventDeltas, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "EventStreamParams{sessionId=$sessionId, eventDeltas=$eventDeltas, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

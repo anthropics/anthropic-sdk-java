@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
@@ -57,6 +58,9 @@ private constructor(
                 override fun visitAgentThinking(
                     agentThinking: BetaManagedAgentsAgentThinkingPreview
                 ): String = agentThinking.id()
+
+                override fun unknown(json: JsonValue?): String =
+                    json.getProperty<String>("id").getRequired("id")
             }
         )
 

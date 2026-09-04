@@ -17,6 +17,7 @@ internal class MessageCreateParamsTest {
         MessageCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .userProfileId("anthropic-user-profile-id")
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .maxTokens(1024L)
             .addMessage(
                 BetaMessageParam.builder()
@@ -180,6 +181,7 @@ internal class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .userProfileId("anthropic-user-profile-id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .maxTokens(1024L)
                 .addMessage(
                     BetaMessageParam.builder()
@@ -347,6 +349,7 @@ internal class MessageCreateParamsTest {
                 Headers.builder()
                     .put("anthropic-beta", "message-batches-2024-09-24")
                     .put("anthropic-user-profile-id", "anthropic-user-profile-id")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
     }
@@ -371,6 +374,7 @@ internal class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .userProfileId("anthropic-user-profile-id")
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .maxTokens(1024L)
                 .addMessage(
                     BetaMessageParam.builder()

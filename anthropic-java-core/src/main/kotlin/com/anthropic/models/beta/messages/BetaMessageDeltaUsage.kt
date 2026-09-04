@@ -12,6 +12,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
@@ -687,6 +688,9 @@ private constructor(
                     override fun visitFallbackMessage(
                         fallbackMessage: BetaFallbackMessageIterationUsage
                     ): Optional<BetaCacheCreation> = fallbackMessage.cacheCreation()
+
+                    override fun unknown(json: JsonValue?): Optional<BetaCacheCreation> =
+                        json.getProperty<BetaCacheCreation>("cache_creation").asKnown()
                 }
             )
 
@@ -706,6 +710,11 @@ private constructor(
                     override fun visitFallbackMessage(
                         fallbackMessage: BetaFallbackMessageIterationUsage
                     ): Long = fallbackMessage.cacheCreationInputTokens()
+
+                    override fun unknown(json: JsonValue?): Long =
+                        json
+                            .getProperty<Long>("cache_creation_input_tokens")
+                            .getRequired("cache_creation_input_tokens")
                 }
             )
 
@@ -725,6 +734,11 @@ private constructor(
                     override fun visitFallbackMessage(
                         fallbackMessage: BetaFallbackMessageIterationUsage
                     ): Long = fallbackMessage.cacheReadInputTokens()
+
+                    override fun unknown(json: JsonValue?): Long =
+                        json
+                            .getProperty<Long>("cache_read_input_tokens")
+                            .getRequired("cache_read_input_tokens")
                 }
             )
 
@@ -744,6 +758,9 @@ private constructor(
                     override fun visitFallbackMessage(
                         fallbackMessage: BetaFallbackMessageIterationUsage
                     ): Long = fallbackMessage.inputTokens()
+
+                    override fun unknown(json: JsonValue?): Long =
+                        json.getProperty<Long>("input_tokens").getRequired("input_tokens")
                 }
             )
 
@@ -764,6 +781,9 @@ private constructor(
                     override fun visitFallbackMessage(
                         fallbackMessage: BetaFallbackMessageIterationUsage
                     ): Optional<Model> = Optional.of(fallbackMessage.model())
+
+                    override fun unknown(json: JsonValue?): Optional<Model> =
+                        json.getProperty<Model>("model").asKnown()
                 }
             )
 
@@ -783,6 +803,9 @@ private constructor(
                     override fun visitFallbackMessage(
                         fallbackMessage: BetaFallbackMessageIterationUsage
                     ): Long = fallbackMessage.outputTokens()
+
+                    override fun unknown(json: JsonValue?): Long =
+                        json.getProperty<Long>("output_tokens").getRequired("output_tokens")
                 }
             )
 

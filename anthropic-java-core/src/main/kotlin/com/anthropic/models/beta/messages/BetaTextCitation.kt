@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
@@ -112,6 +113,9 @@ private constructor(
                 override fun visitSearchResultLocation(
                     searchResultLocation: BetaCitationSearchResultLocation
                 ): String = searchResultLocation.citedText()
+
+                override fun unknown(json: JsonValue?): String =
+                    json.getProperty<String>("cited_text").getRequired("cited_text")
             }
         )
 
@@ -137,6 +141,9 @@ private constructor(
                 override fun visitSearchResultLocation(
                     searchResultLocation: BetaCitationSearchResultLocation
                 ): Optional<Long> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("document_index").asKnown()
             }
         )
 
@@ -162,6 +169,9 @@ private constructor(
                 override fun visitSearchResultLocation(
                     searchResultLocation: BetaCitationSearchResultLocation
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("document_title").asKnown()
             }
         )
 
@@ -187,6 +197,9 @@ private constructor(
                 override fun visitSearchResultLocation(
                     searchResultLocation: BetaCitationSearchResultLocation
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("file_id").asKnown()
             }
         )
 
@@ -212,6 +225,9 @@ private constructor(
                 override fun visitSearchResultLocation(
                     searchResultLocation: BetaCitationSearchResultLocation
                 ): Optional<Long> = Optional.of(searchResultLocation.endBlockIndex())
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("end_block_index").asKnown()
             }
         )
 
@@ -237,6 +253,9 @@ private constructor(
                 override fun visitSearchResultLocation(
                     searchResultLocation: BetaCitationSearchResultLocation
                 ): Optional<Long> = Optional.of(searchResultLocation.startBlockIndex())
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("start_block_index").asKnown()
             }
         )
 
@@ -262,6 +281,9 @@ private constructor(
                 override fun visitSearchResultLocation(
                     searchResultLocation: BetaCitationSearchResultLocation
                 ): Optional<String> = searchResultLocation.title()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("title").asKnown()
             }
         )
 

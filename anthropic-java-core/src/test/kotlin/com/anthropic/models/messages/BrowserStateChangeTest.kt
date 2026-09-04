@@ -152,6 +152,44 @@ internal class BrowserStateChangeTest {
         assertThat(roundtrippedBrowserStateChange).isEqualTo(browserStateChange)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val browserStateChange =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "download_id" to "download_id",
+                            "url" to "url",
+                        )
+                    ),
+                    jacksonTypeRef<BrowserStateChange>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { browserStateChange.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(browserStateChange.downloadId()).contains("download_id")
+        assertThat(browserStateChange.url()).contains("url")
+
+        val mismatchedBrowserStateChange =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "download_id" to listOf("invalid"),
+                            "url" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BrowserStateChange>(),
+                )
+
+        assertThat(mismatchedBrowserStateChange.downloadId()).isEmpty
+        assertThat(mismatchedBrowserStateChange.url()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -168,5 +206,8 @@ internal class BrowserStateChangeTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { browserStateChange.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(browserStateChange.downloadId()).isEmpty
+        assertThat(browserStateChange.url()).isEmpty
     }
 }

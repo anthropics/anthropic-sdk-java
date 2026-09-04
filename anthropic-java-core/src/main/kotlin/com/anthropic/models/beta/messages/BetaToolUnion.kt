@@ -7,6 +7,7 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.core.JsonGenerator
@@ -169,6 +170,9 @@ private constructor(
                 override fun visitMcpToolset(
                     mcpToolset: BetaMcpToolset
                 ): Optional<BetaCacheControlEphemeral> = mcpToolset.cacheControl()
+
+                override fun unknown(json: JsonValue?): Optional<BetaCacheControlEphemeral> =
+                    json.getProperty<BetaCacheControlEphemeral>("cache_control").asKnown()
             }
         )
 
@@ -284,6 +288,9 @@ private constructor(
 
                 override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<Boolean> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Boolean> =
+                    json.getProperty<Boolean>("defer_loading").asKnown()
             }
         )
 
@@ -399,6 +406,9 @@ private constructor(
 
                 override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<Boolean> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Boolean> =
+                    json.getProperty<Boolean>("strict").asKnown()
             }
         )
 
@@ -511,6 +521,9 @@ private constructor(
 
                 override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<Long> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("display_height_px").asKnown()
             }
         )
 
@@ -623,6 +636,9 @@ private constructor(
 
                 override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<Long> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("display_width_px").asKnown()
             }
         )
 
@@ -735,6 +751,9 @@ private constructor(
 
                 override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<Long> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("display_number").asKnown()
             }
         )
 
@@ -850,6 +869,9 @@ private constructor(
 
                 override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<List<String>> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<List<String>> =
+                    json.getProperty<List<String>>("allowed_domains").asKnown()
             }
         )
 
@@ -965,6 +987,9 @@ private constructor(
 
                 override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<List<String>> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<List<String>> =
+                    json.getProperty<List<String>>("blocked_domains").asKnown()
             }
         )
 
@@ -1077,6 +1102,9 @@ private constructor(
 
                 override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<Long> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("max_uses").asKnown()
             }
         )
 
@@ -1193,6 +1221,9 @@ private constructor(
                 override fun visitMcpToolset(
                     mcpToolset: BetaMcpToolset
                 ): Optional<BetaUserLocation> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<BetaUserLocation> =
+                    json.getProperty<BetaUserLocation>("user_location").asKnown()
             }
         )
 
@@ -1309,6 +1340,9 @@ private constructor(
                 override fun visitMcpToolset(
                     mcpToolset: BetaMcpToolset
                 ): Optional<BetaCitationsConfigParam> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<BetaCitationsConfigParam> =
+                    json.getProperty<BetaCitationsConfigParam>("citations").asKnown()
             }
         )
 
@@ -1421,6 +1455,9 @@ private constructor(
 
                 override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<Long> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("max_content_tokens").asKnown()
             }
         )
 
@@ -1535,6 +1572,9 @@ private constructor(
 
                 override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<Boolean> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Boolean> =
+                    json.getProperty<Boolean>("use_cache").asKnown()
             }
         )
 

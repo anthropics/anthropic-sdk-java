@@ -19,12 +19,15 @@ import kotlin.jvm.optionals.getOrNull
 class BatchRetrieveParams
 private constructor(
     private val messageBatchId: String?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     /** ID of the Message Batch. */
     fun messageBatchId(): Optional<String> = Optional.ofNullable(messageBatchId)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -46,12 +49,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var messageBatchId: String? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(batchRetrieveParams: BatchRetrieveParams) = apply {
             messageBatchId = batchRetrieveParams.messageBatchId
+            workspaceId = batchRetrieveParams.workspaceId
             additionalHeaders = batchRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = batchRetrieveParams.additionalQueryParams.toBuilder()
         }
@@ -62,6 +67,11 @@ private constructor(
         /** Alias for calling [Builder.messageBatchId] with `messageBatchId.orElse(null)`. */
         fun messageBatchId(messageBatchId: Optional<String>) =
             messageBatchId(messageBatchId.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -169,6 +179,7 @@ private constructor(
         fun build(): BatchRetrieveParams =
             BatchRetrieveParams(
                 messageBatchId,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -180,7 +191,13 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -191,13 +208,14 @@ private constructor(
 
         return other is BatchRetrieveParams &&
             messageBatchId == other.messageBatchId &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(messageBatchId, additionalHeaders, additionalQueryParams)
+        Objects.hash(messageBatchId, workspaceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "BatchRetrieveParams{messageBatchId=$messageBatchId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "BatchRetrieveParams{messageBatchId=$messageBatchId, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

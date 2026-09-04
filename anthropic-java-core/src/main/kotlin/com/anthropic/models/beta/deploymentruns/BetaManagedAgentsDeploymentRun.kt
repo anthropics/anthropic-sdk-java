@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentReference
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -1045,6 +1046,9 @@ private constructor(
                     override fun visitMcpEgressBlocked(
                         mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedRunError
                     ): String = mcpEgressBlocked.message()
+
+                    override fun unknown(json: JsonValue?): String =
+                        json.getProperty<String>("message").getRequired("message")
                 }
             )
 

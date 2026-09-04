@@ -15,6 +15,7 @@ import kotlin.jvm.optionals.getOrNull
 class SkillDeleteParams
 private constructor(
     private val skillId: String?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
@@ -26,6 +27,8 @@ private constructor(
      * The format and length of IDs may change over time.
      */
     fun skillId(): Optional<String> = Optional.ofNullable(skillId)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -50,6 +53,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var skillId: String? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -57,6 +61,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(skillDeleteParams: SkillDeleteParams) = apply {
             skillId = skillDeleteParams.skillId
+            workspaceId = skillDeleteParams.workspaceId
             additionalHeaders = skillDeleteParams.additionalHeaders.toBuilder()
             additionalQueryParams = skillDeleteParams.additionalQueryParams.toBuilder()
             additionalBodyProperties = skillDeleteParams.additionalBodyProperties.toMutableMap()
@@ -71,6 +76,11 @@ private constructor(
 
         /** Alias for calling [Builder.skillId] with `skillId.orElse(null)`. */
         fun skillId(skillId: Optional<String>) = skillId(skillId.getOrNull())
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -200,6 +210,7 @@ private constructor(
         fun build(): SkillDeleteParams =
             SkillDeleteParams(
                 skillId,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -215,7 +226,13 @@ private constructor(
             else -> ""
         }
 
-    override fun _headers(): Headers = additionalHeaders
+    override fun _headers(): Headers =
+        Headers.builder()
+            .apply {
+                workspaceId?.let { put("anthropic-workspace-id", it) }
+                putAll(additionalHeaders)
+            }
+            .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -226,14 +243,21 @@ private constructor(
 
         return other is SkillDeleteParams &&
             skillId == other.skillId &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
     }
 
     override fun hashCode(): Int =
-        Objects.hash(skillId, additionalHeaders, additionalQueryParams, additionalBodyProperties)
+        Objects.hash(
+            skillId,
+            workspaceId,
+            additionalHeaders,
+            additionalQueryParams,
+            additionalBodyProperties,
+        )
 
     override fun toString() =
-        "SkillDeleteParams{skillId=$skillId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "SkillDeleteParams{skillId=$skillId, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

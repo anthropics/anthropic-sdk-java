@@ -26,6 +26,7 @@ class VaultUpdateParams
 private constructor(
     private val vaultId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -35,6 +36,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
      * Updated human-readable name for the vault. 1-255 characters.
@@ -90,6 +93,7 @@ private constructor(
 
         private var vaultId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -98,6 +102,7 @@ private constructor(
         internal fun from(vaultUpdateParams: VaultUpdateParams) = apply {
             vaultId = vaultUpdateParams.vaultId
             betas = vaultUpdateParams.betas?.toMutableList()
+            workspaceId = vaultUpdateParams.workspaceId
             body = vaultUpdateParams.body.toBuilder()
             additionalHeaders = vaultUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = vaultUpdateParams.additionalQueryParams.toBuilder()
@@ -131,6 +136,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -301,6 +311,7 @@ private constructor(
             VaultUpdateParams(
                 vaultId,
                 betas?.toImmutable(),
+                workspaceId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -319,6 +330,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -651,14 +663,15 @@ private constructor(
         return other is VaultUpdateParams &&
             vaultId == other.vaultId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(vaultId, betas, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(vaultId, betas, workspaceId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "VaultUpdateParams{vaultId=$vaultId, betas=$betas, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "VaultUpdateParams{vaultId=$vaultId, betas=$betas, workspaceId=$workspaceId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -29,6 +29,7 @@ internal class CertificateServiceAsyncTest {
                 CertificateCreateParams.builder()
                     .tunnelId("tunnel_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .caCertificatePem("ca_certificate_pem")
                     .build()
             )
@@ -37,7 +38,7 @@ internal class CertificateServiceAsyncTest {
         betaTunnelCertificate.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun retrieve() {
         val client =
@@ -53,6 +54,7 @@ internal class CertificateServiceAsyncTest {
                     .tunnelId("tunnel_id")
                     .certificateId("certificate_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -60,7 +62,7 @@ internal class CertificateServiceAsyncTest {
         betaTunnelCertificate.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -91,6 +93,7 @@ internal class CertificateServiceAsyncTest {
                     .tunnelId("tunnel_id")
                     .certificateId("certificate_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 

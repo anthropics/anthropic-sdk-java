@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -581,6 +582,9 @@ private constructor(
                     override fun visitCodeExecution20260120(
                         codeExecution20260120: ServerToolCaller20260120
                     ): Optional<String> = Optional.of(codeExecution20260120.toolId())
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("tool_id").asKnown()
                 }
             )
 

@@ -88,6 +88,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -220,6 +221,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -352,6 +354,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -484,6 +487,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -616,6 +620,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -748,6 +753,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -880,6 +886,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -1012,6 +1019,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -1144,6 +1152,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -1276,6 +1285,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -1408,6 +1418,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -1540,6 +1551,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -1672,6 +1684,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -1804,6 +1817,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -1936,6 +1950,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -2068,6 +2083,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -2198,6 +2214,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -2327,6 +2344,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -2456,6 +2474,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -2585,6 +2604,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)
@@ -2714,6 +2734,7 @@ internal class ErrorHandlingTest {
                 messageService.create(
                     MessageCreateParams.builder()
                         .userProfileId("anthropic-user-profile-id")
+                        .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                         .maxTokens(1024L)
                         .addUserMessage("Hello, world")
                         .model(Model.CLAUDE_OPUS_5)

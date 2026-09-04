@@ -38,6 +38,7 @@ internal class WorkServiceAsyncTest {
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .workId("work_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -60,6 +61,7 @@ internal class WorkServiceAsyncTest {
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .workId("work_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .betaSelfHostedWorkUpdateRequest(
                         BetaSelfHostedWorkUpdateRequest.of(
                             BetaSelfHostedWorkUpdateRequest.Metadata.builder()
@@ -74,7 +76,7 @@ internal class WorkServiceAsyncTest {
         betaSelfHostedWork.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -161,7 +163,7 @@ internal class WorkServiceAsyncTest {
         unwrappedBetaSelfHostedWork?.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun stats() {
         val client =
@@ -176,6 +178,7 @@ internal class WorkServiceAsyncTest {
                 WorkStatsParams.builder()
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -198,6 +201,7 @@ internal class WorkServiceAsyncTest {
                     .environmentId("env_011CZkZ9X2dpNyB7HsEFoRfW")
                     .workId("work_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .betaSelfHostedWorkStopRequest(
                         BetaSelfHostedWorkStopRequest.builder().force(true).build()
                     )

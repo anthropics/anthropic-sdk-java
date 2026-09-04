@@ -2923,5 +2923,19 @@ internal class BetaToolUnionTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { betaToolUnion.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaToolUnion.cacheControl()).isEmpty
+        assertThat(betaToolUnion.deferLoading()).isEmpty
+        assertThat(betaToolUnion.strict()).isEmpty
+        assertThat(betaToolUnion.displayHeightPx()).isEmpty
+        assertThat(betaToolUnion.displayWidthPx()).isEmpty
+        assertThat(betaToolUnion.displayNumber()).isEmpty
+        assertThat(betaToolUnion.allowedDomains()).isEmpty
+        assertThat(betaToolUnion.blockedDomains()).isEmpty
+        assertThat(betaToolUnion.maxUses()).isEmpty
+        assertThat(betaToolUnion.userLocation()).isEmpty
+        assertThat(betaToolUnion.citations()).isEmpty
+        assertThat(betaToolUnion.maxContentTokens()).isEmpty
+        assertThat(betaToolUnion.useCache()).isEmpty
     }
 }

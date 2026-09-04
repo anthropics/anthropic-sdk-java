@@ -23,8 +23,8 @@ import com.google.auth.oauth2.GoogleCredentials;
  * <p>
  * Google OAuth2 credentials must be configured to access Vertex AI. In this
  * example, the OAuth2 _access token_ is retrieved from an environment variable
- * along with the project ID. The region is hard-coded. Alternatively, the
- * Google credentials, region and project can be resolved automatically. See
+ * along with the region and project ID. Alternatively, the Google
+ * credentials, region and project can be resolved automatically. See
  * {@link VertexBetaMessagesStreamingAsyncExample} for comparison.
  * </p>
  * <p>
@@ -33,6 +33,8 @@ import com.google.auth.oauth2.GoogleCredentials;
  * <ul>
  *   <li>{@code GOOGLE_APPLICATION_CREDENTIALS}:
  *       The value of the access token for Google Cloud Vertex AI.</li>
+ *   <li>{@code CLOUD_ML_REGION}:
+ *       The name of the Google Cloud region hosting the service.</li>
  *   <li>{@code ANTHROPIC_VERTEX_PROJECT_ID}:
  *       The ID of the Google Cloud Vertex AI project.</li>
  * </ul>
@@ -42,6 +44,7 @@ public final class VertexMessagesExample {
 
     public static void main(String[] args) throws Exception {
         String accessToken = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+        String region = System.getenv("CLOUD_ML_REGION");
         String project = System.getenv("ANTHROPIC_VERTEX_PROJECT_ID");
 
         GoogleCredentials googleCredentials = GoogleCredentials.create(
@@ -50,13 +53,13 @@ public final class VertexMessagesExample {
         AnthropicClient client = AnthropicOkHttpClient.builder()
                 .backend(VertexBackend.builder()
                         .googleCredentials(googleCredentials)
-                        .region("us-central1")
+                        .region(region)
                         .project(project)
                         .build())
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model("claude-sonnet-4@20250514")
+                .model("claude-sonnet-5")
                 .maxTokens(2048)
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();

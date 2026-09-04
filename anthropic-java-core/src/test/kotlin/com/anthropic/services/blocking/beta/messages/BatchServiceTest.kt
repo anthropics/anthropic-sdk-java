@@ -55,6 +55,7 @@ internal class BatchServiceTest {
                 BatchCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .userProfileId("anthropic-user-profile-id")
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .addRequest(
                         BatchCreateParams.Request.builder()
                             .customId("my-custom-id-1")
@@ -276,6 +277,7 @@ internal class BatchServiceTest {
                 BatchRetrieveParams.builder()
                     .messageBatchId("message_batch_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -310,6 +312,7 @@ internal class BatchServiceTest {
                 BatchDeleteParams.builder()
                     .messageBatchId("message_batch_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -330,6 +333,7 @@ internal class BatchServiceTest {
                 BatchCancelParams.builder()
                     .messageBatchId("message_batch_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -350,6 +354,7 @@ internal class BatchServiceTest {
                 BatchResultsParams.builder()
                     .messageBatchId("message_batch_id")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
