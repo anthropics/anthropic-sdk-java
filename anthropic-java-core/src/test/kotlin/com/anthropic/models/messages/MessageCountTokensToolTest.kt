@@ -2072,5 +2072,16 @@ internal class MessageCountTokensToolTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { messageCountTokensTool.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(messageCountTokensTool.cacheControl()).isEmpty
+        assertThat(messageCountTokensTool.deferLoading()).isEmpty
+        assertThat(messageCountTokensTool.strict()).isEmpty
+        assertThat(messageCountTokensTool.allowedDomains()).isEmpty
+        assertThat(messageCountTokensTool.blockedDomains()).isEmpty
+        assertThat(messageCountTokensTool.maxUses()).isEmpty
+        assertThat(messageCountTokensTool.userLocation()).isEmpty
+        assertThat(messageCountTokensTool.citations()).isEmpty
+        assertThat(messageCountTokensTool.maxContentTokens()).isEmpty
+        assertThat(messageCountTokensTool.useCache()).isEmpty
     }
 }

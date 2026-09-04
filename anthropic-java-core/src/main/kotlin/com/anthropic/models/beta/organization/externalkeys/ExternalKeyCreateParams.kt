@@ -12,6 +12,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -687,6 +688,9 @@ private constructor(
                     override fun visitAzure(
                         azure: BetaAzureExternalKeyConfigParam
                     ): Optional<String> = Optional.of(azure.keyName())
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("key_name").asKnown()
                 }
             )
 

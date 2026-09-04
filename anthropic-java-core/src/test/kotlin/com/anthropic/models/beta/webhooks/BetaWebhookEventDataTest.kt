@@ -3474,6 +3474,58 @@ internal class BetaWebhookEventDataTest {
         assertThat(roundtrippedBetaWebhookEventData).isEqualTo(betaWebhookEventData)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaWebhookEventData =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to "id",
+                            "organization_id" to "organization_id",
+                            "workspace_id" to "workspace_id",
+                            "session_thread_id" to "session_thread_id",
+                            "vault_id" to "vault_id",
+                        )
+                    ),
+                    jacksonTypeRef<BetaWebhookEventData>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaWebhookEventData.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaWebhookEventData.id()).isEqualTo("id")
+        assertThat(betaWebhookEventData.organizationId()).isEqualTo("organization_id")
+        assertThat(betaWebhookEventData.workspaceId()).isEqualTo("workspace_id")
+        assertThat(betaWebhookEventData.sessionThreadId()).contains("session_thread_id")
+        assertThat(betaWebhookEventData.vaultId()).contains("vault_id")
+
+        val mismatchedBetaWebhookEventData =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to listOf("invalid"),
+                            "organization_id" to listOf("invalid"),
+                            "workspace_id" to listOf("invalid"),
+                            "session_thread_id" to listOf("invalid"),
+                            "vault_id" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaWebhookEventData>(),
+                )
+
+        assertThrows<AnthropicInvalidDataException> { mismatchedBetaWebhookEventData.id() }
+        assertThrows<AnthropicInvalidDataException> {
+            mismatchedBetaWebhookEventData.organizationId()
+        }
+        assertThrows<AnthropicInvalidDataException> { mismatchedBetaWebhookEventData.workspaceId() }
+        assertThat(mismatchedBetaWebhookEventData.sessionThreadId()).isEmpty
+        assertThat(mismatchedBetaWebhookEventData.vaultId()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -3490,5 +3542,11 @@ internal class BetaWebhookEventDataTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { betaWebhookEventData.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThrows<AnthropicInvalidDataException> { betaWebhookEventData.id() }
+        assertThrows<AnthropicInvalidDataException> { betaWebhookEventData.organizationId() }
+        assertThrows<AnthropicInvalidDataException> { betaWebhookEventData.workspaceId() }
+        assertThat(betaWebhookEventData.sessionThreadId()).isEmpty
+        assertThat(betaWebhookEventData.vaultId()).isEmpty
     }
 }

@@ -249,6 +249,33 @@ internal class BetaMemoryTool20250818CommandTest {
             .isEqualTo(betaMemoryTool20250818Command)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaMemoryTool20250818Command =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(mapOf("command" to "unknown_variant", "path" to "/memories")),
+                    jacksonTypeRef<BetaMemoryTool20250818Command>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> { betaMemoryTool20250818Command.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaMemoryTool20250818Command.path()).contains("/memories")
+
+        val mismatchedBetaMemoryTool20250818Command =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("command" to "unknown_variant", "path" to listOf("invalid"))
+                    ),
+                    jacksonTypeRef<BetaMemoryTool20250818Command>(),
+                )
+
+        assertThat(mismatchedBetaMemoryTool20250818Command.path()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -267,5 +294,7 @@ internal class BetaMemoryTool20250818CommandTest {
         val e =
             assertThrows<AnthropicInvalidDataException> { betaMemoryTool20250818Command.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaMemoryTool20250818Command.path()).isEmpty
     }
 }

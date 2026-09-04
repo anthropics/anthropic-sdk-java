@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaEvent
@@ -393,6 +394,9 @@ private constructor(
                 override fun visitSessionUsage(
                     sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<String> = Optional.of(sessionUsage.id())
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("id").asKnown()
             }
         )
 
@@ -551,6 +555,9 @@ private constructor(
                 override fun visitSessionUsage(
                     sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<OffsetDateTime> = Optional.of(sessionUsage.processedAt())
+
+                override fun unknown(json: JsonValue?): Optional<OffsetDateTime> =
+                    json.getProperty<OffsetDateTime>("processed_at").asKnown()
             }
         )
 
@@ -706,6 +713,9 @@ private constructor(
                 override fun visitSessionUsage(
                     sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("session_thread_id").asKnown()
             }
         )
 
@@ -861,6 +871,9 @@ private constructor(
                 override fun visitSessionUsage(
                     sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("tool_use_id").asKnown()
             }
         )
 
@@ -1016,6 +1029,9 @@ private constructor(
                 override fun visitSessionUsage(
                     sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<Boolean> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Boolean> =
+                    json.getProperty<Boolean>("is_error").asKnown()
             }
         )
 
@@ -1171,6 +1187,9 @@ private constructor(
                 override fun visitSessionUsage(
                     sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("name").asKnown()
             }
         )
 
@@ -1326,6 +1345,9 @@ private constructor(
                 override fun visitSessionUsage(
                     sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("agent_name").asKnown()
             }
         )
 
@@ -1481,6 +1503,9 @@ private constructor(
                 override fun visitSessionUsage(
                     sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<Int> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Int> =
+                    json.getProperty<Int>("iteration").asKnown()
             }
         )
 
@@ -1636,6 +1661,9 @@ private constructor(
                 override fun visitSessionUsage(
                     sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("outcome_id").asKnown()
             }
         )
 
@@ -1791,6 +1819,9 @@ private constructor(
                 override fun visitSessionUsage(
                     sessionUsage: BetaManagedAgentsSessionUsageEvent
                 ): Optional<BetaManagedAgentsBudgetLimit> = sessionUsage.budget()
+
+                override fun unknown(json: JsonValue?): Optional<BetaManagedAgentsBudgetLimit> =
+                    json.getProperty<BetaManagedAgentsBudgetLimit>("budget").asKnown()
             }
         )
 

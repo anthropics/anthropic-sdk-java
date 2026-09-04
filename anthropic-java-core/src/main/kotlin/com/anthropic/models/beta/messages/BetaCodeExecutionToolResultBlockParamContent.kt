@@ -7,6 +7,7 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -48,6 +49,11 @@ private constructor(
                         BetaEncryptedCodeExecutionResultBlockParam
                 ): Optional<List<BetaCodeExecutionOutputBlockParam>> =
                     Optional.of(encryptedCodeExecutionResultBlockParam.content())
+
+                override fun unknown(
+                    json: JsonValue?
+                ): Optional<List<BetaCodeExecutionOutputBlockParam>> =
+                    json.getProperty<List<BetaCodeExecutionOutputBlockParam>>("content").asKnown()
             }
         )
 
@@ -66,6 +72,9 @@ private constructor(
                     encryptedCodeExecutionResultBlockParam:
                         BetaEncryptedCodeExecutionResultBlockParam
                 ): Optional<Long> = Optional.of(encryptedCodeExecutionResultBlockParam.returnCode())
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("return_code").asKnown()
             }
         )
 
@@ -84,6 +93,9 @@ private constructor(
                     encryptedCodeExecutionResultBlockParam:
                         BetaEncryptedCodeExecutionResultBlockParam
                 ): Optional<String> = Optional.of(encryptedCodeExecutionResultBlockParam.stderr())
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("stderr").asKnown()
             }
         )
 

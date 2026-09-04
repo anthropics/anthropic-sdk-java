@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
@@ -106,6 +107,9 @@ private constructor(
                 override fun visitWebSearch(
                     webSearch: BetaManagedAgentsWebSearchToolConfigParams
                 ): Optional<Boolean> = webSearch.enabled()
+
+                override fun unknown(json: JsonValue?): Optional<Boolean> =
+                    json.getProperty<Boolean>("enabled").asKnown()
             }
         )
 
@@ -143,6 +147,9 @@ private constructor(
                 override fun visitWebSearch(
                     webSearch: BetaManagedAgentsWebSearchToolConfigParams
                 ): Optional<List<String>> = webSearch.allowedDomains()
+
+                override fun unknown(json: JsonValue?): Optional<List<String>> =
+                    json.getProperty<List<String>>("allowed_domains").asKnown()
             }
         )
 
@@ -180,6 +187,9 @@ private constructor(
                 override fun visitWebSearch(
                     webSearch: BetaManagedAgentsWebSearchToolConfigParams
                 ): Optional<List<String>> = webSearch.blockedDomains()
+
+                override fun unknown(json: JsonValue?): Optional<List<String>> =
+                    json.getProperty<List<String>>("blocked_domains").asKnown()
             }
         )
 

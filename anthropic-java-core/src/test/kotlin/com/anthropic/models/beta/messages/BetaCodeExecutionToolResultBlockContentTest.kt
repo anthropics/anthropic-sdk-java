@@ -159,5 +159,9 @@ internal class BetaCodeExecutionToolResultBlockContentTest {
                 betaCodeExecutionToolResultBlockContent.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaCodeExecutionToolResultBlockContent.content()).isEmpty
+        assertThat(betaCodeExecutionToolResultBlockContent.returnCode()).isEmpty
+        assertThat(betaCodeExecutionToolResultBlockContent.stderr()).isEmpty
     }
 }

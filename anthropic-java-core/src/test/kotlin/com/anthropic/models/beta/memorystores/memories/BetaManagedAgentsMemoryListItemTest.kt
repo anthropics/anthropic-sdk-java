@@ -102,6 +102,35 @@ internal class BetaManagedAgentsMemoryListItemTest {
             .isEqualTo(betaManagedAgentsMemoryListItem)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaManagedAgentsMemoryListItem =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(mapOf("type" to "unknown_variant", "path" to "path")),
+                    jacksonTypeRef<BetaManagedAgentsMemoryListItem>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> {
+                betaManagedAgentsMemoryListItem.validate()
+            }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsMemoryListItem.path()).isEqualTo("path")
+
+        val mismatchedBetaManagedAgentsMemoryListItem =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(mapOf("type" to "unknown_variant", "path" to listOf("invalid"))),
+                    jacksonTypeRef<BetaManagedAgentsMemoryListItem>(),
+                )
+
+        assertThrows<AnthropicInvalidDataException> {
+            mismatchedBetaManagedAgentsMemoryListItem.path()
+        }
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -122,5 +151,7 @@ internal class BetaManagedAgentsMemoryListItemTest {
                 betaManagedAgentsMemoryListItem.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThrows<AnthropicInvalidDataException> { betaManagedAgentsMemoryListItem.path() }
     }
 }

@@ -12,6 +12,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -703,6 +704,9 @@ private constructor(
                     override fun visitCodeExecution20260120(
                         codeExecution20260120: BetaServerToolCaller20260120
                     ): Optional<String> = Optional.of(codeExecution20260120.toolId())
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("tool_id").asKnown()
                 }
             )
 

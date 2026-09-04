@@ -123,6 +123,37 @@ internal class ToolChoiceTest {
         assertThat(roundtrippedToolChoice).isEqualTo(toolChoice)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val toolChoice =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "disable_parallel_tool_use" to true)
+                    ),
+                    jacksonTypeRef<ToolChoice>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { toolChoice.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(toolChoice.disableParallelToolUse()).contains(true)
+
+        val mismatchedToolChoice =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "disable_parallel_tool_use" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<ToolChoice>(),
+                )
+
+        assertThat(mismatchedToolChoice.disableParallelToolUse()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -138,5 +169,7 @@ internal class ToolChoiceTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { toolChoice.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(toolChoice.disableParallelToolUse()).isEmpty
     }
 }

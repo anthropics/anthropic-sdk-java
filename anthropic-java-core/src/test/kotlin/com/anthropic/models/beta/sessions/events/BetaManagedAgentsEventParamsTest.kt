@@ -316,6 +316,41 @@ internal class BetaManagedAgentsEventParamsTest {
         assertThat(roundtrippedBetaManagedAgentsEventParams).isEqualTo(betaManagedAgentsEventParams)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaManagedAgentsEventParams =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "tool_use_id" to "x", "is_error" to true)
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsEventParams>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> { betaManagedAgentsEventParams.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsEventParams.toolUseId()).contains("x")
+        assertThat(betaManagedAgentsEventParams.isError()).contains(true)
+
+        val mismatchedBetaManagedAgentsEventParams =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "tool_use_id" to listOf("invalid"),
+                            "is_error" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsEventParams>(),
+                )
+
+        assertThat(mismatchedBetaManagedAgentsEventParams.toolUseId()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsEventParams.isError()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -334,5 +369,8 @@ internal class BetaManagedAgentsEventParamsTest {
         val e =
             assertThrows<AnthropicInvalidDataException> { betaManagedAgentsEventParams.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsEventParams.toolUseId()).isEmpty
+        assertThat(betaManagedAgentsEventParams.isError()).isEmpty
     }
 }

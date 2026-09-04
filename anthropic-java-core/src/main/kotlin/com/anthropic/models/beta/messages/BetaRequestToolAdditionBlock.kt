@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -358,6 +359,9 @@ private constructor(
                     override fun visitMcpToolsetReference(
                         mcpToolsetReference: BetaToolChangeMcpToolsetReference
                     ): Optional<String> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("name").asKnown()
                 }
             )
 
@@ -375,6 +379,9 @@ private constructor(
                     override fun visitMcpToolsetReference(
                         mcpToolsetReference: BetaToolChangeMcpToolsetReference
                     ): Optional<String> = Optional.of(mcpToolsetReference.serverName())
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("server_name").asKnown()
                 }
             )
 

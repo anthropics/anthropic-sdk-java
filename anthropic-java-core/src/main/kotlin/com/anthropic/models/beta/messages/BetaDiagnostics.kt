@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -383,6 +384,9 @@ private constructor(
                     override fun visitUnavailable(
                         unavailable: BetaCacheMissUnavailable
                     ): Optional<Long> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<Long> =
+                        json.getProperty<Long>("cache_missed_input_tokens").asKnown()
                 }
             )
 

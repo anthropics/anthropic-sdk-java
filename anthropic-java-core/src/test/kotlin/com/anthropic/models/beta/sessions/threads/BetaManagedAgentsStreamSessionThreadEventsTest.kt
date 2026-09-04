@@ -3689,6 +3689,99 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             .isEqualTo(betaManagedAgentsStreamSessionThreadEvents)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaManagedAgentsStreamSessionThreadEvents =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to "sevt_011CZkZGOp0iBcp4kaQSihUmy",
+                            "processed_at" to "2026-03-15T10:00:00Z",
+                            "session_thread_id" to "session_thread_id",
+                            "tool_use_id" to "tool_use_id",
+                            "is_error" to true,
+                            "name" to "name",
+                            "agent_name" to "Researcher",
+                            "iteration" to 0,
+                            "outcome_id" to "outc_011CZkZRSw2kEfs6ncTVljxP",
+                            "budget" to
+                                mapOf(
+                                    "max_list_cost" to
+                                        mapOf("amount" to "2500", "currency" to "USD"),
+                                    "type" to "limit",
+                                ),
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsStreamSessionThreadEvents>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> {
+                betaManagedAgentsStreamSessionThreadEvents.validate()
+            }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.id())
+            .contains("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.processedAt())
+            .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadId())
+            .contains("session_thread_id")
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.toolUseId()).contains("tool_use_id")
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.isError()).contains(true)
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.name()).contains("name")
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentName()).contains("Researcher")
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.iteration()).contains(0)
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.outcomeId())
+            .contains("outc_011CZkZRSw2kEfs6ncTVljxP")
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.budget())
+            .contains(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .maxListCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .build()
+            )
+
+        val mismatchedBetaManagedAgentsStreamSessionThreadEvents =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to listOf("invalid"),
+                            "processed_at" to listOf("invalid"),
+                            "session_thread_id" to listOf("invalid"),
+                            "tool_use_id" to listOf("invalid"),
+                            "is_error" to listOf("invalid"),
+                            "name" to listOf("invalid"),
+                            "agent_name" to listOf("invalid"),
+                            "iteration" to listOf("invalid"),
+                            "outcome_id" to listOf("invalid"),
+                            "budget" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsStreamSessionThreadEvents>(),
+                )
+
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.id()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.processedAt()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.sessionThreadId()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.toolUseId()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.isError()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.name()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.agentName()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.iteration()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.outcomeId()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.budget()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -3712,5 +3805,16 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 betaManagedAgentsStreamSessionThreadEvents.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.id()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.processedAt()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.sessionThreadId()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.toolUseId()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.isError()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.name()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.agentName()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.iteration()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.outcomeId()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.budget()).isEmpty
     }
 }

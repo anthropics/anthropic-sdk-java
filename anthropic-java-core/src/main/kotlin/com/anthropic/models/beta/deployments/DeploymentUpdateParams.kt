@@ -13,6 +13,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkKnown
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -1939,6 +1940,9 @@ private constructor(
                     override fun visitMemoryStore(
                         memoryStore: BetaManagedAgentsMemoryStoreResourceParam
                     ): Optional<String> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("mount_path").asKnown()
                 }
             )
 

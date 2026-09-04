@@ -233,6 +233,61 @@ internal class BetaTextCitationParamTest {
         assertThat(roundtrippedBetaTextCitationParam).isEqualTo(betaTextCitationParam)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaTextCitationParam =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "cited_text" to "The grass is green. The sky is blue.",
+                            "document_index" to 0,
+                            "document_title" to "x",
+                            "end_block_index" to 0,
+                            "start_block_index" to 0,
+                            "title" to "x",
+                        )
+                    ),
+                    jacksonTypeRef<BetaTextCitationParam>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaTextCitationParam.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaTextCitationParam.citedText())
+            .isEqualTo("The grass is green. The sky is blue.")
+        assertThat(betaTextCitationParam.documentIndex()).contains(0L)
+        assertThat(betaTextCitationParam.documentTitle()).contains("x")
+        assertThat(betaTextCitationParam.endBlockIndex()).contains(0L)
+        assertThat(betaTextCitationParam.startBlockIndex()).contains(0L)
+        assertThat(betaTextCitationParam.title()).contains("x")
+
+        val mismatchedBetaTextCitationParam =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "cited_text" to listOf("invalid"),
+                            "document_index" to listOf("invalid"),
+                            "document_title" to listOf("invalid"),
+                            "end_block_index" to listOf("invalid"),
+                            "start_block_index" to listOf("invalid"),
+                            "title" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaTextCitationParam>(),
+                )
+
+        assertThrows<AnthropicInvalidDataException> { mismatchedBetaTextCitationParam.citedText() }
+        assertThat(mismatchedBetaTextCitationParam.documentIndex()).isEmpty
+        assertThat(mismatchedBetaTextCitationParam.documentTitle()).isEmpty
+        assertThat(mismatchedBetaTextCitationParam.endBlockIndex()).isEmpty
+        assertThat(mismatchedBetaTextCitationParam.startBlockIndex()).isEmpty
+        assertThat(mismatchedBetaTextCitationParam.title()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -249,5 +304,12 @@ internal class BetaTextCitationParamTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { betaTextCitationParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThrows<AnthropicInvalidDataException> { betaTextCitationParam.citedText() }
+        assertThat(betaTextCitationParam.documentIndex()).isEmpty
+        assertThat(betaTextCitationParam.documentTitle()).isEmpty
+        assertThat(betaTextCitationParam.endBlockIndex()).isEmpty
+        assertThat(betaTextCitationParam.startBlockIndex()).isEmpty
+        assertThat(betaTextCitationParam.title()).isEmpty
     }
 }

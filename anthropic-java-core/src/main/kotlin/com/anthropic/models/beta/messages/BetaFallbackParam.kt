@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -569,6 +570,9 @@ private constructor(
                     override fun visitAdaptive(
                         adaptive: BetaThinkingConfigAdaptive
                     ): Optional<BetaThinkingBlockBinding> = adaptive.blockBinding()
+
+                    override fun unknown(json: JsonValue?): Optional<BetaThinkingBlockBinding> =
+                        json.getProperty<BetaThinkingBlockBinding>("block_binding").asKnown()
                 }
             )
 

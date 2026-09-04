@@ -3528,6 +3528,99 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
             .isEqualTo(betaManagedAgentsStreamSessionEvents)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaManagedAgentsStreamSessionEvents =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to "sevt_011CZkZGOp0iBcp4kaQSihUmy",
+                            "processed_at" to "2026-03-15T10:00:00Z",
+                            "session_thread_id" to "session_thread_id",
+                            "tool_use_id" to "tool_use_id",
+                            "is_error" to true,
+                            "name" to "name",
+                            "agent_name" to "Researcher",
+                            "iteration" to 0,
+                            "outcome_id" to "outc_011CZkZRSw2kEfs6ncTVljxP",
+                            "budget" to
+                                mapOf(
+                                    "max_list_cost" to
+                                        mapOf("amount" to "2500", "currency" to "USD"),
+                                    "type" to "limit",
+                                ),
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsStreamSessionEvents>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> {
+                betaManagedAgentsStreamSessionEvents.validate()
+            }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsStreamSessionEvents.id())
+            .contains("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+        assertThat(betaManagedAgentsStreamSessionEvents.processedAt())
+            .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadId())
+            .contains("session_thread_id")
+        assertThat(betaManagedAgentsStreamSessionEvents.toolUseId()).contains("tool_use_id")
+        assertThat(betaManagedAgentsStreamSessionEvents.isError()).contains(true)
+        assertThat(betaManagedAgentsStreamSessionEvents.name()).contains("name")
+        assertThat(betaManagedAgentsStreamSessionEvents.agentName()).contains("Researcher")
+        assertThat(betaManagedAgentsStreamSessionEvents.iteration()).contains(0)
+        assertThat(betaManagedAgentsStreamSessionEvents.outcomeId())
+            .contains("outc_011CZkZRSw2kEfs6ncTVljxP")
+        assertThat(betaManagedAgentsStreamSessionEvents.budget())
+            .contains(
+                BetaManagedAgentsBudgetLimit.builder()
+                    .maxListCost(
+                        BetaMonetaryAmount.builder()
+                            .amount("2500")
+                            .currency(BetaCurrency.USD)
+                            .build()
+                    )
+                    .type(BetaManagedAgentsBudgetLimit.Type.LIMIT)
+                    .build()
+            )
+
+        val mismatchedBetaManagedAgentsStreamSessionEvents =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to listOf("invalid"),
+                            "processed_at" to listOf("invalid"),
+                            "session_thread_id" to listOf("invalid"),
+                            "tool_use_id" to listOf("invalid"),
+                            "is_error" to listOf("invalid"),
+                            "name" to listOf("invalid"),
+                            "agent_name" to listOf("invalid"),
+                            "iteration" to listOf("invalid"),
+                            "outcome_id" to listOf("invalid"),
+                            "budget" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaManagedAgentsStreamSessionEvents>(),
+                )
+
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.id()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.processedAt()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.sessionThreadId()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.toolUseId()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.isError()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.name()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.agentName()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.iteration()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.outcomeId()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.budget()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -3551,5 +3644,16 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 betaManagedAgentsStreamSessionEvents.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsStreamSessionEvents.id()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.processedAt()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.sessionThreadId()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.toolUseId()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.isError()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.name()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.agentName()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.iteration()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.outcomeId()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.budget()).isEmpty
     }
 }

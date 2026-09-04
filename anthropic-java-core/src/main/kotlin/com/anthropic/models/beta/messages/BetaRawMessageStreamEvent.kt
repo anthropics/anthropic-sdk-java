@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
@@ -90,6 +91,9 @@ private constructor(
                 override fun visitContentBlockStop(
                     contentBlockStop: BetaRawContentBlockStopEvent
                 ): Optional<Long> = Optional.of(contentBlockStop.index())
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("index").asKnown()
             }
         )
 

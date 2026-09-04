@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSystemContentBlock
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -104,6 +105,9 @@ private constructor(
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEventParams
                 ): Optional<String> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("tool_use_id").asKnown()
             }
         )
 
@@ -137,6 +141,9 @@ private constructor(
                 override fun visitSystemMessage(
                     systemMessage: BetaManagedAgentsSystemMessageEventParams
                 ): Optional<Boolean> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Boolean> =
+                    json.getProperty<Boolean>("is_error").asKnown()
             }
         )
 

@@ -12,6 +12,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -612,6 +613,9 @@ private constructor(
 
                     override fun visitCustom(custom: BetaManagedAgentsCustomSkill): String =
                         custom.skillId()
+
+                    override fun unknown(json: JsonValue?): String =
+                        json.getProperty<String>("skill_id").getRequired("skill_id")
                 }
             )
 
@@ -624,6 +628,9 @@ private constructor(
 
                     override fun visitCustom(custom: BetaManagedAgentsCustomSkill): String =
                         custom.version()
+
+                    override fun unknown(json: JsonValue?): String =
+                        json.getProperty<String>("version").getRequired("version")
                 }
             )
 

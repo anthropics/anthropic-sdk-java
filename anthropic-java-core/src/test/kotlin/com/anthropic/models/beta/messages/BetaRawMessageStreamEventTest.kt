@@ -628,6 +628,32 @@ internal class BetaRawMessageStreamEventTest {
         assertThat(roundtrippedBetaRawMessageStreamEvent).isEqualTo(betaRawMessageStreamEvent)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaRawMessageStreamEvent =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(mapOf("type" to "unknown_variant", "index" to 0)),
+                    jacksonTypeRef<BetaRawMessageStreamEvent>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaRawMessageStreamEvent.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaRawMessageStreamEvent.index()).contains(0L)
+
+        val mismatchedBetaRawMessageStreamEvent =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "index" to listOf("invalid"))
+                    ),
+                    jacksonTypeRef<BetaRawMessageStreamEvent>(),
+                )
+
+        assertThat(mismatchedBetaRawMessageStreamEvent.index()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -644,5 +670,7 @@ internal class BetaRawMessageStreamEventTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { betaRawMessageStreamEvent.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaRawMessageStreamEvent.index()).isEmpty
     }
 }

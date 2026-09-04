@@ -12,6 +12,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.toImmutable
 import com.anthropic.core.toJsonString
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -656,6 +657,9 @@ private constructor(
                         override fun visitBrowserState(
                             browserState: BrowserStateBlockParam
                         ): Optional<CacheControlEphemeral> = browserState.cacheControl()
+
+                        override fun unknown(json: JsonValue?): Optional<CacheControlEphemeral> =
+                            json.getProperty<CacheControlEphemeral>("cache_control").asKnown()
                     }
                 )
 
@@ -682,6 +686,9 @@ private constructor(
                         override fun visitBrowserState(
                             browserState: BrowserStateBlockParam
                         ): Optional<String> = Optional.empty()
+
+                        override fun unknown(json: JsonValue?): Optional<String> =
+                            json.getProperty<String>("title").asKnown()
                     }
                 )
 

@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
@@ -56,6 +57,9 @@ private constructor(
 
                 override fun visitCustom(custom: BetaManagedAgentsCustomSkillParams): String =
                     custom.skillId()
+
+                override fun unknown(json: JsonValue?): String =
+                    json.getProperty<String>("skill_id").getRequired("skill_id")
             }
         )
 
@@ -69,6 +73,9 @@ private constructor(
                 override fun visitCustom(
                     custom: BetaManagedAgentsCustomSkillParams
                 ): Optional<String> = custom.version()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("version").asKnown()
             }
         )
 

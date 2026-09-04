@@ -11,6 +11,7 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.Params
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -1092,6 +1093,9 @@ private constructor(
 
                     override fun visitInline(inline: BetaJwksInline): Optional<String> =
                         Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("ca_cert_pem").asKnown()
                 }
             )
 

@@ -3,15 +3,33 @@
 package com.anthropic.core
 
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Collections
 import java.util.SortedMap
 import java.util.SortedSet
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.locks.Lock
+import kotlin.jvm.optionals.getOrNull
 
 @JvmSynthetic
 internal fun <T : Any> T?.getOrThrow(name: String): T =
     this ?: throw AnthropicInvalidDataException("`${name}` is not present")
+
+/**
+ * Returns this JSON object's property with the given [name] as a [JsonField] of type [T],
+ * deserialized the way an SDK class's `JsonField` property is: a "known" value if the raw property
+ * deserializes to [T], the raw [JsonValue] if it doesn't, or [JsonMissing] if this isn't a JSON
+ * object with that property.
+ */
+@JvmSynthetic
+internal inline fun <reified T : Any> JsonValue?.getProperty(name: String): JsonField<T> {
+    val value = this?.asObject()?.getOrNull()?.get(name) ?: return JsonMissing.of()
+    return try {
+        value.convert(jacksonTypeRef<T>())?.let { JsonField.of(it) } ?: value
+    } catch (e: Exception) {
+        value
+    }
+}
 
 @JvmSynthetic
 internal fun <T> List<T>.toImmutable(): List<T> =

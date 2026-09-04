@@ -128,6 +128,42 @@ internal class BetaThinkingConfigParamTest {
         assertThat(roundtrippedBetaThinkingConfigParam).isEqualTo(betaThinkingConfigParam)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaThinkingConfigParam =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "block_binding" to mapOf("prefix_mismatch_behavior" to "error"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaThinkingConfigParam>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaThinkingConfigParam.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaThinkingConfigParam.blockBinding())
+            .contains(
+                BetaThinkingBlockBinding.builder()
+                    .prefixMismatchBehavior(BetaThinkingPrefixMismatchBehavior.ERROR)
+                    .build()
+            )
+
+        val mismatchedBetaThinkingConfigParam =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "block_binding" to listOf("invalid"))
+                    ),
+                    jacksonTypeRef<BetaThinkingConfigParam>(),
+                )
+
+        assertThat(mismatchedBetaThinkingConfigParam.blockBinding()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -144,5 +180,7 @@ internal class BetaThinkingConfigParamTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { betaThinkingConfigParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaThinkingConfigParam.blockBinding()).isEmpty
     }
 }

@@ -166,5 +166,9 @@ internal class CodeExecutionToolResultBlockParamContentTest {
                 codeExecutionToolResultBlockParamContent.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(codeExecutionToolResultBlockParamContent.content()).isEmpty
+        assertThat(codeExecutionToolResultBlockParamContent.returnCode()).isEmpty
+        assertThat(codeExecutionToolResultBlockParamContent.stderr()).isEmpty
     }
 }

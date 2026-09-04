@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
@@ -67,6 +68,9 @@ private constructor(
 
                 override fun visitNone(none: BetaToolChoiceNone): Optional<Boolean> =
                     Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Boolean> =
+                    json.getProperty<Boolean>("disable_parallel_tool_use").asKnown()
             }
         )
 

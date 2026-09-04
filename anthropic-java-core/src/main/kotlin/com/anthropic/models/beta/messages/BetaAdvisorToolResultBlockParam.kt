@@ -11,6 +11,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -354,6 +355,9 @@ private constructor(
                     override fun visitBetaAdvisorRedactedResultBlockParam(
                         betaAdvisorRedactedResultBlockParam: BetaAdvisorRedactedResultBlockParam
                     ): Optional<String> = betaAdvisorRedactedResultBlockParam.stopReason()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("stop_reason").asKnown()
                 }
             )
 

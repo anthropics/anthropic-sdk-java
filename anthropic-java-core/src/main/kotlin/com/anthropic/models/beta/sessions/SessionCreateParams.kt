@@ -14,6 +14,7 @@ import com.anthropic.core.allMaxBy
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
@@ -1331,6 +1332,9 @@ private constructor(
                             BetaManagedAgentsAgentWithOverridesParams
                     ): Optional<String> =
                         Optional.of(betaManagedAgentsAgentWithOverridesParams.id())
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("id").asKnown()
                 }
             )
 
@@ -1347,6 +1351,9 @@ private constructor(
                         betaManagedAgentsAgentWithOverridesParams:
                             BetaManagedAgentsAgentWithOverridesParams
                     ): Optional<Int> = betaManagedAgentsAgentWithOverridesParams.version()
+
+                    override fun unknown(json: JsonValue?): Optional<Int> =
+                        json.getProperty<Int>("version").asKnown()
                 }
             )
 
@@ -2241,6 +2248,9 @@ private constructor(
                     override fun visitMemoryStore(
                         memoryStore: BetaManagedAgentsMemoryStoreResourceParam
                     ): Optional<String> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("mount_path").asKnown()
                 }
             )
 

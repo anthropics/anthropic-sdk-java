@@ -935,6 +935,44 @@ internal class BetaContentBlockTest {
         assertThat(roundtrippedBetaContentBlock).isEqualTo(betaContentBlock)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaContentBlock =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to "id",
+                            "tool_use_id" to "srvtoolu_SQfNkl1n_JR_",
+                        )
+                    ),
+                    jacksonTypeRef<BetaContentBlock>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaContentBlock.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaContentBlock.id()).contains("id")
+        assertThat(betaContentBlock.toolUseId()).contains("srvtoolu_SQfNkl1n_JR_")
+
+        val mismatchedBetaContentBlock =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "id" to listOf("invalid"),
+                            "tool_use_id" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<BetaContentBlock>(),
+                )
+
+        assertThat(mismatchedBetaContentBlock.id()).isEmpty
+        assertThat(mismatchedBetaContentBlock.toolUseId()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -951,5 +989,8 @@ internal class BetaContentBlockTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { betaContentBlock.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaContentBlock.id()).isEmpty
+        assertThat(betaContentBlock.toolUseId()).isEmpty
     }
 }

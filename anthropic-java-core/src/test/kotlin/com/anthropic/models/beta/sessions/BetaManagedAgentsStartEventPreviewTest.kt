@@ -86,6 +86,35 @@ internal class BetaManagedAgentsStartEventPreviewTest {
             .isEqualTo(betaManagedAgentsStartEventPreview)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaManagedAgentsStartEventPreview =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(mapOf("type" to "unknown_variant", "id" to "id")),
+                    jacksonTypeRef<BetaManagedAgentsStartEventPreview>(),
+                )
+
+        val e =
+            assertThrows<AnthropicInvalidDataException> {
+                betaManagedAgentsStartEventPreview.validate()
+            }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaManagedAgentsStartEventPreview.id()).isEqualTo("id")
+
+        val mismatchedBetaManagedAgentsStartEventPreview =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(mapOf("type" to "unknown_variant", "id" to listOf("invalid"))),
+                    jacksonTypeRef<BetaManagedAgentsStartEventPreview>(),
+                )
+
+        assertThrows<AnthropicInvalidDataException> {
+            mismatchedBetaManagedAgentsStartEventPreview.id()
+        }
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -106,5 +135,7 @@ internal class BetaManagedAgentsStartEventPreviewTest {
                 betaManagedAgentsStartEventPreview.validate()
             }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThrows<AnthropicInvalidDataException> { betaManagedAgentsStartEventPreview.id() }
     }
 }

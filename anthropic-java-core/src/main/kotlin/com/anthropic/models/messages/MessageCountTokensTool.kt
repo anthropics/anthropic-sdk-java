@@ -7,6 +7,7 @@ import com.anthropic.core.BaseSerializer
 import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -132,6 +133,9 @@ private constructor(
                 override fun visitToolSearchToolRegex20251119(
                     toolSearchToolRegex20251119: ToolSearchToolRegex20251119
                 ): Optional<CacheControlEphemeral> = toolSearchToolRegex20251119.cacheControl()
+
+                override fun unknown(json: JsonValue?): Optional<CacheControlEphemeral> =
+                    json.getProperty<CacheControlEphemeral>("cache_control").asKnown()
             }
         )
 
@@ -219,6 +223,9 @@ private constructor(
                 override fun visitToolSearchToolRegex20251119(
                     toolSearchToolRegex20251119: ToolSearchToolRegex20251119
                 ): Optional<Boolean> = toolSearchToolRegex20251119.deferLoading()
+
+                override fun unknown(json: JsonValue?): Optional<Boolean> =
+                    json.getProperty<Boolean>("defer_loading").asKnown()
             }
         )
 
@@ -306,6 +313,9 @@ private constructor(
                 override fun visitToolSearchToolRegex20251119(
                     toolSearchToolRegex20251119: ToolSearchToolRegex20251119
                 ): Optional<Boolean> = toolSearchToolRegex20251119.strict()
+
+                override fun unknown(json: JsonValue?): Optional<Boolean> =
+                    json.getProperty<Boolean>("strict").asKnown()
             }
         )
 
@@ -393,6 +403,9 @@ private constructor(
                 override fun visitToolSearchToolRegex20251119(
                     toolSearchToolRegex20251119: ToolSearchToolRegex20251119
                 ): Optional<List<String>> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<List<String>> =
+                    json.getProperty<List<String>>("allowed_domains").asKnown()
             }
         )
 
@@ -480,6 +493,9 @@ private constructor(
                 override fun visitToolSearchToolRegex20251119(
                     toolSearchToolRegex20251119: ToolSearchToolRegex20251119
                 ): Optional<List<String>> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<List<String>> =
+                    json.getProperty<List<String>>("blocked_domains").asKnown()
             }
         )
 
@@ -567,6 +583,9 @@ private constructor(
                 override fun visitToolSearchToolRegex20251119(
                     toolSearchToolRegex20251119: ToolSearchToolRegex20251119
                 ): Optional<Long> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("max_uses").asKnown()
             }
         )
 
@@ -654,6 +673,9 @@ private constructor(
                 override fun visitToolSearchToolRegex20251119(
                     toolSearchToolRegex20251119: ToolSearchToolRegex20251119
                 ): Optional<UserLocation> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<UserLocation> =
+                    json.getProperty<UserLocation>("user_location").asKnown()
             }
         )
 
@@ -742,6 +764,9 @@ private constructor(
                 override fun visitToolSearchToolRegex20251119(
                     toolSearchToolRegex20251119: ToolSearchToolRegex20251119
                 ): Optional<CitationsConfigParam> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<CitationsConfigParam> =
+                    json.getProperty<CitationsConfigParam>("citations").asKnown()
             }
         )
 
@@ -829,6 +854,9 @@ private constructor(
                 override fun visitToolSearchToolRegex20251119(
                     toolSearchToolRegex20251119: ToolSearchToolRegex20251119
                 ): Optional<Long> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Long> =
+                    json.getProperty<Long>("max_content_tokens").asKnown()
             }
         )
 
@@ -916,6 +944,9 @@ private constructor(
                 override fun visitToolSearchToolRegex20251119(
                     toolSearchToolRegex20251119: ToolSearchToolRegex20251119
                 ): Optional<Boolean> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<Boolean> =
+                    json.getProperty<Boolean>("use_cache").asKnown()
             }
         )
 

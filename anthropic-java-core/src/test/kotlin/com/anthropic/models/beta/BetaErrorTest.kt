@@ -293,6 +293,32 @@ internal class BetaErrorTest {
         assertThat(roundtrippedBetaError).isEqualTo(betaError)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val betaError =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(mapOf("type" to "unknown_variant", "message" to "message")),
+                    jacksonTypeRef<BetaError>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { betaError.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(betaError.message()).isEqualTo("message")
+
+        val mismatchedBetaError =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf("type" to "unknown_variant", "message" to listOf("invalid"))
+                    ),
+                    jacksonTypeRef<BetaError>(),
+                )
+
+        assertThrows<AnthropicInvalidDataException> { mismatchedBetaError.message() }
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -308,5 +334,7 @@ internal class BetaErrorTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { betaError.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThrows<AnthropicInvalidDataException> { betaError.message() }
     }
 }

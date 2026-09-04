@@ -1057,6 +1057,57 @@ internal class ContentBlockParamTest {
         assertThat(roundtrippedContentBlockParam).isEqualTo(contentBlockParam)
     }
 
+    @Test
+    fun unknownVariantCommonProperties() {
+        val contentBlockParam =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "cache_control" to mapOf("type" to "ephemeral", "ttl" to "5m"),
+                            "title" to "x",
+                            "id" to "id",
+                            "toolset_name" to "toolset_name",
+                            "tool_use_id" to "tool_use_id",
+                        )
+                    ),
+                    jacksonTypeRef<ContentBlockParam>(),
+                )
+
+        val e = assertThrows<AnthropicInvalidDataException> { contentBlockParam.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(contentBlockParam.cacheControl())
+            .contains(CacheControlEphemeral.builder().ttl(CacheControlEphemeral.Ttl.TTL_5M).build())
+        assertThat(contentBlockParam.title()).contains("x")
+        assertThat(contentBlockParam.id()).contains("id")
+        assertThat(contentBlockParam.toolsetName()).contains("toolset_name")
+        assertThat(contentBlockParam.toolUseId()).contains("tool_use_id")
+
+        val mismatchedContentBlockParam =
+            jsonMapper()
+                .convertValue(
+                    JsonValue.from(
+                        mapOf(
+                            "type" to "unknown_variant",
+                            "cache_control" to listOf("invalid"),
+                            "title" to listOf("invalid"),
+                            "id" to listOf("invalid"),
+                            "toolset_name" to listOf("invalid"),
+                            "tool_use_id" to listOf("invalid"),
+                        )
+                    ),
+                    jacksonTypeRef<ContentBlockParam>(),
+                )
+
+        assertThat(mismatchedContentBlockParam.cacheControl()).isEmpty
+        assertThat(mismatchedContentBlockParam.title()).isEmpty
+        assertThat(mismatchedContentBlockParam.id()).isEmpty
+        assertThat(mismatchedContentBlockParam.toolsetName()).isEmpty
+        assertThat(mismatchedContentBlockParam.toolUseId()).isEmpty
+    }
+
     enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
@@ -1073,5 +1124,11 @@ internal class ContentBlockParamTest {
 
         val e = assertThrows<AnthropicInvalidDataException> { contentBlockParam.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
+
+        assertThat(contentBlockParam.cacheControl()).isEmpty
+        assertThat(contentBlockParam.title()).isEmpty
+        assertThat(contentBlockParam.id()).isEmpty
+        assertThat(contentBlockParam.toolsetName()).isEmpty
+        assertThat(contentBlockParam.toolUseId()).isEmpty
     }
 }

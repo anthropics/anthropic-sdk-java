@@ -12,6 +12,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -258,6 +259,11 @@ private constructor(
                     override fun visitClearThinking20251015(
                         clearThinking20251015: BetaClearThinking20251015EditResponse
                     ): Long = clearThinking20251015.clearedInputTokens()
+
+                    override fun unknown(json: JsonValue?): Long =
+                        json
+                            .getProperty<Long>("cleared_input_tokens")
+                            .getRequired("cleared_input_tokens")
                 }
             )
 

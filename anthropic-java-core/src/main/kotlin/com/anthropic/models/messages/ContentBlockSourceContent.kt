@@ -9,6 +9,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
@@ -51,6 +52,9 @@ private constructor(
 
                 override fun visitImage(image: ImageBlockParam): Optional<CacheControlEphemeral> =
                     image.cacheControl()
+
+                override fun unknown(json: JsonValue?): Optional<CacheControlEphemeral> =
+                    json.getProperty<CacheControlEphemeral>("cache_control").asKnown()
             }
         )
 
