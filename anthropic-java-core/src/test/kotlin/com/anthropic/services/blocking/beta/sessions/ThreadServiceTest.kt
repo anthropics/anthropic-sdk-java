@@ -36,7 +36,7 @@ internal class ThreadServiceTest {
         betaManagedAgentsSessionThread.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

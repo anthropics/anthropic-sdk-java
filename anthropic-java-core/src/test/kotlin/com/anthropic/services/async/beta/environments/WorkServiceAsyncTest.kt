@@ -76,7 +76,7 @@ internal class WorkServiceAsyncTest {
         betaSelfHostedWork.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -163,7 +163,7 @@ internal class WorkServiceAsyncTest {
         unwrappedBetaSelfHostedWork?.validate()
     }
 
-    @Disabled("buildURL drops path-level query params (SDK-4349)")
+    @Disabled("buildURL drops path-level query params")
     @Test
     fun stats() {
         val client =
