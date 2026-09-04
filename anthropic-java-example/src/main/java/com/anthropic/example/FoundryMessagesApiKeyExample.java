@@ -46,7 +46,7 @@ public final class FoundryMessagesApiKeyExample {
                 // For Foundry, the `model` name must be set to the name of the Magma deployment,
                 // which defaults to the name of the deployed Anthropic model, but the deployment
                 // name may be changed to an arbitrary value, such as that shown here.
-                .model("claude-sonnet-4-5")
+                .model("claude-sonnet-5")
                 .maxTokens(2048)
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();

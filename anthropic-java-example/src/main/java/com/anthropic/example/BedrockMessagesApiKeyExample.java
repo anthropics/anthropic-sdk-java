@@ -43,7 +43,7 @@ public final class BedrockMessagesApiKeyExample {
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model("us.anthropic.claude-opus-4-20250514-v1:0")
+                .model("global.anthropic.claude-opus-5")
                 .maxTokens(2048)
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();
