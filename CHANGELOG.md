@@ -1,5 +1,44 @@
 # Changelog
 
+## 2.61.0 (2026-09-04)
+
+Full Changelog: [v2.60.0...v2.61.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.60.0...v2.61.0)
+
+### Features
+
+* **api:** add Claude Tag category and user breakdowns to usage reports ([7caaeb9](https://github.com/anthropics/anthropic-sdk-java/commit/7caaeb9fde92fa516f9b699d31522392c88fbd96))
+* **api:** add named types for organization compliance settings state ([9576c86](https://github.com/anthropics/anthropic-sdk-java/commit/9576c86dced649ba360eecae4e061336cfa0d7ba))
+* **api:** add workspace_id request option for multi-workspace credentials ([cf7f13c](https://github.com/anthropics/anthropic-sdk-java/commit/cf7f13ccc1d8655d9035ac2ed49b600fe906441d))
+* **api:** raise Managed Agents vault refresh token limit to 8192 chars ([d0c2286](https://github.com/anthropics/anthropic-sdk-java/commit/d0c2286edaa20a84e18d631a736493059fe0a1a4))
+* **client:** keep vault credential secrets out of Terraform state with write-only arguments ([7556952](https://github.com/anthropics/anthropic-sdk-java/commit/755695219118fcbfde2e2b379a83ade270daaab7))
+
+
+### Bug Fixes
+
+* **api:** remove response text block maxLength constraint ([b6225ce](https://github.com/anthropics/anthropic-sdk-java/commit/b6225ce28067b84b3934fdd0188174572549daa0))
+* **client:** raise a clear error when an httpx object is passed instead of an httpx2 one ([130d7af](https://github.com/anthropics/anthropic-sdk-java/commit/130d7af1c6502ad7dee04938d3a137d2af30e3ca))
+* **client:** read union common properties from raw JSON for unknown variants ([3d2f38f](https://github.com/anthropics/anthropic-sdk-java/commit/3d2f38fe74eeec004bfd12915a4f9859d76744f9))
+
+
+### Chores
+
+* **api:** accept anthropic-version on Claude Enterprise admin endpoints ([165fa6b](https://github.com/anthropics/anthropic-sdk-java/commit/165fa6b5aa17fd4b85e2364f0eec9772c2fede84))
+* **api:** declare specific error statuses instead of a generic 4XX response ([e0dc35b](https://github.com/anthropics/anthropic-sdk-java/commit/e0dc35b2c5941d07e02ea55aa07534c946c94cc9))
+* **api:** update authentication parameters on spend limit create and delete ([d054f6c](https://github.com/anthropics/anthropic-sdk-java/commit/d054f6cfe4b2b2e63545740a2d2a1eddd8e306ba))
+* **ci:** compare breaking-change detection against a baseline tag when present ([309bc84](https://github.com/anthropics/anthropic-sdk-java/commit/309bc84dc8506a495abf8259e20368d853070e99))
+* **docs:** fix broken session link in memory version descriptions ([ef6f4fd](https://github.com/anthropics/anthropic-sdk-java/commit/ef6f4fdad9a441d8b8befb1124ab4b8c16ff0aea))
+* **examples:** refresh platform model IDs ([#263](https://github.com/anthropics/anthropic-sdk-java/issues/263)) ([47425be](https://github.com/anthropics/anthropic-sdk-java/commit/47425be0a66a9e871b6834c1bff605e001e506a3))
+* **internal:** fix spec repo README link and drop its mock script ([7556952](https://github.com/anthropics/anthropic-sdk-java/commit/755695219118fcbfde2e2b379a83ade270daaab7))
+* **internal:** read formatter versions from one place ([cf7f13c](https://github.com/anthropics/anthropic-sdk-java/commit/cf7f13ccc1d8655d9035ac2ed49b600fe906441d))
+* **internal:** update CODEOWNERS ([8276e5c](https://github.com/anthropics/anthropic-sdk-java/commit/8276e5c4884cd4391fa0f960be6f877a6852bccc))
+* **internal:** update CODEOWNERS ([7556952](https://github.com/anthropics/anthropic-sdk-java/commit/755695219118fcbfde2e2b379a83ade270daaab7))
+* **tests:** reword the skip reason on the path-level query param tests ([d89a5f2](https://github.com/anthropics/anthropic-sdk-java/commit/d89a5f269a63216741ea60e8516783e355e1e222))
+
+
+### Documentation
+
+* **api:** add HTTP reference for the remaining Admin API endpoints ([130d7af](https://github.com/anthropics/anthropic-sdk-java/commit/130d7af1c6502ad7dee04938d3a137d2af30e3ca))
+
 ## 2.60.0 (2026-09-01)
 
 Full Changelog: [v2.59.0...v2.60.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.59.0...v2.60.0)
