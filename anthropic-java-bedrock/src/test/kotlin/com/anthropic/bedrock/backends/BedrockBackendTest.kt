@@ -1,18 +1,23 @@
 package com.anthropic.bedrock.backends
 
+import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpRequestBody
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.bodyToJson
 import com.anthropic.core.http.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.node.ObjectNode
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.io.OutputStream
 import java.lang.System.clearProperty
 import java.lang.System.setProperty
+import java.util.Base64
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -27,6 +32,8 @@ import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain
+import software.amazon.eventstream.HeaderValue
+import software.amazon.eventstream.Message
 
 @ResourceLock("environment")
 internal class BedrockBackendTest {
@@ -945,6 +952,81 @@ internal class BedrockBackendTest {
         val backend = BedrockBackend.fromEnv()
 
         assertThatNoException().isThrownBy { backend.close() }
+    }
+
+    @Test
+    fun prepareResponseSkipsInvocationMetricsTrailerWithoutTypeField() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
+
+        val firstEvent =
+            """{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}"""
+        // The trailer that AWS Bedrock appends to a Messages API stream. It carries usage
+        // metrics and, unlike every other frame in the stream, has no "type" field.
+        val invocationMetricsTrailer =
+            """{"amazon-bedrock-invocationMetrics":{"inputTokenCount":10,"outputTokenCount":20,"invocationLatency":543,"firstByteLatency":123}}"""
+        val secondEvent = """{"type":"content_block_stop","index":0}"""
+
+        val response = eventStreamResponse(firstEvent, invocationMetricsTrailer, secondEvent)
+        val prepared = backend.prepareResponse(response)
+        val sse = String(prepared.body().readBytes())
+
+        // Before the fix, parsing the trailer's absent "type" field throws an uncaught
+        // NullPointerException on the background SSE-decoding thread. The `use { }` blocks in
+        // `prepareResponse` still close the piped output from their `finally` clause when that
+        // happens, so the reader just sees a clean, early EOF: the stream silently truncates
+        // after `firstEvent` and `secondEvent` is lost, with no exception visible anywhere the
+        // caller could catch it. Asserting on the output (not on a thrown exception) is what
+        // actually catches that truncation - a naive try/catch around this call would pass
+        // against the buggy code too, since the failure never leaves the background thread.
+        assertThat(sse).contains("event: content_block_delta\ndata: $firstEvent\n\n")
+        assertThat(sse).contains("event: content_block_stop\ndata: $secondEvent\n\n")
+        assertThat(sse).doesNotContain("amazon-bedrock-invocationMetrics")
+    }
+
+    @Test
+    fun prepareResponseLeavesWellFormedEventUnchanged() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
+        val event = """{"type":"message_stop"}"""
+
+        val prepared = backend.prepareResponse(eventStreamResponse(event))
+        val sse = String(prepared.body().readBytes())
+
+        assertThat(sse).isEqualTo("event: message_stop\ndata: $event\n\n")
+    }
+
+    /**
+     * Builds a fake response whose body is a binary AWS EventStream encoding one message per given
+     * JSON string, each wrapping its JSON as the base64 "bytes" field of an EventStream payload,
+     * mirroring the shape Bedrock sends for streamed Messages API responses.
+     */
+    private fun eventStreamResponse(vararg innerJsonPayloads: String): HttpResponse {
+        val body = ByteArrayOutputStream()
+        innerJsonPayloads.forEach { body.write(encodeEventStreamMessage(it)) }
+        val bodyBytes = body.toByteArray()
+
+        return object : HttpResponse {
+            override fun statusCode(): Int = 200
+
+            override fun headers(): Headers =
+                Headers.builder()
+                    .put("content-type", "application/vnd.amazon.eventstream")
+                    .put("x-amzn-bedrock-content-type", "application/json")
+                    .build()
+
+            override fun body(): InputStream = ByteArrayInputStream(bodyBytes)
+
+            override fun close() {}
+        }
+    }
+
+    /** Encodes [innerJson] as the payload of a single binary AWS EventStream message. */
+    private fun encodeEventStreamMessage(innerJson: String): ByteArray {
+        val base64Payload = Base64.getEncoder().encodeToString(innerJson.toByteArray())
+        val payloadJson = """{"bytes":"$base64Payload"}"""
+        val message = Message(emptyMap<String, HeaderValue>(), payloadJson.toByteArray())
+        val out = ByteArrayOutputStream()
+        message.encode(out)
+        return out.toByteArray()
     }
 
     /**
