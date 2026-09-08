@@ -994,14 +994,65 @@ internal class BedrockBackendTest {
         assertThat(sse).isEqualTo("event: message_stop\ndata: $event\n\n")
     }
 
+    @Test
+    fun prepareResponseSurfacesExceptionFrameAsSseError() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
+        // AWS EventStream reports a mid-stream failure as a frame with a ":message-type"
+        // header of "exception" whose payload is the error body directly, not wrapped in a
+        // "bytes" field the way normal Messages API frames are.
+        val errorPayload = """{"message":"Too many requests, please wait before trying again."}"""
+        val response =
+            eventStreamResponseFromMessages(
+                encodeEventStreamErrorMessage("exception", "throttlingException", errorPayload)
+            )
+
+        val prepared = backend.prepareResponse(response)
+        val sse = String(prepared.body().readBytes())
+
+        // Before this fix, `.get("bytes").asText()` NPEs on the missing field here, on the
+        // same background thread as the inner "type" bug above, and the caller again just
+        // sees a clean, early EOF with no exception. Forwarding it as an "error" SSE event
+        // instead routes it through the SDK's existing SseHandler, which turns an "error"
+        // event into a thrown SseException the same as an in-band Anthropic API error.
+        assertThat(sse).isEqualTo("event: error\ndata: $errorPayload\n\n")
+    }
+
+    @Test
+    fun prepareResponseSurfacesErrorFrameMidStreamInsteadOfTruncating() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
+        val firstEvent =
+            """{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}"""
+        val errorPayload = """{"message":"Internal server error"}"""
+        val response =
+            eventStreamResponseFromMessages(
+                encodeEventStreamMessage(firstEvent),
+                encodeEventStreamErrorMessage("error", "internalServerException", errorPayload),
+            )
+
+        val prepared = backend.prepareResponse(response)
+        val sse = String(prepared.body().readBytes())
+
+        assertThat(sse).contains("event: content_block_delta\ndata: $firstEvent\n\n")
+        assertThat(sse).contains("event: error\ndata: $errorPayload\n\n")
+    }
+
     /**
      * Builds a fake response whose body is a binary AWS EventStream encoding one message per given
      * JSON string, each wrapping its JSON as the base64 "bytes" field of an EventStream payload,
      * mirroring the shape Bedrock sends for streamed Messages API responses.
      */
-    private fun eventStreamResponse(vararg innerJsonPayloads: String): HttpResponse {
+    private fun eventStreamResponse(vararg innerJsonPayloads: String): HttpResponse =
+        eventStreamResponseFromMessages(
+            *innerJsonPayloads.map { encodeEventStreamMessage(it) }.toTypedArray()
+        )
+
+    /**
+     * Builds a fake response whose body is the concatenation of the given pre-encoded binary AWS
+     * EventStream messages.
+     */
+    private fun eventStreamResponseFromMessages(vararg messages: ByteArray): HttpResponse {
         val body = ByteArrayOutputStream()
-        innerJsonPayloads.forEach { body.write(encodeEventStreamMessage(it)) }
+        messages.forEach { body.write(it) }
         val bodyBytes = body.toByteArray()
 
         return object : HttpResponse {
@@ -1024,6 +1075,28 @@ internal class BedrockBackendTest {
         val base64Payload = Base64.getEncoder().encodeToString(innerJson.toByteArray())
         val payloadJson = """{"bytes":"$base64Payload"}"""
         val message = Message(emptyMap<String, HeaderValue>(), payloadJson.toByteArray())
+        val out = ByteArrayOutputStream()
+        message.encode(out)
+        return out.toByteArray()
+    }
+
+    /**
+     * Encodes an AWS EventStream exception/error frame: a ":message-type" header of [messageType]
+     * ("exception" or "error"), a ":exception-type" header naming the modeled error shape, and
+     * [errorPayload] as the raw (non-base64, unwrapped) payload, mirroring how Bedrock reports a
+     * mid-stream failure.
+     */
+    private fun encodeEventStreamErrorMessage(
+        messageType: String,
+        exceptionType: String,
+        errorPayload: String,
+    ): ByteArray {
+        val headers =
+            mapOf(
+                ":message-type" to HeaderValue.fromString(messageType),
+                ":exception-type" to HeaderValue.fromString(exceptionType),
+            )
+        val message = Message(headers, errorPayload.toByteArray())
         val out = ByteArrayOutputStream()
         message.encode(out)
         return out.toByteArray()
