@@ -80,8 +80,9 @@ private constructor(
 
     /**
      * The visibility scope for this environment. 'organization' makes the environment visible to
-     * all accounts. 'account' restricts visibility to the owning account only. Only applicable for
-     * self-hosted environments. If not specified, defaults based on organization type.
+     * all accounts. 'account' restricts visibility to the owning account only. API organizations
+     * support only 'organization'; 'account' is rejected. If not specified, defaults based on
+     * organization type.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -267,9 +268,9 @@ private constructor(
 
         /**
          * The visibility scope for this environment. 'organization' makes the environment visible
-         * to all accounts. 'account' restricts visibility to the owning account only. Only
-         * applicable for self-hosted environments. If not specified, defaults based on organization
-         * type.
+         * to all accounts. 'account' restricts visibility to the owning account only. API
+         * organizations support only 'organization'; 'account' is rejected. If not specified,
+         * defaults based on organization type.
          */
         fun scope(scope: Scope?) = apply { body.scope(scope) }
 
@@ -495,9 +496,9 @@ private constructor(
 
         /**
          * The visibility scope for this environment. 'organization' makes the environment visible
-         * to all accounts. 'account' restricts visibility to the owning account only. Only
-         * applicable for self-hosted environments. If not specified, defaults based on organization
-         * type.
+         * to all accounts. 'account' restricts visibility to the owning account only. API
+         * organizations support only 'organization'; 'account' is rejected. If not specified,
+         * defaults based on organization type.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -658,8 +659,8 @@ private constructor(
             /**
              * The visibility scope for this environment. 'organization' makes the environment
              * visible to all accounts. 'account' restricts visibility to the owning account only.
-             * Only applicable for self-hosted environments. If not specified, defaults based on
-             * organization type.
+             * API organizations support only 'organization'; 'account' is rejected. If not
+             * specified, defaults based on organization type.
              */
             fun scope(scope: Scope?) = scope(JsonField.ofNullable(scope))
 
@@ -1281,8 +1282,9 @@ private constructor(
 
     /**
      * The visibility scope for this environment. 'organization' makes the environment visible to
-     * all accounts. 'account' restricts visibility to the owning account only. Only applicable for
-     * self-hosted environments. If not specified, defaults based on organization type.
+     * all accounts. 'account' restricts visibility to the owning account only. API organizations
+     * support only 'organization'; 'account' is rejected. If not specified, defaults based on
+     * organization type.
      */
     class Scope @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
