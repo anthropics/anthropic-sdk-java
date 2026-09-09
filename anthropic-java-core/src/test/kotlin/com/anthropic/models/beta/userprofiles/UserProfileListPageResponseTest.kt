@@ -30,6 +30,21 @@ internal class UserProfileListPageResponseTest {
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .accessType(BetaUserProfile.AccessType.APPLICATION)
                         .externalId("user_12345")
+                        .externalUserDetails(
+                            BetaUserProfileExternalUserDetails.builder()
+                                .accountStatus(
+                                    BetaUserProfileExternalUserDetails.AccountStatus.ACTIVE
+                                )
+                                .country("country")
+                                .emailHash("email_hash")
+                                .entityType(
+                                    BetaUserProfileExternalUserDetails.EntityType.INDIVIDUAL
+                                )
+                                .nameHash("name_hash")
+                                .onboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .referenceId("reference_id")
+                                .build()
+                        )
                         .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                         .name("Example User")
                         .build()
@@ -55,6 +70,17 @@ internal class UserProfileListPageResponseTest {
                     .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .accessType(BetaUserProfile.AccessType.APPLICATION)
                     .externalId("user_12345")
+                    .externalUserDetails(
+                        BetaUserProfileExternalUserDetails.builder()
+                            .accountStatus(BetaUserProfileExternalUserDetails.AccountStatus.ACTIVE)
+                            .country("country")
+                            .emailHash("email_hash")
+                            .entityType(BetaUserProfileExternalUserDetails.EntityType.INDIVIDUAL)
+                            .nameHash("name_hash")
+                            .onboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .referenceId("reference_id")
+                            .build()
+                    )
                     .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                     .name("Example User")
                     .build()
@@ -85,6 +111,21 @@ internal class UserProfileListPageResponseTest {
                         .updatedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .accessType(BetaUserProfile.AccessType.APPLICATION)
                         .externalId("user_12345")
+                        .externalUserDetails(
+                            BetaUserProfileExternalUserDetails.builder()
+                                .accountStatus(
+                                    BetaUserProfileExternalUserDetails.AccountStatus.ACTIVE
+                                )
+                                .country("country")
+                                .emailHash("email_hash")
+                                .entityType(
+                                    BetaUserProfileExternalUserDetails.EntityType.INDIVIDUAL
+                                )
+                                .nameHash("name_hash")
+                                .onboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .referenceId("reference_id")
+                                .build()
+                        )
                         .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                         .name("Example User")
                         .build()

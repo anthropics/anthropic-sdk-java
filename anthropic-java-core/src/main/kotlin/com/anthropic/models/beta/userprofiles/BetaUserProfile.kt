@@ -29,6 +29,7 @@ private constructor(
     private val updatedAt: JsonField<OffsetDateTime>,
     private val accessType: JsonField<AccessType>,
     private val externalId: JsonField<String>,
+    private val externalUserDetails: JsonField<BetaUserProfileExternalUserDetails>,
     private val externalUserOnboardedAt: JsonField<OffsetDateTime>,
     private val name: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -54,6 +55,9 @@ private constructor(
         @JsonProperty("external_id")
         @ExcludeMissing
         externalId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("external_user_details")
+        @ExcludeMissing
+        externalUserDetails: JsonField<BetaUserProfileExternalUserDetails> = JsonMissing.of(),
         @JsonProperty("external_user_onboarded_at")
         @ExcludeMissing
         externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -67,6 +71,7 @@ private constructor(
         updatedAt,
         accessType,
         externalId,
+        externalUserDetails,
         externalUserOnboardedAt,
         name,
         mutableMapOf(),
@@ -133,12 +138,24 @@ private constructor(
     fun accessType(): Optional<AccessType> = accessType.getOptional("access_type")
 
     /**
-     * Platform's own identifier for this user. Not enforced unique.
+     * Platform's own identifier for this user. Not enforced unique. Present under the
+     * `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta headers; under
+     * `user-profiles-2026-09-04` the value is `external_user_details.reference_id`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun externalId(): Optional<String> = externalId.getOptional("external_id")
+
+    /**
+     * Details about the entity this profile represents, as the platform states them. Anthropic does
+     * not verify them. Every field is present, `null` until the platform supplies a value.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun externalUserDetails(): Optional<BetaUserProfileExternalUserDetails> =
+        externalUserDetails.getOptional("external_user_details")
 
     /**
      * A timestamp in RFC 3339 format
@@ -224,6 +241,16 @@ private constructor(
     @JsonProperty("external_id") @ExcludeMissing fun _externalId(): JsonField<String> = externalId
 
     /**
+     * Returns the raw JSON value of [externalUserDetails].
+     *
+     * Unlike [externalUserDetails], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("external_user_details")
+    @ExcludeMissing
+    fun _externalUserDetails(): JsonField<BetaUserProfileExternalUserDetails> = externalUserDetails
+
+    /**
      * Returns the raw JSON value of [externalUserOnboardedAt].
      *
      * Unlike [externalUserOnboardedAt], this method doesn't throw if the JSON field has an
@@ -281,6 +308,8 @@ private constructor(
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var accessType: JsonField<AccessType> = JsonMissing.of()
         private var externalId: JsonField<String> = JsonMissing.of()
+        private var externalUserDetails: JsonField<BetaUserProfileExternalUserDetails> =
+            JsonMissing.of()
         private var externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -295,6 +324,7 @@ private constructor(
             updatedAt = betaUserProfile.updatedAt
             accessType = betaUserProfile.accessType
             externalId = betaUserProfile.externalId
+            externalUserDetails = betaUserProfile.externalUserDetails
             externalUserOnboardedAt = betaUserProfile.externalUserOnboardedAt
             name = betaUserProfile.name
             additionalProperties = betaUserProfile.additionalProperties.toMutableMap()
@@ -395,7 +425,11 @@ private constructor(
          */
         fun accessType(accessType: JsonField<AccessType>) = apply { this.accessType = accessType }
 
-        /** Platform's own identifier for this user. Not enforced unique. */
+        /**
+         * Platform's own identifier for this user. Not enforced unique. Present under the
+         * `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta headers; under
+         * `user-profiles-2026-09-04` the value is `external_user_details.reference_id`.
+         */
         fun externalId(externalId: String?) = externalId(JsonField.ofNullable(externalId))
 
         /** Alias for calling [Builder.externalId] with `externalId.orElse(null)`. */
@@ -409,6 +443,24 @@ private constructor(
          * value.
          */
         fun externalId(externalId: JsonField<String>) = apply { this.externalId = externalId }
+
+        /**
+         * Details about the entity this profile represents, as the platform states them. Anthropic
+         * does not verify them. Every field is present, `null` until the platform supplies a value.
+         */
+        fun externalUserDetails(externalUserDetails: BetaUserProfileExternalUserDetails) =
+            externalUserDetails(JsonField.of(externalUserDetails))
+
+        /**
+         * Sets [Builder.externalUserDetails] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.externalUserDetails] with a well-typed
+         * [BetaUserProfileExternalUserDetails] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun externalUserDetails(
+            externalUserDetails: JsonField<BetaUserProfileExternalUserDetails>
+        ) = apply { this.externalUserDetails = externalUserDetails }
 
         /** A timestamp in RFC 3339 format */
         fun externalUserOnboardedAt(externalUserOnboardedAt: OffsetDateTime?) =
@@ -496,6 +548,7 @@ private constructor(
                 checkRequired("updatedAt", updatedAt),
                 accessType,
                 externalId,
+                externalUserDetails,
                 externalUserOnboardedAt,
                 name,
                 additionalProperties.toMutableMap(),
@@ -525,6 +578,7 @@ private constructor(
         updatedAt()
         accessType().ifPresent { it.validate() }
         externalId()
+        externalUserDetails().ifPresent { it.validate() }
         externalUserOnboardedAt()
         name()
         validated = true
@@ -553,6 +607,7 @@ private constructor(
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (accessType.asKnown().getOrNull()?.validity() ?: 0) +
             (if (externalId.asKnown().isPresent) 1 else 0) +
+            (externalUserDetails.asKnown().getOrNull()?.validity() ?: 0) +
             (if (externalUserOnboardedAt.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0)
 
@@ -1076,6 +1131,7 @@ private constructor(
             updatedAt == other.updatedAt &&
             accessType == other.accessType &&
             externalId == other.externalId &&
+            externalUserDetails == other.externalUserDetails &&
             externalUserOnboardedAt == other.externalUserOnboardedAt &&
             name == other.name &&
             additionalProperties == other.additionalProperties
@@ -1091,6 +1147,7 @@ private constructor(
             updatedAt,
             accessType,
             externalId,
+            externalUserDetails,
             externalUserOnboardedAt,
             name,
             additionalProperties,
@@ -1100,5 +1157,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaUserProfile{id=$id, createdAt=$createdAt, metadata=$metadata, trustGrants=$trustGrants, type=$type, updatedAt=$updatedAt, accessType=$accessType, externalId=$externalId, externalUserOnboardedAt=$externalUserOnboardedAt, name=$name, additionalProperties=$additionalProperties}"
+        "BetaUserProfile{id=$id, createdAt=$createdAt, metadata=$metadata, trustGrants=$trustGrants, type=$type, updatedAt=$updatedAt, accessType=$accessType, externalId=$externalId, externalUserDetails=$externalUserDetails, externalUserOnboardedAt=$externalUserOnboardedAt, name=$name, additionalProperties=$additionalProperties}"
 }
