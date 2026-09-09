@@ -92,6 +92,14 @@ class MessageAccumulator private constructor() {
      */
     private val messageContentInputJson: MutableMap<Long, StringBuilder> = mutableMapOf()
 
+    /**
+     * Text and thinking delta strings buffered per content block index. The buffer is folded into
+     * the content block once, when the block stops, so accumulation stays linear in the streamed
+     * text rather than re-copying the block's whole text for every delta. The keys correspond to
+     * the `index` identified in each of the `content_block_delta` events.
+     */
+    private val messageContentDeltaText: MutableMap<Long, StringBuilder> = mutableMapOf()
+
     companion object {
         private val JSON_MAPPER = jsonMapper()
 
@@ -122,13 +130,16 @@ class MessageAccumulator private constructor() {
         internal fun mergeTextDelta(
             contentBlock: ContentBlock,
             textDelta: TextDelta,
-        ): ContentBlock {
+        ): ContentBlock = mergeText(contentBlock, textDelta.text())
+
+        @JvmSynthetic
+        internal fun mergeText(contentBlock: ContentBlock, text: String): ContentBlock {
             require(contentBlock.isText()) { "Content block is not a text block." }
             val oldTextBlock = contentBlock.asText()
             val newTextBlock =
                 oldTextBlock
                     .toBuilder()
-                    .text(oldTextBlock.text() + textDelta.text())
+                    .text(oldTextBlock.text() + text)
                     // A streamed `content_block_start` payload omits the `citations` field, but
                     // `toBuilder()` drops a missing `citations` while `build()` requires it to be
                     // set — carry the raw field through so the rebuild does not throw.
@@ -158,13 +169,16 @@ class MessageAccumulator private constructor() {
         internal fun mergeThinkingDelta(
             contentBlock: ContentBlock,
             thinkingDelta: ThinkingDelta,
-        ): ContentBlock {
+        ): ContentBlock = mergeThinking(contentBlock, thinkingDelta.thinking())
+
+        @JvmSynthetic
+        internal fun mergeThinking(contentBlock: ContentBlock, thinking: String): ContentBlock {
             require(contentBlock.isThinking()) { "Content block is not a thinking block." }
             val oldThinkingBlock = contentBlock.asThinking()
             val newThinkingBlock =
                 oldThinkingBlock
                     .toBuilder()
-                    .thinking(oldThinkingBlock.thinking() + thinkingDelta.thinking())
+                    .thinking(oldThinkingBlock.thinking() + thinking)
                     .build()
 
             return ContentBlock.ofThinking(newThinkingBlock)
@@ -306,6 +320,14 @@ class MessageAccumulator private constructor() {
                 }
 
                 override fun visitMessageStop(messageStop: RawMessageStopEvent) {
+                    // A content block that never received its `content_block_stop` event still
+                    // needs its buffered delta text folded in.
+                    for (index in messageContentDeltaText.keys.toList()) {
+                        messageContent[index]?.let {
+                            messageContent[index] = foldDeltaText(index, it)
+                        }
+                    }
+
                     message =
                         requireMessageBuilder()
                             // The indexed content block map is converted to a list with the blocks
@@ -420,8 +442,15 @@ class MessageAccumulator private constructor() {
                             .delta()
                             .accept(
                                 object : RawContentBlockDelta.Visitor<ContentBlock> {
-                                    override fun visitText(text: TextDelta) =
-                                        mergeTextDelta(oldContentBlock, text)
+                                    override fun visitText(text: TextDelta) = run {
+                                        require(oldContentBlock.isText()) {
+                                            "Content block is not a text block."
+                                        }
+                                        messageContentDeltaText
+                                            .getOrPut(index) { StringBuilder() }
+                                            .append(text.text())
+                                        oldContentBlock // Text is folded in on the stop event.
+                                    }
 
                                     override fun visitInputJson(inputJson: InputJsonDelta) = run {
                                         messageContentInputJson
@@ -434,8 +463,15 @@ class MessageAccumulator private constructor() {
                                     override fun visitCitations(citations: CitationsDelta) =
                                         mergeCitationsDelta(oldContentBlock, citations)
 
-                                    override fun visitThinking(thinking: ThinkingDelta) =
-                                        mergeThinkingDelta(oldContentBlock, thinking)
+                                    override fun visitThinking(thinking: ThinkingDelta) = run {
+                                        require(oldContentBlock.isThinking()) {
+                                            "Content block is not a thinking block."
+                                        }
+                                        messageContentDeltaText
+                                            .getOrPut(index) { StringBuilder() }
+                                            .append(thinking.thinking())
+                                        oldContentBlock // Text is folded in on the stop event.
+                                    }
 
                                     override fun visitSignature(signature: SignatureDelta) =
                                         mergeSignatureDelta(oldContentBlock, signature)
@@ -454,11 +490,13 @@ class MessageAccumulator private constructor() {
                     // delta events. It is not possible to validate that the `type` of this event is
                     // the expected one for the accumulated content with the same `index`, as the
                     // type is always just `content_block_stop`.
-                    val oldContentBlock =
+                    val startedContentBlock =
                         messageContent[index]
                             ?: throw AnthropicInvalidDataException(
                                 "Content block not started for index $index."
                             )
+                    val oldContentBlock = foldDeltaText(index, startedContentBlock)
+                    messageContent[index] = oldContentBlock
 
                     // The `content_block_stop` event for most content block types can be ignored,
                     // as it carries no data. Where the `index` corresponds to a `tool_use` content
@@ -519,6 +557,21 @@ class MessageAccumulator private constructor() {
         )
 
         return event
+    }
+
+    /**
+     * Returns [contentBlock] with any buffered `text_delta`/`thinking_delta` text for [index]
+     * folded in, clearing the buffer. Deltas are buffered only after the block type is checked, so
+     * the block is a text block or a thinking block whenever a buffer exists.
+     */
+    private fun foldDeltaText(index: Long, contentBlock: ContentBlock): ContentBlock {
+        val deltaText = messageContentDeltaText.remove(index) ?: return contentBlock
+
+        return when {
+            contentBlock.isText() -> mergeText(contentBlock, deltaText.toString())
+            contentBlock.isThinking() -> mergeThinking(contentBlock, deltaText.toString())
+            else -> contentBlock
+        }
     }
 
     private fun requireMessageBuilder() =
