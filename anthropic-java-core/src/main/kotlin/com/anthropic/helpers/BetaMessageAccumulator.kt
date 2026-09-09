@@ -56,7 +56,7 @@ class BetaMessageAccumulator private constructor() {
      * notified. The keys correspond to the `index` identified in each of the `content_block_delta`
      * events.
      */
-    private val messageContentInputJson: MutableMap<Long, String> = mutableMapOf()
+    private val messageContentInputJson: MutableMap<Long, StringBuilder> = mutableMapOf()
 
     companion object {
         private val JSON_MAPPER = jsonMapper()
@@ -480,10 +480,9 @@ class BetaMessageAccumulator private constructor() {
 
                                     override fun visitInputJson(inputJson: BetaInputJsonDelta) =
                                         run {
-                                            val oldInputJson = messageContentInputJson[index]
-
-                                            messageContentInputJson[index] =
-                                                (oldInputJson ?: "") + inputJson.partialJson()
+                                            messageContentInputJson
+                                                .getOrPut(index) { StringBuilder() }
+                                                .append(inputJson.partialJson())
 
                                             oldContentBlock // Unchanged until stop event.
                                         }
@@ -525,7 +524,7 @@ class BetaMessageAccumulator private constructor() {
                     // as it carries no data. Where the `index` corresponds to a `tool_use` content
                     // block, the partial JSON that was concatenated from each delta can now be used
                     // to update the final `tool_use` content block.
-                    val inputJson = messageContentInputJson[index]
+                    val inputJson = messageContentInputJson[index]?.toString()
 
                     if (oldContentBlock.tracksToolInput()) {
                         // Check that there was at least one delta, so a potentially-valid `input`
