@@ -42,6 +42,10 @@ private fun Project.registerKtfmt(
         classpath = ktfmt
         mainClass.set("com.facebook.ktfmt.cli.Main")
 
+        // Cap the heap: ktfmt formats one file per core at once, and an uncapped JVM lets
+        // that fill up to a quarter of the machine's memory. 1 GiB costs no time.
+        maxHeapSize = "1g"
+
         // Use paths relative to the current project.
         val argumentFile = layout.buildDirectory.file("ktfmt-$name-args.txt").get().asFile
         val lastRunTimeFile = layout.buildDirectory.file("ktfmt-$name-last-run.txt").get().asFile
