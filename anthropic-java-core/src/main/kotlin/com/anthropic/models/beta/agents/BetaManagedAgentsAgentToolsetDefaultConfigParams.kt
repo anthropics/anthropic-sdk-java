@@ -169,10 +169,6 @@ private constructor(
         fun permissionPolicy(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy) =
             permissionPolicy(PermissionPolicy.ofAlwaysAsk(alwaysAsk))
 
-        /** Alias for calling [permissionPolicy] with `PermissionPolicy.ofAuto(auto)`. */
-        fun permissionPolicy(auto: BetaManagedAgentsAutoPolicy) =
-            permissionPolicy(PermissionPolicy.ofAuto(auto))
-
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -250,7 +246,6 @@ private constructor(
     private constructor(
         private val alwaysAllow: BetaManagedAgentsAlwaysAllowPolicy? = null,
         private val alwaysAsk: BetaManagedAgentsAlwaysAskPolicy? = null,
-        private val auto: BetaManagedAgentsAutoPolicy? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -264,8 +259,6 @@ private constructor(
                     override fun visitAlwaysAsk(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy): Type =
                         Type.ALWAYS_ASK
 
-                    override fun visitAuto(auto: BetaManagedAgentsAutoPolicy): Type = Type.AUTO
-
                     override fun unknown(json: JsonValue?): Type =
                         Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
                 }
@@ -278,19 +271,9 @@ private constructor(
         /** Tool calls require user confirmation before execution. */
         fun alwaysAsk(): Optional<BetaManagedAgentsAlwaysAskPolicy> = Optional.ofNullable(alwaysAsk)
 
-        /**
-         * The server decides each tool call individually: it judges, from the tool, its input, and
-         * the session content so far, whether the call is safe to execute or high-risk, and
-         * evaluates it to allow when judged safe and to deny when judged high-risk. A call the
-         * server cannot reach a judgement on evaluates to ask.
-         */
-        fun auto(): Optional<BetaManagedAgentsAutoPolicy> = Optional.ofNullable(auto)
-
         fun isAlwaysAllow(): Boolean = alwaysAllow != null
 
         fun isAlwaysAsk(): Boolean = alwaysAsk != null
-
-        fun isAuto(): Boolean = auto != null
 
         /** Tool calls are automatically approved without user confirmation. */
         fun asAlwaysAllow(): BetaManagedAgentsAlwaysAllowPolicy =
@@ -298,14 +281,6 @@ private constructor(
 
         /** Tool calls require user confirmation before execution. */
         fun asAlwaysAsk(): BetaManagedAgentsAlwaysAskPolicy = alwaysAsk.getOrThrow("alwaysAsk")
-
-        /**
-         * The server decides each tool call individually: it judges, from the tool, its input, and
-         * the session content so far, whether the call is safe to execute or high-risk, and
-         * evaluates it to allow when judged safe and to deny when judged high-risk. A call the
-         * server cannot reach a judgement on evaluates to ask.
-         */
-        fun asAuto(): BetaManagedAgentsAutoPolicy = auto.getOrThrow("auto")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -342,7 +317,6 @@ private constructor(
             when {
                 alwaysAllow != null -> visitor.visitAlwaysAllow(alwaysAllow)
                 alwaysAsk != null -> visitor.visitAlwaysAsk(alwaysAsk)
-                auto != null -> visitor.visitAuto(auto)
                 else -> visitor.unknown(_json)
             }
 
@@ -370,10 +344,6 @@ private constructor(
 
                     override fun visitAlwaysAsk(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy) {
                         alwaysAsk.validate()
-                    }
-
-                    override fun visitAuto(auto: BetaManagedAgentsAutoPolicy) {
-                        auto.validate()
                     }
                 }
             )
@@ -404,8 +374,6 @@ private constructor(
                     override fun visitAlwaysAsk(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy) =
                         alwaysAsk.validity()
 
-                    override fun visitAuto(auto: BetaManagedAgentsAutoPolicy) = auto.validity()
-
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -417,17 +385,15 @@ private constructor(
 
             return other is PermissionPolicy &&
                 alwaysAllow == other.alwaysAllow &&
-                alwaysAsk == other.alwaysAsk &&
-                auto == other.auto
+                alwaysAsk == other.alwaysAsk
         }
 
-        override fun hashCode(): Int = Objects.hash(alwaysAllow, alwaysAsk, auto)
+        override fun hashCode(): Int = Objects.hash(alwaysAllow, alwaysAsk)
 
         override fun toString(): String =
             when {
                 alwaysAllow != null -> "PermissionPolicy{alwaysAllow=$alwaysAllow}"
                 alwaysAsk != null -> "PermissionPolicy{alwaysAsk=$alwaysAsk}"
-                auto != null -> "PermissionPolicy{auto=$auto}"
                 _json != null -> "PermissionPolicy{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid PermissionPolicy")
             }
@@ -459,14 +425,6 @@ private constructor(
             @JvmStatic
             fun ofAlwaysAsk(type: BetaManagedAgentsAlwaysAskPolicy.Type) =
                 ofAlwaysAsk(BetaManagedAgentsAlwaysAskPolicy.of(type))
-
-            /**
-             * The server decides each tool call individually: it judges, from the tool, its input,
-             * and the session content so far, whether the call is safe to execute or high-risk, and
-             * evaluates it to allow when judged safe and to deny when judged high-risk. A call the
-             * server cannot reach a judgement on evaluates to ask.
-             */
-            @JvmStatic fun ofAuto(auto: BetaManagedAgentsAutoPolicy) = PermissionPolicy(auto = auto)
         }
 
         /**
@@ -480,14 +438,6 @@ private constructor(
 
             /** Tool calls require user confirmation before execution. */
             fun visitAlwaysAsk(alwaysAsk: BetaManagedAgentsAlwaysAskPolicy): T
-
-            /**
-             * The server decides each tool call individually: it judges, from the tool, its input,
-             * and the session content so far, whether the call is safe to execute or high-risk, and
-             * evaluates it to allow when judged safe and to deny when judged high-risk. A call the
-             * server cannot reach a judgement on evaluates to ask.
-             */
-            fun visitAuto(auto: BetaManagedAgentsAutoPolicy): T
 
             /**
              * Maps an unknown variant of [PermissionPolicy] to a value of type [T].
@@ -527,11 +477,6 @@ private constructor(
                             ?.let { PermissionPolicy(alwaysAsk = it, _json = json) }
                             ?: PermissionPolicy(_json = json)
                     }
-                    "auto" -> {
-                        return tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsAutoPolicy>())
-                            ?.let { PermissionPolicy(auto = it, _json = json) }
-                            ?: PermissionPolicy(_json = json)
-                    }
                 }
 
                 return PermissionPolicy(_json = json)
@@ -548,7 +493,6 @@ private constructor(
                 when {
                     value.alwaysAllow != null -> generator.writeObject(value.alwaysAllow)
                     value.alwaysAsk != null -> generator.writeObject(value.alwaysAsk)
-                    value.auto != null -> generator.writeObject(value.auto)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid PermissionPolicy")
                 }
@@ -573,8 +517,6 @@ private constructor(
 
                 @JvmField val ALWAYS_ASK = of("always_ask")
 
-                @JvmField val AUTO = of("auto")
-
                 @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
                 @JvmSynthetic
@@ -586,7 +528,6 @@ private constructor(
             enum class Known {
                 ALWAYS_ALLOW,
                 ALWAYS_ASK,
-                AUTO,
             }
 
             /**
@@ -601,7 +542,6 @@ private constructor(
             enum class Value {
                 ALWAYS_ALLOW,
                 ALWAYS_ASK,
-                AUTO,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
@@ -617,7 +557,6 @@ private constructor(
                 when (this) {
                     ALWAYS_ALLOW -> Value.ALWAYS_ALLOW
                     ALWAYS_ASK -> Value.ALWAYS_ASK
-                    AUTO -> Value.AUTO
                     else -> Value._UNKNOWN
                 }
 
@@ -634,7 +573,6 @@ private constructor(
                 when (this) {
                     ALWAYS_ALLOW -> Known.ALWAYS_ALLOW
                     ALWAYS_ASK -> Known.ALWAYS_ASK
-                    AUTO -> Known.AUTO
                     else -> throw AnthropicInvalidDataException("Unknown Type: $value")
                 }
 

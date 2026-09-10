@@ -37,8 +37,6 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentThinkingE
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentThreadContextCompactedEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentThreadMessageReceivedEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentThreadMessageSentEvent
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolEvaluation
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolEvaluationAlwaysAllow
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolResultEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolUseEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsRetryStatusRetrying
@@ -668,7 +666,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .evaluatedPermission(
                     BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
                 )
-                .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
 
@@ -737,7 +734,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .evaluatedPermission(
                         BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
                     )
-                    .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                     .sessionThreadId("session_thread_id")
                     .build()
             )
@@ -849,7 +845,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
                 .evaluatedPermission(BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW)
-                .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
 
@@ -916,7 +911,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .evaluatedPermission(
                         BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW
                     )
-                    .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                     .sessionThreadId("session_thread_id")
                     .build()
             )
@@ -3707,7 +3701,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             "tool_use_id" to "tool_use_id",
                             "is_error" to true,
                             "name" to "name",
-                            "evaluation" to mapOf("type" to "always_allow"),
                             "agent_name" to "Researcher",
                             "iteration" to 0,
                             "outcome_id" to "outc_011CZkZRSw2kEfs6ncTVljxP",
@@ -3737,12 +3730,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.toolUseId()).contains("tool_use_id")
         assertThat(betaManagedAgentsStreamSessionThreadEvents.isError()).contains(true)
         assertThat(betaManagedAgentsStreamSessionThreadEvents.name()).contains("name")
-        assertThat(betaManagedAgentsStreamSessionThreadEvents.evaluation())
-            .contains(
-                BetaManagedAgentsAgentToolEvaluation.ofAlwaysAllow(
-                    BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build()
-                )
-            )
         assertThat(betaManagedAgentsStreamSessionThreadEvents.agentName()).contains("Researcher")
         assertThat(betaManagedAgentsStreamSessionThreadEvents.iteration()).contains(0)
         assertThat(betaManagedAgentsStreamSessionThreadEvents.outcomeId())
@@ -3823,7 +3810,6 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.toolUseId()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.isError()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.name()).isEmpty
-        assertThat(betaManagedAgentsStreamSessionThreadEvents.evaluation()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.agentName()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.iteration()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.outcomeId()).isEmpty

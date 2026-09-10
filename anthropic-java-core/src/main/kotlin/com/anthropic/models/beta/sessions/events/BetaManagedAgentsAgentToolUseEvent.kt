@@ -28,7 +28,6 @@ private constructor(
     private val processedAt: JsonField<OffsetDateTime>,
     private val type: JsonField<Type>,
     private val evaluatedPermission: JsonField<EvaluatedPermission>,
-    private val evaluation: JsonField<BetaManagedAgentsAgentToolEvaluation>,
     private val sessionThreadId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -45,9 +44,6 @@ private constructor(
         @JsonProperty("evaluated_permission")
         @ExcludeMissing
         evaluatedPermission: JsonField<EvaluatedPermission> = JsonMissing.of(),
-        @JsonProperty("evaluation")
-        @ExcludeMissing
-        evaluation: JsonField<BetaManagedAgentsAgentToolEvaluation> = JsonMissing.of(),
         @JsonProperty("session_thread_id")
         @ExcludeMissing
         sessionThreadId: JsonField<String> = JsonMissing.of(),
@@ -58,7 +54,6 @@ private constructor(
         processedAt,
         type,
         evaluatedPermission,
-        evaluation,
         sessionThreadId,
         mutableMapOf(),
     )
@@ -109,16 +104,6 @@ private constructor(
      */
     fun evaluatedPermission(): Optional<EvaluatedPermission> =
         evaluatedPermission.getOptional("evaluated_permission")
-
-    /**
-     * Names the resolved permission_policy that produced evaluated_permission, and under auto
-     * carries the judgement. Open union: clients must tolerate unknown variants.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun evaluation(): Optional<BetaManagedAgentsAgentToolEvaluation> =
-        evaluation.getOptional("evaluation")
 
     /**
      * When set, this event was cross-posted from a subagent's thread to surface its permission
@@ -178,15 +163,6 @@ private constructor(
     fun _evaluatedPermission(): JsonField<EvaluatedPermission> = evaluatedPermission
 
     /**
-     * Returns the raw JSON value of [evaluation].
-     *
-     * Unlike [evaluation], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("evaluation")
-    @ExcludeMissing
-    fun _evaluation(): JsonField<BetaManagedAgentsAgentToolEvaluation> = evaluation
-
-    /**
      * Returns the raw JSON value of [sessionThreadId].
      *
      * Unlike [sessionThreadId], this method doesn't throw if the JSON field has an unexpected type.
@@ -234,7 +210,6 @@ private constructor(
         private var processedAt: JsonField<OffsetDateTime>? = null
         private var type: JsonField<Type>? = null
         private var evaluatedPermission: JsonField<EvaluatedPermission> = JsonMissing.of()
-        private var evaluation: JsonField<BetaManagedAgentsAgentToolEvaluation> = JsonMissing.of()
         private var sessionThreadId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -247,7 +222,6 @@ private constructor(
                 processedAt = betaManagedAgentsAgentToolUseEvent.processedAt
                 type = betaManagedAgentsAgentToolUseEvent.type
                 evaluatedPermission = betaManagedAgentsAgentToolUseEvent.evaluatedPermission
-                evaluation = betaManagedAgentsAgentToolUseEvent.evaluation
                 sessionThreadId = betaManagedAgentsAgentToolUseEvent.sessionThreadId
                 additionalProperties =
                     betaManagedAgentsAgentToolUseEvent.additionalProperties.toMutableMap()
@@ -326,110 +300,6 @@ private constructor(
         }
 
         /**
-         * Names the resolved permission_policy that produced evaluated_permission, and under auto
-         * carries the judgement. Open union: clients must tolerate unknown variants.
-         */
-        fun evaluation(evaluation: BetaManagedAgentsAgentToolEvaluation) =
-            evaluation(JsonField.of(evaluation))
-
-        /**
-         * Sets [Builder.evaluation] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.evaluation] with a well-typed
-         * [BetaManagedAgentsAgentToolEvaluation] value instead. This method is primarily for
-         * setting the field to an undocumented or not yet supported value.
-         */
-        fun evaluation(evaluation: JsonField<BetaManagedAgentsAgentToolEvaluation>) = apply {
-            this.evaluation = evaluation
-        }
-
-        /**
-         * Alias for calling [evaluation] with
-         * `BetaManagedAgentsAgentToolEvaluation.ofAlwaysAllow(alwaysAllow)`.
-         */
-        fun evaluation(alwaysAllow: BetaManagedAgentsAgentToolEvaluationAlwaysAllow) =
-            evaluation(BetaManagedAgentsAgentToolEvaluation.ofAlwaysAllow(alwaysAllow))
-
-        /**
-         * Alias for calling [evaluation] with
-         * `BetaManagedAgentsAgentToolEvaluation.ofAlwaysAsk(alwaysAsk)`.
-         */
-        fun evaluation(alwaysAsk: BetaManagedAgentsAgentToolEvaluationAlwaysAsk) =
-            evaluation(BetaManagedAgentsAgentToolEvaluation.ofAlwaysAsk(alwaysAsk))
-
-        /**
-         * Alias for calling [evaluation] with `BetaManagedAgentsAgentToolEvaluation.ofAuto(auto)`.
-         */
-        fun evaluation(auto: BetaManagedAgentsAgentToolEvaluationAuto) =
-            evaluation(BetaManagedAgentsAgentToolEvaluation.ofAuto(auto))
-
-        /**
-         * Alias for calling [evaluation] with the following:
-         * ```java
-         * BetaManagedAgentsAgentToolEvaluationAuto.builder()
-         *     .evaluatedPermission(evaluatedPermission)
-         *     .build()
-         * ```
-         */
-        fun autoEvaluation(evaluatedPermission: BetaManagedAgentsAgentAutoEvaluatedPermission) =
-            evaluation(
-                BetaManagedAgentsAgentToolEvaluationAuto.builder()
-                    .evaluatedPermission(evaluatedPermission)
-                    .build()
-            )
-
-        /**
-         * Alias for calling [autoEvaluation] with
-         * `BetaManagedAgentsAgentAutoEvaluatedPermission.ofAllow(allow)`.
-         */
-        fun autoEvaluation(allow: BetaManagedAgentsAgentAutoEvaluatedPermissionAllow) =
-            autoEvaluation(BetaManagedAgentsAgentAutoEvaluatedPermission.ofAllow(allow))
-
-        /**
-         * Alias for calling [autoEvaluation] with
-         * `BetaManagedAgentsAgentAutoEvaluatedPermission.ofAsk(ask)`.
-         */
-        fun autoEvaluation(ask: BetaManagedAgentsAgentAutoEvaluatedPermissionAsk) =
-            autoEvaluation(BetaManagedAgentsAgentAutoEvaluatedPermission.ofAsk(ask))
-
-        /**
-         * Alias for calling [autoEvaluation] with the following:
-         * ```java
-         * BetaManagedAgentsAgentAutoEvaluatedPermissionAsk.builder()
-         *     .reasonCode(reasonCode)
-         *     .build()
-         * ```
-         */
-        fun askAutoEvaluation(reasonCode: String) =
-            autoEvaluation(
-                BetaManagedAgentsAgentAutoEvaluatedPermissionAsk.builder()
-                    .reasonCode(reasonCode)
-                    .build()
-            )
-
-        /**
-         * Alias for calling [autoEvaluation] with
-         * `BetaManagedAgentsAgentAutoEvaluatedPermission.ofDeny(deny)`.
-         */
-        fun autoEvaluation(deny: BetaManagedAgentsAgentAutoEvaluatedPermissionDeny) =
-            autoEvaluation(BetaManagedAgentsAgentAutoEvaluatedPermission.ofDeny(deny))
-
-        /**
-         * Alias for calling [autoEvaluation] with the following:
-         * ```java
-         * BetaManagedAgentsAgentAutoEvaluatedPermissionDeny.builder()
-         *     .reasonCode(reasonCode)
-         *     .build()
-         * ```
-         */
-        fun denyAutoEvaluation(reasonCode: String) =
-            autoEvaluation(
-                BetaManagedAgentsAgentAutoEvaluatedPermissionDeny.builder()
-                    .reasonCode(reasonCode)
-                    .build()
-            )
-
-        /**
          * When set, this event was cross-posted from a subagent's thread to surface its permission
          * request on the primary thread's stream. Empty on the thread's own events. Echo this on a
          * `user.tool_confirmation` event to route the approval back.
@@ -495,7 +365,6 @@ private constructor(
                 checkRequired("processedAt", processedAt),
                 checkRequired("type", type),
                 evaluatedPermission,
-                evaluation,
                 sessionThreadId,
                 additionalProperties.toMutableMap(),
             )
@@ -522,7 +391,6 @@ private constructor(
         processedAt()
         type().validate()
         evaluatedPermission().ifPresent { it.validate() }
-        evaluation().ifPresent { it.validate() }
         sessionThreadId()
         validated = true
     }
@@ -548,7 +416,6 @@ private constructor(
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (evaluatedPermission.asKnown().getOrNull()?.validity() ?: 0) +
-            (evaluation.asKnown().getOrNull()?.validity() ?: 0) +
             (if (sessionThreadId.asKnown().isPresent) 1 else 0)
 
     /** Input parameters for the tool call. */
@@ -958,7 +825,6 @@ private constructor(
             processedAt == other.processedAt &&
             type == other.type &&
             evaluatedPermission == other.evaluatedPermission &&
-            evaluation == other.evaluation &&
             sessionThreadId == other.sessionThreadId &&
             additionalProperties == other.additionalProperties
     }
@@ -971,7 +837,6 @@ private constructor(
             processedAt,
             type,
             evaluatedPermission,
-            evaluation,
             sessionThreadId,
             additionalProperties,
         )
@@ -980,5 +845,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsAgentToolUseEvent{id=$id, input=$input, name=$name, processedAt=$processedAt, type=$type, evaluatedPermission=$evaluatedPermission, evaluation=$evaluation, sessionThreadId=$sessionThreadId, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsAgentToolUseEvent{id=$id, input=$input, name=$name, processedAt=$processedAt, type=$type, evaluatedPermission=$evaluatedPermission, sessionThreadId=$sessionThreadId, additionalProperties=$additionalProperties}"
 }
