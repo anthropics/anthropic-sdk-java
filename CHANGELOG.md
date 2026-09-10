@@ -1,5 +1,32 @@
 # Changelog
 
+## 2.62.0 (2026-09-10)
+
+Full Changelog: [v2.61.0...v2.62.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.61.0...v2.62.0)
+
+### Features
+
+* **api:** add auto mode tool permissions for Managed Agents ([e373fea](https://github.com/anthropics/anthropic-sdk-java/commit/e373feae158c0d8cd018ff9ae73eb0c7fb0881eb))
+* **api:** add content_too_large web_fetch tool error code ([96451de](https://github.com/anthropics/anthropic-sdk-java/commit/96451dee568546e3898bcf42dba6af09440bcd43))
+* **api:** add the user-profiles-2026-09-04 beta value and external_user_details to user profiles ([eb8c5b8](https://github.com/anthropics/anthropic-sdk-java/commit/eb8c5b8900e953459315a7a15fc9ac310836c3cf))
+* **api:** support mounting public GitHub repositories without an authorization_token in Managed Agents sessions ([2e1c9ed](https://github.com/anthropics/anthropic-sdk-java/commit/2e1c9edbd4b9bc78e09048d8f9b69d812aa3a5bf))
+
+
+### Performance Improvements
+
+* **streaming:** append tool input JSON in place ([d330f8b](https://github.com/anthropics/anthropic-sdk-java/commit/d330f8bc51f5bd84529eefd829dcf5c5e4efde65))
+* **streaming:** buffer text deltas instead of rebuilding blocks per delta ([2bf8f70](https://github.com/anthropics/anthropic-sdk-java/commit/2bf8f70acd505c8cf96922dfc8209d8aa9359ca2))
+
+
+### Chores
+
+* **docs:** correct the environment scope field description ([7888770](https://github.com/anthropics/anthropic-sdk-java/commit/788877064ea20867be642e9f85c11ac3e83b2a73))
+* **internal:** cap formatter JVM heap at 1 GiB ([9b7b5a8](https://github.com/anthropics/anthropic-sdk-java/commit/9b7b5a8b9a8e549cedd97608d358765b3abbe4ed))
+* **internal:** restore package version ([28151f2](https://github.com/anthropics/anthropic-sdk-java/commit/28151f2eab903d7344b1dc0849dc1c6f905bfd62))
+* **internal:** restore package version ([6044d63](https://github.com/anthropics/anthropic-sdk-java/commit/6044d632e628a57d2a2425bb2a336e2741bae3ae))
+* **internal:** stop stamping the package version into generated files ([ee275ad](https://github.com/anthropics/anthropic-sdk-java/commit/ee275adad39ca82607443a80e3e0f5254abf1a70))
+* **tests:** restore empty test package marker files ([3e2284c](https://github.com/anthropics/anthropic-sdk-java/commit/3e2284c0b362a81a0cdeec06decbc2beb4a60bb3))
+
 ## 2.61.0 (2026-09-04)
 
 Full Changelog: [v2.60.0...v2.61.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.60.0...v2.61.0)
