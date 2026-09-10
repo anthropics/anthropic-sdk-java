@@ -518,6 +518,19 @@ private constructor(
             body.addResource(githubRepository)
         }
 
+        /**
+         * Alias for calling [addResource] with the following:
+         * ```java
+         * BetaManagedAgentsGitHubRepositoryResourceParams.builder()
+         *     .type(BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY)
+         *     .url(url)
+         *     .build()
+         * ```
+         */
+        fun addGitHubRepositoryResource(url: String) = apply {
+            body.addGitHubRepositoryResource(url)
+        }
+
         /** Alias for calling [addResource] with `Resource.ofFile(file)`. */
         fun addResource(file: BetaManagedAgentsFileResourceParams) = apply {
             body.addResource(file)
@@ -1295,6 +1308,25 @@ private constructor(
              */
             fun addResource(githubRepository: BetaManagedAgentsGitHubRepositoryResourceParams) =
                 addResource(Resource.ofGitHubRepository(githubRepository))
+
+            /**
+             * Alias for calling [addResource] with the following:
+             * ```java
+             * BetaManagedAgentsGitHubRepositoryResourceParams.builder()
+             *     .type(BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY)
+             *     .url(url)
+             *     .build()
+             * ```
+             */
+            fun addGitHubRepositoryResource(url: String) =
+                addResource(
+                    BetaManagedAgentsGitHubRepositoryResourceParams.builder()
+                        .type(
+                            BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY
+                        )
+                        .url(url)
+                        .build()
+                )
 
             /** Alias for calling [addResource] with `Resource.ofFile(file)`. */
             fun addResource(file: BetaManagedAgentsFileResourceParams) =
@@ -2105,6 +2137,21 @@ private constructor(
             fun ofGitHubRepository(
                 githubRepository: BetaManagedAgentsGitHubRepositoryResourceParams
             ) = Resource(githubRepository = githubRepository)
+
+            /**
+             * Returns an immutable instance of [Resource] whose [ofGitHubRepository] variant is
+             * built from the given required [url].
+             */
+            @JvmStatic
+            fun ofGitHubRepository(url: String) =
+                ofGitHubRepository(
+                    BetaManagedAgentsGitHubRepositoryResourceParams.builder()
+                        .type(
+                            BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY
+                        )
+                        .url(url)
+                        .build()
+                )
 
             /** Mount a file uploaded via the Files API into the session. */
             @JvmStatic fun ofFile(file: BetaManagedAgentsFileResourceParams) = Resource(file = file)
