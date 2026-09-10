@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.beta.userprofiles
 
 import com.anthropic.core.JsonValue
@@ -18,6 +16,17 @@ internal class UserProfileUpdateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
             .externalId("user_12345")
+            .externalUserDetails(
+                BetaUserProfileExternalUserDetailsParams.builder()
+                    .accountStatus(BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE)
+                    .country("country")
+                    .emailHash("x")
+                    .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
+                    .nameHash("x")
+                    .onboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .referenceId("x")
+                    .build()
+            )
             .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .metadata(
                 UserProfileUpdateParams.Metadata.builder()
@@ -48,6 +57,19 @@ internal class UserProfileUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
+                .externalUserDetails(
+                    BetaUserProfileExternalUserDetailsParams.builder()
+                        .accountStatus(
+                            BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE
+                        )
+                        .country("country")
+                        .emailHash("x")
+                        .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
+                        .nameHash("x")
+                        .onboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .referenceId("x")
+                        .build()
+                )
                 .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .metadata(
                     UserProfileUpdateParams.Metadata.builder()
@@ -85,6 +107,19 @@ internal class UserProfileUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
+                .externalUserDetails(
+                    BetaUserProfileExternalUserDetailsParams.builder()
+                        .accountStatus(
+                            BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE
+                        )
+                        .country("country")
+                        .emailHash("x")
+                        .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
+                        .nameHash("x")
+                        .onboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .referenceId("x")
+                        .build()
+                )
                 .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .metadata(
                     UserProfileUpdateParams.Metadata.builder()
@@ -98,6 +133,18 @@ internal class UserProfileUpdateParamsTest {
 
         assertThat(body.accessType()).contains(UserProfileUpdateParams.AccessType.APPLICATION)
         assertThat(body.externalId()).contains("user_12345")
+        assertThat(body.externalUserDetails())
+            .contains(
+                BetaUserProfileExternalUserDetailsParams.builder()
+                    .accountStatus(BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE)
+                    .country("country")
+                    .emailHash("x")
+                    .entityType(BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL)
+                    .nameHash("x")
+                    .onboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .referenceId("x")
+                    .build()
+            )
         assertThat(body.externalUserOnboardedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(body.metadata())

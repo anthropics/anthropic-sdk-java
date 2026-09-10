@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.messages
 
 import com.anthropic.core.Enum
@@ -41,6 +39,8 @@ private constructor(private val value: JsonField<String>) : Enum {
 
         @JvmField val UNAVAILABLE = of("unavailable")
 
+        @JvmField val CONTENT_TOO_LARGE = of("content_too_large")
+
         @JvmStatic fun of(value: String) = WebFetchToolResultErrorCode(JsonField.of(value))
 
         @JvmSynthetic
@@ -59,6 +59,7 @@ private constructor(private val value: JsonField<String>) : Enum {
         TOO_MANY_REQUESTS,
         MAX_USES_EXCEEDED,
         UNAVAILABLE,
+        CONTENT_TOO_LARGE,
     }
 
     /**
@@ -82,6 +83,7 @@ private constructor(private val value: JsonField<String>) : Enum {
         TOO_MANY_REQUESTS,
         MAX_USES_EXCEEDED,
         UNAVAILABLE,
+        CONTENT_TOO_LARGE,
         /**
          * An enum member indicating that [WebFetchToolResultErrorCode] was instantiated with an
          * unknown value.
@@ -107,6 +109,7 @@ private constructor(private val value: JsonField<String>) : Enum {
             TOO_MANY_REQUESTS -> Value.TOO_MANY_REQUESTS
             MAX_USES_EXCEEDED -> Value.MAX_USES_EXCEEDED
             UNAVAILABLE -> Value.UNAVAILABLE
+            CONTENT_TOO_LARGE -> Value.CONTENT_TOO_LARGE
             else -> Value._UNKNOWN
         }
 
@@ -129,6 +132,7 @@ private constructor(private val value: JsonField<String>) : Enum {
             TOO_MANY_REQUESTS -> Known.TOO_MANY_REQUESTS
             MAX_USES_EXCEEDED -> Known.MAX_USES_EXCEEDED
             UNAVAILABLE -> Known.UNAVAILABLE
+            CONTENT_TOO_LARGE -> Known.CONTENT_TOO_LARGE
             else ->
                 throw AnthropicInvalidDataException("Unknown WebFetchToolResultErrorCode: $value")
         }

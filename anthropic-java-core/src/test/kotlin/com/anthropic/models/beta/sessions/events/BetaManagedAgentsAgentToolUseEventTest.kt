@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.beta.sessions.events
 
 import com.anthropic.core.JsonValue
@@ -25,6 +23,7 @@ internal class BetaManagedAgentsAgentToolUseEventTest {
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
                 .evaluatedPermission(BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW)
+                .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
 
@@ -42,6 +41,12 @@ internal class BetaManagedAgentsAgentToolUseEventTest {
             .isEqualTo(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
         assertThat(betaManagedAgentsAgentToolUseEvent.evaluatedPermission())
             .contains(BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW)
+        assertThat(betaManagedAgentsAgentToolUseEvent.evaluation())
+            .contains(
+                BetaManagedAgentsAgentToolEvaluation.ofAlwaysAllow(
+                    BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build()
+                )
+            )
         assertThat(betaManagedAgentsAgentToolUseEvent.sessionThreadId())
             .contains("session_thread_id")
     }
@@ -61,6 +66,7 @@ internal class BetaManagedAgentsAgentToolUseEventTest {
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
                 .evaluatedPermission(BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW)
+                .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
 

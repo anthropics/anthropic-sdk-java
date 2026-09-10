@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.beta.sessions
 
 import com.anthropic.core.BaseDeserializer
@@ -32,9 +30,9 @@ import kotlin.jvm.optionals.getOrNull
 class BetaManagedAgentsGitHubRepositoryResourceParams
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val authorizationToken: JsonField<String>,
     private val type: JsonField<Type>,
     private val url: JsonField<String>,
+    private val authorizationToken: JsonField<String>,
     private val checkout: JsonField<Checkout>,
     private val mountPath: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -42,22 +40,14 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         @JsonProperty("authorization_token")
         @ExcludeMissing
         authorizationToken: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-        @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         @JsonProperty("checkout") @ExcludeMissing checkout: JsonField<Checkout> = JsonMissing.of(),
         @JsonProperty("mount_path") @ExcludeMissing mountPath: JsonField<String> = JsonMissing.of(),
-    ) : this(authorizationToken, type, url, checkout, mountPath, mutableMapOf())
-
-    /**
-     * GitHub authorization token used to clone the repository.
-     *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun authorizationToken(): String = authorizationToken.getRequired("authorization_token")
+    ) : this(type, url, authorizationToken, checkout, mountPath, mutableMapOf())
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -72,6 +62,16 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun url(): String = url.getRequired("url")
+
+    /**
+     * GitHub authorization token used to clone the repository. Required for private repositories;
+     * optional for public ones.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun authorizationToken(): Optional<String> =
+        authorizationToken.getOptional("authorization_token")
 
     /**
      * Branch or commit to check out. Defaults to the repository's default branch.
@@ -90,16 +90,6 @@ private constructor(
     fun mountPath(): Optional<String> = mountPath.getOptional("mount_path")
 
     /**
-     * Returns the raw JSON value of [authorizationToken].
-     *
-     * Unlike [authorizationToken], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("authorization_token")
-    @ExcludeMissing
-    fun _authorizationToken(): JsonField<String> = authorizationToken
-
-    /**
      * Returns the raw JSON value of [type].
      *
      * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
@@ -112,6 +102,16 @@ private constructor(
      * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+    /**
+     * Returns the raw JSON value of [authorizationToken].
+     *
+     * Unlike [authorizationToken], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("authorization_token")
+    @ExcludeMissing
+    fun _authorizationToken(): JsonField<String> = authorizationToken
 
     /**
      * Returns the raw JSON value of [checkout].
@@ -147,7 +147,6 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .authorizationToken()
          * .type()
          * .url()
          * ```
@@ -158,9 +157,9 @@ private constructor(
     /** A builder for [BetaManagedAgentsGitHubRepositoryResourceParams]. */
     class Builder internal constructor() {
 
-        private var authorizationToken: JsonField<String>? = null
         private var type: JsonField<Type>? = null
         private var url: JsonField<String>? = null
+        private var authorizationToken: JsonField<String> = JsonMissing.of()
         private var checkout: JsonField<Checkout> = JsonMissing.of()
         private var mountPath: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -170,28 +169,13 @@ private constructor(
             betaManagedAgentsGitHubRepositoryResourceParams:
                 BetaManagedAgentsGitHubRepositoryResourceParams
         ) = apply {
-            authorizationToken = betaManagedAgentsGitHubRepositoryResourceParams.authorizationToken
             type = betaManagedAgentsGitHubRepositoryResourceParams.type
             url = betaManagedAgentsGitHubRepositoryResourceParams.url
+            authorizationToken = betaManagedAgentsGitHubRepositoryResourceParams.authorizationToken
             checkout = betaManagedAgentsGitHubRepositoryResourceParams.checkout
             mountPath = betaManagedAgentsGitHubRepositoryResourceParams.mountPath
             additionalProperties =
                 betaManagedAgentsGitHubRepositoryResourceParams.additionalProperties.toMutableMap()
-        }
-
-        /** GitHub authorization token used to clone the repository. */
-        fun authorizationToken(authorizationToken: String) =
-            authorizationToken(JsonField.of(authorizationToken))
-
-        /**
-         * Sets [Builder.authorizationToken] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.authorizationToken] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun authorizationToken(authorizationToken: JsonField<String>) = apply {
-            this.authorizationToken = authorizationToken
         }
 
         fun type(type: Type) = type(JsonField.of(type))
@@ -214,6 +198,24 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun url(url: JsonField<String>) = apply { this.url = url }
+
+        /**
+         * GitHub authorization token used to clone the repository. Required for private
+         * repositories; optional for public ones.
+         */
+        fun authorizationToken(authorizationToken: String) =
+            authorizationToken(JsonField.of(authorizationToken))
+
+        /**
+         * Sets [Builder.authorizationToken] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.authorizationToken] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun authorizationToken(authorizationToken: JsonField<String>) = apply {
+            this.authorizationToken = authorizationToken
+        }
 
         /** Branch or commit to check out. Defaults to the repository's default branch. */
         fun checkout(checkout: Checkout?) = checkout(JsonField.ofNullable(checkout))
@@ -311,7 +313,6 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .authorizationToken()
          * .type()
          * .url()
          * ```
@@ -320,9 +321,9 @@ private constructor(
          */
         fun build(): BetaManagedAgentsGitHubRepositoryResourceParams =
             BetaManagedAgentsGitHubRepositoryResourceParams(
-                checkRequired("authorizationToken", authorizationToken),
                 checkRequired("type", type),
                 checkRequired("url", url),
+                authorizationToken,
                 checkout,
                 mountPath,
                 additionalProperties.toMutableMap(),
@@ -344,9 +345,9 @@ private constructor(
             return@apply
         }
 
-        authorizationToken()
         type().validate()
         url()
+        authorizationToken()
         checkout().ifPresent { it.validate() }
         mountPath()
         validated = true
@@ -367,9 +368,9 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (authorizationToken.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
+        (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
+            (if (authorizationToken.asKnown().isPresent) 1 else 0) +
             (checkout.asKnown().getOrNull()?.validity() ?: 0) +
             (if (mountPath.asKnown().isPresent) 1 else 0)
 
@@ -907,20 +908,20 @@ private constructor(
         }
 
         return other is BetaManagedAgentsGitHubRepositoryResourceParams &&
-            authorizationToken == other.authorizationToken &&
             type == other.type &&
             url == other.url &&
+            authorizationToken == other.authorizationToken &&
             checkout == other.checkout &&
             mountPath == other.mountPath &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(authorizationToken, type, url, checkout, mountPath, additionalProperties)
+        Objects.hash(type, url, authorizationToken, checkout, mountPath, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsGitHubRepositoryResourceParams{authorizationToken=$authorizationToken, type=$type, url=$url, checkout=$checkout, mountPath=$mountPath, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsGitHubRepositoryResourceParams{type=$type, url=$url, authorizationToken=$authorizationToken, checkout=$checkout, mountPath=$mountPath, additionalProperties=$additionalProperties}"
 }

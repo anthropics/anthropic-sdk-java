@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.beta
 
 import com.anthropic.core.Enum
@@ -68,6 +66,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         @JvmField val USER_PROFILES_2026_03_24 = of("user-profiles-2026-03-24")
 
         @JvmField val USER_PROFILES_2026_08_18 = of("user-profiles-2026-08-18")
+
+        @JvmField val USER_PROFILES_2026_09_04 = of("user-profiles-2026-09-04")
 
         @JvmField val ADVISOR_TOOL_2026_03_01 = of("advisor-tool-2026-03-01")
 
@@ -151,6 +151,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         OUTPUT_300K_2026_03_24,
         USER_PROFILES_2026_03_24,
         USER_PROFILES_2026_08_18,
+        USER_PROFILES_2026_09_04,
         ADVISOR_TOOL_2026_03_01,
         MANAGED_AGENTS_2026_04_01,
         CACHE_DIAGNOSIS_2026_04_07,
@@ -207,6 +208,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         OUTPUT_300K_2026_03_24,
         USER_PROFILES_2026_03_24,
         USER_PROFILES_2026_08_18,
+        USER_PROFILES_2026_09_04,
         ADVISOR_TOOL_2026_03_01,
         MANAGED_AGENTS_2026_04_01,
         CACHE_DIAGNOSIS_2026_04_07,
@@ -267,6 +269,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             OUTPUT_300K_2026_03_24 -> Value.OUTPUT_300K_2026_03_24
             USER_PROFILES_2026_03_24 -> Value.USER_PROFILES_2026_03_24
             USER_PROFILES_2026_08_18 -> Value.USER_PROFILES_2026_08_18
+            USER_PROFILES_2026_09_04 -> Value.USER_PROFILES_2026_09_04
             ADVISOR_TOOL_2026_03_01 -> Value.ADVISOR_TOOL_2026_03_01
             MANAGED_AGENTS_2026_04_01 -> Value.MANAGED_AGENTS_2026_04_01
             CACHE_DIAGNOSIS_2026_04_07 -> Value.CACHE_DIAGNOSIS_2026_04_07
@@ -328,6 +331,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             OUTPUT_300K_2026_03_24 -> Known.OUTPUT_300K_2026_03_24
             USER_PROFILES_2026_03_24 -> Known.USER_PROFILES_2026_03_24
             USER_PROFILES_2026_08_18 -> Known.USER_PROFILES_2026_08_18
+            USER_PROFILES_2026_09_04 -> Known.USER_PROFILES_2026_09_04
             ADVISOR_TOOL_2026_03_01 -> Known.ADVISOR_TOOL_2026_03_01
             MANAGED_AGENTS_2026_04_01 -> Known.MANAGED_AGENTS_2026_04_01
             CACHE_DIAGNOSIS_2026_04_07 -> Known.CACHE_DIAGNOSIS_2026_04_07

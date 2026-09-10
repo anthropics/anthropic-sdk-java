@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.beta.sessions
 
 import com.anthropic.core.jsonMapper
@@ -13,19 +11,19 @@ internal class BetaManagedAgentsGitHubRepositoryResourceParamsTest {
     fun create() {
         val betaManagedAgentsGitHubRepositoryResourceParams =
             BetaManagedAgentsGitHubRepositoryResourceParams.builder()
-                .authorizationToken("ghp_exampletoken")
                 .type(BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY)
                 .url("https://github.com/example-org/example-repo")
+                .authorizationToken("ghp_exampletoken")
                 .branchCheckout("main")
                 .mountPath("x")
                 .build()
 
-        assertThat(betaManagedAgentsGitHubRepositoryResourceParams.authorizationToken())
-            .isEqualTo("ghp_exampletoken")
         assertThat(betaManagedAgentsGitHubRepositoryResourceParams.type())
             .isEqualTo(BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY)
         assertThat(betaManagedAgentsGitHubRepositoryResourceParams.url())
             .isEqualTo("https://github.com/example-org/example-repo")
+        assertThat(betaManagedAgentsGitHubRepositoryResourceParams.authorizationToken())
+            .contains("ghp_exampletoken")
         assertThat(betaManagedAgentsGitHubRepositoryResourceParams.checkout())
             .contains(
                 BetaManagedAgentsGitHubRepositoryResourceParams.Checkout.ofBranch(
@@ -43,9 +41,9 @@ internal class BetaManagedAgentsGitHubRepositoryResourceParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsGitHubRepositoryResourceParams =
             BetaManagedAgentsGitHubRepositoryResourceParams.builder()
-                .authorizationToken("ghp_exampletoken")
                 .type(BetaManagedAgentsGitHubRepositoryResourceParams.Type.GITHUB_REPOSITORY)
                 .url("https://github.com/example-org/example-repo")
+                .authorizationToken("ghp_exampletoken")
                 .branchCheckout("main")
                 .mountPath("x")
                 .build()

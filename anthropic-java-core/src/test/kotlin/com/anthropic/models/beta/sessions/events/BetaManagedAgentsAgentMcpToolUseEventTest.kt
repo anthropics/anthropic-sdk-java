@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.beta.sessions.events
 
 import com.anthropic.core.JsonValue
@@ -28,6 +26,7 @@ internal class BetaManagedAgentsAgentMcpToolUseEventTest {
                 .evaluatedPermission(
                     BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
                 )
+                .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
 
@@ -47,6 +46,12 @@ internal class BetaManagedAgentsAgentMcpToolUseEventTest {
             .isEqualTo(BetaManagedAgentsAgentMcpToolUseEvent.Type.AGENT_MCP_TOOL_USE)
         assertThat(betaManagedAgentsAgentMcpToolUseEvent.evaluatedPermission())
             .contains(BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW)
+        assertThat(betaManagedAgentsAgentMcpToolUseEvent.evaluation())
+            .contains(
+                BetaManagedAgentsAgentToolEvaluation.ofAlwaysAllow(
+                    BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build()
+                )
+            )
         assertThat(betaManagedAgentsAgentMcpToolUseEvent.sessionThreadId())
             .contains("session_thread_id")
     }
@@ -69,6 +74,7 @@ internal class BetaManagedAgentsAgentMcpToolUseEventTest {
                 .evaluatedPermission(
                     BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
                 )
+                .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
 

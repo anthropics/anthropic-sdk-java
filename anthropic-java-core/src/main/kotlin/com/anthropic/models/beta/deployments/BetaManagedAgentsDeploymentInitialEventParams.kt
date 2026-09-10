@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.beta.deployments
 
 import com.anthropic.core.BaseDeserializer

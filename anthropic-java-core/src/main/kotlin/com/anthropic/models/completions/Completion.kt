@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.completions
 
 import com.anthropic.core.ExcludeMissing

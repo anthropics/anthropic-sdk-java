@@ -116,6 +116,9 @@ fun registerPalantir(
         classpath = palantir
         mainClass = "com.palantir.javaformat.java.Main"
 
+        // Cap the heap; the JVM's default ceiling is a quarter of the machine's memory.
+        maxHeapSize = "1g"
+
         // Avoid an `IllegalAccessError` on Java 9+.
         jvmArgs(
             "--add-exports", "jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",

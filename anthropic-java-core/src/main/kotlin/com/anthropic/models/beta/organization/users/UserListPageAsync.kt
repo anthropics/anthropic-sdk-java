@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.beta.organization.users
 
 import com.anthropic.core.AutoPagerAsync

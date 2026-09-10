@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.beta.userprofiles
 
 import com.anthropic.core.Enum
@@ -48,11 +46,23 @@ private constructor(
 
     /**
      * Platform's own identifier for this user. Not enforced unique. Maximum 255 characters.
+     * Accepted under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta headers;
+     * under `user-profiles-2026-09-04` send `external_user_details.reference_id` instead.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun externalId(): Optional<String> = body.externalId()
+
+    /**
+     * Details about the entity this profile represents, as the platform states them. Every field is
+     * optional. Accepted under the `user-profiles-2026-09-04` beta header only.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun externalUserDetails(): Optional<BetaUserProfileExternalUserDetailsParams> =
+        body.externalUserDetails()
 
     /**
      * A timestamp in RFC 3339 format
@@ -94,6 +104,15 @@ private constructor(
      * Unlike [externalId], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _externalId(): JsonField<String> = body._externalId()
+
+    /**
+     * Returns the raw JSON value of [externalUserDetails].
+     *
+     * Unlike [externalUserDetails], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _externalUserDetails(): JsonField<BetaUserProfileExternalUserDetailsParams> =
+        body._externalUserDetails()
 
     /**
      * Returns the raw JSON value of [externalUserOnboardedAt].
@@ -182,9 +201,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [accessType]
          * - [externalId]
+         * - [externalUserDetails]
          * - [externalUserOnboardedAt]
          * - [metadata]
-         * - [name]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -206,7 +225,12 @@ private constructor(
          */
         fun accessType(accessType: JsonField<AccessType>) = apply { body.accessType(accessType) }
 
-        /** Platform's own identifier for this user. Not enforced unique. Maximum 255 characters. */
+        /**
+         * Platform's own identifier for this user. Not enforced unique. Maximum 255 characters.
+         * Accepted under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta
+         * headers; under `user-profiles-2026-09-04` send `external_user_details.reference_id`
+         * instead.
+         */
         fun externalId(externalId: String?) = apply { body.externalId(externalId) }
 
         /** Alias for calling [Builder.externalId] with `externalId.orElse(null)`. */
@@ -220,6 +244,26 @@ private constructor(
          * value.
          */
         fun externalId(externalId: JsonField<String>) = apply { body.externalId(externalId) }
+
+        /**
+         * Details about the entity this profile represents, as the platform states them. Every
+         * field is optional. Accepted under the `user-profiles-2026-09-04` beta header only.
+         */
+        fun externalUserDetails(externalUserDetails: BetaUserProfileExternalUserDetailsParams) =
+            apply {
+                body.externalUserDetails(externalUserDetails)
+            }
+
+        /**
+         * Sets [Builder.externalUserDetails] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.externalUserDetails] with a well-typed
+         * [BetaUserProfileExternalUserDetailsParams] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
+         */
+        fun externalUserDetails(
+            externalUserDetails: JsonField<BetaUserProfileExternalUserDetailsParams>
+        ) = apply { body.externalUserDetails(externalUserDetails) }
 
         /** A timestamp in RFC 3339 format */
         fun externalUserOnboardedAt(externalUserOnboardedAt: OffsetDateTime) = apply {
@@ -418,6 +462,7 @@ private constructor(
     private constructor(
         private val accessType: JsonField<AccessType>,
         private val externalId: JsonField<String>,
+        private val externalUserDetails: JsonField<BetaUserProfileExternalUserDetailsParams>,
         private val externalUserOnboardedAt: JsonField<OffsetDateTime>,
         private val metadata: JsonField<Metadata>,
         private val name: JsonField<String>,
@@ -432,6 +477,10 @@ private constructor(
             @JsonProperty("external_id")
             @ExcludeMissing
             externalId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("external_user_details")
+            @ExcludeMissing
+            externalUserDetails: JsonField<BetaUserProfileExternalUserDetailsParams> =
+                JsonMissing.of(),
             @JsonProperty("external_user_onboarded_at")
             @ExcludeMissing
             externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -439,7 +488,15 @@ private constructor(
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        ) : this(accessType, externalId, externalUserOnboardedAt, metadata, name, mutableMapOf())
+        ) : this(
+            accessType,
+            externalId,
+            externalUserDetails,
+            externalUserOnboardedAt,
+            metadata,
+            name,
+            mutableMapOf(),
+        )
 
         /**
          * How the platform uses the API on behalf of the entity this profile represents.
@@ -454,11 +511,24 @@ private constructor(
 
         /**
          * Platform's own identifier for this user. Not enforced unique. Maximum 255 characters.
+         * Accepted under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta
+         * headers; under `user-profiles-2026-09-04` send `external_user_details.reference_id`
+         * instead.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun externalId(): Optional<String> = externalId.getOptional("external_id")
+
+        /**
+         * Details about the entity this profile represents, as the platform states them. Every
+         * field is optional. Accepted under the `user-profiles-2026-09-04` beta header only.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun externalUserDetails(): Optional<BetaUserProfileExternalUserDetailsParams> =
+            externalUserDetails.getOptional("external_user_details")
 
         /**
          * A timestamp in RFC 3339 format
@@ -507,6 +577,17 @@ private constructor(
         fun _externalId(): JsonField<String> = externalId
 
         /**
+         * Returns the raw JSON value of [externalUserDetails].
+         *
+         * Unlike [externalUserDetails], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("external_user_details")
+        @ExcludeMissing
+        fun _externalUserDetails(): JsonField<BetaUserProfileExternalUserDetailsParams> =
+            externalUserDetails
+
+        /**
          * Returns the raw JSON value of [externalUserOnboardedAt].
          *
          * Unlike [externalUserOnboardedAt], this method doesn't throw if the JSON field has an
@@ -553,6 +634,8 @@ private constructor(
 
             private var accessType: JsonField<AccessType> = JsonMissing.of()
             private var externalId: JsonField<String> = JsonMissing.of()
+            private var externalUserDetails: JsonField<BetaUserProfileExternalUserDetailsParams> =
+                JsonMissing.of()
             private var externalUserOnboardedAt: JsonField<OffsetDateTime> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
@@ -562,6 +645,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 accessType = body.accessType
                 externalId = body.externalId
+                externalUserDetails = body.externalUserDetails
                 externalUserOnboardedAt = body.externalUserOnboardedAt
                 metadata = body.metadata
                 name = body.name
@@ -589,6 +673,9 @@ private constructor(
 
             /**
              * Platform's own identifier for this user. Not enforced unique. Maximum 255 characters.
+             * Accepted under the `user-profiles-2026-03-24` and `user-profiles-2026-08-18` beta
+             * headers; under `user-profiles-2026-09-04` send `external_user_details.reference_id`
+             * instead.
              */
             fun externalId(externalId: String?) = externalId(JsonField.ofNullable(externalId))
 
@@ -603,6 +690,24 @@ private constructor(
              * supported value.
              */
             fun externalId(externalId: JsonField<String>) = apply { this.externalId = externalId }
+
+            /**
+             * Details about the entity this profile represents, as the platform states them. Every
+             * field is optional. Accepted under the `user-profiles-2026-09-04` beta header only.
+             */
+            fun externalUserDetails(externalUserDetails: BetaUserProfileExternalUserDetailsParams) =
+                externalUserDetails(JsonField.of(externalUserDetails))
+
+            /**
+             * Sets [Builder.externalUserDetails] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.externalUserDetails] with a well-typed
+             * [BetaUserProfileExternalUserDetailsParams] value instead. This method is primarily
+             * for setting the field to an undocumented or not yet supported value.
+             */
+            fun externalUserDetails(
+                externalUserDetails: JsonField<BetaUserProfileExternalUserDetailsParams>
+            ) = apply { this.externalUserDetails = externalUserDetails }
 
             /** A timestamp in RFC 3339 format */
             fun externalUserOnboardedAt(externalUserOnboardedAt: OffsetDateTime) =
@@ -684,6 +789,7 @@ private constructor(
                 Body(
                     accessType,
                     externalId,
+                    externalUserDetails,
                     externalUserOnboardedAt,
                     metadata,
                     name,
@@ -709,6 +815,7 @@ private constructor(
 
             accessType().ifPresent { it.validate() }
             externalId()
+            externalUserDetails().ifPresent { it.validate() }
             externalUserOnboardedAt()
             metadata().ifPresent { it.validate() }
             name()
@@ -733,6 +840,7 @@ private constructor(
         internal fun validity(): Int =
             (accessType.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (externalId.asKnown().isPresent) 1 else 0) +
+                (externalUserDetails.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (externalUserOnboardedAt.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (name.asKnown().isPresent) 1 else 0)
@@ -745,6 +853,7 @@ private constructor(
             return other is Body &&
                 accessType == other.accessType &&
                 externalId == other.externalId &&
+                externalUserDetails == other.externalUserDetails &&
                 externalUserOnboardedAt == other.externalUserOnboardedAt &&
                 metadata == other.metadata &&
                 name == other.name &&
@@ -755,6 +864,7 @@ private constructor(
             Objects.hash(
                 accessType,
                 externalId,
+                externalUserDetails,
                 externalUserOnboardedAt,
                 metadata,
                 name,
@@ -765,7 +875,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{accessType=$accessType, externalId=$externalId, externalUserOnboardedAt=$externalUserOnboardedAt, metadata=$metadata, name=$name, additionalProperties=$additionalProperties}"
+            "Body{accessType=$accessType, externalId=$externalId, externalUserDetails=$externalUserDetails, externalUserOnboardedAt=$externalUserOnboardedAt, metadata=$metadata, name=$name, additionalProperties=$additionalProperties}"
     }
 
     /**

@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.client.okhttp
 
 import com.anthropic.backends.AnthropicBackend

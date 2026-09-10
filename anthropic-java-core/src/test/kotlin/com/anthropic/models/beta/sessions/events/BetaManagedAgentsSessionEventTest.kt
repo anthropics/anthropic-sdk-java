@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.models.beta.sessions.events
 
 import com.anthropic.core.JsonValue
@@ -589,6 +587,7 @@ internal class BetaManagedAgentsSessionEventTest {
                 .evaluatedPermission(
                     BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
                 )
+                .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
 
@@ -651,6 +650,7 @@ internal class BetaManagedAgentsSessionEventTest {
                     .evaluatedPermission(
                         BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
                     )
+                    .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                     .sessionThreadId("session_thread_id")
                     .build()
             )
@@ -756,6 +756,7 @@ internal class BetaManagedAgentsSessionEventTest {
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
                 .evaluatedPermission(BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW)
+                .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
 
@@ -817,6 +818,7 @@ internal class BetaManagedAgentsSessionEventTest {
                     .evaluatedPermission(
                         BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW
                     )
+                    .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                     .sessionThreadId("session_thread_id")
                     .build()
             )
@@ -3286,6 +3288,7 @@ internal class BetaManagedAgentsSessionEventTest {
                             "tool_use_id" to "tool_use_id",
                             "is_error" to true,
                             "name" to "name",
+                            "evaluation" to mapOf("type" to "always_allow"),
                             "agent_name" to "Researcher",
                             "iteration" to 0,
                             "outcome_id" to "outc_011CZkZRSw2kEfs6ncTVljxP",
@@ -3311,6 +3314,12 @@ internal class BetaManagedAgentsSessionEventTest {
         assertThat(betaManagedAgentsSessionEvent.toolUseId()).contains("tool_use_id")
         assertThat(betaManagedAgentsSessionEvent.isError()).contains(true)
         assertThat(betaManagedAgentsSessionEvent.name()).contains("name")
+        assertThat(betaManagedAgentsSessionEvent.evaluation())
+            .contains(
+                BetaManagedAgentsAgentToolEvaluation.ofAlwaysAllow(
+                    BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build()
+                )
+            )
         assertThat(betaManagedAgentsSessionEvent.agentName()).contains("Researcher")
         assertThat(betaManagedAgentsSessionEvent.iteration()).contains(0)
         assertThat(betaManagedAgentsSessionEvent.outcomeId())
@@ -3386,6 +3395,7 @@ internal class BetaManagedAgentsSessionEventTest {
         assertThat(betaManagedAgentsSessionEvent.toolUseId()).isEmpty
         assertThat(betaManagedAgentsSessionEvent.isError()).isEmpty
         assertThat(betaManagedAgentsSessionEvent.name()).isEmpty
+        assertThat(betaManagedAgentsSessionEvent.evaluation()).isEmpty
         assertThat(betaManagedAgentsSessionEvent.agentName()).isEmpty
         assertThat(betaManagedAgentsSessionEvent.iteration()).isEmpty
         assertThat(betaManagedAgentsSessionEvent.outcomeId()).isEmpty

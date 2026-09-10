@@ -1,11 +1,10 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.services.async.beta
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.core.JsonValue
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.userprofiles.BetaUserProfileExternalUserDetailsParams
 import com.anthropic.models.beta.userprofiles.UserProfileCreateEnrollmentUrlParams
 import com.anthropic.models.beta.userprofiles.UserProfileCreateParams
 import com.anthropic.models.beta.userprofiles.UserProfileRetrieveParams
@@ -32,6 +31,21 @@ internal class UserProfileServiceAsyncTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                     .externalId("user_12345")
+                    .externalUserDetails(
+                        BetaUserProfileExternalUserDetailsParams.builder()
+                            .accountStatus(
+                                BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE
+                            )
+                            .country("country")
+                            .emailHash("x")
+                            .entityType(
+                                BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL
+                            )
+                            .nameHash("x")
+                            .onboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .referenceId("x")
+                            .build()
+                    )
                     .externalUserOnboardedAt(OffsetDateTime.parse("2024-11-02T08:15:00Z"))
                     .metadata(UserProfileCreateParams.Metadata.builder().build())
                     .name("x")
@@ -79,6 +93,21 @@ internal class UserProfileServiceAsyncTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                     .externalId("user_12345")
+                    .externalUserDetails(
+                        BetaUserProfileExternalUserDetailsParams.builder()
+                            .accountStatus(
+                                BetaUserProfileExternalUserDetailsParams.AccountStatus.ACTIVE
+                            )
+                            .country("country")
+                            .emailHash("x")
+                            .entityType(
+                                BetaUserProfileExternalUserDetailsParams.EntityType.INDIVIDUAL
+                            )
+                            .nameHash("x")
+                            .onboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .referenceId("x")
+                            .build()
+                    )
                     .externalUserOnboardedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .metadata(
                         UserProfileUpdateParams.Metadata.builder()

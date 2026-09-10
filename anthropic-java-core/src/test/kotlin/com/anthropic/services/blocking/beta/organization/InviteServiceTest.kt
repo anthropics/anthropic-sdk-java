@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.services.blocking.beta.organization
 
 import com.anthropic.TestServerExtension

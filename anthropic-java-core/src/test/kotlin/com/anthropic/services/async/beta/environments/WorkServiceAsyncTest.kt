@@ -1,5 +1,3 @@
-// File generated from our OpenAPI spec by Stainless.
-
 package com.anthropic.services.async.beta.environments
 
 import com.anthropic.TestServerExtension
