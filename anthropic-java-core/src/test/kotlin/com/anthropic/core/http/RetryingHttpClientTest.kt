@@ -4,6 +4,7 @@ import com.anthropic.backends.Backend
 import com.anthropic.client.okhttp.OkHttpClient
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.Sleeper
+import com.anthropic.errors.AnthropicIoException
 import com.anthropic.errors.AnthropicRetryableException
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.matching
@@ -27,6 +28,7 @@ import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -376,6 +378,115 @@ internal class RetryingHttpClientTest {
                 .withHeader("x-stainless-retry-count", equalTo("0")),
         )
         // Exponential backoff with jitter: 0.5s * jitter where jitter is in [0.75, 1.0].
+        assertThat(sleeper.durations).hasSize(1)
+        assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
+        assertNoResponseLeaks()
+    }
+
+    @Test
+    fun executeAsync_withExceptionFromPreviousStage() {
+        stubFor(post(urlPathEqualTo("/something")).willReturn(ok()))
+
+        var callCount = 0
+        val failingHttpClient =
+            object : HttpClient {
+                override fun execute(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse = httpClient.execute(request, requestOptions)
+
+                override fun executeAsync(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): CompletableFuture<HttpResponse> {
+                    callCount++
+                    if (callCount == 1) {
+                        val future = CompletableFuture<HttpResponse>()
+                        future.completeExceptionally(
+                            AnthropicIoException("Simulated connection failure")
+                        )
+                        // Fail through a dependent stage so that the exception arrives wrapped in a
+                        // CompletionException, as failures from the other HttpClient layers do.
+                        return future.thenApply { it }
+                    }
+                    return httpClient.executeAsync(request, requestOptions)
+                }
+
+                override fun close() = httpClient.close()
+            }
+
+        val sleeper = RecordingSleeper()
+        val retryingClient =
+            RetryingHttpClient.builder()
+                .httpClient(failingHttpClient)
+                .maxRetries(2)
+                .sleeper(sleeper)
+                .build()
+
+        val response =
+            retryingClient
+                .executeAsync(
+                    HttpRequest.builder()
+                        .method(HttpMethod.POST)
+                        .baseUrl(baseUrl)
+                        .addPathSegment("something")
+                        .build()
+                )
+                .get()
+
+        assertThat(response.statusCode()).isEqualTo(200)
+        assertThat(callCount).isEqualTo(2)
+        assertThat(sleeper.durations).hasSize(1)
+        assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
+        assertNoResponseLeaks()
+    }
+
+    @Test
+    fun executeAsync_withSynchronousException() {
+        stubFor(post(urlPathEqualTo("/something")).willReturn(ok()))
+
+        var callCount = 0
+        val failingHttpClient =
+            object : HttpClient {
+                override fun execute(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): HttpResponse = httpClient.execute(request, requestOptions)
+
+                override fun executeAsync(
+                    request: HttpRequest,
+                    requestOptions: RequestOptions,
+                ): CompletableFuture<HttpResponse> {
+                    callCount++
+                    if (callCount == 1) {
+                        throw AnthropicRetryableException("Simulated retryable failure")
+                    }
+                    return httpClient.executeAsync(request, requestOptions)
+                }
+
+                override fun close() = httpClient.close()
+            }
+
+        val sleeper = RecordingSleeper()
+        val retryingClient =
+            RetryingHttpClient.builder()
+                .httpClient(failingHttpClient)
+                .maxRetries(2)
+                .sleeper(sleeper)
+                .build()
+
+        // The failure is reported through the future rather than thrown, and then retried.
+        val responseFuture =
+            retryingClient.executeAsync(
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(baseUrl)
+                    .addPathSegment("something")
+                    .build()
+            )
+
+        assertThat(responseFuture.get().statusCode()).isEqualTo(200)
+        assertThat(callCount).isEqualTo(2)
         assertThat(sleeper.durations).hasSize(1)
         assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
         assertNoResponseLeaks()

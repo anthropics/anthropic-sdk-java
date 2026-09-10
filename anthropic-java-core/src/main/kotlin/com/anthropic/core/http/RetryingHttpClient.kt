@@ -15,6 +15,7 @@ import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CompletionException
 import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.TimeUnit
 import java.util.function.Function
@@ -90,7 +91,16 @@ private constructor(
             val requestWithRetryCount =
                 if (shouldSendRetryCount) setRetryCountHeader(request, retries) else request
 
-            val responseFuture = httpClient.executeAsync(requestWithRetryCount, requestOptions)
+            val responseFuture =
+                try {
+                    httpClient.executeAsync(requestWithRetryCount, requestOptions)
+                } catch (throwable: Throwable) {
+                    // Surface a synchronous failure through the returned future, like an
+                    // asynchronous one, so that it goes through the same retry decision below.
+                    val failedFuture = CompletableFuture<HttpResponse>()
+                    failedFuture.completeExceptionally(throwable)
+                    failedFuture
+                }
             if (!isRetryable(requestWithRetryCount)) {
                 return responseFuture
             }
@@ -179,11 +189,15 @@ private constructor(
         }
     }
 
-    private fun shouldRetry(throwable: Throwable): Boolean =
+    private fun shouldRetry(throwable: Throwable): Boolean {
+        // Failures from earlier stages of the future chain arrive wrapped in a CompletionException.
+        var cause = throwable
+        while (cause is CompletionException) cause = cause.cause ?: break
         // Only retry known retryable exceptions, other exceptions are not intended to be retried.
-        throwable is IOException ||
-            throwable is AnthropicIoException ||
-            throwable is AnthropicRetryableException
+        return cause is IOException ||
+            cause is AnthropicIoException ||
+            cause is AnthropicRetryableException
+    }
 
     private fun getRetryBackoffDuration(retries: Int, response: HttpResponse?): Duration {
         // About the Retry-After header:
