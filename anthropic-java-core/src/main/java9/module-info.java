@@ -6,15 +6,28 @@ open module com.anthropic.core {
     requires com.fasterxml.jackson.datatype.jdk8;
     requires com.fasterxml.jackson.datatype.jsr310;
     requires com.fasterxml.jackson.kotlin;
+    requires com.github.victools.jsonschema.generator;
+    requires com.github.victools.jsonschema.module.jackson;
+    requires com.github.victools.jsonschema.module.swagger.two;
     requires transitive com.google.errorprone.annotations;
     requires transitive com.standardwebhooks;
+    requires transitive io.swagger.v3.oas.annotations;
+    requires kotlin.reflect;
     requires transitive kotlin.stdlib;
 
+    exports com.anthropic.backends;
     exports com.anthropic.client;
+    exports com.anthropic.config;
     exports com.anthropic.core;
+    exports com.anthropic.core.auth;
     exports com.anthropic.core.handlers;
     exports com.anthropic.core.http;
+    exports com.anthropic.credentials;
     exports com.anthropic.errors;
+    exports com.anthropic.helpers;
+    exports com.anthropic.internal.config;
+    exports com.anthropic.internal.core.http;
+    exports com.anthropic.internal.credentials;
     exports com.anthropic.models;
     exports com.anthropic.models.beta;
     exports com.anthropic.models.beta.agents;
