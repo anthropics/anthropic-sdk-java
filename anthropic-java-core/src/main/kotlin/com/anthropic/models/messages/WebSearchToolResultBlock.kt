@@ -68,15 +68,15 @@ private constructor(
                             override fun visitCodeExecution20250825(
                                 codeExecution20250825: ServerToolCaller
                             ): WebSearchToolResultBlockParam.Caller =
-                                WebSearchToolResultBlockParam.Caller.ofDirect(
-                                    DirectCaller.builder().build()
+                                WebSearchToolResultBlockParam.Caller.ofCodeExecution20250825(
+                                    codeExecution20250825
                                 )
 
                             override fun visitCodeExecution20260120(
                                 codeExecution20260120: ServerToolCaller20260120
                             ): WebSearchToolResultBlockParam.Caller =
-                                WebSearchToolResultBlockParam.Caller.ofDirect(
-                                    DirectCaller.builder().build()
+                                WebSearchToolResultBlockParam.Caller.ofCodeExecution20260120(
+                                    codeExecution20260120
                                 )
                         }
                     )
