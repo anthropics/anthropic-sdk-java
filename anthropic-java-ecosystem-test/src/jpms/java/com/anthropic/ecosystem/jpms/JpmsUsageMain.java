@@ -1,6 +1,7 @@
 package com.anthropic.ecosystem.jpms;
 
 import com.anthropic.backends.AnthropicBackend;
+import com.anthropic.bedrock.backends.BedrockBackend;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.JsonValue;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import java.lang.module.ModuleDescriptor;
 import java.lang.module.ModuleDescriptor.Requires;
 import java.util.Arrays;
+import software.amazon.awssdk.regions.Region;
 
 // Exercises the SDK from an explicit JPMS module, executed on the module path, to catch broken
 // module descriptors (a missing `requires transitive`, an unopened package) that classpath tests
@@ -49,6 +51,18 @@ public final class JpmsUsageMain {
         AnthropicBackend backend =
                 AnthropicBackend.builder().apiKey("my-anthropic-api-key").build();
         require(backend.baseUrl().equals("https://api.anthropic.com"), "backend base URL");
+
+        // `Region` arrives through the SDK modules' `requires transitive`; this module requires no AWS
+        // module itself.
+        BedrockBackend bedrock = BedrockBackend.builder()
+                .region(Region.US_EAST_1)
+                .apiKey("my-bedrock-api-key")
+                .build();
+        require(bedrock.baseUrl().contains("us-east-1"), "Bedrock backend base URL");
+        requireModule(BedrockBackend.class, "com.anthropic.bedrock");
+        require(
+                !BedrockBackend.class.getModule().getDescriptor().isAutomatic(),
+                "com.anthropic.bedrock has an explicit descriptor");
 
         // Schema derivation is hand-written and calls the JSON Schema generator, so the core
         // descriptor needs its own `requires` for it.

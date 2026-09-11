@@ -228,6 +228,18 @@ val jpmsModulePath: Configuration by configurations.creating {
 
 dependencies { "jpmsImplementation"(project(":anthropic-java")) }
 
+// The hand-written modules with a descriptor, so `testJpms` can use them and `testModuleInfo` checks
+// them. `anthropic-java-mcp` has none: the MCP SDK's `Automatic-Module-Name` is not a legal module
+// name, so the module path rejects its jars
+// (https://github.com/modelcontextprotocol/java-sdk/issues/560).
+dependencies {
+    "jpmsImplementation"(project(":anthropic-java-aws"))
+    "jpmsImplementation"(project(":anthropic-java-bedrock"))
+    "jpmsImplementation"(project(":anthropic-java-foundry"))
+    "jpmsImplementation"(project(":anthropic-java-google-cloud"))
+    "jpmsImplementation"(project(":anthropic-java-vertex"))
+}
+
 val compileJpmsJava =
     tasks.named<JavaCompile>(jpms.compileJavaTaskName) {
         // Gradle's inferred module path, as in a consumer's build: a jar with neither a descriptor nor an
