@@ -29,6 +29,7 @@ internal class UserProfileServiceAsyncTest {
             userProfileServiceAsync.create(
                 UserProfileCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                     .externalId("user_12345")
                     .externalUserDetails(
@@ -70,6 +71,7 @@ internal class UserProfileServiceAsyncTest {
                 UserProfileRetrieveParams.builder()
                     .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
@@ -91,6 +93,7 @@ internal class UserProfileServiceAsyncTest {
                 UserProfileUpdateParams.builder()
                     .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .accessType(UserProfileUpdateParams.AccessType.APPLICATION)
                     .externalId("user_12345")
                     .externalUserDetails(
@@ -151,6 +154,7 @@ internal class UserProfileServiceAsyncTest {
                 UserProfileCreateEnrollmentUrlParams.builder()
                     .userProfileId("uprof_011CZkZCu8hGbp5mYRQgUmz9")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
 
