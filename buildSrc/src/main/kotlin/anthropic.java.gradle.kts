@@ -71,6 +71,9 @@ tasks.named<Jar>("jar") {
     }
 }
 
+// A module opts in by having a `src/main/java9/module-info.java`.
+configureModuleInfo()
+
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 

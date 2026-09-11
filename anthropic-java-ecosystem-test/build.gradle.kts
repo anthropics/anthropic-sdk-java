@@ -209,6 +209,56 @@ val testJava8 by tasks.registering(JavaExec::class) {
     outputs.upToDateWhen { true }
 }
 
+// JPMS usage smoke test: an explicit consumer module, compiled and run on the module path
+
+val jpms: SourceSet by sourceSets.creating
+
+// The SDK plus its runtime dependencies as jars: a module descriptor only exists in the jar (under
+// `META-INF/versions/9/`), never in a classes directory.
+val jpmsModulePath: Configuration by configurations.creating {
+    isCanBeConsumed = false
+    isCanBeResolved = true
+    extendsFrom(configurations[jpms.implementationConfigurationName])
+    attributes {
+        attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
+        attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
+        attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
+    }
+}
+
+dependencies { "jpmsImplementation"(project(":anthropic-java")) }
+
+val compileJpmsJava =
+    tasks.named<JavaCompile>(jpms.compileJavaTaskName) {
+        // Gradle's inferred module path, as in a consumer's build: a jar with neither a descriptor nor an
+        // `Automatic-Module-Name` stays on the classpath, unreadable from named modules, and fails here.
+        classpath = jpmsModulePath
+        // `module-info.java` needs Java 9+.
+        options.release.set(9)
+        modularity.inferModulePath.set(true)
+    }
+
+val testJpms by tasks.registering(JavaExec::class) {
+    group = "verification"
+    description = "Runs a small SDK consumer as a JPMS module on the module path."
+
+    mainModule.set("com.anthropic.ecosystem.jpms")
+    mainClass.set("com.anthropic.ecosystem.jpms.JpmsUsageMain")
+    classpath = files(compileJpmsJava.flatMap { it.destinationDirectory }) + jpmsModulePath
+    modularity.inferModulePath.set(true)
+
+    outputs.upToDateWhen { true }
+}
+
+// Static module descriptors can fall behind the code; see `CheckModuleInfo` in `buildSrc`.
+val testModuleInfo by tasks.registering(CheckModuleInfo::class) {
+    group = "verification"
+    description = "Checks that the SDK's module descriptors require and export everything its jars need."
+
+    jars.from(jpmsModulePath.incoming.artifactView { componentFilter { it is ProjectComponentIdentifier } }.files)
+    modulePath.from(jpmsModulePath)
+}
+
 // Kotlin 1.8.20 usage smoke test: compiled by kotlinc 1.8.20, then executed on JDK 8
 
 val kotlin1820Out = layout.buildDirectory.dir("kotlin-1820-classes")
@@ -282,6 +332,8 @@ tasks.test {
     dependsOn(testProGuard)
     dependsOn(testR8)
     dependsOn(testJava8)
+    dependsOn(testJpms)
+    dependsOn(testModuleInfo)
     dependsOn(runKotlin1820) // transitively runs compileKotlin1820
     // We defer to the tests run via the verification tasks above.
     enabled = false
