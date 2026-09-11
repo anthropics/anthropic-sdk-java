@@ -86,6 +86,7 @@ public final class JpmsUsageMain {
             ModuleDescriptor descriptor = module.getDescriptor();
             require(!descriptor.isAutomatic(), name + " has an explicit descriptor");
             require(descriptor.isOpen(), name + " is an open module");
+            require(args[0].equals(descriptor.rawVersion().orElse(null)), name + " records version " + args[0]);
             require(self.canRead(module), self.getName() + " reads " + name);
         }
         ModuleDescriptor core = layer.findModule(CORE_MODULE).get().getDescriptor();

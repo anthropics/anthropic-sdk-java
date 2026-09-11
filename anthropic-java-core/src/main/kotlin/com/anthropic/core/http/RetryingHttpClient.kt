@@ -116,7 +116,7 @@ private constructor(
                                 return CompletableFuture.completedFuture(response)
                             }
                         } else {
-                            if (++retries > maxRetries || !shouldRetry(throwable!!)) {
+                            if (++retries > maxRetries || !shouldRetry(checkNotNull(throwable))) {
                                 val failedFuture = CompletableFuture<HttpResponse>()
                                 failedFuture.completeExceptionally(throwable)
                                 return failedFuture
@@ -246,6 +246,8 @@ private constructor(
         return Duration.ofNanos((TimeUnit.SECONDS.toNanos(1) * backoffSeconds * jitter).toLong())
     }
 
+    fun toBuilder(): Builder = Builder().from(this)
+
     companion object {
 
         @JvmStatic fun builder() = Builder()
@@ -258,6 +260,15 @@ private constructor(
         private var clock: Clock = Clock.systemUTC()
         private var maxRetries: Int = 2
         private var idempotencyHeader: String? = null
+
+        @JvmSynthetic
+        internal fun from(retryingHttpClient: RetryingHttpClient) = apply {
+            httpClient = retryingHttpClient.httpClient
+            sleeper = retryingHttpClient.sleeper
+            clock = retryingHttpClient.clock
+            maxRetries = retryingHttpClient.maxRetries
+            idempotencyHeader = retryingHttpClient.idempotencyHeader
+        }
 
         fun httpClient(httpClient: HttpClient) = apply { this.httpClient = httpClient }
 

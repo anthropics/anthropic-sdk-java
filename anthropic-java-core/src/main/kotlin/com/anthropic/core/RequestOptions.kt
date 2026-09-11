@@ -78,6 +78,8 @@ private constructor(
         return requestOptions
     }
 
+    fun toBuilder(): Builder = Builder().from(this)
+
     fun applyDefaults(options: RequestOptions): RequestOptions =
         RequestOptions(
             responseValidation = responseValidation ?: options.responseValidation,
@@ -92,6 +94,13 @@ private constructor(
         private var responseValidation: Boolean? = null
         private var timeout: Timeout? = null
         private var fallbackState: BetaFallbackState? = null
+
+        @JvmSynthetic
+        internal fun from(requestOptions: RequestOptions) = apply {
+            responseValidation = requestOptions.responseValidation
+            timeout = requestOptions.timeout
+            fallbackState = requestOptions.fallbackState
+        }
 
         /**
          * Whether to call `validate` on the response before returning it.

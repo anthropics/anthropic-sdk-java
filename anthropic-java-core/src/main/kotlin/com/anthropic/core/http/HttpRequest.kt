@@ -1,6 +1,7 @@
 package com.anthropic.core.http
 
 import com.anthropic.core.checkRequired
+import com.anthropic.core.contentToString
 import com.anthropic.core.toImmutable
 import java.net.URLEncoder
 import java.util.Optional
@@ -59,7 +60,7 @@ private constructor(
     fun toBuilder(): Builder = Builder().from(this)
 
     override fun toString(): String =
-        "HttpRequest{method=$method, baseUrl=$baseUrl, pathSegments=$pathSegments, headers=$headers, queryParams=$queryParams, body=$body}"
+        "HttpRequest{method=$method, baseUrl=$baseUrl, pathSegments=$pathSegments, headers=$headers, queryParams=$queryParams, body=${body.contentToString()}}"
 
     companion object {
         @JvmStatic fun builder() = Builder()

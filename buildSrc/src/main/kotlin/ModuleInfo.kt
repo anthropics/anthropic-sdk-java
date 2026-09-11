@@ -64,6 +64,8 @@ fun Project.configureModuleInfo() {
             destinationDirectory.set(layout.buildDirectory.dir("classes/java/moduleInfo"))
             // `module-info.java` needs Java 9+; everything else still uses `--release 8`.
             options.release.set(9)
+            // Informational only: shown in stack traces and by `java --describe-module`.
+            options.javaModuleVersion.set(provider { version.toString() })
             // Most dependencies are automatic modules (no own `module-info.class`); expected.
             options.compilerArgs.add("-Xlint:-requires-automatic,-requires-transitive-automatic")
             // Gradle splits the jars into module path and class path, as in a consumer's build.

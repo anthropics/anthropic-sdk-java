@@ -59,12 +59,17 @@ private class IOExceptionWrappingSequence<T>(private val sequence: Sequence<T>) 
         val iterator = sequence.iterator()
         return object : Iterator<T> {
 
-            override fun next(): T =
-                try {
+            override fun next(): T {
+                if (!hasNext()) {
+                    throw NoSuchElementException()
+                }
+
+                return try {
                     iterator.next()
                 } catch (e: IOException) {
                     throw AnthropicIoException("Stream failed", e)
                 }
+            }
 
             override fun hasNext(): Boolean =
                 try {
@@ -90,7 +95,14 @@ private class CloseableSequence<T>(private val sequence: Sequence<T>) : Sequence
         val iterator = sequence.iterator()
         return object : Iterator<T> {
 
-            override fun next(): T = iterator.next()
+            override fun next(): T {
+                // Not `hasNext()`: a `close()` after `hasNext()` must still yield this element.
+                if (!iterator.hasNext()) {
+                    throw NoSuchElementException()
+                }
+
+                return iterator.next()
+            }
 
             override fun hasNext(): Boolean = !isClosed && iterator.hasNext()
         }

@@ -165,5 +165,5 @@ private constructor(
     override fun hashCode(): Int = Objects.hash(connect, read, write, request)
 
     override fun toString() =
-        "Timeout{connect=$connect, read=$read, write=$write, request=$request}"
+        "Timeout{connect=${connect.contentToString()}, read=${read.contentToString()}, write=${write.contentToString()}, request=${request.contentToString()}}"
 }

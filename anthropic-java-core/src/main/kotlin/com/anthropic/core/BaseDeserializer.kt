@@ -18,13 +18,10 @@ abstract class BaseDeserializer<T : Any>(type: KClass<T>) :
     override fun createContextual(
         context: DeserializationContext,
         property: BeanProperty?,
-    ): JsonDeserializer<T> {
-        return this
-    }
+    ): JsonDeserializer<T> = this
 
-    override fun deserialize(parser: JsonParser, context: DeserializationContext): T {
-        return parser.codec.deserialize(parser.readValueAsTree())
-    }
+    override fun deserialize(parser: JsonParser, context: DeserializationContext): T =
+        parser.codec.deserialize(parser.readValueAsTree())
 
     protected abstract fun ObjectCodec.deserialize(node: JsonNode): T
 

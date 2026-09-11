@@ -4,6 +4,7 @@ import com.anthropic.core.http.AsyncStreamResponse
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
+import java.util.concurrent.RejectedExecutionException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
@@ -103,7 +104,6 @@ internal class AutoPagerAsyncTest {
         verify(handler, times(1)).onNext("page1")
         verify(handler, never()).onNext("page2")
         verify(handler, times(1)).onComplete(Optional.empty())
-        verify(executor, times(1)).execute(any())
     }
 
     @Test
@@ -114,9 +114,25 @@ internal class AutoPagerAsyncTest {
 
         page.nextPageFuture.completeExceptionally(ERROR)
 
-        verify(executor, times(1)).execute(any())
         verify(handler, never()).onNext(any())
         verify(handler, times(1)).onComplete(Optional.of(ERROR))
+    }
+
+    @Test
+    fun subscribe_whenExecutorRejectsWork_completesOnCompleteFuture() {
+        var isShutDown = false
+        val shuttingDownExecutor = Executor {
+            if (isShutDown) throw RejectedExecutionException() else it.run()
+        }
+        val page = PageAsyncImpl(listOf("page1"))
+        val autoPagerAsync = AutoPagerAsync.from(page, shuttingDownExecutor)
+        autoPagerAsync.subscribe(handler)
+        isShutDown = true
+
+        page.nextPageFuture.complete(PageAsyncImpl(listOf("page2"), hasNext = false))
+
+        assertThat(autoPagerAsync.onCompleteFuture()).isCompletedExceptionally()
+        verify(handler, never()).onNext("page2")
     }
 
     @Test
@@ -136,8 +152,8 @@ internal class AutoPagerAsyncTest {
 
         page.nextPageFuture.complete(PageAsyncImpl(listOf("chunk3", "chunk4"), hasNext = false))
 
-        verify(executor, never()).execute(any())
-        inOrder(handler) {
+        inOrder(executor, handler) {
+            verify(executor, times(1)).execute(any())
             verify(handler, times(1)).onNext("chunk3")
             verify(handler, times(1)).onNext("chunk4")
             verify(handler, times(1)).onComplete(Optional.empty())

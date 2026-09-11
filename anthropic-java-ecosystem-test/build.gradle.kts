@@ -258,6 +258,8 @@ val testJpms by tasks.registering(JavaExec::class) {
     mainClass.set("com.anthropic.ecosystem.jpms.JpmsUsageMain")
     classpath = files(compileJpmsJava.flatMap { it.destinationDirectory }) + jpmsModulePath
     modularity.inferModulePath.set(true)
+    // The version the SDK's module descriptors should record.
+    args(project.version.toString())
 
     outputs.upToDateWhen { true }
 }
