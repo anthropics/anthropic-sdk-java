@@ -222,12 +222,19 @@ private constructor(
                                 )
                             } catch (e: DateTimeParseException) {
                                 null
+                            } catch (e: ArithmeticException) {
+                                null
                             }
                     }
             }
             ?.let { retryAfterNanos ->
-                // If the API asks us to wait a certain amount of time, do what it says.
-                return Duration.ofNanos(retryAfterNanos.toLong())
+                // If the API asks us to wait some amount of time, do what it says, however long. A
+                // value that isn't a positive delay (e.g. a date in the past) is ignored in favor
+                // of the exponential backoff below.
+                val nanos = retryAfterNanos.toDouble()
+                if (nanos > 0 && nanos.isFinite()) {
+                    return Duration.ofNanos(retryAfterNanos.toLong())
+                }
             }
 
         // Apply exponential backoff, but not more than the max.
