@@ -21,7 +21,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Regular text content. */
 @JsonDeserialize(using = BetaContentBlockParam.Deserializer::class)
 @JsonSerialize(using = BetaContentBlockParam.Serializer::class)
 class BetaContentBlockParam

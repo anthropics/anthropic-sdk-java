@@ -191,7 +191,6 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** Tool invocation directly from the model. */
         fun caller(caller: Caller) = caller(JsonField.of(caller))
 
         /**
@@ -360,7 +359,6 @@ private constructor(
             (name.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("server_tool_use")) 1 else 0 }
 
-    /** Tool invocation directly from the model. */
     @JsonDeserialize(using = Caller.Deserializer::class)
     @JsonSerialize(using = Caller.Serializer::class)
     class Caller

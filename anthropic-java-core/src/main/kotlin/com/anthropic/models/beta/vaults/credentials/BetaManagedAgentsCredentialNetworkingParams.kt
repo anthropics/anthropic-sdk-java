@@ -20,10 +20,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Substitute the secret on any host the session's Environment network policy permits egress to. The
- * Environment's network policy is the only boundary on where the secret can reach.
- */
 @JsonDeserialize(using = BetaManagedAgentsCredentialNetworkingParams.Deserializer::class)
 @JsonSerialize(using = BetaManagedAgentsCredentialNetworkingParams.Serializer::class)
 class BetaManagedAgentsCredentialNetworkingParams

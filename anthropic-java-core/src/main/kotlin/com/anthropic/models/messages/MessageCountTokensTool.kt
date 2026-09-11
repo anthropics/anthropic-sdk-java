@@ -17,7 +17,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
-/** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
 @JsonDeserialize(using = MessageCountTokensTool.Deserializer::class)
 @JsonSerialize(using = MessageCountTokensTool.Serializer::class)
 class MessageCountTokensTool

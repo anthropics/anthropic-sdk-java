@@ -85,8 +85,6 @@ private constructor(
     fun cacheControl(): Optional<CacheControlEphemeral> = cacheControl.getOptional("cache_control")
 
     /**
-     * Tool invocation directly from the model.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -253,7 +251,6 @@ private constructor(
             this.cacheControl = cacheControl
         }
 
-        /** Tool invocation directly from the model. */
         fun caller(caller: Caller) = caller(JsonField.of(caller))
 
         /**
@@ -392,7 +389,6 @@ private constructor(
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (caller.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Tool invocation directly from the model. */
     @JsonDeserialize(using = Caller.Deserializer::class)
     @JsonSerialize(using = Caller.Serializer::class)
     class Caller

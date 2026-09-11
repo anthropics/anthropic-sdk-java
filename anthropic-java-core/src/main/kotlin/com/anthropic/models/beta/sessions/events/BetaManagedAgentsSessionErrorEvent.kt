@@ -58,9 +58,6 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * An unknown or unexpected error occurred during session execution. A fallback variant; clients
-     * that don't recognize a new error code can match on `retry_status` and `message` alone.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -170,11 +167,6 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /**
-         * An unknown or unexpected error occurred during session execution. A fallback variant;
-         * clients that don't recognize a new error code can match on `retry_status` and `message`
-         * alone.
-         */
         fun error(error: Error) = error(JsonField.of(error))
 
         /**
@@ -331,10 +323,6 @@ private constructor(
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    /**
-     * An unknown or unexpected error occurred during session execution. A fallback variant; clients
-     * that don't recognize a new error code can match on `retry_status` and `message` alone.
-     */
     @JsonDeserialize(using = Error.Deserializer::class)
     @JsonSerialize(using = Error.Serializer::class)
     class Error

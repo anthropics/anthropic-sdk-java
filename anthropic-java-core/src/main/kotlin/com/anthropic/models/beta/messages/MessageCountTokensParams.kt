@@ -3129,7 +3129,6 @@ private constructor(
         }
     }
 
-    /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
     @JsonDeserialize(using = Tool.Deserializer::class)
     @JsonSerialize(using = Tool.Serializer::class)
     class Tool

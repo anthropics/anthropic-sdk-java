@@ -130,8 +130,6 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Tool invocation directly from the model.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -260,7 +258,6 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
-        /** Tool invocation directly from the model. */
         fun caller(caller: Caller) = caller(JsonField.of(caller))
 
         /**
@@ -524,7 +521,6 @@ private constructor(
         override fun toString() = "Input{additionalProperties=$additionalProperties}"
     }
 
-    /** Tool invocation directly from the model. */
     @JsonDeserialize(using = Caller.Deserializer::class)
     @JsonSerialize(using = Caller.Serializer::class)
     class Caller

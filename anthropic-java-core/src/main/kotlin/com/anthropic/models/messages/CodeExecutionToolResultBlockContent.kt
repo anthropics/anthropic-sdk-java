@@ -17,7 +17,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
-/** Code execution result with encrypted stdout for PFC + web_search results. */
 @JsonDeserialize(using = CodeExecutionToolResultBlockContent.Deserializer::class)
 @JsonSerialize(using = CodeExecutionToolResultBlockContent.Serializer::class)
 class CodeExecutionToolResultBlockContent

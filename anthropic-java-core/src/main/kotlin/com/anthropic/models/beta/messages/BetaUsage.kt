@@ -806,7 +806,6 @@ private constructor(
             (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
             (speed.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Token usage for a sampling iteration. */
     @JsonDeserialize(using = Iteration.Deserializer::class)
     @JsonSerialize(using = Iteration.Serializer::class)
     class Iteration

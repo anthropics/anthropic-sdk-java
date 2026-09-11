@@ -85,8 +85,6 @@ private constructor(
             .build()
 
     /**
-     * Tool invocation directly from the model.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -183,7 +181,6 @@ private constructor(
             additionalProperties = webSearchToolResultBlock.additionalProperties.toMutableMap()
         }
 
-        /** Tool invocation directly from the model. */
         fun caller(caller: Caller) = caller(JsonField.of(caller))
 
         /**
@@ -369,7 +366,6 @@ private constructor(
             (if (toolUseId.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("web_search_tool_result")) 1 else 0 }
 
-    /** Tool invocation directly from the model. */
     @JsonDeserialize(using = Caller.Deserializer::class)
     @JsonSerialize(using = Caller.Serializer::class)
     class Caller

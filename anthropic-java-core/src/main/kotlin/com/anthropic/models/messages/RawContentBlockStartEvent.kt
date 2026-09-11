@@ -46,8 +46,6 @@ private constructor(
     ) : this(contentBlock, index, type, mutableMapOf())
 
     /**
-     * Response model for a file uploaded to the container.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -128,7 +126,6 @@ private constructor(
             additionalProperties = rawContentBlockStartEvent.additionalProperties.toMutableMap()
         }
 
-        /** Response model for a file uploaded to the container. */
         fun contentBlock(contentBlock: ContentBlock) = contentBlock(JsonField.of(contentBlock))
 
         /**
@@ -345,7 +342,6 @@ private constructor(
             (if (index.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("content_block_start")) 1 else 0 }
 
-    /** Response model for a file uploaded to the container. */
     @JsonDeserialize(using = ContentBlock.Deserializer::class)
     @JsonSerialize(using = ContentBlock.Serializer::class)
     class ContentBlock

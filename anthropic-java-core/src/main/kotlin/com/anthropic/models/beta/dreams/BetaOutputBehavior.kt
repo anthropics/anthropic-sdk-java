@@ -20,10 +20,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * The default destination: the job creates a new output memory store as a clone of the memory_store
- * input and writes the consolidated memories into it. The input store is never mutated.
- */
 @JsonDeserialize(using = BetaOutputBehavior.Deserializer::class)
 @JsonSerialize(using = BetaOutputBehavior.Serializer::class)
 class BetaOutputBehavior

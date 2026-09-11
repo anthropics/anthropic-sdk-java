@@ -634,7 +634,6 @@ private constructor(
             (outputTokensDetails.asKnown().getOrNull()?.validity() ?: 0) +
             (serverToolUse.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Token usage for a sampling iteration. */
     @JsonDeserialize(using = Iteration.Deserializer::class)
     @JsonSerialize(using = Iteration.Serializer::class)
     class Iteration

@@ -21,7 +21,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Response model for a file uploaded to the container. */
 @JsonDeserialize(using = BetaContentBlock.Deserializer::class)
 @JsonSerialize(using = BetaContentBlock.Serializer::class)
 class BetaContentBlock

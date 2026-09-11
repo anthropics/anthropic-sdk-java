@@ -196,7 +196,6 @@ private constructor(
     internal fun validity(): Int =
         (edits.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
-    /** Automatically compact older context when reaching the configured trigger threshold. */
     @JsonDeserialize(using = Edit.Deserializer::class)
     @JsonSerialize(using = Edit.Serializer::class)
     class Edit

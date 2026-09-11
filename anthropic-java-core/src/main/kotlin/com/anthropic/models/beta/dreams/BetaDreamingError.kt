@@ -30,14 +30,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * The `output_behavior.memory_store_id` target is still held by a prior `{type: "update_existing"}`
- * dream — one that is `pending` or `running`, or was canceled with its final writes still landing.
- * Rarely the named dream has just finished (`completed`/`failed`) and its execution is still
- * closing; an immediate retry then almost always succeeds. The message names the holding dream when
- * the server can identify it (rarely omitted); poll it to a terminal state or cancel it, then
- * retry. Carried with `x-should-retry: false`.
- */
 @JsonDeserialize(using = BetaDreamingError.Deserializer::class)
 @JsonSerialize(using = BetaDreamingError.Serializer::class)
 class BetaDreamingError

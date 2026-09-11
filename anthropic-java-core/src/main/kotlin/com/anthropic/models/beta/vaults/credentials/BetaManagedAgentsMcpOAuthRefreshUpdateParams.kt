@@ -64,8 +64,6 @@ private constructor(
     fun scope(): Optional<String> = scope.getOptional("scope")
 
     /**
-     * Updated HTTP Basic authentication parameters for the token endpoint.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -170,7 +168,6 @@ private constructor(
          */
         fun scope(scope: JsonField<String>) = apply { this.scope = scope }
 
-        /** Updated HTTP Basic authentication parameters for the token endpoint. */
         fun tokenEndpointAuth(tokenEndpointAuth: TokenEndpointAuth) =
             tokenEndpointAuth(JsonField.of(tokenEndpointAuth))
 
@@ -273,7 +270,6 @@ private constructor(
             (if (scope.asKnown().isPresent) 1 else 0) +
             (tokenEndpointAuth.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Updated HTTP Basic authentication parameters for the token endpoint. */
     @JsonDeserialize(using = TokenEndpointAuth.Deserializer::class)
     @JsonSerialize(using = TokenEndpointAuth.Serializer::class)
     class TokenEndpointAuth

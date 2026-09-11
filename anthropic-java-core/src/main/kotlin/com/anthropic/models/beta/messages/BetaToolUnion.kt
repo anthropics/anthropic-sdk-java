@@ -18,7 +18,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
-/** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
 @JsonDeserialize(using = BetaToolUnion.Deserializer::class)
 @JsonSerialize(using = BetaToolUnion.Serializer::class)
 class BetaToolUnion

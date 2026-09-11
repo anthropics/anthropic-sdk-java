@@ -67,8 +67,6 @@ private constructor(
     fun processedAt(): OffsetDateTime = processedAt.getRequired("processed_at")
 
     /**
-     * The agent completed its turn naturally and is ready for the next user message.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -187,7 +185,6 @@ private constructor(
             this.processedAt = processedAt
         }
 
-        /** The agent completed its turn naturally and is ready for the next user message. */
         fun stopReason(stopReason: StopReason) = stopReason(JsonField.of(stopReason))
 
         /**
@@ -330,7 +327,6 @@ private constructor(
             (stopReason.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** The agent completed its turn naturally and is ready for the next user message. */
     @JsonDeserialize(using = StopReason.Deserializer::class)
     @JsonSerialize(using = StopReason.Serializer::class)
     class StopReason

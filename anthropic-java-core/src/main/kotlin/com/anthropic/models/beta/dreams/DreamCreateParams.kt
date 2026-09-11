@@ -54,8 +54,6 @@ private constructor(
     fun inputs(): List<BetaDreamInput> = body.inputs()
 
     /**
-     * Model identifier and configuration applied to every pipeline stage.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -68,10 +66,6 @@ private constructor(
     fun instructions(): Optional<String> = body.instructions()
 
     /**
-     * The default destination: the job creates a new output memory store as a clone of the
-     * memory_store input and writes the consolidated memories into it. The input store is never
-     * mutated.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -236,7 +230,6 @@ private constructor(
          */
         fun addSessionsInput(sessionIds: List<String>) = apply { body.addSessionsInput(sessionIds) }
 
-        /** Model identifier and configuration applied to every pipeline stage. */
         fun model(model: Model) = apply { body.model(model) }
 
         /**
@@ -274,11 +267,6 @@ private constructor(
             body.instructions(instructions)
         }
 
-        /**
-         * The default destination: the job creates a new output memory store as a clone of the
-         * memory_store input and writes the consolidated memories into it. The input store is never
-         * mutated.
-         */
         fun outputBehavior(outputBehavior: BetaOutputBehavior) = apply {
             body.outputBehavior(outputBehavior)
         }
@@ -504,8 +492,6 @@ private constructor(
         fun inputs(): List<BetaDreamInput> = inputs.getRequired("inputs")
 
         /**
-         * Model identifier and configuration applied to every pipeline stage.
-         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
@@ -518,10 +504,6 @@ private constructor(
         fun instructions(): Optional<String> = instructions.getOptional("instructions")
 
         /**
-         * The default destination: the job creates a new output memory store as a clone of the
-         * memory_store input and writes the consolidated memories into it. The input store is never
-         * mutated.
-         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
@@ -675,7 +657,6 @@ private constructor(
                         .build()
                 )
 
-            /** Model identifier and configuration applied to every pipeline stage. */
             fun model(model: Model) = model(JsonField.of(model))
 
             /**
@@ -715,11 +696,6 @@ private constructor(
                 this.instructions = instructions
             }
 
-            /**
-             * The default destination: the job creates a new output memory store as a clone of the
-             * memory_store input and writes the consolidated memories into it. The input store is
-             * never mutated.
-             */
             fun outputBehavior(outputBehavior: BetaOutputBehavior) =
                 outputBehavior(JsonField.of(outputBehavior))
 
@@ -873,7 +849,6 @@ private constructor(
             "Body{inputs=$inputs, model=$model, instructions=$instructions, outputBehavior=$outputBehavior, additionalProperties=$additionalProperties}"
     }
 
-    /** Model identifier and configuration applied to every pipeline stage. */
     @JsonDeserialize(using = Model.Deserializer::class)
     @JsonSerialize(using = Model.Serializer::class)
     class Model
