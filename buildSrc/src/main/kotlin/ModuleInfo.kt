@@ -45,7 +45,7 @@ fun Project.configureModuleInfo() {
             ?: throw GradleException("No `module <name>` declaration in ${moduleInfo.asFile}")
     val mainClassesDirs = the<SourceSetContainer>()["main"].output.classesDirs
     // Jars rather than class directories: a sibling module's descriptor only exists in its jar.
-    val modulePath =
+    val compileClasspathJars =
         configurations["compileClasspath"]
             .incoming
             .artifactView {
@@ -60,16 +60,15 @@ fun Project.configureModuleInfo() {
     val compileModuleInfo =
         tasks.register<JavaCompile>("compileModuleInfo") {
             source("src/main/java9")
-            classpath = files()
+            classpath = compileClasspathJars
             destinationDirectory.set(layout.buildDirectory.dir("classes/java/moduleInfo"))
             // `module-info.java` needs Java 9+; everything else still uses `--release 8`.
             options.release.set(9)
             // Most dependencies are automatic modules (no own `module-info.class`); expected.
             options.compilerArgs.add("-Xlint:-requires-automatic,-requires-transitive-automatic")
-            modularity.inferModulePath.set(false)
-            options.compilerArgumentProviders.add(
-                ModuleInfoCompilerArguments(moduleName, modulePath, mainClassesDirs)
-            )
+            // Gradle splits the jars into module path and class path, as in a consumer's build.
+            modularity.inferModulePath.set(true)
+            options.compilerArgumentProviders.add(PatchModuleArguments(moduleName, mainClassesDirs))
         }
     tasks.named<Jar>("jar") {
         manifest.attributes(mapOf("Multi-Release" to "true"))
@@ -77,22 +76,29 @@ fun Project.configureModuleInfo() {
     }
 }
 
-class ModuleInfoCompilerArguments(
+/** `exports` must name packages javac can see, so overlay the compiled classes. */
+class PatchModuleArguments(
     @get:Input val moduleName: String,
-    @get:Classpath val modulePath: FileCollection,
     @get:InputFiles @get:PathSensitive(PathSensitivity.RELATIVE) val patchDirs: FileCollection,
 ) : CommandLineArgumentProvider {
-    override fun asArguments(): Iterable<String> = buildList {
-        add("--module-path")
-        add(modulePath.asPath)
-        // `exports` must name packages javac can see, so overlay the compiled classes.
+    override fun asArguments(): Iterable<String> {
         val classesDirs = patchDirs.filter { it.exists() }
-        if (!classesDirs.isEmpty) {
-            add("--patch-module")
-            add("$moduleName=${classesDirs.asPath}")
-        }
+        return if (classesDirs.isEmpty) emptyList()
+        else listOf("--patch-module", "$moduleName=${classesDirs.asPath}")
     }
 }
+
+/**
+ * Whether Gradle's module-path inference puts the jar on the module path: it has a descriptor or an
+ * `Automatic-Module-Name`. Gradle has no public API for that, and jdeps needs the same split.
+ */
+private fun isModuleJar(jar: File): Boolean =
+    JarFile(jar).use { file ->
+        file.manifest?.mainAttributes?.getValue("Automatic-Module-Name") != null ||
+            file.entries().asSequence().any { MODULE_INFO_ENTRY.matches(it.name) }
+    }
+
+private val MODULE_INFO_ENTRY = Regex("""(META-INF/versions/\d+/)?module-info\.class""")
 
 /**
  * Fails when a jar's static module descriptor has fallen behind its code: the bytecode uses a
@@ -121,7 +127,7 @@ abstract class CheckModuleInfo : DefaultTask() {
             return listOf("${jar.name} has no module descriptor")
         }
         val name = descriptor.name()
-        val otherJars = modulePath.files.filter { it != jar }
+        val otherJars = modulePath.files.filter { it != jar && isModuleJar(it) }
         val unreadModules =
             unreadPackages(jar, otherJars).map { moduleOf(it, otherJars) }.toSortedSet()
         val unexportedPackages =
