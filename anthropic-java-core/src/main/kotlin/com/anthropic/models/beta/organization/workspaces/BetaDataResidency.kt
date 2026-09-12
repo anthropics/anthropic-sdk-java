@@ -2,6 +2,7 @@ package com.anthropic.models.beta.organization.workspaces
 
 import com.anthropic.core.BaseDeserializer
 import com.anthropic.core.BaseSerializer
+import com.anthropic.core.Enum
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
@@ -31,8 +32,8 @@ class BetaDataResidency
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val allowedInferenceGeos: JsonField<AllowedInferenceGeos>,
-    private val defaultInferenceGeo: JsonField<String>,
-    private val workspaceGeo: JsonField<String>,
+    private val defaultInferenceGeo: JsonField<DefaultInferenceGeo>,
+    private val workspaceGeo: JsonField<WorkspaceGeo>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -43,10 +44,10 @@ private constructor(
         allowedInferenceGeos: JsonField<AllowedInferenceGeos> = JsonMissing.of(),
         @JsonProperty("default_inference_geo")
         @ExcludeMissing
-        defaultInferenceGeo: JsonField<String> = JsonMissing.of(),
+        defaultInferenceGeo: JsonField<DefaultInferenceGeo> = JsonMissing.of(),
         @JsonProperty("workspace_geo")
         @ExcludeMissing
-        workspaceGeo: JsonField<String> = JsonMissing.of(),
+        workspaceGeo: JsonField<WorkspaceGeo> = JsonMissing.of(),
     ) : this(allowedInferenceGeos, defaultInferenceGeo, workspaceGeo, mutableMapOf())
 
     /**
@@ -64,7 +65,8 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun defaultInferenceGeo(): String = defaultInferenceGeo.getRequired("default_inference_geo")
+    fun defaultInferenceGeo(): DefaultInferenceGeo =
+        defaultInferenceGeo.getRequired("default_inference_geo")
 
     /**
      * Geographic region for workspace data storage. Immutable after creation.
@@ -72,7 +74,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun workspaceGeo(): String = workspaceGeo.getRequired("workspace_geo")
+    fun workspaceGeo(): WorkspaceGeo = workspaceGeo.getRequired("workspace_geo")
 
     /**
      * Returns the raw JSON value of [allowedInferenceGeos].
@@ -92,7 +94,7 @@ private constructor(
      */
     @JsonProperty("default_inference_geo")
     @ExcludeMissing
-    fun _defaultInferenceGeo(): JsonField<String> = defaultInferenceGeo
+    fun _defaultInferenceGeo(): JsonField<DefaultInferenceGeo> = defaultInferenceGeo
 
     /**
      * Returns the raw JSON value of [workspaceGeo].
@@ -101,7 +103,7 @@ private constructor(
      */
     @JsonProperty("workspace_geo")
     @ExcludeMissing
-    fun _workspaceGeo(): JsonField<String> = workspaceGeo
+    fun _workspaceGeo(): JsonField<WorkspaceGeo> = workspaceGeo
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -134,8 +136,8 @@ private constructor(
     class Builder internal constructor() {
 
         private var allowedInferenceGeos: JsonField<AllowedInferenceGeos>? = null
-        private var defaultInferenceGeo: JsonField<String>? = null
-        private var workspaceGeo: JsonField<String>? = null
+        private var defaultInferenceGeo: JsonField<DefaultInferenceGeo>? = null
+        private var workspaceGeo: JsonField<WorkspaceGeo>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -162,7 +164,7 @@ private constructor(
         }
 
         /** Alias for calling [allowedInferenceGeos] with `AllowedInferenceGeos.ofGeos(geos)`. */
-        fun allowedInferenceGeosOfGeos(geos: List<String>) =
+        fun allowedInferenceGeosOfGeos(geos: List<BetaAllowedInferenceGeo>) =
             allowedInferenceGeos(AllowedInferenceGeos.ofGeos(geos))
 
         /**
@@ -172,31 +174,31 @@ private constructor(
             allowedInferenceGeos(AllowedInferenceGeos.ofUnrestricted())
 
         /** Default inference geo applied when requests omit the parameter. */
-        fun defaultInferenceGeo(defaultInferenceGeo: String) =
+        fun defaultInferenceGeo(defaultInferenceGeo: DefaultInferenceGeo) =
             defaultInferenceGeo(JsonField.of(defaultInferenceGeo))
 
         /**
          * Sets [Builder.defaultInferenceGeo] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.defaultInferenceGeo] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.defaultInferenceGeo] with a well-typed
+         * [DefaultInferenceGeo] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
          */
-        fun defaultInferenceGeo(defaultInferenceGeo: JsonField<String>) = apply {
+        fun defaultInferenceGeo(defaultInferenceGeo: JsonField<DefaultInferenceGeo>) = apply {
             this.defaultInferenceGeo = defaultInferenceGeo
         }
 
         /** Geographic region for workspace data storage. Immutable after creation. */
-        fun workspaceGeo(workspaceGeo: String) = workspaceGeo(JsonField.of(workspaceGeo))
+        fun workspaceGeo(workspaceGeo: WorkspaceGeo) = workspaceGeo(JsonField.of(workspaceGeo))
 
         /**
          * Sets [Builder.workspaceGeo] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.workspaceGeo] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.workspaceGeo] with a well-typed [WorkspaceGeo] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun workspaceGeo(workspaceGeo: JsonField<String>) = apply {
+        fun workspaceGeo(workspaceGeo: JsonField<WorkspaceGeo>) = apply {
             this.workspaceGeo = workspaceGeo
         }
 
@@ -258,8 +260,8 @@ private constructor(
         }
 
         allowedInferenceGeos().validate()
-        defaultInferenceGeo()
-        workspaceGeo()
+        defaultInferenceGeo().validate()
+        workspaceGeo().validate()
         validated = true
     }
 
@@ -279,20 +281,20 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (allowedInferenceGeos.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (defaultInferenceGeo.asKnown().isPresent) 1 else 0) +
-            (if (workspaceGeo.asKnown().isPresent) 1 else 0)
+            (defaultInferenceGeo.asKnown().getOrNull()?.validity() ?: 0) +
+            (workspaceGeo.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Permitted inference geo values. 'unrestricted' means all geos are allowed. */
     @JsonDeserialize(using = AllowedInferenceGeos.Deserializer::class)
     @JsonSerialize(using = AllowedInferenceGeos.Serializer::class)
     class AllowedInferenceGeos
     private constructor(
-        private val geos: List<String>? = null,
+        private val geos: List<BetaAllowedInferenceGeo>? = null,
         private val unrestricted: JsonValue? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun geos(): Optional<List<String>> = Optional.ofNullable(geos)
+        fun geos(): Optional<List<BetaAllowedInferenceGeo>> = Optional.ofNullable(geos)
 
         fun unrestricted(): Optional<JsonValue> = Optional.ofNullable(unrestricted)
 
@@ -300,7 +302,7 @@ private constructor(
 
         fun isUnrestricted(): Boolean = unrestricted != null
 
-        fun asGeos(): List<String> = geos.getOrThrow("geos")
+        fun asGeos(): List<BetaAllowedInferenceGeo> = geos.getOrThrow("geos")
 
         fun asUnrestricted(): JsonValue = unrestricted.getOrThrow("unrestricted")
 
@@ -318,7 +320,7 @@ private constructor(
          *
          * Optional<String> result = allowedInferenceGeos.accept(new AllowedInferenceGeos.Visitor<Optional<String>>() {
          *     @Override
-         *     public Optional<String> visitGeos(List<String> geos) {
+         *     public Optional<String> visitGeos(List<BetaAllowedInferenceGeo> geos) {
          *         return Optional.of(geos.toString());
          *     }
          *
@@ -360,7 +362,9 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitGeos(geos: List<String>) {}
+                    override fun visitGeos(geos: List<BetaAllowedInferenceGeo>) {
+                        geos.forEach { it.validate() }
+                    }
 
                     override fun visitUnrestricted(unrestricted: JsonValue) {
                         unrestricted.let {
@@ -394,7 +398,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitGeos(geos: List<String>) = geos.size
+                    override fun visitGeos(geos: List<BetaAllowedInferenceGeo>) =
+                        geos.sumOf { it.validity().toInt() }
 
                     override fun visitUnrestricted(unrestricted: JsonValue) =
                         unrestricted.let { if (it == JsonValue.from("unrestricted")) 1 else 0 }
@@ -426,7 +431,8 @@ private constructor(
         companion object {
 
             @JvmStatic
-            fun ofGeos(geos: List<String>) = AllowedInferenceGeos(geos = geos.toImmutable())
+            fun ofGeos(geos: List<BetaAllowedInferenceGeo>) =
+                AllowedInferenceGeos(geos = geos.toImmutable())
 
             @JvmStatic
             fun ofUnrestricted() =
@@ -439,7 +445,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitGeos(geos: List<String>): T
+            fun visitGeos(geos: List<BetaAllowedInferenceGeo>): T
 
             fun visitUnrestricted(unrestricted: JsonValue): T
 
@@ -469,9 +475,8 @@ private constructor(
                             tryDeserialize(node, jacksonTypeRef<JsonValue>())
                                 ?.let { AllowedInferenceGeos(unrestricted = it, _json = json) }
                                 ?.takeIf { it.isValid() },
-                            tryDeserialize(node, jacksonTypeRef<List<String>>())?.let {
-                                AllowedInferenceGeos(geos = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<List<BetaAllowedInferenceGeo>>())
+                                ?.let { AllowedInferenceGeos(geos = it, _json = json) },
                         )
                         .filterNotNull()
                         .allMaxBy { it.validity() }
@@ -505,6 +510,290 @@ private constructor(
                 }
             }
         }
+    }
+
+    /** Default inference geo applied when requests omit the parameter. */
+    class DefaultInferenceGeo
+    @JsonCreator
+    private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val GLOBAL = of("global")
+
+            @JvmField val US = of("us")
+
+            @JvmStatic fun of(value: String) = DefaultInferenceGeo(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): DefaultInferenceGeo =
+                value.asString().getOrNull()?.let { of(it) } ?: DefaultInferenceGeo(value)
+        }
+
+        /** An enum containing [DefaultInferenceGeo]'s known values. */
+        enum class Known {
+            GLOBAL,
+            US,
+        }
+
+        /**
+         * An enum containing [DefaultInferenceGeo]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [DefaultInferenceGeo] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            GLOBAL,
+            US,
+            /**
+             * An enum member indicating that [DefaultInferenceGeo] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                GLOBAL -> Value.GLOBAL
+                US -> Value.US
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                GLOBAL -> Known.GLOBAL
+                US -> Known.US
+                else -> throw AnthropicInvalidDataException("Unknown DefaultInferenceGeo: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): DefaultInferenceGeo = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is DefaultInferenceGeo && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    /** Geographic region for workspace data storage. Immutable after creation. */
+    class WorkspaceGeo @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val US = of("us")
+
+            @JvmStatic fun of(value: String) = WorkspaceGeo(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): WorkspaceGeo =
+                value.asString().getOrNull()?.let { of(it) } ?: WorkspaceGeo(value)
+        }
+
+        /** An enum containing [WorkspaceGeo]'s known values. */
+        enum class Known {
+            US
+        }
+
+        /**
+         * An enum containing [WorkspaceGeo]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [WorkspaceGeo] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            US,
+            /**
+             * An enum member indicating that [WorkspaceGeo] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                US -> Value.US
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                US -> Known.US
+                else -> throw AnthropicInvalidDataException("Unknown WorkspaceGeo: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): WorkspaceGeo = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is WorkspaceGeo && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {
