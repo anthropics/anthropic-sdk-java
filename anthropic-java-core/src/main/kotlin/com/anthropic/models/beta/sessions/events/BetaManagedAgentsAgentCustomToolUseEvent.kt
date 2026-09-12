@@ -88,8 +88,9 @@ private constructor(
 
     /**
      * When set, this event was cross-posted from a subagent's thread to surface its custom tool use
-     * on the primary thread's stream. Empty on the thread's own events. Echo this on a
-     * `user.custom_tool_result` event to route the result back.
+     * on the primary thread's stream. Empty on the thread's own events. Informational only: the
+     * server routes the matching `user.custom_tool_result` by `custom_tool_use_id`, so clients do
+     * not send it back.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -256,8 +257,9 @@ private constructor(
 
         /**
          * When set, this event was cross-posted from a subagent's thread to surface its custom tool
-         * use on the primary thread's stream. Empty on the thread's own events. Echo this on a
-         * `user.custom_tool_result` event to route the result back.
+         * use on the primary thread's stream. Empty on the thread's own events. Informational only:
+         * the server routes the matching `user.custom_tool_result` by `custom_tool_use_id`, so
+         * clients do not send it back.
          */
         fun sessionThreadId(sessionThreadId: String?) =
             sessionThreadId(JsonField.ofNullable(sessionThreadId))

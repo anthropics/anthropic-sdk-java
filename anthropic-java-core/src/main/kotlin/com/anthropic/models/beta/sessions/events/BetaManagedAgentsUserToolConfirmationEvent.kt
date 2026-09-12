@@ -100,9 +100,8 @@ private constructor(
     fun processedAt(): Optional<OffsetDateTime> = processedAt.getOptional("processed_at")
 
     /**
-     * When set, the confirmation routes to this subagent's thread rather than the primary. Echo
-     * this from the `session_thread_id` on the `agent.tool_use` or `agent.mcp_tool_use` event that
-     * prompted the approval.
+     * Set by the server to the subagent thread this confirmation was routed to. Omitted when it was
+     * routed to the primary thread.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -307,9 +306,8 @@ private constructor(
         }
 
         /**
-         * When set, the confirmation routes to this subagent's thread rather than the primary. Echo
-         * this from the `session_thread_id` on the `agent.tool_use` or `agent.mcp_tool_use` event
-         * that prompted the approval.
+         * Set by the server to the subagent thread this confirmation was routed to. Omitted when it
+         * was routed to the primary thread.
          */
         fun sessionThreadId(sessionThreadId: String?) =
             sessionThreadId(JsonField.ofNullable(sessionThreadId))

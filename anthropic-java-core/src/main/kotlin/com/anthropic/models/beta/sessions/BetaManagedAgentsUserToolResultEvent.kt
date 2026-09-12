@@ -128,8 +128,8 @@ private constructor(
     fun processedAt(): Optional<OffsetDateTime> = processedAt.getOptional("processed_at")
 
     /**
-     * Routes this result to a subagent thread. Copy from the `agent.tool_use` event's
-     * `session_thread_id`.
+     * Set by the server to the subagent thread this result was routed to. Omitted when it was
+     * routed to the primary thread.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -533,8 +533,8 @@ private constructor(
         }
 
         /**
-         * Routes this result to a subagent thread. Copy from the `agent.tool_use` event's
-         * `session_thread_id`.
+         * Set by the server to the subagent thread this result was routed to. Omitted when it was
+         * routed to the primary thread.
          */
         fun sessionThreadId(sessionThreadId: String?) =
             sessionThreadId(JsonField.ofNullable(sessionThreadId))
