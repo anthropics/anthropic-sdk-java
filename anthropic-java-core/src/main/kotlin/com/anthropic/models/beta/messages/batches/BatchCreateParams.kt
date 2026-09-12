@@ -1242,7 +1242,7 @@ private constructor(
              *   if the server responded with an unexpected value).
              */
             @Deprecated(
-                "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+                "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
             )
             fun temperature(): Optional<Double> = temperature.getOptional("temperature")
 
@@ -1568,7 +1568,7 @@ private constructor(
              * type.
              */
             @Deprecated(
-                "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+                "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
             )
             @JsonProperty("temperature")
             @ExcludeMissing
@@ -2399,7 +2399,7 @@ private constructor(
                  * deterministic.
                  */
                 @Deprecated(
-                    "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+                    "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
                 )
                 fun temperature(temperature: Double) = temperature(JsonField.of(temperature))
 
@@ -2411,7 +2411,7 @@ private constructor(
                  * yet supported value.
                  */
                 @Deprecated(
-                    "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 of will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
+                    "Deprecated. Models released after Claude Opus 4.6 do not support setting temperature. A value of 1.0 will be accepted for backwards compatibility, all other values will be rejected with a 400 error."
                 )
                 fun temperature(temperature: JsonField<Double>) = apply {
                     this.temperature = temperature
