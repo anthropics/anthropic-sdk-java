@@ -937,7 +937,7 @@ private constructor(
             accept(
                 object : Visitor<Optional<Model>> {
                     override fun visitMessage(message: BetaMessageIterationUsage): Optional<Model> =
-                        Optional.of(message.model())
+                        message.model()
 
                     override fun visitCompaction(
                         compaction: BetaCompactionIterationUsage

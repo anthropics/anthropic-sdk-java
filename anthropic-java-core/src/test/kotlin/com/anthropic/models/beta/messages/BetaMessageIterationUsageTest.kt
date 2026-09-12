@@ -35,7 +35,7 @@ internal class BetaMessageIterationUsageTest {
         assertThat(betaMessageIterationUsage.cacheCreationInputTokens()).isEqualTo(0L)
         assertThat(betaMessageIterationUsage.cacheReadInputTokens()).isEqualTo(0L)
         assertThat(betaMessageIterationUsage.inputTokens()).isEqualTo(0L)
-        assertThat(betaMessageIterationUsage.model()).isEqualTo(Model.CLAUDE_FABLE_5_1)
+        assertThat(betaMessageIterationUsage.model()).contains(Model.CLAUDE_FABLE_5_1)
         assertThat(betaMessageIterationUsage.outputTokens()).isEqualTo(0L)
     }
 

@@ -99,10 +99,10 @@ private constructor(
      * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
      * options.
      *
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
-    fun model(): Model = model.getRequired("model")
+    fun model(): Optional<Model> = model.getOptional("model")
 
     /**
      * The number of output tokens which were used.
@@ -298,7 +298,10 @@ private constructor(
          * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
          * and options.
          */
-        fun model(model: Model) = model(JsonField.of(model))
+        fun model(model: Model?) = model(JsonField.ofNullable(model))
+
+        /** Alias for calling [Builder.model] with `model.orElse(null)`. */
+        fun model(model: Optional<Model>) = model(model.getOrNull())
 
         /**
          * Sets [Builder.model] to an arbitrary JSON value.
