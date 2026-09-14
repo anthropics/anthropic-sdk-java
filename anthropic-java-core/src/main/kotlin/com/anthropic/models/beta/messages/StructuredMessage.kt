@@ -64,7 +64,7 @@ internal constructor(
     fun usage(): BetaUsage = rawMessage.usage()
 
     /** @see BetaMessage.inputTransformations */
-    fun inputTransformations(): Optional<List<BetaThinkingDroppedInputTransformation>> =
+    fun inputTransformations(): Optional<List<BetaInputTransformation>> =
         rawMessage.inputTransformations()
 
     /** @see BetaMessage._id */
@@ -99,7 +99,7 @@ internal constructor(
     fun _usage(): JsonField<BetaUsage> = rawMessage._usage()
 
     /** @see BetaMessage._inputTransformations */
-    fun _inputTransformations(): JsonField<List<BetaThinkingDroppedInputTransformation>> =
+    fun _inputTransformations(): JsonField<List<BetaInputTransformation>> =
         rawMessage._inputTransformations()
 
     /** @see BetaMessage._additionalProperties */
