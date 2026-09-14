@@ -179,7 +179,7 @@ internal class BetaRawMessageDeltaEventTest {
             )
         assertThat(betaRawMessageDeltaEvent.inputTransformations().getOrNull())
             .containsExactly(
-                BetaRawMessageDeltaEvent.InputTransformation.ofThinkingDropped(
+                BetaInputTransformation.ofThinkingDropped(
                     BetaThinkingDroppedInputTransformation.builder()
                         .path("path")
                         .reason(
@@ -275,7 +275,7 @@ internal class BetaRawMessageDeltaEventTest {
             baseBetaRawMessageDeltaEvent
                 .toBuilder()
                 .addInputTransformation(
-                    BetaRawMessageDeltaEvent.InputTransformation.ofThinkingDropped(
+                    BetaInputTransformation.ofThinkingDropped(
                         BetaThinkingDroppedInputTransformation.builder()
                             .path("path")
                             .reason(
@@ -288,7 +288,7 @@ internal class BetaRawMessageDeltaEventTest {
 
         assertThat(betaRawMessageDeltaEvent.inputTransformations().getOrNull())
             .containsExactly(
-                BetaRawMessageDeltaEvent.InputTransformation.ofThinkingDropped(
+                BetaInputTransformation.ofThinkingDropped(
                     BetaThinkingDroppedInputTransformation.builder()
                         .path("path")
                         .reason(

@@ -21,6 +21,11 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * One entry of `input_transformations`: either a change the API made to the request's input before
+ * showing it to the model, or a block that failed a binding check and was still shown to the model
+ * unchanged. The `type` field says which.
+ */
 @JsonDeserialize(using = BetaInputTransformation.Deserializer::class)
 @JsonSerialize(using = BetaInputTransformation.Serializer::class)
 class BetaInputTransformation
