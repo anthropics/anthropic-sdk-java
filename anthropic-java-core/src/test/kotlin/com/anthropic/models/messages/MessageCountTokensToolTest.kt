@@ -1459,6 +1459,13 @@ internal class MessageCountTokensToolTest {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .build()
 
         val messageCountTokensTool =
@@ -1506,6 +1513,13 @@ internal class MessageCountTokensToolTest {
                     .maxContentTokens(1L)
                     .maxUses(1L)
                     .strict(true)
+                    .urlSources(
+                        WebFetchUrlSources.builder()
+                            .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                            .userInput(WebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .build()
             )
 
@@ -1619,6 +1633,13 @@ internal class MessageCountTokensToolTest {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .build()
 
         val messageCountTokensTool =
@@ -1666,6 +1687,13 @@ internal class MessageCountTokensToolTest {
                     .maxContentTokens(1L)
                     .maxUses(1L)
                     .strict(true)
+                    .urlSources(
+                        WebFetchUrlSources.builder()
+                            .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                            .userInput(WebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .build()
             )
 
@@ -1693,6 +1721,13 @@ internal class MessageCountTokensToolTest {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
@@ -1741,6 +1776,13 @@ internal class MessageCountTokensToolTest {
                     .maxContentTokens(1L)
                     .maxUses(1L)
                     .strict(true)
+                    .urlSources(
+                        WebFetchUrlSources.builder()
+                            .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                            .userInput(WebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .useCache(true)
                     .build()
             )
@@ -1858,6 +1900,13 @@ internal class MessageCountTokensToolTest {
                 .maxUses(1L)
                 .responseInclusion(WebFetchTool20260318.ResponseInclusion.FULL)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
@@ -1907,6 +1956,13 @@ internal class MessageCountTokensToolTest {
                     .maxUses(1L)
                     .responseInclusion(WebFetchTool20260318.ResponseInclusion.FULL)
                     .strict(true)
+                    .urlSources(
+                        WebFetchUrlSources.builder()
+                            .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                            .userInput(WebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .useCache(true)
                     .build()
             )
@@ -2080,6 +2136,7 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.userLocation()).isEmpty
         assertThat(messageCountTokensTool.citations()).isEmpty
         assertThat(messageCountTokensTool.maxContentTokens()).isEmpty
+        assertThat(messageCountTokensTool.urlSources()).isEmpty
         assertThat(messageCountTokensTool.useCache()).isEmpty
     }
 }

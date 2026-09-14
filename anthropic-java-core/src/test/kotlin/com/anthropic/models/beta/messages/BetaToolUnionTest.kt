@@ -2072,6 +2072,13 @@ internal class BetaToolUnionTest {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    BetaWebFetchUrlSources.builder()
+                        .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910)
@@ -2125,6 +2132,13 @@ internal class BetaToolUnionTest {
                     .maxContentTokens(1L)
                     .maxUses(1L)
                     .strict(true)
+                    .urlSources(
+                        BetaWebFetchUrlSources.builder()
+                            .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                            .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .build()
             )
 
@@ -2248,6 +2262,13 @@ internal class BetaToolUnionTest {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    BetaWebFetchUrlSources.builder()
+                        .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofWebFetchTool20260209(webFetchTool20260209)
@@ -2301,6 +2322,13 @@ internal class BetaToolUnionTest {
                     .maxContentTokens(1L)
                     .maxUses(1L)
                     .strict(true)
+                    .urlSources(
+                        BetaWebFetchUrlSources.builder()
+                            .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                            .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .build()
             )
 
@@ -2330,6 +2358,13 @@ internal class BetaToolUnionTest {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    BetaWebFetchUrlSources.builder()
+                        .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
@@ -2384,6 +2419,13 @@ internal class BetaToolUnionTest {
                     .maxContentTokens(1L)
                     .maxUses(1L)
                     .strict(true)
+                    .urlSources(
+                        BetaWebFetchUrlSources.builder()
+                            .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                            .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .useCache(true)
                     .build()
             )
@@ -2511,6 +2553,13 @@ internal class BetaToolUnionTest {
                 .maxUses(1L)
                 .responseInclusion(BetaWebFetchTool20260318.ResponseInclusion.FULL)
                 .strict(true)
+                .urlSources(
+                    BetaWebFetchUrlSources.builder()
+                        .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
@@ -2566,6 +2615,13 @@ internal class BetaToolUnionTest {
                     .maxUses(1L)
                     .responseInclusion(BetaWebFetchTool20260318.ResponseInclusion.FULL)
                     .strict(true)
+                    .urlSources(
+                        BetaWebFetchUrlSources.builder()
+                            .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                            .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .useCache(true)
                     .build()
             )
@@ -2934,6 +2990,7 @@ internal class BetaToolUnionTest {
         assertThat(betaToolUnion.userLocation()).isEmpty
         assertThat(betaToolUnion.citations()).isEmpty
         assertThat(betaToolUnion.maxContentTokens()).isEmpty
+        assertThat(betaToolUnion.urlSources()).isEmpty
         assertThat(betaToolUnion.useCache()).isEmpty
     }
 }

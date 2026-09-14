@@ -23,6 +23,13 @@ internal class WebFetchTool20250910Test {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .build()
 
         assertThat(webFetchTool20250910.allowedCallers().getOrNull())
@@ -37,6 +44,14 @@ internal class WebFetchTool20250910Test {
         assertThat(webFetchTool20250910.maxContentTokens()).contains(1L)
         assertThat(webFetchTool20250910.maxUses()).contains(1L)
         assertThat(webFetchTool20250910.strict()).contains(true)
+        assertThat(webFetchTool20250910.urlSources())
+            .contains(
+                WebFetchUrlSources.builder()
+                    .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                    .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                    .userInput(WebFetchUrlSourceAll.builder().build())
+                    .build()
+            )
     }
 
     @Test
@@ -73,6 +88,13 @@ internal class WebFetchTool20250910Test {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .build()
 
         val roundtrippedWebFetchTool20250910 =

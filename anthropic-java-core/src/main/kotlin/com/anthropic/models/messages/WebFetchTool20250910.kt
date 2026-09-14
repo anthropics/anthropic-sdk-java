@@ -31,6 +31,7 @@ private constructor(
     private val maxContentTokens: JsonField<Long>,
     private val maxUses: JsonField<Long>,
     private val strict: JsonField<Boolean>,
+    private val urlSources: JsonField<WebFetchUrlSources>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -61,6 +62,9 @@ private constructor(
         maxContentTokens: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("max_uses") @ExcludeMissing maxUses: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("url_sources")
+        @ExcludeMissing
+        urlSources: JsonField<WebFetchUrlSources> = JsonMissing.of(),
     ) : this(
         name,
         type,
@@ -73,6 +77,7 @@ private constructor(
         maxContentTokens,
         maxUses,
         strict,
+        urlSources,
         mutableMapOf(),
     )
 
@@ -176,6 +181,18 @@ private constructor(
     fun strict(): Optional<Boolean> = strict.getOptional("strict")
 
     /**
+     * Which sources contribute to the set of URLs web fetch may fetch.
+     *
+     * Each key is a tagged variant: ``user_input`` is ``all`` or ``none``; the two tool filters are
+     * ``all``, ``none``, ``only`` (only the named tools' results) or ``except`` (every result but
+     * the named tools'). A named tool must be declared in this request's ``tools[]``.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun urlSources(): Optional<WebFetchUrlSources> = urlSources.getOptional("url_sources")
+
+    /**
      * Returns the raw JSON value of [allowedCallers].
      *
      * Unlike [allowedCallers], this method doesn't throw if the JSON field has an unexpected type.
@@ -253,6 +270,15 @@ private constructor(
      */
     @JsonProperty("strict") @ExcludeMissing fun _strict(): JsonField<Boolean> = strict
 
+    /**
+     * Returns the raw JSON value of [urlSources].
+     *
+     * Unlike [urlSources], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("url_sources")
+    @ExcludeMissing
+    fun _urlSources(): JsonField<WebFetchUrlSources> = urlSources
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -285,6 +311,7 @@ private constructor(
         private var maxContentTokens: JsonField<Long> = JsonMissing.of()
         private var maxUses: JsonField<Long> = JsonMissing.of()
         private var strict: JsonField<Boolean> = JsonMissing.of()
+        private var urlSources: JsonField<WebFetchUrlSources> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -309,6 +336,7 @@ private constructor(
             maxContentTokens = webFetchTool20250910.maxContentTokens
             maxUses = webFetchTool20250910.maxUses
             strict = webFetchTool20250910.strict
+            urlSources = webFetchTool20250910.urlSources
             additionalProperties = webFetchTool20250910.additionalProperties.toMutableMap()
         }
 
@@ -542,6 +570,32 @@ private constructor(
          */
         fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
 
+        /**
+         * Which sources contribute to the set of URLs web fetch may fetch.
+         *
+         * Each key is a tagged variant: ``user_input`` is ``all`` or ``none``; the two tool filters
+         * are ``all``, ``none``, ``only`` (only the named tools' results) or ``except`` (every
+         * result but the named tools'). A named tool must be declared in this request's
+         * ``tools[]``.
+         */
+        fun urlSources(urlSources: WebFetchUrlSources?) =
+            urlSources(JsonField.ofNullable(urlSources))
+
+        /** Alias for calling [Builder.urlSources] with `urlSources.orElse(null)`. */
+        fun urlSources(urlSources: Optional<WebFetchUrlSources>) =
+            urlSources(urlSources.getOrNull())
+
+        /**
+         * Sets [Builder.urlSources] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.urlSources] with a well-typed [WebFetchUrlSources] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun urlSources(urlSources: JsonField<WebFetchUrlSources>) = apply {
+            this.urlSources = urlSources
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -579,6 +633,7 @@ private constructor(
                 maxContentTokens,
                 maxUses,
                 strict,
+                urlSources,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -617,6 +672,7 @@ private constructor(
         maxContentTokens()
         maxUses()
         strict()
+        urlSources().ifPresent { it.validate() }
         validated = true
     }
 
@@ -645,7 +701,8 @@ private constructor(
             (if (deferLoading.asKnown().isPresent) 1 else 0) +
             (if (maxContentTokens.asKnown().isPresent) 1 else 0) +
             (if (maxUses.asKnown().isPresent) 1 else 0) +
-            (if (strict.asKnown().isPresent) 1 else 0)
+            (if (strict.asKnown().isPresent) 1 else 0) +
+            (urlSources.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
      * Specifies who can invoke a tool.
@@ -828,6 +885,7 @@ private constructor(
             maxContentTokens == other.maxContentTokens &&
             maxUses == other.maxUses &&
             strict == other.strict &&
+            urlSources == other.urlSources &&
             additionalProperties == other.additionalProperties
     }
 
@@ -844,6 +902,7 @@ private constructor(
             maxContentTokens,
             maxUses,
             strict,
+            urlSources,
             additionalProperties,
         )
     }
@@ -851,5 +910,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "WebFetchTool20250910{name=$name, type=$type, allowedCallers=$allowedCallers, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, citations=$citations, deferLoading=$deferLoading, maxContentTokens=$maxContentTokens, maxUses=$maxUses, strict=$strict, additionalProperties=$additionalProperties}"
+        "WebFetchTool20250910{name=$name, type=$type, allowedCallers=$allowedCallers, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, cacheControl=$cacheControl, citations=$citations, deferLoading=$deferLoading, maxContentTokens=$maxContentTokens, maxUses=$maxUses, strict=$strict, urlSources=$urlSources, additionalProperties=$additionalProperties}"
 }

@@ -26,6 +26,13 @@ internal class BetaWebFetchTool20260318Test {
                 .maxUses(1L)
                 .responseInclusion(BetaWebFetchTool20260318.ResponseInclusion.FULL)
                 .strict(true)
+                .urlSources(
+                    BetaWebFetchUrlSources.builder()
+                        .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
@@ -47,6 +54,14 @@ internal class BetaWebFetchTool20260318Test {
         assertThat(betaWebFetchTool20260318.responseInclusion())
             .contains(BetaWebFetchTool20260318.ResponseInclusion.FULL)
         assertThat(betaWebFetchTool20260318.strict()).contains(true)
+        assertThat(betaWebFetchTool20260318.urlSources())
+            .contains(
+                BetaWebFetchUrlSources.builder()
+                    .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                    .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                    .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                    .build()
+            )
         assertThat(betaWebFetchTool20260318.useCache()).contains(true)
     }
 
@@ -87,6 +102,13 @@ internal class BetaWebFetchTool20260318Test {
                 .maxUses(1L)
                 .responseInclusion(BetaWebFetchTool20260318.ResponseInclusion.FULL)
                 .strict(true)
+                .urlSources(
+                    BetaWebFetchUrlSources.builder()
+                        .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 

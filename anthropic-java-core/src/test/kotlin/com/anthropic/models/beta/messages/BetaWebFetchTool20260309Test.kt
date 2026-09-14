@@ -25,6 +25,13 @@ internal class BetaWebFetchTool20260309Test {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    BetaWebFetchUrlSources.builder()
+                        .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
@@ -44,6 +51,14 @@ internal class BetaWebFetchTool20260309Test {
         assertThat(betaWebFetchTool20260309.maxContentTokens()).contains(1L)
         assertThat(betaWebFetchTool20260309.maxUses()).contains(1L)
         assertThat(betaWebFetchTool20260309.strict()).contains(true)
+        assertThat(betaWebFetchTool20260309.urlSources())
+            .contains(
+                BetaWebFetchUrlSources.builder()
+                    .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                    .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                    .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                    .build()
+            )
         assertThat(betaWebFetchTool20260309.useCache()).contains(true)
     }
 
@@ -83,6 +98,13 @@ internal class BetaWebFetchTool20260309Test {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    BetaWebFetchUrlSources.builder()
+                        .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 

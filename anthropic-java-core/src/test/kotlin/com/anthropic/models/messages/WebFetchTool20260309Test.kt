@@ -23,6 +23,13 @@ internal class WebFetchTool20260309Test {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
@@ -38,6 +45,14 @@ internal class WebFetchTool20260309Test {
         assertThat(webFetchTool20260309.maxContentTokens()).contains(1L)
         assertThat(webFetchTool20260309.maxUses()).contains(1L)
         assertThat(webFetchTool20260309.strict()).contains(true)
+        assertThat(webFetchTool20260309.urlSources())
+            .contains(
+                WebFetchUrlSources.builder()
+                    .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                    .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                    .userInput(WebFetchUrlSourceAll.builder().build())
+                    .build()
+            )
         assertThat(webFetchTool20260309.useCache()).contains(true)
     }
 
@@ -75,6 +90,13 @@ internal class WebFetchTool20260309Test {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
