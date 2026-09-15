@@ -356,14 +356,42 @@ private constructor(
                     // When fed enough data (see loop, below) to create a new
                     // "Message", the "Consumer.accept" lambda here is fired.
                     val messageDecoder = MessageDecoder { message ->
-                        val sseJson =
-                            String(
-                                Base64.getDecoder()
-                                    .decode(
-                                        jsonMapper.readTree(message.payload).get("bytes").asText()
-                                    )
-                            )
-                        val sseEventType = jsonMapper.readTree(sseJson).get("type").asText()
+                        // AWS EventStream reports mid-stream failures (throttling,
+                        // validation, internal errors) as frames with a
+                        // ":message-type" header of "exception" or "error". Those
+                        // frames carry the error body directly as the payload, not
+                        // wrapped in the {"bytes": ...} envelope that normal Messages
+                        // API frames use, so they have no "bytes" field to decode.
+                        // Forward them as an SSE "error" event: the SDK's SSE handler
+                        // already turns that into an SseException, the same as an
+                        // in-band Anthropic API error.
+                        val messageType = message.headers[":message-type"]?.string
+
+                        if (messageType == "exception" || messageType == "error") {
+                            val errorJson = String(message.payload, Charsets.UTF_8)
+
+                            output.write("event: error\ndata: $errorJson\n\n".toByteArray())
+                            output.flush()
+                            return@MessageDecoder
+                        }
+
+                        // Any other frame without a "bytes" field is unrecognized;
+                        // drop it rather than let a null decode NPE this background
+                        // thread and truncate the stream as a clean EOF.
+                        val bytesField =
+                            jsonMapper.readTree(message.payload).get("bytes")
+                                ?: return@MessageDecoder
+
+                        val sseJson = String(Base64.getDecoder().decode(bytesField.asText()))
+
+                        // AWS Bedrock appends a trailing `amazon-bedrock-invocationMetrics`
+                        // object to a Messages API stream that carries no "type" field. There
+                        // is no SSE event name to give a frame like that, so drop it rather
+                        // than fail the whole stream (matching the behavior of the other
+                        // Anthropic SDKs).
+                        val sseEventType =
+                            jsonMapper.readTree(sseJson).get("type")?.asText()
+                                ?: return@MessageDecoder
 
                         output.write("event: $sseEventType\ndata: $sseJson\n\n".toByteArray())
                         output.flush()
