@@ -1,18 +1,23 @@
 package com.anthropic.bedrock.backends
 
+import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpRequestBody
+import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.bodyToJson
 import com.anthropic.core.http.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.node.ObjectNode
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.io.OutputStream
 import java.lang.System.clearProperty
 import java.lang.System.setProperty
+import java.util.Base64
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -27,6 +32,8 @@ import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain
+import software.amazon.eventstream.HeaderValue
+import software.amazon.eventstream.Message
 
 @ResourceLock("environment")
 internal class BedrockBackendTest {
@@ -37,6 +44,9 @@ internal class BedrockBackendTest {
         private const val AWS_SESSION_TOKEN = "FwoGZXIvYXdzEJr..."
         private const val AWS_REGION = "us-east-1"
         private const val MODEL_ID = "anthropic.claude-3-5-sonnet-20240620-v1:0"
+        private const val TEXT_DELTA =
+            """{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}"""
+        private const val MESSAGE_STOP = """{"type":"message_stop"}"""
 
         // The names of the system properties recognised by AWS when resolving
         // credentials. The AWS SDK does not provide public constants for these
@@ -947,6 +957,97 @@ internal class BedrockBackendTest {
         assertThatNoException().isThrownBy { backend.close() }
     }
 
+    @Test
+    fun prepareResponseTranslatesChunksToSseEvents() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
+
+        val sse =
+            backend
+                .prepareResponse(eventStreamResponse(chunk(TEXT_DELTA), chunk(MESSAGE_STOP)))
+                .readSse()
+
+        assertThat(sse)
+            .isEqualTo(
+                "event: content_block_delta\ndata: $TEXT_DELTA\n\n" +
+                    "event: message_stop\ndata: $MESSAGE_STOP\n\n"
+            )
+    }
+
+    @Test
+    fun prepareResponseSkipsChunksWithoutTypeAndUnknownFrames() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
+        val unknownFrame =
+            Message(mapOf(":message-type" to HeaderValue.fromString("unknown")), ByteArray(0))
+
+        val sse =
+            backend
+                .prepareResponse(
+                    eventStreamResponse(
+                        chunk(TEXT_DELTA),
+                        chunk("""{"amazon-bedrock-invocationMetrics":{"inputTokenCount":10}}"""),
+                        chunk("""{"type":1}"""),
+                        unknownFrame,
+                        chunk(MESSAGE_STOP),
+                    )
+                )
+                .readSse()
+
+        assertThat(sse)
+            .isEqualTo(
+                "event: content_block_delta\ndata: $TEXT_DELTA\n\n" +
+                    "event: message_stop\ndata: $MESSAGE_STOP\n\n"
+            )
+    }
+
+    @Test
+    fun prepareResponseTranslatesExceptionFrameToErrorEvent() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
+        val exception =
+            Message(
+                mapOf(
+                    ":message-type" to HeaderValue.fromString("exception"),
+                    ":exception-type" to HeaderValue.fromString("throttlingException"),
+                    ":content-type" to HeaderValue.fromString("application/json"),
+                ),
+                """{"message":"Too many \"requests\""}""".toByteArray(),
+            )
+
+        val sse =
+            backend.prepareResponse(eventStreamResponse(chunk(TEXT_DELTA), exception)).readSse()
+
+        assertThat(sse)
+            .isEqualTo(
+                "event: content_block_delta\ndata: $TEXT_DELTA\n\n" +
+                    "event: error\ndata: " +
+                    """{"type":"error","error":{"type":"throttlingException","message":"Too many \"requests\""}}""" +
+                    "\n\n"
+            )
+    }
+
+    @Test
+    fun prepareResponseTranslatesErrorFrameToErrorEvent() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
+        val error =
+            Message(
+                mapOf(
+                    ":message-type" to HeaderValue.fromString("error"),
+                    ":error-code" to HeaderValue.fromString("InternalFailure"),
+                    ":error-message" to HeaderValue.fromString("Something went wrong"),
+                ),
+                ByteArray(0),
+            )
+
+        val sse = backend.prepareResponse(eventStreamResponse(chunk(TEXT_DELTA), error)).readSse()
+
+        assertThat(sse)
+            .isEqualTo(
+                "event: content_block_delta\ndata: $TEXT_DELTA\n\n" +
+                    "event: error\ndata: " +
+                    """{"type":"error","error":{"type":"InternalFailure","message":"Something went wrong"}}""" +
+                    "\n\n"
+            )
+    }
+
     /**
      * Initializes the environment to simulate the presence of AWS authentication and region values
      * that can be resolved into the credentials of the backend.
@@ -1058,4 +1159,38 @@ internal class BedrockBackendTest {
             .addPathSegments(*pathSegments)
             .apply { jsonData?.let { body(json(jsonMapper(), parseJson(it))) } }
             .build()
+
+    private fun chunk(json: String): Message =
+        Message(
+            mapOf(
+                ":message-type" to HeaderValue.fromString("event"),
+                ":event-type" to HeaderValue.fromString("chunk"),
+                ":content-type" to HeaderValue.fromString("application/json"),
+            ),
+            jsonMapper()
+                .writeValueAsBytes(
+                    mapOf("bytes" to Base64.getEncoder().encodeToString(json.toByteArray()))
+                ),
+        )
+
+    private fun eventStreamResponse(vararg messages: Message): HttpResponse {
+        val body = ByteArrayOutputStream()
+        messages.forEach { it.encode(body) }
+
+        return object : HttpResponse {
+            override fun statusCode(): Int = 200
+
+            override fun headers(): Headers =
+                Headers.builder()
+                    .put("content-type", "application/vnd.amazon.eventstream")
+                    .put("x-amzn-bedrock-content-type", "application/json")
+                    .build()
+
+            override fun body(): InputStream = ByteArrayInputStream(body.toByteArray())
+
+            override fun close() {}
+        }
+    }
+
+    private fun HttpResponse.readSse(): String = body().use { String(it.readBytes()) }
 }

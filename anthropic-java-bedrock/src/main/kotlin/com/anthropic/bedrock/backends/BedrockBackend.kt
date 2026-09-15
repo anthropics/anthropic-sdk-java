@@ -304,6 +304,12 @@ private constructor(
         // When using an API key, the request is not signed.
         request.toBuilder().putHeader(HEADER_AUTHORIZATION, "Bearer $apiKey").build()
 
+    /** An SSE `error` event's data, which the stream handler raises as an error. */
+    private fun errorEventJson(type: String?, message: String?): String =
+        jsonMapper.writeValueAsString(
+            mapOf("type" to "error", "error" to mapOf("type" to type, "message" to message))
+        )
+
     override fun prepareResponse(response: HttpResponse): HttpResponse {
         if (
             !response.headers().values(HEADER_CONTENT_TYPE).contains(CONTENT_TYPE_AWS_EVENT_STREAM)
@@ -356,14 +362,38 @@ private constructor(
                     // When fed enough data (see loop, below) to create a new
                     // "Message", the "Consumer.accept" lambda here is fired.
                     val messageDecoder = MessageDecoder { message ->
+                        val headers = message.headers
                         val sseJson =
-                            String(
-                                Base64.getDecoder()
-                                    .decode(
-                                        jsonMapper.readTree(message.payload).get("bytes").asText()
+                            when (headers[":message-type"]?.string) {
+                                null,
+                                "event" ->
+                                    String(
+                                        Base64.getDecoder()
+                                            .decode(
+                                                jsonMapper
+                                                    .readTree(message.payload)
+                                                    .get("bytes")
+                                                    .asText()
+                                            )
                                     )
-                            )
-                        val sseEventType = jsonMapper.readTree(sseJson).get("type").asText()
+                                "exception" ->
+                                    errorEventJson(
+                                        headers[":exception-type"]?.string,
+                                        jsonMapper
+                                            .readTree(message.payload)
+                                            .get("message")
+                                            ?.textValue(),
+                                    )
+                                "error" ->
+                                    errorEventJson(
+                                        headers[":error-code"]?.string,
+                                        headers[":error-message"]?.string,
+                                    )
+                                else -> return@MessageDecoder
+                            }
+                        val sseEventType =
+                            jsonMapper.readTree(sseJson).get("type")?.textValue()
+                                ?: return@MessageDecoder
 
                         output.write("event: $sseEventType\ndata: $sseJson\n\n".toByteArray())
                         output.flush()
