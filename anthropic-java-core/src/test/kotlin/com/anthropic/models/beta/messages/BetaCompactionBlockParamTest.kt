@@ -18,6 +18,7 @@ internal class BetaCompactionBlockParamTest {
                 )
                 .content("content")
                 .encryptedContent("encrypted_content")
+                .signature("signature")
                 .build()
 
         assertThat(betaCompactionBlockParam.cacheControl())
@@ -28,6 +29,7 @@ internal class BetaCompactionBlockParamTest {
             )
         assertThat(betaCompactionBlockParam.content()).contains("content")
         assertThat(betaCompactionBlockParam.encryptedContent()).contains("encrypted_content")
+        assertThat(betaCompactionBlockParam.signature()).contains("signature")
     }
 
     @Test
@@ -42,6 +44,7 @@ internal class BetaCompactionBlockParamTest {
                 )
                 .content("content")
                 .encryptedContent("encrypted_content")
+                .signature("signature")
                 .build()
 
         val roundtrippedBetaCompactionBlockParam =

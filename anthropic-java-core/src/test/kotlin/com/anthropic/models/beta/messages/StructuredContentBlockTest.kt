@@ -168,6 +168,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("type", BetaContentBlock.Type.TEXT),
                 DelegationReadTestCase("id", OPTIONAL),
                 DelegationReadTestCase("toolUseId", OPTIONAL),
+                DelegationReadTestCase("signature", OPTIONAL),
                 // `isText()` is a special case and has its own test function.
                 // For the Boolean functions, call each in turn with both `true` and `false` to
                 // ensure that a return value is not hard-coded.

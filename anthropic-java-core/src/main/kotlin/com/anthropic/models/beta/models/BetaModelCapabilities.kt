@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Model capability information. */
@@ -21,6 +22,7 @@ private constructor(
     private val batch: JsonField<BetaCapabilitySupport>,
     private val citations: JsonField<BetaCapabilitySupport>,
     private val codeExecution: JsonField<BetaCapabilitySupport>,
+    private val compaction: JsonField<BetaCompactionCapability>,
     private val contextManagement: JsonField<BetaContextManagementCapability>,
     private val effort: JsonField<BetaEffortCapability>,
     private val imageInput: JsonField<BetaCapabilitySupport>,
@@ -41,6 +43,9 @@ private constructor(
         @JsonProperty("code_execution")
         @ExcludeMissing
         codeExecution: JsonField<BetaCapabilitySupport> = JsonMissing.of(),
+        @JsonProperty("compaction")
+        @ExcludeMissing
+        compaction: JsonField<BetaCompactionCapability> = JsonMissing.of(),
         @JsonProperty("context_management")
         @ExcludeMissing
         contextManagement: JsonField<BetaContextManagementCapability> = JsonMissing.of(),
@@ -63,6 +68,7 @@ private constructor(
         batch,
         citations,
         codeExecution,
+        compaction,
         contextManagement,
         effort,
         imageInput,
@@ -95,6 +101,15 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun codeExecution(): BetaCapabilitySupport = codeExecution.getRequired("code_execution")
+
+    /**
+     * Compaction capability details: whether the model accepts the top-level `compaction` request
+     * parameter, with one entry per supported `compaction.type` value.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun compaction(): Optional<BetaCompactionCapability> = compaction.getOptional("compaction")
 
     /**
      * Context management support and available strategies.
@@ -172,6 +187,15 @@ private constructor(
     fun _codeExecution(): JsonField<BetaCapabilitySupport> = codeExecution
 
     /**
+     * Returns the raw JSON value of [compaction].
+     *
+     * Unlike [compaction], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("compaction")
+    @ExcludeMissing
+    fun _compaction(): JsonField<BetaCompactionCapability> = compaction
+
+    /**
      * Returns the raw JSON value of [contextManagement].
      *
      * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
@@ -247,6 +271,7 @@ private constructor(
          * .batch()
          * .citations()
          * .codeExecution()
+         * .compaction()
          * .contextManagement()
          * .effort()
          * .imageInput()
@@ -264,6 +289,7 @@ private constructor(
         private var batch: JsonField<BetaCapabilitySupport>? = null
         private var citations: JsonField<BetaCapabilitySupport>? = null
         private var codeExecution: JsonField<BetaCapabilitySupport>? = null
+        private var compaction: JsonField<BetaCompactionCapability>? = null
         private var contextManagement: JsonField<BetaContextManagementCapability>? = null
         private var effort: JsonField<BetaEffortCapability>? = null
         private var imageInput: JsonField<BetaCapabilitySupport>? = null
@@ -277,6 +303,7 @@ private constructor(
             batch = betaModelCapabilities.batch
             citations = betaModelCapabilities.citations
             codeExecution = betaModelCapabilities.codeExecution
+            compaction = betaModelCapabilities.compaction
             contextManagement = betaModelCapabilities.contextManagement
             effort = betaModelCapabilities.effort
             imageInput = betaModelCapabilities.imageInput
@@ -325,6 +352,28 @@ private constructor(
          */
         fun codeExecution(codeExecution: JsonField<BetaCapabilitySupport>) = apply {
             this.codeExecution = codeExecution
+        }
+
+        /**
+         * Compaction capability details: whether the model accepts the top-level `compaction`
+         * request parameter, with one entry per supported `compaction.type` value.
+         */
+        fun compaction(compaction: BetaCompactionCapability?) =
+            compaction(JsonField.ofNullable(compaction))
+
+        /** Alias for calling [Builder.compaction] with `compaction.orElse(null)`. */
+        fun compaction(compaction: Optional<BetaCompactionCapability>) =
+            compaction(compaction.getOrNull())
+
+        /**
+         * Sets [Builder.compaction] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.compaction] with a well-typed [BetaCompactionCapability]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun compaction(compaction: JsonField<BetaCompactionCapability>) = apply {
+            this.compaction = compaction
         }
 
         /** Context management support and available strategies. */
@@ -441,6 +490,7 @@ private constructor(
          * .batch()
          * .citations()
          * .codeExecution()
+         * .compaction()
          * .contextManagement()
          * .effort()
          * .imageInput()
@@ -456,6 +506,7 @@ private constructor(
                 checkRequired("batch", batch),
                 checkRequired("citations", citations),
                 checkRequired("codeExecution", codeExecution),
+                checkRequired("compaction", compaction),
                 checkRequired("contextManagement", contextManagement),
                 checkRequired("effort", effort),
                 checkRequired("imageInput", imageInput),
@@ -484,6 +535,7 @@ private constructor(
         batch().validate()
         citations().validate()
         codeExecution().validate()
+        compaction().ifPresent { it.validate() }
         contextManagement().validate()
         effort().validate()
         imageInput().validate()
@@ -511,6 +563,7 @@ private constructor(
         (batch.asKnown().getOrNull()?.validity() ?: 0) +
             (citations.asKnown().getOrNull()?.validity() ?: 0) +
             (codeExecution.asKnown().getOrNull()?.validity() ?: 0) +
+            (compaction.asKnown().getOrNull()?.validity() ?: 0) +
             (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
             (effort.asKnown().getOrNull()?.validity() ?: 0) +
             (imageInput.asKnown().getOrNull()?.validity() ?: 0) +
@@ -527,6 +580,7 @@ private constructor(
             batch == other.batch &&
             citations == other.citations &&
             codeExecution == other.codeExecution &&
+            compaction == other.compaction &&
             contextManagement == other.contextManagement &&
             effort == other.effort &&
             imageInput == other.imageInput &&
@@ -541,6 +595,7 @@ private constructor(
             batch,
             citations,
             codeExecution,
+            compaction,
             contextManagement,
             effort,
             imageInput,
@@ -554,5 +609,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaModelCapabilities{batch=$batch, citations=$citations, codeExecution=$codeExecution, contextManagement=$contextManagement, effort=$effort, imageInput=$imageInput, pdfInput=$pdfInput, structuredOutputs=$structuredOutputs, thinking=$thinking, additionalProperties=$additionalProperties}"
+        "BetaModelCapabilities{batch=$batch, citations=$citations, codeExecution=$codeExecution, compaction=$compaction, contextManagement=$contextManagement, effort=$effort, imageInput=$imageInput, pdfInput=$pdfInput, structuredOutputs=$structuredOutputs, thinking=$thinking, additionalProperties=$additionalProperties}"
 }

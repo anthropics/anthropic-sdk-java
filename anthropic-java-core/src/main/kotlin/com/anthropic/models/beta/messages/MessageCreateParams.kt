@@ -209,6 +209,20 @@ private constructor(
     fun cacheControl(): Optional<BetaCacheControlEphemeral> = body.cacheControl()
 
     /**
+     * Compact the whole conversation and return a signed `compaction` block, alone, that a later
+     * request sends back first in `messages`, in place of the messages it summarizes. There is no
+     * trigger and no pause flag: sending the parameter compacts, and nothing is sampled after the
+     * block.
+     *
+     * The summarization prompt is the server's own unless `instructions` are given, which then
+     * replace it for this request; a value that is empty or only whitespace counts as absent.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun compaction(): Optional<BetaCompactionConfig> = body.compaction()
+
+    /**
      * Container identifier for reuse across requests.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -545,6 +559,13 @@ private constructor(
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = body._cacheControl()
 
     /**
+     * Returns the raw JSON value of [compaction].
+     *
+     * Unlike [compaction], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _compaction(): JsonField<BetaCompactionConfig> = body._compaction()
+
+    /**
      * Returns the raw JSON value of [container].
      *
      * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
@@ -791,7 +812,7 @@ private constructor(
          * - [messages]
          * - [model]
          * - [cacheControl]
-         * - [container]
+         * - [compaction]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -1022,6 +1043,32 @@ private constructor(
          */
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             body.cacheControl(cacheControl)
+        }
+
+        /**
+         * Compact the whole conversation and return a signed `compaction` block, alone, that a
+         * later request sends back first in `messages`, in place of the messages it summarizes.
+         * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
+         * sampled after the block.
+         *
+         * The summarization prompt is the server's own unless `instructions` are given, which then
+         * replace it for this request; a value that is empty or only whitespace counts as absent.
+         */
+        fun compaction(compaction: BetaCompactionConfig?) = apply { body.compaction(compaction) }
+
+        /** Alias for calling [Builder.compaction] with `compaction.orElse(null)`. */
+        fun compaction(compaction: Optional<BetaCompactionConfig>) =
+            compaction(compaction.getOrNull())
+
+        /**
+         * Sets [Builder.compaction] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.compaction] with a well-typed [BetaCompactionConfig]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun compaction(compaction: JsonField<BetaCompactionConfig>) = apply {
+            body.compaction(compaction)
         }
 
         /** Container identifier for reuse across requests. */
@@ -2149,6 +2196,7 @@ private constructor(
         private val messages: JsonField<List<BetaMessageParam>>,
         private val model: JsonField<Model>,
         private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+        private val compaction: JsonField<BetaCompactionConfig>,
         private val container: JsonField<Container>,
         private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val diagnostics: JsonField<BetaDiagnosticsParam>,
@@ -2184,6 +2232,9 @@ private constructor(
             @JsonProperty("cache_control")
             @ExcludeMissing
             cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+            @JsonProperty("compaction")
+            @ExcludeMissing
+            compaction: JsonField<BetaCompactionConfig> = JsonMissing.of(),
             @JsonProperty("container")
             @ExcludeMissing
             container: JsonField<Container> = JsonMissing.of(),
@@ -2241,6 +2292,7 @@ private constructor(
             messages,
             model,
             cacheControl,
+            compaction,
             container,
             contextManagement,
             diagnostics,
@@ -2366,6 +2418,20 @@ private constructor(
          */
         fun cacheControl(): Optional<BetaCacheControlEphemeral> =
             cacheControl.getOptional("cache_control")
+
+        /**
+         * Compact the whole conversation and return a signed `compaction` block, alone, that a
+         * later request sends back first in `messages`, in place of the messages it summarizes.
+         * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
+         * sampled after the block.
+         *
+         * The summarization prompt is the server's own unless `instructions` are given, which then
+         * replace it for this request; a value that is empty or only whitespace counts as absent.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun compaction(): Optional<BetaCompactionConfig> = compaction.getOptional("compaction")
 
         /**
          * Container identifier for reuse across requests.
@@ -2716,6 +2782,15 @@ private constructor(
         fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
         /**
+         * Returns the raw JSON value of [compaction].
+         *
+         * Unlike [compaction], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("compaction")
+        @ExcludeMissing
+        fun _compaction(): JsonField<BetaCompactionConfig> = compaction
+
+        /**
          * Returns the raw JSON value of [container].
          *
          * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
@@ -2939,6 +3014,7 @@ private constructor(
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
             private var model: JsonField<Model>? = null
             private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+            private var compaction: JsonField<BetaCompactionConfig> = JsonMissing.of()
             private var container: JsonField<Container> = JsonMissing.of()
             private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
             private var diagnostics: JsonField<BetaDiagnosticsParam> = JsonMissing.of()
@@ -2968,6 +3044,7 @@ private constructor(
                 messages = body.messages.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 model = body.model
                 cacheControl = body.cacheControl
+                compaction = body.compaction
                 container = body.container
                 contextManagement = body.contextManagement
                 diagnostics = body.diagnostics
@@ -3256,6 +3333,34 @@ private constructor(
              */
             fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
                 this.cacheControl = cacheControl
+            }
+
+            /**
+             * Compact the whole conversation and return a signed `compaction` block, alone, that a
+             * later request sends back first in `messages`, in place of the messages it summarizes.
+             * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
+             * sampled after the block.
+             *
+             * The summarization prompt is the server's own unless `instructions` are given, which
+             * then replace it for this request; a value that is empty or only whitespace counts as
+             * absent.
+             */
+            fun compaction(compaction: BetaCompactionConfig?) =
+                compaction(JsonField.ofNullable(compaction))
+
+            /** Alias for calling [Builder.compaction] with `compaction.orElse(null)`. */
+            fun compaction(compaction: Optional<BetaCompactionConfig>) =
+                compaction(compaction.getOrNull())
+
+            /**
+             * Sets [Builder.compaction] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.compaction] with a well-typed [BetaCompactionConfig]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun compaction(compaction: JsonField<BetaCompactionConfig>) = apply {
+                this.compaction = compaction
             }
 
             /** Container identifier for reuse across requests. */
@@ -4122,6 +4227,7 @@ private constructor(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
                     cacheControl,
+                    compaction,
                     container,
                     contextManagement,
                     diagnostics,
@@ -4166,6 +4272,7 @@ private constructor(
             messages().forEach { it.validate() }
             model()
             cacheControl().ifPresent { it.validate() }
+            compaction().ifPresent { it.validate() }
             container().ifPresent { it.validate() }
             contextManagement().ifPresent { it.validate() }
             diagnostics().ifPresent { it.validate() }
@@ -4209,6 +4316,7 @@ private constructor(
                 (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
                 (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+                (compaction.asKnown().getOrNull()?.validity() ?: 0) +
                 (container.asKnown().getOrNull()?.validity() ?: 0) +
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (diagnostics.asKnown().getOrNull()?.validity() ?: 0) +
@@ -4240,6 +4348,7 @@ private constructor(
                 messages == other.messages &&
                 model == other.model &&
                 cacheControl == other.cacheControl &&
+                compaction == other.compaction &&
                 container == other.container &&
                 contextManagement == other.contextManagement &&
                 diagnostics == other.diagnostics &&
@@ -4269,6 +4378,7 @@ private constructor(
                 messages,
                 model,
                 cacheControl,
+                compaction,
                 container,
                 contextManagement,
                 diagnostics,
@@ -4296,7 +4406,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, fallbackCreditToken=$fallbackCreditToken, fallbacks=$fallbacks, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, compaction=$compaction, container=$container, contextManagement=$contextManagement, diagnostics=$diagnostics, fallbackCreditToken=$fallbackCreditToken, fallbacks=$fallbacks, inferenceGeo=$inferenceGeo, mcpServers=$mcpServers, metadata=$metadata, outputConfig=$outputConfig, outputFormat=$outputFormat, serviceTier=$serviceTier, speed=$speed, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /** Container identifier for reuse across requests. */

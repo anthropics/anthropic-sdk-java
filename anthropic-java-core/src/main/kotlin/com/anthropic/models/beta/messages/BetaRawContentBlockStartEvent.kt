@@ -457,6 +457,78 @@ private constructor(
                 }
             )
 
+        fun signature(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitText(text: BetaTextBlock): Optional<String> = Optional.empty()
+
+                    override fun visitThinking(thinking: BetaThinkingBlock): Optional<String> =
+                        Optional.of(thinking.signature())
+
+                    override fun visitRedactedThinking(
+                        redactedThinking: BetaRedactedThinkingBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitToolUse(toolUse: BetaToolUseBlock): Optional<String> =
+                        Optional.empty()
+
+                    override fun visitServerToolUse(
+                        serverToolUse: BetaServerToolUseBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitWebSearchToolResult(
+                        webSearchToolResult: BetaWebSearchToolResultBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitWebFetchToolResult(
+                        webFetchToolResult: BetaWebFetchToolResultBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitAdvisorToolResult(
+                        advisorToolResult: BetaAdvisorToolResultBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitCodeExecutionToolResult(
+                        codeExecutionToolResult: BetaCodeExecutionToolResultBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitBashCodeExecutionToolResult(
+                        bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitTextEditorCodeExecutionToolResult(
+                        textEditorCodeExecutionToolResult:
+                            BetaTextEditorCodeExecutionToolResultBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitToolSearchToolResult(
+                        toolSearchToolResult: BetaToolSearchToolResultBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitMcpToolUse(
+                        mcpToolUse: BetaMcpToolUseBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitMcpToolResult(
+                        mcpToolResult: BetaMcpToolResultBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitContainerUpload(
+                        containerUpload: BetaContainerUploadBlock
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitCompaction(
+                        compaction: BetaCompactionBlock
+                    ): Optional<String> = compaction.signature()
+
+                    override fun visitFallback(fallback: BetaFallbackBlock): Optional<String> =
+                        Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("signature").asKnown()
+                }
+            )
+
         fun id(): Optional<String> =
             accept(
                 object : Visitor<Optional<String>> {

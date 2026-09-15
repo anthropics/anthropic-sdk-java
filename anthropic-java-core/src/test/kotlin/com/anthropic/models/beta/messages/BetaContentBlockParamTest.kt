@@ -1435,6 +1435,7 @@ internal class BetaContentBlockParamTest {
                 )
                 .content("content")
                 .encryptedContent("encrypted_content")
+                .signature("signature")
                 .build()
 
         val betaContentBlockParam = BetaContentBlockParam.ofCompaction(compaction)
@@ -1477,6 +1478,7 @@ internal class BetaContentBlockParamTest {
                     )
                     .content("content")
                     .encryptedContent("encrypted_content")
+                    .signature("signature")
                     .build()
             )
 
@@ -1682,6 +1684,7 @@ internal class BetaContentBlockParamTest {
                             "type" to "unknown_variant",
                             "cache_control" to mapOf("type" to "ephemeral", "ttl" to "5m"),
                             "title" to "x",
+                            "signature" to "signature",
                             "id" to "id",
                             "toolset_name" to "toolset_name",
                             "tool_use_id" to "tool_use_id",
@@ -1701,6 +1704,7 @@ internal class BetaContentBlockParamTest {
                     .build()
             )
         assertThat(betaContentBlockParam.title()).contains("x")
+        assertThat(betaContentBlockParam.signature()).contains("signature")
         assertThat(betaContentBlockParam.id()).contains("id")
         assertThat(betaContentBlockParam.toolsetName()).contains("toolset_name")
         assertThat(betaContentBlockParam.toolUseId()).contains("tool_use_id")
@@ -1714,6 +1718,7 @@ internal class BetaContentBlockParamTest {
                             "type" to "unknown_variant",
                             "cache_control" to listOf("invalid"),
                             "title" to listOf("invalid"),
+                            "signature" to listOf("invalid"),
                             "id" to listOf("invalid"),
                             "toolset_name" to listOf("invalid"),
                             "tool_use_id" to listOf("invalid"),
@@ -1725,6 +1730,7 @@ internal class BetaContentBlockParamTest {
 
         assertThat(mismatchedBetaContentBlockParam.cacheControl()).isEmpty
         assertThat(mismatchedBetaContentBlockParam.title()).isEmpty
+        assertThat(mismatchedBetaContentBlockParam.signature()).isEmpty
         assertThat(mismatchedBetaContentBlockParam.id()).isEmpty
         assertThat(mismatchedBetaContentBlockParam.toolsetName()).isEmpty
         assertThat(mismatchedBetaContentBlockParam.toolUseId()).isEmpty
@@ -1750,6 +1756,7 @@ internal class BetaContentBlockParamTest {
 
         assertThat(betaContentBlockParam.cacheControl()).isEmpty
         assertThat(betaContentBlockParam.title()).isEmpty
+        assertThat(betaContentBlockParam.signature()).isEmpty
         assertThat(betaContentBlockParam.id()).isEmpty
         assertThat(betaContentBlockParam.toolsetName()).isEmpty
         assertThat(betaContentBlockParam.toolUseId()).isEmpty

@@ -158,6 +158,21 @@ internal constructor(
             paramsBuilder.cacheControl(cacheControl)
         }
 
+        /** @see MessageCreateParams.Builder.compaction */
+        fun compaction(compaction: BetaCompactionConfig?) = apply {
+            paramsBuilder.compaction(compaction)
+        }
+
+        /** @see MessageCreateParams.Builder.compaction */
+        fun compaction(compaction: Optional<BetaCompactionConfig>) = apply {
+            paramsBuilder.compaction(compaction)
+        }
+
+        /** @see MessageCreateParams.Builder.compaction */
+        fun compaction(compaction: JsonField<BetaCompactionConfig>) = apply {
+            paramsBuilder.compaction(compaction)
+        }
+
         /** @see MessageCreateParams.Builder.container */
         fun container(container: MessageCreateParams.Container?) = apply {
             paramsBuilder.container(container)

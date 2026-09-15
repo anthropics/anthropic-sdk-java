@@ -34,6 +34,7 @@ internal class MessageCountTokensParamsTest {
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+            .compaction(BetaCompactionConfig.builder().instructions("instructions").build())
             .contextManagement(
                 BetaContextManagementConfig.builder()
                     .addEdit(
@@ -173,6 +174,7 @@ internal class MessageCountTokensParamsTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .compaction(BetaCompactionConfig.builder().instructions("instructions").build())
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -338,6 +340,7 @@ internal class MessageCountTokensParamsTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .compaction(BetaCompactionConfig.builder().instructions("instructions").build())
                 .contextManagement(
                     BetaContextManagementConfig.builder()
                         .addEdit(
@@ -475,6 +478,8 @@ internal class MessageCountTokensParamsTest {
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+        assertThat(body.compaction())
+            .contains(BetaCompactionConfig.builder().instructions("instructions").build())
         assertThat(body.contextManagement())
             .contains(
                 BetaContextManagementConfig.builder()

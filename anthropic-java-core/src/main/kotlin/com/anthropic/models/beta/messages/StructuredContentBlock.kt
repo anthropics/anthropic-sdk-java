@@ -86,6 +86,9 @@ internal constructor(
     /** @see BetaContentBlock.toolUseId */
     fun toolUseId(): Optional<String> = rawContentBlock.toolUseId()
 
+    /** @see BetaContentBlock.signature */
+    fun signature(): Optional<String> = rawContentBlock.signature()
+
     /** @see BetaContentBlock.fallback */
     fun fallback(): Optional<BetaFallbackBlock> = rawContentBlock.fallback()
 

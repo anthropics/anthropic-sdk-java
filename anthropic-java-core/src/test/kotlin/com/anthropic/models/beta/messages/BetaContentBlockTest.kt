@@ -837,6 +837,7 @@ internal class BetaContentBlockTest {
             BetaCompactionBlock.builder()
                 .content("content")
                 .encryptedContent("encrypted_content")
+                .signature("signature")
                 .build()
 
         val betaContentBlock = BetaContentBlock.ofCompaction(compaction)
@@ -868,6 +869,7 @@ internal class BetaContentBlockTest {
                 BetaCompactionBlock.builder()
                     .content("content")
                     .encryptedContent("encrypted_content")
+                    .signature("signature")
                     .build()
             )
 
@@ -941,6 +943,7 @@ internal class BetaContentBlockTest {
                     JsonValue.from(
                         mapOf(
                             "type" to "unknown_variant",
+                            "signature" to "signature",
                             "id" to "id",
                             "tool_use_id" to "srvtoolu_SQfNkl1n_JR_",
                         )
@@ -951,6 +954,7 @@ internal class BetaContentBlockTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaContentBlock.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
 
+        assertThat(betaContentBlock.signature()).contains("signature")
         assertThat(betaContentBlock.id()).contains("id")
         assertThat(betaContentBlock.toolUseId()).contains("srvtoolu_SQfNkl1n_JR_")
 
@@ -960,6 +964,7 @@ internal class BetaContentBlockTest {
                     JsonValue.from(
                         mapOf(
                             "type" to "unknown_variant",
+                            "signature" to listOf("invalid"),
                             "id" to listOf("invalid"),
                             "tool_use_id" to listOf("invalid"),
                         )
@@ -967,6 +972,7 @@ internal class BetaContentBlockTest {
                     jacksonTypeRef<BetaContentBlock>(),
                 )
 
+        assertThat(mismatchedBetaContentBlock.signature()).isEmpty
         assertThat(mismatchedBetaContentBlock.id()).isEmpty
         assertThat(mismatchedBetaContentBlock.toolUseId()).isEmpty
     }
@@ -988,6 +994,7 @@ internal class BetaContentBlockTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaContentBlock.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
 
+        assertThat(betaContentBlock.signature()).isEmpty
         assertThat(betaContentBlock.id()).isEmpty
         assertThat(betaContentBlock.toolUseId()).isEmpty
     }

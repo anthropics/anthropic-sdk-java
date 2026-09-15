@@ -1,0 +1,230 @@
+package com.anthropic.models.beta.models
+
+import com.anthropic.core.ExcludeMissing
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonValue
+import com.anthropic.core.checkRequired
+import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
+import java.util.Objects
+import kotlin.jvm.optionals.getOrNull
+
+/**
+ * Compaction capability details: whether the model accepts the top-level `compaction` request
+ * parameter, with one entry per supported `compaction.type` value.
+ */
+class BetaCompactionCapability
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+private constructor(
+    private val summarize: JsonField<BetaCapabilitySupport>,
+    private val supported: JsonField<Boolean>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
+) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("summarize")
+        @ExcludeMissing
+        summarize: JsonField<BetaCapabilitySupport> = JsonMissing.of(),
+        @JsonProperty("supported") @ExcludeMissing supported: JsonField<Boolean> = JsonMissing.of(),
+    ) : this(summarize, supported, mutableMapOf())
+
+    /**
+     * Whether the summarize compaction type is supported.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun summarize(): BetaCapabilitySupport = summarize.getRequired("summarize")
+
+    /**
+     * Whether this capability is supported by the model.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun supported(): Boolean = supported.getRequired("supported")
+
+    /**
+     * Returns the raw JSON value of [summarize].
+     *
+     * Unlike [summarize], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("summarize")
+    @ExcludeMissing
+    fun _summarize(): JsonField<BetaCapabilitySupport> = summarize
+
+    /**
+     * Returns the raw JSON value of [supported].
+     *
+     * Unlike [supported], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("supported") @ExcludeMissing fun _supported(): JsonField<Boolean> = supported
+
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
+    @JsonAnyGetter
+    @ExcludeMissing
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaCompactionCapability].
+         *
+         * The following fields are required:
+         * ```java
+         * .summarize()
+         * .supported()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
+    }
+
+    /** A builder for [BetaCompactionCapability]. */
+    class Builder internal constructor() {
+
+        private var summarize: JsonField<BetaCapabilitySupport>? = null
+        private var supported: JsonField<Boolean>? = null
+        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+        @JvmSynthetic
+        internal fun from(betaCompactionCapability: BetaCompactionCapability) = apply {
+            summarize = betaCompactionCapability.summarize
+            supported = betaCompactionCapability.supported
+            additionalProperties = betaCompactionCapability.additionalProperties.toMutableMap()
+        }
+
+        /** Whether the summarize compaction type is supported. */
+        fun summarize(summarize: BetaCapabilitySupport) = summarize(JsonField.of(summarize))
+
+        /**
+         * Sets [Builder.summarize] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.summarize] with a well-typed [BetaCapabilitySupport]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun summarize(summarize: JsonField<BetaCapabilitySupport>) = apply {
+            this.summarize = summarize
+        }
+
+        /** Whether this capability is supported by the model. */
+        fun supported(supported: Boolean) = supported(JsonField.of(supported))
+
+        /**
+         * Sets [Builder.supported] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.supported] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun supported(supported: JsonField<Boolean>) = apply { this.supported = supported }
+
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.clear()
+            putAllAdditionalProperties(additionalProperties)
+        }
+
+        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+            additionalProperties.put(key, value)
+        }
+
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
+        }
+
+        /**
+         * Returns an immutable instance of [BetaCompactionCapability].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .summarize()
+         * .supported()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): BetaCompactionCapability =
+            BetaCompactionCapability(
+                checkRequired("summarize", summarize),
+                checkRequired("supported", supported),
+                additionalProperties.toMutableMap(),
+            )
+    }
+
+    private var validated: Boolean = false
+
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
+    fun validate(): BetaCompactionCapability = apply {
+        if (validated) {
+            return@apply
+        }
+
+        summarize().validate()
+        supported()
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (summarize.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (supported.asKnown().isPresent) 1 else 0)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is BetaCompactionCapability &&
+            summarize == other.summarize &&
+            supported == other.supported &&
+            additionalProperties == other.additionalProperties
+    }
+
+    private val hashCode: Int by lazy { Objects.hash(summarize, supported, additionalProperties) }
+
+    override fun hashCode(): Int = hashCode
+
+    override fun toString() =
+        "BetaCompactionCapability{summarize=$summarize, supported=$supported, additionalProperties=$additionalProperties}"
+}
