@@ -116,7 +116,7 @@ private constructor(
                                 return CompletableFuture.completedFuture(response)
                             }
                         } else {
-                            if (++retries > maxRetries || !shouldRetry(throwable!!)) {
+                            if (++retries > maxRetries || !shouldRetry(checkNotNull(throwable))) {
                                 val failedFuture = CompletableFuture<HttpResponse>()
                                 failedFuture.completeExceptionally(throwable)
                                 return failedFuture
@@ -222,12 +222,19 @@ private constructor(
                                 )
                             } catch (e: DateTimeParseException) {
                                 null
+                            } catch (e: ArithmeticException) {
+                                null
                             }
                     }
             }
             ?.let { retryAfterNanos ->
-                // If the API asks us to wait a certain amount of time, do what it says.
-                return Duration.ofNanos(retryAfterNanos.toLong())
+                // If the API asks us to wait some amount of time, do what it says, however long. A
+                // value that isn't a positive delay (e.g. a date in the past) is ignored in favor
+                // of the exponential backoff below.
+                val nanos = retryAfterNanos.toDouble()
+                if (nanos > 0 && nanos.isFinite()) {
+                    return Duration.ofNanos(retryAfterNanos.toLong())
+                }
             }
 
         // Apply exponential backoff, but not more than the max.
@@ -238,6 +245,8 @@ private constructor(
 
         return Duration.ofNanos((TimeUnit.SECONDS.toNanos(1) * backoffSeconds * jitter).toLong())
     }
+
+    fun toBuilder(): Builder = Builder().from(this)
 
     companion object {
 
@@ -251,6 +260,15 @@ private constructor(
         private var clock: Clock = Clock.systemUTC()
         private var maxRetries: Int = 2
         private var idempotencyHeader: String? = null
+
+        @JvmSynthetic
+        internal fun from(retryingHttpClient: RetryingHttpClient) = apply {
+            httpClient = retryingHttpClient.httpClient
+            sleeper = retryingHttpClient.sleeper
+            clock = retryingHttpClient.clock
+            maxRetries = retryingHttpClient.maxRetries
+            idempotencyHeader = retryingHttpClient.idempotencyHeader
+        }
 
         fun httpClient(httpClient: HttpClient) = apply { this.httpClient = httpClient }
 

@@ -20,6 +20,7 @@ enum class LogLevel {
     companion object {
 
         /** Returns a [LogLevel] based on the `ANTHROPIC_LOG` environment variable. */
+        @JvmStatic
         fun fromEnv() =
             when (System.getenv("ANTHROPIC_LOG")?.lowercase()) {
                 "info" -> INFO

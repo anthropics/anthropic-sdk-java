@@ -1,5 +1,7 @@
 package com.anthropic.core.http
 
+import com.anthropic.core.checkRequired
+import com.anthropic.core.contentToString
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
@@ -44,7 +46,8 @@ private constructor(
 
         fun rawLines(rawLines: List<String>) = apply { this.rawLines = rawLines }
 
-        fun build(): SseMessage = SseMessage(jsonMapper!!, event, data, id, retry, rawLines)
+        fun build(): SseMessage =
+            SseMessage(checkRequired("jsonMapper", jsonMapper), event, data, id, retry, rawLines)
     }
 
     inline fun <reified T> json(): T =
@@ -78,5 +81,6 @@ private constructor(
 
     override fun hashCode(): Int = Objects.hash(event, data, id, retry)
 
-    override fun toString(): String = "SseMessage{event=$event, data=$data, id=$id, retry=$retry}"
+    override fun toString(): String =
+        "SseMessage{event=${event.contentToString()}, data=$data, id=${id.contentToString()}, retry=${retry.contentToString()}}"
 }

@@ -92,6 +92,7 @@ internal class StructuredMessageCreateParamsTest {
                 .build()
 
         private val NULLABLE_CACHE_CONTROL = null
+        private val NULLABLE_COMPACTION = null
         private val NULLABLE_CONTAINER = null
         private val CONTAINER_PARAMS = BetaContainerParams.builder().build()
         private val NULLABLE_CONTEXT_MAN_CONFIG = null
@@ -213,6 +214,9 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("cacheControl", NULLABLE_CACHE_CONTROL),
                 DelegationWriteTestCase("cacheControl", OPTIONAL),
                 DelegationWriteTestCase("cacheControl", JSON_FIELD),
+                DelegationWriteTestCase("compaction", NULLABLE_COMPACTION),
+                DelegationWriteTestCase("compaction", OPTIONAL),
+                DelegationWriteTestCase("compaction", JSON_FIELD),
                 DelegationWriteTestCase("container", NULLABLE_CONTAINER),
                 DelegationWriteTestCase("container", OPTIONAL),
                 DelegationWriteTestCase("container", JSON_FIELD),

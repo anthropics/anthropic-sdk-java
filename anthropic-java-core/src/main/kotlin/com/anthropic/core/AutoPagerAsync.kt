@@ -13,6 +13,7 @@ private constructor(private val firstPage: PageAsync<T>, private val defaultExec
 
     companion object {
 
+        @JvmStatic
         fun <T> from(firstPage: PageAsync<T>, defaultExecutor: Executor): AutoPagerAsync<T> =
             AutoPagerAsync(firstPage, defaultExecutor)
     }
@@ -39,27 +40,44 @@ private constructor(private val firstPage: PageAsync<T>, private val defaultExec
             }
 
             items().forEach { handler.onNext(it) }
-            return if (hasNextPage()) nextPage().thenCompose { it.handle() }
+            return if (hasNextPage()) nextPage().thenComposeAsync({ it.handle() }, executor)
             else CompletableFuture.completedFuture(null)
         }
 
-        executor.execute {
-            firstPage.handle().whenComplete { _, error ->
-                val actualError =
-                    if (error is CompletionException && error.cause != null) error.cause else error
-                try {
-                    handler.onComplete(Optional.ofNullable(actualError))
-                } finally {
-                    try {
-                        if (actualError == null) {
-                            onCompleteFuture.complete(null)
-                        } else {
-                            onCompleteFuture.completeExceptionally(actualError)
+        // Every handler callback runs on `executor`, never on the thread that completed a page
+        // future.
+        val completion =
+            CompletableFuture.completedFuture(firstPage)
+                .thenComposeAsync({ it.handle() }, executor)
+                .whenCompleteAsync(
+                    { _, error ->
+                        val actualError =
+                            if (error is CompletionException && error.cause != null) error.cause
+                            else error
+                        try {
+                            handler.onComplete(Optional.ofNullable(actualError))
+                        } finally {
+                            try {
+                                if (actualError == null) {
+                                    onCompleteFuture.complete(null)
+                                } else {
+                                    onCompleteFuture.completeExceptionally(actualError)
+                                }
+                            } finally {
+                                close()
+                            }
                         }
-                    } finally {
-                        close()
-                    }
-                }
+                    },
+                    executor,
+                )
+
+        // Not a user callback; if `executor` rejects work, the body above never runs, so finish
+        // here.
+        @Suppress("ForbiddenMethodCall")
+        completion.whenComplete { _, error ->
+            if (state.get() != State.CLOSED && error != null) {
+                onCompleteFuture.completeExceptionally(error)
+                close()
             }
         }
     }

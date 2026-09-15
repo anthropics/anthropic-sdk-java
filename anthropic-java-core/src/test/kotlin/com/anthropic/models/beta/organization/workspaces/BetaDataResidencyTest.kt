@@ -12,14 +12,15 @@ internal class BetaDataResidencyTest {
         val betaDataResidency =
             BetaDataResidency.builder()
                 .allowedInferenceGeosUnrestricted()
-                .defaultInferenceGeo("default_inference_geo")
-                .workspaceGeo("workspace_geo")
+                .defaultInferenceGeo(BetaDataResidency.DefaultInferenceGeo.GLOBAL)
+                .workspaceGeo(BetaDataResidency.WorkspaceGeo.US)
                 .build()
 
         assertThat(betaDataResidency.allowedInferenceGeos())
             .isEqualTo(BetaDataResidency.AllowedInferenceGeos.ofUnrestricted())
-        assertThat(betaDataResidency.defaultInferenceGeo()).isEqualTo("default_inference_geo")
-        assertThat(betaDataResidency.workspaceGeo()).isEqualTo("workspace_geo")
+        assertThat(betaDataResidency.defaultInferenceGeo())
+            .isEqualTo(BetaDataResidency.DefaultInferenceGeo.GLOBAL)
+        assertThat(betaDataResidency.workspaceGeo()).isEqualTo(BetaDataResidency.WorkspaceGeo.US)
     }
 
     @Test
@@ -28,8 +29,8 @@ internal class BetaDataResidencyTest {
         val betaDataResidency =
             BetaDataResidency.builder()
                 .allowedInferenceGeosUnrestricted()
-                .defaultInferenceGeo("default_inference_geo")
-                .workspaceGeo("workspace_geo")
+                .defaultInferenceGeo(BetaDataResidency.DefaultInferenceGeo.GLOBAL)
+                .workspaceGeo(BetaDataResidency.WorkspaceGeo.US)
                 .build()
 
         val roundtrippedBetaDataResidency =

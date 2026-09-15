@@ -57,11 +57,7 @@ private constructor(
                                         override fun visitText(
                                             text: BetaPlainTextSource
                                         ): BetaRequestDocumentBlock.Source =
-                                            BetaRequestDocumentBlock.Source.ofBase64(
-                                                BetaBase64PdfSource.builder()
-                                                    .data(text._data())
-                                                    .build()
-                                            )
+                                            BetaRequestDocumentBlock.Source.ofText(text)
                                     }
                                 )
                             }

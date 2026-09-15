@@ -55,9 +55,7 @@ private constructor(
                                         override fun visitText(
                                             text: PlainTextSource
                                         ): DocumentBlockParam.Source =
-                                            DocumentBlockParam.Source.ofBase64(
-                                                Base64PdfSource.builder().data(text._data()).build()
-                                            )
+                                            DocumentBlockParam.Source.ofText(text)
                                     }
                                 )
                             }

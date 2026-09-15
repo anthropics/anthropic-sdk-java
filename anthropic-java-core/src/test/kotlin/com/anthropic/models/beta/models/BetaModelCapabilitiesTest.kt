@@ -14,6 +14,12 @@ internal class BetaModelCapabilitiesTest {
                 .batch(BetaCapabilitySupport.of(true))
                 .citations(BetaCapabilitySupport.of(true))
                 .codeExecution(BetaCapabilitySupport.of(true))
+                .compaction(
+                    BetaCompactionCapability.builder()
+                        .summarize(BetaCapabilitySupport.of(true))
+                        .supported(true)
+                        .build()
+                )
                 .contextManagement(
                     BetaContextManagementCapability.builder()
                         .clearThinking20251015(BetaCapabilitySupport.of(true))
@@ -51,6 +57,13 @@ internal class BetaModelCapabilitiesTest {
         assertThat(betaModelCapabilities.batch()).isEqualTo(BetaCapabilitySupport.of(true))
         assertThat(betaModelCapabilities.citations()).isEqualTo(BetaCapabilitySupport.of(true))
         assertThat(betaModelCapabilities.codeExecution()).isEqualTo(BetaCapabilitySupport.of(true))
+        assertThat(betaModelCapabilities.compaction())
+            .contains(
+                BetaCompactionCapability.builder()
+                    .summarize(BetaCapabilitySupport.of(true))
+                    .supported(true)
+                    .build()
+            )
         assertThat(betaModelCapabilities.contextManagement())
             .isEqualTo(
                 BetaContextManagementCapability.builder()
@@ -97,6 +110,12 @@ internal class BetaModelCapabilitiesTest {
                 .batch(BetaCapabilitySupport.of(true))
                 .citations(BetaCapabilitySupport.of(true))
                 .codeExecution(BetaCapabilitySupport.of(true))
+                .compaction(
+                    BetaCompactionCapability.builder()
+                        .summarize(BetaCapabilitySupport.of(true))
+                        .supported(true)
+                        .build()
+                )
                 .contextManagement(
                     BetaContextManagementCapability.builder()
                         .clearThinking20251015(BetaCapabilitySupport.of(true))

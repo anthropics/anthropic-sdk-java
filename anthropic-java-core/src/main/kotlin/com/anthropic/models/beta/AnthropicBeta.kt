@@ -119,6 +119,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         val MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21 =
             of("mid-conversation-system-clear-at-2026-08-21")
 
+        @JvmField val COMPACT_2026_09_04 = of("compact-2026-09-04")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
 
         @JvmSynthetic
@@ -173,6 +175,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01,
         THINKING_BINDING_CONTROLS_2026_08_01,
         MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21,
+        COMPACT_2026_09_04,
     }
 
     /**
@@ -230,6 +233,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01,
         THINKING_BINDING_CONTROLS_2026_08_01,
         MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21,
+        COMPACT_2026_09_04,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -294,6 +298,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             THINKING_BINDING_CONTROLS_2026_08_01 -> Value.THINKING_BINDING_CONTROLS_2026_08_01
             MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21 ->
                 Value.MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21
+            COMPACT_2026_09_04 -> Value.COMPACT_2026_09_04
             else -> Value._UNKNOWN
         }
 
@@ -356,6 +361,7 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             THINKING_BINDING_CONTROLS_2026_08_01 -> Known.THINKING_BINDING_CONTROLS_2026_08_01
             MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21 ->
                 Known.MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21
+            COMPACT_2026_09_04 -> Known.COMPACT_2026_09_04
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

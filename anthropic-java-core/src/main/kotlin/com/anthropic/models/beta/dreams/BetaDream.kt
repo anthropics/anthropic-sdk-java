@@ -158,10 +158,6 @@ private constructor(
     fun model(): BetaDreamModelConfig = model.getRequired("model")
 
     /**
-     * The default destination: the job creates a new output memory store as a clone of the
-     * memory_store input and writes the consolidated memories into it. The input store is never
-     * mutated.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -552,11 +548,6 @@ private constructor(
          */
         fun model(model: JsonField<BetaDreamModelConfig>) = apply { this.model = model }
 
-        /**
-         * The default destination: the job creates a new output memory store as a clone of the
-         * memory_store input and writes the consolidated memories into it. The input store is never
-         * mutated.
-         */
         fun outputBehavior(outputBehavior: BetaOutputBehavior) =
             outputBehavior(JsonField.of(outputBehavior))
 

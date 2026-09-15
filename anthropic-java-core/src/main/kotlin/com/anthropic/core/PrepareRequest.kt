@@ -12,6 +12,16 @@ internal fun HttpRequest.prepare(clientOptions: ClientOptions, params: Params): 
         .replaceAllQueryParams(params._queryParams())
         .putAllHeaders(clientOptions.headers)
         .replaceAllHeaders(params._headers())
+        // `Accept` is only a default. It is added here, not in `ClientOptions`, so that a value set
+        // on a derived builder replaces it.
+        .also {
+            if (
+                !headers.names().contains("Accept") &&
+                    !clientOptions.headers.names().contains("Accept") &&
+                    !params._headers().names().contains("Accept")
+            )
+                it.putHeader("Accept", "application/json")
+        }
         .build()
 
 @JvmSynthetic

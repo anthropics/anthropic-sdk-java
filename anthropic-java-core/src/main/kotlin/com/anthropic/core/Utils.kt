@@ -134,6 +134,7 @@ internal fun <T> Lock.withLockAsync(action: () -> CompletableFuture<T>): Complet
             unlock()
             throw e
         }
-    future.whenComplete { _, _ -> unlock() }
+    // Not a user callback; the lock must be released as soon as the action settles.
+    @Suppress("ForbiddenMethodCall") future.whenComplete { _, _ -> unlock() }
     return future
 }

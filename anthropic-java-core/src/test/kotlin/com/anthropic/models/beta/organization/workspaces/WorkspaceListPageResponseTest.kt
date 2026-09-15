@@ -22,8 +22,8 @@ internal class WorkspaceListPageResponseTest {
                         .dataResidency(
                             BetaDataResidency.builder()
                                 .allowedInferenceGeosUnrestricted()
-                                .defaultInferenceGeo("default_inference_geo")
-                                .workspaceGeo("workspace_geo")
+                                .defaultInferenceGeo(BetaDataResidency.DefaultInferenceGeo.GLOBAL)
+                                .workspaceGeo(BetaDataResidency.WorkspaceGeo.US)
                                 .build()
                         )
                         .displayColor("#6C5BB9")
@@ -52,8 +52,8 @@ internal class WorkspaceListPageResponseTest {
                     .dataResidency(
                         BetaDataResidency.builder()
                             .allowedInferenceGeosUnrestricted()
-                            .defaultInferenceGeo("default_inference_geo")
-                            .workspaceGeo("workspace_geo")
+                            .defaultInferenceGeo(BetaDataResidency.DefaultInferenceGeo.GLOBAL)
+                            .workspaceGeo(BetaDataResidency.WorkspaceGeo.US)
                             .build()
                     )
                     .displayColor("#6C5BB9")
@@ -86,8 +86,8 @@ internal class WorkspaceListPageResponseTest {
                         .dataResidency(
                             BetaDataResidency.builder()
                                 .allowedInferenceGeosUnrestricted()
-                                .defaultInferenceGeo("default_inference_geo")
-                                .workspaceGeo("workspace_geo")
+                                .defaultInferenceGeo(BetaDataResidency.DefaultInferenceGeo.GLOBAL)
+                                .workspaceGeo(BetaDataResidency.WorkspaceGeo.US)
                                 .build()
                         )
                         .displayColor("#6C5BB9")

@@ -24,6 +24,13 @@ internal class WebFetchTool20260318Test {
                 .maxUses(1L)
                 .responseInclusion(WebFetchTool20260318.ResponseInclusion.FULL)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
@@ -41,6 +48,14 @@ internal class WebFetchTool20260318Test {
         assertThat(webFetchTool20260318.responseInclusion())
             .contains(WebFetchTool20260318.ResponseInclusion.FULL)
         assertThat(webFetchTool20260318.strict()).contains(true)
+        assertThat(webFetchTool20260318.urlSources())
+            .contains(
+                WebFetchUrlSources.builder()
+                    .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                    .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                    .userInput(WebFetchUrlSourceAll.builder().build())
+                    .build()
+            )
         assertThat(webFetchTool20260318.useCache()).contains(true)
     }
 
@@ -79,6 +94,13 @@ internal class WebFetchTool20260318Test {
                 .maxUses(1L)
                 .responseInclusion(WebFetchTool20260318.ResponseInclusion.FULL)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 

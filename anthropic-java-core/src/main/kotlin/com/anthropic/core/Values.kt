@@ -25,9 +25,11 @@ import com.fasterxml.jackson.databind.node.JsonNodeType.OBJECT
 import com.fasterxml.jackson.databind.node.JsonNodeType.POJO
 import com.fasterxml.jackson.databind.node.JsonNodeType.STRING
 import com.fasterxml.jackson.databind.ser.std.NullSerializer
+import com.google.errorprone.annotations.Keep
 import java.io.InputStream
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * A class representing a serializable JSON field.
@@ -238,14 +240,14 @@ sealed class JsonField<out T : Any> {
      * This filter should not be used directly and should instead use the @ExcludeMissing
      * annotation.
      */
-    class IsMissing {
+    class IsMissing @Keep constructor() {
 
         override fun equals(other: Any?): Boolean = other is JsonMissing
 
         override fun hashCode(): Int = Objects.hash()
     }
 
-    class Deserializer(private val type: JavaType? = null) :
+    class Deserializer @Keep constructor(private val type: JavaType? = null) :
         BaseDeserializer<JsonField<*>>(JsonField::class) {
 
         override fun createContextual(
@@ -381,11 +383,11 @@ sealed class JsonValue : JsonField<Nothing>() {
                     )
                 BINARY,
                 POJO,
-                null -> throw IllegalStateException("Unexpected JsonNode type: ${node.nodeType}")
+                null -> error("Unexpected JsonNode type: ${node.nodeType}")
             }
     }
 
-    class Deserializer : BaseDeserializer<JsonValue>(JsonValue::class) {
+    class Deserializer @Keep constructor() : BaseDeserializer<JsonValue>(JsonValue::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): JsonValue = fromJsonNode(node)
 
@@ -442,14 +444,14 @@ class JsonMissing : JsonValue() {
         @JvmStatic fun of() = INSTANCE
     }
 
-    class Serializer : BaseSerializer<JsonMissing>(JsonMissing::class) {
+    class Serializer @Keep constructor() : BaseSerializer<JsonMissing>(JsonMissing::class) {
 
         override fun serialize(
             value: JsonMissing,
             generator: JsonGenerator,
             provider: SerializerProvider,
         ) {
-            throw IllegalStateException("JsonMissing cannot be serialized")
+            error("JsonMissing cannot be serialized")
         }
     }
 }
@@ -650,6 +652,9 @@ private constructor(
     /** Returns the filename directive that will be included in the serialized field. */
     fun filename(): Optional<String> = Optional.ofNullable(filename)
 
+    fun toBuilder(): Builder<T> =
+        builder<T>().value(value).contentType(contentType).filename(filename)
+
     @JvmSynthetic
     internal fun <R : Any> map(transform: (T) -> R): MultipartField<R> =
         builder<R>().value(value.map(transform)).contentType(contentType).filename(filename).build()
@@ -665,12 +670,15 @@ private constructor(
 
         fun value(value: T?) = value(JsonField.ofNullable(value))
 
+        /** Alias for calling [Builder.value] with `value.orElse(null)`. */
+        fun value(value: Optional<T>) = value(value.getOrNull())
+
         fun contentType(contentType: String) = apply { this.contentType = contentType }
 
         fun filename(filename: String?) = apply { this.filename = filename }
 
         /** Alias for calling [Builder.filename] with `filename.orElse(null)`. */
-        fun filename(filename: Optional<String>) = filename(filename.orElse(null))
+        fun filename(filename: Optional<String>) = filename(filename.getOrNull())
 
         /**
          * Returns an immutable instance of [MultipartField].
@@ -719,5 +727,5 @@ private constructor(
     }
 
     override fun toString(): String =
-        "MultipartField{value=$value, contentType=$contentType, filename=$filename}"
+        "MultipartField{value=$value, contentType=$contentType, filename=${filename.contentToString()}}"
 }

@@ -28,6 +28,7 @@ private constructor(
     private val content: JsonField<String>,
     private val encryptedContent: JsonField<String>,
     private val type: JsonValue,
+    private val signature: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -38,12 +39,14 @@ private constructor(
         @ExcludeMissing
         encryptedContent: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(content, encryptedContent, type, mutableMapOf())
+        @JsonProperty("signature") @ExcludeMissing signature: JsonField<String> = JsonMissing.of(),
+    ) : this(content, encryptedContent, type, signature, mutableMapOf())
 
     fun toParam(): BetaCompactionBlockParam =
         BetaCompactionBlockParam.builder()
             .content(_content())
             .encryptedContent(_encryptedContent())
+            .signature(_signature())
             .build()
 
     /**
@@ -74,6 +77,14 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
+     * Signature over the summary, to be sent back with the block verbatim
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun signature(): Optional<String> = signature.getOptional("signature")
+
+    /**
      * Returns the raw JSON value of [content].
      *
      * Unlike [content], this method doesn't throw if the JSON field has an unexpected type.
@@ -89,6 +100,13 @@ private constructor(
     @JsonProperty("encrypted_content")
     @ExcludeMissing
     fun _encryptedContent(): JsonField<String> = encryptedContent
+
+    /**
+     * Returns the raw JSON value of [signature].
+     *
+     * Unlike [signature], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("signature") @ExcludeMissing fun _signature(): JsonField<String> = signature
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -122,6 +140,7 @@ private constructor(
         private var content: JsonField<String>? = null
         private var encryptedContent: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("compaction")
+        private var signature: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -129,6 +148,7 @@ private constructor(
             content = betaCompactionBlock.content
             encryptedContent = betaCompactionBlock.encryptedContent
             type = betaCompactionBlock.type
+            signature = betaCompactionBlock.signature
             additionalProperties = betaCompactionBlock.additionalProperties.toMutableMap()
         }
 
@@ -179,6 +199,21 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
+        /** Signature over the summary, to be sent back with the block verbatim */
+        fun signature(signature: String?) = signature(JsonField.ofNullable(signature))
+
+        /** Alias for calling [Builder.signature] with `signature.orElse(null)`. */
+        fun signature(signature: Optional<String>) = signature(signature.getOrNull())
+
+        /**
+         * Sets [Builder.signature] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.signature] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun signature(signature: JsonField<String>) = apply { this.signature = signature }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -216,6 +251,7 @@ private constructor(
                 checkRequired("content", content),
                 checkRequired("encryptedContent", encryptedContent),
                 type,
+                signature,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -242,6 +278,7 @@ private constructor(
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
+        signature()
         validated = true
     }
 
@@ -262,7 +299,8 @@ private constructor(
     internal fun validity(): Int =
         (if (content.asKnown().isPresent) 1 else 0) +
             (if (encryptedContent.asKnown().isPresent) 1 else 0) +
-            type.let { if (it == JsonValue.from("compaction")) 1 else 0 }
+            type.let { if (it == JsonValue.from("compaction")) 1 else 0 } +
+            (if (signature.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -273,15 +311,16 @@ private constructor(
             content == other.content &&
             encryptedContent == other.encryptedContent &&
             type == other.type &&
+            signature == other.signature &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(content, encryptedContent, type, additionalProperties)
+        Objects.hash(content, encryptedContent, type, signature, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaCompactionBlock{content=$content, encryptedContent=$encryptedContent, type=$type, additionalProperties=$additionalProperties}"
+        "BetaCompactionBlock{content=$content, encryptedContent=$encryptedContent, type=$type, signature=$signature, additionalProperties=$additionalProperties}"
 }

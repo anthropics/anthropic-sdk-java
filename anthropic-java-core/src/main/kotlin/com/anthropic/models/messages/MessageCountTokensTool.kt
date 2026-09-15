@@ -17,7 +17,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.util.Objects
 import java.util.Optional
 
-/** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
 @JsonDeserialize(using = MessageCountTokensTool.Deserializer::class)
 @JsonSerialize(using = MessageCountTokensTool.Serializer::class)
 class MessageCountTokensTool
@@ -855,6 +854,96 @@ private constructor(
 
                 override fun unknown(json: JsonValue?): Optional<Long> =
                     json.getProperty<Long>("max_content_tokens").asKnown()
+            }
+        )
+
+    fun urlSources(): Optional<WebFetchUrlSources> =
+        accept(
+            object : Visitor<Optional<WebFetchUrlSources>> {
+                override fun visitTool(tool: Tool): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitToolBash20250124(
+                    toolBash20250124: ToolBash20250124
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitCodeExecutionTool20250522(
+                    codeExecutionTool20250522: CodeExecutionTool20250522
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitCodeExecutionTool20250825(
+                    codeExecutionTool20250825: CodeExecutionTool20250825
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitCodeExecutionTool20260120(
+                    codeExecutionTool20260120: CodeExecutionTool20260120
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitCodeExecutionTool20260521(
+                    codeExecutionTool20260521: CodeExecutionTool20260521
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BrowserToolset20260801
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitMemoryTool20250818(
+                    memoryTool20250818: MemoryTool20250818
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: ComputerToolset20260801
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitToolTextEditor20250124(
+                    toolTextEditor20250124: ToolTextEditor20250124
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitToolTextEditor20250429(
+                    toolTextEditor20250429: ToolTextEditor20250429
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitToolTextEditor20250728(
+                    toolTextEditor20250728: ToolTextEditor20250728
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitWebSearchTool20250305(
+                    webSearchTool20250305: WebSearchTool20250305
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitWebFetchTool20250910(
+                    webFetchTool20250910: WebFetchTool20250910
+                ): Optional<WebFetchUrlSources> = webFetchTool20250910.urlSources()
+
+                override fun visitWebSearchTool20260209(
+                    webSearchTool20260209: WebSearchTool20260209
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitWebFetchTool20260209(
+                    webFetchTool20260209: WebFetchTool20260209
+                ): Optional<WebFetchUrlSources> = webFetchTool20260209.urlSources()
+
+                override fun visitWebFetchTool20260309(
+                    webFetchTool20260309: WebFetchTool20260309
+                ): Optional<WebFetchUrlSources> = webFetchTool20260309.urlSources()
+
+                override fun visitWebSearchTool20260318(
+                    webSearchTool20260318: WebSearchTool20260318
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitWebFetchTool20260318(
+                    webFetchTool20260318: WebFetchTool20260318
+                ): Optional<WebFetchUrlSources> = webFetchTool20260318.urlSources()
+
+                override fun visitToolSearchToolBm25_20251119(
+                    toolSearchToolBm25_20251119: ToolSearchToolBm25_20251119
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun visitToolSearchToolRegex20251119(
+                    toolSearchToolRegex20251119: ToolSearchToolRegex20251119
+                ): Optional<WebFetchUrlSources> = Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<WebFetchUrlSources> =
+                    json.getProperty<WebFetchUrlSources>("url_sources").asKnown()
             }
         )
 

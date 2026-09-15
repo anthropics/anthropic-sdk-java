@@ -159,7 +159,7 @@ private constructor(
     }
 
     private fun unwrapCompletionException(error: Throwable): Throwable =
-        if (error is CompletionException && error.cause != null) error.cause!! else error
+        if (error is CompletionException) error.cause ?: error else error
 
     private fun logHeaders(headers: Headers) =
         headers.names().forEach { name ->

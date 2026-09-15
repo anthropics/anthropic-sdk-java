@@ -68,12 +68,16 @@ private constructor(
                             override fun visitCodeExecution20250825(
                                 codeExecution20250825: ServerToolCaller
                             ): ToolUseBlockParam.Caller =
-                                ToolUseBlockParam.Caller.ofDirect(DirectCaller.builder().build())
+                                ToolUseBlockParam.Caller.ofCodeExecution20250825(
+                                    codeExecution20250825
+                                )
 
                             override fun visitCodeExecution20260120(
                                 codeExecution20260120: ServerToolCaller20260120
                             ): ToolUseBlockParam.Caller =
-                                ToolUseBlockParam.Caller.ofDirect(DirectCaller.builder().build())
+                                ToolUseBlockParam.Caller.ofCodeExecution20260120(
+                                    codeExecution20260120
+                                )
                         }
                     )
                 }
@@ -210,7 +214,6 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** Tool invocation directly from the model. */
         fun caller(caller: Caller) = caller(JsonField.of(caller))
 
         /**
@@ -399,7 +402,6 @@ private constructor(
             type.let { if (it == JsonValue.from("tool_use")) 1 else 0 } +
             (if (toolsetName.asKnown().isPresent) 1 else 0)
 
-    /** Tool invocation directly from the model. */
     @JsonDeserialize(using = Caller.Deserializer::class)
     @JsonSerialize(using = Caller.Serializer::class)
     class Caller

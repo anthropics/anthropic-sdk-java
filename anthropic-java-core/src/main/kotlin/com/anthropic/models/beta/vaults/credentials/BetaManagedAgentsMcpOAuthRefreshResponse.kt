@@ -68,8 +68,6 @@ private constructor(
     fun tokenEndpoint(): String = tokenEndpoint.getRequired("token_endpoint")
 
     /**
-     * Token endpoint requires no client authentication.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -208,7 +206,6 @@ private constructor(
             this.tokenEndpoint = tokenEndpoint
         }
 
-        /** Token endpoint requires no client authentication. */
         fun tokenEndpointAuth(tokenEndpointAuth: TokenEndpointAuth) =
             tokenEndpointAuth(JsonField.of(tokenEndpointAuth))
 
@@ -357,7 +354,6 @@ private constructor(
             (if (resource.asKnown().isPresent) 1 else 0) +
             (if (scope.asKnown().isPresent) 1 else 0)
 
-    /** Token endpoint requires no client authentication. */
     @JsonDeserialize(using = TokenEndpointAuth.Deserializer::class)
     @JsonSerialize(using = TokenEndpointAuth.Serializer::class)
     class TokenEndpointAuth

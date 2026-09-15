@@ -30,6 +30,7 @@ private constructor(
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
     private val content: JsonField<String>,
     private val encryptedContent: JsonField<String>,
+    private val signature: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -43,7 +44,8 @@ private constructor(
         @JsonProperty("encrypted_content")
         @ExcludeMissing
         encryptedContent: JsonField<String> = JsonMissing.of(),
-    ) : this(type, cacheControl, content, encryptedContent, mutableMapOf())
+        @JsonProperty("signature") @ExcludeMissing signature: JsonField<String> = JsonMissing.of(),
+    ) : this(type, cacheControl, content, encryptedContent, signature, mutableMapOf())
 
     /**
      * Expected to always return the following:
@@ -82,6 +84,14 @@ private constructor(
     fun encryptedContent(): Optional<String> = encryptedContent.getOptional("encrypted_content")
 
     /**
+     * The block's signature as returned, to be sent back verbatim
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun signature(): Optional<String> = signature.getOptional("signature")
+
+    /**
      * Returns the raw JSON value of [cacheControl].
      *
      * Unlike [cacheControl], this method doesn't throw if the JSON field has an unexpected type.
@@ -106,6 +116,13 @@ private constructor(
     @JsonProperty("encrypted_content")
     @ExcludeMissing
     fun _encryptedContent(): JsonField<String> = encryptedContent
+
+    /**
+     * Returns the raw JSON value of [signature].
+     *
+     * Unlike [signature], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("signature") @ExcludeMissing fun _signature(): JsonField<String> = signature
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -132,6 +149,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var content: JsonField<String> = JsonMissing.of()
         private var encryptedContent: JsonField<String> = JsonMissing.of()
+        private var signature: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -140,6 +158,7 @@ private constructor(
             cacheControl = betaCompactionBlockParam.cacheControl
             content = betaCompactionBlockParam.content
             encryptedContent = betaCompactionBlockParam.encryptedContent
+            signature = betaCompactionBlockParam.signature
             additionalProperties = betaCompactionBlockParam.additionalProperties.toMutableMap()
         }
 
@@ -209,6 +228,21 @@ private constructor(
             this.encryptedContent = encryptedContent
         }
 
+        /** The block's signature as returned, to be sent back verbatim */
+        fun signature(signature: String?) = signature(JsonField.ofNullable(signature))
+
+        /** Alias for calling [Builder.signature] with `signature.orElse(null)`. */
+        fun signature(signature: Optional<String>) = signature(signature.getOrNull())
+
+        /**
+         * Sets [Builder.signature] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.signature] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun signature(signature: JsonField<String>) = apply { this.signature = signature }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -239,6 +273,7 @@ private constructor(
                 cacheControl,
                 content,
                 encryptedContent,
+                signature,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -266,6 +301,7 @@ private constructor(
         cacheControl().ifPresent { it.validate() }
         content()
         encryptedContent()
+        signature()
         validated = true
     }
 
@@ -287,7 +323,8 @@ private constructor(
         type.let { if (it == JsonValue.from("compaction")) 1 else 0 } +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (if (content.asKnown().isPresent) 1 else 0) +
-            (if (encryptedContent.asKnown().isPresent) 1 else 0)
+            (if (encryptedContent.asKnown().isPresent) 1 else 0) +
+            (if (signature.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -299,15 +336,16 @@ private constructor(
             cacheControl == other.cacheControl &&
             content == other.content &&
             encryptedContent == other.encryptedContent &&
+            signature == other.signature &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(type, cacheControl, content, encryptedContent, additionalProperties)
+        Objects.hash(type, cacheControl, content, encryptedContent, signature, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaCompactionBlockParam{type=$type, cacheControl=$cacheControl, content=$content, encryptedContent=$encryptedContent, additionalProperties=$additionalProperties}"
+        "BetaCompactionBlockParam{type=$type, cacheControl=$cacheControl, content=$content, encryptedContent=$encryptedContent, signature=$signature, additionalProperties=$additionalProperties}"
 }

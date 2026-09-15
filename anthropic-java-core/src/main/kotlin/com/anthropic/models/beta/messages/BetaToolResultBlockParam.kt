@@ -591,7 +591,6 @@ private constructor(
             }
         }
 
-        /** Tool reference block that can be included in tool_result content. */
         @JsonDeserialize(using = Block.Deserializer::class)
         @JsonSerialize(using = Block.Serializer::class)
         class Block

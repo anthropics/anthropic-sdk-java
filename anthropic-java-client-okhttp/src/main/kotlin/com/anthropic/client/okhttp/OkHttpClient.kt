@@ -17,6 +17,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.Proxy
 import java.time.Duration
+import java.util.Optional
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
@@ -42,10 +43,76 @@ import okio.buffer
 import okio.sink
 
 class OkHttpClient
-internal constructor(
-    @JvmSynthetic internal val okHttpClient: okhttp3.OkHttpClient,
+private constructor(
+    private val timeout: Timeout,
+    private val proxy: Proxy?,
     private val backend: Backend,
+    private val proxyAuthenticator: ProxyAuthenticator?,
+    private val maxIdleConnections: Int?,
+    private val keepAliveDuration: Duration?,
+    private val dispatcherExecutorService: ExecutorService?,
+    private val sslSocketFactory: SSLSocketFactory?,
+    private val trustManager: X509TrustManager?,
+    private val hostnameVerifier: HostnameVerifier?,
 ) : HttpClient {
+
+    @get:JvmSynthetic
+    internal val okHttpClient: okhttp3.OkHttpClient =
+        okhttp3.OkHttpClient.Builder()
+            // `RetryingHttpClient` handles retries if the user enabled them.
+            .retryOnConnectionFailure(false)
+            .pingInterval(Duration.ofMinutes(1))
+            .connectTimeout(timeout.connect())
+            .readTimeout(timeout.read())
+            .writeTimeout(timeout.write())
+            .callTimeout(timeout.request())
+            .proxy(proxy)
+            .apply {
+                proxyAuthenticator?.let { auth ->
+                    proxyAuthenticator { route, response ->
+                        auth
+                            .authenticate(
+                                route?.proxy ?: Proxy.NO_PROXY,
+                                response.request.toHttpRequest(),
+                                response.toHttpResponse(),
+                            )
+                            .getOrNull()
+                            ?.toRequest(client = null)
+                    }
+                }
+
+                dispatcherExecutorService?.let { dispatcher(Dispatcher(it)) }
+
+                if (maxIdleConnections != null && keepAliveDuration != null) {
+                    connectionPool(
+                        ConnectionPool(
+                            maxIdleConnections,
+                            keepAliveDuration.toNanos(),
+                            TimeUnit.NANOSECONDS,
+                        )
+                    )
+                } else {
+                    check((maxIdleConnections != null) == (keepAliveDuration != null)) {
+                        "Both or none of `maxIdleConnections` and `keepAliveDuration` must be set, but only one was set"
+                    }
+                }
+
+                if (sslSocketFactory != null && trustManager != null) {
+                    sslSocketFactory(sslSocketFactory, trustManager)
+                } else {
+                    check((sslSocketFactory != null) == (trustManager != null)) {
+                        "Both or none of `sslSocketFactory` and `trustManager` must be set, but only one was set"
+                    }
+                }
+
+                hostnameVerifier?.let(::hostnameVerifier)
+            }
+            .build()
+            .apply {
+                // We usually make all our requests to the same host so it makes sense to
+                // raise the per-host limit to the overall limit.
+                dispatcher.maxRequestsPerHost = dispatcher.maxRequests
+            }
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
         val preparedRequest = prepareRequest(request)
@@ -80,6 +147,8 @@ internal constructor(
             }
         )
 
+        // Not a user callback; cancellation and body cleanup must not depend on an executor.
+        @Suppress("ForbiddenMethodCall")
         future.whenComplete { _, e ->
             if (e is CancellationException) {
                 call.cancel()
@@ -119,6 +188,8 @@ internal constructor(
         val client = clientBuilder.build()
         return client.newCall(request.toRequest(client))
     }
+
+    fun toBuilder(): Builder = Builder().from(this)
 
     private fun HttpRequest.toRequest(client: okhttp3.OkHttpClient): Request {
         var body: RequestBody? = body?.toRequestBody()
@@ -170,17 +241,40 @@ internal constructor(
         private var trustManager: X509TrustManager? = null
         private var hostnameVerifier: HostnameVerifier? = null
 
+        @JvmSynthetic
+        internal fun from(okHttpClient: OkHttpClient) = apply {
+            timeout = okHttpClient.timeout
+            proxy = okHttpClient.proxy
+            backend = okHttpClient.backend
+            proxyAuthenticator = okHttpClient.proxyAuthenticator
+            maxIdleConnections = okHttpClient.maxIdleConnections
+            keepAliveDuration = okHttpClient.keepAliveDuration
+            dispatcherExecutorService = okHttpClient.dispatcherExecutorService
+            sslSocketFactory = okHttpClient.sslSocketFactory
+            trustManager = okHttpClient.trustManager
+            hostnameVerifier = okHttpClient.hostnameVerifier
+        }
+
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
         fun timeout(timeout: Duration) = timeout(Timeout.builder().request(timeout).build())
 
         fun proxy(proxy: Proxy?) = apply { this.proxy = proxy }
 
+        /** Alias for calling [Builder.proxy] with `proxy.orElse(null)`. */
+        fun proxy(proxy: Optional<Proxy>) = proxy(proxy.getOrNull())
+
         fun backend(backend: Backend) = apply { this.backend = backend }
 
         fun proxyAuthenticator(proxyAuthenticator: ProxyAuthenticator?) = apply {
             this.proxyAuthenticator = proxyAuthenticator
         }
+
+        /**
+         * Alias for calling [Builder.proxyAuthenticator] with `proxyAuthenticator.orElse(null)`.
+         */
+        fun proxyAuthenticator(proxyAuthenticator: Optional<ProxyAuthenticator>) =
+            proxyAuthenticator(proxyAuthenticator.getOrNull())
 
         /**
          * Sets the maximum number of idle connections kept by the underlying [ConnectionPool].
@@ -194,6 +288,12 @@ internal constructor(
         }
 
         /**
+         * Alias for calling [Builder.maxIdleConnections] with `maxIdleConnections.orElse(null)`.
+         */
+        fun maxIdleConnections(maxIdleConnections: Optional<Int>) =
+            maxIdleConnections(maxIdleConnections.getOrNull())
+
+        /**
          * Sets the keep-alive duration for idle connections in the underlying [ConnectionPool].
          *
          * If this is set, then [maxIdleConnections] must also be set.
@@ -204,84 +304,57 @@ internal constructor(
             this.keepAliveDuration = keepAliveDuration
         }
 
+        /** Alias for calling [Builder.keepAliveDuration] with `keepAliveDuration.orElse(null)`. */
+        fun keepAliveDuration(keepAliveDuration: Optional<Duration>) =
+            keepAliveDuration(keepAliveDuration.getOrNull())
+
         fun dispatcherExecutorService(dispatcherExecutorService: ExecutorService?) = apply {
             this.dispatcherExecutorService = dispatcherExecutorService
         }
+
+        /**
+         * Alias for calling [Builder.dispatcherExecutorService] with
+         * `dispatcherExecutorService.orElse(null)`.
+         */
+        fun dispatcherExecutorService(dispatcherExecutorService: Optional<ExecutorService>) =
+            dispatcherExecutorService(dispatcherExecutorService.getOrNull())
 
         fun sslSocketFactory(sslSocketFactory: SSLSocketFactory?) = apply {
             this.sslSocketFactory = sslSocketFactory
         }
 
+        /** Alias for calling [Builder.sslSocketFactory] with `sslSocketFactory.orElse(null)`. */
+        fun sslSocketFactory(sslSocketFactory: Optional<SSLSocketFactory>) =
+            sslSocketFactory(sslSocketFactory.getOrNull())
+
         fun trustManager(trustManager: X509TrustManager?) = apply {
             this.trustManager = trustManager
         }
+
+        /** Alias for calling [Builder.trustManager] with `trustManager.orElse(null)`. */
+        fun trustManager(trustManager: Optional<X509TrustManager>) =
+            trustManager(trustManager.getOrNull())
 
         fun hostnameVerifier(hostnameVerifier: HostnameVerifier?) = apply {
             this.hostnameVerifier = hostnameVerifier
         }
 
+        /** Alias for calling [Builder.hostnameVerifier] with `hostnameVerifier.orElse(null)`. */
+        fun hostnameVerifier(hostnameVerifier: Optional<HostnameVerifier>) =
+            hostnameVerifier(hostnameVerifier.getOrNull())
+
         fun build(): OkHttpClient =
             OkHttpClient(
-                okhttp3.OkHttpClient.Builder()
-                    // `RetryingHttpClient` handles retries if the user enabled them.
-                    .retryOnConnectionFailure(false)
-                    .pingInterval(Duration.ofMinutes(1))
-                    .connectTimeout(timeout.connect())
-                    .readTimeout(timeout.read())
-                    .writeTimeout(timeout.write())
-                    .callTimeout(timeout.request())
-                    .proxy(proxy)
-                    .apply {
-                        proxyAuthenticator?.let { auth ->
-                            proxyAuthenticator { route, response ->
-                                auth
-                                    .authenticate(
-                                        route?.proxy ?: Proxy.NO_PROXY,
-                                        response.request.toHttpRequest(),
-                                        response.toHttpResponse(),
-                                    )
-                                    .getOrNull()
-                                    ?.toRequest(client = null)
-                            }
-                        }
-
-                        dispatcherExecutorService?.let { dispatcher(Dispatcher(it)) }
-
-                        val maxIdleConnections = maxIdleConnections
-                        val keepAliveDuration = keepAliveDuration
-                        if (maxIdleConnections != null && keepAliveDuration != null) {
-                            connectionPool(
-                                ConnectionPool(
-                                    maxIdleConnections,
-                                    keepAliveDuration.toNanos(),
-                                    TimeUnit.NANOSECONDS,
-                                )
-                            )
-                        } else {
-                            check((maxIdleConnections != null) == (keepAliveDuration != null)) {
-                                "Both or none of `maxIdleConnections` and `keepAliveDuration` must be set, but only one was set"
-                            }
-                        }
-
-                        val sslSocketFactory = sslSocketFactory
-                        val trustManager = trustManager
-                        if (sslSocketFactory != null && trustManager != null) {
-                            sslSocketFactory(sslSocketFactory, trustManager)
-                        } else {
-                            check((sslSocketFactory != null) == (trustManager != null)) {
-                                "Both or none of `sslSocketFactory` and `trustManager` must be set, but only one was set"
-                            }
-                        }
-
-                        hostnameVerifier?.let(::hostnameVerifier)
-                    }
-                    .build()
-                    .apply {
-                        // We usually make all our requests to the same host so it makes sense to
-                        // raise the per-host limit to the overall limit.
-                        dispatcher.maxRequestsPerHost = dispatcher.maxRequests
-                    },
+                timeout,
+                proxy,
                 checkRequired("backend", backend),
+                proxyAuthenticator,
+                maxIdleConnections,
+                keepAliveDuration,
+                dispatcherExecutorService,
+                sslSocketFactory,
+                trustManager,
+                hostnameVerifier,
             )
     }
 }
@@ -397,9 +470,12 @@ private fun Response.toHttpResponse(): HttpResponse {
 
         override fun headers(): Headers = headers
 
-        override fun body(): InputStream = body!!.byteStream()
+        override fun body(): InputStream =
+            checkNotNull(body) { "Response has no body" }.byteStream()
 
-        override fun close() = body!!.close()
+        override fun close() {
+            body?.close()
+        }
     }
 }
 

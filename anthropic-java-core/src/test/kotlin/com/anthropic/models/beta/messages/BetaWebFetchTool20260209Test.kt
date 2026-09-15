@@ -25,6 +25,13 @@ internal class BetaWebFetchTool20260209Test {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    BetaWebFetchUrlSources.builder()
+                        .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .build()
 
         assertThat(betaWebFetchTool20260209.allowedCallers().getOrNull())
@@ -43,6 +50,14 @@ internal class BetaWebFetchTool20260209Test {
         assertThat(betaWebFetchTool20260209.maxContentTokens()).contains(1L)
         assertThat(betaWebFetchTool20260209.maxUses()).contains(1L)
         assertThat(betaWebFetchTool20260209.strict()).contains(true)
+        assertThat(betaWebFetchTool20260209.urlSources())
+            .contains(
+                BetaWebFetchUrlSources.builder()
+                    .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                    .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                    .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                    .build()
+            )
     }
 
     @Test
@@ -81,6 +96,13 @@ internal class BetaWebFetchTool20260209Test {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    BetaWebFetchUrlSources.builder()
+                        .clientToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaWebFetchTool20260209 =

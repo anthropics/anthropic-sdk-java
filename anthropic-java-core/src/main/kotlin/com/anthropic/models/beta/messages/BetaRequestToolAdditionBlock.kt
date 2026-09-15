@@ -52,10 +52,6 @@ private constructor(
     ) : this(tool, type, cacheControl, mutableMapOf())
 
     /**
-     * Reference to a single tool the caller declared directly in ``tools[]``. Does not accept the
-     * composed ``{server}_{name}`` form the server assigns to MCP-resolved tools — use
-     * ``mcp_tool_reference`` or ``mcp_toolset_reference`` for those.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -144,11 +140,6 @@ private constructor(
             additionalProperties = betaRequestToolAdditionBlock.additionalProperties.toMutableMap()
         }
 
-        /**
-         * Reference to a single tool the caller declared directly in ``tools[]``. Does not accept
-         * the composed ``{server}_{name}`` form the server assigns to MCP-resolved tools — use
-         * ``mcp_tool_reference`` or ``mcp_toolset_reference`` for those.
-         */
         fun tool(tool: Tool) = tool(JsonField.of(tool))
 
         /**
@@ -309,11 +300,6 @@ private constructor(
             type.let { if (it == JsonValue.from("tool_addition")) 1 else 0 } +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0)
 
-    /**
-     * Reference to a single tool the caller declared directly in ``tools[]``. Does not accept the
-     * composed ``{server}_{name}`` form the server assigns to MCP-resolved tools — use
-     * ``mcp_tool_reference`` or ``mcp_toolset_reference`` for those.
-     */
     @JsonDeserialize(using = Tool.Deserializer::class)
     @JsonSerialize(using = Tool.Serializer::class)
     class Tool

@@ -18,6 +18,10 @@ import org.jetbrains.kotlin.psi.KtNamedFunction
  *
  * Triggering on a nested `Builder` scopes this to classes opted into the pattern (vs. types using
  * `of(...)` factories).
+ *
+ * `toBuilder()` is only required when the `Builder` builds the enclosing class. A `Builder` whose
+ * `build()` declares some other return type is a factory for that type: the enclosing class is
+ * never instantiated, so there is no instance for `toBuilder()` to copy.
  */
 class BuilderEntryPoints(config: Config) : Rule(config) {
 
@@ -32,21 +36,31 @@ class BuilderEntryPoints(config: Config) : Rule(config) {
     override fun visitClass(klass: KtClass) {
         super.visitClass(klass)
         if (!klass.isEffectivelyPublic()) return
-        if (!klass.hasNestedBuilder()) return
+        val builder = klass.nestedBuilder() ?: return
 
-        if (klass.companionObjects.firstOrNull()?.body.hasFunction("builder") != true) {
+        if (klass.companionObjects.firstOrNull()?.body.function("builder") == null) {
             report(klass, "`${klass.name}` has a `Builder` but no companion `fun builder()`.")
         }
-        if (!klass.body.hasFunction("toBuilder")) {
+        if (builder.buildsEnclosing(klass) && klass.body.function("toBuilder") == null) {
             report(klass, "`${klass.name}` has a `Builder` but no `fun toBuilder()`.")
         }
     }
 
-    private fun KtClass.hasNestedBuilder(): Boolean =
-        body?.declarations.orEmpty().filterIsInstance<KtClass>().any { it.name == "Builder" }
+    private fun KtClass.nestedBuilder(): KtClass? =
+        body?.declarations.orEmpty().filterIsInstance<KtClass>().firstOrNull {
+            it.name == "Builder"
+        }
 
-    private fun KtClassBody?.hasFunction(name: String): Boolean =
-        this?.declarations.orEmpty().filterIsInstance<KtNamedFunction>().any { it.name == name }
+    /** An absent `build()` or an inferred return type is assumed to build [klass]. */
+    private fun KtClass.buildsEnclosing(klass: KtClass): Boolean {
+        val returnType = body.function("build")?.typeReference?.text ?: return true
+        return returnType.substringBefore('<').substringAfterLast('.') == klass.name
+    }
+
+    private fun KtClassBody?.function(name: String): KtNamedFunction? =
+        this?.declarations.orEmpty().filterIsInstance<KtNamedFunction>().firstOrNull {
+            it.name == name
+        }
 
     private fun report(klass: KtClass, message: String) {
         report(CodeSmell(issue, Entity.atName(klass), message))

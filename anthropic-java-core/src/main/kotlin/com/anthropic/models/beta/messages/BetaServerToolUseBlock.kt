@@ -68,15 +68,15 @@ private constructor(
                             override fun visitCodeExecution20250825(
                                 codeExecution20250825: BetaServerToolCaller
                             ): BetaServerToolUseBlockParam.Caller =
-                                BetaServerToolUseBlockParam.Caller.ofDirect(
-                                    BetaDirectCaller.builder().build()
+                                BetaServerToolUseBlockParam.Caller.ofCodeExecution20250825(
+                                    codeExecution20250825
                                 )
 
                             override fun visitCodeExecution20260120(
                                 codeExecution20260120: BetaServerToolCaller20260120
                             ): BetaServerToolUseBlockParam.Caller =
-                                BetaServerToolUseBlockParam.Caller.ofDirect(
-                                    BetaDirectCaller.builder().build()
+                                BetaServerToolUseBlockParam.Caller.ofCodeExecution20260120(
+                                    codeExecution20260120
                                 )
                         }
                     )
@@ -110,8 +110,6 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Tool invocation directly from the model.
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -197,7 +195,6 @@ private constructor(
 
         fun input(input: JsonValue) = apply { this.input = input }
 
-        /** Tool invocation directly from the model. */
         fun caller(caller: Caller) = caller(JsonField.of(caller))
 
         /**
@@ -643,7 +640,6 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Tool invocation directly from the model. */
     @JsonDeserialize(using = Caller.Deserializer::class)
     @JsonSerialize(using = Caller.Serializer::class)
     class Caller

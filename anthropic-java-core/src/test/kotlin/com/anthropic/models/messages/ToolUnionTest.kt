@@ -1444,6 +1444,13 @@ internal class ToolUnionTest {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .build()
 
         val toolUnion = ToolUnion.ofWebFetchTool20250910(webFetchTool20250910)
@@ -1490,6 +1497,13 @@ internal class ToolUnionTest {
                     .maxContentTokens(1L)
                     .maxUses(1L)
                     .strict(true)
+                    .urlSources(
+                        WebFetchUrlSources.builder()
+                            .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                            .userInput(WebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .build()
             )
 
@@ -1602,6 +1616,13 @@ internal class ToolUnionTest {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .build()
 
         val toolUnion = ToolUnion.ofWebFetchTool20260209(webFetchTool20260209)
@@ -1648,6 +1669,13 @@ internal class ToolUnionTest {
                     .maxContentTokens(1L)
                     .maxUses(1L)
                     .strict(true)
+                    .urlSources(
+                        WebFetchUrlSources.builder()
+                            .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                            .userInput(WebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .build()
             )
 
@@ -1675,6 +1703,13 @@ internal class ToolUnionTest {
                 .maxContentTokens(1L)
                 .maxUses(1L)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
@@ -1722,6 +1757,13 @@ internal class ToolUnionTest {
                     .maxContentTokens(1L)
                     .maxUses(1L)
                     .strict(true)
+                    .urlSources(
+                        WebFetchUrlSources.builder()
+                            .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                            .userInput(WebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .useCache(true)
                     .build()
             )
@@ -1838,6 +1880,13 @@ internal class ToolUnionTest {
                 .maxUses(1L)
                 .responseInclusion(WebFetchTool20260318.ResponseInclusion.FULL)
                 .strict(true)
+                .urlSources(
+                    WebFetchUrlSources.builder()
+                        .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                        .userInput(WebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .useCache(true)
                 .build()
 
@@ -1886,6 +1935,13 @@ internal class ToolUnionTest {
                     .maxUses(1L)
                     .responseInclusion(WebFetchTool20260318.ResponseInclusion.FULL)
                     .strict(true)
+                    .urlSources(
+                        WebFetchUrlSources.builder()
+                            .clientToolResults(WebFetchUrlSourceAll.builder().build())
+                            .serverToolResults(WebFetchUrlSourceAll.builder().build())
+                            .userInput(WebFetchUrlSourceAll.builder().build())
+                            .build()
+                    )
                     .useCache(true)
                     .build()
             )
@@ -2054,6 +2110,7 @@ internal class ToolUnionTest {
         assertThat(toolUnion.userLocation()).isEmpty
         assertThat(toolUnion.citations()).isEmpty
         assertThat(toolUnion.maxContentTokens()).isEmpty
+        assertThat(toolUnion.urlSources()).isEmpty
         assertThat(toolUnion.useCache()).isEmpty
     }
 }

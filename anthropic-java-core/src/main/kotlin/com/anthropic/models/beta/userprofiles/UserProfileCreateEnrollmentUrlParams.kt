@@ -15,6 +15,7 @@ class UserProfileCreateEnrollmentUrlParams
 private constructor(
     private val userProfileId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
@@ -24,6 +25,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -52,6 +55,7 @@ private constructor(
 
         private var userProfileId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -62,6 +66,7 @@ private constructor(
         ) = apply {
             userProfileId = userProfileCreateEnrollmentUrlParams.userProfileId
             betas = userProfileCreateEnrollmentUrlParams.betas?.toMutableList()
+            workspaceId = userProfileCreateEnrollmentUrlParams.workspaceId
             additionalHeaders = userProfileCreateEnrollmentUrlParams.additionalHeaders.toBuilder()
             additionalQueryParams =
                 userProfileCreateEnrollmentUrlParams.additionalQueryParams.toBuilder()
@@ -98,6 +103,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -228,6 +238,7 @@ private constructor(
             UserProfileCreateEnrollmentUrlParams(
                 userProfileId,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -247,6 +258,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -261,6 +273,7 @@ private constructor(
         return other is UserProfileCreateEnrollmentUrlParams &&
             userProfileId == other.userProfileId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
@@ -270,11 +283,12 @@ private constructor(
         Objects.hash(
             userProfileId,
             betas,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
             additionalBodyProperties,
         )
 
     override fun toString() =
-        "UserProfileCreateEnrollmentUrlParams{userProfileId=$userProfileId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "UserProfileCreateEnrollmentUrlParams{userProfileId=$userProfileId, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

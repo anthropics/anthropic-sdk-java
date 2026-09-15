@@ -52,21 +52,36 @@ internal class AnthropicRulesTest(private val env: KotlinCoreEnvironment) {
                         companion object { @JvmStatic fun builder() = Builder() }
                         class Builder internal constructor()
                     }
+                    class NoToBuilderExplicit private constructor() {
+                        companion object { @JvmStatic fun builder() = Builder() }
+                        class Builder internal constructor() {
+                            fun build(): NoToBuilderExplicit = TODO()
+                        }
+                    }
                     class Good private constructor() {
                         // `@JvmStatic` is CompanionFunctionMissingJvmStatic's job, not this rule's.
                         companion object { fun builder() = Builder() }
                         fun toBuilder() = Builder()
                         class Builder internal constructor()
                     }
+                    // Never instantiated: its `Builder` builds a `Good`, so there is nothing to `toBuilder()`.
+                    class GoodFactory private constructor() {
+                        companion object { fun builder() = Builder() }
+                        class Builder internal constructor() {
+                            fun build(): Good = TODO()
+                        }
+                    }
                     class NoBuilderClass private constructor()
                     """
                         .trimIndent()
                 )
         assertThat(findings.map { it.message })
-            .hasSize(3)
+            .hasSize(4)
             .anyMatch { it.contains("Missing") && it.contains("builder()") }
             .anyMatch { it.contains("Missing") && it.contains("toBuilder") }
-            .anyMatch { it.contains("NoToBuilder") && it.contains("toBuilder") }
+            .anyMatch { it.contains("NoToBuilder`") && it.contains("toBuilder") }
+            .anyMatch { it.contains("NoToBuilderExplicit") && it.contains("toBuilder") }
+            .noneMatch { it.contains("GoodFactory") }
     }
 
     @Test

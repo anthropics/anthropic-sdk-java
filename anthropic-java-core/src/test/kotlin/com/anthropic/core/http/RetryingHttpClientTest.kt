@@ -628,6 +628,80 @@ internal class RetryingHttpClientTest {
         assertNoResponseLeaks()
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun execute_withRetryAfterUnusable(async: Boolean) {
+        val retryAfterDate = "Wed, 21 Oct 2015 07:28:00 GMT"
+        stubFor(
+            post(urlPathEqualTo("/something"))
+                // First we fail with a negative delay,
+                .inScenario("foo")
+                .whenScenarioStateIs(Scenario.STARTED)
+                .willReturn(serviceUnavailable().withHeader("Retry-After", "-1"))
+                .willSetStateTo("RETRY_AFTER_NEGATIVE")
+        )
+        stubFor(
+            post(urlPathEqualTo("/something"))
+                // then with a zero delay,
+                .inScenario("foo")
+                .whenScenarioStateIs("RETRY_AFTER_NEGATIVE")
+                .willReturn(serviceUnavailable().withHeader("Retry-After-Ms", "0"))
+                .willSetStateTo("RETRY_AFTER_ZERO")
+        )
+        stubFor(
+            post(urlPathEqualTo("/something"))
+                // then with a date in the past,
+                .inScenario("foo")
+                .whenScenarioStateIs("RETRY_AFTER_ZERO")
+                .willReturn(serviceUnavailable().withHeader("Retry-After", retryAfterDate))
+                .willSetStateTo("RETRY_AFTER_PAST_DATE")
+        )
+        stubFor(
+            post(urlPathEqualTo("/something"))
+                // then with a date too far in the future to represent,
+                .inScenario("foo")
+                .whenScenarioStateIs("RETRY_AFTER_PAST_DATE")
+                .willReturn(
+                    serviceUnavailable().withHeader("Retry-After", "Fri, 31 Dec 9999 23:59:59 GMT")
+                )
+                .willSetStateTo("RETRY_AFTER_DISTANT_DATE")
+        )
+        stubFor(
+            post(urlPathEqualTo("/something"))
+                // then we return a success.
+                .inScenario("foo")
+                .whenScenarioStateIs("RETRY_AFTER_DISTANT_DATE")
+                .willReturn(ok())
+                .willSetStateTo("COMPLETED")
+        )
+        // Fix the clock to 5 seconds after the first Retry-After date.
+        val retryAfterDateTime =
+            OffsetDateTime.parse(retryAfterDate, DateTimeFormatter.RFC_1123_DATE_TIME)
+        val clock = Clock.fixed(retryAfterDateTime.plusSeconds(5).toInstant(), ZoneOffset.UTC)
+        val sleeper = RecordingSleeper()
+        val retryingClient = retryingHttpClientBuilder(sleeper, clock).maxRetries(4).build()
+
+        val response =
+            retryingClient.execute(
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(baseUrl)
+                    .addPathSegment("something")
+                    .build(),
+                async,
+            )
+
+        assertThat(response.statusCode()).isEqualTo(200)
+        verify(5, postRequestedFor(urlPathEqualTo("/something")))
+        // None of those Retry-After values is a usable delay, so each retry backs off instead.
+        assertThat(sleeper.durations).hasSize(4)
+        assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
+        assertThat(sleeper.durations[1]).isBetween(Duration.ofMillis(750), Duration.ofMillis(1000))
+        assertThat(sleeper.durations[2]).isBetween(Duration.ofMillis(1500), Duration.ofMillis(2000))
+        assertThat(sleeper.durations[3]).isBetween(Duration.ofMillis(3000), Duration.ofMillis(4000))
+        assertNoResponseLeaks()
+    }
+
     private fun retryingHttpClientBuilder(
         sleeper: RecordingSleeper,
         clock: Clock = Clock.systemUTC(),

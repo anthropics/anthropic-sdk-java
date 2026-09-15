@@ -148,6 +148,20 @@ private constructor(
     fun cacheControl(): Optional<BetaCacheControlEphemeral> = body.cacheControl()
 
     /**
+     * Compact the whole conversation and return a signed `compaction` block, alone, that a later
+     * request sends back first in `messages`, in place of the messages it summarizes. There is no
+     * trigger and no pause flag: sending the parameter compacts, and nothing is sampled after the
+     * block.
+     *
+     * The summarization prompt is the server's own unless `instructions` are given, which then
+     * replace it for this request; a value that is empty or only whitespace counts as absent.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun compaction(): Optional<BetaCompactionConfig> = body.compaction()
+
+    /**
      * Context management configuration.
      *
      * This allows you to control how Claude manages context across multiple requests, such as
@@ -331,6 +345,13 @@ private constructor(
     fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = body._cacheControl()
 
     /**
+     * Returns the raw JSON value of [compaction].
+     *
+     * Unlike [compaction], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _compaction(): JsonField<BetaCompactionConfig> = body._compaction()
+
+    /**
      * Returns the raw JSON value of [contextManagement].
      *
      * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
@@ -486,8 +507,8 @@ private constructor(
          * - [messages]
          * - [model]
          * - [cacheControl]
+         * - [compaction]
          * - [contextManagement]
-         * - [mcpServers]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -695,6 +716,32 @@ private constructor(
          */
         fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
             body.cacheControl(cacheControl)
+        }
+
+        /**
+         * Compact the whole conversation and return a signed `compaction` block, alone, that a
+         * later request sends back first in `messages`, in place of the messages it summarizes.
+         * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
+         * sampled after the block.
+         *
+         * The summarization prompt is the server's own unless `instructions` are given, which then
+         * replace it for this request; a value that is empty or only whitespace counts as absent.
+         */
+        fun compaction(compaction: BetaCompactionConfig?) = apply { body.compaction(compaction) }
+
+        /** Alias for calling [Builder.compaction] with `compaction.orElse(null)`. */
+        fun compaction(compaction: Optional<BetaCompactionConfig>) =
+            compaction(compaction.getOrNull())
+
+        /**
+         * Sets [Builder.compaction] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.compaction] with a well-typed [BetaCompactionConfig]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun compaction(compaction: JsonField<BetaCompactionConfig>) = apply {
+            body.compaction(compaction)
         }
 
         /**
@@ -1373,6 +1420,7 @@ private constructor(
         private val messages: JsonField<List<BetaMessageParam>>,
         private val model: JsonField<Model>,
         private val cacheControl: JsonField<BetaCacheControlEphemeral>,
+        private val compaction: JsonField<BetaCompactionConfig>,
         private val contextManagement: JsonField<BetaContextManagementConfig>,
         private val mcpServers: JsonField<List<BetaRequestMcpServerUrlDefinition>>,
         private val outputConfig: JsonField<BetaOutputConfig>,
@@ -1394,6 +1442,9 @@ private constructor(
             @JsonProperty("cache_control")
             @ExcludeMissing
             cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of(),
+            @JsonProperty("compaction")
+            @ExcludeMissing
+            compaction: JsonField<BetaCompactionConfig> = JsonMissing.of(),
             @JsonProperty("context_management")
             @ExcludeMissing
             contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of(),
@@ -1419,6 +1470,7 @@ private constructor(
             messages,
             model,
             cacheControl,
+            compaction,
             contextManagement,
             mcpServers,
             outputConfig,
@@ -1515,6 +1567,20 @@ private constructor(
          */
         fun cacheControl(): Optional<BetaCacheControlEphemeral> =
             cacheControl.getOptional("cache_control")
+
+        /**
+         * Compact the whole conversation and return a signed `compaction` block, alone, that a
+         * later request sends back first in `messages`, in place of the messages it summarizes.
+         * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
+         * sampled after the block.
+         *
+         * The summarization prompt is the server's own unless `instructions` are given, which then
+         * replace it for this request; a value that is empty or only whitespace counts as absent.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun compaction(): Optional<BetaCompactionConfig> = compaction.getOptional("compaction")
 
         /**
          * Context management configuration.
@@ -1710,6 +1776,15 @@ private constructor(
         fun _cacheControl(): JsonField<BetaCacheControlEphemeral> = cacheControl
 
         /**
+         * Returns the raw JSON value of [compaction].
+         *
+         * Unlike [compaction], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("compaction")
+        @ExcludeMissing
+        fun _compaction(): JsonField<BetaCompactionConfig> = compaction
+
+        /**
          * Returns the raw JSON value of [contextManagement].
          *
          * Unlike [contextManagement], this method doesn't throw if the JSON field has an unexpected
@@ -1820,6 +1895,7 @@ private constructor(
             private var messages: JsonField<MutableList<BetaMessageParam>>? = null
             private var model: JsonField<Model>? = null
             private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
+            private var compaction: JsonField<BetaCompactionConfig> = JsonMissing.of()
             private var contextManagement: JsonField<BetaContextManagementConfig> = JsonMissing.of()
             private var mcpServers: JsonField<MutableList<BetaRequestMcpServerUrlDefinition>>? =
                 null
@@ -1837,6 +1913,7 @@ private constructor(
                 messages = body.messages.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 model = body.model
                 cacheControl = body.cacheControl
+                compaction = body.compaction
                 contextManagement = body.contextManagement
                 mcpServers =
                     body.mcpServers.map { it.toMutableList() }.takeUnless { it.isMissing() }
@@ -2088,6 +2165,34 @@ private constructor(
              */
             fun cacheControl(cacheControl: JsonField<BetaCacheControlEphemeral>) = apply {
                 this.cacheControl = cacheControl
+            }
+
+            /**
+             * Compact the whole conversation and return a signed `compaction` block, alone, that a
+             * later request sends back first in `messages`, in place of the messages it summarizes.
+             * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
+             * sampled after the block.
+             *
+             * The summarization prompt is the server's own unless `instructions` are given, which
+             * then replace it for this request; a value that is empty or only whitespace counts as
+             * absent.
+             */
+            fun compaction(compaction: BetaCompactionConfig?) =
+                compaction(JsonField.ofNullable(compaction))
+
+            /** Alias for calling [Builder.compaction] with `compaction.orElse(null)`. */
+            fun compaction(compaction: Optional<BetaCompactionConfig>) =
+                compaction(compaction.getOrNull())
+
+            /**
+             * Sets [Builder.compaction] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.compaction] with a well-typed [BetaCompactionConfig]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun compaction(compaction: JsonField<BetaCompactionConfig>) = apply {
+                this.compaction = compaction
             }
 
             /**
@@ -2642,6 +2747,7 @@ private constructor(
                     checkRequired("messages", messages).map { it.toImmutable() },
                     checkRequired("model", model),
                     cacheControl,
+                    compaction,
                     contextManagement,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     outputConfig,
@@ -2674,6 +2780,7 @@ private constructor(
             messages().forEach { it.validate() }
             model()
             cacheControl().ifPresent { it.validate() }
+            compaction().ifPresent { it.validate() }
             contextManagement().ifPresent { it.validate() }
             mcpServers().ifPresent { it.forEach { it.validate() } }
             outputConfig().ifPresent { it.validate() }
@@ -2705,6 +2812,7 @@ private constructor(
             (messages.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (model.asKnown().isPresent) 1 else 0) +
                 (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
+                (compaction.asKnown().getOrNull()?.validity() ?: 0) +
                 (contextManagement.asKnown().getOrNull()?.validity() ?: 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2724,6 +2832,7 @@ private constructor(
                 messages == other.messages &&
                 model == other.model &&
                 cacheControl == other.cacheControl &&
+                compaction == other.compaction &&
                 contextManagement == other.contextManagement &&
                 mcpServers == other.mcpServers &&
                 outputConfig == other.outputConfig &&
@@ -2741,6 +2850,7 @@ private constructor(
                 messages,
                 model,
                 cacheControl,
+                compaction,
                 contextManagement,
                 mcpServers,
                 outputConfig,
@@ -2757,7 +2867,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{messages=$messages, model=$model, cacheControl=$cacheControl, contextManagement=$contextManagement, mcpServers=$mcpServers, outputConfig=$outputConfig, outputFormat=$outputFormat, speed=$speed, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
+            "Body{messages=$messages, model=$model, cacheControl=$cacheControl, compaction=$compaction, contextManagement=$contextManagement, mcpServers=$mcpServers, outputConfig=$outputConfig, outputFormat=$outputFormat, speed=$speed, system=$system, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -3129,7 +3239,6 @@ private constructor(
         }
     }
 
-    /** Code execution tool with REPL state persistence (daemon mode + gVisor checkpoint). */
     @JsonDeserialize(using = Tool.Deserializer::class)
     @JsonSerialize(using = Tool.Serializer::class)
     class Tool
@@ -4601,6 +4710,125 @@ private constructor(
 
                     override fun unknown(json: JsonValue?): Optional<Long> =
                         json.getProperty<Long>("max_content_tokens").asKnown()
+                }
+            )
+
+        fun urlSources(): Optional<BetaWebFetchUrlSources> =
+            accept(
+                object : Visitor<Optional<BetaWebFetchUrlSources>> {
+                    override fun visitBeta(beta: BetaTool): Optional<BetaWebFetchUrlSources> =
+                        Optional.empty()
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<BetaWebFetchUrlSources> = betaWebFetchTool20250910.urlSources()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<BetaWebFetchUrlSources> = betaWebFetchTool20260209.urlSources()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<BetaWebFetchUrlSources> = betaWebFetchTool20260309.urlSources()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<BetaWebFetchUrlSources> = betaWebFetchTool20260318.urlSources()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<BetaWebFetchUrlSources> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<BetaWebFetchUrlSources> =
+                        json.getProperty<BetaWebFetchUrlSources>("url_sources").asKnown()
                 }
             )
 

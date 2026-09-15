@@ -4,6 +4,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonNull
 import com.anthropic.core.JsonString
+import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.*
@@ -771,7 +772,7 @@ internal class BetaMessageAccumulatorTest {
                             .container(null as BetaContainer?)
                             .contextManagement(null as BetaContextManagementResponse?)
                             .diagnostics(null)
-                            .inputTransformations(listOf(startInputTransformation))
+                            .addInputTransformation(startInputTransformation)
                             .build()
                     )
                     .build()
@@ -781,7 +782,7 @@ internal class BetaMessageAccumulatorTest {
             BetaRawMessageStreamEvent.ofMessageDelta(
                 BetaRawMessageDeltaEvent.builder()
                     .contextManagement(contextManagement)
-                    .inputTransformations(listOf(deltaInputTransformation))
+                    .addInputTransformation(deltaInputTransformation)
                     .delta(
                         BetaRawMessageDeltaEvent.Delta.builder()
                             .container(container)
@@ -818,7 +819,8 @@ internal class BetaMessageAccumulatorTest {
 
         assertThat(message.contextManagement()).hasValue(contextManagement)
         assertThat(message.container()).hasValue(container)
-        assertThat(message.inputTransformations()).hasValue(listOf(deltaInputTransformation))
+        assertThat(message.inputTransformations())
+            .hasValue(listOf(BetaInputTransformation.ofThinkingDropped(deltaInputTransformation)))
         assertThat(message.usage().outputTokens()).isEqualTo(96L)
         assertThat(message.usage().inputTokens()).isEqualTo(101L)
         assertThat(message.usage().outputTokensDetails().get().thinkingTokens()).isEqualTo(64L)
@@ -833,22 +835,63 @@ internal class BetaMessageAccumulatorTest {
         // key is omitted otherwise (never `null`), may be an empty list, and replaces (never merges
         // with) the `message_start` list.
         val x =
-            inputTransformation(
-                "messages.0.content.0",
-                BetaThinkingDroppedInputTransformation.Reason.PREFIX_BINDING_MISMATCH,
+            BetaInputTransformation.ofThinkingDropped(
+                inputTransformation(
+                    "messages.0.content.0",
+                    BetaThinkingDroppedInputTransformation.Reason.PREFIX_BINDING_MISMATCH,
+                )
             )
         val y =
-            inputTransformation(
-                "messages.2.content.0",
-                BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH,
+            BetaInputTransformation.ofThinkingMismatchAllowed(
+                BetaThinkingMismatchAllowedInputTransformation.builder()
+                    .path("messages.2.content.0")
+                    .reason(
+                        BetaThinkingMismatchAllowedInputTransformation.Reason.MODEL_BINDING_MISMATCH
+                    )
+                    .build()
+            )
+        val z =
+            BetaInputTransformation.ofThinkingDropped(
+                inputTransformation(
+                    "messages.4.content.0",
+                    BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH,
+                )
             )
 
         assertThat(accumulateInputTransformations(JsonField.of(listOf(x)), NOT_SET))
             .hasValue(listOf(x))
-        assertThat(accumulateInputTransformations(JsonField.of(listOf(x)), JsonField.of(listOf(y))))
-            .hasValue(listOf(y))
+        assertThat(
+                accumulateInputTransformations(JsonField.of(listOf(x)), JsonField.of(listOf(y, z)))
+            )
+            .hasValue(listOf(y, z))
         assertThat(accumulateInputTransformations(JsonField.of(listOf(x)), JsonField.of(listOf())))
             .hasValue(listOf())
+    }
+
+    @Test
+    fun messageDeltaInputTransformationOfUnknownTypeIsKeptAsJson() {
+        val accumulator = BetaMessageAccumulator.create()
+        val unknownEntry = mapOf("type" to "thinking_rewritten", "path" to "messages.0.content.0")
+
+        accumulator.accumulate(messageStartEvent())
+        accumulator.accumulate(
+            jsonMapper()
+                .convertValue(
+                    mapOf(
+                        "type" to "message_delta",
+                        "delta" to mapOf("stop_reason" to "end_turn", "stop_sequence" to null),
+                        "usage" to mapOf("output_tokens" to 1),
+                        "input_transformations" to listOf(unknownEntry),
+                    ),
+                    BetaRawMessageStreamEvent::class.java,
+                )
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        val entry = accumulator.message().inputTransformations().get().single()
+        assertThat(entry.isThinkingDropped()).isFalse()
+        assertThat(entry.isThinkingMismatchAllowed()).isFalse()
+        assertThat(entry._json()).hasValue(JsonValue.from(unknownEntry))
     }
 
     @Test
@@ -1484,7 +1527,7 @@ internal class BetaMessageAccumulatorTest {
     // not set explicitly, as it always has an appropriate non-null default value.
 
     private fun messageStartEvent(
-        inputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>> = NOT_SET
+        inputTransformations: JsonField<List<BetaInputTransformation>> = NOT_SET
     ) =
         BetaRawMessageStreamEvent.ofMessageStart(
             BetaRawMessageStartEvent.builder()
@@ -1558,7 +1601,7 @@ internal class BetaMessageAccumulatorTest {
         cacheCreationInputTokens: Long = 0L,
         cacheReadInputTokens: Long = 0L,
         webSearchRequests: Long = 0L,
-        inputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>> = NOT_SET,
+        inputTransformations: JsonField<List<BetaInputTransformation>> = NOT_SET,
     ) =
         BetaRawMessageStreamEvent.ofMessageDelta(
             BetaRawMessageDeltaEvent.builder()
@@ -1626,9 +1669,9 @@ internal class BetaMessageAccumulatorTest {
      *   `NOT_SET` omits the key, as the API does when no model fallback happened.
      */
     private fun accumulateInputTransformations(
-        startInputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>>,
-        deltaInputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>>,
-    ): Optional<List<BetaThinkingDroppedInputTransformation>> {
+        startInputTransformations: JsonField<List<BetaInputTransformation>>,
+        deltaInputTransformations: JsonField<List<BetaInputTransformation>>,
+    ): Optional<List<BetaInputTransformation>> {
         val accumulator = BetaMessageAccumulator.create()
 
         accumulator.accumulate(messageStartEvent(inputTransformations = startInputTransformations))

@@ -7,6 +7,7 @@ import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.messages.BetaCacheControlEphemeral
 import com.anthropic.models.beta.messages.BetaCitationCharLocationParam
 import com.anthropic.models.beta.messages.BetaClearToolUses20250919Edit
+import com.anthropic.models.beta.messages.BetaCompactionConfig
 import com.anthropic.models.beta.messages.BetaContainerParams
 import com.anthropic.models.beta.messages.BetaContextManagementConfig
 import com.anthropic.models.beta.messages.BetaDiagnosticsParam
@@ -78,6 +79,11 @@ internal class BatchServiceTest {
                                     .cacheControl(
                                         BetaCacheControlEphemeral.builder()
                                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
+                                            .build()
+                                    )
+                                    .compaction(
+                                        BetaCompactionConfig.builder()
+                                            .instructions("instructions")
                                             .build()
                                     )
                                     .container(

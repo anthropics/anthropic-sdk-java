@@ -22,7 +22,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** A memory store attached to an agent session. */
 @JsonDeserialize(using = BetaManagedAgentsSessionResource.Deserializer::class)
 @JsonSerialize(using = BetaManagedAgentsSessionResource.Serializer::class)
 class BetaManagedAgentsSessionResource

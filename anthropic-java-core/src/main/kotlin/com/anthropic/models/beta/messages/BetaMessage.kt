@@ -33,7 +33,7 @@ private constructor(
     private val stopSequence: JsonField<String>,
     private val type: JsonValue,
     private val usage: JsonField<BetaUsage>,
-    private val inputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>>,
+    private val inputTransformations: JsonField<List<BetaInputTransformation>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -67,8 +67,7 @@ private constructor(
         @JsonProperty("usage") @ExcludeMissing usage: JsonField<BetaUsage> = JsonMissing.of(),
         @JsonProperty("input_transformations")
         @ExcludeMissing
-        inputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>> =
-            JsonMissing.of(),
+        inputTransformations: JsonField<List<BetaInputTransformation>> = JsonMissing.of(),
     ) : this(
         id,
         container,
@@ -272,24 +271,28 @@ private constructor(
     fun usage(): BetaUsage = usage.getRequired("usage")
 
     /**
-     * Changes the API made to the request's input before showing it to the model: one entry per
-     * change, in request order. Today the only entry type is `thinking_dropped` — a `thinking`,
-     * `redacted_thinking` or `connector_text` block from the request's `messages` that was removed
-     * from the prompt instead of being shown to the model because it failed a binding check. More
-     * entry types may be added over time; ignore types you do not recognize.
+     * Changes the API made to the request's input before showing it to the model, and blocks that
+     * failed a binding check but were left unchanged: one entry per block, in request order. Two
+     * entry types today. `thinking_dropped` — a `thinking`, `redacted_thinking` or `connector_text`
+     * block from the request's `messages` that was removed from the prompt instead of being shown
+     * to the model because it failed a binding check. `thinking_mismatch_allowed` — a `thinking` or
+     * `redacted_thinking` block that failed the conversation check (the conversation before it
+     * differs from the one it was created in, or it carries no record of one on a model that
+     * requires it) and was shown to the model all the same, because that check is not enforced for
+     * this request. More entry types may be added over time; ignore types you do not recognize.
      *
      * Requires `anthropic-beta: thinking-binding-controls-2026-08-01`. Present on every such
-     * response from a model that supports extended thinking, as `[]` when nothing was changed;
-     * without the beta, blocks are removed all the same but nothing is reported. Removed blocks
-     * contribute nothing to `usage.input_tokens`. When streaming, the array is final in
-     * `message_start`; the final `message_delta` event carries it only when a server-side model
-     * fallback happened mid-stream, in which case it holds the serving model's entries and replaces
-     * the one in `message_start`.
+     * response from a model that supports extended thinking, as `[]` when there is no entry to
+     * report; without the beta, blocks are removed or left in place all the same but nothing is
+     * reported. Removed blocks contribute nothing to `usage.input_tokens`; blocks left in place
+     * count as sent. When streaming, the array is final in `message_start`; the final
+     * `message_delta` event carries it only when a server-side model fallback happened mid-stream,
+     * in which case it holds the serving model's entries and replaces the one in `message_start`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun inputTransformations(): Optional<List<BetaThinkingDroppedInputTransformation>> =
+    fun inputTransformations(): Optional<List<BetaInputTransformation>> =
         inputTransformations.getOptional("input_transformations")
 
     /**
@@ -385,8 +388,7 @@ private constructor(
      */
     @JsonProperty("input_transformations")
     @ExcludeMissing
-    fun _inputTransformations(): JsonField<List<BetaThinkingDroppedInputTransformation>> =
-        inputTransformations
+    fun _inputTransformations(): JsonField<List<BetaInputTransformation>> = inputTransformations
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -437,9 +439,7 @@ private constructor(
         private var stopSequence: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("message")
         private var usage: JsonField<BetaUsage>? = null
-        private var inputTransformations:
-            JsonField<MutableList<BetaThinkingDroppedInputTransformation>>? =
-            null
+        private var inputTransformations: JsonField<MutableList<BetaInputTransformation>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -867,55 +867,77 @@ private constructor(
         fun usage(usage: JsonField<BetaUsage>) = apply { this.usage = usage }
 
         /**
-         * Changes the API made to the request's input before showing it to the model: one entry per
-         * change, in request order. Today the only entry type is `thinking_dropped` — a `thinking`,
-         * `redacted_thinking` or `connector_text` block from the request's `messages` that was
-         * removed from the prompt instead of being shown to the model because it failed a binding
-         * check. More entry types may be added over time; ignore types you do not recognize.
+         * Changes the API made to the request's input before showing it to the model, and blocks
+         * that failed a binding check but were left unchanged: one entry per block, in request
+         * order. Two entry types today. `thinking_dropped` — a `thinking`, `redacted_thinking` or
+         * `connector_text` block from the request's `messages` that was removed from the prompt
+         * instead of being shown to the model because it failed a binding check.
+         * `thinking_mismatch_allowed` — a `thinking` or `redacted_thinking` block that failed the
+         * conversation check (the conversation before it differs from the one it was created in, or
+         * it carries no record of one on a model that requires it) and was shown to the model all
+         * the same, because that check is not enforced for this request. More entry types may be
+         * added over time; ignore types you do not recognize.
          *
          * Requires `anthropic-beta: thinking-binding-controls-2026-08-01`. Present on every such
-         * response from a model that supports extended thinking, as `[]` when nothing was changed;
-         * without the beta, blocks are removed all the same but nothing is reported. Removed blocks
-         * contribute nothing to `usage.input_tokens`. When streaming, the array is final in
-         * `message_start`; the final `message_delta` event carries it only when a server-side model
-         * fallback happened mid-stream, in which case it holds the serving model's entries and
-         * replaces the one in `message_start`.
+         * response from a model that supports extended thinking, as `[]` when there is no entry to
+         * report; without the beta, blocks are removed or left in place all the same but nothing is
+         * reported. Removed blocks contribute nothing to `usage.input_tokens`; blocks left in place
+         * count as sent. When streaming, the array is final in `message_start`; the final
+         * `message_delta` event carries it only when a server-side model fallback happened
+         * mid-stream, in which case it holds the serving model's entries and replaces the one in
+         * `message_start`.
          */
-        fun inputTransformations(
-            inputTransformations: List<BetaThinkingDroppedInputTransformation>?
-        ) = inputTransformations(JsonField.ofNullable(inputTransformations))
+        fun inputTransformations(inputTransformations: List<BetaInputTransformation>?) =
+            inputTransformations(JsonField.ofNullable(inputTransformations))
 
         /**
          * Alias for calling [Builder.inputTransformations] with
          * `inputTransformations.orElse(null)`.
          */
-        fun inputTransformations(
-            inputTransformations: Optional<List<BetaThinkingDroppedInputTransformation>>
-        ) = inputTransformations(inputTransformations.getOrNull())
+        fun inputTransformations(inputTransformations: Optional<List<BetaInputTransformation>>) =
+            inputTransformations(inputTransformations.getOrNull())
 
         /**
          * Sets [Builder.inputTransformations] to an arbitrary JSON value.
          *
          * You should usually call [Builder.inputTransformations] with a well-typed
-         * `List<BetaThinkingDroppedInputTransformation>` value instead. This method is primarily
-         * for setting the field to an undocumented or not yet supported value.
+         * `List<BetaInputTransformation>` value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
          */
-        fun inputTransformations(
-            inputTransformations: JsonField<List<BetaThinkingDroppedInputTransformation>>
-        ) = apply { this.inputTransformations = inputTransformations.map { it.toMutableList() } }
+        fun inputTransformations(inputTransformations: JsonField<List<BetaInputTransformation>>) =
+            apply {
+                this.inputTransformations = inputTransformations.map { it.toMutableList() }
+            }
 
         /**
-         * Adds a single [BetaThinkingDroppedInputTransformation] to [inputTransformations].
+         * Adds a single [BetaInputTransformation] to [inputTransformations].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addInputTransformation(inputTransformation: BetaThinkingDroppedInputTransformation) =
-            apply {
-                inputTransformations =
-                    (inputTransformations ?: JsonField.of(mutableListOf())).also {
-                        checkKnown("inputTransformations", it).add(inputTransformation)
-                    }
-            }
+        fun addInputTransformation(inputTransformation: BetaInputTransformation) = apply {
+            inputTransformations =
+                (inputTransformations ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("inputTransformations", it).add(inputTransformation)
+                }
+        }
+
+        /**
+         * Alias for calling [addInputTransformation] with
+         * `BetaInputTransformation.ofThinkingDropped(thinkingDropped)`.
+         */
+        fun addInputTransformation(thinkingDropped: BetaThinkingDroppedInputTransformation) =
+            addInputTransformation(BetaInputTransformation.ofThinkingDropped(thinkingDropped))
+
+        /**
+         * Alias for calling [addInputTransformation] with
+         * `BetaInputTransformation.ofThinkingMismatchAllowed(thinkingMismatchAllowed)`.
+         */
+        fun addInputTransformation(
+            thinkingMismatchAllowed: BetaThinkingMismatchAllowedInputTransformation
+        ) =
+            addInputTransformation(
+                BetaInputTransformation.ofThinkingMismatchAllowed(thinkingMismatchAllowed)
+            )
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()

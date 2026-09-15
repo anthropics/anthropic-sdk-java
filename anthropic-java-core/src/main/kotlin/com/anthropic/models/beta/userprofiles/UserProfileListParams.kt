@@ -21,6 +21,7 @@ private constructor(
     private val orderBy: OrderBy?,
     private val page: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -39,6 +40,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -64,6 +67,7 @@ private constructor(
         private var orderBy: OrderBy? = null
         private var page: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -74,6 +78,7 @@ private constructor(
             orderBy = userProfileListParams.orderBy
             page = userProfileListParams.page
             betas = userProfileListParams.betas?.toMutableList()
+            workspaceId = userProfileListParams.workspaceId
             additionalHeaders = userProfileListParams.additionalHeaders.toBuilder()
             additionalQueryParams = userProfileListParams.additionalQueryParams.toBuilder()
         }
@@ -132,6 +137,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -243,6 +253,7 @@ private constructor(
                 orderBy,
                 page,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -252,6 +263,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -560,13 +572,23 @@ private constructor(
             orderBy == other.orderBy &&
             page == other.page &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(limit, order, orderBy, page, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            limit,
+            order,
+            orderBy,
+            page,
+            betas,
+            workspaceId,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "UserProfileListParams{limit=$limit, order=$order, orderBy=$orderBy, page=$page, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UserProfileListParams{limit=$limit, order=$order, orderBy=$orderBy, page=$page, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

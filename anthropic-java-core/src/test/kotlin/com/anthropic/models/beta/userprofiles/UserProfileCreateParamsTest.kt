@@ -12,6 +12,7 @@ internal class UserProfileCreateParamsTest {
     fun create() {
         UserProfileCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+            .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .accessType(UserProfileCreateParams.AccessType.APPLICATION)
             .externalId("user_12345")
             .externalUserDetails(
@@ -36,6 +37,7 @@ internal class UserProfileCreateParamsTest {
         val params =
             UserProfileCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
                 .externalUserDetails(
@@ -60,7 +62,10 @@ internal class UserProfileCreateParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
+                    .build()
             )
     }
 
@@ -78,6 +83,7 @@ internal class UserProfileCreateParamsTest {
         val params =
             UserProfileCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .accessType(UserProfileCreateParams.AccessType.APPLICATION)
                 .externalId("user_12345")
                 .externalUserDetails(

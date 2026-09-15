@@ -1,5 +1,56 @@
 # Changelog
 
+## 2.63.0 (2026-09-15)
+
+Full Changelog: [v2.62.0...v2.63.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.62.0...v2.63.0)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** **Migration:** Nothing changes if you use the SDK on the classpath, including on Java 8.
+
+### Features
+
+* **api:** add auto mode tool permissions for Managed Agents ([3ba10c1](https://github.com/anthropics/anthropic-sdk-java/commit/3ba10c1dd61730a6193e7c73e8d6d5f32ffca7b3))
+* **api:** add compaction parameter and signed compaction blocks (beta) ([28ba202](https://github.com/anthropics/anthropic-sdk-java/commit/28ba202c95fc472dbefcc6343e5c78db3f6b4b02))
+* **api:** add enum types for workspace data-residency geo fields ([9e14259](https://github.com/anthropics/anthropic-sdk-java/commit/9e14259a84e320e1715a516717868ac1bd0bcd3c))
+* **api:** add thinking_mismatch_allowed entries to input_transformations (beta) ([87814d4](https://github.com/anthropics/anthropic-sdk-java/commit/87814d40a6650b1d9902abcbdaff8effe1226ba2))
+* **api:** add url_sources to the web fetch tool ([74d5f1c](https://github.com/anthropics/anthropic-sdk-java/commit/74d5f1c02d04470f5bb88339d16c513d5ce6a24d))
+* **api:** add workspace_id parameter to user profiles methods ([fe6bea8](https://github.com/anthropics/anthropic-sdk-java/commit/fe6bea8f1a9609e8ee96f42df157fd9e6718461f))
+* **api:** model the compaction parameter as a CompactionConfig union ([eb22445](https://github.com/anthropics/anthropic-sdk-java/commit/eb22445d11d77fa97dde25020d78d8e74ede124d))
+* **client:** add missing toBuilder() and Optional builder overloads ([03fe2f1](https://github.com/anthropics/anthropic-sdk-java/commit/03fe2f16a169c6265208acab3785dcb581dcca75))
+* **client:** add module descriptors to the platform backend modules ([#284](https://github.com/anthropics/anthropic-sdk-java/issues/284)) ([5ca0aeb](https://github.com/anthropics/anthropic-sdk-java/commit/5ca0aebcf81e0426ac17f7eb4e3a2a43f2c6543d))
+* **client:** publish jars as JPMS modules (multi-release module-info) ([6f72aa9](https://github.com/anthropics/anthropic-sdk-java/commit/6f72aa9597b8dd6df39d595670dd3817b0ba5f5a))
+
+
+### Bug Fixes
+
+* **api:** mark usage iteration model as nullable ([5a7015b](https://github.com/anthropics/anthropic-sdk-java/commit/5a7015be63d9ddd3af4dd7c3fa7361378e80a33d))
+* **api:** use one input transformation type for message and delta event ([fa17026](https://github.com/anthropics/anthropic-sdk-java/commit/fa1702669eab39820270781e9c8f631321312a01))
+* **client:** ignore invalid Retry-After values and validate maxRetries ([3ba10c1](https://github.com/anthropics/anthropic-sdk-java/commit/3ba10c1dd61730a6193e7c73e8d6d5f32ffca7b3))
+* **client:** ignore Retry-After values that aren't a positive delay instead of throwing ([8c22e9a](https://github.com/anthropics/anthropic-sdk-java/commit/8c22e9a920cd34dd5aa7f6c0dda4c91b05bdfdfe))
+* **client:** keep the matching variant type when converting response unions to request params ([eeba317](https://github.com/anthropics/anthropic-sdk-java/commit/eeba317f5b366e6bc2b0fb14ea9a6a3032353ed7))
+* **client:** make other packages usable on the module path ([#283](https://github.com/anthropics/anthropic-sdk-java/issues/283)) ([6426d6e](https://github.com/anthropics/anthropic-sdk-java/commit/6426d6ec7bf8bdc99fafe23792068c3f89c1e157))
+* **client:** retry connection errors in the async client and stop blocking in the coroutine retry loop ([3ba10c1](https://github.com/anthropics/anthropic-sdk-java/commit/3ba10c1dd61730a6193e7c73e8d6d5f32ffca7b3))
+* **client:** use the default backoff when Retry-After is out of range ([1b41823](https://github.com/anthropics/anthropic-sdk-java/commit/1b4182306bb837c9222478654d542fe29c3b7a11))
+* **streaming:** use the input transformation union in the structured message and accumulator tests ([c3a6796](https://github.com/anthropics/anthropic-sdk-java/commit/c3a67963d209b3f3c963e45393b4abad3e52c1bb))
+
+
+### Chores
+
+* **client:** record the SDK version in module descriptors ([03fe2f1](https://github.com/anthropics/anthropic-sdk-java/commit/03fe2f16a169c6265208acab3785dcb581dcca75))
+* **docs:** clarify that session_thread_id on tool use events is informational ([12364fe](https://github.com/anthropics/anthropic-sdk-java/commit/12364fe7eeeeae3897002cfa4b9ce64ffda905f9))
+* **docs:** correct the compaction beta's parameter descriptions ([a35eb4f](https://github.com/anthropics/anthropic-sdk-java/commit/a35eb4f6b8ab23323cc20bf30fd0ce9f799a24a9))
+* **internal:** compile module descriptors against the inferred module path ([6ea5fb1](https://github.com/anthropics/anthropic-sdk-java/commit/6ea5fb1d1634b15df45fa214e0b33ea5d457c096))
+* **tests:** lock the standard stderr resource in the logging client test ([03fe2f1](https://github.com/anthropics/anthropic-sdk-java/commit/03fe2f16a169c6265208acab3785dcb581dcca75))
+* **tests:** stop the mock server without failing a passing test run ([7162f34](https://github.com/anthropics/anthropic-sdk-java/commit/7162f346c882b42b131e7add55c5298b15300b87))
+
+
+### Documentation
+
+* **api:** clarify usage.iterations entry typing under server-side fallback ([190208a](https://github.com/anthropics/anthropic-sdk-java/commit/190208af568b930fa01288b8da5a7a6a284156eb))
+* **api:** fix typo in temperature deprecation message ([03fe2f1](https://github.com/anthropics/anthropic-sdk-java/commit/03fe2f16a169c6265208acab3785dcb581dcca75))
+* stop documenting unions with their first variant's description ([9ab57a5](https://github.com/anthropics/anthropic-sdk-java/commit/9ab57a5734767e10c5c731040049448ee9ce0fa9))
+
 ## 2.62.0 (2026-09-10)
 
 Full Changelog: [v2.61.0...v2.62.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.61.0...v2.62.0)

@@ -13,10 +13,12 @@ internal class BetaCompactionBlockTest {
             BetaCompactionBlock.builder()
                 .content("content")
                 .encryptedContent("encrypted_content")
+                .signature("signature")
                 .build()
 
         assertThat(betaCompactionBlock.content()).contains("content")
         assertThat(betaCompactionBlock.encryptedContent()).contains("encrypted_content")
+        assertThat(betaCompactionBlock.signature()).contains("signature")
     }
 
     @Test
@@ -26,6 +28,7 @@ internal class BetaCompactionBlockTest {
             BetaCompactionBlock.builder()
                 .content("content")
                 .encryptedContent("encrypted_content")
+                .signature("signature")
                 .build()
 
         val roundtrippedBetaCompactionBlock =

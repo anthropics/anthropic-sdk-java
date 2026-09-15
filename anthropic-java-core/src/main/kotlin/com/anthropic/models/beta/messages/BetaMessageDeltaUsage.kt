@@ -634,7 +634,6 @@ private constructor(
             (outputTokensDetails.asKnown().getOrNull()?.validity() ?: 0) +
             (serverToolUse.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Token usage for a sampling iteration. */
     @JsonDeserialize(using = Iteration.Deserializer::class)
     @JsonSerialize(using = Iteration.Serializer::class)
     class Iteration
@@ -766,7 +765,7 @@ private constructor(
             accept(
                 object : Visitor<Optional<Model>> {
                     override fun visitMessage(message: BetaMessageIterationUsage): Optional<Model> =
-                        Optional.of(message.model())
+                        message.model()
 
                     override fun visitCompaction(
                         compaction: BetaCompactionIterationUsage
@@ -820,9 +819,11 @@ private constructor(
         /**
          * Token usage for the fallback-model attempt of a server-side fallback request.
          *
-         * Produced in place of a `message` entry for whichever hop served the response. A declined
-         * hop produces the existing `message` entry. Whether a fallback model served the response
-         * is signalled by the presence of this entry in `usage.iterations`.
+         * The terminal entry of a fallback-served turn: when a fallback hop's output is the
+         * returned message, the entry for the iteration that completed it carries this type in
+         * place of `message`. A declined hop and the serving hop's earlier tool-loop iterations
+         * produce `message` entries. Whether a fallback model served the response is signalled by
+         * the presence of this entry in `usage.iterations`.
          */
         fun fallbackMessage(): Optional<BetaFallbackMessageIterationUsage> =
             Optional.ofNullable(fallbackMessage)
@@ -848,9 +849,11 @@ private constructor(
         /**
          * Token usage for the fallback-model attempt of a server-side fallback request.
          *
-         * Produced in place of a `message` entry for whichever hop served the response. A declined
-         * hop produces the existing `message` entry. Whether a fallback model served the response
-         * is signalled by the presence of this entry in `usage.iterations`.
+         * The terminal entry of a fallback-served turn: when a fallback hop's output is the
+         * returned message, the entry for the iteration that completed it carries this type in
+         * place of `message`. A declined hop and the serving hop's earlier tool-loop iterations
+         * produce `message` entries. Whether a fallback model served the response is signalled by
+         * the presence of this entry in `usage.iterations`.
          */
         fun asFallbackMessage(): BetaFallbackMessageIterationUsage =
             fallbackMessage.getOrThrow("fallbackMessage")
@@ -1017,9 +1020,11 @@ private constructor(
             /**
              * Token usage for the fallback-model attempt of a server-side fallback request.
              *
-             * Produced in place of a `message` entry for whichever hop served the response. A
-             * declined hop produces the existing `message` entry. Whether a fallback model served
-             * the response is signalled by the presence of this entry in `usage.iterations`.
+             * The terminal entry of a fallback-served turn: when a fallback hop's output is the
+             * returned message, the entry for the iteration that completed it carries this type in
+             * place of `message`. A declined hop and the serving hop's earlier tool-loop iterations
+             * produce `message` entries. Whether a fallback model served the response is signalled
+             * by the presence of this entry in `usage.iterations`.
              */
             @JvmStatic
             fun ofFallbackMessage(fallbackMessage: BetaFallbackMessageIterationUsage) =
@@ -1043,9 +1048,11 @@ private constructor(
             /**
              * Token usage for the fallback-model attempt of a server-side fallback request.
              *
-             * Produced in place of a `message` entry for whichever hop served the response. A
-             * declined hop produces the existing `message` entry. Whether a fallback model served
-             * the response is signalled by the presence of this entry in `usage.iterations`.
+             * The terminal entry of a fallback-served turn: when a fallback hop's output is the
+             * returned message, the entry for the iteration that completed it carries this type in
+             * place of `message`. A declined hop and the serving hop's earlier tool-loop iterations
+             * produce `message` entries. Whether a fallback model served the response is signalled
+             * by the presence of this entry in `usage.iterations`.
              */
             fun visitFallbackMessage(fallbackMessage: BetaFallbackMessageIterationUsage): T
 

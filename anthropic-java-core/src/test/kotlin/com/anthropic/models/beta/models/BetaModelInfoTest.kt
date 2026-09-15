@@ -20,6 +20,12 @@ internal class BetaModelInfoTest {
                         .batch(BetaCapabilitySupport.of(true))
                         .citations(BetaCapabilitySupport.of(true))
                         .codeExecution(BetaCapabilitySupport.of(true))
+                        .compaction(
+                            BetaCompactionCapability.builder()
+                                .summarize(BetaCapabilitySupport.of(true))
+                                .supported(true)
+                                .build()
+                        )
                         .contextManagement(
                             BetaContextManagementCapability.builder()
                                 .clearThinking20251015(BetaCapabilitySupport.of(true))
@@ -68,6 +74,12 @@ internal class BetaModelInfoTest {
                     .batch(BetaCapabilitySupport.of(true))
                     .citations(BetaCapabilitySupport.of(true))
                     .codeExecution(BetaCapabilitySupport.of(true))
+                    .compaction(
+                        BetaCompactionCapability.builder()
+                            .summarize(BetaCapabilitySupport.of(true))
+                            .supported(true)
+                            .build()
+                    )
                     .contextManagement(
                         BetaContextManagementCapability.builder()
                             .clearThinking20251015(BetaCapabilitySupport.of(true))
@@ -121,6 +133,12 @@ internal class BetaModelInfoTest {
                         .batch(BetaCapabilitySupport.of(true))
                         .citations(BetaCapabilitySupport.of(true))
                         .codeExecution(BetaCapabilitySupport.of(true))
+                        .compaction(
+                            BetaCompactionCapability.builder()
+                                .summarize(BetaCapabilitySupport.of(true))
+                                .supported(true)
+                                .build()
+                        )
                         .contextManagement(
                             BetaContextManagementCapability.builder()
                                 .clearThinking20251015(BetaCapabilitySupport.of(true))

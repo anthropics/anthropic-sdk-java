@@ -179,10 +179,14 @@ internal class BetaRawMessageDeltaEventTest {
             )
         assertThat(betaRawMessageDeltaEvent.inputTransformations().getOrNull())
             .containsExactly(
-                BetaThinkingDroppedInputTransformation.builder()
-                    .path("path")
-                    .reason(BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH)
-                    .build()
+                BetaInputTransformation.ofThinkingDropped(
+                    BetaThinkingDroppedInputTransformation.builder()
+                        .path("path")
+                        .reason(
+                            BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
+                        )
+                        .build()
+                )
             )
     }
 
@@ -271,6 +275,20 @@ internal class BetaRawMessageDeltaEventTest {
             baseBetaRawMessageDeltaEvent
                 .toBuilder()
                 .addInputTransformation(
+                    BetaInputTransformation.ofThinkingDropped(
+                        BetaThinkingDroppedInputTransformation.builder()
+                            .path("path")
+                            .reason(
+                                BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH
+                            )
+                            .build()
+                    )
+                )
+                .build()
+
+        assertThat(betaRawMessageDeltaEvent.inputTransformations().getOrNull())
+            .containsExactly(
+                BetaInputTransformation.ofThinkingDropped(
                     BetaThinkingDroppedInputTransformation.builder()
                         .path("path")
                         .reason(
@@ -278,14 +296,6 @@ internal class BetaRawMessageDeltaEventTest {
                         )
                         .build()
                 )
-                .build()
-
-        assertThat(betaRawMessageDeltaEvent.inputTransformations().getOrNull())
-            .containsExactly(
-                BetaThinkingDroppedInputTransformation.builder()
-                    .path("path")
-                    .reason(BetaThinkingDroppedInputTransformation.Reason.MODEL_BINDING_MISMATCH)
-                    .build()
             )
     }
 

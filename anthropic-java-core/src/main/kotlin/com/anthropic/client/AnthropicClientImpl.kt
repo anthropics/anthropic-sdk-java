@@ -68,8 +68,17 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
 
     override fun close() = clientOptions.close()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+    class WithRawResponseImpl
+    internal constructor(private val originalClientOptions: ClientOptions) :
         AnthropicClient.WithRawResponse {
+
+        private val clientOptions =
+            if (originalClientOptions.headers.names().contains("User-Agent")) originalClientOptions
+            else
+                originalClientOptions
+                    .toBuilder()
+                    .putHeader("User-Agent", "AnthropicClientImpl/Java ${getPackageVersion()}")
+                    .build()
 
         private val completions: CompletionService.WithRawResponse by lazy {
             CompletionServiceImpl.WithRawResponseImpl(clientOptions)
@@ -99,7 +108,7 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
             modifier: Consumer<ClientOptions.Builder>
         ): AnthropicClient.WithRawResponse =
             AnthropicClientImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+                originalClientOptions.toBuilder().apply(modifier::accept).build()
             )
 
         override fun completions(): CompletionService.WithRawResponse = completions

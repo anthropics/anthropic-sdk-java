@@ -35,6 +35,7 @@ internal class MessageCreateParamsTest {
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+            .compaction(BetaCompactionConfig.builder().instructions("instructions").build())
             .container(
                 BetaContainerParams.builder()
                     .id("id")
@@ -199,6 +200,7 @@ internal class MessageCreateParamsTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .compaction(BetaCompactionConfig.builder().instructions("instructions").build())
                 .container(
                     BetaContainerParams.builder()
                         .id("id")
@@ -392,6 +394,7 @@ internal class MessageCreateParamsTest {
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                         .build()
                 )
+                .compaction(BetaCompactionConfig.builder().instructions("instructions").build())
                 .container(
                     BetaContainerParams.builder()
                         .id("id")
@@ -556,6 +559,8 @@ internal class MessageCreateParamsTest {
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
                     .build()
             )
+        assertThat(body.compaction())
+            .contains(BetaCompactionConfig.builder().instructions("instructions").build())
         assertThat(body.container())
             .contains(
                 MessageCreateParams.Container.ofBetaContainerParams(

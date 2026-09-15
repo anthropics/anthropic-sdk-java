@@ -14,6 +14,7 @@ class UserProfileRetrieveParams
 private constructor(
     private val userProfileId: String?,
     private val betas: List<AnthropicBeta>?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -22,6 +23,8 @@ private constructor(
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
+
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -46,6 +49,7 @@ private constructor(
 
         private var userProfileId: String? = null
         private var betas: MutableList<AnthropicBeta>? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -53,6 +57,7 @@ private constructor(
         internal fun from(userProfileRetrieveParams: UserProfileRetrieveParams) = apply {
             userProfileId = userProfileRetrieveParams.userProfileId
             betas = userProfileRetrieveParams.betas?.toMutableList()
+            workspaceId = userProfileRetrieveParams.workspaceId
             additionalHeaders = userProfileRetrieveParams.additionalHeaders.toBuilder()
             additionalQueryParams = userProfileRetrieveParams.additionalQueryParams.toBuilder()
         }
@@ -86,6 +91,11 @@ private constructor(
          * value.
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
+
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -194,6 +204,7 @@ private constructor(
             UserProfileRetrieveParams(
                 userProfileId,
                 betas?.toImmutable(),
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -209,6 +220,7 @@ private constructor(
         Headers.builder()
             .apply {
                 betas?.forEach { put("anthropic-beta", it.toString()) }
+                workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
             .build()
@@ -223,13 +235,14 @@ private constructor(
         return other is UserProfileRetrieveParams &&
             userProfileId == other.userProfileId &&
             betas == other.betas &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(userProfileId, betas, additionalHeaders, additionalQueryParams)
+        Objects.hash(userProfileId, betas, workspaceId, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "UserProfileRetrieveParams{userProfileId=$userProfileId, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UserProfileRetrieveParams{userProfileId=$userProfileId, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

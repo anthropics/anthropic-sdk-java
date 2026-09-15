@@ -49,7 +49,7 @@ class AnthropicOkHttpClient private constructor() {
     /** A builder for [AnthropicOkHttpClient]. */
     class Builder internal constructor() {
 
-        private var clientOptions: ClientOptions.Builder = ClientOptions.builder()
+        private val clientOptions: ClientOptions.Builder = ClientOptions.builder()
         private var dispatcherExecutorService: ExecutorService? = null
         private var proxy: Proxy? = null
         private var proxyAuthenticator: ProxyAuthenticator? = null
