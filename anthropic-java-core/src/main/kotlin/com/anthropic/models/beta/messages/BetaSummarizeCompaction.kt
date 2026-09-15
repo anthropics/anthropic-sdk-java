@@ -51,8 +51,8 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Replaces the server's summarization prompt for this request. When set, earlier thinking
-     * blocks are left out of the content being summarized on models that require it.
+     * Replaces the server's default summarization prompt for this request. An empty or
+     * whitespace-only value counts as absent.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -115,8 +115,8 @@ private constructor(
         fun type(type: JsonValue) = apply { this.type = type }
 
         /**
-         * Replaces the server's summarization prompt for this request. When set, earlier thinking
-         * blocks are left out of the content being summarized on models that require it.
+         * Replaces the server's default summarization prompt for this request. An empty or
+         * whitespace-only value counts as absent.
          */
         fun instructions(instructions: String?) = instructions(JsonField.ofNullable(instructions))
 
