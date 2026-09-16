@@ -216,6 +216,7 @@ internal constructor(
             isServerToolUse() -> visitor.visitServerToolUse(asServerToolUse())
             isWebSearchToolResult() -> visitor.visitWebSearchToolResult(asWebSearchToolResult())
             isWebFetchToolResult() -> visitor.visitWebFetchToolResult(asWebFetchToolResult())
+            isAdvisorToolResult() -> visitor.visitAdvisorToolResult(asAdvisorToolResult())
             isCodeExecutionToolResult() ->
                 visitor.visitCodeExecutionToolResult(asCodeExecutionToolResult())
             isBashCodeExecutionToolResult() ->
@@ -229,6 +230,7 @@ internal constructor(
             isMcpToolResult() -> visitor.visitMcpToolResult(asMcpToolResult())
             isContainerUpload() -> visitor.visitContainerUpload(asContainerUpload())
             isCompaction() -> visitor.visitCompaction(asCompaction())
+            isFallback() -> visitor.visitFallback(asFallback())
             else -> visitor.unknown(_json().getOrNull())
         }
 
@@ -274,6 +276,10 @@ internal constructor(
                     webFetchToolResult.validate()
                 }
 
+                override fun visitAdvisorToolResult(advisorToolResult: BetaAdvisorToolResultBlock) {
+                    advisorToolResult.validate()
+                }
+
                 override fun visitCodeExecutionToolResult(
                     codeExecutionToolResult: BetaCodeExecutionToolResultBlock
                 ) {
@@ -312,6 +318,10 @@ internal constructor(
 
                 override fun visitCompaction(compaction: BetaCompactionBlock) {
                     compaction.validate()
+                }
+
+                override fun visitFallback(fallback: BetaFallbackBlock) {
+                    fallback.validate()
                 }
             }
         )
@@ -368,6 +378,9 @@ internal constructor(
         /** @see BetaContentBlock.Visitor.visitWebFetchToolResult */
         fun visitWebFetchToolResult(webFetchToolResult: BetaWebFetchToolResultBlock): T
 
+        /** @see BetaContentBlock.Visitor.visitAdvisorToolResult */
+        fun visitAdvisorToolResult(advisorToolResult: BetaAdvisorToolResultBlock): T
+
         /** @see BetaContentBlock.Visitor.visitCodeExecutionToolResult */
         fun visitCodeExecutionToolResult(
             codeExecutionToolResult: BetaCodeExecutionToolResultBlock
@@ -397,6 +410,9 @@ internal constructor(
 
         /** @see BetaContentBlock.Visitor.visitCompaction */
         fun visitCompaction(compaction: BetaCompactionBlock): T
+
+        /** @see BetaContentBlock.Visitor.visitFallback */
+        fun visitFallback(fallback: BetaFallbackBlock): T
 
         /** @see BetaContentBlock.Visitor.unknown */
         fun unknown(json: JsonValue?): T {
