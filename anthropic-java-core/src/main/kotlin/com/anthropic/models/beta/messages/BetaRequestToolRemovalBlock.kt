@@ -377,7 +377,7 @@ private constructor(
         fun reference(): Optional<BetaToolChangeToolReference> = Optional.ofNullable(reference)
 
         /**
-         * Reference to a single MCP tool by its server and remote name — the same
+         * Reference to a single MCP tool by its server and remote name; the same
          * ``server_name``/``name`` pair ``mcp_tool_use`` carries.
          */
         fun mcpToolReference(): Optional<BetaToolChangeMcpToolReference> =
@@ -401,7 +401,7 @@ private constructor(
         fun asReference(): BetaToolChangeToolReference = reference.getOrThrow("reference")
 
         /**
-         * Reference to a single MCP tool by its server and remote name — the same
+         * Reference to a single MCP tool by its server and remote name; the same
          * ``server_name``/``name`` pair ``mcp_tool_use`` carries.
          */
         fun asMcpToolReference(): BetaToolChangeMcpToolReference =
@@ -562,7 +562,7 @@ private constructor(
             fun ofReference(name: String) = ofReference(BetaToolChangeToolReference.of(name))
 
             /**
-             * Reference to a single MCP tool by its server and remote name — the same
+             * Reference to a single MCP tool by its server and remote name; the same
              * ``server_name``/``name`` pair ``mcp_tool_use`` carries.
              */
             @JvmStatic
@@ -594,7 +594,7 @@ private constructor(
             fun visitReference(reference: BetaToolChangeToolReference): T
 
             /**
-             * Reference to a single MCP tool by its server and remote name — the same
+             * Reference to a single MCP tool by its server and remote name; the same
              * ``server_name``/``name`` pair ``mcp_tool_use`` carries.
              */
             fun visitMcpToolReference(mcpToolReference: BetaToolChangeMcpToolReference): T
