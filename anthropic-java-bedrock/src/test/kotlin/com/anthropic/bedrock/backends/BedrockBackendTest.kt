@@ -13,8 +13,12 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.DataInputStream
+import java.io.FilterInputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.io.SequenceInputStream
 import java.lang.System.clearProperty
 import java.lang.System.setProperty
 import java.util.Base64
@@ -950,6 +954,90 @@ internal class BedrockBackendTest {
     }
 
     @Test
+    fun prepareResponseTranslatesFramesSplitAcrossReads() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
+
+        val sse =
+            backend
+                .prepareResponse(
+                    eventStreamResponse(
+                        OneByteAtATimeInputStream(encode(chunk(TEXT_DELTA), chunk(MESSAGE_STOP)))
+                    )
+                )
+                .readSse()
+
+        assertThat(sse).isEqualTo(sseEvent(TEXT_DELTA) + sseEvent(MESSAGE_STOP))
+        backend.close()
+    }
+
+    @Test
+    fun prepareResponseMalformedFrameFailsStream() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
+        val malformedChunk =
+            Message(
+                mapOf(":message-type" to HeaderValue.fromString("event")),
+                """{"bytes":"not base64!"}""".toByteArray(),
+            )
+
+        val body =
+            backend.prepareResponse(eventStreamResponse(chunk(TEXT_DELTA), malformedChunk)).body()
+
+        assertThat(readEvent(body, TEXT_DELTA)).isEqualTo(sseEvent(TEXT_DELTA))
+        assertThatThrownBy { body.readBytes() }
+            .isInstanceOf(IOException::class.java)
+            .hasRootCauseInstanceOf(IllegalArgumentException::class.java)
+        backend.close()
+    }
+
+    @Test
+    fun prepareResponseTruncatedFrameFailsStream() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
+        val truncatedChunk = encode(chunk(MESSAGE_STOP)).let { it.copyOf(it.size - 3) }
+
+        val body =
+            backend
+                .prepareResponse(
+                    eventStreamResponse(
+                        ByteArrayInputStream(encode(chunk(TEXT_DELTA)) + truncatedChunk)
+                    )
+                )
+                .body()
+
+        assertThat(readEvent(body, TEXT_DELTA)).isEqualTo(sseEvent(TEXT_DELTA))
+        assertThatThrownBy { body.readBytes() }
+            .isInstanceOf(IOException::class.java)
+            .hasRootCauseMessage("Bedrock event stream ended mid-frame")
+        backend.close()
+    }
+
+    @Test
+    fun prepareResponseReadFailureFailsStream() {
+        val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
+        val failingInput =
+            object : InputStream() {
+                override fun read(): Int = throw IOException("Connection reset")
+            }
+
+        val body =
+            backend
+                .prepareResponse(
+                    eventStreamResponse(
+                        SequenceInputStream(
+                            ByteArrayInputStream(encode(chunk(TEXT_DELTA))),
+                            failingInput,
+                        )
+                    )
+                )
+                .body()
+
+        assertThat(readEvent(body, TEXT_DELTA)).isEqualTo(sseEvent(TEXT_DELTA))
+        assertThatThrownBy { body.readBytes() }
+            .isInstanceOf(IOException::class.java)
+            .hasRootCauseMessage("Connection reset")
+        backend.close()
+    }
+
+    @Test
     fun closeWithoutUsingThreads() {
         initEnv()
         val backend = BedrockBackend.fromEnv()
@@ -1173,11 +1261,17 @@ internal class BedrockBackendTest {
                 ),
         )
 
-    private fun eventStreamResponse(vararg messages: Message): HttpResponse {
-        val body = ByteArrayOutputStream()
-        messages.forEach { it.encode(body) }
+    private fun encode(vararg messages: Message): ByteArray {
+        val output = ByteArrayOutputStream()
+        messages.forEach { it.encode(output) }
+        return output.toByteArray()
+    }
 
-        return object : HttpResponse {
+    private fun eventStreamResponse(vararg messages: Message): HttpResponse =
+        eventStreamResponse(ByteArrayInputStream(encode(*messages)))
+
+    private fun eventStreamResponse(body: InputStream): HttpResponse =
+        object : HttpResponse {
             override fun statusCode(): Int = 200
 
             override fun headers(): Headers =
@@ -1186,11 +1280,23 @@ internal class BedrockBackendTest {
                     .put("x-amzn-bedrock-content-type", "application/json")
                     .build()
 
-            override fun body(): InputStream = ByteArrayInputStream(body.toByteArray())
+            override fun body(): InputStream = body
 
-            override fun close() {}
+            override fun close() = body.close()
         }
-    }
 
     private fun HttpResponse.readSse(): String = body().use { String(it.readBytes()) }
+
+    private class OneByteAtATimeInputStream(bytes: ByteArray) :
+        FilterInputStream(ByteArrayInputStream(bytes)) {
+        override fun read(b: ByteArray, off: Int, len: Int): Int = super.read(b, off, minOf(len, 1))
+    }
+
+    private fun sseEvent(eventJson: String): String =
+        "event: ${parseJson(eventJson).get("type").asText()}\ndata: $eventJson\n\n"
+
+    private fun readEvent(body: InputStream, eventJson: String): String =
+        ByteArray(sseEvent(eventJson).toByteArray().size)
+            .also { DataInputStream(body).readFully(it) }
+            .let(::String)
 }
