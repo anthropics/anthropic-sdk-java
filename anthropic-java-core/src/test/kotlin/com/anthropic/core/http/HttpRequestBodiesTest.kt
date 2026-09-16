@@ -3,9 +3,17 @@ package com.anthropic.core.http
 import com.anthropic.core.MultipartField
 import com.anthropic.core.jsonMapper
 import java.io.ByteArrayOutputStream
+import java.io.FileInputStream
+import java.io.IOException
 import java.io.InputStream
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 internal class HttpRequestBodiesTest {
 
@@ -864,6 +872,192 @@ internal class HttpRequestBodiesTest {
                     .trimMargin()
                     .replace("\n", "\r\n")
             )
+    }
+
+    @Test
+    fun multipartFormData_pathIsReopenedForEachWrite(@TempDir tempDir: Path) {
+        val path = Files.write(tempDir.resolve("file.txt"), "hello".toByteArray())
+        val inputStream = PathInputStream(path)
+        val body =
+            multipartFormData(
+                jsonMapper(),
+                mapOf(
+                    "file" to
+                        MultipartField.builder<InputStream>()
+                            .value(inputStream)
+                            .contentType("text/plain")
+                            .build()
+                ),
+            )
+
+        val output1 = ByteArrayOutputStream()
+        body.writeTo(output1)
+        Files.write(path, "world!".toByteArray())
+        val output2 = ByteArrayOutputStream()
+        body.writeTo(output2)
+
+        assertThat(body.repeatable()).isTrue()
+        assertThat(body.contentLength()).isEqualTo(output2.size().toLong())
+        val boundary = boundary(body)
+        assertThat(output1.toString("UTF-8"))
+            .isEqualTo(
+                """
+                |--$boundary
+                |Content-Disposition: form-data; name="file"
+                |Content-Type: text/plain
+                |
+                |hello
+                |--$boundary--
+                |
+                """
+                    .trimMargin()
+                    .replace("\n", "\r\n")
+            )
+        assertThat(output2.toString("UTF-8"))
+            .isEqualTo(
+                """
+                |--$boundary
+                |Content-Disposition: form-data; name="file"
+                |Content-Type: text/plain
+                |
+                |world!
+                |--$boundary--
+                |
+                """
+                    .trimMargin()
+                    .replace("\n", "\r\n")
+            )
+
+        body.close()
+        assertThatThrownBy { inputStream.read() }.isInstanceOf(IOException::class.java)
+    }
+
+    @Test
+    fun multipartFormData_pathAlreadyReadIsSentOnce(@TempDir tempDir: Path) {
+        val path = Files.write(tempDir.resolve("file.txt"), "hello".toByteArray())
+        val inputStream = PathInputStream(path)
+        assertThat(inputStream.read()).isEqualTo('h'.code)
+        val body =
+            multipartFormData(
+                jsonMapper(),
+                mapOf(
+                    "file" to
+                        MultipartField.builder<InputStream>()
+                            .value(inputStream)
+                            .contentType("text/plain")
+                            .build()
+                ),
+            )
+
+        val output = ByteArrayOutputStream()
+        body.writeTo(output)
+
+        assertThat(body.repeatable()).isFalse()
+        assertThat(body.contentLength()).isEqualTo(-1L)
+        val boundary = boundary(body)
+        assertThat(output.toString("UTF-8"))
+            .isEqualTo(
+                """
+                |--$boundary
+                |Content-Disposition: form-data; name="file"
+                |Content-Type: text/plain
+                |
+                |ello
+                |--$boundary--
+                |
+                """
+                    .trimMargin()
+                    .replace("\n", "\r\n")
+            )
+
+        body.close()
+        assertThatThrownBy { inputStream.read() }.isInstanceOf(IOException::class.java)
+    }
+
+    @Test
+    fun multipartFormData_pathThatIsNotARegularFileIsSentOnce() {
+        val path = Paths.get("/dev/null")
+        assumeTrue(Files.exists(path))
+        val inputStream = PathInputStream(path)
+        val body =
+            multipartFormData(
+                jsonMapper(),
+                mapOf(
+                    "file" to
+                        MultipartField.builder<InputStream>()
+                            .value(inputStream)
+                            .contentType("text/plain")
+                            .build()
+                ),
+            )
+
+        val output = ByteArrayOutputStream()
+        body.writeTo(output)
+
+        assertThat(body.repeatable()).isFalse()
+        assertThat(body.contentLength()).isEqualTo(-1L)
+        val boundary = boundary(body)
+        assertThat(output.toString("UTF-8"))
+            .isEqualTo(
+                """
+                |--$boundary
+                |Content-Disposition: form-data; name="file"
+                |Content-Type: text/plain
+                |
+                |
+                |--$boundary--
+                |
+                """
+                    .trimMargin()
+                    .replace("\n", "\r\n")
+            )
+
+        body.close()
+        assertThatThrownBy { inputStream.read() }.isInstanceOf(IOException::class.java)
+    }
+
+    @Test
+    fun multipartFormData_fileInputStreamIsResentFromItsPosition(@TempDir tempDir: Path) {
+        val path = Files.write(tempDir.resolve("file.txt"), "hello".toByteArray())
+        val inputStream = FileInputStream(path.toFile())
+        assertThat(inputStream.read()).isEqualTo('h'.code)
+        val body =
+            multipartFormData(
+                jsonMapper(),
+                mapOf(
+                    "file" to
+                        MultipartField.builder<InputStream>()
+                            .value(inputStream)
+                            .contentType("text/plain")
+                            .build()
+                ),
+            )
+
+        val output1 = ByteArrayOutputStream()
+        body.writeTo(output1)
+        val output2 = ByteArrayOutputStream()
+        body.writeTo(output2)
+
+        assertThat(body.repeatable()).isTrue()
+        assertThat(body.contentLength()).isEqualTo(output1.size().toLong())
+        val boundary = boundary(body)
+        val expected =
+            """
+            |--$boundary
+            |Content-Disposition: form-data; name="file"
+            |Content-Type: text/plain
+            |
+            |ello
+            |--$boundary--
+            |
+            """
+                .trimMargin()
+                .replace("\n", "\r\n")
+        assertThat(output1.toString("UTF-8")).isEqualTo(expected)
+        assertThat(output2.toString("UTF-8")).isEqualTo(expected)
+
+        body.close()
+        assertThatThrownBy { inputStream.read() }.isInstanceOf(IOException::class.java)
     }
 
     private fun boundary(body: HttpRequestBody): String =

@@ -7,6 +7,7 @@ import com.anthropic.core.checkRequired
 import com.anthropic.errors.AnthropicIoException
 import com.anthropic.errors.AnthropicRetryableException
 import java.io.IOException
+import java.io.OutputStream
 import java.time.Clock
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -32,7 +33,7 @@ private constructor(
 ) : HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
-        var modifiedRequest = maybeAddIdempotencyHeader(request)
+        var modifiedRequest = keepBodyOpen(maybeAddIdempotencyHeader(request))
 
         // Don't send the current retry count in the headers if the caller set their own value.
         val shouldSendRetryCount =
@@ -40,35 +41,39 @@ private constructor(
 
         var retries = 0
 
-        while (true) {
-            if (shouldSendRetryCount) {
-                modifiedRequest = setRetryCountHeader(modifiedRequest, retries)
-            }
-
-            if (!isRetryable(modifiedRequest)) {
-                return httpClient.execute(modifiedRequest, requestOptions)
-            }
-
-            val response =
-                try {
-                    val response = httpClient.execute(modifiedRequest, requestOptions)
-                    if (++retries > maxRetries || !shouldRetry(response)) {
-                        return response
-                    }
-
-                    response
-                } catch (throwable: Throwable) {
-                    if (++retries > maxRetries || !shouldRetry(throwable)) {
-                        throw throwable
-                    }
-
-                    null
+        try {
+            while (true) {
+                if (shouldSendRetryCount) {
+                    modifiedRequest = setRetryCountHeader(modifiedRequest, retries)
                 }
 
-            val backoffDuration = getRetryBackoffDuration(retries, response)
-            // All responses must be closed, so close the failed one before retrying.
-            response?.close()
-            sleeper.sleep(backoffDuration)
+                if (!isRetryable(modifiedRequest)) {
+                    return httpClient.execute(modifiedRequest, requestOptions)
+                }
+
+                val response =
+                    try {
+                        val response = httpClient.execute(modifiedRequest, requestOptions)
+                        if (++retries > maxRetries || !shouldRetry(response)) {
+                            return response
+                        }
+
+                        response
+                    } catch (throwable: Throwable) {
+                        if (++retries > maxRetries || !shouldRetry(throwable)) {
+                            throw throwable
+                        }
+
+                        null
+                    }
+
+                val backoffDuration = getRetryBackoffDuration(retries, response)
+                // All responses must be closed, so close the failed one before retrying.
+                response?.close()
+                sleeper.sleep(backoffDuration)
+            }
+        } finally {
+            request.body?.close()
         }
     }
 
@@ -76,7 +81,7 @@ private constructor(
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> {
-        val modifiedRequest = maybeAddIdempotencyHeader(request)
+        val modifiedRequest = keepBodyOpen(maybeAddIdempotencyHeader(request))
 
         // Don't send the current retry count in the headers if the caller set their own value.
         val shouldSendRetryCount =
@@ -137,7 +142,11 @@ private constructor(
                 .thenCompose(Function.identity())
         }
 
-        return executeWithRetries(modifiedRequest, requestOptions)
+        // Not a user callback; the body must be closed whatever the outcome of the attempts.
+        @Suppress("ForbiddenMethodCall")
+        return executeWithRetries(modifiedRequest, requestOptions).whenComplete { _, _ ->
+            request.body?.close()
+        }
     }
 
     override fun close() {
@@ -149,6 +158,31 @@ private constructor(
         // Some requests, such as when a request body is being streamed, cannot be retried because
         // the body data aren't available on subsequent attempts.
         request.body?.repeatable() ?: true
+
+    /**
+     * Returns [request] with a body whose `close()` does nothing, so that [httpClient], which
+     * closes a request body after every attempt, cannot close this one between attempts. The caller
+     * closes the original body when the attempts are over.
+     */
+    private fun keepBodyOpen(request: HttpRequest): HttpRequest {
+        val body = request.body ?: return request
+        return request
+            .toBuilder()
+            .body(
+                object : HttpRequestBody {
+                    override fun writeTo(outputStream: OutputStream) = body.writeTo(outputStream)
+
+                    override fun contentType(): String? = body.contentType()
+
+                    override fun contentLength(): Long = body.contentLength()
+
+                    override fun repeatable(): Boolean = body.repeatable()
+
+                    override fun close() {}
+                }
+            )
+            .build()
+    }
 
     private fun setRetryCountHeader(request: HttpRequest, retries: Int): HttpRequest =
         request.toBuilder().replaceHeaders("X-Stainless-Retry-Count", retries.toString()).build()
