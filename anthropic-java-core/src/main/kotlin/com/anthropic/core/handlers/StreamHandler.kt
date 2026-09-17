@@ -44,8 +44,10 @@ internal fun <T> streamHandler(
 
                     override fun close() {
                         sequence.close()
-                        reader.close()
+                        // Close the response first: it unblocks a read in flight on another
+                        // thread, which holds `reader`'s lock.
                         response.close()
+                        reader.close()
                     }
                 }
             )
@@ -82,14 +84,15 @@ private class IOExceptionWrappingSequence<T>(private val sequence: Sequence<T>) 
 }
 
 /**
- * A sequence that can be closed.
+ * A sequence that can be closed, including from another thread.
  *
  * Once [close] is called, it will not yield more elements. It will also no longer consult the
- * underlying [Iterator.hasNext] method.
+ * underlying [Iterator.hasNext] method, and a read failure of an in-flight [Iterator.hasNext] ends
+ * the sequence instead of propagating, because closing the stream is what failed the read.
  */
 private class CloseableSequence<T>(private val sequence: Sequence<T>) : Sequence<T> {
 
-    private var isClosed: Boolean = false
+    @Volatile private var isClosed: Boolean = false
 
     override fun iterator(): Iterator<T> {
         val iterator = sequence.iterator()
@@ -104,7 +107,12 @@ private class CloseableSequence<T>(private val sequence: Sequence<T>) : Sequence
                 return iterator.next()
             }
 
-            override fun hasNext(): Boolean = !isClosed && iterator.hasNext()
+            override fun hasNext(): Boolean =
+                try {
+                    !isClosed && iterator.hasNext()
+                } catch (e: AnthropicIoException) {
+                    if (isClosed) false else throw e
+                }
         }
     }
 

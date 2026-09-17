@@ -355,55 +355,56 @@ private class LoggingHttpResponse(private val response: HttpResponse) : HttpResp
  *
  * The contents of [inputStream] are assumed to be in the given [charset] and the logging occurs in
  * a streaming manner with minimal buffering.
+ *
+ * The stream may be closed from another thread while a read is in flight. The logging state is
+ * guarded by a lock that isn't held during the delegate read, so the close doesn't wait for the
+ * read. A read after [close] still goes to [inputStream], so it fails like the unlogged stream.
  */
 private class LoggingInputStream(private val inputStream: InputStream, charset: Charset?) :
     InputStream() {
 
+    private val lock = Any()
+    // Guarded by `lock`.
     private var isDone = false
     private val buffer = LoggingBuffer(charset)
 
     override fun read(): Int {
-        if (isDone) {
-            return -1
-        }
-
         val b = inputStream.read()
 
-        if (b == -1) {
-            markDone()
-            return b
+        synchronized(lock) {
+            when {
+                b == -1 -> markDone()
+                !isDone -> buffer.write(b)
+            }
         }
-
-        buffer.write(b)
         return b
     }
 
     override fun read(b: ByteArray, off: Int, len: Int): Int {
-        if (isDone) {
-            return -1
-        }
-
         val bytesRead = inputStream.read(b, off, len)
 
-        if (bytesRead == -1) {
-            markDone()
-            return bytesRead
-        }
-
-        for (i in off until off + bytesRead) {
-            buffer.write(b[i].toInt() and 0xFF)
+        synchronized(lock) {
+            when {
+                bytesRead == -1 -> markDone()
+                !isDone ->
+                    for (i in off until off + bytesRead) {
+                        buffer.write(b[i].toInt() and 0xFF)
+                    }
+            }
         }
         return bytesRead
     }
 
     override fun close() {
-        if (!isDone) {
-            markDone(closedEarly = true)
-        }
+        synchronized(lock) { markDone(closedEarly = true) }
         inputStream.close()
     }
 
     private fun markDone(closedEarly: Boolean = false) {
+        if (isDone) {
+            return
+        }
+
         isDone = true
         buffer.flush()
         val suffix = if (closedEarly) ", closed early" else ""
