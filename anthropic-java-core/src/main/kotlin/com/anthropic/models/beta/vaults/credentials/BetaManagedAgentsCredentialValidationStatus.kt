@@ -22,10 +22,19 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
+        /** The credential successfully authenticated against its MCP server. */
         @JvmField val VALID = of("valid")
 
+        /**
+         * The probe reached the MCP server and was rejected, and a refresh (if attempted) did not
+         * recover it.
+         */
         @JvmField val INVALID = of("invalid")
 
+        /**
+         * The probe could not determine validity — for example, a transport error or a successful
+         * refresh that was not re-probed.
+         */
         @JvmField val UNKNOWN = of("unknown")
 
         @JvmStatic
@@ -39,8 +48,17 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [BetaManagedAgentsCredentialValidationStatus]'s known values. */
     enum class Known {
+        /** The credential successfully authenticated against its MCP server. */
         VALID,
+        /**
+         * The probe reached the MCP server and was rejected, and a refresh (if attempted) did not
+         * recover it.
+         */
         INVALID,
+        /**
+         * The probe could not determine validity — for example, a transport error or a successful
+         * refresh that was not re-probed.
+         */
         UNKNOWN,
     }
 
@@ -56,8 +74,17 @@ private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** The credential successfully authenticated against its MCP server. */
         VALID,
+        /**
+         * The probe reached the MCP server and was rejected, and a refresh (if attempted) did not
+         * recover it.
+         */
         INVALID,
+        /**
+         * The probe could not determine validity — for example, a transport error or a successful
+         * refresh that was not re-probed.
+         */
         UNKNOWN,
         /**
          * An enum member indicating that [BetaManagedAgentsCredentialValidationStatus] was

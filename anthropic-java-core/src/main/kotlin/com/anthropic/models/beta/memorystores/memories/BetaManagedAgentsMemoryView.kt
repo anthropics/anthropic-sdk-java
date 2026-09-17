@@ -27,8 +27,17 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
+        /**
+         * Return the object with `content` set to `null`. The `content_size_bytes` and
+         * `content_sha256` fields remain populated, so sync clients can diff without fetching
+         * content.
+         */
         @JvmField val BASIC = of("basic")
 
+        /**
+         * Return the object with `content` populated. On list endpoints, `view=full` caps `limit`
+         * at 20.
+         */
         @JvmField val FULL = of("full")
 
         @JvmStatic fun of(value: String) = BetaManagedAgentsMemoryView(JsonField.of(value))
@@ -40,7 +49,16 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [BetaManagedAgentsMemoryView]'s known values. */
     enum class Known {
+        /**
+         * Return the object with `content` set to `null`. The `content_size_bytes` and
+         * `content_sha256` fields remain populated, so sync clients can diff without fetching
+         * content.
+         */
         BASIC,
+        /**
+         * Return the object with `content` populated. On list endpoints, `view=full` caps `limit`
+         * at 20.
+         */
         FULL,
     }
 
@@ -56,7 +74,16 @@ private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /**
+         * Return the object with `content` set to `null`. The `content_size_bytes` and
+         * `content_sha256` fields remain populated, so sync clients can diff without fetching
+         * content.
+         */
         BASIC,
+        /**
+         * Return the object with `content` populated. On list endpoints, `view=full` caps `limit`
+         * at 20.
+         */
         FULL,
         /**
          * An enum member indicating that [BetaManagedAgentsMemoryView] was instantiated with an

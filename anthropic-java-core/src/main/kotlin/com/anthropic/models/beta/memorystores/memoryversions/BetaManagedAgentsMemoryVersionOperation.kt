@@ -25,10 +25,20 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
+        /** The memory was created. The first version in any memory's lineage. */
         @JvmField val CREATED = of("created")
 
+        /**
+         * The memory's `content`, `path`, or both were changed via update. Writes the agent makes
+         * through the filesystem mount also appear as `modified`.
+         */
         @JvmField val MODIFIED = of("modified")
 
+        /**
+         * The memory was deleted. The `content`, `content_size_bytes`, and `content_sha256` fields
+         * are `null` on this version. The preceding version, while it is retained, records the
+         * deleted content's size and hash.
+         */
         @JvmField val DELETED = of("deleted")
 
         @JvmStatic
@@ -42,8 +52,18 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [BetaManagedAgentsMemoryVersionOperation]'s known values. */
     enum class Known {
+        /** The memory was created. The first version in any memory's lineage. */
         CREATED,
+        /**
+         * The memory's `content`, `path`, or both were changed via update. Writes the agent makes
+         * through the filesystem mount also appear as `modified`.
+         */
         MODIFIED,
+        /**
+         * The memory was deleted. The `content`, `content_size_bytes`, and `content_sha256` fields
+         * are `null` on this version. The preceding version, while it is retained, records the
+         * deleted content's size and hash.
+         */
         DELETED,
     }
 
@@ -59,8 +79,18 @@ private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** The memory was created. The first version in any memory's lineage. */
         CREATED,
+        /**
+         * The memory's `content`, `path`, or both were changed via update. Writes the agent makes
+         * through the filesystem mount also appear as `modified`.
+         */
         MODIFIED,
+        /**
+         * The memory was deleted. The `content`, `content_size_bytes`, and `content_sha256` fields
+         * are `null` on this version. The preceding version, while it is retained, records the
+         * deleted content's size and hash.
+         */
         DELETED,
         /**
          * An enum member indicating that [BetaManagedAgentsMemoryVersionOperation] was instantiated

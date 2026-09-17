@@ -22,8 +22,16 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
+        /**
+         * The deployment is active and can run sessions. Archived deployments also report this
+         * status; check `archived_at` to distinguish them.
+         */
         @JvmField val ACTIVE = of("active")
 
+        /**
+         * The deployment is paused. Autonomous triggers are suppressed; manual runs are still
+         * permitted.
+         */
         @JvmField val PAUSED = of("paused")
 
         @JvmStatic fun of(value: String) = BetaManagedAgentsDeploymentStatus(JsonField.of(value))
@@ -35,7 +43,15 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [BetaManagedAgentsDeploymentStatus]'s known values. */
     enum class Known {
+        /**
+         * The deployment is active and can run sessions. Archived deployments also report this
+         * status; check `archived_at` to distinguish them.
+         */
         ACTIVE,
+        /**
+         * The deployment is paused. Autonomous triggers are suppressed; manual runs are still
+         * permitted.
+         */
         PAUSED,
     }
 
@@ -51,7 +67,15 @@ private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /**
+         * The deployment is active and can run sessions. Archived deployments also report this
+         * status; check `archived_at` to distinguish them.
+         */
         ACTIVE,
+        /**
+         * The deployment is paused. Autonomous triggers are suppressed; manual runs are still
+         * permitted.
+         */
         PAUSED,
         /**
          * An enum member indicating that [BetaManagedAgentsDeploymentStatus] was instantiated with

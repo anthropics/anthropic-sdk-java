@@ -1058,12 +1058,19 @@ private constructor(
 
         companion object {
 
+            /** Transient error occurred, retrying automatically. */
             @JvmField val RESCHEDULING = of("rescheduling")
 
+            /** Agent is actively executing. */
             @JvmField val RUNNING = of("running")
 
+            /**
+             * Agent is waiting for input, including user messages or tool confirmations. Sessions
+             * start in idle.
+             */
             @JvmField val IDLE = of("idle")
 
+            /** Session has ended, either due to an error or completion. */
             @JvmField val TERMINATED = of("terminated")
 
             @JvmStatic fun of(value: String) = Status(JsonField.of(value))
@@ -1075,9 +1082,16 @@ private constructor(
 
         /** An enum containing [Status]'s known values. */
         enum class Known {
+            /** Transient error occurred, retrying automatically. */
             RESCHEDULING,
+            /** Agent is actively executing. */
             RUNNING,
+            /**
+             * Agent is waiting for input, including user messages or tool confirmations. Sessions
+             * start in idle.
+             */
             IDLE,
+            /** Session has ended, either due to an error or completion. */
             TERMINATED,
         }
 
@@ -1091,9 +1105,16 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /** Transient error occurred, retrying automatically. */
             RESCHEDULING,
+            /** Agent is actively executing. */
             RUNNING,
+            /**
+             * Agent is waiting for input, including user messages or tool confirmations. Sessions
+             * start in idle.
+             */
             IDLE,
+            /** Session has ended, either due to an error or completion. */
             TERMINATED,
             /** An enum member indicating that [Status] was instantiated with an unknown value. */
             _UNKNOWN,

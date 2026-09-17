@@ -873,14 +873,19 @@ private constructor(
 
             companion object {
 
+                /** Low effort. Favors latency over reasoning depth. */
                 @JvmField val LOW = of("low")
 
+                /** Medium effort. Balances latency and reasoning depth. */
                 @JvmField val MEDIUM = of("medium")
 
+                /** High effort. Favors reasoning depth. */
                 @JvmField val HIGH = of("high")
 
+                /** Extra-high effort. Not all models accept this level. */
                 @JvmField val XHIGH = of("xhigh")
 
+                /** Maximum effort. Favors reasoning depth over latency. */
                 @JvmField val MAX = of("max")
 
                 @JvmStatic fun of(value: String) = BetaManagedAgentsEffortLevel(JsonField.of(value))
@@ -893,10 +898,15 @@ private constructor(
 
             /** An enum containing [BetaManagedAgentsEffortLevel]'s known values. */
             enum class Known {
+                /** Low effort. Favors latency over reasoning depth. */
                 LOW,
+                /** Medium effort. Balances latency and reasoning depth. */
                 MEDIUM,
+                /** High effort. Favors reasoning depth. */
                 HIGH,
+                /** Extra-high effort. Not all models accept this level. */
                 XHIGH,
+                /** Maximum effort. Favors reasoning depth over latency. */
                 MAX,
             }
 
@@ -912,10 +922,15 @@ private constructor(
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
+                /** Low effort. Favors latency over reasoning depth. */
                 LOW,
+                /** Medium effort. Balances latency and reasoning depth. */
                 MEDIUM,
+                /** High effort. Favors reasoning depth. */
                 HIGH,
+                /** Extra-high effort. Not all models accept this level. */
                 XHIGH,
+                /** Maximum effort. Favors reasoning depth over latency. */
                 MAX,
                 /**
                  * An enum member indicating that [BetaManagedAgentsEffortLevel] was instantiated
