@@ -6,21 +6,29 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.NestedClassJavaFixtures
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.StreamResponse
+import com.anthropic.core.jsonMapper
+import com.anthropic.errors.AnthropicIoException
 import com.anthropic.models.beta.messages.*
 import com.anthropic.models.messages.Model
 import com.anthropic.services.blocking.beta.MessageService
 import com.fasterxml.jackson.annotation.JsonClassDescription
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.Duration
 import java.time.OffsetDateTime
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Supplier
 import java.util.stream.Stream
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.parallel.ResourceLock
+import org.junit.jupiter.api.parallel.Resources
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
@@ -1484,6 +1492,790 @@ internal class BetaToolRunnerTest {
     }
 
     @Test
+    fun compactBeforeNextTurn_whenToolUse_compactsAfterToolResults() {
+        val contextManagement =
+            BetaContextManagementConfig.builder()
+                .addEdit(BetaClearToolUses20250919Edit.builder().build())
+                .build()
+        val params =
+            initialMessageParams
+                .toBuilder()
+                .addBeta("compact-2026-09-04")
+                .contextManagement(contextManagement)
+                .build()
+        // The compaction request is not a model turn, so both real turns still fit.
+        val toolRunner = newToolRunner(params, maxIterations = 2)
+        val compaction = BetaCompactionConfig.builder().instructions("Keep the city.").build()
+        val toolUseMessage = toolUseMessage("Compacted History City")
+        val compactionResponse = compactionResponse()
+        val finalMessage = finalAssistantMessage()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(toolUseMessage, compactionResponse, finalMessage)
+
+        val messages = mutableListOf<BetaMessage>()
+        for (message in toolRunner) {
+            messages.add(message)
+            if (message.stopReason().get() == BetaStopReason.TOOL_USE) {
+                toolRunner.compactBeforeNextTurn(compaction)
+            }
+        }
+
+        assertThat(messages).containsExactly(toolUseMessage, compactionResponse, finalMessage)
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(3)).create(requests.capture(), any())
+        assertThat(requests.firstValue).isEqualTo(params)
+        assertThat(requests.secondValue)
+            .isEqualTo(
+                params
+                    .toBuilder()
+                    .addMessage(toolUseMessage)
+                    .addMessage(getWeatherToolResponse("Compacted History City"))
+                    .compaction(compaction)
+                    .contextManagement(JsonMissing.of())
+                    .build()
+            )
+        // The beta is the caller's to pass, and `contextManagement` is back.
+        assertThat(requests.thirdValue)
+            .isEqualTo(params.toBuilder().messages(listOf(compactionResponse.toParam())).build())
+    }
+
+    @Test
+    fun compactBeforeNextTurn_whenCalledBeforeIterating_compactsFirst() {
+        val compactionResponse = compactionResponse()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(compactionResponse, finalAssistantMessage())
+
+        toolRunner.compactBeforeNextTurn()
+        val messages = toolRunner.toList()
+
+        assertThat(messages.map { it.stopReason().get() })
+            .containsExactly(BetaStopReason.COMPACTION, BetaStopReason.END_TURN)
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        assertThat(requests.firstValue)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .compaction(BetaCompactionConfig.builder().build())
+                    .build()
+            )
+        assertThat(requests.secondValue.messages()).containsExactly(compactionResponse.toParam())
+    }
+
+    @Test
+    fun compactBeforeNextTurn_whenCalledAgain_replacesPendingCompaction() {
+        val config = BetaCompactionConfig.builder().instructions("Keep the units.").build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                toolUseMessage("Twice Queued City"),
+                compactionResponse(),
+                finalAssistantMessage(),
+            )
+
+        for (message in toolRunner) {
+            if (message.stopReason().get() == BetaStopReason.TOOL_USE) {
+                toolRunner.compactBeforeNextTurn(
+                    BetaCompactionConfig.builder().instructions("Keep the city.").build()
+                )
+                toolRunner.compactBeforeNextTurn(config)
+            }
+        }
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(3)).create(requests.capture(), any())
+        assertThat(requests.allValues.map { it.compaction().getOrNull() })
+            .containsExactly(null, config, null)
+    }
+
+    @Test
+    fun compactBeforeNextTurn_sendsConfigAsGiven() {
+        // Nothing is checked or filled in: empty instructions and options newer than this SDK are
+        // the API's business.
+        val config =
+            BetaCompactionConfig.builder()
+                .instructions("")
+                .putAdditionalProperty("some_future_option", JsonValue.from(1))
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(compactionResponse(), finalAssistantMessage())
+
+        toolRunner.compactBeforeNextTurn(config)
+        toolRunner.toList()
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        assertThat(requests.firstValue.compaction().get()).isSameAs(config)
+    }
+
+    @Test
+    fun compactBeforeNextTurn_whenTurnPaused_waitsForResumedTurn() {
+        val toolRunner = newToolRunner(maxIterations = 4)
+        val pausedMessage = pausedServerToolUseMessage()
+        val toolUseMessage = toolUseMessage("Paused Then Compacted City")
+        val compactionResponse = compactionResponse()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(pausedMessage, toolUseMessage, compactionResponse, finalAssistantMessage())
+
+        for (message in toolRunner) {
+            if (message.stopReason().get() == BetaStopReason.PAUSE_TURN) {
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(4)).create(requests.capture(), any())
+        val (_, resumed, compaction, after) = requests.allValues
+        assertThat(resumed)
+            .isEqualTo(initialMessageParams.toBuilder().addMessage(pausedMessage).build())
+        assertThat(compaction)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(pausedMessage)
+                    .addMessage(toolUseMessage)
+                    .addMessage(getWeatherToolResponse("Paused Then Compacted City"))
+                    .compaction(BetaCompactionConfig.builder().build())
+                    .build()
+            )
+        assertThat(after.messages()).containsExactly(compactionResponse.toParam())
+    }
+
+    @Test
+    fun compactBeforeNextTurn_whenFinalTurn_compactsThenStops() {
+        // The final answer is also the last iteration allowed; the compaction still goes out.
+        val toolRunner = newToolRunner(maxIterations = 1)
+        val finalMessage = finalAssistantMessage()
+        val compactionResponse = compactionResponse()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(finalMessage, compactionResponse)
+
+        val messages = mutableListOf<BetaMessage>()
+        for (message in toolRunner) {
+            messages.add(message)
+            if (message.stopReason().get() == BetaStopReason.END_TURN) {
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        assertThat(messages).containsExactly(finalMessage, compactionResponse)
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        assertThat(requests.secondValue)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(finalMessage)
+                    .compaction(BetaCompactionConfig.builder().build())
+                    .build()
+            )
+        assertThat(toolRunner.params().messages()).containsExactly(compactionResponse.toParam())
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["max_tokens", "refusal"])
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun compactBeforeNextTurn_whenFinalTurnCutOffWithToolUse_skipsAndWarns(stopReason: String) {
+        val location = "Cut Off City ($stopReason)"
+        val cutOffMessage =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse(location))
+                .contextManagement(null)
+                .stopReason(BetaStopReason.of(stopReason))
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(cutOffMessage, compactionResponse())
+
+        val messages = mutableListOf<BetaMessage>()
+        val stderr = captureStderr {
+            for (message in toolRunner) {
+                messages.add(message)
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        assertThat(messages).containsExactly(cutOffMessage)
+        verify(messageService, times(1)).create(any<MessageCreateParams>(), any())
+        assertThat(stderr)
+            .contains("pending compaction was skipped")
+            .contains("stop_reason=$stopReason")
+        assertThat(toolRunner.params()).isEqualTo(initialMessageParams)
+        assertThat(GetWeather.executions).doesNotContainKey(location)
+    }
+
+    @Test
+    fun compactBeforeNextTurn_whenFinalTurnCutOffWithoutToolUse_compacts() {
+        val cutOffMessage =
+            finalAssistantMessage().toBuilder().stopReason(BetaStopReason.MAX_TOKENS).build()
+        val compactionResponse = compactionResponse()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(cutOffMessage, compactionResponse)
+
+        val messages = mutableListOf<BetaMessage>()
+        for (message in toolRunner) {
+            messages.add(message)
+            if (message.stopReason().get() == BetaStopReason.MAX_TOKENS) {
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        assertThat(messages).containsExactly(cutOffMessage, compactionResponse)
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        assertThat(requests.secondValue.compaction()).isPresent
+        assertThat(requests.secondValue.messages().last()).isEqualTo(cutOffMessage.toParam())
+        assertThat(toolRunner.params().messages()).containsExactly(compactionResponse.toParam())
+    }
+
+    @Test
+    fun compactBeforeNextTurn_whenFinalTurnHasBlockNewerThanSdk_compacts() {
+        val newerBlock = """{"type":"newer_block","note":"kept"}"""
+        val finalMessage =
+            finalAssistantMessage()
+                .toBuilder()
+                .addContent(jsonMapper().readValue(newerBlock, BetaContentBlock::class.java))
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(finalMessage, compactionResponse())
+
+        for (message in toolRunner) {
+            if (message.stopReason().get() == BetaStopReason.END_TURN) {
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        assertThat(requests.secondValue.compaction()).isPresent
+        val finalTurn = requests.secondValue.messages().last()
+        assertThat(
+                jsonMapper()
+                    .writeValueAsString(finalTurn.content().betaContentBlockParams().get().last())
+            )
+            .isEqualTo(newerBlock)
+    }
+
+    @Test
+    fun compactBeforeNextTurn_whenMaxIterationsEndsRun_dropsPendingCompaction() {
+        val toolRunner = newToolRunner(maxIterations = 1)
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(toolUseMessage("Out Of Iterations City"), compactionResponse())
+
+        for (message in toolRunner) {
+            toolRunner.compactBeforeNextTurn()
+        }
+
+        verify(messageService, times(1)).create(any<MessageCreateParams>(), any())
+    }
+
+    @Test
+    fun compactBeforeNextTurn_whenCalledOnCompactionResponse_isIgnored() {
+        val toolRunner = newToolRunner(maxIterations = 4)
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                toolUseMessage("Compacted Once City"),
+                compactionResponse(),
+                finalAssistantMessage(),
+                compactionResponse(),
+            )
+
+        val stopReasons = mutableListOf<BetaStopReason>()
+        for (message in toolRunner) {
+            stopReasons.add(message.stopReason().get())
+            if (message.stopReason().get() != BetaStopReason.END_TURN) {
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        assertThat(stopReasons)
+            .containsExactly(
+                BetaStopReason.TOOL_USE,
+                BetaStopReason.COMPACTION,
+                BetaStopReason.END_TURN,
+            )
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(3)).create(requests.capture(), any())
+        assertThat(requests.allValues.map { it.compaction().isPresent })
+            .containsExactly(false, true, false)
+    }
+
+    @Test
+    fun compaction_whenCompactedTwice_leavesOnlyNewerBlock() {
+        val toolRunner = newToolRunner(maxIterations = 4)
+        val firstCompactionResponse = compactionResponse("First summary.", "sig_01")
+        val secondToolUseMessage = toolUseMessage("Compacted Twice City")
+        val secondCompactionResponse = compactionResponse("Second summary.", "sig_02")
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                toolUseMessage("Compacted Twice City"),
+                firstCompactionResponse,
+                secondToolUseMessage,
+                secondCompactionResponse,
+                finalAssistantMessage(),
+            )
+
+        for (message in toolRunner) {
+            if (message.stopReason().get() == BetaStopReason.TOOL_USE) {
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(5)).create(requests.capture(), any())
+        // The second compaction summarizes the first block and what followed it...
+        assertThat(requests.allValues[3].compaction()).isPresent
+        assertThat(requests.allValues[3].messages())
+            .containsExactly(
+                firstCompactionResponse.toParam(),
+                secondToolUseMessage.toParam(),
+                getWeatherToolResponse("Compacted Twice City"),
+            )
+        // ...and its block then stands alone.
+        assertThat(requests.allValues[4].messages())
+            .containsExactly(secondCompactionResponse.toParam())
+    }
+
+    @Test
+    fun compaction_whenResponseHasBlockNewerThanSdk_sendsResponseBackAsItCame() {
+        val content =
+            """
+            [
+              {
+                "type": "compaction",
+                "content": "Summary so far.",
+                "encrypted_content": null,
+                "signature": "sig_01"
+              },
+              {"type": "block_from_the_future", "tools": [], "name": "docs"}
+            ]
+            """
+        val compactionResponse =
+            compactionResponse()
+                .toBuilder()
+                .content(jsonMapper().readValue(content, jacksonTypeRef<List<BetaContentBlock>>()))
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                toolUseMessage("Newer Block City"),
+                compactionResponse,
+                finalAssistantMessage(),
+            )
+
+        for (message in toolRunner) {
+            if (message.stopReason().get() == BetaStopReason.TOOL_USE) {
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(3)).create(requests.capture(), any())
+        val history = requests.thirdValue.messages()
+        assertThat(jsonMapper().valueToTree<JsonNode>(history))
+            .isEqualTo(jsonMapper().readTree("""[{"content": $content, "role": "assistant"}]"""))
+        // Key order included.
+        assertThat(
+                jsonMapper()
+                    .writeValueAsString(
+                        history.single().content().betaContentBlockParams().get().last()
+                    )
+            )
+            .isEqualTo("""{"type":"block_from_the_future","tools":[],"name":"docs"}""")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun compaction_whenNoSummary_keepsHistoryAndWarns(hasBlock: Boolean) {
+        val toolRunner = newToolRunner(maxIterations = 4)
+        val toolUseMessage = toolUseMessage("Not Compacted City")
+        // Either a compaction block without content, or no content at all and the summarization's
+        // own stop reason.
+        val notCompactedResponse =
+            betaMessageBuilder()
+                .content(
+                    if (hasBlock)
+                        listOf(
+                            BetaContentBlock.ofCompaction(
+                                BetaCompactionBlock.builder()
+                                    .content(null)
+                                    .encryptedContent(null)
+                                    .build()
+                            )
+                        )
+                    else listOf()
+                )
+                .contextManagement(null)
+                .stopReason(if (hasBlock) BetaStopReason.COMPACTION else BetaStopReason.MAX_TOKENS)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(toolUseMessage, notCompactedResponse, finalAssistantMessage())
+
+        var yielded = 0
+        val stderr = captureStderr {
+            for (message in toolRunner) {
+                // The second call is made on the compaction response, so it is ignored: no retry
+                // is sent.
+                if (++yielded <= 2) {
+                    toolRunner.compactBeforeNextTurn()
+                }
+            }
+        }
+
+        assertThat(stderr).contains("Compaction produced no summary")
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(3)).create(requests.capture(), any())
+        assertThat(requests.thirdValue)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(toolUseMessage)
+                    .addMessage(getWeatherToolResponse("Not Compacted City"))
+                    .build()
+            )
+    }
+
+    @Test
+    fun compaction_whenRequestThrows_clearsCompaction() {
+        val failure = AnthropicIoException("Connection reset")
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(toolUseMessage("Failed Compaction City"))
+            .thenThrow(failure)
+        val iterator = toolRunner.iterator()
+
+        iterator.next()
+        toolRunner.compactBeforeNextTurn()
+        val exception = assertThrows<AnthropicIoException> { iterator.hasNext() }
+
+        assertThat(exception).isSameAs(failure)
+        verify(messageService, times(2)).create(any<MessageCreateParams>(), any())
+        // Nothing is being compacted any more, so the messages can be replaced again.
+        toolRunner.setNextParams(
+            toolRunner.params().toBuilder().addUserMessage("And in NYC?").build()
+        )
+    }
+
+    @Test
+    fun setNextParams_whenCompacting_refusesDifferentMessages() {
+        val compactionResponse = compactionResponse()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                toolUseMessage("Compacting City"),
+                compactionResponse,
+                finalAssistantMessage(),
+            )
+
+        for (message in toolRunner) {
+            if (message.stopReason().get() == BetaStopReason.TOOL_USE) {
+                toolRunner.compactBeforeNextTurn()
+            } else if (message.stopReason().get() == BetaStopReason.COMPACTION) {
+                val exception =
+                    assertThrows<IllegalStateException> {
+                        toolRunner.setNextParams(
+                            toolRunner.params().toBuilder().addUserMessage("And in NYC?").build()
+                        )
+                    }
+                assertThat(exception)
+                    .hasMessageContaining("while the conversation is being compacted")
+                // Other params can still change, and the change is kept after the history is
+                // replaced.
+                toolRunner.setNextParams(toolRunner.params().toBuilder().maxTokens(2048).build())
+            }
+        }
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(3)).create(requests.capture(), any())
+        assertThat(requests.thirdValue)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .maxTokens(2048)
+                    .messages(listOf(compactionResponse.toParam()))
+                    .build()
+            )
+    }
+
+    @Test
+    fun setNextParams_whenCompacting_refusesCompactionEdit() {
+        val compactionResponse = compactionResponse()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                toolUseMessage("Compacting With Edit City"),
+                compactionResponse,
+                finalAssistantMessage(),
+            )
+
+        for (message in toolRunner) {
+            if (message.stopReason().get() == BetaStopReason.TOOL_USE) {
+                toolRunner.compactBeforeNextTurn()
+            } else if (message.stopReason().get() == BetaStopReason.COMPACTION) {
+                val exception =
+                    assertThrows<IllegalStateException> {
+                        toolRunner.setNextParams(
+                            toolRunner
+                                .params()
+                                .toBuilder()
+                                .contextManagement(
+                                    BetaContextManagementConfig.builder()
+                                        .addEdit(BetaCompact20260112Edit.builder().build())
+                                        .build()
+                                )
+                                .build()
+                        )
+                    }
+                assertThat(exception).hasMessageContaining("has a compaction edit")
+            }
+        }
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(3)).create(requests.capture(), any())
+        assertThat(requests.thirdValue)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .messages(listOf(compactionResponse.toParam()))
+                    .build()
+            )
+    }
+
+    @Test
+    fun lastToolResponse_whenHistoryCompacted_returnsEmptyOptional() {
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                toolUseMessage("Summarized Away City"),
+                compactionResponse(),
+                finalAssistantMessage(),
+            )
+
+        for (message in toolRunner) {
+            if (message.stopReason().get() == BetaStopReason.TOOL_USE) {
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        // The tool response was summarized away with the rest of the history.
+        assertThat(toolRunner.lastToolResponse()).isEmpty
+    }
+
+    @Test
+    fun toolRunner_whenParamsSetCompaction_throws() {
+        val paramsWithCompaction =
+            initialMessageParams
+                .toBuilder()
+                .compaction(BetaCompactionConfig.builder().build())
+                .build()
+
+        val fromConstructor =
+            assertThrows<IllegalArgumentException> { newToolRunner(paramsWithCompaction) }
+        val fromSetter =
+            assertThrows<IllegalArgumentException> {
+                toolRunner.setNextParams(paramsWithCompaction)
+            }
+
+        assertThat(fromConstructor)
+            .hasMessage(
+                "`compaction` cannot be set on a tool runner: every request in the loop would " +
+                    "compact again. Call `compactBeforeNextTurn()` on the tool runner when the " +
+                    "conversation should be compacted instead."
+            )
+        assertThat(fromSetter).hasMessage(fromConstructor.message)
+    }
+
+    @Test
+    fun compactBeforeNextTurn_whenContextManagementHasCompactionEdit_throws() {
+        val paramsWithCompactionEdit =
+            initialMessageParams
+                .toBuilder()
+                .contextManagement(
+                    BetaContextManagementConfig.builder()
+                        .addEdit(BetaCompact20260112Edit.builder().build())
+                        .build()
+                )
+                .build()
+
+        val exception =
+            assertThrows<IllegalStateException> {
+                newToolRunner(paramsWithCompactionEdit).compactBeforeNextTurn()
+            }
+
+        assertThat(exception).hasMessageContaining("has a compaction edit")
+    }
+
+    @Test
+    fun setNextParams_whenCompactionScheduled_refusesCompactionEdit() {
+        val toolUseMessage = toolUseMessage("Compaction Edit City")
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(toolUseMessage, compactionResponse())
+        val iterator = toolRunner.iterator()
+
+        iterator.next()
+        toolRunner.compactBeforeNextTurn()
+        val exception =
+            assertThrows<IllegalStateException> {
+                toolRunner.setNextParams(
+                    toolRunner
+                        .params()
+                        .toBuilder()
+                        .addMessage(toolUseMessage)
+                        .addMessage(getWeatherToolResponse("Compaction Edit City"))
+                        .contextManagement(
+                            BetaContextManagementConfig.builder()
+                                .addEdit(BetaCompact20260112Edit.builder().build())
+                                .build()
+                        )
+                        .build()
+                )
+            }
+
+        assertThat(exception).hasMessageContaining("has a compaction edit")
+        // The refused params were not kept, so the compaction goes out as scheduled.
+        iterator.next()
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        assertThat(requests.secondValue)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(toolUseMessage)
+                    .addMessage(getWeatherToolResponse("Compaction Edit City"))
+                    .compaction(BetaCompactionConfig.builder().build())
+                    .build()
+            )
+    }
+
+    @Test
+    fun streamingCompactBeforeNextTurn_whenToolUse_compactsAfterToolResults() {
+        val toolRunner = newToolRunner(maxIterations = 2)
+        val compactionEvents =
+            streamEvents(
+                BetaRawContentBlockStartEvent.ContentBlock.ofCompaction(
+                    BetaCompactionBlock.builder()
+                        .content(null)
+                        .encryptedContent(null)
+                        .signature("sig_01")
+                        .build()
+                ),
+                BetaRawContentBlockDelta.ofCompaction(
+                    BetaCompactionContentBlockDelta.builder()
+                        .content("Summary so far.")
+                        .encryptedContent(null)
+                        .build()
+                ),
+                BetaStopReason.COMPACTION,
+            )
+        val finalEvents =
+            streamEvents(
+                BetaRawContentBlockStartEvent.ContentBlock.ofText(
+                    BetaTextBlock.builder().citations(null).text("").build()
+                ),
+                BetaRawContentBlockDelta.ofText(
+                    BetaTextDelta.builder().text("Foggy, as usual.").build()
+                ),
+                BetaStopReason.END_TURN,
+            )
+        whenever(messageService.createStreaming(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                streamResponseOf(getWeatherToolUseStreamEvents("Streamed Compacted City")),
+                streamResponseOf(compactionEvents),
+                streamResponseOf(finalEvents),
+            )
+
+        val messages = mutableListOf<BetaMessage>()
+        for (response in toolRunner.streaming()) {
+            val accumulator = BetaMessageAccumulator.create()
+            response.stream().forEach(accumulator::accumulate)
+            messages.add(accumulator.message())
+            if (messages.last().stopReason().get() == BetaStopReason.TOOL_USE) {
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        assertThat(messages.map { it.stopReason().get() })
+            .containsExactly(
+                BetaStopReason.TOOL_USE,
+                BetaStopReason.COMPACTION,
+                BetaStopReason.END_TURN,
+            )
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(3)).createStreaming(requests.capture(), any())
+        assertThat(requests.secondValue)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(messages[0])
+                    .addMessage(getWeatherToolResponse("Streamed Compacted City"))
+                    .compaction(BetaCompactionConfig.builder().build())
+                    .build()
+            )
+        assertThat(requests.thirdValue)
+            .isEqualTo(
+                initialMessageParams.toBuilder().messages(listOf(messages[1].toParam())).build()
+            )
+        assertThat(messages[1].toParam().content().betaContentBlockParams().get().single())
+            .isEqualTo(
+                BetaContentBlockParam.ofCompaction(
+                    BetaCompactionBlockParam.builder()
+                        .content("Summary so far.")
+                        .encryptedContent(null)
+                        .signature("sig_01")
+                        .build()
+                )
+            )
+    }
+
+    @Test
+    fun streamingCompactBeforeNextTurn_whenFinalTurn_compactsThenStops() {
+        val toolRunner = newToolRunner(maxIterations = 1)
+        val finalEvents =
+            streamEvents(
+                BetaRawContentBlockStartEvent.ContentBlock.ofText(
+                    BetaTextBlock.builder().citations(null).text("").build()
+                ),
+                BetaRawContentBlockDelta.ofText(
+                    BetaTextDelta.builder().text("Foggy, as usual.").build()
+                ),
+                BetaStopReason.END_TURN,
+            )
+        val compactionEvents =
+            streamEvents(
+                BetaRawContentBlockStartEvent.ContentBlock.ofCompaction(
+                    BetaCompactionBlock.builder().content(null).encryptedContent(null).build()
+                ),
+                BetaRawContentBlockDelta.ofCompaction(
+                    BetaCompactionContentBlockDelta.builder()
+                        .content("Summary so far.")
+                        .encryptedContent(null)
+                        .build()
+                ),
+                BetaStopReason.COMPACTION,
+            )
+        whenever(messageService.createStreaming(any<MessageCreateParams>(), any()))
+            .thenReturn(streamResponseOf(finalEvents), streamResponseOf(compactionEvents))
+
+        val messages = mutableListOf<BetaMessage>()
+        for (response in toolRunner.streaming()) {
+            val accumulator = BetaMessageAccumulator.create()
+            response.stream().forEach(accumulator::accumulate)
+            messages.add(accumulator.message())
+            if (messages.last().stopReason().get() == BetaStopReason.END_TURN) {
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        assertThat(messages.map { it.stopReason().get() })
+            .containsExactly(BetaStopReason.END_TURN, BetaStopReason.COMPACTION)
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).createStreaming(requests.capture(), any())
+        assertThat(requests.secondValue)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(messages[0])
+                    .compaction(BetaCompactionConfig.builder().build())
+                    .build()
+            )
+        assertThat(toolRunner.params().messages()).containsExactly(messages[1].toParam())
+    }
+
+    @Test
     fun iteration_whenTooManyIterations_stops() {
         val assistantMessage1 =
             betaMessageBuilder()
@@ -1989,6 +2781,38 @@ internal class BetaToolRunnerTest {
         assertThat(GetWeather.executions).containsEntry("Re-added Mid-run City", 1)
         assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
     }
+
+    private fun newToolRunner(
+        params: MessageCreateParams = initialMessageParams,
+        maxIterations: Long = 2,
+    ) =
+        BetaToolRunner(
+            messageService,
+            ToolRunnerCreateParams.builder()
+                .initialMessageParams(params)
+                .maxIterations(maxIterations)
+                .build(),
+            requestOptions,
+        )
+
+    private fun toolUseMessage(location: String) =
+        betaMessageBuilder().addContent(getWeatherToolUse(location)).contextManagement(null).build()
+
+    private fun compactionResponse(
+        summary: String = "Summary so far.",
+        signature: String = "sig_01",
+    ) =
+        betaMessageBuilder()
+            .addContent(
+                BetaCompactionBlock.builder()
+                    .content(summary)
+                    .encryptedContent(null)
+                    .signature(signature)
+                    .build()
+            )
+            .contextManagement(null)
+            .stopReason(BetaStopReason.COMPACTION)
+            .build()
 
     private fun getWeatherToolUse(location: String) =
         BetaToolUseBlock.builder()
