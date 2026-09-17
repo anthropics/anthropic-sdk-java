@@ -3,6 +3,7 @@ package com.anthropic.helpers
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonNull
 import com.anthropic.core.JsonValue
+import com.anthropic.core.NestedClassJavaFixtures
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.models.beta.messages.*
@@ -465,6 +466,176 @@ internal class BetaToolRunnerTest {
         val messages = toolRunner.toList()
 
         assertThat(messages).containsExactly(assistantMessage1, assistantMessage2)
+        assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
+    }
+
+    @Test
+    fun iteration_whenRunnableToolUse_runsFunctionWithParsedInput() {
+        val locations = mutableListOf<String>()
+        val messageParams =
+            MessageCreateParams.builder()
+                .model(Model.CLAUDE_SONNET_4_5)
+                .maxTokens(1000)
+                .addUserMessage("What is the weather in San Francisco?")
+                .addTool(
+                    BetaRunnableTool.of(
+                        NestedClassJavaFixtures.GetWeather::class.java,
+                        {
+                            locations.add(it.location)
+                            BetaToolResultBlockParam.Content.ofString("Foggy and 60°F")
+                        },
+                    )
+                )
+                .putAdditionalHeader(STAINLESS_HELPER_HEADER, "BetaToolRunner")
+                .build()
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(messageParams)
+                    .maxIterations(2)
+                    .build(),
+                requestOptions,
+            )
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("toolUseId")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "San Francisco")))
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        val expectedToolResponseMessageParam =
+            BetaMessageParam.builder()
+                .role(BetaMessageParam.Role.USER)
+                .contentOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolResult(
+                            BetaToolResultBlockParam.builder()
+                                .toolUseId("toolUseId")
+                                .content("Foggy and 60°F")
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaTextBlock.builder()
+                        .citations(null)
+                        .text("The weather in San Francisco is foggy and 60°F")
+                        .build()
+                )
+                .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
+                .build()
+        whenever(messageService.create(messageParams, requestOptions)).thenReturn(assistantMessage1)
+        whenever(
+                messageService.create(
+                    messageParams
+                        .toBuilder()
+                        .addMessage(assistantMessage1)
+                        .addMessage(expectedToolResponseMessageParam)
+                        .build(),
+                    requestOptions,
+                )
+            )
+            .thenReturn(assistantMessage2)
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).containsExactly(assistantMessage1, assistantMessage2)
+        assertThat(locations).containsExactly("San Francisco")
+        assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
+    }
+
+    @Test
+    fun iteration_whenRunnableToolFromDefinitionUse_runsFunctionWithJsonInput() {
+        val inputs = mutableListOf<String>()
+        val definition =
+            BetaTool.builder()
+                .name("get_weather")
+                .inputSchema(BetaTool.InputSchema.builder().build())
+                .build()
+        val messageParams =
+            MessageCreateParams.builder()
+                .model(Model.CLAUDE_SONNET_4_5)
+                .maxTokens(1000)
+                .addUserMessage("What is the weather in San Francisco?")
+                .addTool(
+                    BetaRunnableTool.of(definition) {
+                        inputs.add(it)
+                        BetaToolResultBlockParam.Content.ofString("Foggy and 60°F")
+                    }
+                )
+                .putAdditionalHeader(STAINLESS_HELPER_HEADER, "BetaToolRunner")
+                .build()
+        val toolRunner =
+            BetaToolRunner(
+                messageService,
+                ToolRunnerCreateParams.builder()
+                    .initialMessageParams(messageParams)
+                    .maxIterations(2)
+                    .build(),
+                requestOptions,
+            )
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaToolUseBlock.builder()
+                        .id("toolUseId")
+                        .name("get_weather")
+                        .input(JsonValue.from(mapOf("location" to "San Francisco")))
+                        .build()
+                )
+                .contextManagement(null)
+                .build()
+        val expectedToolResponseMessageParam =
+            BetaMessageParam.builder()
+                .role(BetaMessageParam.Role.USER)
+                .contentOfBetaContentBlockParams(
+                    listOf(
+                        BetaContentBlockParam.ofToolResult(
+                            BetaToolResultBlockParam.builder()
+                                .toolUseId("toolUseId")
+                                .content("Foggy and 60°F")
+                                .build()
+                        )
+                    )
+                )
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(
+                    BetaTextBlock.builder()
+                        .citations(null)
+                        .text("The weather in San Francisco is foggy and 60°F")
+                        .build()
+                )
+                .contextManagement(null)
+                .stopReason(BetaStopReason.END_TURN)
+                .build()
+        whenever(messageService.create(messageParams, requestOptions)).thenReturn(assistantMessage1)
+        whenever(
+                messageService.create(
+                    messageParams
+                        .toBuilder()
+                        .addMessage(assistantMessage1)
+                        .addMessage(expectedToolResponseMessageParam)
+                        .build(),
+                    requestOptions,
+                )
+            )
+            .thenReturn(assistantMessage2)
+
+        val messages = toolRunner.toList()
+
+        assertThat(messages).containsExactly(assistantMessage1, assistantMessage2)
+        assertThat(inputs).containsExactly("""{"location":"San Francisco"}""")
         assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
     }
 

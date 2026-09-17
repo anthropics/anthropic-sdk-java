@@ -7,6 +7,7 @@ import com.anthropic.core.betaOutputFormatFromClass
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.helpers.BetaRunnableTool
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Model
 import java.util.Objects
@@ -688,6 +689,9 @@ internal constructor(
             toolParametersType: Class<*>,
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
         ) = apply { paramsBuilder.addTool(toolParametersType, localValidation) }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(tool: BetaRunnableTool) = apply { paramsBuilder.addTool(tool) }
 
         /** @see MessageCreateParams.Builder.addTool */
         fun addTool(tool: com.anthropic.helpers.McpBetaTool) = apply { paramsBuilder.addTool(tool) }

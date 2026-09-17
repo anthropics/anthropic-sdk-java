@@ -306,7 +306,7 @@ internal constructor(
 
     private fun generateToolUseResult(
         toolUse: BetaToolUseBlockParam,
-        toolsByName: Map<String, RunnableTool>,
+        toolsByName: Map<String, BetaRunnableTool>,
         availableToolNames: Set<String>,
     ): BetaToolResultBlockParam =
         when (toolUse.name()) {
@@ -318,7 +318,7 @@ internal constructor(
 
     private fun generateGenericToolUseResult(
         toolUse: BetaToolUseBlockParam,
-        toolsByName: Map<String, RunnableTool>,
+        toolsByName: Map<String, BetaRunnableTool>,
         availableToolNames: Set<String>,
     ): BetaToolResultBlockParam {
         val tool =
