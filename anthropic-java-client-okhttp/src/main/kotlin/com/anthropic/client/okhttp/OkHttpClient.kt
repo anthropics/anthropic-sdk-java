@@ -120,7 +120,7 @@ private constructor(
         val call = newCall(preparedRequest, requestOptions)
 
         return try {
-            backend.prepareResponse(call.execute().toHttpResponse(call))
+            prepareResponse(call.execute().toHttpResponse(call))
         } catch (e: IOException) {
             throw AnthropicIoException("Request failed", e)
         } finally {
@@ -139,7 +139,23 @@ private constructor(
         call.enqueue(
             object : Callback {
                 override fun onResponse(call: Call, response: Response) {
-                    future.complete(backend.prepareResponse(response.toHttpResponse(call)))
+                    // OkHttp doesn't call `onFailure` when this throws, so a throw would leave the
+                    // future incomplete.
+                    val preparedResponse =
+                        try {
+                            prepareResponse(response.toHttpResponse(call))
+                        } catch (e: IOException) {
+                            onFailure(call, e)
+                            return
+                        } catch (e: Throwable) {
+                            future.completeExceptionally(e)
+                            return
+                        }
+                    if (!future.complete(preparedResponse)) {
+                        // The future is already done, e.g. canceled, so nothing else will close the
+                        // response.
+                        preparedResponse.close()
+                    }
                 }
 
                 override fun onFailure(call: Call, e: IOException) {
@@ -166,6 +182,19 @@ private constructor(
         okHttpClient.connectionPool.evictAll()
         okHttpClient.cache?.close()
     }
+
+    /** Returns [Backend.prepareResponse] of [response], closing [response] if that throws. */
+    private fun prepareResponse(response: HttpResponse): HttpResponse =
+        try {
+            backend.prepareResponse(response)
+        } catch (e: Throwable) {
+            try {
+                response.close()
+            } catch (closeError: Throwable) {
+                e.addSuppressed(closeError)
+            }
+            throw e
+        }
 
     private fun prepareRequest(request: HttpRequest): HttpRequest {
         val preparedRequest = backend.prepareRequest(request)

@@ -20,6 +20,7 @@ import java.io.InterruptedIOException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.Base64
+import java.util.concurrent.CancellationException
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
@@ -434,30 +435,58 @@ private constructor(
 
             override fun body(): InputStream = body
 
-            override fun close() = body.close()
+            override fun close() {
+                try {
+                    // Close the body first, so the pipeline failures the steps below cause don't
+                    // surface to a reader.
+                    body.close()
+                    // Ends a pipeline blocked reading the network, and releases the connection.
+                    response.close()
+                    // Ends a pipeline blocked writing to the pipe, or keeps it from starting.
+                    pipeline.cancel(true)
+                } finally {
+                    // Ends a read blocked on the pipe even if the pipeline never ran to close it.
+                    pipedOutput.close()
+                }
+            }
         }
     }
 
     /**
      * Rethrows a failure of [pipeline] when [input] reaches end-of-file. The pipeline closes its
      * end of the pipe even when it fails, so without this a failure mid-stream would look like a
-     * complete stream to the reader.
+     * complete stream to the reader. A read that reaches end-of-file because this stream was closed
+     * fails as closed instead, since the pipeline's failure is then a result of the close.
      */
     private class PipelineFailurePropagatingInputStream(
         input: InputStream,
         private val pipeline: Future<*>,
     ) : FilterInputStream(input) {
 
+        @Volatile private var closed = false
+
         override fun read(): Int = super.read().also { if (it == -1) awaitPipeline() }
 
         override fun read(b: ByteArray, off: Int, len: Int): Int =
             super.read(b, off, len).also { if (it == -1) awaitPipeline() }
 
+        override fun close() {
+            closed = true
+            super.close()
+        }
+
         private fun awaitPipeline() {
+            if (closed) {
+                throw IOException("Stream closed")
+            }
             try {
                 pipeline.get()
             } catch (e: ExecutionException) {
-                throw IOException("Failed to decode Bedrock event stream", e.cause)
+                throw if (closed) IOException("Stream closed")
+                else IOException("Failed to decode Bedrock event stream", e.cause)
+            } catch (e: CancellationException) {
+                // Only `close` cancels the pipeline.
+                throw IOException("Stream closed", e)
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
                 throw InterruptedIOException().apply { initCause(e) }
