@@ -23,9 +23,7 @@ internal class BetaManagedAgentsAgentMcpToolUseEventTest {
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentMcpToolUseEvent.Type.AGENT_MCP_TOOL_USE)
-                .evaluatedPermission(
-                    BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
-                )
+                .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                 .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
@@ -45,7 +43,7 @@ internal class BetaManagedAgentsAgentMcpToolUseEventTest {
         assertThat(betaManagedAgentsAgentMcpToolUseEvent.type())
             .isEqualTo(BetaManagedAgentsAgentMcpToolUseEvent.Type.AGENT_MCP_TOOL_USE)
         assertThat(betaManagedAgentsAgentMcpToolUseEvent.evaluatedPermission())
-            .contains(BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW)
+            .contains(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
         assertThat(betaManagedAgentsAgentMcpToolUseEvent.evaluation())
             .contains(
                 BetaManagedAgentsAgentToolEvaluation.ofAlwaysAllow(
@@ -71,9 +69,7 @@ internal class BetaManagedAgentsAgentMcpToolUseEventTest {
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentMcpToolUseEvent.Type.AGENT_MCP_TOOL_USE)
-                .evaluatedPermission(
-                    BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
-                )
+                .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                 .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
