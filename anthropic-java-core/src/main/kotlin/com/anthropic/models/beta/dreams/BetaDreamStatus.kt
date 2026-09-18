@@ -21,14 +21,32 @@ class BetaDreamStatus @JsonCreator private constructor(private val value: JsonFi
 
     companion object {
 
+        /**
+         * The dream is waiting to start and hasn't read its inputs yet.
+         *
+         * `outputs` is empty and every `usage` count is zero.
+         */
         @JvmField val PENDING = of("pending")
 
+        /**
+         * The dream is reading its inputs and writing its result.
+         *
+         * `usage` updates while the dream has this status.
+         */
         @JvmField val RUNNING = of("running")
 
+        /** The dream finished and its output memory store holds the complete result. */
         @JvmField val COMPLETED = of("completed")
 
+        /**
+         * The dream stopped with an error, which `error` describes.
+         *
+         * If `outputs` references a memory store, that memory store keeps what the dream wrote
+         * before it stopped.
+         */
         @JvmField val FAILED = of("failed")
 
+        /** The caller canceled the dream before it completed. */
         @JvmField val CANCELED = of("canceled")
 
         @JvmStatic fun of(value: String) = BetaDreamStatus(JsonField.of(value))
@@ -40,10 +58,28 @@ class BetaDreamStatus @JsonCreator private constructor(private val value: JsonFi
 
     /** An enum containing [BetaDreamStatus]'s known values. */
     enum class Known {
+        /**
+         * The dream is waiting to start and hasn't read its inputs yet.
+         *
+         * `outputs` is empty and every `usage` count is zero.
+         */
         PENDING,
+        /**
+         * The dream is reading its inputs and writing its result.
+         *
+         * `usage` updates while the dream has this status.
+         */
         RUNNING,
+        /** The dream finished and its output memory store holds the complete result. */
         COMPLETED,
+        /**
+         * The dream stopped with an error, which `error` describes.
+         *
+         * If `outputs` references a memory store, that memory store keeps what the dream wrote
+         * before it stopped.
+         */
         FAILED,
+        /** The caller canceled the dream before it completed. */
         CANCELED,
     }
 
@@ -57,10 +93,28 @@ class BetaDreamStatus @JsonCreator private constructor(private val value: JsonFi
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /**
+         * The dream is waiting to start and hasn't read its inputs yet.
+         *
+         * `outputs` is empty and every `usage` count is zero.
+         */
         PENDING,
+        /**
+         * The dream is reading its inputs and writing its result.
+         *
+         * `usage` updates while the dream has this status.
+         */
         RUNNING,
+        /** The dream finished and its output memory store holds the complete result. */
         COMPLETED,
+        /**
+         * The dream stopped with an error, which `error` describes.
+         *
+         * If `outputs` references a memory store, that memory store keeps what the dream wrote
+         * before it stopped.
+         */
         FAILED,
+        /** The caller canceled the dream before it completed. */
         CANCELED,
         /**
          * An enum member indicating that [BetaDreamStatus] was instantiated with an unknown value.

@@ -13,11 +13,17 @@ import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.io.ByteArrayOutputStream
+import java.io.FilterInputStream
+import java.io.IOException
 import java.io.InputStream
+import java.io.InterruptedIOException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.Base64
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.FutureTask
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicLong
 import software.amazon.awssdk.auth.credentials.AwsCredentials
@@ -304,6 +310,12 @@ private constructor(
         // When using an API key, the request is not signed.
         request.toBuilder().putHeader(HEADER_AUTHORIZATION, "Bearer $apiKey").build()
 
+    /** An SSE `error` event's data, which the stream handler raises as an error. */
+    private fun errorEventJson(type: String?, message: String?): String =
+        jsonMapper.writeValueAsString(
+            mapOf("type" to "error", "error" to mapOf("type" to type, "message" to message))
+        )
+
     override fun prepareResponse(response: HttpResponse): HttpResponse {
         if (
             !response.headers().values(HEADER_CONTENT_TYPE).contains(CONTENT_TYPE_AWS_EVENT_STREAM)
@@ -348,7 +360,7 @@ private constructor(
         // blocks waiting for more data to be written, would block the thread from executing the
         // necessary "write" and cause a deadlock.
         //
-        sseThreadPool.execute {
+        val pipeline = FutureTask {
             responseInput.use { input ->
                 // "use" closes the piped output stream when done, which signals
                 // the end-of-file to the reader of the piped input stream.
@@ -356,27 +368,59 @@ private constructor(
                     // When fed enough data (see loop, below) to create a new
                     // "Message", the "Consumer.accept" lambda here is fired.
                     val messageDecoder = MessageDecoder { message ->
+                        val headers = message.headers
                         val sseJson =
-                            String(
-                                Base64.getDecoder()
-                                    .decode(
-                                        jsonMapper.readTree(message.payload).get("bytes").asText()
+                            when (headers[":message-type"]?.string) {
+                                null,
+                                "event" ->
+                                    String(
+                                        Base64.getDecoder()
+                                            .decode(
+                                                jsonMapper
+                                                    .readTree(message.payload)
+                                                    .get("bytes")
+                                                    .asText()
+                                            )
                                     )
-                            )
-                        val sseEventType = jsonMapper.readTree(sseJson).get("type").asText()
+                                "exception" ->
+                                    errorEventJson(
+                                        headers[":exception-type"]?.string,
+                                        jsonMapper
+                                            .readTree(message.payload)
+                                            .get("message")
+                                            ?.textValue(),
+                                    )
+                                "error" ->
+                                    errorEventJson(
+                                        headers[":error-code"]?.string,
+                                        headers[":error-message"]?.string,
+                                    )
+                                else -> return@MessageDecoder
+                            }
+                        val sseEventType =
+                            jsonMapper.readTree(sseJson).get("type")?.textValue()
+                                ?: return@MessageDecoder
 
                         output.write("event: $sseEventType\ndata: $sseJson\n\n".toByteArray())
                         output.flush()
                     }
 
                     val buffer = ByteArray(4096)
+                    val frameTracker = EventStreamFrameTracker()
                     var bytesRead: Int
                     while (input.read(buffer).also { bytesRead = it } != -1) {
                         messageDecoder.feed(buffer, 0, bytesRead)
+                        frameTracker.feed(buffer, 0, bytesRead)
+                    }
+                    if (frameTracker.isMidFrame) {
+                        throw IOException("Bedrock event stream ended mid-frame")
                     }
                 }
             }
         }
+        sseThreadPool.execute(pipeline)
+
+        val body = PipelineFailurePropagatingInputStream(pipedInput, pipeline)
 
         return object : HttpResponse {
             override fun statusCode(): Int = response.statusCode()
@@ -388,9 +432,69 @@ private constructor(
                     .replace(HEADER_CONTENT_TYPE, CONTENT_TYPE_SSE_STREAM)
                     .build()
 
-            override fun body(): InputStream = pipedInput
+            override fun body(): InputStream = body
 
-            override fun close() = pipedInput.close()
+            override fun close() = body.close()
+        }
+    }
+
+    /**
+     * Rethrows a failure of [pipeline] when [input] reaches end-of-file. The pipeline closes its
+     * end of the pipe even when it fails, so without this a failure mid-stream would look like a
+     * complete stream to the reader.
+     */
+    private class PipelineFailurePropagatingInputStream(
+        input: InputStream,
+        private val pipeline: Future<*>,
+    ) : FilterInputStream(input) {
+
+        override fun read(): Int = super.read().also { if (it == -1) awaitPipeline() }
+
+        override fun read(b: ByteArray, off: Int, len: Int): Int =
+            super.read(b, off, len).also { if (it == -1) awaitPipeline() }
+
+        private fun awaitPipeline() {
+            try {
+                pipeline.get()
+            } catch (e: ExecutionException) {
+                throw IOException("Failed to decode Bedrock event stream", e.cause)
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
+                throw InterruptedIOException().apply { initCause(e) }
+            }
+        }
+    }
+
+    /**
+     * Tracks AWS EventStream frame boundaries using each frame's leading total-length field.
+     * [MessageDecoder] silently buffers a trailing partial frame, so this detects a stream that
+     * ends mid-frame.
+     */
+    private class EventStreamFrameTracker {
+        private var totalLength = 0L
+        private var totalLengthBytesRead = 0
+        private var bytesLeftInFrame = 0L
+
+        val isMidFrame: Boolean
+            get() = totalLengthBytesRead > 0 || bytesLeftInFrame > 0
+
+        fun feed(bytes: ByteArray, offset: Int, length: Int) {
+            var i = offset
+            val end = offset + length
+            while (i < end) {
+                if (bytesLeftInFrame > 0) {
+                    val skipped = minOf(bytesLeftInFrame, (end - i).toLong()).toInt()
+                    bytesLeftInFrame -= skipped
+                    i += skipped
+                } else {
+                    totalLength = (totalLength shl 8) or (bytes[i++].toLong() and 0xFF)
+                    if (++totalLengthBytesRead == 4) {
+                        bytesLeftInFrame = totalLength - 4
+                        totalLength = 0
+                        totalLengthBytesRead = 0
+                    }
+                }
+            }
         }
     }
 

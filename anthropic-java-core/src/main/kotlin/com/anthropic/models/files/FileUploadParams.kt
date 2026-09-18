@@ -6,6 +6,7 @@ import com.anthropic.core.MultipartField
 import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
+import com.anthropic.core.http.PathInputStream
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -17,7 +18,6 @@ import java.nio.file.Path
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
-import kotlin.io.path.inputStream
 import kotlin.io.path.name
 import kotlin.jvm.optionals.getOrNull
 
@@ -442,7 +442,7 @@ private constructor(
             fun file(path: Path) =
                 file(
                     MultipartField.builder<InputStream>()
-                        .value(path.inputStream())
+                        .value(PathInputStream(path))
                         .filename(path.name)
                         .build()
                 )

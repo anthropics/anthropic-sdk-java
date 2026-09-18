@@ -536,6 +536,7 @@ internal class LoggingHttpClientTest {
         body.read(ByteArray(5))
         body.close()
 
+        assertThatThrownBy { body.read(ByteArray(5)) }.isInstanceOf(IOException::class.java)
         assertThat(stderrOutput())
             .isEqualTo(
                 """
@@ -974,7 +975,9 @@ internal class LoggingHttpClientTest {
 
             override fun headers(): Headers = headers
 
-            override fun body(): InputStream = ByteArrayInputStream(body)
+            // Unlike `ByteArrayInputStream`, a buffered stream fails reads once closed, like a
+            // real response body.
+            override fun body(): InputStream = ByteArrayInputStream(body).buffered()
 
             override fun close() {}
         }

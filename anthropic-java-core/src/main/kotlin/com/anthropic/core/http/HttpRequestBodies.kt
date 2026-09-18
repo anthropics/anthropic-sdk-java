@@ -12,8 +12,11 @@ import com.fasterxml.jackson.databind.node.JsonNodeType
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.FileInputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.nio.file.Files
 import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 
@@ -97,47 +100,12 @@ private fun MultipartBody.Builder.addParts(
         }
 
     parts.forEach { (name, bytes) ->
-        val partBody =
-            if (bytes is ByteArrayInputStream) {
-                val byteArray = bytes.readBytes()
-
-                object : HttpRequestBody {
-
-                    override fun writeTo(outputStream: OutputStream) {
-                        outputStream.write(byteArray)
-                    }
-
-                    override fun contentType(): String = field.contentType
-
-                    override fun contentLength(): Long = byteArray.size.toLong()
-
-                    override fun repeatable(): Boolean = true
-
-                    override fun close() {}
-                }
-            } else {
-                object : HttpRequestBody {
-
-                    override fun writeTo(outputStream: OutputStream) {
-                        bytes.copyTo(outputStream)
-                    }
-
-                    override fun contentType(): String = field.contentType
-
-                    override fun contentLength(): Long = -1L
-
-                    override fun repeatable(): Boolean = false
-
-                    override fun close() = bytes.close()
-                }
-            }
-
         addPart(
             MultipartBody.Part.create(
                 name,
                 field.filename().getOrNull(),
                 field.contentType,
-                partBody,
+                inputStreamBody(bytes, field.contentType),
             )
         )
     }
@@ -160,6 +128,94 @@ private fun serializePart(name: String, node: JsonNode): Sequence<Pair<String, I
         JsonNodeType.POJO,
         null -> throw AnthropicInvalidDataException("Unexpected JsonNode type: ${node.nodeType}")
     }
+
+/**
+ * Returns a part body that sends the content of [inputStream].
+ *
+ * The body is repeatable when the content can be read again without reading a stream into memory:
+ * bytes already in memory, an unread [PathInputStream] over a regular file (opened again for each
+ * write), or a [FileInputStream] whose position can be read (each write starts from the position it
+ * had when the body was created). Any other stream is written once.
+ */
+private fun inputStreamBody(inputStream: InputStream, contentType: String): HttpRequestBody {
+    if (inputStream is ByteArrayInputStream) {
+        val bytes = inputStream.readBytes()
+        return object : HttpRequestBody {
+            override fun writeTo(outputStream: OutputStream) = outputStream.write(bytes)
+
+            override fun contentType(): String = contentType
+
+            override fun contentLength(): Long = bytes.size.toLong()
+
+            override fun repeatable(): Boolean = true
+
+            override fun close() {}
+        }
+    }
+
+    if (
+        inputStream is PathInputStream &&
+            !inputStream.isRead &&
+            Files.isRegularFile(inputStream.path)
+    ) {
+        val path = inputStream.path
+        return object : HttpRequestBody {
+            override fun writeTo(outputStream: OutputStream) {
+                Files.newInputStream(path).use { it.copyTo(outputStream) }
+            }
+
+            override fun contentType(): String = contentType
+
+            override fun contentLength(): Long = runCatching { Files.size(path) }.getOrDefault(-1L)
+
+            override fun repeatable(): Boolean = true
+
+            override fun close() = inputStream.close()
+        }
+    }
+
+    if (inputStream is FileInputStream) {
+        val channel = inputStream.channel
+        // A pipe opened as a `FileInputStream` (stdin, for example) has no position: `position()`
+        // throws.
+        val startPosition =
+            try {
+                channel.position()
+            } catch (e: IOException) {
+                null
+            }
+        if (startPosition != null) {
+            return object : HttpRequestBody {
+                override fun writeTo(outputStream: OutputStream) {
+                    channel.position(startPosition)
+                    inputStream.copyTo(outputStream)
+                }
+
+                override fun contentType(): String = contentType
+
+                override fun contentLength(): Long = maxOf(channel.size() - startPosition, 0)
+
+                override fun repeatable(): Boolean = true
+
+                override fun close() = inputStream.close()
+            }
+        }
+    }
+
+    return object : HttpRequestBody {
+        override fun writeTo(outputStream: OutputStream) {
+            inputStream.copyTo(outputStream)
+        }
+
+        override fun contentType(): String = contentType
+
+        override fun contentLength(): Long = -1L
+
+        override fun repeatable(): Boolean = false
+
+        override fun close() = inputStream.close()
+    }
+}
 
 private class MultipartBody
 private constructor(private val boundary: String, private val parts: List<Part>) : HttpRequestBody {

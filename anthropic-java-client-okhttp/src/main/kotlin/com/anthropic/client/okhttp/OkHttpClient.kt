@@ -38,6 +38,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import okhttp3.ResponseBody
 import okio.BufferedSink
 import okio.buffer
 import okio.sink
@@ -74,7 +75,7 @@ private constructor(
                             .authenticate(
                                 route?.proxy ?: Proxy.NO_PROXY,
                                 response.request.toHttpRequest(),
-                                response.toHttpResponse(),
+                                response.toHttpResponse(call = null),
                             )
                             .getOrNull()
                             ?.toRequest(client = null)
@@ -119,7 +120,7 @@ private constructor(
         val call = newCall(preparedRequest, requestOptions)
 
         return try {
-            backend.prepareResponse(call.execute().toHttpResponse())
+            backend.prepareResponse(call.execute().toHttpResponse(call))
         } catch (e: IOException) {
             throw AnthropicIoException("Request failed", e)
         } finally {
@@ -138,7 +139,7 @@ private constructor(
         call.enqueue(
             object : Callback {
                 override fun onResponse(call: Call, response: Response) {
-                    future.complete(backend.prepareResponse(response.toHttpResponse()))
+                    future.complete(backend.prepareResponse(response.toHttpResponse(call)))
                 }
 
                 override fun onFailure(call: Call, e: IOException) {
@@ -462,19 +463,83 @@ private fun RequestBody.toHttpRequestBody(): HttpRequestBody {
     }
 }
 
-private fun Response.toHttpResponse(): HttpResponse {
+/**
+ * @param call the call to cancel on a close that races a read, or `null` if it can't be canceled.
+ */
+private fun Response.toHttpResponse(call: Call?): HttpResponse {
     val headers = headers.toHeaders()
+    val body = body?.let { ResponseBodyInputStream(it, call) }
 
     return object : HttpResponse {
         override fun statusCode(): Int = code
 
         override fun headers(): Headers = headers
 
-        override fun body(): InputStream =
-            checkNotNull(body) { "Response has no body" }.byteStream()
+        override fun body(): InputStream = checkNotNull(body) { "Response has no body" }
 
         override fun close() {
             body?.close()
+        }
+    }
+}
+
+/**
+ * A response body that one thread can close while another thread reads it.
+ *
+ * OkHttp's own close drains the rest of the body so the connection can be reused. On HTTP/1.1 that
+ * reads the socket source, and okio doesn't allow two threads to read one source at once, so a
+ * close that races a read would throw and leave the read blocked. Such a close cancels [call]
+ * instead, which fails the read, and the reading thread closes the body once its read unwinds. A
+ * close with no read in flight closes the body directly, which keeps the connection reusable.
+ */
+private class ResponseBodyInputStream(private val body: ResponseBody, private val call: Call?) :
+    InputStream() {
+
+    private val delegate = body.byteStream()
+    private val lock = Any()
+    // Guarded by `lock`. No read starts once `closed` is set, so exactly one of `close` or the last
+    // in-flight read closes the body.
+    private var closed = false
+    private var readsInFlight = 0
+
+    override fun read(): Int = trackRead { delegate.read() }
+
+    override fun read(b: ByteArray, off: Int, len: Int): Int = trackRead {
+        delegate.read(b, off, len)
+    }
+
+    override fun available(): Int = trackRead { delegate.available() }
+
+    private inline fun <T> trackRead(read: () -> T): T {
+        synchronized(lock) {
+            if (closed) {
+                throw IOException("closed")
+            }
+            readsInFlight++
+        }
+        try {
+            return read()
+        } finally {
+            val closeBody = synchronized(lock) { --readsInFlight == 0 && closed }
+            if (closeBody) {
+                body.close()
+            }
+        }
+    }
+
+    override fun close() {
+        val readInFlight =
+            synchronized(lock) {
+                if (closed) {
+                    return
+                }
+                closed = true
+                readsInFlight > 0
+            }
+        if (readInFlight) {
+            call?.cancel()
+        } else {
+            body.close()
         }
     }
 }

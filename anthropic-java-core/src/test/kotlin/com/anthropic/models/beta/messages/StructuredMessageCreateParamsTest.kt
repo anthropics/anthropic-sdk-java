@@ -23,6 +23,7 @@ import com.anthropic.core.findDelegationMethod
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toolFromClass
+import com.anthropic.helpers.BetaRunnableTool
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Model
 import org.assertj.core.api.Assertions.assertThat
@@ -135,6 +136,8 @@ internal class StructuredMessageCreateParamsTest {
                 .definition(TOOL)
                 .runner { BetaToolResultBlockParam.Content.ofString(it) }
                 .build()
+        private val RUNNABLE_TOOL =
+            BetaRunnableTool.of(CLASS, { BetaToolResultBlockParam.Content.ofString(it.s) })
         private val TOOL_UNION = BetaToolUnion.ofBetaTool(TOOL)
         private val TOOL_CHOICE_TOOL = BetaToolChoiceTool.builder().name(STRING).build()
         private val TOOL_CHOICE = BetaToolChoice.ofTool(TOOL_CHOICE_TOOL)
@@ -306,6 +309,7 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("addTool", TOOL_SEARCH_TOOL_REGEX_20251119),
                 DelegationWriteTestCase("addTool", BETA_MCP_TOOL_SET),
                 DelegationWriteTestCase("addTool", CLASS, VALIDATION),
+                DelegationWriteTestCase("addTool", RUNNABLE_TOOL),
                 DelegationWriteTestCase("addTool", MCP_BETA_TOOL),
                 DelegationWriteTestCase("addTools", listOf(MCP_BETA_TOOL)),
                 DelegationWriteTestCase("topK", LONG),

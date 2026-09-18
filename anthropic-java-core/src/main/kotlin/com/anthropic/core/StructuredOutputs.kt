@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.databind.util.ClassUtil
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.kotlinModule
@@ -41,14 +42,17 @@ private val MAPPER =
 internal fun betaOutputFormatFromClass(
     outputType: Class<*>,
     localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
-): BetaJsonOutputFormat =
-    BetaJsonOutputFormat.builder()
+): BetaJsonOutputFormat {
+    requireInstantiable(outputType)
+
+    return BetaJsonOutputFormat.builder()
         .schema(
             JsonValue.fromJsonNode(
                 validateSchema(extractSchema(outputType), outputType, localValidation)
             )
         )
         .build()
+}
 
 /**
  * Builds a GA output format using a JSON schema derived from the structure of an arbitrary Java
@@ -58,8 +62,10 @@ internal fun betaOutputFormatFromClass(
 internal fun outputFormatFromClass(
     outputType: Class<*>,
     localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
-): JsonOutputFormat =
-    JsonOutputFormat.builder()
+): JsonOutputFormat {
+    requireInstantiable(outputType)
+
+    return JsonOutputFormat.builder()
         .schema(
             JsonOutputFormat.Schema.builder()
                 .additionalProperties(
@@ -72,6 +78,13 @@ internal fun outputFormatFromClass(
                 .build()
         )
         .build()
+}
+
+private fun requireInstantiable(type: Class<*>) =
+    require(ClassUtil.isLocalType(type, false) == null) {
+        "$type cannot be instantiated from JSON. It must be a top-level class, a static nested " +
+            "class, or a record."
+    }
 
 /**
  * Validates the given JSON schema with respect to Anthropic's JSON schema restrictions.
@@ -108,6 +121,8 @@ internal fun extractFunctionInfo(
     parametersType: Class<*>,
     localValidation: JsonSchemaLocalValidation,
 ): FunctionInfo {
+    requireInstantiable(parametersType)
+
     val schema = extractSchema(parametersType)
 
     validateSchema(schema, parametersType, localValidation)

@@ -231,12 +231,16 @@ private constructor(
 
         companion object {
 
+            /** The token endpoint returned a new access token. */
             @JvmField val SUCCEEDED = of("succeeded")
 
+            /** The token endpoint returned an error response. See `http_response` for detail. */
             @JvmField val FAILED = of("failed")
 
+            /** The token endpoint could not be reached (DNS, TLS, or connection error). */
             @JvmField val CONNECT_ERROR = of("connect_error")
 
+            /** No refresh token is stored for the credential, so no exchange was attempted. */
             @JvmField val NO_REFRESH_TOKEN = of("no_refresh_token")
 
             @JvmStatic fun of(value: String) = Status(JsonField.of(value))
@@ -248,9 +252,13 @@ private constructor(
 
         /** An enum containing [Status]'s known values. */
         enum class Known {
+            /** The token endpoint returned a new access token. */
             SUCCEEDED,
+            /** The token endpoint returned an error response. See `http_response` for detail. */
             FAILED,
+            /** The token endpoint could not be reached (DNS, TLS, or connection error). */
             CONNECT_ERROR,
+            /** No refresh token is stored for the credential, so no exchange was attempted. */
             NO_REFRESH_TOKEN,
         }
 
@@ -264,9 +272,13 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /** The token endpoint returned a new access token. */
             SUCCEEDED,
+            /** The token endpoint returned an error response. See `http_response` for detail. */
             FAILED,
+            /** The token endpoint could not be reached (DNS, TLS, or connection error). */
             CONNECT_ERROR,
+            /** No refresh token is stored for the credential, so no exchange was attempted. */
             NO_REFRESH_TOKEN,
             /** An enum member indicating that [Status] was instantiated with an unknown value. */
             _UNKNOWN,

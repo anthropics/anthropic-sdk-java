@@ -896,7 +896,9 @@ private constructor(
          *   or [JsonSchemaLocalValidation.NO] to skip local validation and rely only on remote
          *   validation. See the SDK documentation for more details.
          * @throws IllegalArgumentException If local validation is enabled, but it fails because a
-         *   valid JSON schema cannot be derived from the given class.
+         *   valid JSON schema cannot be derived from the given class; or if the given class is a
+         *   non-static inner class, a local class or an anonymous class. The kind of class is
+         *   checked even when [localValidation] is [JsonSchemaLocalValidation.NO].
          */
         @JvmOverloads
         fun <T : Any> outputConfig(

@@ -15,11 +15,9 @@ import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
-import com.anthropic.core.outputTypeFromJson
 import com.anthropic.core.toImmutable
-import com.anthropic.core.toJsonString
-import com.anthropic.core.toolFromClass
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.helpers.BetaRunnableTool
 import com.anthropic.helpers.McpBetaTool
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.messages.Model
@@ -40,42 +38,6 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * A tool that can be executed locally by [com.anthropic.helpers.BetaToolRunner] when the model
- * issues a tool-use block. Both class-based tools (registered via
- * [MessageCreateParams.Builder.addTool] with a [Class]) and functional tools (e.g. MCP tools
- * registered via [MessageCreateParams.Builder.addTool] with an [McpBetaTool]) flow through this
- * single abstraction.
- */
-internal abstract class RunnableTool {
-
-    abstract fun name(): String
-
-    abstract fun run(input: JsonField<*>): BetaToolResultBlockParam.Content
-
-    /** A tool whose definition and execution are both encoded by a [Supplier] class. */
-    data class FromClass(val parametersType: Class<*>) : RunnableTool() {
-        private val tool = toolFromClass(parametersType)
-
-        override fun name() = tool.name()
-
-        override fun run(input: JsonField<*>): BetaToolResultBlockParam.Content {
-            val parsed = outputTypeFromJson(toJsonString(input), parametersType)
-            if (parsed !is java.util.function.Supplier<*>) {
-                throw IllegalStateException("Cannot run non-`Supplier` tool")
-            }
-            return when (val output = parsed.get()) {
-                is String -> BetaToolResultBlockParam.Content.ofString(output)
-                is BetaToolResultBlockParam.Content -> output
-                else ->
-                    throw IllegalStateException(
-                        "Expected tool to return `String` or `BetaToolResultBlockParam.Content`"
-                    )
-            }
-        }
-    }
-}
-
-/**
  * Send a structured list of input messages with text and/or image content, and the model will
  * generate the next message in the conversation.
  *
@@ -86,7 +48,7 @@ internal abstract class RunnableTool {
  */
 class MessageCreateParams
 private constructor(
-    private val runnableTools: List<RunnableTool>,
+    private val runnableTools: List<BetaRunnableTool>,
     private val betas: List<AnthropicBeta>?,
     private val userProfileId: String?,
     private val workspaceId: String?,
@@ -95,7 +57,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    @JvmSynthetic internal fun runnableTools(): List<RunnableTool> = runnableTools
+    @JvmSynthetic internal fun runnableTools(): List<BetaRunnableTool> = runnableTools
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
@@ -745,7 +707,7 @@ private constructor(
     /** A builder for [MessageCreateParams]. */
     class Builder internal constructor() {
 
-        private var runnableTools: MutableList<RunnableTool> = mutableListOf()
+        private var runnableTools: MutableList<BetaRunnableTool> = mutableListOf()
         private var betas: MutableList<AnthropicBeta>? = null
         private var userProfileId: String? = null
         private var workspaceId: String? = null
@@ -1351,7 +1313,9 @@ private constructor(
          *   or [JsonSchemaLocalValidation.NO] to skip local validation and rely only on remote
          *   validation. See the SDK documentation for more details.
          * @throws IllegalArgumentException If local validation is enabled, but it fails because a
-         *   valid JSON schema cannot be derived from the given class.
+         *   valid JSON schema cannot be derived from the given class; or if the given class is a
+         *   non-static inner class, a local class or an anonymous class. The kind of class is
+         *   checked even when [localValidation] is [JsonSchemaLocalValidation.NO].
          */
         @JvmOverloads
         @Deprecated(
@@ -1381,7 +1345,9 @@ private constructor(
          *   or [JsonSchemaLocalValidation.NO] to skip local validation and rely only on remote
          *   validation. See the SDK documentation for more details.
          * @throws IllegalArgumentException If local validation is enabled, but it fails because a
-         *   valid JSON schema cannot be derived from the given class.
+         *   valid JSON schema cannot be derived from the given class; or if the given class is a
+         *   non-static inner class, a local class or an anonymous class. The kind of class is
+         *   checked even when [localValidation] is [JsonSchemaLocalValidation.NO].
          */
         @JvmOverloads
         fun <T : Any> outputConfig(
@@ -1413,7 +1379,9 @@ private constructor(
          *   or [JsonSchemaLocalValidation.NO] to skip local validation and rely only on remote
          *   validation. See the SDK documentation for more details.
          * @throws IllegalArgumentException If local validation is enabled, but it fails because a
-         *   valid JSON schema cannot be derived from the given class.
+         *   valid JSON schema cannot be derived from the given class; or if the given class is a
+         *   non-static inner class, a local class or an anonymous class. The kind of class is
+         *   checked even when [localValidation] is [JsonSchemaLocalValidation.NO].
          */
         @JvmOverloads
         @Deprecated(
@@ -1884,15 +1852,26 @@ private constructor(
          * AI model. By default, local validation is enabled; disable it by setting
          * [localValidation] to [JsonSchemaLocalValidation.NO].
          *
+         * @throws IllegalArgumentException If local validation is enabled, but it fails because a
+         *   valid JSON schema cannot be derived from the given class; or if the given class is a
+         *   non-static inner class, a local class or an anonymous class. The kind of class is
+         *   checked even when [localValidation] is [JsonSchemaLocalValidation.NO].
          * @see addTool
          */
         @JvmOverloads
         fun addTool(
             toolParametersType: Class<*>,
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
-        ) = apply {
-            runnableTools.add(RunnableTool.FromClass(toolParametersType))
-            addTool(toolFromClass(toolParametersType, localValidation))
+        ) = apply { addTool(BetaRunnableTool.ofSupplier(toolParametersType, localValidation)) }
+
+        /**
+         * Adds a runnable tool to [tools]. The tool definition is sent to the API; when the model
+         * calls the tool, [com.anthropic.helpers.BetaToolRunner] invokes [tool]'s function with the
+         * parsed tool input.
+         */
+        fun addTool(tool: BetaRunnableTool) = apply {
+            runnableTools.add(tool)
+            addTool(tool.definition())
         }
 
         /**
@@ -1902,15 +1881,7 @@ private constructor(
          * Produced by `com.anthropic.mcp.BetaMcp.mcpTool` from the `anthropic-java-mcp` module.
          */
         fun addTool(tool: McpBetaTool) = apply {
-            runnableTools.add(
-                object : RunnableTool() {
-                    override fun name() = tool.definition.name()
-
-                    override fun run(input: JsonField<*>): BetaToolResultBlockParam.Content =
-                        tool.runner.apply(toJsonString(input))
-                }
-            )
-            addTool(tool.definition)
+            addTool(BetaRunnableTool.of(tool.definition, tool.runner))
         }
 
         /** Adds multiple MCP tools to [tools]. See [addTool] for details. */

@@ -1,4 +1,4 @@
-package com.anthropic.models.beta.messages
+package com.anthropic.models.beta.organization.ratelimits
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -13,44 +13,36 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-/**
- * Reference to a single MCP tool by its server and remote name; the same ``server_name``/``name``
- * pair ``mcp_tool_use`` carries.
- */
-class BetaToolChangeMcpToolReference
+class BetaOrganizationRateLimitSkillsGroup
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val name: JsonField<String>,
-    private val serverName: JsonField<String>,
+    private val id: JsonField<String>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("server_name")
-        @ExcludeMissing
-        serverName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(name, serverName, type, mutableMapOf())
+    ) : this(id, type, mutableMapOf())
 
     /**
+     * Opaque identifier of the rate-limit group (for example, `rlg_01VPTCmyiu5ZLsWkcxYG2pY8`). It
+     * is the same in every organization and never changes, unlike the entry's own identifier, which
+     * differs per organization.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun name(): String = name.getRequired("name")
+    fun id(): String = id.getRequired("id")
 
     /**
-     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun serverName(): String = serverName.getRequired("server_name")
-
-    /**
+     * Always `skills`: the Skills API.
+     *
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("mcp_tool_reference")
+     * JsonValue.from("skills")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
@@ -59,18 +51,11 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Returns the raw JSON value of [name].
+     * Returns the raw JSON value of [id].
      *
-     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
-    /**
-     * Returns the raw JSON value of [serverName].
-     *
-     * Unlike [serverName], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("server_name") @ExcludeMissing fun _serverName(): JsonField<String> = serverName
+    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -88,54 +73,53 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [BetaToolChangeMcpToolReference].
+         * [BetaOrganizationRateLimitSkillsGroup].
          *
          * The following fields are required:
          * ```java
-         * .name()
-         * .serverName()
+         * .id()
          * ```
          */
         @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaOrganizationRateLimitSkillsGroup] with the required
+         * [id] set to the given value.
+         */
+        @JvmStatic fun of(id: String) = builder().id(id).build()
     }
 
-    /** A builder for [BetaToolChangeMcpToolReference]. */
+    /** A builder for [BetaOrganizationRateLimitSkillsGroup]. */
     class Builder internal constructor() {
 
-        private var name: JsonField<String>? = null
-        private var serverName: JsonField<String>? = null
-        private var type: JsonValue = JsonValue.from("mcp_tool_reference")
+        private var id: JsonField<String>? = null
+        private var type: JsonValue = JsonValue.from("skills")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaToolChangeMcpToolReference: BetaToolChangeMcpToolReference) = apply {
-            name = betaToolChangeMcpToolReference.name
-            serverName = betaToolChangeMcpToolReference.serverName
-            type = betaToolChangeMcpToolReference.type
+        internal fun from(
+            betaOrganizationRateLimitSkillsGroup: BetaOrganizationRateLimitSkillsGroup
+        ) = apply {
+            id = betaOrganizationRateLimitSkillsGroup.id
+            type = betaOrganizationRateLimitSkillsGroup.type
             additionalProperties =
-                betaToolChangeMcpToolReference.additionalProperties.toMutableMap()
+                betaOrganizationRateLimitSkillsGroup.additionalProperties.toMutableMap()
         }
 
-        fun name(name: String) = name(JsonField.of(name))
+        /**
+         * Opaque identifier of the rate-limit group (for example, `rlg_01VPTCmyiu5ZLsWkcxYG2pY8`).
+         * It is the same in every organization and never changes, unlike the entry's own
+         * identifier, which differs per organization.
+         */
+        fun id(id: String) = id(JsonField.of(id))
 
         /**
-         * Sets [Builder.name] to an arbitrary JSON value.
+         * Sets [Builder.id] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun name(name: JsonField<String>) = apply { this.name = name }
-
-        fun serverName(serverName: String) = serverName(JsonField.of(serverName))
-
-        /**
-         * Sets [Builder.serverName] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.serverName] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun serverName(serverName: JsonField<String>) = apply { this.serverName = serverName }
+        fun id(id: JsonField<String>) = apply { this.id = id }
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -143,7 +127,7 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("mcp_tool_reference")
+         * JsonValue.from("skills")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
@@ -171,22 +155,20 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaToolChangeMcpToolReference].
+         * Returns an immutable instance of [BetaOrganizationRateLimitSkillsGroup].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
          * ```java
-         * .name()
-         * .serverName()
+         * .id()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BetaToolChangeMcpToolReference =
-            BetaToolChangeMcpToolReference(
-                checkRequired("name", name),
-                checkRequired("serverName", serverName),
+        fun build(): BetaOrganizationRateLimitSkillsGroup =
+            BetaOrganizationRateLimitSkillsGroup(
+                checkRequired("id", id),
                 type,
                 additionalProperties.toMutableMap(),
             )
@@ -202,15 +184,14 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BetaToolChangeMcpToolReference = apply {
+    fun validate(): BetaOrganizationRateLimitSkillsGroup = apply {
         if (validated) {
             return@apply
         }
 
-        name()
-        serverName()
+        id()
         _type().let {
-            if (it != JsonValue.from("mcp_tool_reference")) {
+            if (it != JsonValue.from("skills")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
@@ -232,26 +213,24 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (name.asKnown().isPresent) 1 else 0) +
-            (if (serverName.asKnown().isPresent) 1 else 0) +
-            type.let { if (it == JsonValue.from("mcp_tool_reference")) 1 else 0 }
+        (if (id.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("skills")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is BetaToolChangeMcpToolReference &&
-            name == other.name &&
-            serverName == other.serverName &&
+        return other is BetaOrganizationRateLimitSkillsGroup &&
+            id == other.id &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(name, serverName, type, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(id, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaToolChangeMcpToolReference{name=$name, serverName=$serverName, type=$type, additionalProperties=$additionalProperties}"
+        "BetaOrganizationRateLimitSkillsGroup{id=$id, type=$type, additionalProperties=$additionalProperties}"
 }

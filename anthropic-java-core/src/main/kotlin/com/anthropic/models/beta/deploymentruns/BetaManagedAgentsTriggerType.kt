@@ -22,8 +22,10 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
+        /** The run was fired by the deployment's cron schedule. */
         @JvmField val SCHEDULE = of("schedule")
 
+        /** The run was started manually by creating a session directly against the deployment. */
         @JvmField val MANUAL = of("manual")
 
         @JvmStatic fun of(value: String) = BetaManagedAgentsTriggerType(JsonField.of(value))
@@ -35,7 +37,9 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [BetaManagedAgentsTriggerType]'s known values. */
     enum class Known {
+        /** The run was fired by the deployment's cron schedule. */
         SCHEDULE,
+        /** The run was started manually by creating a session directly against the deployment. */
         MANUAL,
     }
 
@@ -51,7 +55,9 @@ private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** The run was fired by the deployment's cron schedule. */
         SCHEDULE,
+        /** The run was started manually by creating a session directly against the deployment. */
         MANUAL,
         /**
          * An enum member indicating that [BetaManagedAgentsTriggerType] was instantiated with an

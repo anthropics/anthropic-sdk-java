@@ -1,6 +1,7 @@
 package com.anthropic.models.beta.organization.workspaces.ratelimits
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.organization.ratelimits.BetaOrganizationRateLimitModelGroup
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -13,6 +14,12 @@ internal class RateLimitListPageResponseTest {
             RateLimitListPageResponse.builder()
                 .addData(
                     BetaWorkspaceRateLimit.builder()
+                        .group(
+                            BetaOrganizationRateLimitModelGroup.builder()
+                                .id("id")
+                                .displayName("display_name")
+                                .build()
+                        )
                         .groupType(BetaWorkspaceRateLimit.GroupType.BATCH)
                         .addLimit(
                             BetaWorkspaceRateLimitValue.builder()
@@ -32,6 +39,12 @@ internal class RateLimitListPageResponseTest {
         assertThat(rateLimitListPageResponse.data())
             .containsExactly(
                 BetaWorkspaceRateLimit.builder()
+                    .group(
+                        BetaOrganizationRateLimitModelGroup.builder()
+                            .id("id")
+                            .displayName("display_name")
+                            .build()
+                    )
                     .groupType(BetaWorkspaceRateLimit.GroupType.BATCH)
                     .addLimit(
                         BetaWorkspaceRateLimitValue.builder()
@@ -55,6 +68,12 @@ internal class RateLimitListPageResponseTest {
             RateLimitListPageResponse.builder()
                 .addData(
                     BetaWorkspaceRateLimit.builder()
+                        .group(
+                            BetaOrganizationRateLimitModelGroup.builder()
+                                .id("id")
+                                .displayName("display_name")
+                                .build()
+                        )
                         .groupType(BetaWorkspaceRateLimit.GroupType.BATCH)
                         .addLimit(
                             BetaWorkspaceRateLimitValue.builder()

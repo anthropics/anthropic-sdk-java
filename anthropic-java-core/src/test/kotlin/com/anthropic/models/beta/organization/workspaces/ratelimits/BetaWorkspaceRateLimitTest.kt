@@ -1,6 +1,7 @@
 package com.anthropic.models.beta.organization.workspaces.ratelimits
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.organization.ratelimits.BetaOrganizationRateLimitModelGroup
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -12,6 +13,12 @@ internal class BetaWorkspaceRateLimitTest {
     fun create() {
         val betaWorkspaceRateLimit =
             BetaWorkspaceRateLimit.builder()
+                .group(
+                    BetaOrganizationRateLimitModelGroup.builder()
+                        .id("id")
+                        .displayName("display_name")
+                        .build()
+                )
                 .groupType(BetaWorkspaceRateLimit.GroupType.BATCH)
                 .addLimit(
                     BetaWorkspaceRateLimitValue.builder()
@@ -25,6 +32,15 @@ internal class BetaWorkspaceRateLimitTest {
                 .workspaceId("workspace_id")
                 .build()
 
+        assertThat(betaWorkspaceRateLimit.group())
+            .isEqualTo(
+                BetaWorkspaceRateLimit.Group.ofModel(
+                    BetaOrganizationRateLimitModelGroup.builder()
+                        .id("id")
+                        .displayName("display_name")
+                        .build()
+                )
+            )
         assertThat(betaWorkspaceRateLimit.groupType())
             .isEqualTo(BetaWorkspaceRateLimit.GroupType.BATCH)
         assertThat(betaWorkspaceRateLimit.limits())
@@ -41,6 +57,12 @@ internal class BetaWorkspaceRateLimitTest {
         val jsonMapper = jsonMapper()
         val betaWorkspaceRateLimit =
             BetaWorkspaceRateLimit.builder()
+                .group(
+                    BetaOrganizationRateLimitModelGroup.builder()
+                        .id("id")
+                        .displayName("display_name")
+                        .build()
+                )
                 .groupType(BetaWorkspaceRateLimit.GroupType.BATCH)
                 .addLimit(
                     BetaWorkspaceRateLimitValue.builder()

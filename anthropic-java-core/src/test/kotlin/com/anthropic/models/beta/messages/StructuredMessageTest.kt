@@ -53,6 +53,27 @@ internal class StructuredMessageTest {
                 .build()
         private val CONTENT =
             BetaContentBlock.ofText(BetaTextBlock.builder().citations(null).text(STRING).build())
+        private val FALLBACK_CONTENT =
+            BetaContentBlock.ofFallback(
+                BetaFallbackBlock.builder()
+                    .from(BetaFallbackInfo.builder().model(Model.CLAUDE_OPUS_4_8).build())
+                    .to(BetaFallbackInfo.builder().model(Model.CLAUDE_HAIKU_4_5).build())
+                    .trigger(BetaFallbackRefusalTrigger.builder().category(null).build())
+                    .build()
+            )
+        private val ADVISOR_TOOL_RESULT_CONTENT =
+            BetaContentBlock.ofAdvisorToolResult(
+                BetaAdvisorToolResultBlock.builder()
+                    .content(
+                        BetaAdvisorToolResultBlock.Content.ofBetaAdvisorToolResultError(
+                            BetaAdvisorToolResultError.builder()
+                                .errorCode(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
+                                .build()
+                        )
+                    )
+                    .toolUseId(STRING)
+                    .build()
+            )
 
         // The list order follows the declaration order in `BetaMessage` for easier maintenance.
         @JvmStatic
@@ -194,5 +215,23 @@ internal class StructuredMessageTest {
         verifyNoMoreInteractions(mockDelegate)
 
         assertThat(output).isFalse
+    }
+
+    @Test
+    fun `validate accepts fallback and advisor tool result content`() {
+        val input = JsonField.of(listOf(CONTENT, FALLBACK_CONTENT, ADVISOR_TOOL_RESULT_CONTENT))
+        `when`(mockDelegate._content()).thenReturn(input)
+        val output = delegator.validate()
+
+        assertThat(output).isSameAs(delegator)
+    }
+
+    @Test
+    fun `isValid accepts fallback and advisor tool result content`() {
+        val input = JsonField.of(listOf(CONTENT, FALLBACK_CONTENT, ADVISOR_TOOL_RESULT_CONTENT))
+        `when`(mockDelegate._content()).thenReturn(input)
+        val output = delegator.isValid()
+
+        assertThat(output).isTrue
     }
 }

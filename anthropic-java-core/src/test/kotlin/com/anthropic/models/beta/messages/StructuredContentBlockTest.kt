@@ -18,6 +18,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
@@ -231,6 +232,30 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("asFallback", FALLBACK),
                 DelegationReadTestCase("_json", OPTIONAL),
             )
+
+        @JvmStatic
+        fun contentBlocks() =
+            listOf(
+                BetaContentBlock.ofText(TEXT_BLOCK),
+                BetaContentBlock.ofThinking(THINKING),
+                BetaContentBlock.ofRedactedThinking(REDACTED_THINKING),
+                BetaContentBlock.ofToolUse(TOOL_USE),
+                BetaContentBlock.ofServerToolUse(SERVER_TOOL_USE),
+                BetaContentBlock.ofWebSearchToolResult(WEB_SEARCH_TOOL_RESULT),
+                BetaContentBlock.ofWebFetchToolResult(WEB_FETCH_TOOL_RESULT),
+                BetaContentBlock.ofAdvisorToolResult(ADVISOR_TOOL_RESULT),
+                BetaContentBlock.ofCodeExecutionToolResult(CODE_EXECUTION_TOOL_RESULT),
+                BetaContentBlock.ofBashCodeExecutionToolResult(BASH_CODE_EXECUTION_TOOL_RESULT),
+                BetaContentBlock.ofTextEditorCodeExecutionToolResult(
+                    TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
+                ),
+                BetaContentBlock.ofToolSearchToolResult(TOOL_SEARCH_TOOL_RESULT),
+                BetaContentBlock.ofMcpToolUse(MCP_TOOL_USE),
+                BetaContentBlock.ofMcpToolResult(MCP_TOOL_RESULT),
+                BetaContentBlock.ofContainerUpload(CONTAINER_UPLOAD),
+                BetaContentBlock.ofCompaction(COMPACTION),
+                BetaContentBlock.ofFallback(FALLBACK),
+            )
     }
 
     // New instances of the `mockDelegate` and `delegator` are required for each test case (each
@@ -336,5 +361,47 @@ internal class StructuredContentBlockTest {
 
         verify(mockDelegate, times(1)).text()
         verifyNoMoreInteractions(mockDelegate)
+    }
+
+    @ParameterizedTest
+    @MethodSource("contentBlocks")
+    fun `validate accepts every content block variant`(contentBlock: BetaContentBlock) {
+        val block = StructuredContentBlock<X>(X::class.java, contentBlock)
+
+        assertThat(block.validate()).isSameAs(block)
+    }
+
+    @ParameterizedTest
+    @MethodSource("contentBlocks")
+    fun `isValid accepts every content block variant`(contentBlock: BetaContentBlock) {
+        val block = StructuredContentBlock<X>(X::class.java, contentBlock)
+
+        assertThat(block.isValid()).isTrue
+    }
+
+    @Test
+    fun `accept dispatches advisorToolResult`() {
+        val visitor = mock<StructuredContentBlock.Visitor<X, Any?>>()
+        val block =
+            StructuredContentBlock<X>(
+                X::class.java,
+                BetaContentBlock.ofAdvisorToolResult(ADVISOR_TOOL_RESULT),
+            )
+
+        block.accept(visitor)
+
+        verify(visitor, times(1)).visitAdvisorToolResult(ADVISOR_TOOL_RESULT)
+        verifyNoMoreInteractions(visitor)
+    }
+
+    @Test
+    fun `accept dispatches fallback`() {
+        val visitor = mock<StructuredContentBlock.Visitor<X, Any?>>()
+        val block = StructuredContentBlock<X>(X::class.java, BetaContentBlock.ofFallback(FALLBACK))
+
+        block.accept(visitor)
+
+        verify(visitor, times(1)).visitFallback(FALLBACK)
+        verifyNoMoreInteractions(visitor)
     }
 }

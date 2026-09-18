@@ -16,10 +16,13 @@ import com.github.tomakehurst.wiremock.client.WireMock.serviceUnavailable
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.verify
+import com.github.tomakehurst.wiremock.http.Fault
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import com.github.tomakehurst.wiremock.stubbing.Scenario
+import java.io.IOException
 import java.io.InputStream
+import java.io.OutputStream
 import java.time.Clock
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -27,6 +30,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
@@ -60,6 +64,29 @@ internal class RetryingHttpClientTest {
         }
 
         override fun close() {}
+    }
+
+    private class RecordingBody(private val repeatable: Boolean) : HttpRequestBody {
+        var writeCount = 0
+            private set
+
+        /** The [writeCount] at each [close] call. */
+        val closes = mutableListOf<Int>()
+
+        override fun writeTo(outputStream: OutputStream) {
+            writeCount++
+            outputStream.write("hello".toByteArray())
+        }
+
+        override fun contentType(): String = "text/plain"
+
+        override fun contentLength(): Long = 5
+
+        override fun repeatable(): Boolean = repeatable
+
+        override fun close() {
+            closes.add(writeCount)
+        }
     }
 
     @BeforeEach
@@ -489,6 +516,86 @@ internal class RetryingHttpClientTest {
         assertThat(callCount).isEqualTo(2)
         assertThat(sleeper.durations).hasSize(1)
         assertThat(sleeper.durations[0]).isBetween(Duration.ofMillis(375), Duration.ofMillis(500))
+        assertNoResponseLeaks()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun execute_withRepeatableBody_closesBodyOnceAfterLastAttempt(async: Boolean) {
+        stubFor(post(urlPathEqualTo("/something")).willReturn(serviceUnavailable()))
+        val sleeper = RecordingSleeper()
+        val retryingClient = retryingHttpClientBuilder(sleeper).maxRetries(2).build()
+        val body = RecordingBody(repeatable = true)
+
+        val response =
+            retryingClient.execute(
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(baseUrl)
+                    .addPathSegment("something")
+                    .body(body)
+                    .build(),
+                async,
+            )
+
+        assertThat(response.statusCode()).isEqualTo(503)
+        verify(3, postRequestedFor(urlPathEqualTo("/something")).withRequestBody(equalTo("hello")))
+        assertThat(body.closes).containsExactly(3)
+        assertNoResponseLeaks()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun execute_withRepeatableBodyAndFailedAttempts_closesBodyOnceAfterLastAttempt(async: Boolean) {
+        stubFor(
+            post(urlPathEqualTo("/something"))
+                .willReturn(serviceUnavailable().withFault(Fault.CONNECTION_RESET_BY_PEER))
+        )
+        val sleeper = RecordingSleeper()
+        val retryingClient = retryingHttpClientBuilder(sleeper).maxRetries(2).build()
+        val body = RecordingBody(repeatable = true)
+
+        assertThatThrownBy {
+                retryingClient.execute(
+                    HttpRequest.builder()
+                        .method(HttpMethod.POST)
+                        .baseUrl(baseUrl)
+                        .addPathSegment("something")
+                        .body(body)
+                        .build(),
+                    async,
+                )
+            }
+            .hasRootCauseInstanceOf(IOException::class.java)
+
+        verify(3, postRequestedFor(urlPathEqualTo("/something")))
+        assertThat(body.closes).containsExactly(3)
+        assertThat(sleeper.durations).hasSize(2)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun execute_withNonRepeatableBody_closesBodyAfterOnlyAttempt(async: Boolean) {
+        stubFor(post(urlPathEqualTo("/something")).willReturn(serviceUnavailable()))
+        val sleeper = RecordingSleeper()
+        val retryingClient = retryingHttpClientBuilder(sleeper).maxRetries(2).build()
+        val body = RecordingBody(repeatable = false)
+
+        val response =
+            retryingClient.execute(
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(baseUrl)
+                    .addPathSegment("something")
+                    .body(body)
+                    .build(),
+                async,
+            )
+
+        assertThat(response.statusCode()).isEqualTo(503)
+        verify(1, postRequestedFor(urlPathEqualTo("/something")))
+        assertThat(body.closes).containsExactly(1)
+        assertThat(sleeper.durations).isEmpty()
         assertNoResponseLeaks()
     }
 
