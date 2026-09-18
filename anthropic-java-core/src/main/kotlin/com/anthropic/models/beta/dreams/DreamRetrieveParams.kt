@@ -9,7 +9,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get a Dream */
+/**
+ * Get a dream by ID to check its status, output memory store, and token usage.
+ *
+ * Archived dreams are returned too.
+ *
+ * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#track-progress)
+ * for how to poll a dream and what each status means.
+ */
 class DreamRetrieveParams
 private constructor(
     private val dreamId: String?,
@@ -19,6 +26,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** The ID of the dream to get (`drm_...`). */
     fun dreamId(): Optional<String> = Optional.ofNullable(dreamId)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -67,6 +75,7 @@ private constructor(
             additionalQueryParams = dreamRetrieveParams.additionalQueryParams.toBuilder()
         }
 
+        /** The ID of the dream to get (`drm_...`). */
         fun dreamId(dreamId: String?) = apply { this.dreamId = dreamId }
 
         /** Alias for calling [Builder.dreamId] with `dreamId.orElse(null)`. */

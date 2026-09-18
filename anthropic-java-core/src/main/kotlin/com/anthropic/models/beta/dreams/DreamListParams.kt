@@ -11,7 +11,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List Dreams */
+/**
+ * List the dreams in the workspace, newest first.
+ *
+ * Archived dreams are left out unless `include_archived` is `true`.
+ *
+ * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#list-dreams) for
+ * how to page through dreams.
+ */
 class DreamListParams
 private constructor(
     private val createdAtGt: OffsetDateTime?,
@@ -38,10 +45,17 @@ private constructor(
      */
     fun createdAtLt(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLt)
 
+    /** Whether to include archived dreams. Defaults to `false`. */
     fun includeArchived(): Optional<Boolean> = Optional.ofNullable(includeArchived)
 
+    /** The maximum number of dreams to return, from 1 to 100. Defaults to 20. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
+    /**
+     * The cursor for the page to return, taken from `next_page` in a previous response.
+     *
+     * Leave it out to get the first page.
+     */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /**
@@ -126,6 +140,7 @@ private constructor(
         fun createdAtLt(createdAtLt: Optional<OffsetDateTime>) =
             createdAtLt(createdAtLt.getOrNull())
 
+        /** Whether to include archived dreams. Defaults to `false`. */
         fun includeArchived(includeArchived: Boolean?) = apply {
             this.includeArchived = includeArchived
         }
@@ -141,6 +156,7 @@ private constructor(
         fun includeArchived(includeArchived: Optional<Boolean>) =
             includeArchived(includeArchived.getOrNull())
 
+        /** The maximum number of dreams to return, from 1 to 100. Defaults to 20. */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -153,6 +169,11 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
+        /**
+         * The cursor for the page to return, taken from `next_page` in a previous response.
+         *
+         * Leave it out to get the first page.
+         */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */

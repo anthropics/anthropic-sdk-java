@@ -33,6 +33,11 @@ private constructor(
     ) : this(memoryStoreId, type, mutableMapOf())
 
     /**
+     * The ID of the memory store that the dream writes its result to (`memstore_...`).
+     *
+     * With `output_behavior` set to `create_new`, this is a new memory store. With
+     * `update_existing`, it is the input memory store.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -100,6 +105,12 @@ private constructor(
             additionalProperties = betaDreamMemoryStoreOutput.additionalProperties.toMutableMap()
         }
 
+        /**
+         * The ID of the memory store that the dream writes its result to (`memstore_...`).
+         *
+         * With `output_behavior` set to `create_new`, this is a new memory store. With
+         * `update_existing`, it is the input memory store.
+         */
         fun memoryStoreId(memoryStoreId: String) = memoryStoreId(JsonField.of(memoryStoreId))
 
         /**

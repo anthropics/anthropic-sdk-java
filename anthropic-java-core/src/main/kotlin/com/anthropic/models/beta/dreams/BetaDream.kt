@@ -99,6 +99,8 @@ private constructor(
     )
 
     /**
+     * The unique ID of the dream (`drm_...`).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -137,12 +139,16 @@ private constructor(
     fun error(): Optional<BetaDreamError> = error.getOptional("error")
 
     /**
+     * The sources that the dream reads, from the request that created it.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun inputs(): List<BetaDreamInput> = inputs.getRequired("inputs")
 
     /**
+     * The guidance given when the dream was created, or `null` if none was given.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -158,18 +164,41 @@ private constructor(
     fun model(): BetaDreamModelConfig = model.getRequired("model")
 
     /**
+     * Which memory store a dream writes its result to. Defaults to `create_new` when left out of a
+     * create request.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun outputBehavior(): BetaOutputBehavior = outputBehavior.getRequired("output_behavior")
 
     /**
+     * The memory store that holds the dream's result, as a one-item array, or an empty array until
+     * the dream records that memory store.
+     *
+     * The array is empty while the dream is `pending` and for a short time after it starts
+     * `running`. It can stay empty if the dream fails or is canceled before then. The memory store
+     * holds the complete result only once `status` is `completed`.
+     *
+     * See the
+     * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#use-the-output) for
+     * how to review and use the result.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun outputs(): List<BetaDreamOutput> = outputs.getRequired("outputs")
 
     /**
+     * The ID of the session that runs the dream (`sesn_...`), or `null` if that session hasn't
+     * started.
+     *
+     * Stream that session's events to follow what the dream reads and writes.
+     *
+     * See the
+     * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#watch-the-pipeline-run)
+     * for how to watch a running dream.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -381,6 +410,7 @@ private constructor(
             additionalProperties = betaDream.additionalProperties.toMutableMap()
         }
 
+        /** The unique ID of the dream (`drm_...`). */
         fun id(id: String) = id(JsonField.of(id))
 
         /**
@@ -450,6 +480,7 @@ private constructor(
          */
         fun error(error: JsonField<BetaDreamError>) = apply { this.error = error }
 
+        /** The sources that the dream reads, from the request that created it. */
         fun inputs(inputs: List<BetaDreamInput>) = inputs(JsonField.of(inputs))
 
         /**
@@ -517,6 +548,7 @@ private constructor(
                     .build()
             )
 
+        /** The guidance given when the dream was created, or `null` if none was given. */
         fun instructions(instructions: String?) = instructions(JsonField.ofNullable(instructions))
 
         /** Alias for calling [Builder.instructions] with `instructions.orElse(null)`. */
@@ -548,6 +580,10 @@ private constructor(
          */
         fun model(model: JsonField<BetaDreamModelConfig>) = apply { this.model = model }
 
+        /**
+         * Which memory store a dream writes its result to. Defaults to `create_new` when left out
+         * of a create request.
+         */
         fun outputBehavior(outputBehavior: BetaOutputBehavior) =
             outputBehavior(JsonField.of(outputBehavior))
 
@@ -590,6 +626,18 @@ private constructor(
                     .build()
             )
 
+        /**
+         * The memory store that holds the dream's result, as a one-item array, or an empty array
+         * until the dream records that memory store.
+         *
+         * The array is empty while the dream is `pending` and for a short time after it starts
+         * `running`. It can stay empty if the dream fails or is canceled before then. The memory
+         * store holds the complete result only once `status` is `completed`.
+         *
+         * See the
+         * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#use-the-output)
+         * for how to review and use the result.
+         */
         fun outputs(outputs: List<BetaDreamOutput>) = outputs(JsonField.of(outputs))
 
         /**
@@ -632,6 +680,16 @@ private constructor(
                     .build()
             )
 
+        /**
+         * The ID of the session that runs the dream (`sesn_...`), or `null` if that session hasn't
+         * started.
+         *
+         * Stream that session's events to follow what the dream reads and writes.
+         *
+         * See the
+         * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#watch-the-pipeline-run)
+         * for how to watch a running dream.
+         */
         fun sessionId(sessionId: String?) = sessionId(JsonField.ofNullable(sessionId))
 
         /** Alias for calling [Builder.sessionId] with `sessionId.orElse(null)`. */

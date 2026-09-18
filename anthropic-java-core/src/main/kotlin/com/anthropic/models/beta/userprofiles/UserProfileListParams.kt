@@ -26,17 +26,23 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** The maximum number of user profiles to return, from 1 to 100. Defaults to 20. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** ListOrder enum */
+    /** The sort direction, applied to the field that `order_by` selects. Defaults to `desc`. */
     fun order(): Optional<Order> = Optional.ofNullable(order)
 
     /**
-     * Sort field for listing user profiles: `created_at` (default) or `name` (case-insensitive;
-     * profiles without a name sort last).
+     * The field to sort user profiles by, in the direction that `order` sets. Defaults to
+     * `created_at`.
      */
     fun orderBy(): Optional<OrderBy> = Optional.ofNullable(orderBy)
 
+    /**
+     * The cursor for the page to return, taken from `next_page` in a previous response.
+     *
+     * Leave it out to get the first page.
+     */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -91,6 +97,7 @@ private constructor(
             additionalQueryParams = userProfileListParams.additionalQueryParams.toBuilder()
         }
 
+        /** The maximum number of user profiles to return, from 1 to 100. Defaults to 20. */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -103,21 +110,26 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** ListOrder enum */
+        /** The sort direction, applied to the field that `order_by` selects. Defaults to `desc`. */
         fun order(order: Order?) = apply { this.order = order }
 
         /** Alias for calling [Builder.order] with `order.orElse(null)`. */
         fun order(order: Optional<Order>) = order(order.getOrNull())
 
         /**
-         * Sort field for listing user profiles: `created_at` (default) or `name` (case-insensitive;
-         * profiles without a name sort last).
+         * The field to sort user profiles by, in the direction that `order` sets. Defaults to
+         * `created_at`.
          */
         fun orderBy(orderBy: OrderBy?) = apply { this.orderBy = orderBy }
 
         /** Alias for calling [Builder.orderBy] with `orderBy.orElse(null)`. */
         fun orderBy(orderBy: Optional<OrderBy>) = orderBy(orderBy.getOrNull())
 
+        /**
+         * The cursor for the page to return, taken from `next_page` in a previous response.
+         *
+         * Leave it out to get the first page.
+         */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
@@ -295,7 +307,7 @@ private constructor(
             }
             .build()
 
-    /** ListOrder enum */
+    /** The sort direction, applied to the field that `order_by` selects. Defaults to `desc`. */
     class Order @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -310,8 +322,16 @@ private constructor(
 
         companion object {
 
+            /**
+             * Oldest first when `order_by` is `created_at`, or names in ascending order when
+             * `order_by` is `name`.
+             */
             @JvmField val ASC = of("asc")
 
+            /**
+             * Newest first when `order_by` is `created_at`, or names in descending order when
+             * `order_by` is `name`. This is the default.
+             */
             @JvmField val DESC = of("desc")
 
             @JvmStatic fun of(value: String) = Order(JsonField.of(value))
@@ -323,7 +343,15 @@ private constructor(
 
         /** An enum containing [Order]'s known values. */
         enum class Known {
+            /**
+             * Oldest first when `order_by` is `created_at`, or names in ascending order when
+             * `order_by` is `name`.
+             */
             ASC,
+            /**
+             * Newest first when `order_by` is `created_at`, or names in descending order when
+             * `order_by` is `name`. This is the default.
+             */
             DESC,
         }
 
@@ -337,7 +365,15 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /**
+             * Oldest first when `order_by` is `created_at`, or names in ascending order when
+             * `order_by` is `name`.
+             */
             ASC,
+            /**
+             * Newest first when `order_by` is `created_at`, or names in descending order when
+             * `order_by` is `name`. This is the default.
+             */
             DESC,
             /** An enum member indicating that [Order] was instantiated with an unknown value. */
             _UNKNOWN,
@@ -437,8 +473,8 @@ private constructor(
     }
 
     /**
-     * Sort field for listing user profiles: `created_at` (default) or `name` (case-insensitive;
-     * profiles without a name sort last).
+     * The field to sort user profiles by, in the direction that `order` sets. Defaults to
+     * `created_at`.
      */
     class OrderBy @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -454,8 +490,13 @@ private constructor(
 
         companion object {
 
+            /** Sort by when each user profile was created. This is the default. */
             @JvmField val CREATED_AT = of("created_at")
 
+            /**
+             * Sort by `name`, ignoring the case of ASCII letters. Profiles without a name come last
+             * in either direction.
+             */
             @JvmField val NAME = of("name")
 
             @JvmStatic fun of(value: String) = OrderBy(JsonField.of(value))
@@ -467,7 +508,12 @@ private constructor(
 
         /** An enum containing [OrderBy]'s known values. */
         enum class Known {
+            /** Sort by when each user profile was created. This is the default. */
             CREATED_AT,
+            /**
+             * Sort by `name`, ignoring the case of ASCII letters. Profiles without a name come last
+             * in either direction.
+             */
             NAME,
         }
 
@@ -481,7 +527,12 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /** Sort by when each user profile was created. This is the default. */
             CREATED_AT,
+            /**
+             * Sort by `name`, ignoring the case of ASCII letters. Profiles without a name come last
+             * in either direction.
+             */
             NAME,
             /** An enum member indicating that [OrderBy] was instantiated with an unknown value. */
             _UNKNOWN,

@@ -29,12 +29,19 @@ private constructor(
     ) : this(message, type, mutableMapOf())
 
     /**
+     * A human-readable explanation of why the dream failed.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun message(): String = message.getRequired("message")
 
     /**
+     * A code for why the dream failed, such as `timeout` or `internal_error`.
+     *
+     * The [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#errors) lists
+     * common error codes and when they occur.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -94,6 +101,7 @@ private constructor(
             additionalProperties = betaDreamError.additionalProperties.toMutableMap()
         }
 
+        /** A human-readable explanation of why the dream failed. */
         fun message(message: String) = message(JsonField.of(message))
 
         /**
@@ -104,6 +112,12 @@ private constructor(
          */
         fun message(message: JsonField<String>) = apply { this.message = message }
 
+        /**
+         * A code for why the dream failed, such as `timeout` or `internal_error`.
+         *
+         * The [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#errors)
+         * lists common error codes and when they occur.
+         */
         fun type(type: String) = type(JsonField.of(type))
 
         /**

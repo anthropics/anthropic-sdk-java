@@ -32,6 +32,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** The ID of the user profile to update (`uprof_...`). */
     fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -188,6 +189,7 @@ private constructor(
             additionalQueryParams = userProfileUpdateParams.additionalQueryParams.toBuilder()
         }
 
+        /** The ID of the user profile to update (`uprof_...`). */
         fun userProfileId(userProfileId: String?) = apply { this.userProfileId = userProfileId }
 
         /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
@@ -954,8 +956,13 @@ private constructor(
 
         companion object {
 
+            /**
+             * The user profile represents an individual end-user of a product that the platform
+             * builds on the API. New profiles get this value by default.
+             */
             @JvmField val APPLICATION = of("application")
 
+            /** The user profile represents a company that the platform resells Claude access to. */
             @JvmField val PASSTHROUGH = of("passthrough")
 
             @JvmStatic fun of(value: String) = AccessType(JsonField.of(value))
@@ -967,7 +974,12 @@ private constructor(
 
         /** An enum containing [AccessType]'s known values. */
         enum class Known {
+            /**
+             * The user profile represents an individual end-user of a product that the platform
+             * builds on the API. New profiles get this value by default.
+             */
             APPLICATION,
+            /** The user profile represents a company that the platform resells Claude access to. */
             PASSTHROUGH,
         }
 
@@ -981,7 +993,12 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /**
+             * The user profile represents an individual end-user of a product that the platform
+             * builds on the API. New profiles get this value by default.
+             */
             APPLICATION,
+            /** The user profile represents a company that the platform resells Claude access to. */
             PASSTHROUGH,
             /**
              * An enum member indicating that [AccessType] was instantiated with an unknown value.

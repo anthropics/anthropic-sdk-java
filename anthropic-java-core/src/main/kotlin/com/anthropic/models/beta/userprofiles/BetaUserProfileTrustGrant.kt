@@ -15,6 +15,10 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * The status of one trust grant on a user profile, listed in the profile's `trust_grants` map under
+ * the grant's name.
+ */
 class BetaUserProfileTrustGrant
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

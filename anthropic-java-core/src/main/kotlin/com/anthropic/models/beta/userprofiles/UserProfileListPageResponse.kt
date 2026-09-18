@@ -17,6 +17,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** A page of user profiles, sorted by the request's `order_by` and `order`. */
 class UserProfileListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

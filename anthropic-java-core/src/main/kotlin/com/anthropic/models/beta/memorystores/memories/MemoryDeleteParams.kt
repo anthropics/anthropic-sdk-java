@@ -24,10 +24,18 @@ private constructor(
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
+    /** The ID of the memory store that holds the memory (`memstore_...`). */
     fun memoryStoreId(): String = memoryStoreId
 
+    /** The ID of the memory to delete (`mem_...`). */
     fun memoryId(): Optional<String> = Optional.ofNullable(memoryId)
 
+    /**
+     * Delete the memory only if its current `content_sha256` equals this value, given as 64
+     * lowercase hexadecimal characters. Omit it to delete unconditionally.
+     *
+     * If the hashes differ, the request fails with HTTP status 409 and nothing is deleted.
+     */
     fun expectedContentSha256(): Optional<String> = Optional.ofNullable(expectedContentSha256)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -90,13 +98,21 @@ private constructor(
             additionalBodyProperties = memoryDeleteParams.additionalBodyProperties.toMutableMap()
         }
 
+        /** The ID of the memory store that holds the memory (`memstore_...`). */
         fun memoryStoreId(memoryStoreId: String) = apply { this.memoryStoreId = memoryStoreId }
 
+        /** The ID of the memory to delete (`mem_...`). */
         fun memoryId(memoryId: String?) = apply { this.memoryId = memoryId }
 
         /** Alias for calling [Builder.memoryId] with `memoryId.orElse(null)`. */
         fun memoryId(memoryId: Optional<String>) = memoryId(memoryId.getOrNull())
 
+        /**
+         * Delete the memory only if its current `content_sha256` equals this value, given as 64
+         * lowercase hexadecimal characters. Omit it to delete unconditionally.
+         *
+         * If the hashes differ, the request fails with HTTP status 409 and nothing is deleted.
+         */
         fun expectedContentSha256(expectedContentSha256: String?) = apply {
             this.expectedContentSha256 = expectedContentSha256
         }

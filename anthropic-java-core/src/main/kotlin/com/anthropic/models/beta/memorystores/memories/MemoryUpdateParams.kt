@@ -33,8 +33,10 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** The ID of the memory store that holds the memory (`memstore_...`). */
     fun memoryStoreId(): String = memoryStoreId
 
+    /** The ID of the memory to update (`mem_...`). */
     fun memoryId(): Optional<String> = Optional.ofNullable(memoryId)
 
     /**
@@ -158,8 +160,10 @@ private constructor(
             additionalQueryParams = memoryUpdateParams.additionalQueryParams.toBuilder()
         }
 
+        /** The ID of the memory store that holds the memory (`memstore_...`). */
         fun memoryStoreId(memoryStoreId: String) = apply { this.memoryStoreId = memoryStoreId }
 
+        /** The ID of the memory to update (`mem_...`). */
         fun memoryId(memoryId: String?) = apply { this.memoryId = memoryId }
 
         /** Alias for calling [Builder.memoryId] with `memoryId.orElse(null)`. */

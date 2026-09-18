@@ -24,6 +24,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** The ID of the memory store to list memories from (`memstore_...`). */
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
     /**
@@ -115,6 +116,7 @@ private constructor(
             additionalQueryParams = memoryListParams.additionalQueryParams.toBuilder()
         }
 
+        /** The ID of the memory store to list memories from (`memstore_...`). */
         fun memoryStoreId(memoryStoreId: String?) = apply { this.memoryStoreId = memoryStoreId }
 
         /** Alias for calling [Builder.memoryStoreId] with `memoryStoreId.orElse(null)`. */

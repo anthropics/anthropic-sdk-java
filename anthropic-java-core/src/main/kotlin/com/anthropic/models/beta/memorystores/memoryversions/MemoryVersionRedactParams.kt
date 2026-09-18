@@ -23,8 +23,10 @@ private constructor(
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
+    /** The ID of the memory store that holds the version (`memstore_...`). */
     fun memoryStoreId(): String = memoryStoreId
 
+    /** The ID of the memory version to redact (`memver_...`). */
     fun memoryVersionId(): Optional<String> = Optional.ofNullable(memoryVersionId)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -86,8 +88,10 @@ private constructor(
                 memoryVersionRedactParams.additionalBodyProperties.toMutableMap()
         }
 
+        /** The ID of the memory store that holds the version (`memstore_...`). */
         fun memoryStoreId(memoryStoreId: String) = apply { this.memoryStoreId = memoryStoreId }
 
+        /** The ID of the memory version to redact (`memver_...`). */
         fun memoryVersionId(memoryVersionId: String?) = apply {
             this.memoryVersionId = memoryVersionId
         }

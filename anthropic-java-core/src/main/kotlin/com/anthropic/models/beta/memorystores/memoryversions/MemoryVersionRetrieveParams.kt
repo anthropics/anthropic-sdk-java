@@ -23,8 +23,10 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** The ID of the memory store that holds the version (`memstore_...`). */
     fun memoryStoreId(): String = memoryStoreId
 
+    /** The ID of the memory version to retrieve (`memver_...`). */
     fun memoryVersionId(): Optional<String> = Optional.ofNullable(memoryVersionId)
 
     /**
@@ -90,8 +92,10 @@ private constructor(
             additionalQueryParams = memoryVersionRetrieveParams.additionalQueryParams.toBuilder()
         }
 
+        /** The ID of the memory store that holds the version (`memstore_...`). */
         fun memoryStoreId(memoryStoreId: String) = apply { this.memoryStoreId = memoryStoreId }
 
+        /** The ID of the memory version to retrieve (`memver_...`). */
         fun memoryVersionId(memoryVersionId: String?) = apply {
             this.memoryVersionId = memoryVersionId
         }

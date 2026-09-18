@@ -32,8 +32,10 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** The ID of the memory store whose version history to list (`memstore_...`). */
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
+    /** Return only versions written with the API key that has this ID. */
     fun apiKeyId(): Optional<String> = Optional.ofNullable(apiKeyId)
 
     /** Return versions created at or after this time (inclusive). */
@@ -42,21 +44,31 @@ private constructor(
     /** Return versions created at or before this time (inclusive). */
     fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
 
+    /** The maximum number of versions to return per page. Defaults to 20. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
+    /**
+     * Return only versions of the memory with this ID (`mem_...`).
+     *
+     * The filter still works after the memory is deleted. The results then include the version
+     * whose `operation` is `deleted`.
+     */
     fun memoryId(): Optional<String> = Optional.ofNullable(memoryId)
 
-    /**
-     * The kind of mutation a `memory_version` records. Every non-no-op mutation to a memory appends
-     * exactly one version row with one of these values.
-     */
+    /** Return only versions that record this kind of change. */
     fun operation(): Optional<BetaManagedAgentsMemoryVersionOperation> =
         Optional.ofNullable(operation)
 
+    /**
+     * The `next_page` value from a previous response, to get the next page. Omit it to get the
+     * first page.
+     */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
+    /** Return only versions written by the service account with this ID (`svac_...`). */
     fun serviceAccountId(): Optional<String> = Optional.ofNullable(serviceAccountId)
 
+    /** Return only versions written by the session with this ID. */
     fun sessionId(): Optional<String> = Optional.ofNullable(sessionId)
 
     /**
@@ -133,12 +145,14 @@ private constructor(
             additionalQueryParams = memoryVersionListParams.additionalQueryParams.toBuilder()
         }
 
+        /** The ID of the memory store whose version history to list (`memstore_...`). */
         fun memoryStoreId(memoryStoreId: String?) = apply { this.memoryStoreId = memoryStoreId }
 
         /** Alias for calling [Builder.memoryStoreId] with `memoryStoreId.orElse(null)`. */
         fun memoryStoreId(memoryStoreId: Optional<String>) =
             memoryStoreId(memoryStoreId.getOrNull())
 
+        /** Return only versions written with the API key that has this ID. */
         fun apiKeyId(apiKeyId: String?) = apply { this.apiKeyId = apiKeyId }
 
         /** Alias for calling [Builder.apiKeyId] with `apiKeyId.orElse(null)`. */
@@ -158,6 +172,7 @@ private constructor(
         fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
             createdAtLte(createdAtLte.getOrNull())
 
+        /** The maximum number of versions to return per page. Defaults to 20. */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -170,15 +185,18 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
+        /**
+         * Return only versions of the memory with this ID (`mem_...`).
+         *
+         * The filter still works after the memory is deleted. The results then include the version
+         * whose `operation` is `deleted`.
+         */
         fun memoryId(memoryId: String?) = apply { this.memoryId = memoryId }
 
         /** Alias for calling [Builder.memoryId] with `memoryId.orElse(null)`. */
         fun memoryId(memoryId: Optional<String>) = memoryId(memoryId.getOrNull())
 
-        /**
-         * The kind of mutation a `memory_version` records. Every non-no-op mutation to a memory
-         * appends exactly one version row with one of these values.
-         */
+        /** Return only versions that record this kind of change. */
         fun operation(operation: BetaManagedAgentsMemoryVersionOperation?) = apply {
             this.operation = operation
         }
@@ -187,11 +205,16 @@ private constructor(
         fun operation(operation: Optional<BetaManagedAgentsMemoryVersionOperation>) =
             operation(operation.getOrNull())
 
+        /**
+         * The `next_page` value from a previous response, to get the next page. Omit it to get the
+         * first page.
+         */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
 
+        /** Return only versions written by the service account with this ID (`svac_...`). */
         fun serviceAccountId(serviceAccountId: String?) = apply {
             this.serviceAccountId = serviceAccountId
         }
@@ -200,6 +223,7 @@ private constructor(
         fun serviceAccountId(serviceAccountId: Optional<String>) =
             serviceAccountId(serviceAccountId.getOrNull())
 
+        /** Return only versions written by the session with this ID. */
         fun sessionId(sessionId: String?) = apply { this.sessionId = sessionId }
 
         /** Alias for calling [Builder.sessionId] with `sessionId.orElse(null)`. */

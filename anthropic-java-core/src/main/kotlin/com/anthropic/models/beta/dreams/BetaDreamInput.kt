@@ -20,6 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** A source that a dream reads, such as a memory store or a set of sessions. */
 @JsonDeserialize(using = BetaDreamInput.Deserializer::class)
 @JsonSerialize(using = BetaDreamInput.Serializer::class)
 class BetaDreamInput

@@ -20,6 +20,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Which memory store a dream writes its result to. Defaults to `create_new` when left out of a
+ * create request.
+ */
 @JsonDeserialize(using = BetaOutputBehavior.Deserializer::class)
 @JsonSerialize(using = BetaOutputBehavior.Serializer::class)
 class BetaOutputBehavior

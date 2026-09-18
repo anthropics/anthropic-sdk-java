@@ -159,9 +159,29 @@ private constructor(
 
     fun overloaded(): Optional<BetaOverloadedError> = Optional.ofNullable(overloaded)
 
+    /**
+     * The error returned with HTTP status 409 when a request's precondition doesn't hold for the
+     * memory's current state, such as `precondition` on an update or `expected_content_sha256` on a
+     * delete.
+     *
+     * The error doesn't include the memory's current state. Retrieve the memory to see its current
+     * content and `content_sha256` before you retry.
+     *
+     * See the
+     * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#safe-content-edits-optimistic-concurrency)
+     * to learn more about safe content edits with content hash preconditions.
+     */
     fun memoryPreconditionFailed(): Optional<BetaManagedAgentsMemoryPreconditionFailedError> =
         Optional.ofNullable(memoryPreconditionFailed)
 
+    /**
+     * The error returned with HTTP status 409 when a create or rename targets a path that another
+     * memory uses, or a path that overlaps another memory's path.
+     *
+     * Two paths overlap when one is an ancestor of the other, such as `/notes` and
+     * `/notes/todo.md`. To free the path, rename or delete the memory that `conflicting_memory_id`
+     * references, then retry. To change that memory instead of creating a new one, update it.
+     */
     fun memoryPathConflict(): Optional<BetaManagedAgentsMemoryPathConflictError> =
         Optional.ofNullable(memoryPathConflict)
 
@@ -209,9 +229,29 @@ private constructor(
 
     fun asOverloaded(): BetaOverloadedError = overloaded.getOrThrow("overloaded")
 
+    /**
+     * The error returned with HTTP status 409 when a request's precondition doesn't hold for the
+     * memory's current state, such as `precondition` on an update or `expected_content_sha256` on a
+     * delete.
+     *
+     * The error doesn't include the memory's current state. Retrieve the memory to see its current
+     * content and `content_sha256` before you retry.
+     *
+     * See the
+     * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#safe-content-edits-optimistic-concurrency)
+     * to learn more about safe content edits with content hash preconditions.
+     */
     fun asMemoryPreconditionFailed(): BetaManagedAgentsMemoryPreconditionFailedError =
         memoryPreconditionFailed.getOrThrow("memoryPreconditionFailed")
 
+    /**
+     * The error returned with HTTP status 409 when a create or rename targets a path that another
+     * memory uses, or a path that overlaps another memory's path.
+     *
+     * Two paths overlap when one is an ancestor of the other, such as `/notes` and
+     * `/notes/todo.md`. To free the path, rename or delete the memory that `conflicting_memory_id`
+     * references, then retry. To change that memory instead of creating a new one, update it.
+     */
     fun asMemoryPathConflict(): BetaManagedAgentsMemoryPathConflictError =
         memoryPathConflict.getOrThrow("memoryPathConflict")
 
@@ -540,6 +580,18 @@ private constructor(
          */
         @JvmStatic fun ofOverloaded(message: String) = ofOverloaded(BetaOverloadedError.of(message))
 
+        /**
+         * The error returned with HTTP status 409 when a request's precondition doesn't hold for
+         * the memory's current state, such as `precondition` on an update or
+         * `expected_content_sha256` on a delete.
+         *
+         * The error doesn't include the memory's current state. Retrieve the memory to see its
+         * current content and `content_sha256` before you retry.
+         *
+         * See the
+         * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#safe-content-edits-optimistic-concurrency)
+         * to learn more about safe content edits with content hash preconditions.
+         */
         @JvmStatic
         fun ofMemoryPreconditionFailed(
             memoryPreconditionFailed: BetaManagedAgentsMemoryPreconditionFailedError
@@ -553,6 +605,15 @@ private constructor(
         fun ofMemoryPreconditionFailed(type: BetaManagedAgentsMemoryPreconditionFailedError.Type) =
             ofMemoryPreconditionFailed(BetaManagedAgentsMemoryPreconditionFailedError.of(type))
 
+        /**
+         * The error returned with HTTP status 409 when a create or rename targets a path that
+         * another memory uses, or a path that overlaps another memory's path.
+         *
+         * Two paths overlap when one is an ancestor of the other, such as `/notes` and
+         * `/notes/todo.md`. To free the path, rename or delete the memory that
+         * `conflicting_memory_id` references, then retry. To change that memory instead of creating
+         * a new one, update it.
+         */
         @JvmStatic
         fun ofMemoryPathConflict(memoryPathConflict: BetaManagedAgentsMemoryPathConflictError) =
             BetaManagedAgentsError(memoryPathConflict = memoryPathConflict)
@@ -602,10 +663,31 @@ private constructor(
 
         fun visitOverloaded(overloaded: BetaOverloadedError): T
 
+        /**
+         * The error returned with HTTP status 409 when a request's precondition doesn't hold for
+         * the memory's current state, such as `precondition` on an update or
+         * `expected_content_sha256` on a delete.
+         *
+         * The error doesn't include the memory's current state. Retrieve the memory to see its
+         * current content and `content_sha256` before you retry.
+         *
+         * See the
+         * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#safe-content-edits-optimistic-concurrency)
+         * to learn more about safe content edits with content hash preconditions.
+         */
         fun visitMemoryPreconditionFailed(
             memoryPreconditionFailed: BetaManagedAgentsMemoryPreconditionFailedError
         ): T
 
+        /**
+         * The error returned with HTTP status 409 when a create or rename targets a path that
+         * another memory uses, or a path that overlaps another memory's path.
+         *
+         * Two paths overlap when one is an ancestor of the other, such as `/notes` and
+         * `/notes/todo.md`. To free the path, rename or delete the memory that
+         * `conflicting_memory_id` references, then retry. To change that memory instead of creating
+         * a new one, update it.
+         */
         fun visitMemoryPathConflict(memoryPathConflict: BetaManagedAgentsMemoryPathConflictError): T
 
         fun visitConflict(conflict: BetaManagedAgentsConflictError): T

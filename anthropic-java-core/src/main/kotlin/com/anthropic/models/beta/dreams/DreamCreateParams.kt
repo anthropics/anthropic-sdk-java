@@ -32,7 +32,17 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Create a Dream */
+/**
+ * Start an asynchronous job that uses past sessions to produce a reorganized version of a memory
+ * store and get back the dream to poll for the result.
+ *
+ * By default the dream writes its result to a new memory store and doesn't change the input memory
+ * store. The response has `status` set to `pending` and an empty `outputs` array. Poll the dream
+ * until `status` is `completed`, `failed`, or `canceled`.
+ *
+ * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#create-a-dream)
+ * to learn more about creating dreams.
+ */
 class DreamCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
@@ -55,24 +65,45 @@ private constructor(
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
+     * The memory store and sessions for the dream to read, as exactly one `memory_store` entry and
+     * exactly one `sessions` entry.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun inputs(): List<BetaDreamInput> = body.inputs()
 
     /**
+     * The model that runs a dream, given as a model ID or as an object with `id` and `speed`.
+     *
+     * In the object form, `speed` can only be `standard`.
+     *
+     * The
+     * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+     * lists the supported models.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun model(): Model = body.model()
 
     /**
+     * Guidance that steers how the dream reads the sessions and organizes the output memory store,
+     * from 1 to 4,096 characters.
+     *
+     * See the
+     * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#steer-with-instructions)
+     * for what kinds of instructions work well.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun instructions(): Optional<String> = body.instructions()
 
     /**
+     * Which memory store a dream writes its result to. Defaults to `create_new` when left out of a
+     * create request.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -196,6 +227,10 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /**
+         * The memory store and sessions for the dream to read, as exactly one `memory_store` entry
+         * and exactly one `sessions` entry.
+         */
         fun inputs(inputs: List<BetaDreamInput>) = apply { body.inputs(inputs) }
 
         /**
@@ -244,6 +279,15 @@ private constructor(
          */
         fun addSessionsInput(sessionIds: List<String>) = apply { body.addSessionsInput(sessionIds) }
 
+        /**
+         * The model that runs a dream, given as a model ID or as an object with `id` and `speed`.
+         *
+         * In the object form, `speed` can only be `standard`.
+         *
+         * The
+         * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+         * lists the supported models.
+         */
         fun model(model: Model) = apply { body.model(model) }
 
         /**
@@ -265,6 +309,14 @@ private constructor(
             body.model(betaDreamModelConfigParam)
         }
 
+        /**
+         * Guidance that steers how the dream reads the sessions and organizes the output memory
+         * store, from 1 to 4,096 characters.
+         *
+         * See the
+         * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#steer-with-instructions)
+         * for what kinds of instructions work well.
+         */
         fun instructions(instructions: String?) = apply { body.instructions(instructions) }
 
         /** Alias for calling [Builder.instructions] with `instructions.orElse(null)`. */
@@ -281,6 +333,10 @@ private constructor(
             body.instructions(instructions)
         }
 
+        /**
+         * Which memory store a dream writes its result to. Defaults to `create_new` when left out
+         * of a create request.
+         */
         fun outputBehavior(outputBehavior: BetaOutputBehavior) = apply {
             body.outputBehavior(outputBehavior)
         }
@@ -500,24 +556,45 @@ private constructor(
         ) : this(inputs, model, instructions, outputBehavior, mutableMapOf())
 
         /**
+         * The memory store and sessions for the dream to read, as exactly one `memory_store` entry
+         * and exactly one `sessions` entry.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun inputs(): List<BetaDreamInput> = inputs.getRequired("inputs")
 
         /**
+         * The model that runs a dream, given as a model ID or as an object with `id` and `speed`.
+         *
+         * In the object form, `speed` can only be `standard`.
+         *
+         * The
+         * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+         * lists the supported models.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun model(): Model = model.getRequired("model")
 
         /**
+         * Guidance that steers how the dream reads the sessions and organizes the output memory
+         * store, from 1 to 4,096 characters.
+         *
+         * See the
+         * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#steer-with-instructions)
+         * for what kinds of instructions work well.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
         fun instructions(): Optional<String> = instructions.getOptional("instructions")
 
         /**
+         * Which memory store a dream writes its result to. Defaults to `create_new` when left out
+         * of a create request.
+         *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
@@ -604,6 +681,10 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /**
+             * The memory store and sessions for the dream to read, as exactly one `memory_store`
+             * entry and exactly one `sessions` entry.
+             */
             fun inputs(inputs: List<BetaDreamInput>) = inputs(JsonField.of(inputs))
 
             /**
@@ -671,6 +752,16 @@ private constructor(
                         .build()
                 )
 
+            /**
+             * The model that runs a dream, given as a model ID or as an object with `id` and
+             * `speed`.
+             *
+             * In the object form, `speed` can only be `standard`.
+             *
+             * The
+             * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+             * lists the supported models.
+             */
             fun model(model: Model) = model(JsonField.of(model))
 
             /**
@@ -692,6 +783,14 @@ private constructor(
             fun model(betaDreamModelConfigParam: BetaDreamModelConfigParam) =
                 model(Model.ofBetaDreamModelConfigParam(betaDreamModelConfigParam))
 
+            /**
+             * Guidance that steers how the dream reads the sessions and organizes the output memory
+             * store, from 1 to 4,096 characters.
+             *
+             * See the
+             * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#steer-with-instructions)
+             * for what kinds of instructions work well.
+             */
             fun instructions(instructions: String?) =
                 instructions(JsonField.ofNullable(instructions))
 
@@ -710,6 +809,10 @@ private constructor(
                 this.instructions = instructions
             }
 
+            /**
+             * Which memory store a dream writes its result to. Defaults to `create_new` when left
+             * out of a create request.
+             */
             fun outputBehavior(outputBehavior: BetaOutputBehavior) =
                 outputBehavior(JsonField.of(outputBehavior))
 
@@ -863,6 +966,15 @@ private constructor(
             "Body{inputs=$inputs, model=$model, instructions=$instructions, outputBehavior=$outputBehavior, additionalProperties=$additionalProperties}"
     }
 
+    /**
+     * The model that runs a dream, given as a model ID or as an object with `id` and `speed`.
+     *
+     * In the object form, `speed` can only be `standard`.
+     *
+     * The
+     * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+     * lists the supported models.
+     */
     @JsonDeserialize(using = Model.Deserializer::class)
     @JsonSerialize(using = Model.Serializer::class)
     class Model

@@ -16,6 +16,10 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * A URL to give to the entity that a user profile represents, so that the entity can enroll for a
+ * trust grant.
+ */
 class BetaUserProfileEnrollmentUrl
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

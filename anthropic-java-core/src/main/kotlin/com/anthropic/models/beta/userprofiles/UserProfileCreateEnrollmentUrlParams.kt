@@ -21,6 +21,7 @@ private constructor(
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
+    /** The ID of the user profile to create an enrollment URL for (`uprof_...`). */
     fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -81,6 +82,7 @@ private constructor(
                 userProfileCreateEnrollmentUrlParams.additionalBodyProperties.toMutableMap()
         }
 
+        /** The ID of the user profile to create an enrollment URL for (`uprof_...`). */
         fun userProfileId(userProfileId: String?) = apply { this.userProfileId = userProfileId }
 
         /** Alias for calling [Builder.userProfileId] with `userProfileId.orElse(null)`. */
