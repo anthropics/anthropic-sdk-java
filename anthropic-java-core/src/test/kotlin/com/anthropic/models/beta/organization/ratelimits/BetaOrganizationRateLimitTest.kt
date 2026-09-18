@@ -13,12 +13,27 @@ internal class BetaOrganizationRateLimitTest {
         val betaOrganizationRateLimit =
             BetaOrganizationRateLimit.builder()
                 .id("id")
+                .group(
+                    BetaOrganizationRateLimitModelGroup.builder()
+                        .id("id")
+                        .displayName("display_name")
+                        .build()
+                )
                 .groupType(BetaOrganizationRateLimit.GroupType.BATCH)
                 .addLimit(BetaOrganizationRateLimitValue.builder().type("type").value(0L).build())
                 .addModel("string")
                 .build()
 
         assertThat(betaOrganizationRateLimit.id()).isEqualTo("id")
+        assertThat(betaOrganizationRateLimit.group())
+            .isEqualTo(
+                BetaOrganizationRateLimit.Group.ofModel(
+                    BetaOrganizationRateLimitModelGroup.builder()
+                        .id("id")
+                        .displayName("display_name")
+                        .build()
+                )
+            )
         assertThat(betaOrganizationRateLimit.groupType())
             .isEqualTo(BetaOrganizationRateLimit.GroupType.BATCH)
         assertThat(betaOrganizationRateLimit.limits())
@@ -34,6 +49,12 @@ internal class BetaOrganizationRateLimitTest {
         val betaOrganizationRateLimit =
             BetaOrganizationRateLimit.builder()
                 .id("id")
+                .group(
+                    BetaOrganizationRateLimitModelGroup.builder()
+                        .id("id")
+                        .displayName("display_name")
+                        .build()
+                )
                 .groupType(BetaOrganizationRateLimit.GroupType.BATCH)
                 .addLimit(BetaOrganizationRateLimitValue.builder().type("type").value(0L).build())
                 .addModel("string")

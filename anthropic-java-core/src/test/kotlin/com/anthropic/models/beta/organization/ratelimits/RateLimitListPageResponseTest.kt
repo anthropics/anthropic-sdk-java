@@ -14,6 +14,12 @@ internal class RateLimitListPageResponseTest {
                 .addData(
                     BetaOrganizationRateLimit.builder()
                         .id("id")
+                        .group(
+                            BetaOrganizationRateLimitModelGroup.builder()
+                                .id("id")
+                                .displayName("display_name")
+                                .build()
+                        )
                         .groupType(BetaOrganizationRateLimit.GroupType.BATCH)
                         .addLimit(
                             BetaOrganizationRateLimitValue.builder().type("type").value(0L).build()
@@ -28,6 +34,12 @@ internal class RateLimitListPageResponseTest {
             .containsExactly(
                 BetaOrganizationRateLimit.builder()
                     .id("id")
+                    .group(
+                        BetaOrganizationRateLimitModelGroup.builder()
+                            .id("id")
+                            .displayName("display_name")
+                            .build()
+                    )
                     .groupType(BetaOrganizationRateLimit.GroupType.BATCH)
                     .addLimit(
                         BetaOrganizationRateLimitValue.builder().type("type").value(0L).build()
@@ -46,6 +58,12 @@ internal class RateLimitListPageResponseTest {
                 .addData(
                     BetaOrganizationRateLimit.builder()
                         .id("id")
+                        .group(
+                            BetaOrganizationRateLimitModelGroup.builder()
+                                .id("id")
+                                .displayName("display_name")
+                                .build()
+                        )
                         .groupType(BetaOrganizationRateLimit.GroupType.BATCH)
                         .addLimit(
                             BetaOrganizationRateLimitValue.builder().type("type").value(0L).build()
