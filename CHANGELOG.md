@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.64.0 (2026-09-18)
+
+Full Changelog: [v2.63.0...v2.64.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.63.0...v2.64.0)
+
+### Features
+
+* **api:** add group with display_name to rate limits, deprecate group_type ([135fe49](https://github.com/anthropics/anthropic-sdk-java/commit/135fe49252fa16742ab53800c0b83b5ebe99ddab))
+* **client:** add BetaRunnableTool and reject uninstantiable tool and output classes ([#306](https://github.com/anthropics/anthropic-sdk-java/issues/306)) ([0542b5b](https://github.com/anthropics/anthropic-sdk-java/commit/0542b5b8d620ad29f779a4fc0030c3cd4819de15))
+* **tools:** add compactBeforeNextTurn() to the tool runner ([#310](https://github.com/anthropics/anthropic-sdk-java/issues/310)) ([1849b3f](https://github.com/anthropics/anthropic-sdk-java/commit/1849b3faa9e6a635335790851c844c0e66d19726))
+
+
+### Bug Fixes
+
+* **bedrock:** surface stream decoding failures instead of truncating ([#304](https://github.com/anthropics/anthropic-sdk-java/issues/304)) ([df4db87](https://github.com/anthropics/anthropic-sdk-java/commit/df4db87ead35e57071b54458a1473fcb0c46dadf))
+* **bedrock:** surface stream exception frames as errors and skip typeless frames ([#305](https://github.com/anthropics/anthropic-sdk-java/issues/305)) ([d0cf922](https://github.com/anthropics/anthropic-sdk-java/commit/d0cf922b2977a872f95af15890eacc343632221d))
+* **client:** dispatch fallback and advisor tool result blocks in StructuredContentBlock ([#312](https://github.com/anthropics/anthropic-sdk-java/issues/312)) ([0556b75](https://github.com/anthropics/anthropic-sdk-java/commit/0556b759c60c3c8747678ece2d38f010baeb326f))
+* **client:** fix cross-thread stream close and GC ending streams early ([05dd9db](https://github.com/anthropics/anthropic-sdk-java/commit/05dd9db01686380153e5be9f7a74710b406c6d21))
+* **client:** retry file uploads given as a path or an open file instead of sending them once ([0c34d3a](https://github.com/anthropics/anthropic-sdk-java/commit/0c34d3a3a471e928dc10c62c4730db1f528a7775))
+
+
+### Chores
+
+* **docs:** add descriptions for enum values and path parameters ([dc83ca8](https://github.com/anthropics/anthropic-sdk-java/commit/dc83ca87f2132f85f2900d9005e02b60f2826950))
+* **docs:** clarify the compaction tool_changes and tool change descriptions ([f8e3f2c](https://github.com/anthropics/anthropic-sdk-java/commit/f8e3f2c0fdb4666cb3c2acf3fd9bab7eb97aadd1))
+
 ## 2.63.0 (2026-09-15)
 
 Full Changelog: [v2.62.0...v2.63.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.62.0...v2.63.0)
