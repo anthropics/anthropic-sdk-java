@@ -17,7 +17,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Input session transcripts the dream reads. */
+/** The sessions that a dream reads, given as an entry in `inputs`. */
 class BetaDreamSessionsInput
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

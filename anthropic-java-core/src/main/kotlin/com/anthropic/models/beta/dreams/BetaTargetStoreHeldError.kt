@@ -14,12 +14,14 @@ import java.util.Objects
 import java.util.Optional
 
 /**
- * The `output_behavior.memory_store_id` target is still held by a prior `{type: "update_existing"}`
- * dream — one that is `pending` or `running`, or was canceled with its final writes still landing.
- * Rarely the named dream has just finished (`completed`/`failed`) and its execution is still
- * closing; an immediate retry then almost always succeeds. The message names the holding dream when
- * the server can identify it (rarely omitted); poll it to a terminal state or cancel it, then
- * retry. Carried with `x-should-retry: false`.
+ * Returned with status 409 when a request to create a dream sets `output_behavior` to
+ * `update_existing` and another dream that writes into the same memory store hasn't fully stopped.
+ *
+ * The other dream is `pending` or `running`, or it has just stopped and is still finishing its last
+ * writes. `message` gives the ID of the other dream when the server can identify it. If that dream
+ * has already reached `completed`, `failed`, or `canceled`, retry after a short wait. Otherwise,
+ * wait for the other dream to end or cancel it, then retry. The response sets the `x-should-retry`
+ * header to `false`.
  */
 class BetaTargetStoreHeldError
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -47,8 +49,8 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Human-readable description of the conflict, naming the dream that holds the target store when
-     * the server can identify it.
+     * A human-readable explanation of why the memory store can't be used yet, with the ID of the
+     * dream that is using it when the server can identify it.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -109,8 +111,8 @@ private constructor(
         fun type(type: JsonValue) = apply { this.type = type }
 
         /**
-         * Human-readable description of the conflict, naming the dream that holds the target store
-         * when the server can identify it.
+         * A human-readable explanation of why the memory store can't be used yet, with the ID of
+         * the dream that is using it when the server can identify it.
          */
         fun message(message: String) = message(JsonField.of(message))
 

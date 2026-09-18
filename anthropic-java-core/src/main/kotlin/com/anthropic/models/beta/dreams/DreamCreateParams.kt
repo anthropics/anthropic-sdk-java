@@ -986,7 +986,7 @@ private constructor(
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        /** Model identifier and configuration applied to every pipeline stage. */
+        /** The object form of `model` in a request to create a dream. */
         fun betaDreamModelConfigParam(): Optional<BetaDreamModelConfigParam> =
             Optional.ofNullable(betaDreamModelConfigParam)
 
@@ -996,7 +996,7 @@ private constructor(
 
         fun asString(): String = string.getOrThrow("string")
 
-        /** Model identifier and configuration applied to every pipeline stage. */
+        /** The object form of `model` in a request to create a dream. */
         fun asBetaDreamModelConfigParam(): BetaDreamModelConfigParam =
             betaDreamModelConfigParam.getOrThrow("betaDreamModelConfigParam")
 
@@ -1122,7 +1122,7 @@ private constructor(
 
             @JvmStatic fun ofString(string: String) = Model(string = string)
 
-            /** Model identifier and configuration applied to every pipeline stage. */
+            /** The object form of `model` in a request to create a dream. */
             @JvmStatic
             fun ofBetaDreamModelConfigParam(betaDreamModelConfigParam: BetaDreamModelConfigParam) =
                 Model(betaDreamModelConfigParam = betaDreamModelConfigParam)
@@ -1141,7 +1141,7 @@ private constructor(
 
             fun visitString(string: String): T
 
-            /** Model identifier and configuration applied to every pipeline stage. */
+            /** The object form of `model` in a request to create a dream. */
             fun visitBetaDreamModelConfigParam(
                 betaDreamModelConfigParam: BetaDreamModelConfigParam
             ): T

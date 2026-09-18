@@ -17,8 +17,10 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Model identifier and configuration applied to every pipeline stage. Same wire shape as the Agents
- * API ModelConfig.
+ * The model that runs a dream, from the request that created it.
+ *
+ * The dream uses this model for all of its work. The response always gives the model as an object,
+ * even if the request gave only a model ID.
  */
 class BetaDreamModelConfig
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -35,7 +37,7 @@ private constructor(
     ) : this(id, speed, mutableMapOf())
 
     /**
-     * Model identifier, e.g. "claude-opus-5". 1-256 characters.
+     * The ID of the model that runs the dream, as given in the request that created it.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -110,7 +112,7 @@ private constructor(
             additionalProperties = betaDreamModelConfig.additionalProperties.toMutableMap()
         }
 
-        /** Model identifier, e.g. "claude-opus-5". 1-256 characters. */
+        /** The ID of the model that runs the dream, as given in the request that created it. */
         fun id(id: String) = id(JsonField.of(id))
 
         /**

@@ -15,7 +15,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** An output memory store the dream writes consolidated memories into. */
+/** The memory store that holds a dream's result, as an entry in `outputs`. */
 class BetaDreamMemoryStoreOutput
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

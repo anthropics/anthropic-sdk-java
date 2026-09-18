@@ -33,16 +33,10 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /**
-     * Return dreams with `created_at` strictly after this timestamp (exclusive lower bound, RFC
-     * 3339). Unset applies no lower bound.
-     */
+    /** Return only dreams created after this time (exclusive), in RFC 3339. */
     fun createdAtGt(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGt)
 
-    /**
-     * Return dreams with `created_at` strictly before this timestamp (exclusive upper bound, RFC
-     * 3339). Unset applies no upper bound.
-     */
+    /** Return only dreams created before this time (exclusive), in RFC 3339. */
     fun createdAtLt(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLt)
 
     /** Whether to include archived dreams. Defaults to `false`. */
@@ -59,8 +53,10 @@ private constructor(
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /**
-     * Filter by lifecycle status. Repeat the parameter to match any of multiple statuses. Empty
-     * applies no status filter.
+     * Return only dreams that have one of these statuses.
+     *
+     * Repeat the parameter to give more than one status. Leave it out to return dreams of every
+     * status.
      */
     fun statuses(): Optional<List<BetaDreamStatus>> = Optional.ofNullable(statuses)
 
@@ -120,20 +116,14 @@ private constructor(
             additionalQueryParams = dreamListParams.additionalQueryParams.toBuilder()
         }
 
-        /**
-         * Return dreams with `created_at` strictly after this timestamp (exclusive lower bound, RFC
-         * 3339). Unset applies no lower bound.
-         */
+        /** Return only dreams created after this time (exclusive), in RFC 3339. */
         fun createdAtGt(createdAtGt: OffsetDateTime?) = apply { this.createdAtGt = createdAtGt }
 
         /** Alias for calling [Builder.createdAtGt] with `createdAtGt.orElse(null)`. */
         fun createdAtGt(createdAtGt: Optional<OffsetDateTime>) =
             createdAtGt(createdAtGt.getOrNull())
 
-        /**
-         * Return dreams with `created_at` strictly before this timestamp (exclusive upper bound,
-         * RFC 3339). Unset applies no upper bound.
-         */
+        /** Return only dreams created before this time (exclusive), in RFC 3339. */
         fun createdAtLt(createdAtLt: OffsetDateTime?) = apply { this.createdAtLt = createdAtLt }
 
         /** Alias for calling [Builder.createdAtLt] with `createdAtLt.orElse(null)`. */
@@ -180,8 +170,10 @@ private constructor(
         fun page(page: Optional<String>) = page(page.getOrNull())
 
         /**
-         * Filter by lifecycle status. Repeat the parameter to match any of multiple statuses. Empty
-         * applies no status filter.
+         * Return only dreams that have one of these statuses.
+         *
+         * Repeat the parameter to give more than one status. Leave it out to return dreams of every
+         * status.
          */
         fun statuses(statuses: List<BetaDreamStatus>?) = apply {
             this.statuses = statuses?.toMutableList()
