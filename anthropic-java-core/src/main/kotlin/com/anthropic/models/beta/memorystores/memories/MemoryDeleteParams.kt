@@ -28,7 +28,6 @@ private constructor(
 
     fun memoryId(): Optional<String> = Optional.ofNullable(memoryId)
 
-    /** Query parameter for expected_content_sha256 */
     fun expectedContentSha256(): Optional<String> = Optional.ofNullable(expectedContentSha256)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -91,7 +90,6 @@ private constructor(
         /** Alias for calling [Builder.memoryId] with `memoryId.orElse(null)`. */
         fun memoryId(memoryId: Optional<String>) = memoryId(memoryId.getOrNull())
 
-        /** Query parameter for expected_content_sha256 */
         fun expectedContentSha256(expectedContentSha256: String?) = apply {
             this.expectedContentSha256 = expectedContentSha256
         }

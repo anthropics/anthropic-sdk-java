@@ -27,7 +27,12 @@ private constructor(
 
     fun memoryVersionId(): Optional<String> = Optional.ofNullable(memoryVersionId)
 
-    /** Query parameter for view */
+    /**
+     * Selects which projection of a `memory` or `memory_version` the server returns. `basic`
+     * returns the object with `content` set to `null`; `full` populates `content`. When omitted,
+     * the default is endpoint-specific: retrieve operations default to `full`; list, create, and
+     * update operations default to `basic`. Listing with `view=full` caps `limit` at 20.
+     */
     fun view(): Optional<BetaManagedAgentsMemoryView> = Optional.ofNullable(view)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -88,7 +93,13 @@ private constructor(
         fun memoryVersionId(memoryVersionId: Optional<String>) =
             memoryVersionId(memoryVersionId.getOrNull())
 
-        /** Query parameter for view */
+        /**
+         * Selects which projection of a `memory` or `memory_version` the server returns. `basic`
+         * returns the object with `content` set to `null`; `full` populates `content`. When
+         * omitted, the default is endpoint-specific: retrieve operations default to `full`; list,
+         * create, and update operations default to `basic`. Listing with `view=full` caps `limit`
+         * at 20.
+         */
         fun view(view: BetaManagedAgentsMemoryView?) = apply { this.view = view }
 
         /** Alias for calling [Builder.view] with `view.orElse(null)`. */

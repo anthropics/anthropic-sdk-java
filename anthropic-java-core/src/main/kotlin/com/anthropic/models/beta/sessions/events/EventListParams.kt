@@ -59,7 +59,6 @@ private constructor(
      */
     fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
 
-    /** Query parameter for limit */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
     /**
@@ -177,7 +176,6 @@ private constructor(
         fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
             createdAtLte(createdAtLte.getOrNull())
 
-        /** Query parameter for limit */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**

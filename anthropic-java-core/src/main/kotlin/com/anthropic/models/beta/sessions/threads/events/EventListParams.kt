@@ -27,10 +27,8 @@ private constructor(
 
     fun threadId(): Optional<String> = Optional.ofNullable(threadId)
 
-    /** Query parameter for limit */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Query parameter for page */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -90,7 +88,6 @@ private constructor(
         /** Alias for calling [Builder.threadId] with `threadId.orElse(null)`. */
         fun threadId(threadId: Optional<String>) = threadId(threadId.getOrNull())
 
-        /** Query parameter for limit */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -103,7 +100,6 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Query parameter for page */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */

@@ -38,13 +38,10 @@ private constructor(
      */
     fun createdAtLt(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLt)
 
-    /** Query parameter for include_archived */
     fun includeArchived(): Optional<Boolean> = Optional.ofNullable(includeArchived)
 
-    /** Query parameter for limit */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Query parameter for page */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /**
@@ -122,7 +119,6 @@ private constructor(
         fun createdAtLt(createdAtLt: Optional<OffsetDateTime>) =
             createdAtLt(createdAtLt.getOrNull())
 
-        /** Query parameter for include_archived */
         fun includeArchived(includeArchived: Boolean?) = apply {
             this.includeArchived = includeArchived
         }
@@ -138,7 +134,6 @@ private constructor(
         fun includeArchived(includeArchived: Optional<Boolean>) =
             includeArchived(includeArchived.getOrNull())
 
-        /** Query parameter for limit */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -151,7 +146,6 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Query parameter for page */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */

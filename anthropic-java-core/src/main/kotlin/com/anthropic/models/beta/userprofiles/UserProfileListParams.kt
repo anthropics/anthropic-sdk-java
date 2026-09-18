@@ -26,16 +26,17 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Query parameter for limit */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Query parameter for order */
+    /** ListOrder enum */
     fun order(): Optional<Order> = Optional.ofNullable(order)
 
-    /** Query parameter for order_by */
+    /**
+     * Sort field for listing user profiles: `created_at` (default) or `name` (case-insensitive;
+     * profiles without a name sort last).
+     */
     fun orderBy(): Optional<OrderBy> = Optional.ofNullable(orderBy)
 
-    /** Query parameter for page */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /** Optional header to specify the beta version(s) you want to use. */
@@ -83,7 +84,6 @@ private constructor(
             additionalQueryParams = userProfileListParams.additionalQueryParams.toBuilder()
         }
 
-        /** Query parameter for limit */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -96,19 +96,21 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Query parameter for order */
+        /** ListOrder enum */
         fun order(order: Order?) = apply { this.order = order }
 
         /** Alias for calling [Builder.order] with `order.orElse(null)`. */
         fun order(order: Optional<Order>) = order(order.getOrNull())
 
-        /** Query parameter for order_by */
+        /**
+         * Sort field for listing user profiles: `created_at` (default) or `name` (case-insensitive;
+         * profiles without a name sort last).
+         */
         fun orderBy(orderBy: OrderBy?) = apply { this.orderBy = orderBy }
 
         /** Alias for calling [Builder.orderBy] with `orderBy.orElse(null)`. */
         fun orderBy(orderBy: Optional<OrderBy>) = orderBy(orderBy.getOrNull())
 
-        /** Query parameter for page */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
@@ -279,7 +281,7 @@ private constructor(
             }
             .build()
 
-    /** Query parameter for order */
+    /** ListOrder enum */
     class Order @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -420,7 +422,10 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Query parameter for order_by */
+    /**
+     * Sort field for listing user profiles: `created_at` (default) or `name` (case-insensitive;
+     * profiles without a name sort last).
+     */
     class OrderBy @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
