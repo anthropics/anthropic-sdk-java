@@ -43,11 +43,19 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** Identifier of the vault to create the credential in. */
     fun vaultId(): Optional<String> = Optional.ofNullable(vaultId)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    /**
+     * Optional header to select the Workspace for this request. The value is a Workspace ID (for
+     * example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+     *
+     * Only needed for credentials that can act on more than one Workspace. A credential that
+     * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+     */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
@@ -139,6 +147,7 @@ private constructor(
             additionalQueryParams = credentialCreateParams.additionalQueryParams.toBuilder()
         }
 
+        /** Identifier of the vault to create the credential in. */
         fun vaultId(vaultId: String?) = apply { this.vaultId = vaultId }
 
         /** Alias for calling [Builder.vaultId] with `vaultId.orElse(null)`. */
@@ -168,6 +177,13 @@ private constructor(
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
+        /**
+         * Optional header to select the Workspace for this request. The value is a Workspace ID
+         * (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+         *
+         * Only needed for credentials that can act on more than one Workspace. A credential that
+         * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+         */
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
