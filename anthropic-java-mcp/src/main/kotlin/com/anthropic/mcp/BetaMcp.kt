@@ -15,6 +15,7 @@ import com.anthropic.models.beta.messages.BetaContainerUploadBlockParam
 import com.anthropic.models.beta.messages.BetaContentBlockParam
 import com.anthropic.models.beta.messages.BetaFallbackBlockParam
 import com.anthropic.models.beta.messages.BetaImageBlockParam
+import com.anthropic.models.beta.messages.BetaMcpToolListingBlockParam
 import com.anthropic.models.beta.messages.BetaMcpToolUseBlockParam
 import com.anthropic.models.beta.messages.BetaMessageParam
 import com.anthropic.models.beta.messages.BetaPlainTextSource
@@ -372,6 +373,9 @@ object BetaMcp {
 
                 override fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
                     unsupported("tool_removal")
+
+                override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlockParam) =
+                    unsupported("mcp_tool_listing")
 
                 private fun unsupported(type: String): BetaToolResultBlockParam.Content.Block =
                     throw AnthropicInvalidDataException(

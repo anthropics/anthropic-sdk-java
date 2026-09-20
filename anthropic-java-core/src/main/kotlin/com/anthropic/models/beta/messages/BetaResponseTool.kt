@@ -1,0 +1,1049 @@
+package com.anthropic.models.beta.messages
+
+import com.anthropic.core.Enum
+import com.anthropic.core.ExcludeMissing
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonValue
+import com.anthropic.core.checkKnown
+import com.anthropic.core.checkRequired
+import com.anthropic.core.toImmutable
+import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
+import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+/** A custom tool definition, as sent. */
+class BetaResponseTool
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+private constructor(
+    private val inputSchema: JsonField<BetaResponseToolInputSchema>,
+    private val name: JsonField<String>,
+    private val allowedCallers: JsonField<List<AllowedCaller>>,
+    private val deferLoading: JsonField<Boolean>,
+    private val description: JsonField<String>,
+    private val eagerInputStreaming: JsonField<Boolean>,
+    private val inputExamples: JsonField<List<InputExample>>,
+    private val strict: JsonField<Boolean>,
+    private val type: JsonField<Type>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
+) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("input_schema")
+        @ExcludeMissing
+        inputSchema: JsonField<BetaResponseToolInputSchema> = JsonMissing.of(),
+        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("allowed_callers")
+        @ExcludeMissing
+        allowedCallers: JsonField<List<AllowedCaller>> = JsonMissing.of(),
+        @JsonProperty("defer_loading")
+        @ExcludeMissing
+        deferLoading: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("eager_input_streaming")
+        @ExcludeMissing
+        eagerInputStreaming: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("input_examples")
+        @ExcludeMissing
+        inputExamples: JsonField<List<InputExample>> = JsonMissing.of(),
+        @JsonProperty("strict") @ExcludeMissing strict: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+    ) : this(
+        inputSchema,
+        name,
+        allowedCallers,
+        deferLoading,
+        description,
+        eagerInputStreaming,
+        inputExamples,
+        strict,
+        type,
+        mutableMapOf(),
+    )
+
+    fun toParam(): BetaTool =
+        BetaTool.builder()
+            .inputSchema(
+                _inputSchema().map {
+                    BetaTool.InputSchema.builder()
+                        .properties(
+                            it._properties().map {
+                                BetaTool.InputSchema.Properties.builder()
+                                    .additionalProperties(it._additionalProperties())
+                                    .build()
+                            }
+                        )
+                        .required(it._required())
+                        .additionalProperties(it._additionalProperties())
+                        .build()
+                }
+            )
+            .name(_name())
+            .allowedCallers(
+                _allowedCallers().map { it.map { BetaTool.AllowedCaller.of(it._value()) } }
+            )
+            .deferLoading(_deferLoading())
+            .description(_description())
+            .eagerInputStreaming(_eagerInputStreaming())
+            .inputExamples(
+                _inputExamples().map {
+                    it.map {
+                        BetaTool.InputExample.builder()
+                            .additionalProperties(it._additionalProperties())
+                            .build()
+                    }
+                }
+            )
+            .strict(_strict())
+            .type(_type().map { BetaTool.Type.of(it._value()) })
+            .build()
+
+    /**
+     * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
+     *
+     * This defines the shape of the `input` that your tool accepts and that the model will produce.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun inputSchema(): BetaResponseToolInputSchema = inputSchema.getRequired("input_schema")
+
+    /**
+     * Name of the tool.
+     *
+     * This is how the tool will be called by the model and in `tool_use` blocks.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun name(): String = name.getRequired("name")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun allowedCallers(): Optional<List<AllowedCaller>> =
+        allowedCallers.getOptional("allowed_callers")
+
+    /**
+     * If true, tool will not be included in initial system prompt. Only loaded when returned via
+     * tool_reference from tool search.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun deferLoading(): Optional<Boolean> = deferLoading.getOptional("defer_loading")
+
+    /**
+     * Description of what this tool does.
+     *
+     * Tool descriptions should be as detailed as possible. The more information that the model has
+     * about what the tool is and how to use it, the better it will perform. You can use natural
+     * language descriptions to reinforce important aspects of the tool input JSON schema.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun description(): Optional<String> = description.getOptional("description")
+
+    /**
+     * Enable eager input streaming for this tool. When true, tool input parameters will be streamed
+     * incrementally as they are generated, and types will be inferred on-the-fly rather than
+     * buffering the full JSON output. When false, streaming is disabled for this tool even if the
+     * fine-grained-tool-streaming beta is active. When null (default), uses the default behavior
+     * based on beta headers.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun eagerInputStreaming(): Optional<Boolean> =
+        eagerInputStreaming.getOptional("eager_input_streaming")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun inputExamples(): Optional<List<InputExample>> = inputExamples.getOptional("input_examples")
+
+    /**
+     * When true, guarantees schema validation on tool names and inputs
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun strict(): Optional<Boolean> = strict.getOptional("strict")
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun type(): Optional<Type> = type.getOptional("type")
+
+    /**
+     * Returns the raw JSON value of [inputSchema].
+     *
+     * Unlike [inputSchema], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("input_schema")
+    @ExcludeMissing
+    fun _inputSchema(): JsonField<BetaResponseToolInputSchema> = inputSchema
+
+    /**
+     * Returns the raw JSON value of [name].
+     *
+     * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+    /**
+     * Returns the raw JSON value of [allowedCallers].
+     *
+     * Unlike [allowedCallers], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("allowed_callers")
+    @ExcludeMissing
+    fun _allowedCallers(): JsonField<List<AllowedCaller>> = allowedCallers
+
+    /**
+     * Returns the raw JSON value of [deferLoading].
+     *
+     * Unlike [deferLoading], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("defer_loading")
+    @ExcludeMissing
+    fun _deferLoading(): JsonField<Boolean> = deferLoading
+
+    /**
+     * Returns the raw JSON value of [description].
+     *
+     * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+
+    /**
+     * Returns the raw JSON value of [eagerInputStreaming].
+     *
+     * Unlike [eagerInputStreaming], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("eager_input_streaming")
+    @ExcludeMissing
+    fun _eagerInputStreaming(): JsonField<Boolean> = eagerInputStreaming
+
+    /**
+     * Returns the raw JSON value of [inputExamples].
+     *
+     * Unlike [inputExamples], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("input_examples")
+    @ExcludeMissing
+    fun _inputExamples(): JsonField<List<InputExample>> = inputExamples
+
+    /**
+     * Returns the raw JSON value of [strict].
+     *
+     * Unlike [strict], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("strict") @ExcludeMissing fun _strict(): JsonField<Boolean> = strict
+
+    /**
+     * Returns the raw JSON value of [type].
+     *
+     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
+    @JsonAnyGetter
+    @ExcludeMissing
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaResponseTool].
+         *
+         * The following fields are required:
+         * ```java
+         * .inputSchema()
+         * .name()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
+    }
+
+    /** A builder for [BetaResponseTool]. */
+    class Builder internal constructor() {
+
+        private var inputSchema: JsonField<BetaResponseToolInputSchema>? = null
+        private var name: JsonField<String>? = null
+        private var allowedCallers: JsonField<MutableList<AllowedCaller>>? = null
+        private var deferLoading: JsonField<Boolean> = JsonMissing.of()
+        private var description: JsonField<String> = JsonMissing.of()
+        private var eagerInputStreaming: JsonField<Boolean> = JsonMissing.of()
+        private var inputExamples: JsonField<MutableList<InputExample>>? = null
+        private var strict: JsonField<Boolean> = JsonMissing.of()
+        private var type: JsonField<Type> = JsonMissing.of()
+        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+        @JvmSynthetic
+        internal fun from(betaResponseTool: BetaResponseTool) = apply {
+            inputSchema = betaResponseTool.inputSchema
+            name = betaResponseTool.name
+            allowedCallers =
+                betaResponseTool.allowedCallers
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            deferLoading = betaResponseTool.deferLoading
+            description = betaResponseTool.description
+            eagerInputStreaming = betaResponseTool.eagerInputStreaming
+            inputExamples =
+                betaResponseTool.inputExamples
+                    .map { it.toMutableList() }
+                    .takeUnless { it.isMissing() }
+            strict = betaResponseTool.strict
+            type = betaResponseTool.type
+            additionalProperties = betaResponseTool.additionalProperties.toMutableMap()
+        }
+
+        /**
+         * [JSON schema](https://json-schema.org/draft/2020-12) for this tool's input.
+         *
+         * This defines the shape of the `input` that your tool accepts and that the model will
+         * produce.
+         */
+        fun inputSchema(inputSchema: BetaResponseToolInputSchema) =
+            inputSchema(JsonField.of(inputSchema))
+
+        /**
+         * Sets [Builder.inputSchema] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inputSchema] with a well-typed
+         * [BetaResponseToolInputSchema] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun inputSchema(inputSchema: JsonField<BetaResponseToolInputSchema>) = apply {
+            this.inputSchema = inputSchema
+        }
+
+        /**
+         * Name of the tool.
+         *
+         * This is how the tool will be called by the model and in `tool_use` blocks.
+         */
+        fun name(name: String) = name(JsonField.of(name))
+
+        /**
+         * Sets [Builder.name] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun name(name: JsonField<String>) = apply { this.name = name }
+
+        fun allowedCallers(allowedCallers: List<AllowedCaller>) =
+            allowedCallers(JsonField.of(allowedCallers))
+
+        /**
+         * Sets [Builder.allowedCallers] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.allowedCallers] with a well-typed `List<AllowedCaller>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun allowedCallers(allowedCallers: JsonField<List<AllowedCaller>>) = apply {
+            this.allowedCallers = allowedCallers.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [AllowedCaller] to [allowedCallers].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addAllowedCaller(allowedCaller: AllowedCaller) = apply {
+            allowedCallers =
+                (allowedCallers ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("allowedCallers", it).add(allowedCaller)
+                }
+        }
+
+        /**
+         * If true, tool will not be included in initial system prompt. Only loaded when returned
+         * via tool_reference from tool search.
+         */
+        fun deferLoading(deferLoading: Boolean) = deferLoading(JsonField.of(deferLoading))
+
+        /**
+         * Sets [Builder.deferLoading] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.deferLoading] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun deferLoading(deferLoading: JsonField<Boolean>) = apply {
+            this.deferLoading = deferLoading
+        }
+
+        /**
+         * Description of what this tool does.
+         *
+         * Tool descriptions should be as detailed as possible. The more information that the model
+         * has about what the tool is and how to use it, the better it will perform. You can use
+         * natural language descriptions to reinforce important aspects of the tool input JSON
+         * schema.
+         */
+        fun description(description: String) = description(JsonField.of(description))
+
+        /**
+         * Sets [Builder.description] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.description] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun description(description: JsonField<String>) = apply { this.description = description }
+
+        /**
+         * Enable eager input streaming for this tool. When true, tool input parameters will be
+         * streamed incrementally as they are generated, and types will be inferred on-the-fly
+         * rather than buffering the full JSON output. When false, streaming is disabled for this
+         * tool even if the fine-grained-tool-streaming beta is active. When null (default), uses
+         * the default behavior based on beta headers.
+         */
+        fun eagerInputStreaming(eagerInputStreaming: Boolean?) =
+            eagerInputStreaming(JsonField.ofNullable(eagerInputStreaming))
+
+        /**
+         * Alias for [Builder.eagerInputStreaming].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun eagerInputStreaming(eagerInputStreaming: Boolean) =
+            eagerInputStreaming(eagerInputStreaming as Boolean?)
+
+        /**
+         * Alias for calling [Builder.eagerInputStreaming] with `eagerInputStreaming.orElse(null)`.
+         */
+        fun eagerInputStreaming(eagerInputStreaming: Optional<Boolean>) =
+            eagerInputStreaming(eagerInputStreaming.getOrNull())
+
+        /**
+         * Sets [Builder.eagerInputStreaming] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.eagerInputStreaming] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun eagerInputStreaming(eagerInputStreaming: JsonField<Boolean>) = apply {
+            this.eagerInputStreaming = eagerInputStreaming
+        }
+
+        fun inputExamples(inputExamples: List<InputExample>) =
+            inputExamples(JsonField.of(inputExamples))
+
+        /**
+         * Sets [Builder.inputExamples] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.inputExamples] with a well-typed `List<InputExample>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun inputExamples(inputExamples: JsonField<List<InputExample>>) = apply {
+            this.inputExamples = inputExamples.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [InputExample] to [inputExamples].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addInputExample(inputExample: InputExample) = apply {
+            inputExamples =
+                (inputExamples ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("inputExamples", it).add(inputExample)
+                }
+        }
+
+        /** When true, guarantees schema validation on tool names and inputs */
+        fun strict(strict: Boolean) = strict(JsonField.of(strict))
+
+        /**
+         * Sets [Builder.strict] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.strict] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
+
+        fun type(type: Type?) = type(JsonField.ofNullable(type))
+
+        /** Alias for calling [Builder.type] with `type.orElse(null)`. */
+        fun type(type: Optional<Type>) = type(type.getOrNull())
+
+        /**
+         * Sets [Builder.type] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun type(type: JsonField<Type>) = apply { this.type = type }
+
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.clear()
+            putAllAdditionalProperties(additionalProperties)
+        }
+
+        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+            additionalProperties.put(key, value)
+        }
+
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
+        }
+
+        /**
+         * Returns an immutable instance of [BetaResponseTool].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .inputSchema()
+         * .name()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): BetaResponseTool =
+            BetaResponseTool(
+                checkRequired("inputSchema", inputSchema),
+                checkRequired("name", name),
+                (allowedCallers ?: JsonMissing.of()).map { it.toImmutable() },
+                deferLoading,
+                description,
+                eagerInputStreaming,
+                (inputExamples ?: JsonMissing.of()).map { it.toImmutable() },
+                strict,
+                type,
+                additionalProperties.toMutableMap(),
+            )
+    }
+
+    private var validated: Boolean = false
+
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
+    fun validate(): BetaResponseTool = apply {
+        if (validated) {
+            return@apply
+        }
+
+        inputSchema().validate()
+        name()
+        allowedCallers().ifPresent { it.forEach { it.validate() } }
+        deferLoading()
+        description()
+        eagerInputStreaming()
+        inputExamples().ifPresent { it.forEach { it.validate() } }
+        strict()
+        type().ifPresent { it.validate() }
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (inputSchema.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (name.asKnown().isPresent) 1 else 0) +
+            (allowedCallers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (deferLoading.asKnown().isPresent) 1 else 0) +
+            (if (description.asKnown().isPresent) 1 else 0) +
+            (if (eagerInputStreaming.asKnown().isPresent) 1 else 0) +
+            (inputExamples.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (strict.asKnown().isPresent) 1 else 0) +
+            (type.asKnown().getOrNull()?.validity() ?: 0)
+
+    /**
+     * Specifies who can invoke a tool.
+     *
+     * Values: direct: The model can call this tool directly. code_execution_20250825: The tool can
+     * be called from the code execution environment (v1). code_execution_20260120: The tool can be
+     * called from the code execution environment (v2 with persistence). code_execution_20260521:
+     * The tool can be called from the code execution environment (v2 with persistence).
+     */
+    class AllowedCaller @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val DIRECT = of("direct")
+
+            @JvmField val CODE_EXECUTION_20250825 = of("code_execution_20250825")
+
+            @JvmField val CODE_EXECUTION_20260120 = of("code_execution_20260120")
+
+            @JvmField val CODE_EXECUTION_20260521 = of("code_execution_20260521")
+
+            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): AllowedCaller =
+                value.asString().getOrNull()?.let { of(it) } ?: AllowedCaller(value)
+        }
+
+        /** An enum containing [AllowedCaller]'s known values. */
+        enum class Known {
+            DIRECT,
+            CODE_EXECUTION_20250825,
+            CODE_EXECUTION_20260120,
+            CODE_EXECUTION_20260521,
+        }
+
+        /**
+         * An enum containing [AllowedCaller]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [AllowedCaller] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            DIRECT,
+            CODE_EXECUTION_20250825,
+            CODE_EXECUTION_20260120,
+            CODE_EXECUTION_20260521,
+            /**
+             * An enum member indicating that [AllowedCaller] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                DIRECT -> Value.DIRECT
+                CODE_EXECUTION_20250825 -> Value.CODE_EXECUTION_20250825
+                CODE_EXECUTION_20260120 -> Value.CODE_EXECUTION_20260120
+                CODE_EXECUTION_20260521 -> Value.CODE_EXECUTION_20260521
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                DIRECT -> Known.DIRECT
+                CODE_EXECUTION_20250825 -> Known.CODE_EXECUTION_20250825
+                CODE_EXECUTION_20260120 -> Known.CODE_EXECUTION_20260120
+                CODE_EXECUTION_20260521 -> Known.CODE_EXECUTION_20260521
+                else -> throw AnthropicInvalidDataException("Unknown AllowedCaller: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): AllowedCaller = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is AllowedCaller && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    class InputExample
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [InputExample]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [InputExample]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(inputExample: InputExample) = apply {
+                additionalProperties = inputExample.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [InputExample].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): InputExample = InputExample(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): InputExample = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is InputExample && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "InputExample{additionalProperties=$additionalProperties}"
+    }
+
+    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val CUSTOM = of("custom")
+
+            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+
+            @JvmSynthetic
+            internal fun of(value: JsonField<String>): Type =
+                value.asString().getOrNull()?.let { of(it) } ?: Type(value)
+        }
+
+        /** An enum containing [Type]'s known values. */
+        enum class Known {
+            CUSTOM
+        }
+
+        /**
+         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Type] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            CUSTOM,
+            /** An enum member indicating that [Type] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                CUSTOM -> Value.CUSTOM
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                CUSTOM -> Known.CUSTOM
+                else -> throw AnthropicInvalidDataException("Unknown Type: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Type = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Type && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is BetaResponseTool &&
+            inputSchema == other.inputSchema &&
+            name == other.name &&
+            allowedCallers == other.allowedCallers &&
+            deferLoading == other.deferLoading &&
+            description == other.description &&
+            eagerInputStreaming == other.eagerInputStreaming &&
+            inputExamples == other.inputExamples &&
+            strict == other.strict &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
+    }
+
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            inputSchema,
+            name,
+            allowedCallers,
+            deferLoading,
+            description,
+            eagerInputStreaming,
+            inputExamples,
+            strict,
+            type,
+            additionalProperties,
+        )
+    }
+
+    override fun hashCode(): Int = hashCode
+
+    override fun toString() =
+        "BetaResponseTool{inputSchema=$inputSchema, name=$name, allowedCallers=$allowedCallers, deferLoading=$deferLoading, description=$description, eagerInputStreaming=$eagerInputStreaming, inputExamples=$inputExamples, strict=$strict, type=$type, additionalProperties=$additionalProperties}"
+}

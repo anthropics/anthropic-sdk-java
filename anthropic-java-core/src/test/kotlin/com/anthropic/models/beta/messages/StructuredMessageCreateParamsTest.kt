@@ -139,6 +139,12 @@ internal class StructuredMessageCreateParamsTest {
         private val RUNNABLE_TOOL =
             BetaRunnableTool.of(CLASS, { BetaToolResultBlockParam.Content.ofString(it.s) })
         private val TOOL_UNION = BetaToolUnion.ofBetaTool(TOOL)
+        private val RESPONSE_TOOL =
+            BetaResponseTool.builder()
+                .inputSchema(BetaResponseToolInputSchema.builder().build())
+                .name(STRING)
+                .build()
+        private val RESPONSE_TOOL_UNION = BetaResponseToolUnion.ofBetaResponseTool(RESPONSE_TOOL)
         private val TOOL_CHOICE_TOOL = BetaToolChoiceTool.builder().name(STRING).build()
         private val TOOL_CHOICE = BetaToolChoice.ofTool(TOOL_CHOICE_TOOL)
         private val TOOL_CHOICE_ANY = BetaToolChoiceAny.builder().build()
@@ -280,6 +286,8 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("tools", LIST),
                 DelegationWriteTestCase("tools", JSON_FIELD),
                 DelegationWriteTestCase("addTool", TOOL_UNION),
+                DelegationWriteTestCase("addTool", RESPONSE_TOOL_UNION),
+                DelegationWriteTestCase("addTool", RESPONSE_TOOL),
                 DelegationWriteTestCase("addTool", TOOL),
                 DelegationWriteTestCase("addTool", TOOL_BASH_20241022),
                 DelegationWriteTestCase("addTool", TOOL_BASH_20250124),

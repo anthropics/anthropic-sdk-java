@@ -49,6 +49,7 @@ private constructor(
     private val compaction: BetaCompactionBlockParam? = null,
     private val toolAddition: BetaRequestToolAdditionBlock? = null,
     private val toolRemoval: BetaRequestToolRemovalBlock? = null,
+    private val mcpToolListing: BetaMcpToolListingBlockParam? = null,
     private val fallback: BetaFallbackBlockParam? = null,
     private val _json: JsonValue? = null,
 ) {
@@ -127,6 +128,10 @@ private constructor(
 
                 override fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock): Type =
                     Type.TOOL_REMOVAL
+
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlockParam
+                ): Type = Type.MCP_TOOL_LISTING
 
                 override fun visitFallback(fallback: BetaFallbackBlockParam): Type = Type.FALLBACK
 
@@ -228,6 +233,10 @@ private constructor(
                     toolRemoval: BetaRequestToolRemovalBlock
                 ): Optional<BetaCacheControlEphemeral> = toolRemoval.cacheControl()
 
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlockParam
+                ): Optional<BetaCacheControlEphemeral> = Optional.empty()
+
                 override fun visitFallback(
                     fallback: BetaFallbackBlockParam
                 ): Optional<BetaCacheControlEphemeral> = Optional.empty()
@@ -322,6 +331,10 @@ private constructor(
 
                 override fun visitToolRemoval(
                     toolRemoval: BetaRequestToolRemovalBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlockParam
                 ): Optional<String> = Optional.empty()
 
                 override fun visitFallback(fallback: BetaFallbackBlockParam): Optional<String> =
@@ -419,6 +432,10 @@ private constructor(
                     toolRemoval: BetaRequestToolRemovalBlock
                 ): Optional<String> = Optional.empty()
 
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlockParam
+                ): Optional<String> = Optional.empty()
+
                 override fun visitFallback(fallback: BetaFallbackBlockParam): Optional<String> =
                     Optional.empty()
 
@@ -512,6 +529,10 @@ private constructor(
 
                 override fun visitToolRemoval(
                     toolRemoval: BetaRequestToolRemovalBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlockParam
                 ): Optional<String> = Optional.empty()
 
                 override fun visitFallback(fallback: BetaFallbackBlockParam): Optional<String> =
@@ -609,6 +630,10 @@ private constructor(
                     toolRemoval: BetaRequestToolRemovalBlock
                 ): Optional<String> = Optional.empty()
 
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlockParam
+                ): Optional<String> = Optional.empty()
+
                 override fun visitFallback(fallback: BetaFallbackBlockParam): Optional<String> =
                     Optional.empty()
 
@@ -702,6 +727,10 @@ private constructor(
 
                 override fun visitToolRemoval(
                     toolRemoval: BetaRequestToolRemovalBlock
+                ): Optional<String> = Optional.empty()
+
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlockParam
                 ): Optional<String> = Optional.empty()
 
                 override fun visitFallback(fallback: BetaFallbackBlockParam): Optional<String> =
@@ -799,6 +828,10 @@ private constructor(
                     toolRemoval: BetaRequestToolRemovalBlock
                 ): Optional<Boolean> = Optional.empty()
 
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlockParam
+                ): Optional<Boolean> = Optional.empty()
+
                 override fun visitFallback(fallback: BetaFallbackBlockParam): Optional<Boolean> =
                     Optional.empty()
 
@@ -883,20 +916,34 @@ private constructor(
     fun compaction(): Optional<BetaCompactionBlockParam> = Optional.ofNullable(compaction)
 
     /**
-     * Mid-conversation directive to surface a declared tool.
+     * Mid-conversation directive to make a tool available.
      *
-     * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
-     * offered to the model from this point in the conversation onward.
+     * ``tool`` is a reference to a tool (or MCP toolset) declared in the request's ``tools``. Under
+     * the ``inline-tools-2026-09-15`` beta it may instead be a reference to a tool defined earlier
+     * in ``messages``, or a ``tool_definition`` object that carries an inline tool definition in
+     * ``definition`` (the same object a ``tools`` entry holds). An ``mcp_toolset`` definition also
+     * requires the ``mcp-client-2026-09-15`` beta. The tool is offered to the model from this point
+     * in the conversation onward.
      */
     fun toolAddition(): Optional<BetaRequestToolAdditionBlock> = Optional.ofNullable(toolAddition)
 
     /**
      * Mid-conversation directive to withdraw a tool.
      *
-     * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is no
-     * longer offered to the model from this point in the conversation onward.
+     * ``tool`` references a tool (or MCP toolset) by name: one declared in the request's ``tools``
+     * or defined earlier in ``messages``. It is no longer offered to the model from this point in
+     * the conversation onward.
      */
     fun toolRemoval(): Optional<BetaRequestToolRemovalBlock> = Optional.ofNullable(toolRemoval)
+
+    /**
+     * The tool listing an MCP server returned while an earlier response was produced, as that
+     * response carried it. Send the assistant message back unchanged, this block included, and the
+     * server uses this listing for the matching `mcp_toolset` instead of asking the MCP server
+     * again.
+     */
+    fun mcpToolListing(): Optional<BetaMcpToolListingBlockParam> =
+        Optional.ofNullable(mcpToolListing)
 
     /**
      * A `fallback` block echoed back from a prior response.
@@ -956,6 +1003,8 @@ private constructor(
     fun isToolAddition(): Boolean = toolAddition != null
 
     fun isToolRemoval(): Boolean = toolRemoval != null
+
+    fun isMcpToolListing(): Boolean = mcpToolListing != null
 
     fun isFallback(): Boolean = fallback != null
 
@@ -1034,20 +1083,34 @@ private constructor(
     fun asCompaction(): BetaCompactionBlockParam = compaction.getOrThrow("compaction")
 
     /**
-     * Mid-conversation directive to surface a declared tool.
+     * Mid-conversation directive to make a tool available.
      *
-     * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
-     * offered to the model from this point in the conversation onward.
+     * ``tool`` is a reference to a tool (or MCP toolset) declared in the request's ``tools``. Under
+     * the ``inline-tools-2026-09-15`` beta it may instead be a reference to a tool defined earlier
+     * in ``messages``, or a ``tool_definition`` object that carries an inline tool definition in
+     * ``definition`` (the same object a ``tools`` entry holds). An ``mcp_toolset`` definition also
+     * requires the ``mcp-client-2026-09-15`` beta. The tool is offered to the model from this point
+     * in the conversation onward.
      */
     fun asToolAddition(): BetaRequestToolAdditionBlock = toolAddition.getOrThrow("toolAddition")
 
     /**
      * Mid-conversation directive to withdraw a tool.
      *
-     * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is no
-     * longer offered to the model from this point in the conversation onward.
+     * ``tool`` references a tool (or MCP toolset) by name: one declared in the request's ``tools``
+     * or defined earlier in ``messages``. It is no longer offered to the model from this point in
+     * the conversation onward.
      */
     fun asToolRemoval(): BetaRequestToolRemovalBlock = toolRemoval.getOrThrow("toolRemoval")
+
+    /**
+     * The tool listing an MCP server returned while an earlier response was produced, as that
+     * response carried it. Send the assistant message back unchanged, this block included, and the
+     * server uses this listing for the matching `mcp_toolset` instead of asking the MCP server
+     * again.
+     */
+    fun asMcpToolListing(): BetaMcpToolListingBlockParam =
+        mcpToolListing.getOrThrow("mcpToolListing")
 
     /**
      * A `fallback` block echoed back from a prior response.
@@ -1122,6 +1185,7 @@ private constructor(
             compaction != null -> visitor.visitCompaction(compaction)
             toolAddition != null -> visitor.visitToolAddition(toolAddition)
             toolRemoval != null -> visitor.visitToolRemoval(toolRemoval)
+            mcpToolListing != null -> visitor.visitMcpToolListing(mcpToolListing)
             fallback != null -> visitor.visitFallback(fallback)
             else -> visitor.unknown(_json)
         }
@@ -1248,6 +1312,10 @@ private constructor(
                     toolRemoval.validate()
                 }
 
+                override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlockParam) {
+                    mcpToolListing.validate()
+                }
+
                 override fun visitFallback(fallback: BetaFallbackBlockParam) {
                     fallback.validate()
                 }
@@ -1343,6 +1411,9 @@ private constructor(
                 override fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
                     toolRemoval.validity()
 
+                override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlockParam) =
+                    mcpToolListing.validity()
+
                 override fun visitFallback(fallback: BetaFallbackBlockParam) = fallback.validity()
 
                 override fun unknown(json: JsonValue?) = 0
@@ -1377,6 +1448,7 @@ private constructor(
             compaction == other.compaction &&
             toolAddition == other.toolAddition &&
             toolRemoval == other.toolRemoval &&
+            mcpToolListing == other.mcpToolListing &&
             fallback == other.fallback
     }
 
@@ -1404,6 +1476,7 @@ private constructor(
             compaction,
             toolAddition,
             toolRemoval,
+            mcpToolListing,
             fallback,
         )
 
@@ -1438,6 +1511,7 @@ private constructor(
             compaction != null -> "BetaContentBlockParam{compaction=$compaction}"
             toolAddition != null -> "BetaContentBlockParam{toolAddition=$toolAddition}"
             toolRemoval != null -> "BetaContentBlockParam{toolRemoval=$toolRemoval}"
+            mcpToolListing != null -> "BetaContentBlockParam{mcpToolListing=$mcpToolListing}"
             fallback != null -> "BetaContentBlockParam{fallback=$fallback}"
             _json != null -> "BetaContentBlockParam{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaContentBlockParam")
@@ -1603,9 +1677,13 @@ private constructor(
             BetaContentBlockParam(compaction = compaction)
 
         /**
-         * Mid-conversation directive to surface a declared tool.
+         * Mid-conversation directive to make a tool available.
          *
-         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+         * ``tool`` is a reference to a tool (or MCP toolset) declared in the request's ``tools``.
+         * Under the ``inline-tools-2026-09-15`` beta it may instead be a reference to a tool
+         * defined earlier in ``messages``, or a ``tool_definition`` object that carries an inline
+         * tool definition in ``definition`` (the same object a ``tools`` entry holds). An
+         * ``mcp_toolset`` definition also requires the ``mcp-client-2026-09-15`` beta. The tool is
          * offered to the model from this point in the conversation onward.
          */
         @JvmStatic
@@ -1623,8 +1701,9 @@ private constructor(
         /**
          * Mid-conversation directive to withdraw a tool.
          *
-         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
-         * no longer offered to the model from this point in the conversation onward.
+         * ``tool`` references a tool (or MCP toolset) by name: one declared in the request's
+         * ``tools`` or defined earlier in ``messages``. It is no longer offered to the model from
+         * this point in the conversation onward.
          */
         @JvmStatic
         fun ofToolRemoval(toolRemoval: BetaRequestToolRemovalBlock) =
@@ -1637,6 +1716,16 @@ private constructor(
         @JvmStatic
         fun ofToolRemoval(tool: BetaRequestToolRemovalBlock.Tool) =
             ofToolRemoval(BetaRequestToolRemovalBlock.of(tool))
+
+        /**
+         * The tool listing an MCP server returned while an earlier response was produced, as that
+         * response carried it. Send the assistant message back unchanged, this block included, and
+         * the server uses this listing for the matching `mcp_toolset` instead of asking the MCP
+         * server again.
+         */
+        @JvmStatic
+        fun ofMcpToolListing(mcpToolListing: BetaMcpToolListingBlockParam) =
+            BetaContentBlockParam(mcpToolListing = mcpToolListing)
 
         /**
          * A `fallback` block echoed back from a prior response.
@@ -1733,9 +1822,13 @@ private constructor(
         fun visitCompaction(compaction: BetaCompactionBlockParam): T
 
         /**
-         * Mid-conversation directive to surface a declared tool.
+         * Mid-conversation directive to make a tool available.
          *
-         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
+         * ``tool`` is a reference to a tool (or MCP toolset) declared in the request's ``tools``.
+         * Under the ``inline-tools-2026-09-15`` beta it may instead be a reference to a tool
+         * defined earlier in ``messages``, or a ``tool_definition`` object that carries an inline
+         * tool definition in ``definition`` (the same object a ``tools`` entry holds). An
+         * ``mcp_toolset`` definition also requires the ``mcp-client-2026-09-15`` beta. The tool is
          * offered to the model from this point in the conversation onward.
          */
         fun visitToolAddition(toolAddition: BetaRequestToolAdditionBlock): T
@@ -1743,10 +1836,19 @@ private constructor(
         /**
          * Mid-conversation directive to withdraw a tool.
          *
-         * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is
-         * no longer offered to the model from this point in the conversation onward.
+         * ``tool`` references a tool (or MCP toolset) by name: one declared in the request's
+         * ``tools`` or defined earlier in ``messages``. It is no longer offered to the model from
+         * this point in the conversation onward.
          */
         fun visitToolRemoval(toolRemoval: BetaRequestToolRemovalBlock): T
+
+        /**
+         * The tool listing an MCP server returned while an earlier response was produced, as that
+         * response carried it. Send the assistant message back unchanged, this block included, and
+         * the server uses this listing for the matching `mcp_toolset` instead of asking the MCP
+         * server again.
+         */
+        fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlockParam): T
 
         /**
          * A `fallback` block echoed back from a prior response.
@@ -1916,6 +2018,11 @@ private constructor(
                         ?.let { BetaContentBlockParam(toolRemoval = it, _json = json) }
                         ?: BetaContentBlockParam(_json = json)
                 }
+                "mcp_tool_listing" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaMcpToolListingBlockParam>())
+                        ?.let { BetaContentBlockParam(mcpToolListing = it, _json = json) }
+                        ?: BetaContentBlockParam(_json = json)
+                }
                 "fallback" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaFallbackBlockParam>())?.let {
                         BetaContentBlockParam(fallback = it, _json = json)
@@ -1963,6 +2070,7 @@ private constructor(
                 value.compaction != null -> generator.writeObject(value.compaction)
                 value.toolAddition != null -> generator.writeObject(value.toolAddition)
                 value.toolRemoval != null -> generator.writeObject(value.toolRemoval)
+                value.mcpToolListing != null -> generator.writeObject(value.mcpToolListing)
                 value.fallback != null -> generator.writeObject(value.fallback)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaContentBlockParam")
@@ -2030,6 +2138,8 @@ private constructor(
 
             @JvmField val TOOL_REMOVAL = of("tool_removal")
 
+            @JvmField val MCP_TOOL_LISTING = of("mcp_tool_listing")
+
             @JvmField val FALLBACK = of("fallback")
 
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
@@ -2063,6 +2173,7 @@ private constructor(
             COMPACTION,
             TOOL_ADDITION,
             TOOL_REMOVAL,
+            MCP_TOOL_LISTING,
             FALLBACK,
         }
 
@@ -2098,6 +2209,7 @@ private constructor(
             COMPACTION,
             TOOL_ADDITION,
             TOOL_REMOVAL,
+            MCP_TOOL_LISTING,
             FALLBACK,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
@@ -2135,6 +2247,7 @@ private constructor(
                 COMPACTION -> Value.COMPACTION
                 TOOL_ADDITION -> Value.TOOL_ADDITION
                 TOOL_REMOVAL -> Value.TOOL_REMOVAL
+                MCP_TOOL_LISTING -> Value.MCP_TOOL_LISTING
                 FALLBACK -> Value.FALLBACK
                 else -> Value._UNKNOWN
             }
@@ -2173,6 +2286,7 @@ private constructor(
                 COMPACTION -> Known.COMPACTION
                 TOOL_ADDITION -> Known.TOOL_ADDITION
                 TOOL_REMOVAL -> Known.TOOL_REMOVAL
+                MCP_TOOL_LISTING -> Known.MCP_TOOL_LISTING
                 FALLBACK -> Known.FALLBACK
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }

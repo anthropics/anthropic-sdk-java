@@ -468,6 +468,10 @@ class BetaMessageAccumulator private constructor() {
                                     override fun visitCompaction(compaction: BetaCompactionBlock) =
                                         BetaContentBlock.ofCompaction(compaction)
 
+                                    override fun visitMcpToolListing(
+                                        mcpToolListing: BetaMcpToolListingBlock
+                                    ) = BetaContentBlock.ofMcpToolListing(mcpToolListing)
+
                                     // A block type newer than this SDK is kept as raw JSON, as it
                                     // would be in the non-streaming message.
                                     override fun unknown(json: JsonValue?): BetaContentBlock =

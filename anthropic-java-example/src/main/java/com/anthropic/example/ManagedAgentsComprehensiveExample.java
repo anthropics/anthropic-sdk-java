@@ -98,7 +98,7 @@ public final class ManagedAgentsComprehensiveExample {
                 .create(AgentCreateParams.builder()
                         .name("comprehensive-example-agent")
                         .model(BetaManagedAgentsModelConfigParams.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .build())
                         .system("You are a helpful assistant.")
                         .addMcpServer(BetaManagedAgentsUrlMcpServerParams.builder()

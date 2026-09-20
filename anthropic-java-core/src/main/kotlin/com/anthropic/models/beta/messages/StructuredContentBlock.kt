@@ -92,6 +92,9 @@ internal constructor(
     /** @see BetaContentBlock.fallback */
     fun fallback(): Optional<BetaFallbackBlock> = rawContentBlock.fallback()
 
+    /** @see BetaContentBlock.mcpToolListing */
+    fun mcpToolListing(): Optional<BetaMcpToolListingBlock> = rawContentBlock.mcpToolListing()
+
     /** @see BetaContentBlock.isText */
     fun isText(): Boolean = text().isPresent
 
@@ -143,6 +146,9 @@ internal constructor(
 
     /** @see BetaContentBlock.isFallback */
     fun isFallback(): Boolean = rawContentBlock.isFallback()
+
+    /** @see BetaContentBlock.isMcpToolListing */
+    fun isMcpToolListing(): Boolean = rawContentBlock.isMcpToolListing()
 
     /** @see BetaContentBlock.asText */
     fun asText(): StructuredTextBlock<T> =
@@ -203,6 +209,9 @@ internal constructor(
 
     /** @see BetaContentBlock.asFallback */
     fun asFallback(): BetaFallbackBlock = rawContentBlock.asFallback()
+
+    /** @see BetaContentBlock.asMcpToolListing */
+    fun asMcpToolListing(): BetaMcpToolListingBlock = rawContentBlock.asMcpToolListing()
 
     /** @see BetaContentBlock._json */
     fun _json(): Optional<JsonValue> = rawContentBlock._json()

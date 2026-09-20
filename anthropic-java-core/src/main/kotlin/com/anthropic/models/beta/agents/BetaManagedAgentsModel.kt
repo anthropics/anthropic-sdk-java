@@ -27,6 +27,9 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
+        /** Powerful intelligence for coding, knowledge work, and long-running agents */
+        @JvmField val CLAUDE_OPUS_5_5 = of("claude-opus-5-5")
+
         /**
          * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
          * enterprise workflows
@@ -81,6 +84,8 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [BetaManagedAgentsModel]'s known values. */
     enum class Known {
+        /** Powerful intelligence for coding, knowledge work, and long-running agents */
+        CLAUDE_OPUS_5_5,
         /**
          * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
          * enterprise workflows
@@ -124,6 +129,8 @@ private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Powerful intelligence for coding, knowledge work, and long-running agents */
+        CLAUDE_OPUS_5_5,
         /**
          * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
          * enterprise workflows
@@ -171,6 +178,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_OPUS_5_5 -> Value.CLAUDE_OPUS_5_5
             CLAUDE_FABLE_5_1 -> Value.CLAUDE_FABLE_5_1
             CLAUDE_SONNET_5 -> Value.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Value.CLAUDE_FABLE_5
@@ -198,6 +206,7 @@ private constructor(private val value: JsonField<String>) : Enum {
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_OPUS_5_5 -> Known.CLAUDE_OPUS_5_5
             CLAUDE_FABLE_5_1 -> Known.CLAUDE_FABLE_5_1
             CLAUDE_SONNET_5 -> Known.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Known.CLAUDE_FABLE_5

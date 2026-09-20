@@ -43,6 +43,7 @@ private constructor(
     private val containerUpload: BetaContainerUploadBlock? = null,
     private val compaction: BetaCompactionBlock? = null,
     private val fallback: BetaFallbackBlock? = null,
+    private val mcpToolListing: BetaMcpToolListingBlock? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -129,6 +130,11 @@ private constructor(
 
                 override fun visitFallback(fallback: BetaFallbackBlock): BetaContentBlockParam =
                     BetaContentBlockParam.ofFallback(fallback.toParam())
+
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlock
+                ): BetaContentBlockParam =
+                    BetaContentBlockParam.ofMcpToolListing(mcpToolListing.toParam())
             }
         )
 
@@ -189,6 +195,9 @@ private constructor(
                     Type.COMPACTION
 
                 override fun visitFallback(fallback: BetaFallbackBlock): Type = Type.FALLBACK
+
+                override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlock): Type =
+                    Type.MCP_TOOL_LISTING
 
                 override fun unknown(json: JsonValue?): Type =
                     Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
@@ -259,6 +268,10 @@ private constructor(
                 override fun visitFallback(fallback: BetaFallbackBlock): Optional<String> =
                     Optional.empty()
 
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlock
+                ): Optional<String> = Optional.empty()
+
                 override fun unknown(json: JsonValue?): Optional<String> =
                     json.getProperty<String>("signature").asKnown()
             }
@@ -327,6 +340,10 @@ private constructor(
 
                 override fun visitFallback(fallback: BetaFallbackBlock): Optional<String> =
                     Optional.empty()
+
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlock
+                ): Optional<String> = Optional.empty()
 
                 override fun unknown(json: JsonValue?): Optional<String> =
                     json.getProperty<String>("id").asKnown()
@@ -397,6 +414,10 @@ private constructor(
                 override fun visitFallback(fallback: BetaFallbackBlock): Optional<String> =
                     Optional.empty()
 
+                override fun visitMcpToolListing(
+                    mcpToolListing: BetaMcpToolListingBlock
+                ): Optional<String> = Optional.empty()
+
                 override fun unknown(json: JsonValue?): Optional<String> =
                     json.getProperty<String>("tool_use_id").asKnown()
             }
@@ -463,6 +484,13 @@ private constructor(
      */
     fun fallback(): Optional<BetaFallbackBlock> = Optional.ofNullable(fallback)
 
+    /**
+     * The tool listing the server fetched from an MCP server while producing this response. Send
+     * the assistant message back unchanged, this block included, so later requests use this listing
+     * instead of asking the MCP server again.
+     */
+    fun mcpToolListing(): Optional<BetaMcpToolListingBlock> = Optional.ofNullable(mcpToolListing)
+
     fun isText(): Boolean = text != null
 
     fun isThinking(): Boolean = thinking != null
@@ -496,6 +524,8 @@ private constructor(
     fun isCompaction(): Boolean = compaction != null
 
     fun isFallback(): Boolean = fallback != null
+
+    fun isMcpToolListing(): Boolean = mcpToolListing != null
 
     fun asText(): BetaTextBlock = text.getOrThrow("text")
 
@@ -559,6 +589,13 @@ private constructor(
      */
     fun asFallback(): BetaFallbackBlock = fallback.getOrThrow("fallback")
 
+    /**
+     * The tool listing the server fetched from an MCP server while producing this response. Send
+     * the assistant message back unchanged, this block included, so later requests use this listing
+     * instead of asking the MCP server again.
+     */
+    fun asMcpToolListing(): BetaMcpToolListingBlock = mcpToolListing.getOrThrow("mcpToolListing")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -612,6 +649,7 @@ private constructor(
             containerUpload != null -> visitor.visitContainerUpload(containerUpload)
             compaction != null -> visitor.visitCompaction(compaction)
             fallback != null -> visitor.visitFallback(fallback)
+            mcpToolListing != null -> visitor.visitMcpToolListing(mcpToolListing)
             else -> visitor.unknown(_json)
         }
 
@@ -711,6 +749,10 @@ private constructor(
                 override fun visitFallback(fallback: BetaFallbackBlock) {
                     fallback.validate()
                 }
+
+                override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlock) {
+                    mcpToolListing.validate()
+                }
             }
         )
         validated = true
@@ -786,6 +828,9 @@ private constructor(
 
                 override fun visitFallback(fallback: BetaFallbackBlock) = fallback.validity()
 
+                override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlock) =
+                    mcpToolListing.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -812,7 +857,8 @@ private constructor(
             mcpToolResult == other.mcpToolResult &&
             containerUpload == other.containerUpload &&
             compaction == other.compaction &&
-            fallback == other.fallback
+            fallback == other.fallback &&
+            mcpToolListing == other.mcpToolListing
     }
 
     override fun hashCode(): Int =
@@ -834,6 +880,7 @@ private constructor(
             containerUpload,
             compaction,
             fallback,
+            mcpToolListing,
         )
 
     override fun toString(): String =
@@ -860,6 +907,7 @@ private constructor(
             containerUpload != null -> "BetaContentBlock{containerUpload=$containerUpload}"
             compaction != null -> "BetaContentBlock{compaction=$compaction}"
             fallback != null -> "BetaContentBlock{fallback=$fallback}"
+            mcpToolListing != null -> "BetaContentBlock{mcpToolListing=$mcpToolListing}"
             _json != null -> "BetaContentBlock{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid BetaContentBlock")
         }
@@ -964,6 +1012,15 @@ private constructor(
          */
         @JvmStatic
         fun ofFallback(fallback: BetaFallbackBlock) = BetaContentBlock(fallback = fallback)
+
+        /**
+         * The tool listing the server fetched from an MCP server while producing this response.
+         * Send the assistant message back unchanged, this block included, so later requests use
+         * this listing instead of asking the MCP server again.
+         */
+        @JvmStatic
+        fun ofMcpToolListing(mcpToolListing: BetaMcpToolListingBlock) =
+            BetaContentBlock(mcpToolListing = mcpToolListing)
     }
 
     /**
@@ -1030,6 +1087,13 @@ private constructor(
          * standard `content_block_start` / `content_block_stop` pair and carries no deltas.
          */
         fun visitFallback(fallback: BetaFallbackBlock): T
+
+        /**
+         * The tool listing the server fetched from an MCP server while producing this response.
+         * Send the assistant message back unchanged, this block included, so later requests use
+         * this listing instead of asking the MCP server again.
+         */
+        fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlock): T
 
         /**
          * Maps an unknown variant of [BetaContentBlock] to a value of type [T].
@@ -1145,6 +1209,11 @@ private constructor(
                         BetaContentBlock(fallback = it, _json = json)
                     } ?: BetaContentBlock(_json = json)
                 }
+                "mcp_tool_listing" -> {
+                    return tryDeserialize(node, jacksonTypeRef<BetaMcpToolListingBlock>())?.let {
+                        BetaContentBlock(mcpToolListing = it, _json = json)
+                    } ?: BetaContentBlock(_json = json)
+                }
             }
 
             return BetaContentBlock(_json = json)
@@ -1181,6 +1250,7 @@ private constructor(
                 value.containerUpload != null -> generator.writeObject(value.containerUpload)
                 value.compaction != null -> generator.writeObject(value.compaction)
                 value.fallback != null -> generator.writeObject(value.fallback)
+                value.mcpToolListing != null -> generator.writeObject(value.mcpToolListing)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid BetaContentBlock")
             }
@@ -1237,6 +1307,8 @@ private constructor(
 
             @JvmField val FALLBACK = of("fallback")
 
+            @JvmField val MCP_TOOL_LISTING = of("mcp_tool_listing")
+
             @JvmStatic fun of(value: String) = Type(JsonField.of(value))
 
             @JvmSynthetic
@@ -1263,6 +1335,7 @@ private constructor(
             CONTAINER_UPLOAD,
             COMPACTION,
             FALLBACK,
+            MCP_TOOL_LISTING,
         }
 
         /**
@@ -1292,6 +1365,7 @@ private constructor(
             CONTAINER_UPLOAD,
             COMPACTION,
             FALLBACK,
+            MCP_TOOL_LISTING,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -1323,6 +1397,7 @@ private constructor(
                 CONTAINER_UPLOAD -> Value.CONTAINER_UPLOAD
                 COMPACTION -> Value.COMPACTION
                 FALLBACK -> Value.FALLBACK
+                MCP_TOOL_LISTING -> Value.MCP_TOOL_LISTING
                 else -> Value._UNKNOWN
             }
 
@@ -1355,6 +1430,7 @@ private constructor(
                 CONTAINER_UPLOAD -> Known.CONTAINER_UPLOAD
                 COMPACTION -> Known.COMPACTION
                 FALLBACK -> Known.FALLBACK
+                MCP_TOOL_LISTING -> Known.MCP_TOOL_LISTING
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 

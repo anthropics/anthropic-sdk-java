@@ -121,6 +121,10 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
         @JvmField val COMPACT_2026_09_04 = of("compact-2026-09-04")
 
+        @JvmField val INLINE_TOOLS_2026_09_15 = of("inline-tools-2026-09-15")
+
+        @JvmField val MCP_CLIENT_2026_09_15 = of("mcp-client-2026-09-15")
+
         @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
 
         @JvmSynthetic
@@ -176,6 +180,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         THINKING_BINDING_CONTROLS_2026_08_01,
         MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21,
         COMPACT_2026_09_04,
+        INLINE_TOOLS_2026_09_15,
+        MCP_CLIENT_2026_09_15,
     }
 
     /**
@@ -234,6 +240,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
         THINKING_BINDING_CONTROLS_2026_08_01,
         MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21,
         COMPACT_2026_09_04,
+        INLINE_TOOLS_2026_09_15,
+        MCP_CLIENT_2026_09_15,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -299,6 +307,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21 ->
                 Value.MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21
             COMPACT_2026_09_04 -> Value.COMPACT_2026_09_04
+            INLINE_TOOLS_2026_09_15 -> Value.INLINE_TOOLS_2026_09_15
+            MCP_CLIENT_2026_09_15 -> Value.MCP_CLIENT_2026_09_15
             else -> Value._UNKNOWN
         }
 
@@ -362,6 +372,8 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
             MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21 ->
                 Known.MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21
             COMPACT_2026_09_04 -> Known.COMPACT_2026_09_04
+            INLINE_TOOLS_2026_09_15 -> Known.INLINE_TOOLS_2026_09_15
+            MCP_CLIENT_2026_09_15 -> Known.MCP_CLIENT_2026_09_15
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

@@ -1069,6 +1069,9 @@ private constructor(
         /** Alias for calling [addTool] with `Tool.ofBeta(beta)`. */
         fun addTool(beta: BetaTool) = apply { body.addTool(beta) }
 
+        /** Alias for calling [addTool] with `beta.toParam()`. */
+        fun addTool(beta: BetaResponseTool) = apply { body.addTool(beta) }
+
         /** Alias for calling [addTool] with `Tool.ofBetaToolBash20241022(betaToolBash20241022)`. */
         fun addTool(betaToolBash20241022: BetaToolBash20241022) = apply {
             body.addTool(betaToolBash20241022)
@@ -2539,6 +2542,9 @@ private constructor(
 
             /** Alias for calling [addTool] with `Tool.ofBeta(beta)`. */
             fun addTool(beta: BetaTool) = addTool(Tool.ofBeta(beta))
+
+            /** Alias for calling [addTool] with `beta.toParam()`. */
+            fun addTool(beta: BetaResponseTool) = addTool(beta.toParam())
 
             /**
              * Alias for calling [addTool] with `Tool.ofBetaToolBash20241022(betaToolBash20241022)`.

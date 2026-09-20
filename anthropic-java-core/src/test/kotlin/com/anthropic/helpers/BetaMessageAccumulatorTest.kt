@@ -1320,6 +1320,35 @@ internal class BetaMessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateMcpToolListingContentBlock() {
+        val mcpToolListing =
+            BetaMcpToolListingBlock.builder()
+                .mcpServerName("docs")
+                .addTool(
+                    BetaMcpTool.builder()
+                        .inputSchema(BetaMcpTool.InputSchema.builder().build())
+                        .name("search")
+                        .description("Search the docs.")
+                        .build()
+                )
+                .build()
+        val accumulator = BetaMessageAccumulator.create()
+
+        accumulator.accumulate(messageStartEvent())
+        accumulator.accumulate(
+            contentBlockStartEvent(0L, ContentBlock.ofMcpToolListing(mcpToolListing))
+        )
+        accumulator.accumulate(contentBlockStopEvent(0L))
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(BetaStopReason.END_TURN), outputTokens = 1L)
+        )
+        accumulator.accumulate(messageStopEvent())
+
+        assertThat(accumulator.message().content().single().asMcpToolListing())
+            .isEqualTo(mcpToolListing)
+    }
+
+    @Test
     fun accumulateCompactionContentBlockWithEncryptedContent() {
         val accumulator = BetaMessageAccumulator.create()
 

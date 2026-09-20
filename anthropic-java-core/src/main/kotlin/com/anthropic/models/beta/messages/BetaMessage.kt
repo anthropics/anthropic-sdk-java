@@ -671,6 +671,12 @@ private constructor(
             addContent(BetaContentBlock.ofFallback(fallback))
 
         /**
+         * Alias for calling [addContent] with `BetaContentBlock.ofMcpToolListing(mcpToolListing)`.
+         */
+        fun addContent(mcpToolListing: BetaMcpToolListingBlock) =
+            addContent(BetaContentBlock.ofMcpToolListing(mcpToolListing))
+
+        /**
          * Context management response.
          *
          * Information about context management strategies applied during the request.

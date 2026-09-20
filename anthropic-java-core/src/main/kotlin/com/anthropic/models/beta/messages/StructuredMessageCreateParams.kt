@@ -548,6 +548,14 @@ internal constructor(
         fun addTool(tool: BetaToolUnion) = apply { paramsBuilder.addTool(tool) }
 
         /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(tool: BetaResponseToolUnion) = apply { paramsBuilder.addTool(tool) }
+
+        /** @see MessageCreateParams.Builder.addTool */
+        fun addTool(betaResponseTool: BetaResponseTool) = apply {
+            paramsBuilder.addTool(betaResponseTool)
+        }
+
+        /** @see MessageCreateParams.Builder.addTool */
         fun addTool(betaTool: BetaTool) = apply { paramsBuilder.addTool(betaTool) }
 
         /** @see MessageCreateParams.Builder.addTool */
