@@ -2318,6 +2318,69 @@ internal class BetaToolRunnerTest {
         assertThat(requests.firstValue.compaction().get()).isSameAs(config)
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = ["any", "tool", "auto"])
+    fun compactBeforeNextTurn_leavesReplyOnlyParamsOffCompactionRequest(toolChoiceType: String) {
+        val toolChoice =
+            when (toolChoiceType) {
+                "any" -> BetaToolChoice.ofAny(BetaToolChoiceAny.builder().build())
+                "tool" ->
+                    BetaToolChoice.ofTool(BetaToolChoiceTool.builder().name("get_weather").build())
+                else -> BetaToolChoice.ofAuto(BetaToolChoiceAuto.builder().build())
+            }
+        val format =
+            BetaJsonOutputFormat.builder()
+                .schema(
+                    BetaJsonOutputFormat.Schema.builder()
+                        .putAdditionalProperty("type", JsonValue.from("object"))
+                        .build()
+                )
+                .build()
+        val effortOnly = BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
+        val effortAndFormat = effortOnly.toBuilder().format(format).build()
+        fun fallback(outputConfig: BetaOutputConfig) =
+            BetaFallbackParam.builder()
+                .model(Model.CLAUDE_HAIKU_4_5)
+                .maxTokens(512L)
+                .outputConfig(outputConfig)
+                .build()
+        val params =
+            initialMessageParams
+                .toBuilder()
+                .addBeta("compact-2026-09-04")
+                .system("Answer briefly.")
+                .addStopSequence("STOP")
+                .toolChoice(toolChoice)
+                .outputConfig(effortAndFormat)
+                .outputFormat(format)
+                .fallbacksOfFallbackParams(listOf(fallback(effortAndFormat)))
+                .build()
+        val toolRunner = newToolRunner(params)
+        val compactionResponse = compactionResponse()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(compactionResponse, finalAssistantMessage())
+
+        toolRunner.compactBeforeNextTurn()
+        toolRunner.toList()
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        val compactionRequest =
+            params
+                .toBuilder()
+                .compaction(BetaCompactionConfig.builder().build())
+                .stopSequences(JsonMissing.of())
+                .outputConfig(effortOnly)
+                .outputFormat(JsonMissing.of())
+                .fallbacksOfFallbackParams(listOf(fallback(effortOnly)))
+        if (toolChoiceType != "auto") {
+            compactionRequest.toolChoice(JsonMissing.of())
+        }
+        assertThat(requests.firstValue).isEqualTo(compactionRequest.build())
+        assertThat(requests.secondValue)
+            .isEqualTo(params.toBuilder().messages(listOf(compactionResponse.toParam())).build())
+    }
+
     @Test
     fun compactBeforeNextTurn_whenTurnPaused_waitsForResumedTurn() {
         val toolRunner = newToolRunner(maxIterations = 4)

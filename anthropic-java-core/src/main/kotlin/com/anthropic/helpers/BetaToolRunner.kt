@@ -48,7 +48,7 @@ internal constructor(
     //   1. `compactBeforeNextTurn()` sets `compaction` to `Scheduled`. Nothing is sent.
     //   2. Before each model request, `runLoop()` asks `compactionToSend()`. If one is scheduled
     //      and the last turn wasn't paused, `compact()` sends the compaction request instead: the
-    //      current params plus `compaction`, without `context_management`.
+    //      current params `withoutCompactionIncompatibleParams()`, plus `compaction`.
     //   3. While that request is out, `compaction` is `InFlight`: `setNextParams()` refuses
     //      different messages, and further `compactBeforeNextTurn()` calls are ignored. A request
     //      that throws puts it back to `Idle`; nothing is retried.
@@ -426,11 +426,9 @@ internal constructor(
     ): MessageCreateParams.Builder {
         val request =
             currentParams
+                .withoutCompactionIncompatibleParams()
                 .toBuilder()
                 .compaction(config)
-                // The API refuses `compaction` alongside `context_management`. Later requests
-                // keep it.
-                .contextManagement(JsonMissing.of())
                 .build()
 
         compaction = Compaction.InFlight
@@ -457,6 +455,38 @@ internal constructor(
         // The response has to be sent back as it came, first, replacing the messages it summarizes.
         return paramsBuilder.messages(listOf(message.toParamKeepingUnknownBlocks()))
     }
+
+    /**
+     * A compaction request returns only the compaction block, never a reply, so the API rejects the
+     * params that only shape a reply. The runner's later requests keep them.
+     */
+    private fun MessageCreateParams.withoutCompactionIncompatibleParams(): MessageCreateParams {
+        val toolChoice = _toolChoice()
+        val forcesToolUse = toolChoice.asKnown().getOrNull()?.let { it.isAny() || it.isTool() }
+        return toBuilder()
+            .contextManagement(JsonMissing.of())
+            .stopSequences(JsonMissing.of())
+            .toolChoice(if (forcesToolUse == true) JsonMissing.of() else toolChoice)
+            .outputFormat(JsonMissing.of())
+            .outputConfig(_outputConfig().map { it.withoutFormat() })
+            .fallbacks(_fallbacks().map { it.withoutOutputFormats() })
+            .build()
+    }
+
+    private fun BetaOutputConfig.withoutFormat(): BetaOutputConfig =
+        toBuilder().format(JsonMissing.of()).build()
+
+    private fun BetaFallbacksParam.withoutOutputFormats(): BetaFallbacksParam =
+        if (isFallbackParams())
+            BetaFallbacksParam.ofFallbackParams(
+                asFallbackParams().map { fallback ->
+                    fallback
+                        .toBuilder()
+                        .outputConfig(fallback._outputConfig().map { it.withoutFormat() })
+                        .build()
+                }
+            )
+        else this
 
     private fun compactionToSendAfterFinalTurn(message: BetaMessage): BetaCompactionConfig? {
         val scheduled = compaction as? Compaction.Scheduled ?: return null
