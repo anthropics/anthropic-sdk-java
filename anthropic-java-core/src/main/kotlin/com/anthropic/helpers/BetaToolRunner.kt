@@ -39,7 +39,7 @@ internal constructor(
     private var nextParams: MessageCreateParams? = null
     private var lastToolResponse: BetaMessageParam? = null
 
-    private val pendingToolChanges = mutableListOf<PendingToolChange>()
+    private val pendingToolChanges = mutableListOf<BetaContentBlockParam>()
 
     /** Applied on top of the params' runnable tools; `null` marks a name [removeTool] took away. */
     private val toolOverrides = mutableMapOf<String, BetaRunnableTool?>()
@@ -217,10 +217,11 @@ internal constructor(
      * the prompt cache.
      *
      * The next request carries the definition in a `tool_addition` block, and the runner runs the
-     * tool from then on, in place of any tool of the same name. Changes made while handling a
-     * message go out together, in call order, as one `"system"` message after its tool results; a
-     * turn that stopped on `pause_turn` is resent first. Changes still queued when the run ends are
-     * never sent. Requires the `inline-tools-2026-09-15` beta, which the runner does not add.
+     * tool straight away, in place of any tool of the same name, even for a call already in the
+     * message being handled. Changes made while handling a message go out together, in call order,
+     * as one `"system"` message after its tool results; a turn that stopped on `pause_turn` is
+     * resent first. Changes still queued when the run ends are never sent. Requires the
+     * `inline-tools-2026-09-15` beta, which the runner does not add.
      *
      * In the rare case where a compaction response comes back without `tool_changes` even though
      * the summarized messages added or removed tools, the model goes back to the tools in
@@ -278,7 +279,11 @@ internal constructor(
      */
     fun removeTool(name: String) {
         toolOverrides[name] = null
-        pendingToolChanges.add(PendingToolChange.Removal(name))
+        pendingToolChanges.add(
+            BetaContentBlockParam.ofToolRemoval(
+                BetaRequestToolRemovalBlock.builder().referenceTool(name).build()
+            )
+        )
     }
 
     /**
@@ -324,28 +329,18 @@ internal constructor(
         return Optional.ofNullable(generateToolResponse(lastMessage))
     }
 
-    /**
-     * Takes away the runnable tool that [matches]: the last such tool added while handling this
-     * message, or else the one the runner has.
-     */
+    /** Takes away the runnable tool that [matches], if the runner has one. */
     private fun removeToolThat(matches: (BetaRunnableTool) -> Boolean) {
-        val tool =
-            pendingToolChanges
-                .mapNotNull { (it as? PendingToolChange.Addition)?.tool }
-                .lastOrNull(matches) ?: runnableToolsByName().values.firstOrNull(matches) ?: return
+        val tool = runnableToolsByName().values.firstOrNull(matches) ?: return
         removeTool(tool.name())
     }
 
+    /** [tool] is `null` for a raw definition, which the runner has nothing to run for. */
     private fun queueToolAddition(definition: BetaToolUnion, tool: BetaRunnableTool?) {
-        pendingToolChanges.add(PendingToolChange.Addition(definition, tool))
-    }
-
-    private sealed interface PendingToolChange {
-        /** [tool] is `null` for a raw definition, which the runner has nothing to run for. */
-        class Addition(val definition: BetaToolUnion, val tool: BetaRunnableTool?) :
-            PendingToolChange
-
-        class Removal(val name: String) : PendingToolChange
+        val addition = BetaRequestToolAdditionBlock.builder().definitionTool(definition).build()
+        val name = tool?.name() ?: addition.tool().referencedToolName()
+        name?.let { toolOverrides[it] = tool }
+        pendingToolChanges.add(BetaContentBlockParam.ofToolAddition(addition))
     }
 
     private fun MessageCreateParams.Builder.buildWithPendingToolChanges(
@@ -356,33 +351,11 @@ internal constructor(
             lastStopReason.getOrNull() != BetaStopReason.PAUSE_TURN &&
                 pendingToolChanges.isNotEmpty()
         ) {
-            addSystemMessageOfBetaContentBlockParams(
-                pendingToolChanges.map { applyPendingToolChange(it) }
-            )
+            addSystemMessageOfBetaContentBlockParams(pendingToolChanges.toList())
             pendingToolChanges.clear()
         }
         return build()
     }
-
-    /** Applies [change] to [toolOverrides] and returns the block that tells the model about it. */
-    private fun applyPendingToolChange(change: PendingToolChange): BetaContentBlockParam =
-        when (change) {
-            is PendingToolChange.Addition -> {
-                val addition =
-                    BetaRequestToolAdditionBlock.builder().definitionTool(change.definition).build()
-                val name = change.tool?.name() ?: addition.tool().referencedToolName()
-                name?.let { toolOverrides[it] = change.tool }
-                BetaContentBlockParam.ofToolAddition(addition)
-            }
-            is PendingToolChange.Removal -> {
-                // Already applied when the removal was made, unless an addition earlier in this
-                // batch has just brought the name back.
-                toolOverrides[change.name] = null
-                BetaContentBlockParam.ofToolRemoval(
-                    BetaRequestToolRemovalBlock.builder().referenceTool(change.name).build()
-                )
-            }
-        }
 
     private fun rejectCompactionParam(params: MessageCreateParams) {
         val compaction = params._compaction()
@@ -639,9 +612,9 @@ internal constructor(
      * Returns the names of the tools that are currently available to the assistant.
      *
      * Starts from every runnable tool's name and folds the `tool_removal`/`tool_addition` blocks of
-     * the `"system"` messages, in request order. A removed tool can still receive a `tool_use` from
-     * the model, so dispatch checks membership in this set and routes a removed name down the same
-     * not-found path as a tool that was never declared.
+     * the `"system"` messages, in request order, then the changes still queued. A removed tool can
+     * still receive a `tool_use` from the model, so dispatch checks membership in this set and
+     * routes a removed name down the same not-found path as a tool that was never declared.
      */
     private fun availableToolNames(): MutableSet<String> {
         val available = runnableToolsByName().keys.toMutableSet()
@@ -656,6 +629,7 @@ internal constructor(
                 applyToolChange(block, available)
             }
         }
+        pendingToolChanges.forEach { applyToolChange(it, available) }
         return available
     }
 
