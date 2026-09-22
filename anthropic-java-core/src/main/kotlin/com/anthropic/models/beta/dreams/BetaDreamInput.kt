@@ -20,6 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** A source that a dream reads, such as a memory store or a set of sessions. */
 @JsonDeserialize(using = BetaDreamInput.Deserializer::class)
 @JsonSerialize(using = BetaDreamInput.Serializer::class)
 class BetaDreamInput
@@ -43,13 +44,14 @@ private constructor(
         )
 
     /**
-     * An input memory store the dream reads from. The dream never mutates this store unless it is
-     * also the destination: with output_behavior {type: "update_existing"} the job consolidates
-     * this store in place.
+     * The memory store that a dream reads, given as an entry in `inputs`.
+     *
+     * With `output_behavior` set to `update_existing`, the dream writes its result into this memory
+     * store. Otherwise the dream doesn't change it.
      */
     fun memoryStore(): Optional<BetaDreamMemoryStoreInput> = Optional.ofNullable(memoryStore)
 
-    /** Input session transcripts the dream reads. */
+    /** The sessions that a dream reads, given as an entry in `inputs`. */
     fun sessions(): Optional<BetaDreamSessionsInput> = Optional.ofNullable(sessions)
 
     fun isMemoryStore(): Boolean = memoryStore != null
@@ -57,13 +59,14 @@ private constructor(
     fun isSessions(): Boolean = sessions != null
 
     /**
-     * An input memory store the dream reads from. The dream never mutates this store unless it is
-     * also the destination: with output_behavior {type: "update_existing"} the job consolidates
-     * this store in place.
+     * The memory store that a dream reads, given as an entry in `inputs`.
+     *
+     * With `output_behavior` set to `update_existing`, the dream writes its result into this memory
+     * store. Otherwise the dream doesn't change it.
      */
     fun asMemoryStore(): BetaDreamMemoryStoreInput = memoryStore.getOrThrow("memoryStore")
 
-    /** Input session transcripts the dream reads. */
+    /** The sessions that a dream reads, given as an entry in `inputs`. */
     fun asSessions(): BetaDreamSessionsInput = sessions.getOrThrow("sessions")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
@@ -182,9 +185,10 @@ private constructor(
     companion object {
 
         /**
-         * An input memory store the dream reads from. The dream never mutates this store unless it
-         * is also the destination: with output_behavior {type: "update_existing"} the job
-         * consolidates this store in place.
+         * The memory store that a dream reads, given as an entry in `inputs`.
+         *
+         * With `output_behavior` set to `update_existing`, the dream writes its result into this
+         * memory store. Otherwise the dream doesn't change it.
          */
         @JvmStatic
         fun ofMemoryStore(memoryStore: BetaDreamMemoryStoreInput) =
@@ -203,7 +207,7 @@ private constructor(
                     .build()
             )
 
-        /** Input session transcripts the dream reads. */
+        /** The sessions that a dream reads, given as an entry in `inputs`. */
         @JvmStatic
         fun ofSessions(sessions: BetaDreamSessionsInput) = BetaDreamInput(sessions = sessions)
 
@@ -227,13 +231,14 @@ private constructor(
     interface Visitor<out T> {
 
         /**
-         * An input memory store the dream reads from. The dream never mutates this store unless it
-         * is also the destination: with output_behavior {type: "update_existing"} the job
-         * consolidates this store in place.
+         * The memory store that a dream reads, given as an entry in `inputs`.
+         *
+         * With `output_behavior` set to `update_existing`, the dream writes its result into this
+         * memory store. Otherwise the dream doesn't change it.
          */
         fun visitMemoryStore(memoryStore: BetaDreamMemoryStoreInput): T
 
-        /** Input session transcripts the dream reads. */
+        /** The sessions that a dream reads, given as an entry in `inputs`. */
         fun visitSessions(sessions: BetaDreamSessionsInput): T
 
         /**

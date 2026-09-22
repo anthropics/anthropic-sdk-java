@@ -6,7 +6,15 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-/** Lifecycle status of a Dream. */
+/**
+ * Where a dream is in its lifecycle.
+ *
+ * `completed`, `failed`, and `canceled` are final: once a dream has one of these statuses, its
+ * status doesn't change again.
+ *
+ * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#lifecycle) for
+ * what each status means.
+ */
 class BetaDreamStatus @JsonCreator private constructor(private val value: JsonField<String>) :
     Enum {
 
@@ -46,7 +54,12 @@ class BetaDreamStatus @JsonCreator private constructor(private val value: JsonFi
          */
         @JvmField val FAILED = of("failed")
 
-        /** The caller canceled the dream before it completed. */
+        /**
+         * A cancel request stopped the dream before it reached `completed` or `failed`.
+         *
+         * If `outputs` references a memory store, that memory store keeps what the dream wrote.
+         * `usage` can keep changing after the cancel.
+         */
         @JvmField val CANCELED = of("canceled")
 
         @JvmStatic fun of(value: String) = BetaDreamStatus(JsonField.of(value))
@@ -79,7 +92,12 @@ class BetaDreamStatus @JsonCreator private constructor(private val value: JsonFi
          * before it stopped.
          */
         FAILED,
-        /** The caller canceled the dream before it completed. */
+        /**
+         * A cancel request stopped the dream before it reached `completed` or `failed`.
+         *
+         * If `outputs` references a memory store, that memory store keeps what the dream wrote.
+         * `usage` can keep changing after the cancel.
+         */
         CANCELED,
     }
 
@@ -114,7 +132,12 @@ class BetaDreamStatus @JsonCreator private constructor(private val value: JsonFi
          * before it stopped.
          */
         FAILED,
-        /** The caller canceled the dream before it completed. */
+        /**
+         * A cancel request stopped the dream before it reached `completed` or `failed`.
+         *
+         * If `outputs` references a memory store, that memory store keeps what the dream wrote.
+         * `usage` can keep changing after the cancel.
+         */
         CANCELED,
         /**
          * An enum member indicating that [BetaDreamStatus] was instantiated with an unknown value.

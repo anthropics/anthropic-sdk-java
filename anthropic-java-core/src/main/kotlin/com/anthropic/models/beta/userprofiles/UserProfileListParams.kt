@@ -26,21 +26,35 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Query parameter for limit */
+    /** The maximum number of user profiles to return, from 1 to 100. Defaults to 20. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Query parameter for order */
+    /** The sort direction, applied to the field that `order_by` selects. Defaults to `desc`. */
     fun order(): Optional<Order> = Optional.ofNullable(order)
 
-    /** Query parameter for order_by */
+    /**
+     * The field to sort user profiles by, in the direction that `order` sets. Defaults to
+     * `created_at`.
+     */
     fun orderBy(): Optional<OrderBy> = Optional.ofNullable(orderBy)
 
-    /** Query parameter for page */
+    /**
+     * The cursor for the page to return, taken from `next_page` in a previous response.
+     *
+     * Leave it out to get the first page.
+     */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    /**
+     * Optional header to select the Workspace for this request. The value is a Workspace ID (for
+     * example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+     *
+     * Only needed for credentials that can act on more than one Workspace. A credential that
+     * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+     */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
@@ -83,7 +97,7 @@ private constructor(
             additionalQueryParams = userProfileListParams.additionalQueryParams.toBuilder()
         }
 
-        /** Query parameter for limit */
+        /** The maximum number of user profiles to return, from 1 to 100. Defaults to 20. */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -96,19 +110,26 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Query parameter for order */
+        /** The sort direction, applied to the field that `order_by` selects. Defaults to `desc`. */
         fun order(order: Order?) = apply { this.order = order }
 
         /** Alias for calling [Builder.order] with `order.orElse(null)`. */
         fun order(order: Optional<Order>) = order(order.getOrNull())
 
-        /** Query parameter for order_by */
+        /**
+         * The field to sort user profiles by, in the direction that `order` sets. Defaults to
+         * `created_at`.
+         */
         fun orderBy(orderBy: OrderBy?) = apply { this.orderBy = orderBy }
 
         /** Alias for calling [Builder.orderBy] with `orderBy.orElse(null)`. */
         fun orderBy(orderBy: Optional<OrderBy>) = orderBy(orderBy.getOrNull())
 
-        /** Query parameter for page */
+        /**
+         * The cursor for the page to return, taken from `next_page` in a previous response.
+         *
+         * Leave it out to get the first page.
+         */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
@@ -138,6 +159,13 @@ private constructor(
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
+        /**
+         * Optional header to select the Workspace for this request. The value is a Workspace ID
+         * (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+         *
+         * Only needed for credentials that can act on more than one Workspace. A credential that
+         * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+         */
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
@@ -279,7 +307,7 @@ private constructor(
             }
             .build()
 
-    /** Query parameter for order */
+    /** The sort direction, applied to the field that `order_by` selects. Defaults to `desc`. */
     class Order @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -294,8 +322,16 @@ private constructor(
 
         companion object {
 
+            /**
+             * Oldest first when `order_by` is `created_at`, or names in ascending order when
+             * `order_by` is `name`.
+             */
             @JvmField val ASC = of("asc")
 
+            /**
+             * Newest first when `order_by` is `created_at`, or names in descending order when
+             * `order_by` is `name`. This is the default.
+             */
             @JvmField val DESC = of("desc")
 
             @JvmStatic fun of(value: String) = Order(JsonField.of(value))
@@ -307,7 +343,15 @@ private constructor(
 
         /** An enum containing [Order]'s known values. */
         enum class Known {
+            /**
+             * Oldest first when `order_by` is `created_at`, or names in ascending order when
+             * `order_by` is `name`.
+             */
             ASC,
+            /**
+             * Newest first when `order_by` is `created_at`, or names in descending order when
+             * `order_by` is `name`. This is the default.
+             */
             DESC,
         }
 
@@ -321,7 +365,15 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /**
+             * Oldest first when `order_by` is `created_at`, or names in ascending order when
+             * `order_by` is `name`.
+             */
             ASC,
+            /**
+             * Newest first when `order_by` is `created_at`, or names in descending order when
+             * `order_by` is `name`. This is the default.
+             */
             DESC,
             /** An enum member indicating that [Order] was instantiated with an unknown value. */
             _UNKNOWN,
@@ -420,7 +472,10 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Query parameter for order_by */
+    /**
+     * The field to sort user profiles by, in the direction that `order` sets. Defaults to
+     * `created_at`.
+     */
     class OrderBy @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -435,8 +490,13 @@ private constructor(
 
         companion object {
 
+            /** Sort by when each user profile was created. This is the default. */
             @JvmField val CREATED_AT = of("created_at")
 
+            /**
+             * Sort by `name`, ignoring the case of ASCII letters. Profiles without a name come last
+             * in either direction.
+             */
             @JvmField val NAME = of("name")
 
             @JvmStatic fun of(value: String) = OrderBy(JsonField.of(value))
@@ -448,7 +508,12 @@ private constructor(
 
         /** An enum containing [OrderBy]'s known values. */
         enum class Known {
+            /** Sort by when each user profile was created. This is the default. */
             CREATED_AT,
+            /**
+             * Sort by `name`, ignoring the case of ASCII letters. Profiles without a name come last
+             * in either direction.
+             */
             NAME,
         }
 
@@ -462,7 +527,12 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /** Sort by when each user profile was created. This is the default. */
             CREATED_AT,
+            /**
+             * Sort by `name`, ignoring the case of ASCII letters. Profiles without a name come last
+             * in either direction.
+             */
             NAME,
             /** An enum member indicating that [OrderBy] was instantiated with an unknown value. */
             _UNKNOWN,

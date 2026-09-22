@@ -18,6 +18,13 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * A record of an entity that the platform serves through the API, such as an end-user of the
+ * platform's product or a company that the platform resells Claude access to.
+ *
+ * A Messages, Message Batches or token counting request can send a profile's `id` in the
+ * `anthropic-user-profile-id` header to attribute the request to that entity.
+ */
 class BetaUserProfile
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -989,8 +996,13 @@ private constructor(
 
         companion object {
 
+            /**
+             * The user profile represents an individual end-user of a product that the platform
+             * builds on the API. New profiles get this value by default.
+             */
             @JvmField val APPLICATION = of("application")
 
+            /** The user profile represents a company that the platform resells Claude access to. */
             @JvmField val PASSTHROUGH = of("passthrough")
 
             @JvmStatic fun of(value: String) = AccessType(JsonField.of(value))
@@ -1002,7 +1014,12 @@ private constructor(
 
         /** An enum containing [AccessType]'s known values. */
         enum class Known {
+            /**
+             * The user profile represents an individual end-user of a product that the platform
+             * builds on the API. New profiles get this value by default.
+             */
             APPLICATION,
+            /** The user profile represents a company that the platform resells Claude access to. */
             PASSTHROUGH,
         }
 
@@ -1016,7 +1033,12 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /**
+             * The user profile represents an individual end-user of a product that the platform
+             * builds on the API. New profiles get this value by default.
+             */
             APPLICATION,
+            /** The user profile represents a company that the platform resells Claude access to. */
             PASSTHROUGH,
             /**
              * An enum member indicating that [AccessType] was instantiated with an unknown value.

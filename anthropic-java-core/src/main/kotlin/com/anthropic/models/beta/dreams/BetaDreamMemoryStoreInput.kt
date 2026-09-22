@@ -16,9 +16,10 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * An input memory store the dream reads from. The dream never mutates this store unless it is also
- * the destination: with output_behavior {type: "update_existing"} the job consolidates this store
- * in place.
+ * The memory store that a dream reads, given as an entry in `inputs`.
+ *
+ * With `output_behavior` set to `update_existing`, the dream writes its result into this memory
+ * store. Otherwise the dream doesn't change it.
  */
 class BetaDreamMemoryStoreInput
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -37,6 +38,10 @@ private constructor(
     ) : this(memoryStoreId, type, mutableMapOf())
 
     /**
+     * The ID of the memory store for the dream to read (`memstore_...`).
+     *
+     * The memory store must be in the same workspace as the dream and must not be archived.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -104,6 +109,11 @@ private constructor(
             additionalProperties = betaDreamMemoryStoreInput.additionalProperties.toMutableMap()
         }
 
+        /**
+         * The ID of the memory store for the dream to read (`memstore_...`).
+         *
+         * The memory store must be in the same workspace as the dream and must not be archived.
+         */
         fun memoryStoreId(memoryStoreId: String) = memoryStoreId(JsonField.of(memoryStoreId))
 
         /**

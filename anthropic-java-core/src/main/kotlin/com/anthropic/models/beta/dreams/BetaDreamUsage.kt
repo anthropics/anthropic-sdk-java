@@ -13,7 +13,17 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-/** Cumulative token usage for the dream across every pipeline stage. */
+/**
+ * The tokens that a dream has used so far.
+ *
+ * The counts are zero while the dream is `pending` and update while it is `running`. They can keep
+ * changing after a cancel.
+ *
+ * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#billing) for how
+ * dreams are billed. See the
+ * [prompt caching guide](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#tracking-cache-performance)
+ * for how the input token counts add up.
+ */
 class BetaDreamUsage
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -47,7 +57,8 @@ private constructor(
     )
 
     /**
-     * Total tokens used to create prompt-cache entries (sum of all TTL tiers).
+     * The dream's input tokens that were written to the prompt cache, for both the 5-minute and
+     * 1-hour cache durations.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -56,7 +67,7 @@ private constructor(
         cacheCreationInputTokens.getRequired("cache_creation_input_tokens")
 
     /**
-     * Total tokens read from prompt cache.
+     * The dream's input tokens that were read from the prompt cache.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -64,7 +75,7 @@ private constructor(
     fun cacheReadInputTokens(): Int = cacheReadInputTokens.getRequired("cache_read_input_tokens")
 
     /**
-     * Total uncached input tokens consumed across every pipeline stage.
+     * The dream's input tokens that weren't read from or written to the prompt cache.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -72,7 +83,7 @@ private constructor(
     fun inputTokens(): Int = inputTokens.getRequired("input_tokens")
 
     /**
-     * Total output tokens generated across every pipeline stage.
+     * The tokens that the model generated for the dream.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -161,7 +172,10 @@ private constructor(
             additionalProperties = betaDreamUsage.additionalProperties.toMutableMap()
         }
 
-        /** Total tokens used to create prompt-cache entries (sum of all TTL tiers). */
+        /**
+         * The dream's input tokens that were written to the prompt cache, for both the 5-minute and
+         * 1-hour cache durations.
+         */
         fun cacheCreationInputTokens(cacheCreationInputTokens: Int) =
             cacheCreationInputTokens(JsonField.of(cacheCreationInputTokens))
 
@@ -176,7 +190,7 @@ private constructor(
             this.cacheCreationInputTokens = cacheCreationInputTokens
         }
 
-        /** Total tokens read from prompt cache. */
+        /** The dream's input tokens that were read from the prompt cache. */
         fun cacheReadInputTokens(cacheReadInputTokens: Int) =
             cacheReadInputTokens(JsonField.of(cacheReadInputTokens))
 
@@ -191,7 +205,7 @@ private constructor(
             this.cacheReadInputTokens = cacheReadInputTokens
         }
 
-        /** Total uncached input tokens consumed across every pipeline stage. */
+        /** The dream's input tokens that weren't read from or written to the prompt cache. */
         fun inputTokens(inputTokens: Int) = inputTokens(JsonField.of(inputTokens))
 
         /**
@@ -202,7 +216,7 @@ private constructor(
          */
         fun inputTokens(inputTokens: JsonField<Int>) = apply { this.inputTokens = inputTokens }
 
-        /** Total output tokens generated across every pipeline stage. */
+        /** The tokens that the model generated for the dream. */
         fun outputTokens(outputTokens: Int) = outputTokens(JsonField.of(outputTokens))
 
         /**

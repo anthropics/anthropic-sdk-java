@@ -17,6 +17,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** A page of dreams, newest first. */
 class DreamListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -32,12 +33,18 @@ private constructor(
     ) : this(data, nextPage, mutableMapOf())
 
     /**
+     * The dreams on this page, newest first.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun data(): List<BetaDream> = data.getRequired("data")
 
     /**
+     * The cursor for the next page, or `null` if this is the last page.
+     *
+     * Pass it as `page` to get the next page.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -98,6 +105,7 @@ private constructor(
             additionalProperties = dreamListPageResponse.additionalProperties.toMutableMap()
         }
 
+        /** The dreams on this page, newest first. */
         fun data(data: List<BetaDream>) = data(JsonField.of(data))
 
         /**
@@ -123,6 +131,11 @@ private constructor(
                 }
         }
 
+        /**
+         * The cursor for the next page, or `null` if this is the last page.
+         *
+         * Pass it as `page` to get the next page.
+         */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 
         /** Alias for calling [Builder.nextPage] with `nextPage.orElse(null)`. */

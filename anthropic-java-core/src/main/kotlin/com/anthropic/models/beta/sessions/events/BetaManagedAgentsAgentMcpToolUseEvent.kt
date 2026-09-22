@@ -28,7 +28,7 @@ private constructor(
     private val name: JsonField<String>,
     private val processedAt: JsonField<OffsetDateTime>,
     private val type: JsonField<Type>,
-    private val evaluatedPermission: JsonField<EvaluatedPermission>,
+    private val evaluatedPermission: JsonField<BetaManagedAgentsAgentEvaluatedPermission>,
     private val evaluation: JsonField<BetaManagedAgentsAgentToolEvaluation>,
     private val sessionThreadId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -48,7 +48,8 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
         @JsonProperty("evaluated_permission")
         @ExcludeMissing
-        evaluatedPermission: JsonField<EvaluatedPermission> = JsonMissing.of(),
+        evaluatedPermission: JsonField<BetaManagedAgentsAgentEvaluatedPermission> =
+            JsonMissing.of(),
         @JsonProperty("evaluation")
         @ExcludeMissing
         evaluation: JsonField<BetaManagedAgentsAgentToolEvaluation> = JsonMissing.of(),
@@ -120,7 +121,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun evaluatedPermission(): Optional<EvaluatedPermission> =
+    fun evaluatedPermission(): Optional<BetaManagedAgentsAgentEvaluatedPermission> =
         evaluatedPermission.getOptional("evaluated_permission")
 
     /**
@@ -198,7 +199,8 @@ private constructor(
      */
     @JsonProperty("evaluated_permission")
     @ExcludeMissing
-    fun _evaluatedPermission(): JsonField<EvaluatedPermission> = evaluatedPermission
+    fun _evaluatedPermission(): JsonField<BetaManagedAgentsAgentEvaluatedPermission> =
+        evaluatedPermission
 
     /**
      * Returns the raw JSON value of [evaluation].
@@ -258,7 +260,8 @@ private constructor(
         private var name: JsonField<String>? = null
         private var processedAt: JsonField<OffsetDateTime>? = null
         private var type: JsonField<Type>? = null
-        private var evaluatedPermission: JsonField<EvaluatedPermission> = JsonMissing.of()
+        private var evaluatedPermission: JsonField<BetaManagedAgentsAgentEvaluatedPermission> =
+            JsonMissing.of()
         private var evaluation: JsonField<BetaManagedAgentsAgentToolEvaluation> = JsonMissing.of()
         private var sessionThreadId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -352,19 +355,19 @@ private constructor(
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /** AgentEvaluatedPermission enum */
-        fun evaluatedPermission(evaluatedPermission: EvaluatedPermission) =
+        fun evaluatedPermission(evaluatedPermission: BetaManagedAgentsAgentEvaluatedPermission) =
             evaluatedPermission(JsonField.of(evaluatedPermission))
 
         /**
          * Sets [Builder.evaluatedPermission] to an arbitrary JSON value.
          *
          * You should usually call [Builder.evaluatedPermission] with a well-typed
-         * [EvaluatedPermission] value instead. This method is primarily for setting the field to an
-         * undocumented or not yet supported value.
+         * [BetaManagedAgentsAgentEvaluatedPermission] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
          */
-        fun evaluatedPermission(evaluatedPermission: JsonField<EvaluatedPermission>) = apply {
-            this.evaluatedPermission = evaluatedPermission
-        }
+        fun evaluatedPermission(
+            evaluatedPermission: JsonField<BetaManagedAgentsAgentEvaluatedPermission>
+        ) = apply { this.evaluatedPermission = evaluatedPermission }
 
         /**
          * Names the resolved permission_policy that produced evaluated_permission, and under auto
@@ -833,158 +836,6 @@ private constructor(
             }
 
             return other is Type && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
-
-    /** AgentEvaluatedPermission enum */
-    class EvaluatedPermission
-    @JsonCreator
-    private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val ALLOW = of("allow")
-
-            @JvmField val ASK = of("ask")
-
-            @JvmField val DENY = of("deny")
-
-            @JvmStatic fun of(value: String) = EvaluatedPermission(JsonField.of(value))
-
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): EvaluatedPermission =
-                value.asString().getOrNull()?.let { of(it) } ?: EvaluatedPermission(value)
-        }
-
-        /** An enum containing [EvaluatedPermission]'s known values. */
-        enum class Known {
-            ALLOW,
-            ASK,
-            DENY,
-        }
-
-        /**
-         * An enum containing [EvaluatedPermission]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [EvaluatedPermission] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            ALLOW,
-            ASK,
-            DENY,
-            /**
-             * An enum member indicating that [EvaluatedPermission] was instantiated with an unknown
-             * value.
-             */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                ALLOW -> Value.ALLOW
-                ASK -> Value.ASK
-                DENY -> Value.DENY
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                ALLOW -> Known.ALLOW
-                ASK -> Known.ASK
-                DENY -> Known.DENY
-                else -> throw AnthropicInvalidDataException("Unknown EvaluatedPermission: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws AnthropicInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                AnthropicInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
-         *   expected type.
-         */
-        fun validate(): EvaluatedPermission = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: AnthropicInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is EvaluatedPermission && value == other.value
         }
 
         override fun hashCode() = value.hashCode()

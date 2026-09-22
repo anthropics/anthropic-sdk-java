@@ -1191,6 +1191,172 @@ private constructor(
             }
         )
 
+    fun evaluatedPermission(): Optional<BetaManagedAgentsAgentEvaluatedPermission> =
+        accept(
+            object : Visitor<Optional<BetaManagedAgentsAgentEvaluatedPermission>> {
+                override fun visitUserMessage(
+                    userMessage: BetaManagedAgentsUserMessageEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitUserInterrupt(
+                    userInterrupt: BetaManagedAgentsUserInterruptEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitUserToolConfirmation(
+                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitUserCustomToolResult(
+                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitAgentCustomToolUse(
+                    agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitAgentMessage(
+                    agentMessage: BetaManagedAgentsAgentMessageEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitAgentThinking(
+                    agentThinking: BetaManagedAgentsAgentThinkingEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitAgentMcpToolUse(
+                    agentMcpToolUse: BetaManagedAgentsAgentMcpToolUseEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> =
+                    agentMcpToolUse.evaluatedPermission()
+
+                override fun visitAgentMcpToolResult(
+                    agentMcpToolResult: BetaManagedAgentsAgentMcpToolResultEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitAgentToolUse(
+                    agentToolUse: BetaManagedAgentsAgentToolUseEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> =
+                    agentToolUse.evaluatedPermission()
+
+                override fun visitAgentToolResult(
+                    agentToolResult: BetaManagedAgentsAgentToolResultEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitAgentThreadMessageReceived(
+                    agentThreadMessageReceived: BetaManagedAgentsAgentThreadMessageReceivedEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitAgentThreadMessageSent(
+                    agentThreadMessageSent: BetaManagedAgentsAgentThreadMessageSentEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitAgentThreadContextCompacted(
+                    agentThreadContextCompacted: BetaManagedAgentsAgentThreadContextCompactedEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionError(
+                    sessionError: BetaManagedAgentsSessionErrorEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionStatusRescheduled(
+                    sessionStatusRescheduled: BetaManagedAgentsSessionStatusRescheduledEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionStatusRunning(
+                    sessionStatusRunning: BetaManagedAgentsSessionStatusRunningEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionStatusIdle(
+                    sessionStatusIdle: BetaManagedAgentsSessionStatusIdleEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionStatusTerminated(
+                    sessionStatusTerminated: BetaManagedAgentsSessionStatusTerminatedEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionThreadCreated(
+                    sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationStart(
+                    spanOutcomeEvaluationStart: BetaManagedAgentsSpanOutcomeEvaluationStartEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationEnd(
+                    spanOutcomeEvaluationEnd: BetaManagedAgentsSpanOutcomeEvaluationEndEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSpanModelRequestStart(
+                    spanModelRequestStart: BetaManagedAgentsSpanModelRequestStartEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSpanModelRequestEnd(
+                    spanModelRequestEnd: BetaManagedAgentsSpanModelRequestEndEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSpanOutcomeEvaluationOngoing(
+                    spanOutcomeEvaluationOngoing: BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitUserDefineOutcome(
+                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionDeleted(
+                    sessionDeleted: BetaManagedAgentsSessionDeletedEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionThreadStatusRunning(
+                    sessionThreadStatusRunning: BetaManagedAgentsSessionThreadStatusRunningEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionThreadStatusIdle(
+                    sessionThreadStatusIdle: BetaManagedAgentsSessionThreadStatusIdleEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionThreadStatusTerminated(
+                    sessionThreadStatusTerminated:
+                        BetaManagedAgentsSessionThreadStatusTerminatedEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitUserToolResult(
+                    userToolResult: BetaManagedAgentsUserToolResultEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionThreadStatusRescheduled(
+                    sessionThreadStatusRescheduled:
+                        BetaManagedAgentsSessionThreadStatusRescheduledEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionUpdated(
+                    sessionUpdated: BetaManagedAgentsSessionUpdatedEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitEventStart(
+                    eventStart: BetaManagedAgentsStartEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitEventDelta(
+                    eventDelta: BetaManagedAgentsDeltaEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSystemMessage(
+                    systemMessage: BetaManagedAgentsSystemMessageEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun visitSessionUsage(
+                    sessionUsage: BetaManagedAgentsSessionUsageEvent
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> = Optional.empty()
+
+                override fun unknown(
+                    json: JsonValue?
+                ): Optional<BetaManagedAgentsAgentEvaluatedPermission> =
+                    json
+                        .getProperty<BetaManagedAgentsAgentEvaluatedPermission>(
+                            "evaluated_permission"
+                        )
+                        .asKnown()
+            }
+        )
+
     fun evaluation(): Optional<BetaManagedAgentsAgentToolEvaluation> =
         accept(
             object : Visitor<Optional<BetaManagedAgentsAgentToolEvaluation>> {

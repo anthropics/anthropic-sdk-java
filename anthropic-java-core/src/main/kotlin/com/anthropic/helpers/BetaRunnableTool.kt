@@ -20,12 +20,16 @@ import java.util.function.Supplier
 class BetaRunnableTool
 private constructor(
     private val definition: BetaTool,
+    private val parametersType: Class<*>?,
     private val run: Function<in String, out BetaToolResultBlockParam.Content>,
 ) {
 
     @JvmSynthetic internal fun name(): String = definition.name()
 
     @JvmSynthetic internal fun definition(): BetaTool = definition
+
+    /** The class the tool was derived from, if it was derived from one. */
+    @JvmSynthetic internal fun parametersType(): Class<*>? = parametersType
 
     @JvmSynthetic
     internal fun run(input: JsonField<*>): BetaToolResultBlockParam.Content =
@@ -54,7 +58,8 @@ private constructor(
             run: Function<in T, out BetaToolResultBlockParam.Content>,
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
         ): BetaRunnableTool =
-            BetaRunnableTool(toolFromClass(parametersType, localValidation)) { input ->
+            BetaRunnableTool(toolFromClass(parametersType, localValidation), parametersType) { input
+                ->
                 run.apply(outputTypeFromJson(input, parametersType))
             }
 
@@ -68,7 +73,7 @@ private constructor(
         fun of(
             definition: BetaTool,
             run: Function<in String, out BetaToolResultBlockParam.Content>,
-        ): BetaRunnableTool = BetaRunnableTool(definition, run)
+        ): BetaRunnableTool = BetaRunnableTool(definition, null, run)
 
         @JvmSynthetic
         internal fun <T : Any> ofSupplier(

@@ -16,6 +16,18 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * The error returned with HTTP status 409 when a request's precondition doesn't hold for the
+ * memory's current state, such as `precondition` on an update or `expected_content_sha256` on a
+ * delete.
+ *
+ * The error doesn't include the memory's current state. Retrieve the memory to see its current
+ * content and `content_sha256` before you retry.
+ *
+ * See the
+ * [memory guide](https://platform.claude.com/docs/en/managed-agents/memory#safe-content-edits-optimistic-concurrency)
+ * to learn more about safe content edits with content hash preconditions.
+ */
 class BetaManagedAgentsMemoryPreconditionFailedError
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -37,6 +49,8 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
+     * A human-readable explanation of why the precondition failed.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -116,6 +130,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
+        /** A human-readable explanation of why the precondition failed. */
         fun message(message: String) = message(JsonField.of(message))
 
         /**

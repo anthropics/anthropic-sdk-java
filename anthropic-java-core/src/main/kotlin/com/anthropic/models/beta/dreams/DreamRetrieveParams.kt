@@ -9,7 +9,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get a Dream */
+/**
+ * Get a dream by ID to check its status, output memory store, and token usage.
+ *
+ * Archived dreams are returned too.
+ *
+ * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#track-progress)
+ * for how to poll a dream and what each status means.
+ */
 class DreamRetrieveParams
 private constructor(
     private val dreamId: String?,
@@ -19,11 +26,19 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** The ID of the dream to get (`drm_...`). */
     fun dreamId(): Optional<String> = Optional.ofNullable(dreamId)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    /**
+     * Optional header to select the Workspace for this request. The value is a Workspace ID (for
+     * example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+     *
+     * Only needed for credentials that can act on more than one Workspace. A credential that
+     * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+     */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
@@ -60,6 +75,7 @@ private constructor(
             additionalQueryParams = dreamRetrieveParams.additionalQueryParams.toBuilder()
         }
 
+        /** The ID of the dream to get (`drm_...`). */
         fun dreamId(dreamId: String?) = apply { this.dreamId = dreamId }
 
         /** Alias for calling [Builder.dreamId] with `dreamId.orElse(null)`. */
@@ -89,6 +105,13 @@ private constructor(
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
+        /**
+         * Optional header to select the Workspace for this request. The value is a Workspace ID
+         * (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+         *
+         * Only needed for credentials that can act on more than one Workspace. A credential that
+         * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+         */
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */

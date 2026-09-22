@@ -41,6 +41,8 @@ import com.anthropic.models.beta.messages.BetaMessageParam
 import com.anthropic.models.beta.messages.BetaMetadata
 import com.anthropic.models.beta.messages.BetaOutputConfig
 import com.anthropic.models.beta.messages.BetaRequestMcpServerUrlDefinition
+import com.anthropic.models.beta.messages.BetaResponseTool
+import com.anthropic.models.beta.messages.BetaResponseToolUnion
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaThinkingConfigAdaptive
 import com.anthropic.models.beta.messages.BetaThinkingConfigDisabled
@@ -119,6 +121,13 @@ private constructor(
      */
     fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
 
+    /**
+     * Optional header to select the Workspace for this request. The value is a Workspace ID (for
+     * example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+     *
+     * Only needed for credentials that can act on more than one Workspace. A credential that
+     * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+     */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
@@ -215,6 +224,13 @@ private constructor(
         fun userProfileId(userProfileId: Optional<String>) =
             userProfileId(userProfileId.getOrNull())
 
+        /**
+         * Optional header to select the Workspace for this request. The value is a Workspace ID
+         * (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+         *
+         * Only needed for credentials that can act on more than one Workspace. A credential that
+         * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+         */
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
@@ -2670,192 +2686,231 @@ private constructor(
                         }
                 }
 
-                /** Alias for calling [addTool] with `BetaToolUnion.ofBetaTool(betaTool)`. */
-                fun addTool(betaTool: BetaTool) = addTool(BetaToolUnion.ofBetaTool(betaTool))
-
-                /**
-                 * Alias for calling [addTool] with `BetaToolUnion.ofBash20241022(bash20241022)`.
-                 */
-                fun addTool(bash20241022: BetaToolBash20241022) =
-                    addTool(BetaToolUnion.ofBash20241022(bash20241022))
-
-                /**
-                 * Alias for calling [addTool] with `BetaToolUnion.ofBash20250124(bash20250124)`.
-                 */
-                fun addTool(bash20250124: BetaToolBash20250124) =
-                    addTool(BetaToolUnion.ofBash20250124(bash20250124))
+                /** Alias for calling [addTool] with `tool.toParam()`. */
+                fun addTool(tool: BetaResponseToolUnion) = addTool(tool.toParam())
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)`.
+                 * `BetaResponseToolUnion.ofBetaResponseTool(betaResponseTool)`.
+                 */
+                fun addTool(betaResponseTool: BetaResponseTool) =
+                    addTool(BetaResponseToolUnion.ofBetaResponseTool(betaResponseTool))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaResponseToolUnion.ofToolBash20241022(toolBash20241022)`.
+                 */
+                fun addTool(toolBash20241022: BetaToolBash20241022) =
+                    addTool(BetaResponseToolUnion.ofToolBash20241022(toolBash20241022))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaResponseToolUnion.ofToolBash20250124(toolBash20250124)`.
+                 */
+                fun addTool(toolBash20250124: BetaToolBash20250124) =
+                    addTool(BetaResponseToolUnion.ofToolBash20250124(toolBash20250124))
+
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaResponseToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)`.
                  */
                 fun addTool(codeExecutionTool20250522: BetaCodeExecutionTool20250522) =
-                    addTool(BetaToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522))
+                    addTool(
+                        BetaResponseToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)
+                    )
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)`.
+                 * `BetaResponseToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)`.
                  */
                 fun addTool(codeExecutionTool20250825: BetaCodeExecutionTool20250825) =
-                    addTool(BetaToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825))
+                    addTool(
+                        BetaResponseToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)
+                    )
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
+                 * `BetaResponseToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
                  */
                 fun addTool(codeExecutionTool20260120: BetaCodeExecutionTool20260120) =
-                    addTool(BetaToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120))
+                    addTool(
+                        BetaResponseToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)
+                    )
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)`.
+                 * `BetaResponseToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)`.
                  */
                 fun addTool(codeExecutionTool20260521: BetaCodeExecutionTool20260521) =
-                    addTool(BetaToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521))
+                    addTool(
+                        BetaResponseToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)
+                    )
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofBrowserToolset20260801(browserToolset20260801)`.
+                 * `BetaResponseToolUnion.ofBrowserToolset20260801(browserToolset20260801)`.
                  */
                 fun addTool(browserToolset20260801: BetaBrowserToolset20260801) =
-                    addTool(BetaToolUnion.ofBrowserToolset20260801(browserToolset20260801))
+                    addTool(BetaResponseToolUnion.ofBrowserToolset20260801(browserToolset20260801))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofComputerUse20241022(computerUse20241022)`.
+                 * `BetaResponseToolUnion.ofToolComputerUse20241022(toolComputerUse20241022)`.
                  */
-                fun addTool(computerUse20241022: BetaToolComputerUse20241022) =
-                    addTool(BetaToolUnion.ofComputerUse20241022(computerUse20241022))
+                fun addTool(toolComputerUse20241022: BetaToolComputerUse20241022) =
+                    addTool(
+                        BetaResponseToolUnion.ofToolComputerUse20241022(toolComputerUse20241022)
+                    )
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofMemoryTool20250818(memoryTool20250818)`.
+                 * `BetaResponseToolUnion.ofMemoryTool20250818(memoryTool20250818)`.
                  */
                 fun addTool(memoryTool20250818: BetaMemoryTool20250818) =
-                    addTool(BetaToolUnion.ofMemoryTool20250818(memoryTool20250818))
+                    addTool(BetaResponseToolUnion.ofMemoryTool20250818(memoryTool20250818))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofComputerUse20250124(computerUse20250124)`.
+                 * `BetaResponseToolUnion.ofToolComputerUse20250124(toolComputerUse20250124)`.
                  */
-                fun addTool(computerUse20250124: BetaToolComputerUse20250124) =
-                    addTool(BetaToolUnion.ofComputerUse20250124(computerUse20250124))
+                fun addTool(toolComputerUse20250124: BetaToolComputerUse20250124) =
+                    addTool(
+                        BetaResponseToolUnion.ofToolComputerUse20250124(toolComputerUse20250124)
+                    )
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofTextEditor20241022(textEditor20241022)`.
+                 * `BetaResponseToolUnion.ofToolTextEditor20241022(toolTextEditor20241022)`.
                  */
-                fun addTool(textEditor20241022: BetaToolTextEditor20241022) =
-                    addTool(BetaToolUnion.ofTextEditor20241022(textEditor20241022))
+                fun addTool(toolTextEditor20241022: BetaToolTextEditor20241022) =
+                    addTool(BetaResponseToolUnion.ofToolTextEditor20241022(toolTextEditor20241022))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofComputerUse20251124(computerUse20251124)`.
+                 * `BetaResponseToolUnion.ofToolComputerUse20251124(toolComputerUse20251124)`.
                  */
-                fun addTool(computerUse20251124: BetaToolComputerUse20251124) =
-                    addTool(BetaToolUnion.ofComputerUse20251124(computerUse20251124))
+                fun addTool(toolComputerUse20251124: BetaToolComputerUse20251124) =
+                    addTool(
+                        BetaResponseToolUnion.ofToolComputerUse20251124(toolComputerUse20251124)
+                    )
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofComputerToolset20260801(computerToolset20260801)`.
+                 * `BetaResponseToolUnion.ofComputerToolset20260801(computerToolset20260801)`.
                  */
                 fun addTool(computerToolset20260801: BetaComputerToolset20260801) =
-                    addTool(BetaToolUnion.ofComputerToolset20260801(computerToolset20260801))
+                    addTool(
+                        BetaResponseToolUnion.ofComputerToolset20260801(computerToolset20260801)
+                    )
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofTextEditor20250124(textEditor20250124)`.
+                 * `BetaResponseToolUnion.ofToolTextEditor20250124(toolTextEditor20250124)`.
                  */
-                fun addTool(textEditor20250124: BetaToolTextEditor20250124) =
-                    addTool(BetaToolUnion.ofTextEditor20250124(textEditor20250124))
+                fun addTool(toolTextEditor20250124: BetaToolTextEditor20250124) =
+                    addTool(BetaResponseToolUnion.ofToolTextEditor20250124(toolTextEditor20250124))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofTextEditor20250429(textEditor20250429)`.
+                 * `BetaResponseToolUnion.ofToolTextEditor20250429(toolTextEditor20250429)`.
                  */
-                fun addTool(textEditor20250429: BetaToolTextEditor20250429) =
-                    addTool(BetaToolUnion.ofTextEditor20250429(textEditor20250429))
+                fun addTool(toolTextEditor20250429: BetaToolTextEditor20250429) =
+                    addTool(BetaResponseToolUnion.ofToolTextEditor20250429(toolTextEditor20250429))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofTextEditor20250728(textEditor20250728)`.
+                 * `BetaResponseToolUnion.ofToolTextEditor20250728(toolTextEditor20250728)`.
                  */
-                fun addTool(textEditor20250728: BetaToolTextEditor20250728) =
-                    addTool(BetaToolUnion.ofTextEditor20250728(textEditor20250728))
+                fun addTool(toolTextEditor20250728: BetaToolTextEditor20250728) =
+                    addTool(BetaResponseToolUnion.ofToolTextEditor20250728(toolTextEditor20250728))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305)`.
+                 * `BetaResponseToolUnion.ofWebSearchTool20250305(webSearchTool20250305)`.
                  */
                 fun addTool(webSearchTool20250305: BetaWebSearchTool20250305) =
-                    addTool(BetaToolUnion.ofWebSearchTool20250305(webSearchTool20250305))
+                    addTool(BetaResponseToolUnion.ofWebSearchTool20250305(webSearchTool20250305))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910)`.
+                 * `BetaResponseToolUnion.ofWebFetchTool20250910(webFetchTool20250910)`.
                  */
                 fun addTool(webFetchTool20250910: BetaWebFetchTool20250910) =
-                    addTool(BetaToolUnion.ofWebFetchTool20250910(webFetchTool20250910))
+                    addTool(BetaResponseToolUnion.ofWebFetchTool20250910(webFetchTool20250910))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofWebSearchTool20260209(webSearchTool20260209)`.
+                 * `BetaResponseToolUnion.ofWebSearchTool20260209(webSearchTool20260209)`.
                  */
                 fun addTool(webSearchTool20260209: BetaWebSearchTool20260209) =
-                    addTool(BetaToolUnion.ofWebSearchTool20260209(webSearchTool20260209))
+                    addTool(BetaResponseToolUnion.ofWebSearchTool20260209(webSearchTool20260209))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofWebFetchTool20260209(webFetchTool20260209)`.
+                 * `BetaResponseToolUnion.ofWebFetchTool20260209(webFetchTool20260209)`.
                  */
                 fun addTool(webFetchTool20260209: BetaWebFetchTool20260209) =
-                    addTool(BetaToolUnion.ofWebFetchTool20260209(webFetchTool20260209))
+                    addTool(BetaResponseToolUnion.ofWebFetchTool20260209(webFetchTool20260209))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofWebFetchTool20260309(webFetchTool20260309)`.
+                 * `BetaResponseToolUnion.ofWebFetchTool20260309(webFetchTool20260309)`.
                  */
                 fun addTool(webFetchTool20260309: BetaWebFetchTool20260309) =
-                    addTool(BetaToolUnion.ofWebFetchTool20260309(webFetchTool20260309))
+                    addTool(BetaResponseToolUnion.ofWebFetchTool20260309(webFetchTool20260309))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofWebSearchTool20260318(webSearchTool20260318)`.
+                 * `BetaResponseToolUnion.ofWebSearchTool20260318(webSearchTool20260318)`.
                  */
                 fun addTool(webSearchTool20260318: BetaWebSearchTool20260318) =
-                    addTool(BetaToolUnion.ofWebSearchTool20260318(webSearchTool20260318))
+                    addTool(BetaResponseToolUnion.ofWebSearchTool20260318(webSearchTool20260318))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofWebFetchTool20260318(webFetchTool20260318)`.
+                 * `BetaResponseToolUnion.ofWebFetchTool20260318(webFetchTool20260318)`.
                  */
                 fun addTool(webFetchTool20260318: BetaWebFetchTool20260318) =
-                    addTool(BetaToolUnion.ofWebFetchTool20260318(webFetchTool20260318))
+                    addTool(BetaResponseToolUnion.ofWebFetchTool20260318(webFetchTool20260318))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofAdvisorTool20260301(advisorTool20260301)`.
+                 * `BetaResponseToolUnion.ofAdvisorTool20260301(advisorTool20260301)`.
                  */
                 fun addTool(advisorTool20260301: BetaAdvisorTool20260301) =
-                    addTool(BetaToolUnion.ofAdvisorTool20260301(advisorTool20260301))
+                    addTool(BetaResponseToolUnion.ofAdvisorTool20260301(advisorTool20260301))
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofSearchToolBm25_20251119(searchToolBm25_20251119)`.
+                 * `BetaResponseToolUnion.ofToolSearchToolBm25_20251119(toolSearchToolBm25_20251119)`.
                  */
-                fun addTool(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
-                    addTool(BetaToolUnion.ofSearchToolBm25_20251119(searchToolBm25_20251119))
+                fun addTool(toolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
+                    addTool(
+                        BetaResponseToolUnion.ofToolSearchToolBm25_20251119(
+                            toolSearchToolBm25_20251119
+                        )
+                    )
 
                 /**
                  * Alias for calling [addTool] with
-                 * `BetaToolUnion.ofSearchToolRegex20251119(searchToolRegex20251119)`.
+                 * `BetaResponseToolUnion.ofToolSearchToolRegex20251119(toolSearchToolRegex20251119)`.
                  */
-                fun addTool(searchToolRegex20251119: BetaToolSearchToolRegex20251119) =
-                    addTool(BetaToolUnion.ofSearchToolRegex20251119(searchToolRegex20251119))
+                fun addTool(toolSearchToolRegex20251119: BetaToolSearchToolRegex20251119) =
+                    addTool(
+                        BetaResponseToolUnion.ofToolSearchToolRegex20251119(
+                            toolSearchToolRegex20251119
+                        )
+                    )
 
-                /** Alias for calling [addTool] with `BetaToolUnion.ofMcpToolset(mcpToolset)`. */
+                /**
+                 * Alias for calling [addTool] with
+                 * `BetaResponseToolUnion.ofMcpToolset(mcpToolset)`.
+                 */
                 fun addTool(mcpToolset: BetaMcpToolset) =
-                    addTool(BetaToolUnion.ofMcpToolset(mcpToolset))
+                    addTool(BetaResponseToolUnion.ofMcpToolset(mcpToolset))
+
+                /** Alias for calling [addTool] with `BetaToolUnion.ofBetaTool(betaTool)`. */
+                fun addTool(betaTool: BetaTool) = addTool(BetaToolUnion.ofBetaTool(betaTool))
 
                 /**
                  * Only sample from the top K options for each subsequent token.

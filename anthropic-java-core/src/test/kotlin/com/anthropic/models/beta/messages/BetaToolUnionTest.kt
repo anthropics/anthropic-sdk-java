@@ -2892,6 +2892,17 @@ internal class BetaToolUnionTest {
                 .defaultConfig(
                     BetaMcpToolDefaultConfig.builder().deferLoading(true).enabled(true).build()
                 )
+                .addTool(
+                    BetaMcpToolParam.builder()
+                        .inputSchema(
+                            BetaMcpToolParam.InputSchema.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .name("x")
+                        .description("description")
+                        .build()
+                )
                 .build()
 
         val betaToolUnion = BetaToolUnion.ofMcpToolset(mcpToolset)
@@ -2948,6 +2959,17 @@ internal class BetaToolUnionTest {
                     )
                     .defaultConfig(
                         BetaMcpToolDefaultConfig.builder().deferLoading(true).enabled(true).build()
+                    )
+                    .addTool(
+                        BetaMcpToolParam.builder()
+                            .inputSchema(
+                                BetaMcpToolParam.InputSchema.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .name("x")
+                            .description("description")
+                            .build()
                     )
                     .build()
             )

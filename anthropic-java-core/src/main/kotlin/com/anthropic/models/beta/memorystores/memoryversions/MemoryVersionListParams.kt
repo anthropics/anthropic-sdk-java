@@ -32,9 +32,10 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** The ID of the memory store whose version history to list (`memstore_...`). */
     fun memoryStoreId(): Optional<String> = Optional.ofNullable(memoryStoreId)
 
-    /** Query parameter for api_key_id */
+    /** Return only versions written with the API key that has this ID. */
     fun apiKeyId(): Optional<String> = Optional.ofNullable(apiKeyId)
 
     /** Return versions created at or after this time (inclusive). */
@@ -43,31 +44,51 @@ private constructor(
     /** Return versions created at or before this time (inclusive). */
     fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
 
-    /** Query parameter for limit */
+    /** The maximum number of versions to return per page. Defaults to 20. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Query parameter for memory_id */
+    /**
+     * Return only versions of the memory with this ID (`mem_...`).
+     *
+     * The filter still works after the memory is deleted. The results then include the version
+     * whose `operation` is `deleted`.
+     */
     fun memoryId(): Optional<String> = Optional.ofNullable(memoryId)
 
-    /** Query parameter for operation */
+    /** Return only versions that record this kind of change. */
     fun operation(): Optional<BetaManagedAgentsMemoryVersionOperation> =
         Optional.ofNullable(operation)
 
-    /** Query parameter for page */
+    /**
+     * The `next_page` value from a previous response, to get the next page. Omit it to get the
+     * first page.
+     */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
-    /** Query parameter for service_account_id */
+    /** Return only versions written by the service account with this ID (`svac_...`). */
     fun serviceAccountId(): Optional<String> = Optional.ofNullable(serviceAccountId)
 
-    /** Query parameter for session_id */
+    /** Return only versions written by the session with this ID. */
     fun sessionId(): Optional<String> = Optional.ofNullable(sessionId)
 
-    /** Query parameter for view */
+    /**
+     * Selects which projection of a `memory` or `memory_version` the server returns. `basic`
+     * returns the object with `content` set to `null`; `full` populates `content`. When omitted,
+     * the default is endpoint-specific: retrieve operations default to `full`; list, create, and
+     * update operations default to `basic`. Listing with `view=full` caps `limit` at 20.
+     */
     fun view(): Optional<BetaManagedAgentsMemoryView> = Optional.ofNullable(view)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    /**
+     * Optional header to select the Workspace for this request. The value is a Workspace ID (for
+     * example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+     *
+     * Only needed for credentials that can act on more than one Workspace. A credential that
+     * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+     */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
@@ -124,13 +145,14 @@ private constructor(
             additionalQueryParams = memoryVersionListParams.additionalQueryParams.toBuilder()
         }
 
+        /** The ID of the memory store whose version history to list (`memstore_...`). */
         fun memoryStoreId(memoryStoreId: String?) = apply { this.memoryStoreId = memoryStoreId }
 
         /** Alias for calling [Builder.memoryStoreId] with `memoryStoreId.orElse(null)`. */
         fun memoryStoreId(memoryStoreId: Optional<String>) =
             memoryStoreId(memoryStoreId.getOrNull())
 
-        /** Query parameter for api_key_id */
+        /** Return only versions written with the API key that has this ID. */
         fun apiKeyId(apiKeyId: String?) = apply { this.apiKeyId = apiKeyId }
 
         /** Alias for calling [Builder.apiKeyId] with `apiKeyId.orElse(null)`. */
@@ -150,7 +172,7 @@ private constructor(
         fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
             createdAtLte(createdAtLte.getOrNull())
 
-        /** Query parameter for limit */
+        /** The maximum number of versions to return per page. Defaults to 20. */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -163,13 +185,18 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Query parameter for memory_id */
+        /**
+         * Return only versions of the memory with this ID (`mem_...`).
+         *
+         * The filter still works after the memory is deleted. The results then include the version
+         * whose `operation` is `deleted`.
+         */
         fun memoryId(memoryId: String?) = apply { this.memoryId = memoryId }
 
         /** Alias for calling [Builder.memoryId] with `memoryId.orElse(null)`. */
         fun memoryId(memoryId: Optional<String>) = memoryId(memoryId.getOrNull())
 
-        /** Query parameter for operation */
+        /** Return only versions that record this kind of change. */
         fun operation(operation: BetaManagedAgentsMemoryVersionOperation?) = apply {
             this.operation = operation
         }
@@ -178,13 +205,16 @@ private constructor(
         fun operation(operation: Optional<BetaManagedAgentsMemoryVersionOperation>) =
             operation(operation.getOrNull())
 
-        /** Query parameter for page */
+        /**
+         * The `next_page` value from a previous response, to get the next page. Omit it to get the
+         * first page.
+         */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
 
-        /** Query parameter for service_account_id */
+        /** Return only versions written by the service account with this ID (`svac_...`). */
         fun serviceAccountId(serviceAccountId: String?) = apply {
             this.serviceAccountId = serviceAccountId
         }
@@ -193,13 +223,19 @@ private constructor(
         fun serviceAccountId(serviceAccountId: Optional<String>) =
             serviceAccountId(serviceAccountId.getOrNull())
 
-        /** Query parameter for session_id */
+        /** Return only versions written by the session with this ID. */
         fun sessionId(sessionId: String?) = apply { this.sessionId = sessionId }
 
         /** Alias for calling [Builder.sessionId] with `sessionId.orElse(null)`. */
         fun sessionId(sessionId: Optional<String>) = sessionId(sessionId.getOrNull())
 
-        /** Query parameter for view */
+        /**
+         * Selects which projection of a `memory` or `memory_version` the server returns. `basic`
+         * returns the object with `content` set to `null`; `full` populates `content`. When
+         * omitted, the default is endpoint-specific: retrieve operations default to `full`; list,
+         * create, and update operations default to `basic`. Listing with `view=full` caps `limit`
+         * at 20.
+         */
         fun view(view: BetaManagedAgentsMemoryView?) = apply { this.view = view }
 
         /** Alias for calling [Builder.view] with `view.orElse(null)`. */
@@ -229,6 +265,13 @@ private constructor(
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
+        /**
+         * Optional header to select the Workspace for this request. The value is a Workspace ID
+         * (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+         *
+         * Only needed for credentials that can act on more than one Workspace. A credential that
+         * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+         */
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */

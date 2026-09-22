@@ -11,7 +11,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List Dreams */
+/**
+ * List the dreams in the workspace, newest first.
+ *
+ * Archived dreams are left out unless `include_archived` is `true`.
+ *
+ * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#list-dreams) for
+ * how to page through dreams.
+ */
 class DreamListParams
 private constructor(
     private val createdAtGt: OffsetDateTime?,
@@ -26,36 +33,43 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /**
-     * Return dreams with `created_at` strictly after this timestamp (exclusive lower bound, RFC
-     * 3339). Unset applies no lower bound.
-     */
+    /** Return only dreams created after this time (exclusive), in RFC 3339. */
     fun createdAtGt(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGt)
 
-    /**
-     * Return dreams with `created_at` strictly before this timestamp (exclusive upper bound, RFC
-     * 3339). Unset applies no upper bound.
-     */
+    /** Return only dreams created before this time (exclusive), in RFC 3339. */
     fun createdAtLt(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLt)
 
-    /** Query parameter for include_archived */
+    /** Whether to include archived dreams. Defaults to `false`. */
     fun includeArchived(): Optional<Boolean> = Optional.ofNullable(includeArchived)
 
-    /** Query parameter for limit */
+    /** The maximum number of dreams to return, from 1 to 100. Defaults to 20. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Query parameter for page */
+    /**
+     * The cursor for the page to return, taken from `next_page` in a previous response.
+     *
+     * Leave it out to get the first page.
+     */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /**
-     * Filter by lifecycle status. Repeat the parameter to match any of multiple statuses. Empty
-     * applies no status filter.
+     * Return only dreams that have one of these statuses.
+     *
+     * Repeat the parameter to give more than one status. Leave it out to return dreams of every
+     * status.
      */
     fun statuses(): Optional<List<BetaDreamStatus>> = Optional.ofNullable(statuses)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    /**
+     * Optional header to select the Workspace for this request. The value is a Workspace ID (for
+     * example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+     *
+     * Only needed for credentials that can act on more than one Workspace. A credential that
+     * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+     */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
@@ -102,27 +116,21 @@ private constructor(
             additionalQueryParams = dreamListParams.additionalQueryParams.toBuilder()
         }
 
-        /**
-         * Return dreams with `created_at` strictly after this timestamp (exclusive lower bound, RFC
-         * 3339). Unset applies no lower bound.
-         */
+        /** Return only dreams created after this time (exclusive), in RFC 3339. */
         fun createdAtGt(createdAtGt: OffsetDateTime?) = apply { this.createdAtGt = createdAtGt }
 
         /** Alias for calling [Builder.createdAtGt] with `createdAtGt.orElse(null)`. */
         fun createdAtGt(createdAtGt: Optional<OffsetDateTime>) =
             createdAtGt(createdAtGt.getOrNull())
 
-        /**
-         * Return dreams with `created_at` strictly before this timestamp (exclusive upper bound,
-         * RFC 3339). Unset applies no upper bound.
-         */
+        /** Return only dreams created before this time (exclusive), in RFC 3339. */
         fun createdAtLt(createdAtLt: OffsetDateTime?) = apply { this.createdAtLt = createdAtLt }
 
         /** Alias for calling [Builder.createdAtLt] with `createdAtLt.orElse(null)`. */
         fun createdAtLt(createdAtLt: Optional<OffsetDateTime>) =
             createdAtLt(createdAtLt.getOrNull())
 
-        /** Query parameter for include_archived */
+        /** Whether to include archived dreams. Defaults to `false`. */
         fun includeArchived(includeArchived: Boolean?) = apply {
             this.includeArchived = includeArchived
         }
@@ -138,7 +146,7 @@ private constructor(
         fun includeArchived(includeArchived: Optional<Boolean>) =
             includeArchived(includeArchived.getOrNull())
 
-        /** Query parameter for limit */
+        /** The maximum number of dreams to return, from 1 to 100. Defaults to 20. */
         fun limit(limit: Int?) = apply { this.limit = limit }
 
         /**
@@ -151,15 +159,21 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Query parameter for page */
+        /**
+         * The cursor for the page to return, taken from `next_page` in a previous response.
+         *
+         * Leave it out to get the first page.
+         */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
 
         /**
-         * Filter by lifecycle status. Repeat the parameter to match any of multiple statuses. Empty
-         * applies no status filter.
+         * Return only dreams that have one of these statuses.
+         *
+         * Repeat the parameter to give more than one status. Leave it out to return dreams of every
+         * status.
          */
         fun statuses(statuses: List<BetaDreamStatus>?) = apply {
             this.statuses = statuses?.toMutableList()
@@ -201,6 +215,13 @@ private constructor(
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
+        /**
+         * Optional header to select the Workspace for this request. The value is a Workspace ID
+         * (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+         *
+         * Only needed for credentials that can act on more than one Workspace. A credential that
+         * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+         */
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */

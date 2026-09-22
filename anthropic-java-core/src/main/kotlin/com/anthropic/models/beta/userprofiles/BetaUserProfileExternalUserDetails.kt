@@ -485,10 +485,21 @@ private constructor(
 
         companion object {
 
+            /**
+             * The platform has neither restricted nor barred the account of the entity that the
+             * user profile represents.
+             */
             @JvmField val ACTIVE = of("active")
 
+            /**
+             * The platform has restricted the account of the entity that the user profile
+             * represents and may restore it.
+             */
             @JvmField val SUSPENDED = of("suspended")
 
+            /**
+             * The platform has barred the account of the entity that the user profile represents.
+             */
             @JvmField val BLOCKED = of("blocked")
 
             @JvmStatic fun of(value: String) = AccountStatus(JsonField.of(value))
@@ -500,8 +511,19 @@ private constructor(
 
         /** An enum containing [AccountStatus]'s known values. */
         enum class Known {
+            /**
+             * The platform has neither restricted nor barred the account of the entity that the
+             * user profile represents.
+             */
             ACTIVE,
+            /**
+             * The platform has restricted the account of the entity that the user profile
+             * represents and may restore it.
+             */
             SUSPENDED,
+            /**
+             * The platform has barred the account of the entity that the user profile represents.
+             */
             BLOCKED,
         }
 
@@ -515,8 +537,19 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /**
+             * The platform has neither restricted nor barred the account of the entity that the
+             * user profile represents.
+             */
             ACTIVE,
+            /**
+             * The platform has restricted the account of the entity that the user profile
+             * represents and may restore it.
+             */
             SUSPENDED,
+            /**
+             * The platform has barred the account of the entity that the user profile represents.
+             */
             BLOCKED,
             /**
              * An enum member indicating that [AccountStatus] was instantiated with an unknown

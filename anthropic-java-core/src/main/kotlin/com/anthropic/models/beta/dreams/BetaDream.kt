@@ -20,11 +20,15 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * An asynchronous memory-consolidation job that reads a memory store plus a set of session
- * transcripts and writes consolidated memories into an output memory store — a new store by
- * default, or an existing store chosen via output_behavior. The Dreams API is in research preview:
- * the request and response shapes are volatile and may change without the deprecation period that
- * applies to generally-available endpoints.
+ * An asynchronous job that reads a memory store and past sessions, then writes a reorganized
+ * version of that memory store.
+ *
+ * By default the dream writes its result to a new memory store and doesn't change the input memory
+ * store. With `output_behavior` set to `update_existing`, it writes its result into the input
+ * memory store instead. The Dreams API is in research preview, so this resource can still change.
+ *
+ * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#how-it-works)
+ * for what a dream reads and produces.
  */
 class BetaDream
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -99,6 +103,8 @@ private constructor(
     )
 
     /**
+     * The unique ID of the dream (`drm_...`).
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -137,20 +143,26 @@ private constructor(
     fun error(): Optional<BetaDreamError> = error.getOptional("error")
 
     /**
+     * The sources that the dream reads, from the request that created it.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun inputs(): List<BetaDreamInput> = inputs.getRequired("inputs")
 
     /**
+     * The guidance given when the dream was created, or `null` if none was given.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun instructions(): Optional<String> = instructions.getOptional("instructions")
 
     /**
-     * Model identifier and configuration applied to every pipeline stage. Same wire shape as the
-     * Agents API ModelConfig.
+     * The model that runs a dream, from the request that created it.
+     *
+     * The dream uses this model for all of its work. The response always gives the model as an
+     * object, even if the request gave only a model ID.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -158,25 +170,54 @@ private constructor(
     fun model(): BetaDreamModelConfig = model.getRequired("model")
 
     /**
+     * Which memory store a dream writes its result to. Defaults to `create_new` when left out of a
+     * create request.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun outputBehavior(): BetaOutputBehavior = outputBehavior.getRequired("output_behavior")
 
     /**
+     * The memory store that holds the dream's result, as a one-item array, or an empty array until
+     * the dream records that memory store.
+     *
+     * The array is empty while the dream is `pending` and for a short time after it starts
+     * `running`. It can stay empty if the dream fails or is canceled before then. The memory store
+     * holds the complete result only once `status` is `completed`.
+     *
+     * See the
+     * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#use-the-output) for
+     * how to review and use the result.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun outputs(): List<BetaDreamOutput> = outputs.getRequired("outputs")
 
     /**
+     * The ID of the session that runs the dream (`sesn_...`), or `null` if that session hasn't
+     * started.
+     *
+     * Stream that session's events to follow what the dream reads and writes.
+     *
+     * See the
+     * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#watch-the-pipeline-run)
+     * for how to watch a running dream.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun sessionId(): Optional<String> = sessionId.getOptional("session_id")
 
     /**
-     * Lifecycle status of a Dream.
+     * Where a dream is in its lifecycle.
+     *
+     * `completed`, `failed`, and `canceled` are final: once a dream has one of these statuses, its
+     * status doesn't change again.
+     *
+     * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#lifecycle)
+     * for what each status means.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -190,7 +231,15 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Cumulative token usage for the dream across every pipeline stage.
+     * The tokens that a dream has used so far.
+     *
+     * The counts are zero while the dream is `pending` and update while it is `running`. They can
+     * keep changing after a cancel.
+     *
+     * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#billing) for
+     * how dreams are billed. See the
+     * [prompt caching guide](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#tracking-cache-performance)
+     * for how the input token counts add up.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -381,6 +430,7 @@ private constructor(
             additionalProperties = betaDream.additionalProperties.toMutableMap()
         }
 
+        /** The unique ID of the dream (`drm_...`). */
         fun id(id: String) = id(JsonField.of(id))
 
         /**
@@ -450,6 +500,7 @@ private constructor(
          */
         fun error(error: JsonField<BetaDreamError>) = apply { this.error = error }
 
+        /** The sources that the dream reads, from the request that created it. */
         fun inputs(inputs: List<BetaDreamInput>) = inputs(JsonField.of(inputs))
 
         /**
@@ -517,6 +568,7 @@ private constructor(
                     .build()
             )
 
+        /** The guidance given when the dream was created, or `null` if none was given. */
         fun instructions(instructions: String?) = instructions(JsonField.ofNullable(instructions))
 
         /** Alias for calling [Builder.instructions] with `instructions.orElse(null)`. */
@@ -534,8 +586,10 @@ private constructor(
         }
 
         /**
-         * Model identifier and configuration applied to every pipeline stage. Same wire shape as
-         * the Agents API ModelConfig.
+         * The model that runs a dream, from the request that created it.
+         *
+         * The dream uses this model for all of its work. The response always gives the model as an
+         * object, even if the request gave only a model ID.
          */
         fun model(model: BetaDreamModelConfig) = model(JsonField.of(model))
 
@@ -548,6 +602,10 @@ private constructor(
          */
         fun model(model: JsonField<BetaDreamModelConfig>) = apply { this.model = model }
 
+        /**
+         * Which memory store a dream writes its result to. Defaults to `create_new` when left out
+         * of a create request.
+         */
         fun outputBehavior(outputBehavior: BetaOutputBehavior) =
             outputBehavior(JsonField.of(outputBehavior))
 
@@ -590,6 +648,18 @@ private constructor(
                     .build()
             )
 
+        /**
+         * The memory store that holds the dream's result, as a one-item array, or an empty array
+         * until the dream records that memory store.
+         *
+         * The array is empty while the dream is `pending` and for a short time after it starts
+         * `running`. It can stay empty if the dream fails or is canceled before then. The memory
+         * store holds the complete result only once `status` is `completed`.
+         *
+         * See the
+         * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#use-the-output)
+         * for how to review and use the result.
+         */
         fun outputs(outputs: List<BetaDreamOutput>) = outputs(JsonField.of(outputs))
 
         /**
@@ -632,6 +702,16 @@ private constructor(
                     .build()
             )
 
+        /**
+         * The ID of the session that runs the dream (`sesn_...`), or `null` if that session hasn't
+         * started.
+         *
+         * Stream that session's events to follow what the dream reads and writes.
+         *
+         * See the
+         * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#watch-the-pipeline-run)
+         * for how to watch a running dream.
+         */
         fun sessionId(sessionId: String?) = sessionId(JsonField.ofNullable(sessionId))
 
         /** Alias for calling [Builder.sessionId] with `sessionId.orElse(null)`. */
@@ -646,7 +726,16 @@ private constructor(
          */
         fun sessionId(sessionId: JsonField<String>) = apply { this.sessionId = sessionId }
 
-        /** Lifecycle status of a Dream. */
+        /**
+         * Where a dream is in its lifecycle.
+         *
+         * `completed`, `failed`, and `canceled` are final: once a dream has one of these statuses,
+         * its status doesn't change again.
+         *
+         * See the
+         * [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#lifecycle) for
+         * what each status means.
+         */
         fun status(status: BetaDreamStatus) = status(JsonField.of(status))
 
         /**
@@ -668,7 +757,17 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** Cumulative token usage for the dream across every pipeline stage. */
+        /**
+         * The tokens that a dream has used so far.
+         *
+         * The counts are zero while the dream is `pending` and update while it is `running`. They
+         * can keep changing after a cancel.
+         *
+         * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#billing)
+         * for how dreams are billed. See the
+         * [prompt caching guide](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#tracking-cache-performance)
+         * for how the input token counts add up.
+         */
         fun usage(usage: BetaDreamUsage) = usage(JsonField.of(usage))
 
         /**

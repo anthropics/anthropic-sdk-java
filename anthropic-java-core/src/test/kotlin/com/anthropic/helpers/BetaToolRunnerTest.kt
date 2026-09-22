@@ -2,19 +2,23 @@ package com.anthropic.helpers
 
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonNull
+import com.anthropic.core.JsonSchemaLocalValidation
 import com.anthropic.core.JsonValue
 import com.anthropic.core.NestedClassJavaFixtures
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.jsonMapper
+import com.anthropic.core.toolFromClass
 import com.anthropic.errors.AnthropicIoException
 import com.anthropic.models.beta.messages.*
 import com.anthropic.models.messages.Model
 import com.anthropic.services.blocking.beta.MessageService
 import com.fasterxml.jackson.annotation.JsonClassDescription
 import com.fasterxml.jackson.annotation.JsonPropertyDescription
+import com.fasterxml.jackson.annotation.JsonTypeName
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import io.swagger.v3.oas.annotations.media.Schema
 import java.time.Duration
 import java.time.OffsetDateTime
 import java.util.concurrent.ConcurrentHashMap
@@ -51,6 +55,10 @@ internal class BetaToolRunnerTest {
             .putAdditionalHeader(STAINLESS_HELPER_HEADER, "BetaToolRunner")
             .build()
     private val requestOptions = RequestOptions.builder().timeout(Duration.ofSeconds(42)).build()
+    private val webSearch =
+        BetaToolUnion.ofWebSearchTool20250305(
+            BetaWebSearchTool20250305.builder().maxUses(3L).build()
+        )
 
     private val toolRunner =
         BetaToolRunner(
@@ -356,6 +364,776 @@ internal class BetaToolRunnerTest {
         assertThat(messages).containsExactly(assistantMessage1, assistantMessage2)
         assertThat(GetWeather.executions).containsEntry("Re-added City", 1)
         assertThat(toolRunner.lastToolResponse()).hasValue(expectedToolResponseMessageParam)
+    }
+
+    @Test
+    fun addTool_whenHandlingMessage_sendsDefinitionAfterToolResultsAndRunsTool() {
+        val toolRunner = newToolRunner(maxIterations = 3)
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Added Tool City"))
+                .contextManagement(null)
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(toolUse("get_time", "Added Tool City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, assistantMessage2, finalAssistantMessage())
+
+        toolRunner.runHandlingEachMessage { index ->
+            if (index == 0) {
+                toolRunner.addTool(GetTime::class.java)
+            }
+        }
+
+        val requests = sentRequests(3)
+        val requestWithAddition =
+            initialMessageParams
+                .toBuilder()
+                .addMessage(assistantMessage1)
+                .addMessage(getWeatherToolResponse("Added Tool City"))
+                .addSystemMessageOfBetaContentBlockParams(listOf(toolAddition(GetTime::class.java)))
+                .build()
+        assertThat(requests[0]).isEqualTo(initialMessageParams)
+        assertThat(requests[1]).isEqualTo(requestWithAddition)
+        assertThat(requests[2])
+            .isEqualTo(
+                requestWithAddition
+                    .toBuilder()
+                    .addMessage(assistantMessage2)
+                    .addMessage(toolResponse("12:00 in Added Tool City"))
+                    .build()
+            )
+        assertThat(requests.map { it.tools() }).containsOnly(initialMessageParams.tools())
+    }
+
+    @Test
+    fun addTool_whenMessageBeingHandledCallsToolOfSameName_runsTheNewTool() {
+        val assistantMessage1 = toolUseMessage("Swapped Tool City")
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, finalAssistantMessage())
+
+        toolRunner.runHandlingEachMessage { index ->
+            if (index == 0) {
+                toolRunner.addTool(SunnyGetWeather::class.java)
+            }
+        }
+
+        assertThat(GetWeather.executions).doesNotContainKey("Swapped Tool City")
+        assertThat(sentRequests(2)[1])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(assistantMessage1)
+                    .addMessage(toolResponse("The weather in Swapped Tool City is sunny"))
+                    .addSystemMessageOfBetaContentBlockParams(
+                        listOf(toolAddition(SunnyGetWeather::class.java))
+                    )
+                    .build()
+            )
+    }
+
+    @Test
+    fun addTool_whenRunnableTool_sendsDefinitionAndRunsToolUntilRemoved() {
+        val getTime =
+            BetaRunnableTool.of(
+                GetTime::class.java,
+                { BetaToolResultBlockParam.Content.ofString("noon in ${it.location}") },
+            )
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(toolUse("get_time", "Runnable Tool City"))
+                .contextManagement(null)
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(toolUse("get_time", "Removed Runnable Tool City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, assistantMessage2, finalAssistantMessage())
+        val toolRunner = newToolRunner(maxIterations = 3)
+        val sameNameTool =
+            BetaRunnableTool.of(
+                GetTime::class.java,
+                { BetaToolResultBlockParam.Content.ofString("midnight in ${it.location}") },
+            )
+
+        toolRunner.addTool(getTime)
+        toolRunner.runHandlingEachMessage { index ->
+            when (index) {
+                0 -> toolRunner.removeTool(sameNameTool)
+                1 -> toolRunner.removeTool(getTime)
+            }
+        }
+
+        assertThat(sentRequests(3)[2])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addSystemMessageOfBetaContentBlockParams(
+                        listOf(toolAddition(GetTime::class.java))
+                    )
+                    .addMessage(assistantMessage1)
+                    .addMessage(toolResponse("noon in Runnable Tool City"))
+                    .addMessage(assistantMessage2)
+                    .addMessage(toolNotFoundResponse("get_time"))
+                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_time")))
+                    .build()
+            )
+    }
+
+    @Test
+    fun removeTool_whenGivenRunnableTool_removesToolDeclaredUpFrontOrJustAdded() {
+        val getTime =
+            BetaRunnableTool.of(
+                GetTime::class.java,
+                { BetaToolResultBlockParam.Content.ofString("noon in ${it.location}") },
+            )
+        val getDateDefinition =
+            BetaTool.builder()
+                .name("get_date")
+                .inputSchema(BetaTool.InputSchema.builder().build())
+                .build()
+        val getDate =
+            BetaRunnableTool.of(getDateDefinition) { BetaToolResultBlockParam.Content.ofString(it) }
+        val params = initialMessageParams.toBuilder().addTool(getTime).build()
+        val toolRunner = newToolRunner(params)
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(toolUse("get_time", "Own Tool City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, finalAssistantMessage())
+
+        toolRunner.runHandlingEachMessage { index ->
+            if (index == 0) {
+                toolRunner.removeTool(getTime)
+                toolRunner.addTool(getDate)
+                toolRunner.removeTool(getDate)
+            }
+        }
+
+        assertThat(sentRequests(2)[1])
+            .isEqualTo(
+                params
+                    .toBuilder()
+                    .addMessage(assistantMessage1)
+                    .addMessage(toolNotFoundResponse("get_time"))
+                    .addSystemMessageOfBetaContentBlockParams(
+                        listOf(
+                            toolRemoval("get_time"),
+                            toolAddition(BetaToolUnion.ofBetaTool(getDateDefinition)),
+                            toolRemoval("get_date"),
+                        )
+                    )
+                    .build()
+            )
+    }
+
+    @Test
+    fun addTool_whenLocalValidationOff_sendsDefinitionThatLocalValidationRejects() {
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(finalAssistantMessage())
+
+        assertThrows<IllegalArgumentException> {
+            toolRunner.addTool(UnsupportedSchemaTool::class.java)
+        }
+        toolRunner.addTool(UnsupportedSchemaTool::class.java, JsonSchemaLocalValidation.NO)
+        toolRunner.toList()
+
+        val definition =
+            toolFromClass(UnsupportedSchemaTool::class.java, JsonSchemaLocalValidation.NO)
+        assertThat(sentRequests(1)[0])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addSystemMessageOfBetaContentBlockParams(
+                        listOf(toolAddition(BetaToolUnion.ofBetaTool(definition)))
+                    )
+                    .build()
+            )
+    }
+
+    @Test
+    fun addTool_whenMcpTool_sendsDefinitionAndRunsTool() {
+        val echo =
+            McpBetaTool.builder()
+                .name("echo")
+                .definition(
+                    BetaTool.builder()
+                        .name("echo")
+                        .inputSchema(BetaTool.InputSchema.builder().build())
+                        .build()
+                )
+                .runner { BetaToolResultBlockParam.Content.ofString("echo: $it") }
+                .build()
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(toolUse("echo", "MCP Tool City"))
+                .contextManagement(null)
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(toolUse("echo", "Removed MCP Tool City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, assistantMessage2, finalAssistantMessage())
+        val toolRunner = newToolRunner(maxIterations = 3)
+
+        toolRunner.addTool(echo)
+        toolRunner.runHandlingEachMessage { index ->
+            if (index == 1) {
+                toolRunner.removeTool(echo)
+            }
+        }
+
+        val requests = sentRequests(3)
+        val requestWithAddition =
+            initialMessageParams
+                .toBuilder()
+                .addSystemMessageOfBetaContentBlockParams(
+                    listOf(toolAddition(BetaToolUnion.ofBetaTool(echo.definition)))
+                )
+                .build()
+        assertThat(requests[0]).isEqualTo(requestWithAddition)
+        assertThat(requests[2])
+            .isEqualTo(
+                requestWithAddition
+                    .toBuilder()
+                    .addMessage(assistantMessage1)
+                    .addMessage(toolResponse("""echo: {"location":"MCP Tool City"}"""))
+                    .addMessage(assistantMessage2)
+                    .addMessage(toolNotFoundResponse("echo"))
+                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("echo")))
+                    .build()
+            )
+    }
+
+    @Test
+    fun removeTool_whenHandlingMessage_refusesThatMessagesCallAndSendsRemoval() {
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Withdrawn City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, finalAssistantMessage())
+
+        toolRunner.runHandlingEachMessage { index ->
+            if (index == 0) {
+                toolRunner.removeTool(GetWeather::class.java)
+            }
+        }
+
+        assertThat(GetWeather.executions).doesNotContainKey("Withdrawn City")
+        val requests = sentRequests(2)
+        assertThat(requests[1])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(assistantMessage1)
+                    .addMessage(toolNotFoundResponse("get_weather"))
+                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_weather")))
+                    .build()
+            )
+        assertThat(requests.map { it.tools() }).containsOnly(initialMessageParams.tools())
+    }
+
+    @Test
+    fun removeTool_whenGivenClassOfToolAddedEarlier_removesThatTool() {
+        val toolRunner = newToolRunner(maxIterations = 3)
+        val assistantMessage1 = toolUseMessage("Added Then Removed City")
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(toolUse("get_time", "Added Then Removed City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, assistantMessage2, finalAssistantMessage())
+
+        toolRunner.runHandlingEachMessage { index ->
+            when (index) {
+                0 -> toolRunner.addTool(GetTime::class.java)
+                1 -> toolRunner.removeTool(GetTime::class.java)
+            }
+        }
+
+        assertThat(sentRequests(3)[2])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(assistantMessage1)
+                    .addMessage(getWeatherToolResponse("Added Then Removed City"))
+                    .addSystemMessageOfBetaContentBlockParams(
+                        listOf(toolAddition(GetTime::class.java))
+                    )
+                    .addMessage(assistantMessage2)
+                    .addMessage(toolNotFoundResponse("get_time"))
+                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_time")))
+                    .build()
+            )
+    }
+
+    @Test
+    fun removeTool_whenGivenAnotherClassOfSameToolName_leavesToolAlone() {
+        val assistantMessage1 = toolUseMessage("Same Name City")
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, finalAssistantMessage())
+
+        toolRunner.removeTool(SunnyGetWeather::class.java)
+        toolRunner.toList()
+
+        assertThat(GetWeather.executions).containsEntry("Same Name City", 1)
+        assertThat(sentRequests(2)[0]).isEqualTo(initialMessageParams)
+    }
+
+    @Test
+    fun removeTool_whenClassHasJsonTypeName_findsToolByItsClass() {
+        val params = initialMessageParams.toBuilder().addTool(SunnyGetTime::class.java).build()
+        val toolRunner = newToolRunner(params)
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(toolUse("get_time", "Type Name City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, finalAssistantMessage())
+
+        toolRunner.removeTool(SunnyGetTime::class.java)
+        toolRunner.toList()
+
+        assertThat(sentRequests(2)[1])
+            .isEqualTo(
+                params
+                    .toBuilder()
+                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_time")))
+                    .addMessage(assistantMessage1)
+                    .addMessage(toolNotFoundResponse("get_time"))
+                    .build()
+            )
+    }
+
+    @Test
+    fun removeTool_whenRemovalLeavesHistory_keepsToolRemoved() {
+        val toolRunner = newToolRunner(maxIterations = 4)
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Trimmed History City 1"))
+                .contextManagement(null)
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Trimmed History City 2"))
+                .contextManagement(null)
+                .build()
+        val assistantMessage3 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Trimmed History City 3"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                assistantMessage1,
+                assistantMessage2,
+                assistantMessage3,
+                finalAssistantMessage(),
+            )
+
+        toolRunner.runHandlingEachMessage { index ->
+            when (index) {
+                0 -> toolRunner.removeTool("get_weather")
+                // Drops the `"system"` message that carried the removal.
+                1 -> toolRunner.setNextParams(initialMessageParams)
+            }
+        }
+
+        assertThat(GetWeather.executions.keys).noneMatch { it.startsWith("Trimmed History City") }
+        val requests = sentRequests(4)
+        assertThat(requests[2]).isEqualTo(initialMessageParams)
+        assertThat(requests[3])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(assistantMessage3)
+                    .addMessage(toolNotFoundResponse("get_weather"))
+                    .build()
+            )
+    }
+
+    @Test
+    fun addTool_whenToolWasRemoved_runsTheNewToolInItsPlace() {
+        val toolRunner = newToolRunner(maxIterations = 4)
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Removed Then Added City 1"))
+                .contextManagement(null)
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Removed Then Added City 2"))
+                .contextManagement(null)
+                .build()
+        val assistantMessage3 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Removed Then Added City 3"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                assistantMessage1,
+                assistantMessage2,
+                assistantMessage3,
+                finalAssistantMessage(),
+            )
+
+        toolRunner.runHandlingEachMessage { index ->
+            when (index) {
+                0 -> toolRunner.removeTool("get_weather")
+                1 -> toolRunner.addTool(SunnyGetWeather::class.java)
+            }
+        }
+
+        assertThat(sentRequests(4)[3])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(assistantMessage1)
+                    .addMessage(toolNotFoundResponse("get_weather"))
+                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_weather")))
+                    .addMessage(assistantMessage2)
+                    .addMessage(toolResponse("The weather in Removed Then Added City 2 is sunny"))
+                    .addSystemMessageOfBetaContentBlockParams(
+                        listOf(toolAddition(SunnyGetWeather::class.java))
+                    )
+                    .addMessage(assistantMessage3)
+                    .addMessage(toolResponse("The weather in Removed Then Added City 3 is sunny"))
+                    .build()
+            )
+    }
+
+    @Test
+    fun toolChanges_whenMadeWhileHandlingOneMessage_areSentTogetherInCallOrder() {
+        val toolRunner = newToolRunner(maxIterations = 3)
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Call Order City 1"))
+                .contextManagement(null)
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(toolUse("get_time", "Call Order City 2", id = "toolUseId1"))
+                .addContent(toolUse("get_weather", "Call Order City 2", id = "toolUseId2"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, assistantMessage2, finalAssistantMessage())
+
+        toolRunner.runHandlingEachMessage { index ->
+            if (index == 0) {
+                toolRunner.addTool(GetTime::class.java)
+                toolRunner.removeTool(GetTime::class.java)
+                toolRunner.addTool(webSearch)
+                toolRunner.removeTool("get_weather")
+                toolRunner.addTool(GetWeather::class.java)
+            }
+        }
+
+        val requests = sentRequests(3)
+        val requestWithChanges =
+            initialMessageParams
+                .toBuilder()
+                .addMessage(assistantMessage1)
+                .addMessage(getWeatherToolResponse("Call Order City 1"))
+                .addSystemMessageOfBetaContentBlockParams(
+                    listOf(
+                        toolAddition(GetTime::class.java),
+                        toolRemoval("get_time"),
+                        toolAddition(webSearch),
+                        toolRemoval("get_weather"),
+                        toolAddition(GetWeather::class.java),
+                    )
+                )
+                .build()
+        assertThat(requests[1]).isEqualTo(requestWithChanges)
+        assertThat(requests[2])
+            .isEqualTo(
+                requestWithChanges
+                    .toBuilder()
+                    .addMessage(assistantMessage2)
+                    .addUserMessageOfBetaContentBlockParams(
+                        listOf(
+                            toolNotFoundResult("get_time", id = "toolUseId1"),
+                            toolResult(
+                                "The weather in Call Order City 2 is foggy and 60°F",
+                                id = "toolUseId2",
+                            ),
+                        )
+                    )
+                    .build()
+            )
+    }
+
+    @Test
+    fun addTool_whenRawDefinition_sendsItAsGivenAndStopsRunningToolOfThatName() {
+        val toolRunner = newToolRunner(maxIterations = 3)
+        val mcpToolset = BetaToolUnion.ofMcpToolset("docs")
+        val rawGetWeather = BetaToolUnion.ofBetaTool(toolFromClass(SunnyGetWeather::class.java))
+        val assistantMessage1 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Raw Definition City 1"))
+                .contextManagement(null)
+                .build()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Raw Definition City 2"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(assistantMessage1, assistantMessage2, finalAssistantMessage())
+
+        toolRunner.runHandlingEachMessage { index ->
+            if (index == 0) {
+                toolRunner.addTool(mcpToolset)
+                toolRunner.addTool(rawGetWeather)
+            }
+        }
+
+        assertThat(GetWeather.executions.keys).noneMatch { it.startsWith("Raw Definition City") }
+        assertThat(sentRequests(3)[2])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(assistantMessage1)
+                    .addMessage(toolNotFoundResponse("get_weather"))
+                    .addSystemMessageOfBetaContentBlockParams(
+                        listOf(toolAddition(mcpToolset), toolAddition(rawGetWeather))
+                    )
+                    .addMessage(assistantMessage2)
+                    .addMessage(toolNotFoundResponse("get_weather"))
+                    .build()
+            )
+    }
+
+    @Test
+    fun toolChanges_whenTurnPaused_areSentOneRequestLater() {
+        val toolRunner = newToolRunner(maxIterations = 3)
+        val pausedMessage = pausedServerToolUseMessage()
+        val assistantMessage2 =
+            betaMessageBuilder()
+                .addContent(getWeatherToolUse("Paused Turn City"))
+                .contextManagement(null)
+                .build()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(pausedMessage, assistantMessage2, finalAssistantMessage())
+
+        toolRunner.runHandlingEachMessage { index ->
+            if (index == 0) {
+                toolRunner.removeTool("get_weather")
+                toolRunner.addTool(GetTime::class.java)
+            }
+        }
+
+        assertThat(GetWeather.executions).doesNotContainKey("Paused Turn City")
+        val requests = sentRequests(3)
+        val resumedRequest = initialMessageParams.toBuilder().addMessage(pausedMessage).build()
+        assertThat(requests[1]).isEqualTo(resumedRequest)
+        assertThat(requests[2])
+            .isEqualTo(
+                resumedRequest
+                    .toBuilder()
+                    .addMessage(assistantMessage2)
+                    .addMessage(toolNotFoundResponse("get_weather"))
+                    .addSystemMessageOfBetaContentBlockParams(
+                        listOf(toolRemoval("get_weather"), toolAddition(GetTime::class.java))
+                    )
+                    .build()
+            )
+    }
+
+    @Test
+    fun toolChanges_aroundCompaction_goWithTheCompactionRequestOrFollowItsResponse() {
+        val toolUseMessage = toolUseMessage("Compacting City")
+        val compactionResponse = compactionResponse()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(toolUseMessage, compactionResponse, finalAssistantMessage())
+        val toolRunner = newToolRunner(maxIterations = 2)
+
+        toolRunner.runHandlingEachMessage { index ->
+            when (index) {
+                0 -> {
+                    toolRunner.addTool(GetTime::class.java)
+                    toolRunner.compactBeforeNextTurn()
+                }
+                1 -> toolRunner.removeTool("get_weather")
+            }
+        }
+
+        val requests = sentRequests(3)
+        assertThat(requests[1])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(toolUseMessage)
+                    .addMessage(getWeatherToolResponse("Compacting City"))
+                    .addSystemMessageOfBetaContentBlockParams(
+                        listOf(toolAddition(GetTime::class.java))
+                    )
+                    .compaction(BetaCompactionConfig.builder().build())
+                    .build()
+            )
+        assertThat(requests[2])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .messages(listOf(compactionResponse.toParam()))
+                    .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_weather")))
+                    .build()
+            )
+    }
+
+    @Test
+    fun compaction_whenHistoryRemovedToolAndResponseHasNoToolChanges_keepsToolRemoved() {
+        val params =
+            initialMessageParams
+                .toBuilder()
+                .addSystemMessageOfBetaContentBlockParams(listOf(toolRemoval("get_weather")))
+                .build()
+        val toolRunner = newToolRunner(params, maxIterations = 2)
+        val compactionResponse = compactionResponse()
+        val toolUseMessage = toolUseMessage("Removed Before Compaction City")
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(compactionResponse, toolUseMessage, finalAssistantMessage())
+
+        toolRunner.compactBeforeNextTurn()
+        toolRunner.toList()
+
+        assertThat(GetWeather.executions).doesNotContainKey("Removed Before Compaction City")
+        assertThat(sentRequests(3)[2])
+            .isEqualTo(
+                params
+                    .toBuilder()
+                    .messages(listOf(compactionResponse.toParam()))
+                    .addMessage(toolUseMessage)
+                    .addMessage(toolNotFoundResponse("get_weather"))
+                    .build()
+            )
+    }
+
+    @Test
+    fun addTool_whenHandlingCompactionResponseAfterToolWasRemoved_runsTheTool() {
+        val toolRunner = newToolRunner(maxIterations = 3)
+        val compactionResponse = compactionResponse()
+        val toolUseMessage = toolUseMessage("Restored After Compaction City 2")
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(
+                toolUseMessage("Restored After Compaction City 1"),
+                compactionResponse,
+                toolUseMessage,
+                finalAssistantMessage(),
+            )
+
+        toolRunner.runHandlingEachMessage { index ->
+            when (index) {
+                0 -> {
+                    toolRunner.removeTool("get_weather")
+                    toolRunner.compactBeforeNextTurn()
+                }
+                1 -> toolRunner.addTool(GetWeather::class.java)
+            }
+        }
+
+        val requests = sentRequests(4)
+        val requestAfterCompaction =
+            initialMessageParams
+                .toBuilder()
+                .messages(listOf(compactionResponse.toParam()))
+                .addSystemMessageOfBetaContentBlockParams(
+                    listOf(toolAddition(GetWeather::class.java))
+                )
+                .build()
+        assertThat(requests[2]).isEqualTo(requestAfterCompaction)
+        assertThat(requests[3])
+            .isEqualTo(
+                requestAfterCompaction
+                    .toBuilder()
+                    .addMessage(toolUseMessage)
+                    .addMessage(getWeatherToolResponse("Restored After Compaction City 2"))
+                    .build()
+            )
+    }
+
+    @Test
+    fun toolChanges_whenRunEndsBeforeNextRequest_areNeverSent() {
+        val finalMessage = finalAssistantMessage()
+        val compactionResponse = compactionResponse()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(finalMessage, compactionResponse)
+
+        toolRunner.runHandlingEachMessage { index ->
+            if (index == 0) {
+                toolRunner.addTool(GetTime::class.java)
+                toolRunner.removeTool("get_weather")
+                // Not even the compaction request that follows the final turn carries them.
+                toolRunner.compactBeforeNextTurn()
+            }
+        }
+
+        val requests = sentRequests(2)
+        assertThat(requests[0]).isEqualTo(initialMessageParams)
+        assertThat(requests[1])
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(finalMessage)
+                    .compaction(BetaCompactionConfig.builder().build())
+                    .build()
+            )
+    }
+
+    @Test
+    fun streamingToolChanges_whenHandlingResponse_areSentAfterToolResults() {
+        val toolUseEvents = getWeatherToolUseStreamEvents("Streamed Changes City")
+        val finalEvents =
+            listOf(
+                BetaRawMessageStreamEvent.ofMessageStart(
+                    BetaRawMessageStartEvent.builder()
+                        .message(finalAssistantMessage().toBuilder().content(listOf()).build())
+                        .build()
+                ),
+                BetaRawMessageStreamEvent.ofMessageStop(BetaRawMessageStopEvent.builder().build()),
+            )
+        whenever(messageService.createStreaming(any<MessageCreateParams>(), any()))
+            .thenReturn(streamResponseOf(toolUseEvents), streamResponseOf(finalEvents))
+
+        toolRunner.streaming().forEachIndexed { index, response ->
+            response.stream().forEach { _ -> }
+            if (index == 0) {
+                toolRunner.removeTool("get_weather")
+                toolRunner.addTool(GetTime::class.java)
+            }
+        }
+
+        assertThat(GetWeather.executions).doesNotContainKey("Streamed Changes City")
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).createStreaming(requests.capture(), any())
+        val accumulator = BetaMessageAccumulator.create()
+        toolUseEvents.forEach(accumulator::accumulate)
+        assertThat(requests.secondValue)
+            .isEqualTo(
+                initialMessageParams
+                    .toBuilder()
+                    .addMessage(accumulator.message())
+                    .addMessage(toolNotFoundResponse("get_weather"))
+                    .addSystemMessageOfBetaContentBlockParams(
+                        listOf(toolRemoval("get_weather"), toolAddition(GetTime::class.java))
+                    )
+                    .build()
+            )
     }
 
     @Test
@@ -1607,6 +2385,69 @@ internal class BetaToolRunnerTest {
         assertThat(requests.firstValue.compaction().get()).isSameAs(config)
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = ["any", "tool", "auto"])
+    fun compactBeforeNextTurn_leavesReplyOnlyParamsOffCompactionRequest(toolChoiceType: String) {
+        val toolChoice =
+            when (toolChoiceType) {
+                "any" -> BetaToolChoice.ofAny(BetaToolChoiceAny.builder().build())
+                "tool" ->
+                    BetaToolChoice.ofTool(BetaToolChoiceTool.builder().name("get_weather").build())
+                else -> BetaToolChoice.ofAuto(BetaToolChoiceAuto.builder().build())
+            }
+        val format =
+            BetaJsonOutputFormat.builder()
+                .schema(
+                    BetaJsonOutputFormat.Schema.builder()
+                        .putAdditionalProperty("type", JsonValue.from("object"))
+                        .build()
+                )
+                .build()
+        val effortOnly = BetaOutputConfig.builder().effort(BetaOutputConfig.Effort.LOW).build()
+        val effortAndFormat = effortOnly.toBuilder().format(format).build()
+        fun fallback(outputConfig: BetaOutputConfig) =
+            BetaFallbackParam.builder()
+                .model(Model.CLAUDE_HAIKU_4_5)
+                .maxTokens(512L)
+                .outputConfig(outputConfig)
+                .build()
+        val params =
+            initialMessageParams
+                .toBuilder()
+                .addBeta("compact-2026-09-04")
+                .system("Answer briefly.")
+                .addStopSequence("STOP")
+                .toolChoice(toolChoice)
+                .outputConfig(effortAndFormat)
+                .outputFormat(format)
+                .fallbacksOfFallbackParams(listOf(fallback(effortAndFormat)))
+                .build()
+        val toolRunner = newToolRunner(params)
+        val compactionResponse = compactionResponse()
+        whenever(messageService.create(any<MessageCreateParams>(), any()))
+            .thenReturn(compactionResponse, finalAssistantMessage())
+
+        toolRunner.compactBeforeNextTurn()
+        toolRunner.toList()
+
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(2)).create(requests.capture(), any())
+        val compactionRequest =
+            params
+                .toBuilder()
+                .compaction(BetaCompactionConfig.builder().build())
+                .stopSequences(JsonMissing.of())
+                .outputConfig(effortOnly)
+                .outputFormat(JsonMissing.of())
+                .fallbacksOfFallbackParams(listOf(fallback(effortOnly)))
+        if (toolChoiceType != "auto") {
+            compactionRequest.toolChoice(JsonMissing.of())
+        }
+        assertThat(requests.firstValue).isEqualTo(compactionRequest.build())
+        assertThat(requests.secondValue)
+            .isEqualTo(params.toBuilder().messages(listOf(compactionResponse.toParam())).build())
+    }
+
     @Test
     fun compactBeforeNextTurn_whenTurnPaused_waitsForResumedTurn() {
         val toolRunner = newToolRunner(maxIterations = 4)
@@ -2814,6 +3655,62 @@ internal class BetaToolRunnerTest {
             .stopReason(BetaStopReason.COMPACTION)
             .build()
 
+    /** Runs [handle] while each message is being handled, before the runner runs its tool calls. */
+    private fun BetaToolRunner.runHandlingEachMessage(handle: (index: Int) -> Unit) =
+        asSequence().forEachIndexed { index, _ -> handle(index) }
+
+    private fun sentRequests(count: Int): List<MessageCreateParams> {
+        val requests = argumentCaptor<MessageCreateParams>()
+        verify(messageService, times(count)).create(requests.capture(), any())
+        return requests.allValues
+    }
+
+    private fun toolAddition(definition: BetaToolUnion) =
+        BetaContentBlockParam.ofToolAddition(
+            BetaRequestToolAdditionBlock.builder().definitionTool(definition).build()
+        )
+
+    private fun toolAddition(toolParametersType: Class<*>) =
+        toolAddition(BetaToolUnion.ofBetaTool(toolFromClass(toolParametersType)))
+
+    private fun toolRemoval(name: String) =
+        BetaContentBlockParam.ofToolRemoval(
+            BetaRequestToolRemovalBlock.builder().referenceTool(name).build()
+        )
+
+    private fun toolUse(name: String, location: String, id: String = "toolUseId") =
+        BetaToolUseBlock.builder()
+            .id(id)
+            .name(name)
+            .input(JsonValue.from(mapOf("location" to location)))
+            .build()
+
+    private fun toolResult(content: String, id: String = "toolUseId") =
+        BetaContentBlockParam.ofToolResult(
+            BetaToolResultBlockParam.builder().toolUseId(id).content(content).build()
+        )
+
+    private fun toolNotFoundResult(name: String, id: String = "toolUseId") =
+        BetaContentBlockParam.ofToolResult(
+            BetaToolResultBlockParam.builder()
+                .toolUseId(id)
+                .content("Error: Tool '$name' not found")
+                .isError(true)
+                .build()
+        )
+
+    private fun toolResponse(content: String) =
+        BetaMessageParam.builder()
+            .role(BetaMessageParam.Role.USER)
+            .contentOfBetaContentBlockParams(listOf(toolResult(content)))
+            .build()
+
+    private fun toolNotFoundResponse(name: String) =
+        BetaMessageParam.builder()
+            .role(BetaMessageParam.Role.USER)
+            .contentOfBetaContentBlockParams(listOf(toolNotFoundResult(name)))
+            .build()
+
     private fun getWeatherToolUse(location: String) =
         BetaToolUseBlock.builder()
             .id("toolUseId")
@@ -3062,3 +3959,33 @@ private class BrokenGetWeather : Supplier<String> {
 
     override fun get(): String = throw UnsupportedOperationException("BOOM!")
 }
+
+@JsonClassDescription("Get the time in a given location")
+private class GetTime : Supplier<String> {
+    @JsonPropertyDescription("The city and state, e.g. San Francisco, CA")
+    lateinit var location: String
+
+    override fun get(): String = "12:00 in $location"
+}
+
+@JsonTypeName("get_time")
+@JsonClassDescription("Get the time in a given location")
+private class SunnyGetTime : Supplier<String> {
+    @JsonPropertyDescription("The city and state, e.g. San Francisco, CA")
+    lateinit var location: String
+
+    override fun get(): String = "noon in $location"
+}
+
+@JsonTypeName("get_weather")
+@JsonClassDescription("Get the weather in a given location")
+private class SunnyGetWeather : Supplier<String> {
+    @JsonPropertyDescription("The city and state, e.g. San Francisco, CA")
+    lateinit var location: String
+
+    override fun get(): String = "The weather in $location is sunny"
+}
+
+// `"pattern"` is not a supported keyword, so local validation rejects the derived schema.
+@Suppress("unused")
+private class UnsupportedSchemaTool(@get:Schema(pattern = "unsupported") val s: String)

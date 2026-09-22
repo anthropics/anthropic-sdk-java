@@ -15,7 +15,7 @@ Full documentation is available at **[platform.claude.com/docs/en/api/sdks/java]
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:2.64.0")
+implementation("com.anthropic:anthropic-java:2.65.0")
 ```
 
 ### Maven
@@ -24,7 +24,7 @@ implementation("com.anthropic:anthropic-java:2.64.0")
 <dependency>
   <groupId>com.anthropic</groupId>
   <artifactId>anthropic-java</artifactId>
-  <version>2.64.0</version>
+  <version>2.65.0</version>
 </dependency>
 ```
 
@@ -45,7 +45,7 @@ AnthropicClient client = AnthropicOkHttpClient.fromEnv();
 MessageCreateParams params = MessageCreateParams.builder()
     .maxTokens(1024L)
     .addUserMessage("Hello, Claude")
-    .model(Model.CLAUDE_OPUS_5)
+    .model(Model.CLAUDE_OPUS_5_5)
     .build();
 Message message = client.messages().create(params);
 ```

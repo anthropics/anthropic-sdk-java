@@ -44,7 +44,7 @@ public final class ManagedAgentsWithFilesExample {
                 .create(AgentCreateParams.builder()
                         .name("files-example-agent")
                         .model(BetaManagedAgentsModelConfigParams.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .build())
                         .addTool(BetaManagedAgentsAgentToolset20260401Params.builder()
                                 .type(BetaManagedAgentsAgentToolset20260401Params.Type.AGENT_TOOLSET_20260401)

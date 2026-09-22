@@ -23,13 +23,22 @@ private constructor(
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
+    /** Identifier of the vault containing the credential. */
     fun vaultId(): String = vaultId
 
+    /** Unique identifier of the credential to delete. */
     fun credentialId(): Optional<String> = Optional.ofNullable(credentialId)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    /**
+     * Optional header to select the Workspace for this request. The value is a Workspace ID (for
+     * example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+     *
+     * Only needed for credentials that can act on more than one Workspace. A credential that
+     * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+     */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional body properties to send with the request. */
@@ -79,8 +88,10 @@ private constructor(
                 credentialDeleteParams.additionalBodyProperties.toMutableMap()
         }
 
+        /** Identifier of the vault containing the credential. */
         fun vaultId(vaultId: String) = apply { this.vaultId = vaultId }
 
+        /** Unique identifier of the credential to delete. */
         fun credentialId(credentialId: String?) = apply { this.credentialId = credentialId }
 
         /** Alias for calling [Builder.credentialId] with `credentialId.orElse(null)`. */
@@ -110,6 +121,13 @@ private constructor(
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
+        /**
+         * Optional header to select the Workspace for this request. The value is a Workspace ID
+         * (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+         *
+         * Only needed for credentials that can act on more than one Workspace. A credential that
+         * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+         */
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */

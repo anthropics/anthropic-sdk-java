@@ -30,6 +30,7 @@ import com.anthropic.models.beta.messages.BetaFallbackInfo
 import com.anthropic.models.beta.messages.BetaFallbackParam
 import com.anthropic.models.beta.messages.BetaFallbackRefusalTrigger
 import com.anthropic.models.beta.messages.BetaImageBlockParam
+import com.anthropic.models.beta.messages.BetaMcpToolListingBlockParam
 import com.anthropic.models.beta.messages.BetaMcpToolUseBlockParam
 import com.anthropic.models.beta.messages.BetaMessage
 import com.anthropic.models.beta.messages.BetaMessageIterationUsage
@@ -597,6 +598,9 @@ private constructor(
                 TrimClassification.PRE_SEAM_DROPPABLE
 
             override fun visitToolResult(toolResult: BetaToolResultBlockParam) =
+                TrimClassification.KEEP
+
+            override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlockParam) =
                 TrimClassification.KEEP
 
             override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlockParam) =

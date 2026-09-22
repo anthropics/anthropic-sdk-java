@@ -34,6 +34,13 @@ private constructor(
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    /**
+     * Optional header to select the Workspace for this request. The value is a Workspace ID (for
+     * example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+     *
+     * Only needed for credentials that can act on more than one Workspace. A credential that
+     * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+     */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
@@ -199,6 +206,13 @@ private constructor(
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
+        /**
+         * Optional header to select the Workspace for this request. The value is a Workspace ID
+         * (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+         *
+         * Only needed for credentials that can act on more than one Workspace. A credential that
+         * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+         */
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
@@ -469,6 +483,11 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
+    /**
+     * The settings for a new user profile.
+     *
+     * Each request creates a new profile, even when another profile already has the same values.
+     */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -910,8 +929,13 @@ private constructor(
 
         companion object {
 
+            /**
+             * The user profile represents an individual end-user of a product that the platform
+             * builds on the API. New profiles get this value by default.
+             */
             @JvmField val APPLICATION = of("application")
 
+            /** The user profile represents a company that the platform resells Claude access to. */
             @JvmField val PASSTHROUGH = of("passthrough")
 
             @JvmStatic fun of(value: String) = AccessType(JsonField.of(value))
@@ -923,7 +947,12 @@ private constructor(
 
         /** An enum containing [AccessType]'s known values. */
         enum class Known {
+            /**
+             * The user profile represents an individual end-user of a product that the platform
+             * builds on the API. New profiles get this value by default.
+             */
             APPLICATION,
+            /** The user profile represents a company that the platform resells Claude access to. */
             PASSTHROUGH,
         }
 
@@ -937,7 +966,12 @@ private constructor(
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
+            /**
+             * The user profile represents an individual end-user of a product that the platform
+             * builds on the API. New profiles get this value by default.
+             */
             APPLICATION,
+            /** The user profile represents a company that the platform resells Claude access to. */
             PASSTHROUGH,
             /**
              * An enum member indicating that [AccessType] was instantiated with an unknown value.

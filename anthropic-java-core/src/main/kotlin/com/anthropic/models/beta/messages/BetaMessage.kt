@@ -161,8 +161,8 @@ private constructor(
         contextManagement.getOptional("context_management")
 
     /**
-     * Response envelope for request-level diagnostics. Present (possibly null) whenever the caller
-     * supplied `diagnostics` on the request.
+     * Request-level diagnostics: why the prompt cache could not fully reuse the prefix of the
+     * request named by `diagnostics.previous_message_id`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -671,6 +671,12 @@ private constructor(
             addContent(BetaContentBlock.ofFallback(fallback))
 
         /**
+         * Alias for calling [addContent] with `BetaContentBlock.ofMcpToolListing(mcpToolListing)`.
+         */
+        fun addContent(mcpToolListing: BetaMcpToolListingBlock) =
+            addContent(BetaContentBlock.ofMcpToolListing(mcpToolListing))
+
+        /**
          * Context management response.
          *
          * Information about context management strategies applied during the request.
@@ -694,8 +700,8 @@ private constructor(
         }
 
         /**
-         * Response envelope for request-level diagnostics. Present (possibly null) whenever the
-         * caller supplied `diagnostics` on the request.
+         * Request-level diagnostics: why the prompt cache could not fully reuse the prefix of the
+         * request named by `diagnostics.previous_message_id`.
          */
         fun diagnostics(diagnostics: BetaDiagnostics?) =
             diagnostics(JsonField.ofNullable(diagnostics))

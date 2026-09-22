@@ -16,9 +16,11 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * The job writes the consolidated memories into this existing memory store instead of creating one.
- * In EAP the store must be the job's own memory_store input, so the job consolidates the store in
- * place.
+ * Write the result into the input memory store instead of a new memory store.
+ *
+ * The credential must be allowed to write memory stores, or the request returns a 403 error. While
+ * another `update_existing` dream on the same memory store hasn't fully stopped, the request
+ * returns a 409 error.
  */
 class BetaOutputBehaviorUpdateExisting
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -37,6 +39,9 @@ private constructor(
     ) : this(memoryStoreId, type, mutableMapOf())
 
     /**
+     * The ID of the memory store for the dream to write its result to (`memstore_...`). It must be
+     * the memory store in the `memory_store` entry of `inputs`.
+     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -107,6 +112,10 @@ private constructor(
                     betaOutputBehaviorUpdateExisting.additionalProperties.toMutableMap()
             }
 
+        /**
+         * The ID of the memory store for the dream to write its result to (`memstore_...`). It must
+         * be the memory store in the `memory_store` entry of `inputs`.
+         */
         fun memoryStoreId(memoryStoreId: String) = memoryStoreId(JsonField.of(memoryStoreId))
 
         /**

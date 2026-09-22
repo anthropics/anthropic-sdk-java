@@ -143,6 +143,8 @@ internal class StructuredContentBlockTest {
                 .to(BetaFallbackInfo.builder().model(Model.CLAUDE_HAIKU_4_5).build())
                 .trigger(BetaFallbackRefusalTrigger.builder().category(null).build())
                 .build()
+        private val MCP_TOOL_LISTING =
+            BetaMcpToolListingBlock.builder().mcpServerName(STRING).tools(listOf()).build()
 
         // The list order follows the declaration order in `BetaContentBlock` for easier
         // maintenance.
@@ -166,6 +168,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("containerUpload", OPTIONAL),
                 DelegationReadTestCase("compaction", OPTIONAL),
                 DelegationReadTestCase("fallback", OPTIONAL),
+                DelegationReadTestCase("mcpToolListing", OPTIONAL),
                 DelegationReadTestCase("type", BetaContentBlock.Type.TEXT),
                 DelegationReadTestCase("id", OPTIONAL),
                 DelegationReadTestCase("toolUseId", OPTIONAL),
@@ -207,6 +210,8 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("isCompaction", false),
                 DelegationReadTestCase("isFallback", true),
                 DelegationReadTestCase("isFallback", false),
+                DelegationReadTestCase("isMcpToolListing", true),
+                DelegationReadTestCase("isMcpToolListing", false),
                 // `asText()` is a special case and has its own test function.
                 DelegationReadTestCase("asThinking", THINKING),
                 DelegationReadTestCase("asRedactedThinking", REDACTED_THINKING),
@@ -230,6 +235,7 @@ internal class StructuredContentBlockTest {
                 DelegationReadTestCase("asContainerUpload", CONTAINER_UPLOAD),
                 DelegationReadTestCase("asCompaction", COMPACTION),
                 DelegationReadTestCase("asFallback", FALLBACK),
+                DelegationReadTestCase("asMcpToolListing", MCP_TOOL_LISTING),
                 DelegationReadTestCase("_json", OPTIONAL),
             )
 

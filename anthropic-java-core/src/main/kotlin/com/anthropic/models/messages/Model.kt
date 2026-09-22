@@ -31,6 +31,9 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
          */
         @JvmField val CLAUDE_FABLE_5_1 = of("claude-fable-5-1")
 
+        /** Powerful intelligence for coding, knowledge work, and long-running agents */
+        @JvmField val CLAUDE_OPUS_5_5 = of("claude-opus-5-5")
+
         /**
          * Our most capable model for cybersecurity and biology research, available through trusted
          * access programs
@@ -100,6 +103,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
          * enterprise workflows
          */
         CLAUDE_FABLE_5_1,
+        /** Powerful intelligence for coding, knowledge work, and long-running agents */
+        CLAUDE_OPUS_5_5,
         /**
          * Our most capable model for cybersecurity and biology research, available through trusted
          * access programs
@@ -155,6 +160,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
          * enterprise workflows
          */
         CLAUDE_FABLE_5_1,
+        /** Powerful intelligence for coding, knowledge work, and long-running agents */
+        CLAUDE_OPUS_5_5,
         /**
          * Our most capable model for cybersecurity and biology research, available through trusted
          * access programs
@@ -207,6 +214,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     fun value(): Value =
         when (this) {
             CLAUDE_FABLE_5_1 -> Value.CLAUDE_FABLE_5_1
+            CLAUDE_OPUS_5_5 -> Value.CLAUDE_OPUS_5_5
             CLAUDE_MYTHOS_5_1 -> Value.CLAUDE_MYTHOS_5_1
             CLAUDE_SONNET_5 -> Value.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Value.CLAUDE_FABLE_5
@@ -237,6 +245,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
     fun known(): Known =
         when (this) {
             CLAUDE_FABLE_5_1 -> Known.CLAUDE_FABLE_5_1
+            CLAUDE_OPUS_5_5 -> Known.CLAUDE_OPUS_5_5
             CLAUDE_MYTHOS_5_1 -> Known.CLAUDE_MYTHOS_5_1
             CLAUDE_SONNET_5 -> Known.CLAUDE_SONNET_5
             CLAUDE_FABLE_5 -> Known.CLAUDE_FABLE_5

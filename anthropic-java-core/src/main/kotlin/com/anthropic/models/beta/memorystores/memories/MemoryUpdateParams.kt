@@ -33,16 +33,30 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** The ID of the memory store that holds the memory (`memstore_...`). */
     fun memoryStoreId(): String = memoryStoreId
 
+    /** The ID of the memory to update (`mem_...`). */
     fun memoryId(): Optional<String> = Optional.ofNullable(memoryId)
 
-    /** Query parameter for view */
+    /**
+     * Selects which projection of a `memory` or `memory_version` the server returns. `basic`
+     * returns the object with `content` set to `null`; `full` populates `content`. When omitted,
+     * the default is endpoint-specific: retrieve operations default to `full`; list, create, and
+     * update operations default to `basic`. Listing with `view=full` caps `limit` at 20.
+     */
     fun view(): Optional<BetaManagedAgentsMemoryView> = Optional.ofNullable(view)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
+    /**
+     * Optional header to select the Workspace for this request. The value is a Workspace ID (for
+     * example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+     *
+     * Only needed for credentials that can act on more than one Workspace. A credential that
+     * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+     */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
@@ -146,14 +160,22 @@ private constructor(
             additionalQueryParams = memoryUpdateParams.additionalQueryParams.toBuilder()
         }
 
+        /** The ID of the memory store that holds the memory (`memstore_...`). */
         fun memoryStoreId(memoryStoreId: String) = apply { this.memoryStoreId = memoryStoreId }
 
+        /** The ID of the memory to update (`mem_...`). */
         fun memoryId(memoryId: String?) = apply { this.memoryId = memoryId }
 
         /** Alias for calling [Builder.memoryId] with `memoryId.orElse(null)`. */
         fun memoryId(memoryId: Optional<String>) = memoryId(memoryId.getOrNull())
 
-        /** Query parameter for view */
+        /**
+         * Selects which projection of a `memory` or `memory_version` the server returns. `basic`
+         * returns the object with `content` set to `null`; `full` populates `content`. When
+         * omitted, the default is endpoint-specific: retrieve operations default to `full`; list,
+         * create, and update operations default to `basic`. Listing with `view=full` caps `limit`
+         * at 20.
+         */
         fun view(view: BetaManagedAgentsMemoryView?) = apply { this.view = view }
 
         /** Alias for calling [Builder.view] with `view.orElse(null)`. */
@@ -183,6 +205,13 @@ private constructor(
          */
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
+        /**
+         * Optional header to select the Workspace for this request. The value is a Workspace ID
+         * (for example, `wrkspc_011CZkZaBF1tNoB5wlCeusgy`).
+         *
+         * Only needed for credentials that can act on more than one Workspace. A credential that
+         * belongs to a specific Workspace may omit it; if sent, it must match that Workspace.
+         */
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */

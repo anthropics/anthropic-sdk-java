@@ -1,5 +1,6 @@
 package com.anthropic.bedrock.backends
 
+import com.anthropic.client.okhttp.OkHttpClient
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
@@ -11,17 +12,28 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.databind.node.ObjectNode
+import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
 import java.io.FilterInputStream
 import java.io.IOException
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.io.OutputStream
 import java.io.SequenceInputStream
 import java.lang.System.clearProperty
 import java.lang.System.setProperty
+import java.net.InetAddress
+import java.net.ServerSocket
+import java.net.Socket
+import java.net.URI
 import java.util.Base64
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.concurrent.thread
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatNoException
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -1046,6 +1058,51 @@ internal class BedrockBackendTest {
     }
 
     @Test
+    fun prepareResponseCloseEndsPipelineBlockedOnNetwork() {
+        withHangingEventStreamResponse { server, response ->
+            assertThat(readEvent(response.body(), TEXT_DELTA)).isEqualTo(sseEvent(TEXT_DELTA))
+            val pipelineThread = awaitPipelineBlockedInSocketRead()
+
+            CompletableFuture.runAsync(response::close).get(10, TimeUnit.SECONDS)
+
+            awaitPipelineEnded(pipelineThread)
+            assertThat(server.awaitClientDisconnect()).isTrue()
+        }
+    }
+
+    @Test
+    fun prepareResponseCloseUnblocksReadWithoutDecodeError() {
+        withHangingEventStreamResponse { _, response ->
+            val body = response.body()
+            assertThat(readEvent(body, TEXT_DELTA)).isEqualTo(sseEvent(TEXT_DELTA))
+            val pipelineThread = awaitPipelineBlockedInSocketRead()
+            val readResult = AtomicReference<Any?>()
+            val reader =
+                thread(isDaemon = true) {
+                    readResult.set(
+                        try {
+                            body.read()
+                        } catch (e: Throwable) {
+                            e
+                        }
+                    )
+                }
+            awaitBlockedReadingThePipe(reader)
+
+            CompletableFuture.runAsync(response::close).get(10, TimeUnit.SECONDS)
+
+            reader.join(TimeUnit.SECONDS.toMillis(10))
+            assertThat(reader.isAlive).isFalse()
+            // The read fails like a read of a closed stream, not with the pipeline's failure to
+            // read the canceled connection.
+            assertThat(readResult.get()).isInstanceOfSatisfying(IOException::class.java) {
+                assertThat(it).hasMessageMatching("Stream closed|Pipe closed")
+            }
+            awaitPipelineEnded(pipelineThread)
+        }
+    }
+
+    @Test
     fun prepareResponseTranslatesChunksToSseEvents() {
         val backend = BedrockBackend.builder().apiKey(API_KEY).region(Region.EU_WEST_1).build()
 
@@ -1299,4 +1356,131 @@ internal class BedrockBackendTest {
         ByteArray(sseEvent(eventJson).toByteArray().size)
             .also { DataInputStream(body).readFully(it) }
             .let(::String)
+
+    /**
+     * Runs [block] with a streamed response of a fresh [HangingEventStreamServer]. It's received
+     * over a real HTTP/1.1 connection, where the pipeline thread blocks on the network until the
+     * connection is canceled, which a fake body can't reproduce.
+     */
+    private fun withHangingEventStreamResponse(
+        block: (server: HangingEventStreamServer, response: HttpResponse) -> Unit
+    ) {
+        HangingEventStreamServer(encode(chunk(TEXT_DELTA))).use { server ->
+            OkHttpClient.builder()
+                .backend(BedrockBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build())
+                .build()
+                .use { httpClient ->
+                    val response =
+                        httpClient.execute(
+                            HttpRequest.builder()
+                                .method(HttpMethod.POST)
+                                .baseUrl(server.baseUrl)
+                                .addPathSegments("v1", "messages")
+                                .body(
+                                    json(
+                                        jsonMapper(),
+                                        parseJson("""{"model":"model","stream":true}"""),
+                                    )
+                                )
+                                .build()
+                        )
+                    block(server, response)
+                }
+        }
+    }
+
+    /**
+     * Every backend names its pipeline threads the same way, so this relies on the class's
+     * `@ResourceLock` running its tests one at a time.
+     */
+    private fun awaitPipelineBlockedInSocketRead(): Thread =
+        awaitState("Pipeline never blocked in a socket read") {
+            Thread.getAllStackTraces()
+                .entries
+                .firstOrNull { (thread, stackTrace) ->
+                    thread.name.startsWith("bedrock-sse-pipeline-") &&
+                        stackTrace.any { it.className == "okio.InputStreamSource" }
+                }
+                ?.key
+        }
+
+    /** The pipeline's pool keeps its thread, so an ended pipeline leaves it idle in the pool. */
+    private fun awaitPipelineEnded(pipelineThread: Thread) {
+        awaitState("Pipeline never ended") {
+            pipelineThread.stackTrace
+                .none { it.className.startsWith(BedrockBackend::class.java.name) }
+                .takeIf { it }
+        }
+    }
+
+    private fun awaitBlockedReadingThePipe(thread: Thread) {
+        awaitState("Reader never blocked reading the pipe") {
+            (thread.state == Thread.State.TIMED_WAITING &&
+                    thread.stackTrace.any { it.className == "java.io.PipedInputStream" })
+                .takeIf { it }
+        }
+    }
+
+    private fun <T : Any> awaitState(failureMessage: String, poll: () -> T?): T {
+        val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
+        while (true) {
+            poll()?.let {
+                return it
+            }
+            check(System.nanoTime() < deadline) { failureMessage }
+            Thread.sleep(5)
+        }
+    }
+
+    /** Serves [frame] over chunked HTTP/1.1 and then nothing, until the client disconnects. */
+    private class HangingEventStreamServer(frame: ByteArray) : AutoCloseable {
+        private val address = InetAddress.getLoopbackAddress()
+        private val serverSocket = ServerSocket(0, 50, address)
+        private val socket = AtomicReference<Socket>()
+        private val clientDisconnected = CountDownLatch(1)
+
+        val baseUrl: String =
+            URI("http", null, address.hostAddress, serverSocket.localPort, null, null, null)
+                .toString()
+
+        init {
+            thread(isDaemon = true) {
+                try {
+                    serverSocket.accept().use { socket ->
+                        this.socket.set(socket)
+                        val input = socket.getInputStream()
+                        val reader = BufferedReader(InputStreamReader(input, Charsets.ISO_8859_1))
+                        generateSequence(reader::readLine).takeWhile { it.isNotEmpty() }.count()
+                        socket
+                            .getOutputStream()
+                            .apply {
+                                write(
+                                    ("HTTP/1.1 200 OK\r\n" +
+                                            "Content-Type: application/vnd.amazon.eventstream\r\n" +
+                                            "x-amzn-bedrock-content-type: application/json\r\n" +
+                                            "Transfer-Encoding: chunked\r\n\r\n" +
+                                            "${Integer.toHexString(frame.size)}\r\n")
+                                        .toByteArray(Charsets.ISO_8859_1)
+                                )
+                                write(frame)
+                                write("\r\n".toByteArray(Charsets.ISO_8859_1))
+                            }
+                            .flush()
+                        // The client sends nothing more while it reads this response, so the read
+                        // only ends once the client closes the connection.
+                        input.readBytes()
+                    }
+                } catch (_: IOException) {} finally {
+                    clientDisconnected.countDown()
+                }
+            }
+        }
+
+        fun awaitClientDisconnect(): Boolean = clientDisconnected.await(10, TimeUnit.SECONDS)
+
+        override fun close() {
+            serverSocket.close()
+            socket.get()?.close()
+        }
+    }
 }

@@ -23,6 +23,9 @@ private typealias Send<T> = suspend SequenceScope<T>.(MessageCreateParams) -> Be
  *
  * It's an [Iterable] that yields either [BetaMessage] objects by default or [StreamResponse]
  * objects when calling [streaming].
+ *
+ * Tools can be added and removed during a run, without missing the prompt cache, with [addTool] and
+ * [removeTool].
  */
 class BetaToolRunner
 internal constructor(
@@ -36,11 +39,16 @@ internal constructor(
     private var nextParams: MessageCreateParams? = null
     private var lastToolResponse: BetaMessageParam? = null
 
+    private val pendingToolChanges = mutableListOf<BetaContentBlockParam>()
+
+    /** Applied on top of the params' runnable tools; `null` marks a name [removeTool] took away. */
+    private val toolOverrides = mutableMapOf<String, BetaRunnableTool?>()
+
     // How compaction moves through the runner:
     //   1. `compactBeforeNextTurn()` sets `compaction` to `Scheduled`. Nothing is sent.
     //   2. Before each model request, `runLoop()` asks `compactionToSend()`. If one is scheduled
     //      and the last turn wasn't paused, `compact()` sends the compaction request instead: the
-    //      current params plus `compaction`, without `context_management`.
+    //      current params `withoutCompactionIncompatibleParams()`, plus `compaction`.
     //   3. While that request is out, `compaction` is `InFlight`: `setNextParams()` refuses
     //      different messages, and further `compactBeforeNextTurn()` calls are ignored. A request
     //      that throws puts it back to `Idle`; nothing is retried.
@@ -101,11 +109,11 @@ internal constructor(
             var paramsBuilder = params.initialMessageParams.toBuilderWithToolRunnerHeader()
             val maxIterations = params.maxIterations().orElse(Long.MAX_VALUE)
             var iteration = 0L
-            var turnPaused = false
+            var lastStopReason = Optional.empty<BetaStopReason>()
 
             while (iteration < maxIterations) {
-                currentParams = paramsBuilder.build()
-                val compactionConfig = compactionToSend(turnPaused)
+                currentParams = paramsBuilder.buildWithPendingToolChanges(lastStopReason)
+                val compactionConfig = compactionToSend(lastStopReason)
                 if (compactionConfig != null) {
                     paramsBuilder = compact(send, compactionConfig)
                     continue
@@ -114,7 +122,7 @@ internal constructor(
 
                 val message = send(currentParams)
                 val nextStep = determineNextStepFromStopReason(message.stopReason())
-                turnPaused = nextStep == NextStep.RESUME
+                lastStopReason = message.stopReason()
 
                 val nextParams = nextParams
                 if (nextParams != null) {
@@ -205,6 +213,106 @@ internal constructor(
     }
 
     /**
+     * Gives the model another tool without changing [MessageCreateParams.tools], which would miss
+     * the prompt cache.
+     *
+     * The next request carries the definition in a `tool_addition` block, and the runner runs the
+     * tool straight away, in place of any tool of the same name, even for a call already in the
+     * message being handled. Changes made while handling a message go out together, in call order,
+     * as one `"system"` message after its tool results; a turn that stopped on `pause_turn` is
+     * resent first. Changes still queued when the run ends are never sent. Requires the
+     * `inline-tools-2026-09-15` beta, which the runner does not add.
+     *
+     * In the rare case where a compaction response comes back without `tool_changes` even though
+     * the summarized messages added or removed tools, the model goes back to the tools in
+     * [MessageCreateParams.tools] and the runner does not detect it. Call [addTool] or [removeTool]
+     * again after that compaction if you need the change restored.
+     */
+    fun addTool(tool: BetaRunnableTool) {
+        queueToolAddition(BetaToolUnion.ofBetaTool(tool.definition()), tool)
+    }
+
+    /**
+     * Gives the model the tool defined by [toolParametersType], as
+     * [MessageCreateParams.Builder.addTool] does up front. The tool's name is the class's
+     * `@JsonTypeName` value if it has one, otherwise its simple name in snake case. See [addTool].
+     *
+     * @throws IllegalArgumentException If [localValidation] is on and a valid JSON schema cannot be
+     *   derived from the class, or if the class is a non-static inner, local or anonymous class.
+     */
+    @JvmOverloads
+    fun addTool(
+        toolParametersType: Class<*>,
+        localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
+    ) {
+        addTool(BetaRunnableTool.ofSupplier(toolParametersType, localValidation))
+    }
+
+    /**
+     * Gives the model an MCP [tool], which the runner runs when the model calls it. See [addTool].
+     */
+    fun addTool(tool: McpBetaTool) {
+        addTool(BetaRunnableTool.of(tool.definition, tool.runner))
+    }
+
+    /**
+     * Gives the model a tool the runner has nothing to run for, such as a server tool (web search):
+     * [definition] is sent as given, and the runner stops running any tool of that name. See
+     * [addTool].
+     */
+    fun addTool(definition: BetaToolUnion) {
+        queueToolAddition(definition, null)
+    }
+
+    /**
+     * Takes the tool named [name] away from the model without changing [MessageCreateParams.tools],
+     * which would miss the prompt cache.
+     *
+     * The runner stops running the tool straight away: a call to it, even one in the message being
+     * handled, gets the same error result as a call to an unknown tool. The model is told with the
+     * next request, as for [addTool]. [addTool] brings the tool back. Requires the
+     * `inline-tools-2026-09-15` beta, which the runner does not add.
+     *
+     * A conversation that starts from a compaction block made elsewhere, whose `tool_changes`
+     * removes a tool that is also in [MessageCreateParams.tools], needs this call too: the API
+     * applies that removal for the model, but the runner would still run the tool.
+     */
+    fun removeTool(name: String) {
+        toolOverrides[name] = null
+        pendingToolChanges.add(
+            BetaContentBlockParam.ofToolRemoval(
+                BetaRequestToolRemovalBlock.builder().referenceTool(name).build()
+            )
+        )
+    }
+
+    /**
+     * Takes [tool] away if it is the tool the runner has under its name. A different tool of the
+     * same name is left alone. See [removeTool].
+     */
+    fun removeTool(tool: BetaRunnableTool) {
+        removeToolThat { it === tool }
+    }
+
+    /**
+     * Takes away the tool that was made from [toolParametersType], whether it was given to
+     * [addTool] or to [MessageCreateParams.Builder.addTool]. A tool that another class gives the
+     * same name is left alone, and nothing happens if no tool was made from the class. See
+     * [removeTool].
+     */
+    fun removeTool(toolParametersType: Class<*>) {
+        removeToolThat { it.parametersType() == toolParametersType }
+    }
+
+    /**
+     * Takes away whatever tool the runner has under the MCP [tool]'s name: each [addTool] call
+     * wraps an MCP tool anew, so there is no one object to look for. See [removeTool].
+     */
+    fun removeTool(tool: McpBetaTool) {
+        removeTool(tool.definition.name())
+    }
+
+    /**
      * Get the tool response for the last message from the assistant.
      *
      * Avoids redundant tool executions by caching results.
@@ -219,6 +327,34 @@ internal constructor(
 
         val lastMessage = currentParams.messages().lastOrNull() ?: return Optional.empty()
         return Optional.ofNullable(generateToolResponse(lastMessage))
+    }
+
+    /** Takes away the runnable tool that [matches], if the runner has one. */
+    private fun removeToolThat(matches: (BetaRunnableTool) -> Boolean) {
+        val tool = runnableToolsByName().values.firstOrNull(matches) ?: return
+        removeTool(tool.name())
+    }
+
+    /** [tool] is `null` for a raw definition, which the runner has nothing to run for. */
+    private fun queueToolAddition(definition: BetaToolUnion, tool: BetaRunnableTool?) {
+        val addition = BetaRequestToolAdditionBlock.builder().definitionTool(definition).build()
+        val name = tool?.name() ?: addition.tool().referencedToolName()
+        name?.let { toolOverrides[it] = tool }
+        pendingToolChanges.add(BetaContentBlockParam.ofToolAddition(addition))
+    }
+
+    private fun MessageCreateParams.Builder.buildWithPendingToolChanges(
+        lastStopReason: Optional<BetaStopReason>
+    ): MessageCreateParams {
+        // A paused turn is resent as it is, so it has to stay the last message.
+        if (
+            lastStopReason.getOrNull() != BetaStopReason.PAUSE_TURN &&
+                pendingToolChanges.isNotEmpty()
+        ) {
+            addSystemMessageOfBetaContentBlockParams(pendingToolChanges.toList())
+            pendingToolChanges.clear()
+        }
+        return build()
     }
 
     private fun rejectCompactionParam(params: MessageCreateParams) {
@@ -248,8 +384,10 @@ internal constructor(
     }
 
     // The API can't compact a conversation that ends mid-turn, so a paused turn is resumed first.
-    private fun compactionToSend(turnPaused: Boolean): BetaCompactionConfig? =
-        (compaction as? Compaction.Scheduled)?.config?.takeUnless { turnPaused }
+    private fun compactionToSend(lastStopReason: Optional<BetaStopReason>): BetaCompactionConfig? =
+        (compaction as? Compaction.Scheduled)?.config?.takeUnless {
+            determineNextStepFromStopReason(lastStopReason) == NextStep.RESUME
+        }
 
     /**
      * Sends [config] as a compaction request of its own, yields the response like any other, and
@@ -261,11 +399,9 @@ internal constructor(
     ): MessageCreateParams.Builder {
         val request =
             currentParams
+                .withoutCompactionIncompatibleParams()
                 .toBuilder()
                 .compaction(config)
-                // The API refuses `compaction` alongside `context_management`. Later requests
-                // keep it.
-                .contextManagement(JsonMissing.of())
                 .build()
 
         compaction = Compaction.InFlight
@@ -286,10 +422,44 @@ internal constructor(
             warn("Compaction produced no summary; keeping the conversation as it is.")
             return paramsBuilder
         }
+        // The messages that recorded a removal are about to be replaced.
+        (runnableToolsByName().keys - availableToolNames()).forEach { toolOverrides[it] = null }
         lastToolResponse = null
         // The response has to be sent back as it came, first, replacing the messages it summarizes.
         return paramsBuilder.messages(listOf(message.toParamKeepingUnknownBlocks()))
     }
+
+    /**
+     * A compaction request returns only the compaction block, never a reply, so the API rejects the
+     * params that only shape a reply. The runner's later requests keep them.
+     */
+    private fun MessageCreateParams.withoutCompactionIncompatibleParams(): MessageCreateParams {
+        val toolChoice = _toolChoice()
+        val forcesToolUse = toolChoice.asKnown().getOrNull()?.let { it.isAny() || it.isTool() }
+        return toBuilder()
+            .contextManagement(JsonMissing.of())
+            .stopSequences(JsonMissing.of())
+            .toolChoice(if (forcesToolUse == true) JsonMissing.of() else toolChoice)
+            .outputFormat(JsonMissing.of())
+            .outputConfig(_outputConfig().map { it.withoutFormat() })
+            .fallbacks(_fallbacks().map { it.withoutOutputFormats() })
+            .build()
+    }
+
+    private fun BetaOutputConfig.withoutFormat(): BetaOutputConfig =
+        toBuilder().format(JsonMissing.of()).build()
+
+    private fun BetaFallbacksParam.withoutOutputFormats(): BetaFallbacksParam =
+        if (isFallbackParams())
+            BetaFallbacksParam.ofFallbackParams(
+                asFallbackParams().map { fallback ->
+                    fallback
+                        .toBuilder()
+                        .outputConfig(fallback._outputConfig().map { it.withoutFormat() })
+                        .build()
+                }
+            )
+        else this
 
     private fun compactionToSendAfterFinalTurn(message: BetaMessage): BetaCompactionConfig? {
         val scheduled = compaction as? Compaction.Scheduled ?: return null
@@ -423,7 +593,7 @@ internal constructor(
             return null
         }
 
-        val toolsByName = currentParams.runnableTools().associateBy { it.name() }
+        val toolsByName = runnableToolsByName()
         val availableToolNames = availableToolNames()
         return BetaMessageParam.builder()
             .role(BetaMessageParam.Role.USER)
@@ -442,12 +612,12 @@ internal constructor(
      * Returns the names of the tools that are currently available to the assistant.
      *
      * Starts from every runnable tool's name and folds the `tool_removal`/`tool_addition` blocks of
-     * the `"system"` messages, in request order. A removed tool can still receive a `tool_use` from
-     * the model, so dispatch checks membership in this set and routes a removed name down the same
-     * not-found path as a tool that was never declared.
+     * the `"system"` messages, in request order, then the changes still queued. A removed tool can
+     * still receive a `tool_use` from the model, so dispatch checks membership in this set and
+     * routes a removed name down the same not-found path as a tool that was never declared.
      */
     private fun availableToolNames(): MutableSet<String> {
-        val available = currentParams.runnableTools().map { it.name() }.toMutableSet()
+        val available = runnableToolsByName().keys.toMutableSet()
         // The assistant message being answered is either the last message in the history or hasn't
         // been added to it yet, so every `"system"` message here precedes it.
         for (message in currentParams.messages().filter { it.isSystem() }) {
@@ -459,7 +629,17 @@ internal constructor(
                 applyToolChange(block, available)
             }
         }
+        pendingToolChanges.forEach { applyToolChange(it, available) }
         return available
+    }
+
+    /** The tools the runner can run: the params' runnable tools with [toolOverrides] applied. */
+    private fun runnableToolsByName(): Map<String, BetaRunnableTool> {
+        val toolsByName = currentParams.runnableTools().associateByTo(mutableMapOf()) { it.name() }
+        for ((name, tool) in toolOverrides) {
+            if (tool == null) toolsByName.remove(name) else toolsByName[name] = tool
+        }
+        return toolsByName
     }
 
     /**
@@ -492,6 +672,14 @@ internal constructor(
     private fun BetaRequestToolAdditionBlock.Tool.referencedToolName(): String? =
         when {
             isReference() -> asReference().name()
+            // Not every kind of tool definition has a name (e.g. an MCP toolset).
+            isDefinition() ->
+                JsonValue.from(asDefinition()._definition())
+                    .asObject()
+                    .getOrNull()
+                    ?.get("name")
+                    ?.asString()
+                    ?.getOrNull()
             // MCP references are executed server-side, so they don't affect runnable tools.
             else -> null // unknown reference types are ignored for forward compatibility
         }

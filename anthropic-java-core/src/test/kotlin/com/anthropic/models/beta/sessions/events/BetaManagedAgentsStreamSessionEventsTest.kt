@@ -603,9 +603,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentMcpToolUseEvent.Type.AGENT_MCP_TOOL_USE)
-                .evaluatedPermission(
-                    BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
-                )
+                .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                 .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
@@ -668,9 +666,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                     .name("name")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .type(BetaManagedAgentsAgentMcpToolUseEvent.Type.AGENT_MCP_TOOL_USE)
-                    .evaluatedPermission(
-                        BetaManagedAgentsAgentMcpToolUseEvent.EvaluatedPermission.ALLOW
-                    )
+                    .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                     .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                     .sessionThreadId("session_thread_id")
                     .build()
@@ -779,7 +775,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
-                .evaluatedPermission(BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW)
+                .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                 .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
@@ -841,9 +837,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                     .name("name")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .type(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
-                    .evaluatedPermission(
-                        BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW
-                    )
+                    .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                     .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                     .sessionThreadId("session_thread_id")
                     .build()
@@ -3544,6 +3538,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                             "tool_use_id" to "tool_use_id",
                             "is_error" to true,
                             "name" to "name",
+                            "evaluated_permission" to "allow",
                             "evaluation" to mapOf("type" to "always_allow"),
                             "agent_name" to "Researcher",
                             "iteration" to 0,
@@ -3574,6 +3569,8 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.toolUseId()).contains("tool_use_id")
         assertThat(betaManagedAgentsStreamSessionEvents.isError()).contains(true)
         assertThat(betaManagedAgentsStreamSessionEvents.name()).contains("name")
+        assertThat(betaManagedAgentsStreamSessionEvents.evaluatedPermission())
+            .contains(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
         assertThat(betaManagedAgentsStreamSessionEvents.evaluation())
             .contains(
                 BetaManagedAgentsAgentToolEvaluation.ofAlwaysAllow(
@@ -3660,6 +3657,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.toolUseId()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.isError()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.name()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.evaluatedPermission()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.evaluation()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.agentName()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.iteration()).isEmpty

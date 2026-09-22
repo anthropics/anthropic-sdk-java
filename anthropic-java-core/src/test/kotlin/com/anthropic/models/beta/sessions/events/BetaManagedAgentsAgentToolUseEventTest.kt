@@ -22,7 +22,7 @@ internal class BetaManagedAgentsAgentToolUseEventTest {
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
-                .evaluatedPermission(BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW)
+                .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                 .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()
@@ -40,7 +40,7 @@ internal class BetaManagedAgentsAgentToolUseEventTest {
         assertThat(betaManagedAgentsAgentToolUseEvent.type())
             .isEqualTo(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
         assertThat(betaManagedAgentsAgentToolUseEvent.evaluatedPermission())
-            .contains(BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW)
+            .contains(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
         assertThat(betaManagedAgentsAgentToolUseEvent.evaluation())
             .contains(
                 BetaManagedAgentsAgentToolEvaluation.ofAlwaysAllow(
@@ -65,7 +65,7 @@ internal class BetaManagedAgentsAgentToolUseEventTest {
                 .name("name")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .type(BetaManagedAgentsAgentToolUseEvent.Type.AGENT_TOOL_USE)
-                .evaluatedPermission(BetaManagedAgentsAgentToolUseEvent.EvaluatedPermission.ALLOW)
+                .evaluatedPermission(BetaManagedAgentsAgentEvaluatedPermission.ALLOW)
                 .evaluation(BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build())
                 .sessionThreadId("session_thread_id")
                 .build()

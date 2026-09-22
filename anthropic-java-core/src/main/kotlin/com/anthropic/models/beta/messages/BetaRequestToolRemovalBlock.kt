@@ -30,8 +30,9 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * Mid-conversation directive to withdraw a tool.
  *
- * ``tool`` references a tool (or MCP toolset) by name from the request's ``tools``; it is no longer
- * offered to the model from this point in the conversation onward.
+ * ``tool`` references a tool (or MCP toolset) by name: one declared in the request's ``tools`` or
+ * defined earlier in ``messages``. It is no longer offered to the model from this point in the
+ * conversation onward.
  */
 class BetaRequestToolRemovalBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -153,6 +154,9 @@ private constructor(
         /** Alias for calling [tool] with `Tool.ofReference(reference)`. */
         fun tool(reference: BetaToolChangeToolReference) = tool(Tool.ofReference(reference))
 
+        /** Alias for calling [tool] with `reference.toParam()`. */
+        fun tool(reference: BetaResponseToolChangeToolReference) = tool(reference.toParam())
+
         /**
          * Alias for calling [tool] with the following:
          * ```java
@@ -168,9 +172,17 @@ private constructor(
         fun tool(mcpToolReference: BetaToolChangeMcpToolReference) =
             tool(Tool.ofMcpToolReference(mcpToolReference))
 
+        /** Alias for calling [tool] with `mcpToolReference.toParam()`. */
+        fun tool(mcpToolReference: BetaResponseToolChangeMcpToolReference) =
+            tool(mcpToolReference.toParam())
+
         /** Alias for calling [tool] with `Tool.ofMcpToolsetReference(mcpToolsetReference)`. */
         fun tool(mcpToolsetReference: BetaToolChangeMcpToolsetReference) =
             tool(Tool.ofMcpToolsetReference(mcpToolsetReference))
+
+        /** Alias for calling [tool] with `mcpToolsetReference.toParam()`. */
+        fun tool(mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference) =
+            tool(mcpToolsetReference.toParam())
 
         /**
          * Alias for calling [tool] with the following:
@@ -370,8 +382,9 @@ private constructor(
             )
 
         /**
-         * Reference to a single tool the caller declared directly in ``tools[]``. Does not accept
-         * the composed ``{server}_{name}`` form the server assigns to MCP-resolved tools — use
+         * Reference to a single tool, by the name the model uses to call it: a tool declared in
+         * ``tools`` or defined by an earlier ``tool_addition`` block. Does not accept the composed
+         * ``{server}_{name}`` form the server assigns to MCP-resolved tools; use
          * ``mcp_tool_reference`` or ``mcp_toolset_reference`` for those.
          */
         fun reference(): Optional<BetaToolChangeToolReference> = Optional.ofNullable(reference)
@@ -394,8 +407,9 @@ private constructor(
         fun isMcpToolsetReference(): Boolean = mcpToolsetReference != null
 
         /**
-         * Reference to a single tool the caller declared directly in ``tools[]``. Does not accept
-         * the composed ``{server}_{name}`` form the server assigns to MCP-resolved tools — use
+         * Reference to a single tool, by the name the model uses to call it: a tool declared in
+         * ``tools`` or defined by an earlier ``tool_addition`` block. Does not accept the composed
+         * ``{server}_{name}`` form the server assigns to MCP-resolved tools; use
          * ``mcp_tool_reference`` or ``mcp_toolset_reference`` for those.
          */
         fun asReference(): BetaToolChangeToolReference = reference.getOrThrow("reference")
@@ -547,9 +561,10 @@ private constructor(
         companion object {
 
             /**
-             * Reference to a single tool the caller declared directly in ``tools[]``. Does not
-             * accept the composed ``{server}_{name}`` form the server assigns to MCP-resolved tools
-             * — use ``mcp_tool_reference`` or ``mcp_toolset_reference`` for those.
+             * Reference to a single tool, by the name the model uses to call it: a tool declared in
+             * ``tools`` or defined by an earlier ``tool_addition`` block. Does not accept the
+             * composed ``{server}_{name}`` form the server assigns to MCP-resolved tools; use
+             * ``mcp_tool_reference`` or ``mcp_toolset_reference`` for those.
              */
             @JvmStatic
             fun ofReference(reference: BetaToolChangeToolReference) = Tool(reference = reference)
@@ -587,9 +602,10 @@ private constructor(
         interface Visitor<out T> {
 
             /**
-             * Reference to a single tool the caller declared directly in ``tools[]``. Does not
-             * accept the composed ``{server}_{name}`` form the server assigns to MCP-resolved tools
-             * — use ``mcp_tool_reference`` or ``mcp_toolset_reference`` for those.
+             * Reference to a single tool, by the name the model uses to call it: a tool declared in
+             * ``tools`` or defined by an earlier ``tool_addition`` block. Does not accept the
+             * composed ``{server}_{name}`` form the server assigns to MCP-resolved tools; use
+             * ``mcp_tool_reference`` or ``mcp_toolset_reference`` for those.
              */
             fun visitReference(reference: BetaToolChangeToolReference): T
 

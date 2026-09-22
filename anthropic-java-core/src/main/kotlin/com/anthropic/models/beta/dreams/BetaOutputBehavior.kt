@@ -20,6 +20,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Which memory store a dream writes its result to. Defaults to `create_new` when left out of a
+ * create request.
+ */
 @JsonDeserialize(using = BetaOutputBehavior.Deserializer::class)
 @JsonSerialize(using = BetaOutputBehavior.Serializer::class)
 class BetaOutputBehavior
@@ -45,16 +49,20 @@ private constructor(
         )
 
     /**
-     * The default destination: the job creates a new output memory store as a clone of the
-     * memory_store input and writes the consolidated memories into it. The input store is never
-     * mutated.
+     * Write the result to a new memory store that starts as a copy of the input memory store. This
+     * is the default.
+     *
+     * The new memory store is in the same workspace as the dream. The dream doesn't change the
+     * input memory store.
      */
     fun createNew(): Optional<BetaOutputBehaviorCreateNew> = Optional.ofNullable(createNew)
 
     /**
-     * The job writes the consolidated memories into this existing memory store instead of creating
-     * one. In EAP the store must be the job's own memory_store input, so the job consolidates the
-     * store in place.
+     * Write the result into the input memory store instead of a new memory store.
+     *
+     * The credential must be allowed to write memory stores, or the request returns a 403 error.
+     * While another `update_existing` dream on the same memory store hasn't fully stopped, the
+     * request returns a 409 error.
      */
     fun updateExisting(): Optional<BetaOutputBehaviorUpdateExisting> =
         Optional.ofNullable(updateExisting)
@@ -64,16 +72,20 @@ private constructor(
     fun isUpdateExisting(): Boolean = updateExisting != null
 
     /**
-     * The default destination: the job creates a new output memory store as a clone of the
-     * memory_store input and writes the consolidated memories into it. The input store is never
-     * mutated.
+     * Write the result to a new memory store that starts as a copy of the input memory store. This
+     * is the default.
+     *
+     * The new memory store is in the same workspace as the dream. The dream doesn't change the
+     * input memory store.
      */
     fun asCreateNew(): BetaOutputBehaviorCreateNew = createNew.getOrThrow("createNew")
 
     /**
-     * The job writes the consolidated memories into this existing memory store instead of creating
-     * one. In EAP the store must be the job's own memory_store input, so the job consolidates the
-     * store in place.
+     * Write the result into the input memory store instead of a new memory store.
+     *
+     * The credential must be allowed to write memory stores, or the request returns a 403 error.
+     * While another `update_existing` dream on the same memory store hasn't fully stopped, the
+     * request returns a 409 error.
      */
     fun asUpdateExisting(): BetaOutputBehaviorUpdateExisting =
         updateExisting.getOrThrow("updateExisting")
@@ -195,9 +207,11 @@ private constructor(
     companion object {
 
         /**
-         * The default destination: the job creates a new output memory store as a clone of the
-         * memory_store input and writes the consolidated memories into it. The input store is never
-         * mutated.
+         * Write the result to a new memory store that starts as a copy of the input memory store.
+         * This is the default.
+         *
+         * The new memory store is in the same workspace as the dream. The dream doesn't change the
+         * input memory store.
          */
         @JvmStatic
         fun ofCreateNew(createNew: BetaOutputBehaviorCreateNew) =
@@ -212,9 +226,11 @@ private constructor(
             ofCreateNew(BetaOutputBehaviorCreateNew.of(type))
 
         /**
-         * The job writes the consolidated memories into this existing memory store instead of
-         * creating one. In EAP the store must be the job's own memory_store input, so the job
-         * consolidates the store in place.
+         * Write the result into the input memory store instead of a new memory store.
+         *
+         * The credential must be allowed to write memory stores, or the request returns a 403
+         * error. While another `update_existing` dream on the same memory store hasn't fully
+         * stopped, the request returns a 409 error.
          */
         @JvmStatic
         fun ofUpdateExisting(updateExisting: BetaOutputBehaviorUpdateExisting) =
@@ -241,16 +257,20 @@ private constructor(
     interface Visitor<out T> {
 
         /**
-         * The default destination: the job creates a new output memory store as a clone of the
-         * memory_store input and writes the consolidated memories into it. The input store is never
-         * mutated.
+         * Write the result to a new memory store that starts as a copy of the input memory store.
+         * This is the default.
+         *
+         * The new memory store is in the same workspace as the dream. The dream doesn't change the
+         * input memory store.
          */
         fun visitCreateNew(createNew: BetaOutputBehaviorCreateNew): T
 
         /**
-         * The job writes the consolidated memories into this existing memory store instead of
-         * creating one. In EAP the store must be the job's own memory_store input, so the job
-         * consolidates the store in place.
+         * Write the result into the input memory store instead of a new memory store.
+         *
+         * The credential must be allowed to write memory stores, or the request returns a 403
+         * error. While another `update_existing` dream on the same memory store hasn't fully
+         * stopped, the request returns a 409 error.
          */
         fun visitUpdateExisting(updateExisting: BetaOutputBehaviorUpdateExisting): T
 

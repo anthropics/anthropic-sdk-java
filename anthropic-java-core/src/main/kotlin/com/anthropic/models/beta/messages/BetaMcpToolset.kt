@@ -4,6 +4,7 @@ import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
+import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -30,6 +31,7 @@ private constructor(
     private val cacheControl: JsonField<BetaCacheControlEphemeral>,
     private val configs: JsonField<Configs>,
     private val defaultConfig: JsonField<BetaMcpToolDefaultConfig>,
+    private val tools: JsonField<List<BetaMcpToolParam>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -46,7 +48,10 @@ private constructor(
         @JsonProperty("default_config")
         @ExcludeMissing
         defaultConfig: JsonField<BetaMcpToolDefaultConfig> = JsonMissing.of(),
-    ) : this(mcpServerName, type, cacheControl, configs, defaultConfig, mutableMapOf())
+        @JsonProperty("tools")
+        @ExcludeMissing
+        tools: JsonField<List<BetaMcpToolParam>> = JsonMissing.of(),
+    ) : this(mcpServerName, type, cacheControl, configs, defaultConfig, tools, mutableMapOf())
 
     /**
      * Name of the MCP server to configure tools for
@@ -94,6 +99,16 @@ private constructor(
         defaultConfig.getOptional("default_config")
 
     /**
+     * The server's tool listing, pinned: when present, the server is not asked for its tools before
+     * sampling and exactly these entries, with `default_config` and `configs` applied, are the
+     * toolset's tools. Copy it from the `mcp_tool_listing` block of an earlier response.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun tools(): Optional<List<BetaMcpToolParam>> = tools.getOptional("tools")
+
+    /**
      * Returns the raw JSON value of [mcpServerName].
      *
      * Unlike [mcpServerName], this method doesn't throw if the JSON field has an unexpected type.
@@ -126,6 +141,13 @@ private constructor(
     @JsonProperty("default_config")
     @ExcludeMissing
     fun _defaultConfig(): JsonField<BetaMcpToolDefaultConfig> = defaultConfig
+
+    /**
+     * Returns the raw JSON value of [tools].
+     *
+     * Unlike [tools], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("tools") @ExcludeMissing fun _tools(): JsonField<List<BetaMcpToolParam>> = tools
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -166,6 +188,7 @@ private constructor(
         private var cacheControl: JsonField<BetaCacheControlEphemeral> = JsonMissing.of()
         private var configs: JsonField<Configs> = JsonMissing.of()
         private var defaultConfig: JsonField<BetaMcpToolDefaultConfig> = JsonMissing.of()
+        private var tools: JsonField<MutableList<BetaMcpToolParam>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -175,6 +198,7 @@ private constructor(
             cacheControl = betaMcpToolset.cacheControl
             configs = betaMcpToolset.configs
             defaultConfig = betaMcpToolset.defaultConfig
+            tools = betaMcpToolset.tools.map { it.toMutableList() }.takeUnless { it.isMissing() }
             additionalProperties = betaMcpToolset.additionalProperties.toMutableMap()
         }
 
@@ -254,6 +278,41 @@ private constructor(
             this.defaultConfig = defaultConfig
         }
 
+        /**
+         * The server's tool listing, pinned: when present, the server is not asked for its tools
+         * before sampling and exactly these entries, with `default_config` and `configs` applied,
+         * are the toolset's tools. Copy it from the `mcp_tool_listing` block of an earlier
+         * response.
+         */
+        fun tools(tools: List<BetaMcpToolParam>?) = tools(JsonField.ofNullable(tools))
+
+        /** Alias for calling [Builder.tools] with `tools.orElse(null)`. */
+        fun tools(tools: Optional<List<BetaMcpToolParam>>) = tools(tools.getOrNull())
+
+        /**
+         * Sets [Builder.tools] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.tools] with a well-typed `List<BetaMcpToolParam>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun tools(tools: JsonField<List<BetaMcpToolParam>>) = apply {
+            this.tools = tools.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [BetaMcpToolParam] to [tools].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addTool(tool: BetaMcpToolParam) = apply {
+            tools =
+                (tools ?: JsonField.of(mutableListOf())).also { checkKnown("tools", it).add(tool) }
+        }
+
+        /** Alias for calling [addTool] with `tool.toParam()`. */
+        fun addTool(tool: BetaMcpTool) = addTool(tool.toParam())
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -292,6 +351,7 @@ private constructor(
                 cacheControl,
                 configs,
                 defaultConfig,
+                (tools ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
     }
@@ -320,6 +380,7 @@ private constructor(
         cacheControl().ifPresent { it.validate() }
         configs().ifPresent { it.validate() }
         defaultConfig().ifPresent { it.validate() }
+        tools().ifPresent { it.forEach { it.validate() } }
         validated = true
     }
 
@@ -342,7 +403,8 @@ private constructor(
             type.let { if (it == JsonValue.from("mcp_toolset")) 1 else 0 } +
             (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
             (configs.asKnown().getOrNull()?.validity() ?: 0) +
-            (defaultConfig.asKnown().getOrNull()?.validity() ?: 0)
+            (defaultConfig.asKnown().getOrNull()?.validity() ?: 0) +
+            (tools.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
     /** Configuration overrides for specific tools, keyed by tool name */
     class Configs
@@ -464,6 +526,7 @@ private constructor(
             cacheControl == other.cacheControl &&
             configs == other.configs &&
             defaultConfig == other.defaultConfig &&
+            tools == other.tools &&
             additionalProperties == other.additionalProperties
     }
 
@@ -474,6 +537,7 @@ private constructor(
             cacheControl,
             configs,
             defaultConfig,
+            tools,
             additionalProperties,
         )
     }
@@ -481,5 +545,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaMcpToolset{mcpServerName=$mcpServerName, type=$type, cacheControl=$cacheControl, configs=$configs, defaultConfig=$defaultConfig, additionalProperties=$additionalProperties}"
+        "BetaMcpToolset{mcpServerName=$mcpServerName, type=$type, cacheControl=$cacheControl, configs=$configs, defaultConfig=$defaultConfig, tools=$tools, additionalProperties=$additionalProperties}"
 }

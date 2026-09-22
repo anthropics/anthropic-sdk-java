@@ -101,8 +101,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * The resolved agent a session thread runs: a saved-agent snapshot, the platform advisor entry,
-     * or an inline-defined (ephemeral) agent snapshot.
+     * The resolved agent a `session_thread` runs.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -350,10 +349,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /**
-         * The resolved agent a session thread runs: a saved-agent snapshot, the platform advisor
-         * entry, or an inline-defined (ephemeral) agent snapshot.
-         */
+        /** The resolved agent a `session_thread` runs. */
         fun agent(agent: Agent) = agent(JsonField.of(agent))
 
         /**
@@ -631,10 +627,7 @@ private constructor(
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (usage.asKnown().getOrNull()?.validity() ?: 0)
 
-    /**
-     * The resolved agent a session thread runs: a saved-agent snapshot, the platform advisor entry,
-     * or an inline-defined (ephemeral) agent snapshot.
-     */
+    /** The resolved agent a `session_thread` runs. */
     @JsonDeserialize(using = Agent.Deserializer::class)
     @JsonSerialize(using = Agent.Serializer::class)
     class Agent

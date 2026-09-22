@@ -35,7 +35,7 @@ public final class ManagedAgentsExample {
                 .create(AgentCreateParams.builder()
                         .name("simple-example-agent")
                         .model(BetaManagedAgentsModelConfigParams.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_4_6)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .build())
                         .build());
         System.out.println("Created agent: " + agent.id());

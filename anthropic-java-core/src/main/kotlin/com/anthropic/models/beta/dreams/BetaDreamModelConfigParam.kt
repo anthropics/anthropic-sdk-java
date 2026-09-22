@@ -16,7 +16,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Model identifier and configuration applied to every pipeline stage. */
+/** The object form of `model` in a request to create a dream. */
 class BetaDreamModelConfigParam
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -32,7 +32,13 @@ private constructor(
     ) : this(id, speed, mutableMapOf())
 
     /**
-     * Model identifier, e.g. "claude-opus-5". 1-256 characters.
+     * The ID of the model to run the dream with.
+     *
+     * The ID can be 1 to 256 characters long.
+     *
+     * The
+     * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+     * lists the supported models.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -107,7 +113,15 @@ private constructor(
             additionalProperties = betaDreamModelConfigParam.additionalProperties.toMutableMap()
         }
 
-        /** Model identifier, e.g. "claude-opus-5". 1-256 characters. */
+        /**
+         * The ID of the model to run the dream with.
+         *
+         * The ID can be 1 to 256 characters long.
+         *
+         * The
+         * [limits table in the Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#limits)
+         * lists the supported models.
+         */
         fun id(id: String) = id(JsonField.of(id))
 
         /**
