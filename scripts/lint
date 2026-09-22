@@ -6,32 +6,20 @@ cd "$(dirname "$0")/.."
 
 echo "==> Running lints"
 
-# Build the list of Gradle lint tasks not covered by a locally installed
-# formatter, then run them in a single invocation so we pay buildSrc
-# compilation and project configuration once instead of per language.
-# detekt has no standalone CLI fast-path here, so it always runs via Gradle.
+# Run every lint task in a single Gradle invocation so we pay buildSrc
+# compilation and project configuration once, not once per task.
 if [[ -n "${CI:-}" ]]; then
-    # Checking only the changed files cannot show a problem that an edit causes
-    # in a file that did not change, so CI checks every file.
+    # When detekt checks only the changed files it cannot show a problem that an
+    # edit causes in a file that did not change, so in CI it checks every file.
     gradle_tasks=(detektMain detektTest)
 else
-    echo "==> detekt checks only the files that changed since it last passed; ./gradlew lint checks every file"
+    echo "==> detekt checks only the files that changed since it last passed; run ./gradlew lint to have detekt check every file"
     gradle_tasks=(detektChangedMain detektChangedTest)
 fi
 
-if command -v ktfmt &> /dev/null; then
-    echo "==> Checking ktfmt"
-    ./scripts/kotlin-format --dry-run --set-exit-if-changed
-else
-    gradle_tasks+=(lintKotlin)
-fi
-
-if command -v palantir-java-format &> /dev/null; then
-    echo "==> Checking palantir-java-format"
-    ./scripts/java-format --dry-run --set-exit-if-changed
-else
-    gradle_tasks+=(lintJava)
-fi
+# Whether a file is formatted does not depend on any other file, so lintKotlin
+# and lintJava skip files not modified since a run in which they passed.
+gradle_tasks+=(lintKotlin lintJava)
 
 echo "==> Running gradlew ${gradle_tasks[*]}"
 ./gradlew "${gradle_tasks[@]}"
