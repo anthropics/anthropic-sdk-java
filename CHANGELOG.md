@@ -1,5 +1,37 @@
 # Changelog
 
+## 2.65.0 (2026-09-22)
+
+Full Changelog: [v2.64.0...v2.65.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.64.0...v2.65.0)
+
+### Features
+
+* **api:** add support for claude-opus-5-5, inline tool definitions and MCP tool-list pinning (beta) ([bf0bc98](https://github.com/anthropics/anthropic-sdk-java/commit/bf0bc98e7a19066884bcb3884d676be1682bb159))
+
+
+### Bug Fixes
+
+* **api:** share one evaluated_permission enum across Managed Agents events ([f94963b](https://github.com/anthropics/anthropic-sdk-java/commit/f94963b062e5d389482c0877d452dac0a833b336))
+* **client:** close the response when prepareResponse throws, and end Bedrock streams on close ([#308](https://github.com/anthropics/anthropic-sdk-java/issues/308)) ([0e6082f](https://github.com/anthropics/anthropic-sdk-java/commit/0e6082f9005ad65ea0b67a23b85668b346fe45e8))
+* **tools:** addTool() takes effect straight away ([#321](https://github.com/anthropics/anthropic-sdk-java/issues/321)) ([afd7cf0](https://github.com/anthropics/anthropic-sdk-java/commit/afd7cf03376bcb4d18ea3e61a4d749a30e7dbfe0))
+* **tools:** leave reply-only params off the tool runner's compaction request ([#320](https://github.com/anthropics/anthropic-sdk-java/issues/320)) ([175d0b4](https://github.com/anthropics/anthropic-sdk-java/commit/175d0b495e95c8ce9b047754283d044ba038d8e1))
+
+
+### Chores
+
+* **docs:** add descriptions to the Dreams API reference ([35c9453](https://github.com/anthropics/anthropic-sdk-java/commit/35c94531f5442bffe88b7456d7f018494dd91d96))
+* **docs:** add descriptions to the User Profiles API reference ([35c9453](https://github.com/anthropics/anthropic-sdk-java/commit/35c94531f5442bffe88b7456d7f018494dd91d96))
+* **docs:** add memory store descriptions to the Managed Agents API reference ([35c9453](https://github.com/anthropics/anthropic-sdk-java/commit/35c94531f5442bffe88b7456d7f018494dd91d96))
+* **docs:** improve descriptions in the Dreams API reference ([9d6fcf8](https://github.com/anthropics/anthropic-sdk-java/commit/9d6fcf834e6f892e9d1edebf524650b2f4bdca84))
+* **docs:** remove placeholder parameter descriptions ([029f187](https://github.com/anthropics/anthropic-sdk-java/commit/029f187e8256c251c38f05ced83a6db811a25abc))
+* **docs:** simplify the session thread agent type description ([f512a7f](https://github.com/anthropics/anthropic-sdk-java/commit/f512a7f78bc4ea789d3403511725ed396263e09b))
+* **docs:** update diagnostics field descriptions on beta messages ([ed28797](https://github.com/anthropics/anthropic-sdk-java/commit/ed287970cdd9e3773b0ffaea9f2a1e7a942938c0))
+
+
+### Documentation
+
+* add path and header parameter descriptions ([7573f78](https://github.com/anthropics/anthropic-sdk-java/commit/7573f78c8b08d14ee6fbba7f615956b2bb42c001))
+
 ## 2.64.0 (2026-09-18)
 
 Full Changelog: [v2.63.0...v2.64.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.63.0...v2.64.0)
