@@ -185,11 +185,7 @@ private constructor(
     fun strict(): Optional<Boolean> = strict.getOptional("strict")
 
     /**
-     * Which sources contribute to the set of URLs web fetch may fetch.
-     *
-     * Each key is a tagged variant: ``user_input`` is ``all`` or ``none``; the two tool filters are
-     * ``all``, ``none``, ``only`` (only the named tools' results) or ``except`` (every result but
-     * the named tools'). A named tool must be declared in this request's ``tools[]``.
+     * Which sources contribute to the set of URLs the tool may fetch. Omitted means every source.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -594,12 +590,8 @@ private constructor(
         fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
 
         /**
-         * Which sources contribute to the set of URLs web fetch may fetch.
-         *
-         * Each key is a tagged variant: ``user_input`` is ``all`` or ``none``; the two tool filters
-         * are ``all``, ``none``, ``only`` (only the named tools' results) or ``except`` (every
-         * result but the named tools'). A named tool must be declared in this request's
-         * ``tools[]``.
+         * Which sources contribute to the set of URLs the tool may fetch. Omitted means every
+         * source.
          */
         fun urlSources(urlSources: WebFetchUrlSources?) =
             urlSources(JsonField.ofNullable(urlSources))

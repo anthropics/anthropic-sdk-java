@@ -18,10 +18,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * A coordinator topology: the session's primary thread orchestrates work by spawning session
- * threads, each running an agent drawn from the `agents` roster.
- */
+/** Multiagent orchestration configuration. Currently supports the `coordinator` topology. */
 class BetaManagedAgentsMultiagentParams
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

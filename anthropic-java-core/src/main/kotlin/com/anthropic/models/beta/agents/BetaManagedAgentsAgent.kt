@@ -110,7 +110,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the agent was archived. Null if not archived.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -153,7 +153,7 @@ private constructor(
     fun model(): BetaManagedAgentsModelConfig = model.getRequired("model")
 
     /**
-     * Resolved coordinator topology with a concrete agent roster.
+     * Multiagent orchestration configuration. Null when the agent is single-threaded.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -422,7 +422,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A timestamp in RFC 3339 format */
+        /** When the agent was archived. Null if not archived. */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
         /** Alias for calling [Builder.archivedAt] with `archivedAt.orElse(null)`. */
@@ -515,7 +515,7 @@ private constructor(
          */
         fun model(model: JsonField<BetaManagedAgentsModelConfig>) = apply { this.model = model }
 
-        /** Resolved coordinator topology with a concrete agent roster. */
+        /** Multiagent orchestration configuration. Null when the agent is single-threaded. */
         fun multiagent(multiagent: BetaManagedAgentsMultiagent?) =
             multiagent(JsonField.ofNullable(multiagent))
 

@@ -120,7 +120,8 @@ private constructor(
     fun maxContentTokens(): Optional<Int> = maxContentTokens.getOptional("max_content_tokens")
 
     /**
-     * Permission policy for tool execution.
+     * Permission policy for this tool. Controls whether tool calls are auto-approved or require
+     * confirmation.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -370,7 +371,10 @@ private constructor(
             this.maxContentTokens = maxContentTokens
         }
 
-        /** Permission policy for tool execution. */
+        /**
+         * Permission policy for this tool. Controls whether tool calls are auto-approved or require
+         * confirmation.
+         */
         fun permissionPolicy(permissionPolicy: PermissionPolicy?) =
             permissionPolicy(JsonField.ofNullable(permissionPolicy))
 
@@ -502,7 +506,10 @@ private constructor(
             (permissionPolicy.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Permission policy for tool execution. */
+    /**
+     * Permission policy for this tool. Controls whether tool calls are auto-approved or require
+     * confirmation.
+     */
     @JsonDeserialize(using = PermissionPolicy.Deserializer::class)
     @JsonSerialize(using = PermissionPolicy.Serializer::class)
     class PermissionPolicy

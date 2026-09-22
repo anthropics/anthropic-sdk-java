@@ -30,7 +30,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Resolved coordinator topology with a concrete agent roster. */
+/** Resolved multiagent orchestration configuration as returned in API responses. */
 class BetaManagedAgentsMultiagent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

@@ -56,7 +56,9 @@ private constructor(
     )
 
     /**
-     * The policy category that triggered a refusal.
+     * The policy category that triggered the refusal.
+     *
+     * `null` when the refusal doesn't map to a named category.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -239,7 +241,11 @@ private constructor(
             additionalProperties = betaRefusalStopDetails.additionalProperties.toMutableMap()
         }
 
-        /** The policy category that triggered a refusal. */
+        /**
+         * The policy category that triggered the refusal.
+         *
+         * `null` when the refusal doesn't map to a named category.
+         */
         fun category(category: Category?) = category(JsonField.ofNullable(category))
 
         /** Alias for calling [Builder.category] with `category.orElse(null)`. */
@@ -495,7 +501,11 @@ private constructor(
             (if (recommendedModel.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("refusal")) 1 else 0 }
 
-    /** The policy category that triggered a refusal. */
+    /**
+     * The policy category that triggered the refusal.
+     *
+     * `null` when the refusal doesn't map to a named category.
+     */
     class Category @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

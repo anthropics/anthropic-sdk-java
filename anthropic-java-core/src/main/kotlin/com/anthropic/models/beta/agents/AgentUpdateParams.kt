@@ -101,8 +101,8 @@ private constructor(
     fun model(): Optional<Model> = body.model()
 
     /**
-     * A coordinator topology: the session's primary thread orchestrates work by spawning session
-     * threads, each running an agent drawn from the `agents` roster.
+     * Multiagent orchestration configuration. Full replacement. Omit to preserve; send null to
+     * clear.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -415,8 +415,8 @@ private constructor(
         }
 
         /**
-         * A coordinator topology: the session's primary thread orchestrates work by spawning
-         * session threads, each running an agent drawn from the `agents` roster.
+         * Multiagent orchestration configuration. Full replacement. Omit to preserve; send null to
+         * clear.
          */
         fun multiagent(multiagent: BetaManagedAgentsMultiagentParams?) = apply {
             body.multiagent(multiagent)
@@ -847,8 +847,8 @@ private constructor(
         fun model(): Optional<Model> = model.getOptional("model")
 
         /**
-         * A coordinator topology: the session's primary thread orchestrates work by spawning
-         * session threads, each running an agent drawn from the `agents` roster.
+         * Multiagent orchestration configuration. Full replacement. Omit to preserve; send null to
+         * clear.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1132,8 +1132,8 @@ private constructor(
                 )
 
             /**
-             * A coordinator topology: the session's primary thread orchestrates work by spawning
-             * session threads, each running an agent drawn from the `agents` roster.
+             * Multiagent orchestration configuration. Full replacement. Omit to preserve; send null
+             * to clear.
              */
             fun multiagent(multiagent: BetaManagedAgentsMultiagentParams?) =
                 multiagent(JsonField.ofNullable(multiagent))

@@ -61,7 +61,7 @@ private constructor(
     fun agentName(): String = agentName.getRequired("agent_name")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp of the status transition.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -199,7 +199,7 @@ private constructor(
          */
         fun agentName(agentName: JsonField<String>) = apply { this.agentName = agentName }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp of the status transition. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**

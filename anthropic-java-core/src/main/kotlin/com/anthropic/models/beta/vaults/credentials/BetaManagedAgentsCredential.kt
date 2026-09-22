@@ -86,7 +86,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the credential was archived. Null if not archived.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -94,7 +94,7 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
-     * Authentication details for a credential.
+     * Authentication configuration for this credential.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -289,7 +289,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A timestamp in RFC 3339 format */
+        /** When the credential was archived. Null if not archived. */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
         /** Alias for calling [Builder.archivedAt] with `archivedAt.orElse(null)`. */
@@ -306,7 +306,7 @@ private constructor(
             this.archivedAt = archivedAt
         }
 
-        /** Authentication details for a credential. */
+        /** Authentication configuration for this credential. */
         fun auth(auth: Auth) = auth(JsonField.of(auth))
 
         /**
@@ -539,7 +539,7 @@ private constructor(
             (if (vaultId.asKnown().isPresent) 1 else 0) +
             (if (displayName.asKnown().isPresent) 1 else 0)
 
-    /** Authentication details for a credential. */
+    /** Authentication configuration for this credential. */
     @JsonDeserialize(using = Auth.Deserializer::class)
     @JsonSerialize(using = Auth.Serializer::class)
     class Auth

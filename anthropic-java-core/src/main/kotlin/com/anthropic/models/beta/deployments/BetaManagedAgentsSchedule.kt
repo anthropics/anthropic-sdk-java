@@ -19,7 +19,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** 5-field POSIX cron schedule with computed runtime timestamps. */
+/**
+ * A recurring schedule with computed runtime timestamps. Discriminated union — only cron is
+ * supported currently.
+ */
 class BetaManagedAgentsSchedule
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -72,7 +75,8 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Time the most recent scheduled run actually started. Null until one completes; preserved
+     * after the deployment is archived. Manual runs do not update this.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -218,7 +222,10 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * Time the most recent scheduled run actually started. Null until one completes; preserved
+         * after the deployment is archived. Manual runs do not update this.
+         */
         fun lastRunAt(lastRunAt: OffsetDateTime?) = lastRunAt(JsonField.ofNullable(lastRunAt))
 
         /** Alias for calling [Builder.lastRunAt] with `lastRunAt.orElse(null)`. */

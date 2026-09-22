@@ -39,7 +39,7 @@ private constructor(
     ) : this(expiresAt, type, url, mutableMapOf())
 
     /**
-     * A timestamp in RFC 3339 format
+     * When this enrollment URL expires, in RFC 3339 format.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -128,7 +128,7 @@ private constructor(
             additionalProperties = betaUserProfileEnrollmentUrl.additionalProperties.toMutableMap()
         }
 
-        /** A timestamp in RFC 3339 format */
+        /** When this enrollment URL expires, in RFC 3339 format. */
         fun expiresAt(expiresAt: OffsetDateTime) = expiresAt(JsonField.of(expiresAt))
 
         /**

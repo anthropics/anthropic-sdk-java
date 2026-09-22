@@ -33,7 +33,7 @@ private constructor(
     ) : this(error, type, mutableMapOf())
 
     /**
-     * The error that triggered an auto-pause. Matches the failed run's `error.type`.
+     * The failed run's error.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -107,7 +107,7 @@ private constructor(
                 betaManagedAgentsErrorDeploymentPausedReason.additionalProperties.toMutableMap()
         }
 
-        /** The error that triggered an auto-pause. Matches the failed run's `error.type`. */
+        /** The failed run's error. */
         fun error(error: BetaManagedAgentsDeploymentPausedReasonError) = error(JsonField.of(error))
 
         /**

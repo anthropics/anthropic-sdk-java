@@ -75,7 +75,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the agent finished processing this message.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -391,7 +391,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the agent finished processing this message. */
         fun processedAt(processedAt: OffsetDateTime?) =
             processedAt(JsonField.ofNullable(processedAt))
 

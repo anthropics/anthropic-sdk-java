@@ -103,8 +103,8 @@ private constructor(
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
-     * A coordinator topology: the session's primary thread orchestrates work by spawning session
-     * threads, each running an agent drawn from the `agents` roster.
+     * Multiagent orchestration configuration. Currently supports the `coordinator` topology with a
+     * roster of 1-20 agents.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -390,8 +390,8 @@ private constructor(
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
 
         /**
-         * A coordinator topology: the session's primary thread orchestrates work by spawning
-         * session threads, each running an agent drawn from the `agents` roster.
+         * Multiagent orchestration configuration. Currently supports the `coordinator` topology
+         * with a roster of 1-20 agents.
          */
         fun multiagent(multiagent: BetaManagedAgentsMultiagentParams?) = apply {
             body.multiagent(multiagent)
@@ -792,8 +792,8 @@ private constructor(
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
         /**
-         * A coordinator topology: the session's primary thread orchestrates work by spawning
-         * session threads, each running an agent drawn from the `agents` roster.
+         * Multiagent orchestration configuration. Currently supports the `coordinator` topology
+         * with a roster of 1-20 agents.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1060,8 +1060,8 @@ private constructor(
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
             /**
-             * A coordinator topology: the session's primary thread orchestrates work by spawning
-             * session threads, each running an agent drawn from the `agents` roster.
+             * Multiagent orchestration configuration. Currently supports the `coordinator` topology
+             * with a roster of 1-20 agents.
              */
             fun multiagent(multiagent: BetaManagedAgentsMultiagentParams?) =
                 multiagent(JsonField.ofNullable(multiagent))

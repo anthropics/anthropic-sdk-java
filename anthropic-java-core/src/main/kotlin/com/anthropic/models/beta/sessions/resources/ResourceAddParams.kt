@@ -37,7 +37,7 @@ private constructor(
      */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
-    /** Mount a file uploaded via the Files API into the session. */
+    /** Request parameters for adding a resource to a session. */
     fun betaManagedAgentsFileResourceParams(): BetaManagedAgentsFileResourceParams =
         betaManagedAgentsFileResourceParams
 
@@ -127,7 +127,7 @@ private constructor(
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
         fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
-        /** Mount a file uploaded via the Files API into the session. */
+        /** Request parameters for adding a resource to a session. */
         fun betaManagedAgentsFileResourceParams(
             betaManagedAgentsFileResourceParams: BetaManagedAgentsFileResourceParams
         ) = apply { this.betaManagedAgentsFileResourceParams = betaManagedAgentsFileResourceParams }

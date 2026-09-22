@@ -51,7 +51,7 @@ private constructor(
     fun description(): String = description.getRequired("description")
 
     /**
-     * JSON Schema for custom tool input parameters.
+     * JSON Schema defining the expected input parameters for the tool.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -167,7 +167,7 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
-        /** JSON Schema for custom tool input parameters. */
+        /** JSON Schema defining the expected input parameters for the tool. */
         fun inputSchema(inputSchema: BetaManagedAgentsCustomToolInputSchema) =
             inputSchema(JsonField.of(inputSchema))
 

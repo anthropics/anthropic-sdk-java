@@ -40,7 +40,7 @@ private constructor(
     ) : this(result, toolUseId, type, denyMessage, mutableMapOf())
 
     /**
-     * UserToolConfirmationResult enum
+     * The confirmation result: 'allow' or 'deny'.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -152,7 +152,7 @@ private constructor(
                 betaManagedAgentsUserToolConfirmationEventParams.additionalProperties.toMutableMap()
         }
 
-        /** UserToolConfirmationResult enum */
+        /** The confirmation result: 'allow' or 'deny'. */
         fun result(result: Result) = result(JsonField.of(result))
 
         /**
@@ -293,7 +293,7 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (denyMessage.asKnown().isPresent) 1 else 0)
 
-    /** UserToolConfirmationResult enum */
+    /** The confirmation result: 'allow' or 'deny'. */
     class Result @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

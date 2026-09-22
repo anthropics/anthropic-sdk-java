@@ -101,7 +101,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * The resolved agent a `session_thread` runs.
+     * Resolved agent definition for this thread. Snapshot of the agent at thread creation time.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -109,7 +109,7 @@ private constructor(
     fun agent(): Agent = agent.getRequired("agent")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the thread was archived. Null if not archived.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -117,7 +117,7 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the thread was created.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -141,7 +141,7 @@ private constructor(
     fun sessionId(): String = sessionId.getRequired("session_id")
 
     /**
-     * Timing statistics for a session thread.
+     * Timing statistics for this thread. Null until the thread's first status transition.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -149,7 +149,7 @@ private constructor(
     fun stats(): Optional<BetaManagedAgentsSessionThreadStats> = stats.getOptional("stats")
 
     /**
-     * SessionThreadStatus enum
+     * Current execution status of the thread.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -163,7 +163,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the thread was last updated.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -171,7 +171,7 @@ private constructor(
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
     /**
-     * Cumulative token usage for a session thread across all turns.
+     * Cumulative token usage for this thread. Null until the thread's first idle transition.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -349,7 +349,9 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** The resolved agent a `session_thread` runs. */
+        /**
+         * Resolved agent definition for this thread. Snapshot of the agent at thread creation time.
+         */
         fun agent(agent: Agent) = agent(JsonField.of(agent))
 
         /**
@@ -383,7 +385,7 @@ private constructor(
                     .build()
             )
 
-        /** A timestamp in RFC 3339 format */
+        /** When the thread was archived. Null if not archived. */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
         /** Alias for calling [Builder.archivedAt] with `archivedAt.orElse(null)`. */
@@ -400,7 +402,7 @@ private constructor(
             this.archivedAt = archivedAt
         }
 
-        /** A timestamp in RFC 3339 format */
+        /** When the thread was created. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
@@ -443,7 +445,7 @@ private constructor(
          */
         fun sessionId(sessionId: JsonField<String>) = apply { this.sessionId = sessionId }
 
-        /** Timing statistics for a session thread. */
+        /** Timing statistics for this thread. Null until the thread's first status transition. */
         fun stats(stats: BetaManagedAgentsSessionThreadStats?) = stats(JsonField.ofNullable(stats))
 
         /** Alias for calling [Builder.stats] with `stats.orElse(null)`. */
@@ -460,7 +462,7 @@ private constructor(
             this.stats = stats
         }
 
-        /** SessionThreadStatus enum */
+        /** Current execution status of the thread. */
         fun status(status: BetaManagedAgentsSessionThreadStatus) = status(JsonField.of(status))
 
         /**
@@ -484,7 +486,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** A timestamp in RFC 3339 format */
+        /** When the thread was last updated. */
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
         /**
@@ -496,7 +498,9 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
 
-        /** Cumulative token usage for a session thread across all turns. */
+        /**
+         * Cumulative token usage for this thread. Null until the thread's first idle transition.
+         */
         fun usage(usage: BetaManagedAgentsSessionThreadUsage?) = usage(JsonField.ofNullable(usage))
 
         /** Alias for calling [Builder.usage] with `usage.orElse(null)`. */
@@ -627,7 +631,7 @@ private constructor(
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (usage.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** The resolved agent a `session_thread` runs. */
+    /** Resolved agent definition for this thread. Snapshot of the agent at thread creation time. */
     @JsonDeserialize(using = Agent.Deserializer::class)
     @JsonSerialize(using = Agent.Serializer::class)
     class Agent

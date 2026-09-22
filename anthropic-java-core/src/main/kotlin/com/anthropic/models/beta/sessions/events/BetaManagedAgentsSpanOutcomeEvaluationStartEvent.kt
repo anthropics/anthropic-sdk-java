@@ -65,7 +65,7 @@ private constructor(
     fun outcomeId(): String = outcomeId.getRequired("outcome_id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when outcome evaluation started.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -206,7 +206,7 @@ private constructor(
          */
         fun outcomeId(outcomeId: JsonField<String>) = apply { this.outcomeId = outcomeId }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when outcome evaluation started. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**

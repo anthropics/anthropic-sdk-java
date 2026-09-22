@@ -37,7 +37,8 @@ private constructor(
     ) : this(maxListCost, type, mutableMapOf())
 
     /**
-     * A monetary amount in a specific currency.
+     * Maximum list cost the session may accrue. List price is used regardless of any negotiated
+     * discount, so the cap fires at or before the actual charge.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -106,7 +107,10 @@ private constructor(
             additionalProperties = betaManagedAgentsBudgetLimit.additionalProperties.toMutableMap()
         }
 
-        /** A monetary amount in a specific currency. */
+        /**
+         * Maximum list cost the session may accrue. List price is used regardless of any negotiated
+         * discount, so the cap fires at or before the actual charge.
+         */
         fun maxListCost(maxListCost: BetaMonetaryAmount) = maxListCost(JsonField.of(maxListCost))
 
         /**

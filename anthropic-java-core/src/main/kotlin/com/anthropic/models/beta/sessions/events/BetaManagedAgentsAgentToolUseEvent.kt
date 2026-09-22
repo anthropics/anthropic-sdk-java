@@ -89,7 +89,7 @@ private constructor(
     fun name(): String = name.getRequired("name")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when this event was processed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -103,7 +103,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * AgentEvaluatedPermission enum
+     * The evaluated permission policy for this tool invocation.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -112,8 +112,12 @@ private constructor(
         evaluatedPermission.getOptional("evaluated_permission")
 
     /**
-     * Names the resolved permission_policy that produced evaluated_permission, and under auto
-     * carries the judgement. Open union: clients must tolerate unknown variants.
+     * Which resolved permission_policy produced evaluated_permission: always_allow, always_ask, or
+     * auto (with the server's per-invocation judgement). Absent only when the server refused the
+     * call before any policy applied (for example, the named tool is not enabled in the session);
+     * such a refusal has evaluated_permission deny. An event recorded before this field existed
+     * reads as the arm its evaluated_permission implies (always_allow for allow, always_ask for
+     * ask).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -290,7 +294,7 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when this event was processed. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**
@@ -314,7 +318,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** AgentEvaluatedPermission enum */
+        /** The evaluated permission policy for this tool invocation. */
         fun evaluatedPermission(evaluatedPermission: BetaManagedAgentsAgentEvaluatedPermission) =
             evaluatedPermission(JsonField.of(evaluatedPermission))
 
@@ -330,8 +334,12 @@ private constructor(
         ) = apply { this.evaluatedPermission = evaluatedPermission }
 
         /**
-         * Names the resolved permission_policy that produced evaluated_permission, and under auto
-         * carries the judgement. Open union: clients must tolerate unknown variants.
+         * Which resolved permission_policy produced evaluated_permission: always_allow, always_ask,
+         * or auto (with the server's per-invocation judgement). Absent only when the server refused
+         * the call before any policy applied (for example, the named tool is not enabled in the
+         * session); such a refusal has evaluated_permission deny. An event recorded before this
+         * field existed reads as the arm its evaluated_permission implies (always_allow for allow,
+         * always_ask for ask).
          */
         fun evaluation(evaluation: BetaManagedAgentsAgentToolEvaluation) =
             evaluation(JsonField.of(evaluation))

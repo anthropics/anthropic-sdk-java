@@ -101,7 +101,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When this version was written, in RFC 3339 format.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -128,8 +128,7 @@ private constructor(
     fun memoryStoreId(): String = memoryStoreId.getRequired("memory_store_id")
 
     /**
-     * The kind of mutation a `memory_version` records. Every non-no-op mutation to a memory appends
-     * exactly one version row with one of these values.
+     * The kind of mutation this version records: `created`, `modified`, or `deleted`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -170,10 +169,9 @@ private constructor(
     fun contentSizeBytes(): Optional<Int> = contentSizeBytes.getOptional("content_size_bytes")
 
     /**
-     * Identifies who performed a write or redact operation. Captured at write time on the
-     * `memory_version` row. The API key that created a session is not recorded on agent writes;
-     * attribution answers who made the write, not who is ultimately responsible. Look up session
-     * provenance separately via the [Sessions API](/en/api/beta/sessions/retrieve).
+     * Who performed this write: one of `session_actor`, `api_actor`, `user_actor`, or
+     * `service_account_actor`; `null` when no writer is recorded. Captured at write time and
+     * preserved through redaction.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -189,7 +187,9 @@ private constructor(
     fun path(): Optional<String> = path.getOptional("path")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When this version was redacted, in RFC 3339 format, or `null` if it has not been redacted.
+     * When set, `content`, `path`, `content_size_bytes`, and `content_sha256` are all `null`. See
+     * [Redact a memory version](/en/api/beta/memory_stores/memory_versions/redact).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -197,10 +197,9 @@ private constructor(
     fun redactedAt(): Optional<OffsetDateTime> = redactedAt.getOptional("redacted_at")
 
     /**
-     * Identifies who performed a write or redact operation. Captured at write time on the
-     * `memory_version` row. The API key that created a session is not recorded on agent writes;
-     * attribution answers who made the write, not who is ultimately responsible. Look up session
-     * provenance separately via the [Sessions API](/en/api/beta/sessions/retrieve).
+     * Who redacted this version, or `null` if it has not been redacted. In practice always an
+     * `api_actor`, `user_actor`, or `service_account_actor` (agents do not have a redact
+     * capability).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -394,7 +393,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A timestamp in RFC 3339 format */
+        /** When this version was written, in RFC 3339 format. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
@@ -436,10 +435,7 @@ private constructor(
             this.memoryStoreId = memoryStoreId
         }
 
-        /**
-         * The kind of mutation a `memory_version` records. Every non-no-op mutation to a memory
-         * appends exactly one version row with one of these values.
-         */
+        /** The kind of mutation this version records: `created`, `modified`, or `deleted`. */
         fun operation(operation: BetaManagedAgentsMemoryVersionOperation) =
             operation(JsonField.of(operation))
 
@@ -534,10 +530,9 @@ private constructor(
         }
 
         /**
-         * Identifies who performed a write or redact operation. Captured at write time on the
-         * `memory_version` row. The API key that created a session is not recorded on agent writes;
-         * attribution answers who made the write, not who is ultimately responsible. Look up
-         * session provenance separately via the [Sessions API](/en/api/beta/sessions/retrieve).
+         * Who performed this write: one of `session_actor`, `api_actor`, `user_actor`, or
+         * `service_account_actor`; `null` when no writer is recorded. Captured at write time and
+         * preserved through redaction.
          */
         fun createdBy(createdBy: BetaManagedAgentsActor) = createdBy(JsonField.of(createdBy))
 
@@ -652,7 +647,11 @@ private constructor(
          */
         fun path(path: JsonField<String>) = apply { this.path = path }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When this version was redacted, in RFC 3339 format, or `null` if it has not been
+         * redacted. When set, `content`, `path`, `content_size_bytes`, and `content_sha256` are all
+         * `null`. See [Redact a memory version](/en/api/beta/memory_stores/memory_versions/redact).
+         */
         fun redactedAt(redactedAt: OffsetDateTime?) = redactedAt(JsonField.ofNullable(redactedAt))
 
         /** Alias for calling [Builder.redactedAt] with `redactedAt.orElse(null)`. */
@@ -670,10 +669,9 @@ private constructor(
         }
 
         /**
-         * Identifies who performed a write or redact operation. Captured at write time on the
-         * `memory_version` row. The API key that created a session is not recorded on agent writes;
-         * attribution answers who made the write, not who is ultimately responsible. Look up
-         * session provenance separately via the [Sessions API](/en/api/beta/sessions/retrieve).
+         * Who redacted this version, or `null` if it has not been redacted. In practice always an
+         * `api_actor`, `user_actor`, or `service_account_actor` (agents do not have a redact
+         * capability).
          */
         fun redactedBy(redactedBy: BetaManagedAgentsActor) = redactedBy(JsonField.of(redactedBy))
 

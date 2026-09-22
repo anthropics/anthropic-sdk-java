@@ -36,7 +36,8 @@ private constructor(
     ) : this(content, type, index, mutableMapOf())
 
     /**
-     * Regular text content.
+     * A partial element of the content array at index, typed like the element itself — the same
+     * shape the buffered agent.message carries in content.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -124,7 +125,10 @@ private constructor(
             additionalProperties = betaManagedAgentsDeltaContent.additionalProperties.toMutableMap()
         }
 
-        /** Regular text content. */
+        /**
+         * A partial element of the content array at index, typed like the element itself — the same
+         * shape the buffered agent.message carries in content.
+         */
         fun content(content: BetaManagedAgentsTextBlock) = content(JsonField.of(content))
 
         /**

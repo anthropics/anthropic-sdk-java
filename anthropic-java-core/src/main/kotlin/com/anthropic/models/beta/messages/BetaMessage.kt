@@ -111,7 +111,9 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * Information about the container used in the request (for the code execution tool)
+     * Information about the container used in this request.
+     *
+     * This will be non-null if a container tool (e.g. code execution) was used.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -161,8 +163,8 @@ private constructor(
         contextManagement.getOptional("context_management")
 
     /**
-     * Request-level diagnostics: why the prompt cache could not fully reuse the prefix of the
-     * request named by `diagnostics.previous_message_id`.
+     * Request-level diagnostics. `null` when the request did not supply `diagnostics`, or when it
+     * did and no prompt-cache divergence was detected.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -196,7 +198,9 @@ private constructor(
     @JsonProperty("role") @ExcludeMissing fun _role(): JsonValue = role
 
     /**
-     * Structured information about a refusal.
+     * Structured information about why model output stopped.
+     *
+     * This is `null` when the `stop_reason` has no additional detail to report.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -478,7 +482,11 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** Information about the container used in the request (for the code execution tool) */
+        /**
+         * Information about the container used in this request.
+         *
+         * This will be non-null if a container tool (e.g. code execution) was used.
+         */
         fun container(container: BetaContainer?) = container(JsonField.ofNullable(container))
 
         /** Alias for calling [Builder.container] with `container.orElse(null)`. */
@@ -700,8 +708,8 @@ private constructor(
         }
 
         /**
-         * Request-level diagnostics: why the prompt cache could not fully reuse the prefix of the
-         * request named by `diagnostics.previous_message_id`.
+         * Request-level diagnostics. `null` when the request did not supply `diagnostics`, or when
+         * it did and no prompt-cache divergence was detected.
          */
         fun diagnostics(diagnostics: BetaDiagnostics?) =
             diagnostics(JsonField.ofNullable(diagnostics))
@@ -759,7 +767,11 @@ private constructor(
          */
         fun role(role: JsonValue) = apply { this.role = role }
 
-        /** Structured information about a refusal. */
+        /**
+         * Structured information about why model output stopped.
+         *
+         * This is `null` when the `stop_reason` has no additional detail to report.
+         */
         fun stopDetails(stopDetails: BetaRefusalStopDetails?) =
             stopDetails(JsonField.ofNullable(stopDetails))
 

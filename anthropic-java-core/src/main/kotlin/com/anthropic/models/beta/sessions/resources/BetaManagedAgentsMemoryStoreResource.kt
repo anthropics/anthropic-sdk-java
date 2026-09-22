@@ -71,7 +71,8 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Access mode for an attached memory store.
+     * Access mode for the mounted store. Defaults to `read_write`. `read_only` mounts the store as
+     * a read-only filesystem.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -248,7 +249,10 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** Access mode for an attached memory store. */
+        /**
+         * Access mode for the mounted store. Defaults to `read_write`. `read_only` mounts the store
+         * as a read-only filesystem.
+         */
         fun access(access: Access?) = access(JsonField.ofNullable(access))
 
         /** Alias for calling [Builder.access] with `access.orElse(null)`. */
@@ -559,7 +563,10 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Access mode for an attached memory store. */
+    /**
+     * Access mode for the mounted store. Defaults to `read_write`. `read_only` mounts the store as
+     * a read-only filesystem.
+     */
     class Access @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

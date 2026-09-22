@@ -36,7 +36,10 @@ private constructor(
     ) : this(effort, format, taskBudget, mutableMapOf())
 
     /**
-     * All possible effort levels.
+     * How much effort the model should put into its response. Higher effort levels may result in
+     * more thorough analysis but take longer.
+     *
+     * Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -53,7 +56,7 @@ private constructor(
     fun format(): Optional<BetaJsonOutputFormat> = format.getOptional("format")
 
     /**
-     * User-configurable total token budget across contexts.
+     * Configuration for token budget tracking across contexts.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -117,7 +120,12 @@ private constructor(
             additionalProperties = betaOutputConfig.additionalProperties.toMutableMap()
         }
 
-        /** All possible effort levels. */
+        /**
+         * How much effort the model should put into its response. Higher effort levels may result
+         * in more thorough analysis but take longer.
+         *
+         * Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
+         */
         fun effort(effort: Effort?) = effort(JsonField.ofNullable(effort))
 
         /** Alias for calling [Builder.effort] with `effort.orElse(null)`. */
@@ -149,7 +157,7 @@ private constructor(
          */
         fun format(format: JsonField<BetaJsonOutputFormat>) = apply { this.format = format }
 
-        /** User-configurable total token budget across contexts. */
+        /** Configuration for token budget tracking across contexts. */
         fun taskBudget(taskBudget: BetaTokenTaskBudget?) =
             taskBudget(JsonField.ofNullable(taskBudget))
 
@@ -236,7 +244,12 @@ private constructor(
             (format.asKnown().getOrNull()?.validity() ?: 0) +
             (taskBudget.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** All possible effort levels. */
+    /**
+     * How much effort the model should put into its response. Higher effort levels may result in
+     * more thorough analysis but take longer.
+     *
+     * Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
+     */
     class Effort @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

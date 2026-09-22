@@ -68,7 +68,8 @@ private constructor(
     fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
 
     /**
-     * Permission policy for tool execution.
+     * Permission policy for this tool. Controls whether tool calls are auto-approved or require
+     * confirmation.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -186,7 +187,10 @@ private constructor(
          */
         fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
 
-        /** Permission policy for tool execution. */
+        /**
+         * Permission policy for this tool. Controls whether tool calls are auto-approved or require
+         * confirmation.
+         */
         fun permissionPolicy(permissionPolicy: PermissionPolicy?) =
             permissionPolicy(JsonField.ofNullable(permissionPolicy))
 
@@ -309,7 +313,10 @@ private constructor(
             (permissionPolicy.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Permission policy for tool execution. */
+    /**
+     * Permission policy for this tool. Controls whether tool calls are auto-approved or require
+     * confirmation.
+     */
     @JsonDeserialize(using = PermissionPolicy.Deserializer::class)
     @JsonSerialize(using = PermissionPolicy.Serializer::class)
     class PermissionPolicy

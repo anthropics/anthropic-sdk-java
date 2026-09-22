@@ -71,7 +71,7 @@ private constructor(
     fun modelRequestStartId(): String = modelRequestStartId.getRequired("model_request_start_id")
 
     /**
-     * Token usage for a single model request.
+     * Token usage for this model request.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -79,7 +79,7 @@ private constructor(
     fun modelUsage(): BetaManagedAgentsSpanModelUsage = modelUsage.getRequired("model_usage")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the model request completed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -244,7 +244,7 @@ private constructor(
             this.modelRequestStartId = modelRequestStartId
         }
 
-        /** Token usage for a single model request. */
+        /** Token usage for this model request. */
         fun modelUsage(modelUsage: BetaManagedAgentsSpanModelUsage) =
             modelUsage(JsonField.of(modelUsage))
 
@@ -259,7 +259,7 @@ private constructor(
             this.modelUsage = modelUsage
         }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the model request completed. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**

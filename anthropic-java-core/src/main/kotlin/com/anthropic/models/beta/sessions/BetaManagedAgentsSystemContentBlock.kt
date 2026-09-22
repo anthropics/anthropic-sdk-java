@@ -15,7 +15,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Regular text content. */
+/** Content block in a mid-conversation system message. Text-only. */
 class BetaManagedAgentsSystemContentBlock
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

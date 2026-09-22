@@ -88,7 +88,7 @@ private constructor(
     fun fromSessionThreadId(): String = fromSessionThreadId.getRequired("from_session_thread_id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the message was received.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -452,7 +452,7 @@ private constructor(
             this.fromSessionThreadId = fromSessionThreadId
         }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the message was received. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**

@@ -32,7 +32,8 @@ private constructor(
     ) : this(category, type, mutableMapOf())
 
     /**
-     * The policy category that triggered a refusal.
+     * The policy category that triggered the `from` model's refusal at this hop. `null` when the
+     * refusal doesn't map to a named category. Same vocabulary as `stop_details.category`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -105,7 +106,10 @@ private constructor(
             additionalProperties = betaFallbackRefusalTrigger.additionalProperties.toMutableMap()
         }
 
-        /** The policy category that triggered a refusal. */
+        /**
+         * The policy category that triggered the `from` model's refusal at this hop. `null` when
+         * the refusal doesn't map to a named category. Same vocabulary as `stop_details.category`.
+         */
         fun category(category: Category?) = category(JsonField.ofNullable(category))
 
         /** Alias for calling [Builder.category] with `category.orElse(null)`. */
@@ -215,7 +219,10 @@ private constructor(
         (category.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("refusal")) 1 else 0 }
 
-    /** The policy category that triggered a refusal. */
+    /**
+     * The policy category that triggered the `from` model's refusal at this hop. `null` when the
+     * refusal doesn't map to a named category. Same vocabulary as `stop_details.category`.
+     */
     class Category @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

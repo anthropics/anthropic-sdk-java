@@ -62,7 +62,8 @@ private constructor(
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
-     * Updated authentication details for a credential.
+     * Updated authentication configuration. The `type` is immutable; the variant sent must match
+     * the stored credential's type.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -208,7 +209,10 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** Updated authentication details for a credential. */
+        /**
+         * Updated authentication configuration. The `type` is immutable; the variant sent must
+         * match the stored credential's type.
+         */
         fun auth(auth: Auth) = apply { body.auth(auth) }
 
         /**
@@ -447,7 +451,8 @@ private constructor(
         ) : this(auth, displayName, metadata, mutableMapOf())
 
         /**
-         * Updated authentication details for a credential.
+         * Updated authentication configuration. The `type` is immutable; the variant sent must
+         * match the stored credential's type.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -528,7 +533,10 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Updated authentication details for a credential. */
+            /**
+             * Updated authentication configuration. The `type` is immutable; the variant sent must
+             * match the stored credential's type.
+             */
             fun auth(auth: Auth) = auth(JsonField.of(auth))
 
             /**
@@ -679,7 +687,10 @@ private constructor(
             "Body{auth=$auth, displayName=$displayName, metadata=$metadata, additionalProperties=$additionalProperties}"
     }
 
-    /** Updated authentication details for a credential. */
+    /**
+     * Updated authentication configuration. The `type` is immutable; the variant sent must match
+     * the stored credential's type.
+     */
     @JsonDeserialize(using = Auth.Deserializer::class)
     @JsonSerialize(using = Auth.Serializer::class)
     class Auth

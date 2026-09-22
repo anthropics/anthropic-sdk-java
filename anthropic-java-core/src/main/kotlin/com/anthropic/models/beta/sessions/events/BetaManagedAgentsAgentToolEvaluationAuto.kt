@@ -33,9 +33,7 @@ private constructor(
     ) : this(evaluatedPermission, type, mutableMapOf())
 
     /**
-     * The server's per-invocation judgement under the auto permission policy. Its type always
-     * equals the event's top-level evaluated_permission. Open union: clients must tolerate unknown
-     * variants.
+     * The server's judgement for this invocation.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -117,11 +115,7 @@ private constructor(
                 betaManagedAgentsAgentToolEvaluationAuto.additionalProperties.toMutableMap()
         }
 
-        /**
-         * The server's per-invocation judgement under the auto permission policy. Its type always
-         * equals the event's top-level evaluated_permission. Open union: clients must tolerate
-         * unknown variants.
-         */
+        /** The server's judgement for this invocation. */
         fun evaluatedPermission(
             evaluatedPermission: BetaManagedAgentsAgentAutoEvaluatedPermission
         ) = evaluatedPermission(JsonField.of(evaluatedPermission))

@@ -68,7 +68,7 @@ private constructor(
         configs.getOptional("configs")
 
     /**
-     * Default configuration for all tools from an MCP server.
+     * Default configuration for all tools from this server.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -215,7 +215,7 @@ private constructor(
                 }
         }
 
-        /** Default configuration for all tools from an MCP server. */
+        /** Default configuration for all tools from this server. */
         fun defaultConfig(defaultConfig: BetaManagedAgentsMcpToolsetDefaultConfigParams?) =
             defaultConfig(JsonField.ofNullable(defaultConfig))
 

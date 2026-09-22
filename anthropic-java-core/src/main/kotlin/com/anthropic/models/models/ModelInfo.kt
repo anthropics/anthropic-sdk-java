@@ -66,7 +66,8 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * Model capability information.
+     * Object mapping capability names to their support details. Keys are always present for all
+     * known capabilities.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -236,7 +237,10 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** Model capability information. */
+        /**
+         * Object mapping capability names to their support details. Keys are always present for all
+         * known capabilities.
+         */
         fun capabilities(capabilities: ModelCapabilities?) =
             capabilities(JsonField.ofNullable(capabilities))
 

@@ -77,8 +77,9 @@ private constructor(
     fun environmentId(): String = body.environmentId()
 
     /**
-     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
-     * reaches `max_list_cost`.
+     * Enforced spend ceiling for the session. Omit to create an uncapped session. Every model the
+     * session can run — the agent's model and each callable agent's model — must have a public list
+     * price, or the request is rejected with reason `model_not_budgetable`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -323,8 +324,9 @@ private constructor(
         }
 
         /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
+         * Enforced spend ceiling for the session. Omit to create an uncapped session. Every model
+         * the session can run — the agent's model and each callable agent's model — must have a
+         * public list price, or the request is rejected with reason `model_not_budgetable`.
          */
         fun budget(budget: BetaManagedAgentsBudgetLimit) = apply { body.budget(budget) }
 
@@ -742,8 +744,9 @@ private constructor(
         fun environmentId(): String = environmentId.getRequired("environment_id")
 
         /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
+         * Enforced spend ceiling for the session. Omit to create an uncapped session. Every model
+         * the session can run — the agent's model and each callable agent's model — must have a
+         * public list price, or the request is rejected with reason `model_not_budgetable`.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -967,8 +970,10 @@ private constructor(
             }
 
             /**
-             * A hard spend ceiling. The session stops issuing new model requests once the tracked
-             * list cost reaches `max_list_cost`.
+             * Enforced spend ceiling for the session. Omit to create an uncapped session. Every
+             * model the session can run — the agent's model and each callable agent's model — must
+             * have a public list price, or the request is rejected with reason
+             * `model_not_budgetable`.
              */
             fun budget(budget: BetaManagedAgentsBudgetLimit) = budget(JsonField.of(budget))
 

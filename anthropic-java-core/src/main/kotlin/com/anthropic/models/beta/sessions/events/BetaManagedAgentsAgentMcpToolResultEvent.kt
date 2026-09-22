@@ -76,7 +76,7 @@ private constructor(
     fun mcpToolUseId(): String = mcpToolUseId.getRequired("mcp_tool_use_id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when this event was processed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -233,7 +233,7 @@ private constructor(
             this.mcpToolUseId = mcpToolUseId
         }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when this event was processed. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**

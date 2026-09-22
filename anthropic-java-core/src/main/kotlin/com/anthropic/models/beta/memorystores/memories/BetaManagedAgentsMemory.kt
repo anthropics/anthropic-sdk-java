@@ -108,7 +108,7 @@ private constructor(
     fun contentSizeBytes(): Int = contentSizeBytes.getRequired("content_size_bytes")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When this memory was created, in RFC 3339 format.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -150,7 +150,9 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When this memory was last modified, in RFC 3339 format. Use this as a cheap freshness signal;
+     * for who made the change, look up the head version's `created_by` via
+     * [List memory versions](/en/api/beta/memory_stores/memory_versions/list).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -363,7 +365,7 @@ private constructor(
             this.contentSizeBytes = contentSizeBytes
         }
 
-        /** A timestamp in RFC 3339 format */
+        /** When this memory was created, in RFC 3339 format. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
@@ -433,7 +435,11 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When this memory was last modified, in RFC 3339 format. Use this as a cheap freshness
+         * signal; for who made the change, look up the head version's `created_by` via
+         * [List memory versions](/en/api/beta/memory_stores/memory_versions/list).
+         */
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
         /**

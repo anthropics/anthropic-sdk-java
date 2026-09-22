@@ -46,8 +46,9 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * How fast the model generates output for the dream. Defaults to `standard`.
+     *
+     * Dreams accept only `standard`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -133,9 +134,9 @@ private constructor(
         fun id(id: JsonField<String>) = apply { this.id = id }
 
         /**
-         * Inference speed mode. `fast` provides significantly faster output token generation at
-         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-         * create time.
+         * How fast the model generates output for the dream. Defaults to `standard`.
+         *
+         * Dreams accept only `standard`.
          */
         fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
@@ -227,8 +228,9 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) + (speed.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * How fast the model generates output for the dream. Defaults to `standard`.
+     *
+     * Dreams accept only `standard`.
      */
     class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

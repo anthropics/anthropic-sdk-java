@@ -79,7 +79,7 @@ private constructor(
     fun content(): List<Content> = content.getRequired("content")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the message was sent.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -434,7 +434,7 @@ private constructor(
         fun addContent(redacted: BetaManagedAgentsRedactedBlock) =
             addContent(Content.ofRedacted(redacted))
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the message was sent. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**

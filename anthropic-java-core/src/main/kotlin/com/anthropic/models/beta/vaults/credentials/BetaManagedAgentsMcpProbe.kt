@@ -33,7 +33,8 @@ private constructor(
     ) : this(httpResponse, method, mutableMapOf())
 
     /**
-     * An HTTP response captured during a credential validation probe.
+     * The captured HTTP error response. Null when no HTTP response was received (timeout, DNS,
+     * TLS).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -105,7 +106,10 @@ private constructor(
             additionalProperties = betaManagedAgentsMcpProbe.additionalProperties.toMutableMap()
         }
 
-        /** An HTTP response captured during a credential validation probe. */
+        /**
+         * The captured HTTP error response. Null when no HTTP response was received (timeout, DNS,
+         * TLS).
+         */
         fun httpResponse(httpResponse: BetaManagedAgentsRefreshHttpResponse?) =
             httpResponse(JsonField.ofNullable(httpResponse))
 

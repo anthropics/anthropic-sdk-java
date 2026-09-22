@@ -125,7 +125,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A resolved agent reference with a concrete version.
+     * Reference to the agent this deployment runs, resolved to a concrete version.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -133,7 +133,7 @@ private constructor(
     fun agent(): BetaManagedAgentsAgentReference = agent.getRequired("agent")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Time the deployment was archived. Null if not archived.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -141,7 +141,7 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Time the deployment was created.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -190,7 +190,7 @@ private constructor(
     fun name(): String = name.getRequired("name")
 
     /**
-     * Why a deployment is paused. Non-null exactly when `status` is `paused`.
+     * Why the deployment is `paused`. Non-null exactly when `status` is `paused`; null otherwise.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -209,7 +209,8 @@ private constructor(
         resources.getRequired("resources")
 
     /**
-     * 5-field POSIX cron schedule with computed runtime timestamps.
+     * Recurring cron schedule. Presence enables scheduled execution; null means manual-only.
+     * Includes computed timestamps (next fire times, last run) on the cron variant.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -217,7 +218,8 @@ private constructor(
     fun schedule(): Optional<BetaManagedAgentsSchedule> = schedule.getOptional("schedule")
 
     /**
-     * Lifecycle status of a deployment.
+     * Computed status of the deployment: `active` or `paused`. Archived deployments report `active`
+     * with `archived_at` set.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -231,7 +233,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Time the deployment was last updated.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -247,8 +249,8 @@ private constructor(
     fun vaultIds(): List<String> = vaultIds.getRequired("vault_ids")
 
     /**
-     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
-     * reaches `max_list_cost`.
+     * Spend ceiling stamped onto each session created from this deployment. Absent when no budget
+     * is set.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -503,7 +505,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A resolved agent reference with a concrete version. */
+        /** Reference to the agent this deployment runs, resolved to a concrete version. */
         fun agent(agent: BetaManagedAgentsAgentReference) = agent(JsonField.of(agent))
 
         /**
@@ -515,7 +517,7 @@ private constructor(
          */
         fun agent(agent: JsonField<BetaManagedAgentsAgentReference>) = apply { this.agent = agent }
 
-        /** A timestamp in RFC 3339 format */
+        /** Time the deployment was archived. Null if not archived. */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
         /** Alias for calling [Builder.archivedAt] with `archivedAt.orElse(null)`. */
@@ -532,7 +534,7 @@ private constructor(
             this.archivedAt = archivedAt
         }
 
-        /** A timestamp in RFC 3339 format */
+        /** Time the deployment was created. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
@@ -683,7 +685,10 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
-        /** Why a deployment is paused. Non-null exactly when `status` is `paused`. */
+        /**
+         * Why the deployment is `paused`. Non-null exactly when `status` is `paused`; null
+         * otherwise.
+         */
         fun pausedReason(pausedReason: BetaManagedAgentsDeploymentPausedReason?) =
             pausedReason(JsonField.ofNullable(pausedReason))
 
@@ -999,7 +1004,10 @@ private constructor(
                     .build()
             )
 
-        /** 5-field POSIX cron schedule with computed runtime timestamps. */
+        /**
+         * Recurring cron schedule. Presence enables scheduled execution; null means manual-only.
+         * Includes computed timestamps (next fire times, last run) on the cron variant.
+         */
         fun schedule(schedule: BetaManagedAgentsSchedule?) =
             schedule(JsonField.ofNullable(schedule))
 
@@ -1017,7 +1025,10 @@ private constructor(
             this.schedule = schedule
         }
 
-        /** Lifecycle status of a deployment. */
+        /**
+         * Computed status of the deployment: `active` or `paused`. Archived deployments report
+         * `active` with `archived_at` set.
+         */
         fun status(status: BetaManagedAgentsDeploymentStatus) = status(JsonField.of(status))
 
         /**
@@ -1041,7 +1052,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** A timestamp in RFC 3339 format */
+        /** Time the deployment was last updated. */
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
         /**
@@ -1080,8 +1091,8 @@ private constructor(
         }
 
         /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
+         * Spend ceiling stamped onto each session created from this deployment. Absent when no
+         * budget is set.
          */
         fun budget(budget: BetaManagedAgentsBudgetLimit?) = budget(JsonField.ofNullable(budget))
 

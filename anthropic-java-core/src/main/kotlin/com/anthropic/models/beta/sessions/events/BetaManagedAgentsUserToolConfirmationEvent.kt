@@ -59,7 +59,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * UserToolConfirmationResult enum
+     * The confirmation result: 'allow' or 'deny'.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -92,7 +92,7 @@ private constructor(
     fun denyMessage(): Optional<String> = denyMessage.getOptional("deny_message")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the confirmation was processed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -230,7 +230,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** UserToolConfirmationResult enum */
+        /** The confirmation result: 'allow' or 'deny'. */
         fun result(result: Result) = result(JsonField.of(result))
 
         /**
@@ -286,7 +286,7 @@ private constructor(
          */
         fun denyMessage(denyMessage: JsonField<String>) = apply { this.denyMessage = denyMessage }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the confirmation was processed. */
         fun processedAt(processedAt: OffsetDateTime?) =
             processedAt(JsonField.ofNullable(processedAt))
 
@@ -422,7 +422,7 @@ private constructor(
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (if (sessionThreadId.asKnown().isPresent) 1 else 0)
 
-    /** UserToolConfirmationResult enum */
+    /** The confirmation result: 'allow' or 'deny'. */
     class Result @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

@@ -73,7 +73,7 @@ private constructor(
     fun name(): String = name.getRequired("name")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when this tool use was processed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -231,7 +231,7 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when this tool use was processed. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**

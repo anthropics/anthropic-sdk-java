@@ -34,7 +34,8 @@ private constructor(
     ) : this(scheduledAt, type, mutableMapOf())
 
     /**
-     * A timestamp in RFC 3339 format
+     * The UTC instant at which the cron expression matched in the configured timezone, before
+     * jitter is applied. At most one run is recorded per (`deployment_id`, `scheduled_at`) pair.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -107,7 +108,11 @@ private constructor(
                 betaManagedAgentsScheduleTriggerContext.additionalProperties.toMutableMap()
         }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * The UTC instant at which the cron expression matched in the configured timezone, before
+         * jitter is applied. At most one run is recorded per (`deployment_id`, `scheduled_at`)
+         * pair.
+         */
         fun scheduledAt(scheduledAt: OffsetDateTime) = scheduledAt(JsonField.of(scheduledAt))
 
         /**

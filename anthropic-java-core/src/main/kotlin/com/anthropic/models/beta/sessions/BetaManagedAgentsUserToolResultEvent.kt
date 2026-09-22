@@ -120,7 +120,7 @@ private constructor(
     fun isError(): Optional<Boolean> = isError.getOptional("is_error")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when this result was processed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -513,7 +513,7 @@ private constructor(
          */
         fun isError(isError: JsonField<Boolean>) = apply { this.isError = isError }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when this result was processed. */
         fun processedAt(processedAt: OffsetDateTime?) =
             processedAt(JsonField.ofNullable(processedAt))
 

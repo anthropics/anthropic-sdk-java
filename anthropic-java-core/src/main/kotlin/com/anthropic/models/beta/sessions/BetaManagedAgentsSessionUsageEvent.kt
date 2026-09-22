@@ -55,7 +55,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the snapshot was taken.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -69,7 +69,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Point-in-time snapshot of a session's cumulative usage.
+     * The session's cumulative usage at the snapshot time.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -77,8 +77,7 @@ private constructor(
     fun usage(): BetaManagedAgentsSessionUsageSnapshot = usage.getRequired("usage")
 
     /**
-     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
-     * reaches `max_list_cost`.
+     * The session's configured budget at the snapshot time, or null when the session has no budget.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -188,7 +187,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the snapshot was taken. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**
@@ -212,7 +211,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** Point-in-time snapshot of a session's cumulative usage. */
+        /** The session's cumulative usage at the snapshot time. */
         fun usage(usage: BetaManagedAgentsSessionUsageSnapshot) = usage(JsonField.of(usage))
 
         /**
@@ -227,8 +226,8 @@ private constructor(
         }
 
         /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
+         * The session's configured budget at the snapshot time, or null when the session has no
+         * budget.
          */
         fun budget(budget: BetaManagedAgentsBudgetLimit?) = budget(JsonField.ofNullable(budget))
 

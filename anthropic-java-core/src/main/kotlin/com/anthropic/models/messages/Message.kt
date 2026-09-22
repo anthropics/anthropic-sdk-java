@@ -91,7 +91,9 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * Information about the container used in the request (for the code execution tool)
+     * Information about the container used in this request.
+     *
+     * This will be non-null if a container tool (e.g. code execution) was used.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -156,7 +158,9 @@ private constructor(
     @JsonProperty("role") @ExcludeMissing fun _role(): JsonValue = role
 
     /**
-     * Structured information about a refusal.
+     * Structured information about why model output stopped.
+     *
+     * This is `null` when the `stop_reason` has no additional detail to report.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -369,7 +373,11 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** Information about the container used in the request (for the code execution tool) */
+        /**
+         * Information about the container used in this request.
+         *
+         * This will be non-null if a container tool (e.g. code execution) was used.
+         */
         fun container(container: Container?) = container(JsonField.ofNullable(container))
 
         /** Alias for calling [Builder.container] with `container.orElse(null)`. */
@@ -565,7 +573,11 @@ private constructor(
          */
         fun role(role: JsonValue) = apply { this.role = role }
 
-        /** Structured information about a refusal. */
+        /**
+         * Structured information about why model output stopped.
+         *
+         * This is `null` when the `stop_reason` has no additional detail to report.
+         */
         fun stopDetails(stopDetails: RefusalStopDetails?) =
             stopDetails(JsonField.ofNullable(stopDetails))
 

@@ -66,7 +66,7 @@ private constructor(
 
     /**
      * Controls for block binding: what happens when a thinking block this request sends back fails
-     * the conversation check. Every field is optional; an empty object means every default.
+     * the conversation check. `null`, absent or an empty object means every default.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -196,8 +196,7 @@ private constructor(
 
         /**
          * Controls for block binding: what happens when a thinking block this request sends back
-         * fails the conversation check. Every field is optional; an empty object means every
-         * default.
+         * fails the conversation check. `null`, absent or an empty object means every default.
          */
         fun blockBinding(blockBinding: BetaThinkingBlockBinding?) =
             blockBinding(JsonField.ofNullable(blockBinding))

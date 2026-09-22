@@ -60,7 +60,7 @@ private constructor(
     fun description(): String = description.getRequired("description")
 
     /**
-     * Rubric for grading the quality of an outcome.
+     * How to grade the outcome. Text or file reference.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -174,7 +174,7 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
-        /** Rubric for grading the quality of an outcome. */
+        /** How to grade the outcome. Text or file reference. */
         fun rubric(rubric: Rubric) = rubric(JsonField.of(rubric))
 
         /**
@@ -344,7 +344,7 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (maxIterations.asKnown().isPresent) 1 else 0)
 
-    /** Rubric for grading the quality of an outcome. */
+    /** How to grade the outcome. Text or file reference. */
     @JsonDeserialize(using = Rubric.Deserializer::class)
     @JsonSerialize(using = Rubric.Serializer::class)
     class Rubric

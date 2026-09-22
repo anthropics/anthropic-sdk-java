@@ -64,7 +64,7 @@ private constructor(
     fun error(): Error = error.getRequired("error")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the error occurred.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -213,7 +213,7 @@ private constructor(
         fun error(credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError) =
             error(Error.ofCredentialHostUnreachable(credentialHostUnreachable))
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the error occurred. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**

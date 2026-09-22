@@ -47,7 +47,7 @@ private constructor(
     )
 
     /**
-     * Indicates whether a capability is supported.
+     * Whether the clear_thinking_20251015 strategy is supported.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -56,7 +56,7 @@ private constructor(
         clearThinking20251015.getOptional("clear_thinking_20251015")
 
     /**
-     * Indicates whether a capability is supported.
+     * Whether the clear_tool_uses_20250919 strategy is supported.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -65,7 +65,7 @@ private constructor(
         clearToolUses20250919.getOptional("clear_tool_uses_20250919")
 
     /**
-     * Indicates whether a capability is supported.
+     * Whether the compact_20260112 strategy is supported.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -166,7 +166,7 @@ private constructor(
                     betaContextManagementCapability.additionalProperties.toMutableMap()
             }
 
-        /** Indicates whether a capability is supported. */
+        /** Whether the clear_thinking_20251015 strategy is supported. */
         fun clearThinking20251015(clearThinking20251015: BetaCapabilitySupport?) =
             clearThinking20251015(JsonField.ofNullable(clearThinking20251015))
 
@@ -188,7 +188,7 @@ private constructor(
             this.clearThinking20251015 = clearThinking20251015
         }
 
-        /** Indicates whether a capability is supported. */
+        /** Whether the clear_tool_uses_20250919 strategy is supported. */
         fun clearToolUses20250919(clearToolUses20250919: BetaCapabilitySupport?) =
             clearToolUses20250919(JsonField.ofNullable(clearToolUses20250919))
 
@@ -210,7 +210,7 @@ private constructor(
             this.clearToolUses20250919 = clearToolUses20250919
         }
 
-        /** Indicates whether a capability is supported. */
+        /** Whether the compact_20260112 strategy is supported. */
         fun compact20260112(compact20260112: BetaCapabilitySupport?) =
             compact20260112(JsonField.ofNullable(compact20260112))
 

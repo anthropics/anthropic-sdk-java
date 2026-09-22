@@ -82,11 +82,7 @@ private constructor(
     fun description(): Optional<String> = body.description()
 
     /**
-     * Does the incoming JWT qualify?
-     *
-     * All populated fields must pass; omitted fields are skipped. At least one of `subject_prefix`
-     * (other than a wildcard-only value like `*`), `claims`, or `condition` is required; `audience`
-     * alone is not sufficient.
+     * Replaces the entire match object. All populated matcher fields must pass.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -113,7 +109,7 @@ private constructor(
     fun oauthScope(): Optional<String> = body.oauthScope()
 
     /**
-     * Bind to a fixed service account by ID.
+     * Replaces the entire target object. Currently always a `service_account` target.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -358,13 +354,7 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
-        /**
-         * Does the incoming JWT qualify?
-         *
-         * All populated fields must pass; omitted fields are skipped. At least one of
-         * `subject_prefix` (other than a wildcard-only value like `*`), `claims`, or `condition` is
-         * required; `audience` alone is not sufficient.
-         */
+        /** Replaces the entire match object. All populated matcher fields must pass. */
         fun match(match: BetaFederationRuleMatch?) = apply { body.match(match) }
 
         /** Alias for calling [Builder.match] with `match.orElse(null)`. */
@@ -415,7 +405,7 @@ private constructor(
          */
         fun oauthScope(oauthScope: JsonField<String>) = apply { body.oauthScope(oauthScope) }
 
-        /** Bind to a fixed service account by ID. */
+        /** Replaces the entire target object. Currently always a `service_account` target. */
         fun target(target: BetaServiceAccountTarget?) = apply { body.target(target) }
 
         /** Alias for calling [Builder.target] with `target.orElse(null)`. */
@@ -726,11 +716,7 @@ private constructor(
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
-         * Does the incoming JWT qualify?
-         *
-         * All populated fields must pass; omitted fields are skipped. At least one of
-         * `subject_prefix` (other than a wildcard-only value like `*`), `claims`, or `condition` is
-         * required; `audience` alone is not sufficient.
+         * Replaces the entire match object. All populated matcher fields must pass.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -757,7 +743,7 @@ private constructor(
         fun oauthScope(): Optional<String> = oauthScope.getOptional("oauth_scope")
 
         /**
-         * Bind to a fixed service account by ID.
+         * Replaces the entire target object. Currently always a `service_account` target.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -986,13 +972,7 @@ private constructor(
                 this.description = description
             }
 
-            /**
-             * Does the incoming JWT qualify?
-             *
-             * All populated fields must pass; omitted fields are skipped. At least one of
-             * `subject_prefix` (other than a wildcard-only value like `*`), `claims`, or
-             * `condition` is required; `audience` alone is not sufficient.
-             */
+            /** Replaces the entire match object. All populated matcher fields must pass. */
             fun match(match: BetaFederationRuleMatch?) = match(JsonField.ofNullable(match))
 
             /** Alias for calling [Builder.match] with `match.orElse(null)`. */
@@ -1044,7 +1024,7 @@ private constructor(
              */
             fun oauthScope(oauthScope: JsonField<String>) = apply { this.oauthScope = oauthScope }
 
-            /** Bind to a fixed service account by ID. */
+            /** Replaces the entire target object. Currently always a `service_account` target. */
             fun target(target: BetaServiceAccountTarget?) = target(JsonField.ofNullable(target))
 
             /** Alias for calling [Builder.target] with `target.orElse(null)`. */

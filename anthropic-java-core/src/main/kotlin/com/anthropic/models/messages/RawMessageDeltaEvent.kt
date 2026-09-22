@@ -291,7 +291,9 @@ private constructor(
         ) : this(container, stopDetails, stopReason, stopSequence, mutableMapOf())
 
         /**
-         * Information about the container used in the request (for the code execution tool)
+         * Information about the container used in this request.
+         *
+         * This will be non-null if a container tool (e.g. code execution) was used.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -299,7 +301,9 @@ private constructor(
         fun container(): Optional<Container> = container.getOptional("container")
 
         /**
-         * Structured information about a refusal.
+         * Structured information about why model output stopped.
+         *
+         * This is `null` when the `stop_reason` has no additional detail to report.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -401,7 +405,11 @@ private constructor(
                 additionalProperties = delta.additionalProperties.toMutableMap()
             }
 
-            /** Information about the container used in the request (for the code execution tool) */
+            /**
+             * Information about the container used in this request.
+             *
+             * This will be non-null if a container tool (e.g. code execution) was used.
+             */
             fun container(container: Container?) = container(JsonField.ofNullable(container))
 
             /** Alias for calling [Builder.container] with `container.orElse(null)`. */
@@ -416,7 +424,11 @@ private constructor(
              */
             fun container(container: JsonField<Container>) = apply { this.container = container }
 
-            /** Structured information about a refusal. */
+            /**
+             * Structured information about why model output stopped.
+             *
+             * This is `null` when the `stop_reason` has no additional detail to report.
+             */
             fun stopDetails(stopDetails: RefusalStopDetails?) =
                 stopDetails(JsonField.ofNullable(stopDetails))
 

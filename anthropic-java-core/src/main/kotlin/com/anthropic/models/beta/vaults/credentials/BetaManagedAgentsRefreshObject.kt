@@ -34,7 +34,8 @@ private constructor(
     ) : this(httpResponse, status, mutableMapOf())
 
     /**
-     * An HTTP response captured during a credential validation probe.
+     * The captured HTTP error response from the token endpoint. Populated only when `status` is
+     * `failed`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -43,7 +44,7 @@ private constructor(
         httpResponse.getOptional("http_response")
 
     /**
-     * Outcome of a refresh-token exchange attempted during credential validation.
+     * Outcome of the refresh attempt.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -108,7 +109,10 @@ private constructor(
                 betaManagedAgentsRefreshObject.additionalProperties.toMutableMap()
         }
 
-        /** An HTTP response captured during a credential validation probe. */
+        /**
+         * The captured HTTP error response from the token endpoint. Populated only when `status` is
+         * `failed`.
+         */
         fun httpResponse(httpResponse: BetaManagedAgentsRefreshHttpResponse?) =
             httpResponse(JsonField.ofNullable(httpResponse))
 
@@ -127,7 +131,7 @@ private constructor(
             this.httpResponse = httpResponse
         }
 
-        /** Outcome of a refresh-token exchange attempted during credential validation. */
+        /** Outcome of the refresh attempt. */
         fun status(status: Status) = status(JsonField.of(status))
 
         /**
@@ -216,7 +220,7 @@ private constructor(
         (httpResponse.asKnown().getOrNull()?.validity() ?: 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Outcome of a refresh-token exchange attempted during credential validation. */
+    /** Outcome of the refresh attempt. */
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

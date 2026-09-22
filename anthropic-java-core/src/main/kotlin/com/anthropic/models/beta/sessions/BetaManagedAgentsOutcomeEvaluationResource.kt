@@ -58,7 +58,7 @@ private constructor(
     )
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the outcome reached a terminal result. Null while `pending`/`running`/`evaluating`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -225,7 +225,9 @@ private constructor(
                 betaManagedAgentsOutcomeEvaluationResource.additionalProperties.toMutableMap()
         }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When the outcome reached a terminal result. Null while `pending`/`running`/`evaluating`.
+         */
         fun completedAt(completedAt: OffsetDateTime?) =
             completedAt(JsonField.ofNullable(completedAt))
 

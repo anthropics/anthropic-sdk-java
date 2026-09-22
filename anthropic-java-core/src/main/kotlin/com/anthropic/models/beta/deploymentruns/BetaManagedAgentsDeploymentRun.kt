@@ -86,7 +86,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A resolved agent reference with a concrete version.
+     * Snapshot of the agent at fire time. Always fully resolved — deployments pin agent + version.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -94,7 +94,7 @@ private constructor(
     fun agent(): BetaManagedAgentsAgentReference = agent.getRequired("agent")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Time this run record was persisted.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -110,8 +110,8 @@ private constructor(
     fun deploymentId(): String = deploymentId.getRequired("deployment_id")
 
     /**
-     * Why the run failed to create a session. The type identifies the failure; message is
-     * human-readable detail.
+     * Populated on creation failure. Null on success. Exactly one of `session_id` or `error` is
+     * non-null.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -128,7 +128,7 @@ private constructor(
     fun sessionId(): Optional<String> = sessionId.getOptional("session_id")
 
     /**
-     * Describes what triggered a deployment run, with trigger-specific metadata.
+     * What triggered this run and trigger-specific metadata.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -277,7 +277,10 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A resolved agent reference with a concrete version. */
+        /**
+         * Snapshot of the agent at fire time. Always fully resolved — deployments pin agent +
+         * version.
+         */
         fun agent(agent: BetaManagedAgentsAgentReference) = agent(JsonField.of(agent))
 
         /**
@@ -289,7 +292,7 @@ private constructor(
          */
         fun agent(agent: JsonField<BetaManagedAgentsAgentReference>) = apply { this.agent = agent }
 
-        /** A timestamp in RFC 3339 format */
+        /** Time this run record was persisted. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
@@ -316,8 +319,8 @@ private constructor(
         }
 
         /**
-         * Why the run failed to create a session. The type identifies the failure; message is
-         * human-readable detail.
+         * Populated on creation failure. Null on success. Exactly one of `session_id` or `error` is
+         * non-null.
          */
         fun error(error: Error?) = error(JsonField.ofNullable(error))
 
@@ -717,7 +720,7 @@ private constructor(
          */
         fun sessionId(sessionId: JsonField<String>) = apply { this.sessionId = sessionId }
 
-        /** Describes what triggered a deployment run, with trigger-specific metadata. */
+        /** What triggered this run and trigger-specific metadata. */
         fun triggerContext(triggerContext: BetaManagedAgentsTriggerContext) =
             triggerContext(JsonField.of(triggerContext))
 
@@ -876,8 +879,8 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
-     * Why the run failed to create a session. The type identifies the failure; message is
-     * human-readable detail.
+     * Populated on creation failure. Null on success. Exactly one of `session_id` or `error` is
+     * non-null.
      */
     @JsonDeserialize(using = Error.Deserializer::class)
     @JsonSerialize(using = Error.Serializer::class)

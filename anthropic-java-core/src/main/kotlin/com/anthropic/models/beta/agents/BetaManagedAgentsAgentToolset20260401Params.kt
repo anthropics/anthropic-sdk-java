@@ -59,7 +59,7 @@ private constructor(
         configs.getOptional("configs")
 
     /**
-     * Default configuration for all tools in a toolset.
+     * Default configuration applied to all tools in this set.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -236,7 +236,7 @@ private constructor(
         fun addConfig(webSearch: BetaManagedAgentsWebSearchToolConfigParams) =
             addConfig(BetaManagedAgentsAgentToolConfigParams.ofWebSearch(webSearch))
 
-        /** Default configuration for all tools in a toolset. */
+        /** Default configuration applied to all tools in this set. */
         fun defaultConfig(defaultConfig: BetaManagedAgentsAgentToolsetDefaultConfigParams?) =
             defaultConfig(JsonField.ofNullable(defaultConfig))
 

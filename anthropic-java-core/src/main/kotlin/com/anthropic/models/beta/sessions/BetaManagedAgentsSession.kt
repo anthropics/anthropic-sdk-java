@@ -129,7 +129,7 @@ private constructor(
     fun agent(): BetaManagedAgentsSessionAgent = agent.getRequired("agent")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the session was archived. Null if not archived.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -137,8 +137,7 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
-     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
-     * reaches `max_list_cost`.
+     * The session's enforced spend ceiling, or null when no budget is set.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -181,7 +180,7 @@ private constructor(
     fun resources(): List<BetaManagedAgentsSessionResource> = resources.getRequired("resources")
 
     /**
-     * Timing statistics for a session.
+     * Timing statistics for the session.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -217,7 +216,7 @@ private constructor(
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
     /**
-     * Cumulative token usage for a session across all turns.
+     * Cumulative token usage for the session.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -503,7 +502,7 @@ private constructor(
          */
         fun agent(agent: JsonField<BetaManagedAgentsSessionAgent>) = apply { this.agent = agent }
 
-        /** A timestamp in RFC 3339 format */
+        /** When the session was archived. Null if not archived. */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
         /** Alias for calling [Builder.archivedAt] with `archivedAt.orElse(null)`. */
@@ -520,10 +519,7 @@ private constructor(
             this.archivedAt = archivedAt
         }
 
-        /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
-         */
+        /** The session's enforced spend ceiling, or null when no budget is set. */
         fun budget(budget: BetaManagedAgentsBudgetLimit?) = budget(JsonField.ofNullable(budget))
 
         /** Alias for calling [Builder.budget] with `budget.orElse(null)`. */
@@ -683,7 +679,7 @@ private constructor(
                     .build()
             )
 
-        /** Timing statistics for a session. */
+        /** Timing statistics for the session. */
         fun stats(stats: BetaManagedAgentsSessionStats) = stats(JsonField.of(stats))
 
         /**
@@ -741,7 +737,7 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
 
-        /** Cumulative token usage for a session across all turns. */
+        /** Cumulative token usage for the session. */
         fun usage(usage: BetaManagedAgentsSessionUsage) = usage(JsonField.of(usage))
 
         /**

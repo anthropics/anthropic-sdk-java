@@ -155,13 +155,14 @@ private constructor(
     fun cacheControl(): Optional<BetaCacheControlEphemeral> = body.cacheControl()
 
     /**
-     * Compact the whole conversation and return a signed `compaction` block, alone, that a later
-     * request sends back first in `messages`, in place of the messages it summarizes. There is no
-     * trigger and no pause flag: sending the parameter compacts, and nothing is sampled after the
-     * block.
+     * Compaction configuration.
      *
-     * The summarization prompt is the server's own unless `instructions` are given, which then
-     * replace it for this request; a value that is empty or only whitespace counts as absent.
+     * When set on `POST /v1/messages`, the request is a compaction request: the conversation in
+     * `messages` is summarized and the response holds only the resulting `compaction` block
+     * (`stop_reason` `"compaction"`), which later requests send first in `messages` in place of the
+     * messages it summarizes. `POST /v1/messages/count_tokens` accepts this parameter and ignores
+     * it: the count it returns is for the conversation in `messages` as sent. Cannot be combined
+     * with `context_management`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -209,8 +210,8 @@ private constructor(
     fun outputFormat(): Optional<BetaJsonOutputFormat> = body.outputFormat()
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+     * inference.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -733,13 +734,14 @@ private constructor(
         }
 
         /**
-         * Compact the whole conversation and return a signed `compaction` block, alone, that a
-         * later request sends back first in `messages`, in place of the messages it summarizes.
-         * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
-         * sampled after the block.
+         * Compaction configuration.
          *
-         * The summarization prompt is the server's own unless `instructions` are given, which then
-         * replace it for this request; a value that is empty or only whitespace counts as absent.
+         * When set on `POST /v1/messages`, the request is a compaction request: the conversation in
+         * `messages` is summarized and the response holds only the resulting `compaction` block
+         * (`stop_reason` `"compaction"`), which later requests send first in `messages` in place of
+         * the messages it summarizes. `POST /v1/messages/count_tokens` accepts this parameter and
+         * ignores it: the count it returns is for the conversation in `messages` as sent. Cannot be
+         * combined with `context_management`.
          */
         fun compaction(compaction: BetaCompactionConfig?) = apply { body.compaction(compaction) }
 
@@ -852,9 +854,8 @@ private constructor(
         }
 
         /**
-         * Inference speed mode. `fast` provides significantly faster output token generation at
-         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-         * create time.
+         * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+         * inference.
          */
         fun speed(speed: Speed?) = apply { body.speed(speed) }
 
@@ -1586,13 +1587,14 @@ private constructor(
             cacheControl.getOptional("cache_control")
 
         /**
-         * Compact the whole conversation and return a signed `compaction` block, alone, that a
-         * later request sends back first in `messages`, in place of the messages it summarizes.
-         * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
-         * sampled after the block.
+         * Compaction configuration.
          *
-         * The summarization prompt is the server's own unless `instructions` are given, which then
-         * replace it for this request; a value that is empty or only whitespace counts as absent.
+         * When set on `POST /v1/messages`, the request is a compaction request: the conversation in
+         * `messages` is summarized and the response holds only the resulting `compaction` block
+         * (`stop_reason` `"compaction"`), which later requests send first in `messages` in place of
+         * the messages it summarizes. `POST /v1/messages/count_tokens` accepts this parameter and
+         * ignores it: the count it returns is for the conversation in `messages` as sent. Cannot be
+         * combined with `context_management`.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1643,9 +1645,8 @@ private constructor(
             outputFormat.getOptional("output_format")
 
         /**
-         * Inference speed mode. `fast` provides significantly faster output token generation at
-         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-         * create time.
+         * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+         * inference.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -2185,14 +2186,14 @@ private constructor(
             }
 
             /**
-             * Compact the whole conversation and return a signed `compaction` block, alone, that a
-             * later request sends back first in `messages`, in place of the messages it summarizes.
-             * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
-             * sampled after the block.
+             * Compaction configuration.
              *
-             * The summarization prompt is the server's own unless `instructions` are given, which
-             * then replace it for this request; a value that is empty or only whitespace counts as
-             * absent.
+             * When set on `POST /v1/messages`, the request is a compaction request: the
+             * conversation in `messages` is summarized and the response holds only the resulting
+             * `compaction` block (`stop_reason` `"compaction"`), which later requests send first in
+             * `messages` in place of the messages it summarizes. `POST /v1/messages/count_tokens`
+             * accepts this parameter and ignores it: the count it returns is for the conversation
+             * in `messages` as sent. Cannot be combined with `context_management`.
              */
             fun compaction(compaction: BetaCompactionConfig?) =
                 compaction(JsonField.ofNullable(compaction))
@@ -2310,9 +2311,8 @@ private constructor(
             }
 
             /**
-             * Inference speed mode. `fast` provides significantly faster output token generation at
-             * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-             * create time.
+             * The inference speed mode for this request. `"fast"` enables high
+             * output-tokens-per-second inference.
              */
             fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
@@ -2891,8 +2891,8 @@ private constructor(
     }
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+     * inference.
      */
     class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

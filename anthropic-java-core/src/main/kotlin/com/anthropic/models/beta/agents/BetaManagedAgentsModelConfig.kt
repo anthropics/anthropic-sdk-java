@@ -61,8 +61,8 @@ private constructor(
     fun id(): BetaManagedAgentsModel = id.getRequired("id")
 
     /**
-     * How hard Claude works on each turn. Sets `output_config.effort` on every Messages call the
-     * session makes.
+     * How hard Claude works on each inference call. One of `low`, `medium`, `high`, `xhigh`, `max`.
+     * Always present; resolved to the per-model default at save time when not supplied.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -80,7 +80,8 @@ private constructor(
 
     /**
      * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * pricing. Defaults to `standard`. Not all models support `fast`; invalid combinations are
+     * rejected at create time.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -193,8 +194,8 @@ private constructor(
         fun id(value: String) = id(BetaManagedAgentsModel.of(value))
 
         /**
-         * How hard Claude works on each turn. Sets `output_config.effort` on every Messages call
-         * the session makes.
+         * How hard Claude works on each inference call. One of `low`, `medium`, `high`, `xhigh`,
+         * `max`. Always present; resolved to the per-model default at save time when not supplied.
          */
         fun effort(effort: Effort) = effort(JsonField.of(effort))
 
@@ -240,8 +241,8 @@ private constructor(
 
         /**
          * Inference speed mode. `fast` provides significantly faster output token generation at
-         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-         * create time.
+         * premium pricing. Defaults to `standard`. Not all models support `fast`; invalid
+         * combinations are rejected at create time.
          */
         fun speed(speed: Speed) = speed(JsonField.of(speed))
 
@@ -337,8 +338,8 @@ private constructor(
             (speed.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
-     * How hard Claude works on each turn. Sets `output_config.effort` on every Messages call the
-     * session makes.
+     * How hard Claude works on each inference call. One of `low`, `medium`, `high`, `xhigh`, `max`.
+     * Always present; resolved to the per-model default at save time when not supplied.
      */
     @JsonDeserialize(using = Effort.Deserializer::class)
     @JsonSerialize(using = Effort.Serializer::class)
@@ -858,7 +859,8 @@ private constructor(
 
     /**
      * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * pricing. Defaults to `standard`. Not all models support `fast`; invalid combinations are
+     * rejected at create time.
      */
     class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 

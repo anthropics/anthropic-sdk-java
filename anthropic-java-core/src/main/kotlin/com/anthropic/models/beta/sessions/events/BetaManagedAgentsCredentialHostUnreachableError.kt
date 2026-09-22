@@ -71,7 +71,7 @@ private constructor(
     fun message(): String = message.getRequired("message")
 
     /**
-     * What the client should do next in response to this error.
+     * What the client should do next.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -210,7 +210,7 @@ private constructor(
          */
         fun message(message: JsonField<String>) = apply { this.message = message }
 
-        /** What the client should do next in response to this error. */
+        /** What the client should do next. */
         fun retryStatus(retryStatus: RetryStatus) = retryStatus(JsonField.of(retryStatus))
 
         /**
@@ -347,7 +347,7 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (vaultId.asKnown().isPresent) 1 else 0)
 
-    /** What the client should do next in response to this error. */
+    /** What the client should do next. */
     @JsonDeserialize(using = RetryStatus.Deserializer::class)
     @JsonSerialize(using = RetryStatus.Serializer::class)
     class RetryStatus

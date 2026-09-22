@@ -83,7 +83,7 @@ private constructor(
     fun hasRefreshToken(): Boolean = hasRefreshToken.getRequired("has_refresh_token")
 
     /**
-     * The failing step of an MCP validation probe.
+     * Details of the failing MCP probe step. Null when the probe succeeded.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -91,7 +91,7 @@ private constructor(
     fun mcpProbe(): Optional<BetaManagedAgentsMcpProbe> = mcpProbe.getOptional("mcp_probe")
 
     /**
-     * Outcome of a refresh-token exchange attempted during credential validation.
+     * Details of the refresh-token exchange attempted on a 401. Null when no refresh was attempted.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -99,7 +99,7 @@ private constructor(
     fun refresh(): Optional<BetaManagedAgentsRefreshObject> = refresh.getOptional("refresh")
 
     /**
-     * Overall verdict of a credential validation probe.
+     * Overall verdict of the validation probe.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -113,7 +113,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the validation probe was performed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -287,7 +287,7 @@ private constructor(
             this.hasRefreshToken = hasRefreshToken
         }
 
-        /** The failing step of an MCP validation probe. */
+        /** Details of the failing MCP probe step. Null when the probe succeeded. */
         fun mcpProbe(mcpProbe: BetaManagedAgentsMcpProbe?) =
             mcpProbe(JsonField.ofNullable(mcpProbe))
 
@@ -305,7 +305,10 @@ private constructor(
             this.mcpProbe = mcpProbe
         }
 
-        /** Outcome of a refresh-token exchange attempted during credential validation. */
+        /**
+         * Details of the refresh-token exchange attempted on a 401. Null when no refresh was
+         * attempted.
+         */
         fun refresh(refresh: BetaManagedAgentsRefreshObject?) =
             refresh(JsonField.ofNullable(refresh))
 
@@ -324,7 +327,7 @@ private constructor(
             this.refresh = refresh
         }
 
-        /** Overall verdict of a credential validation probe. */
+        /** Overall verdict of the validation probe. */
         fun status(status: BetaManagedAgentsCredentialValidationStatus) =
             status(JsonField.of(status))
 
@@ -349,7 +352,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** A timestamp in RFC 3339 format */
+        /** When the validation probe was performed. */
         fun validatedAt(validatedAt: OffsetDateTime) = validatedAt(JsonField.of(validatedAt))
 
         /**

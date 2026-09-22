@@ -120,7 +120,7 @@ private constructor(
     fun model(): BetaManagedAgentsModelConfig = model.getRequired("model")
 
     /**
-     * Resolved coordinator topology with full agent definitions for each roster member.
+     * Resolved multiagent orchestration configuration. Null when the agent is single-threaded.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -388,7 +388,9 @@ private constructor(
          */
         fun model(model: JsonField<BetaManagedAgentsModelConfig>) = apply { this.model = model }
 
-        /** Resolved coordinator topology with full agent definitions for each roster member. */
+        /**
+         * Resolved multiagent orchestration configuration. Null when the agent is single-threaded.
+         */
         fun multiagent(multiagent: BetaManagedAgentsSessionMultiagentCoordinator?) =
             multiagent(JsonField.ofNullable(multiagent))
 

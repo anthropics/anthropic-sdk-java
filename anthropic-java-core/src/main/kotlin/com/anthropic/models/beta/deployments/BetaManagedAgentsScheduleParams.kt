@@ -15,7 +15,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** 5-field POSIX cron schedule. Literal wall-clock matching in the configured timezone. */
+/** A recurring schedule. Discriminated union — only cron is supported currently. */
 class BetaManagedAgentsScheduleParams
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

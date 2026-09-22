@@ -101,7 +101,11 @@ private constructor(
         cacheReadInputTokens.getOptional("cache_read_input_tokens")
 
     /**
-     * Outcome of the ``fallback_credit_token`` presented on this request.
+     * Outcome of the `fallback_credit_token` presented on this request.
+     *
+     * Present on every response to a non-batch request that carried a `fallback_credit_token`, in
+     * either redemption mode; absent otherwise (batch items accept and ignore the token and carry
+     * no outcome object).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -367,7 +371,13 @@ private constructor(
             this.cacheReadInputTokens = cacheReadInputTokens
         }
 
-        /** Outcome of the ``fallback_credit_token`` presented on this request. */
+        /**
+         * Outcome of the `fallback_credit_token` presented on this request.
+         *
+         * Present on every response to a non-batch request that carried a `fallback_credit_token`,
+         * in either redemption mode; absent otherwise (batch items accept and ignore the token and
+         * carry no outcome object).
+         */
         fun fallbackCredit(fallbackCredit: BetaFallbackCreditUsage?) =
             fallbackCredit(JsonField.ofNullable(fallbackCredit))
 

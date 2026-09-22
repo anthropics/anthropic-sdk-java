@@ -15,7 +15,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** The memory store that holds a dream's result, as an entry in `outputs`. */
+/** An entry in a dream's `outputs` that references the memory store holding its result. */
 class BetaDreamOutput
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

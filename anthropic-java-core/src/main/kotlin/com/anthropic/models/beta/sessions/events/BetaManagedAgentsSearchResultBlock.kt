@@ -43,7 +43,7 @@ private constructor(
     ) : this(citations, content, source, title, type, mutableMapOf())
 
     /**
-     * Citation settings for a search result.
+     * Citation settings for this search result.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -174,7 +174,7 @@ private constructor(
                     betaManagedAgentsSearchResultBlock.additionalProperties.toMutableMap()
             }
 
-        /** Citation settings for a search result. */
+        /** Citation settings for this search result. */
         fun citations(citations: BetaManagedAgentsSearchResultCitations) =
             citations(JsonField.of(citations))
 

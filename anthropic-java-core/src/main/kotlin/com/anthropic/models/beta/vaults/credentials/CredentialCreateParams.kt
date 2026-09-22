@@ -59,7 +59,7 @@ private constructor(
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
-     * Authentication details for creating a credential.
+     * Authentication configuration for the credential.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -200,7 +200,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** Authentication details for creating a credential. */
+        /** Authentication configuration for the credential. */
         fun auth(auth: Auth) = apply { body.auth(auth) }
 
         /**
@@ -434,7 +434,7 @@ private constructor(
         ) : this(auth, displayName, metadata, mutableMapOf())
 
         /**
-         * Authentication details for creating a credential.
+         * Authentication configuration for the credential.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -528,7 +528,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Authentication details for creating a credential. */
+            /** Authentication configuration for the credential. */
             fun auth(auth: Auth) = auth(JsonField.of(auth))
 
             /**
@@ -688,7 +688,7 @@ private constructor(
             "Body{auth=$auth, displayName=$displayName, metadata=$metadata, additionalProperties=$additionalProperties}"
     }
 
-    /** Authentication details for creating a credential. */
+    /** Authentication configuration for the credential. */
     @JsonDeserialize(using = Auth.Deserializer::class)
     @JsonSerialize(using = Auth.Serializer::class)
     class Auth

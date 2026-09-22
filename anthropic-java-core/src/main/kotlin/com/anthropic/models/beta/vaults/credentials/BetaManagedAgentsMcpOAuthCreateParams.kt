@@ -77,7 +77,7 @@ private constructor(
     fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expires_at")
 
     /**
-     * OAuth refresh token parameters for creating a credential with refresh support.
+     * Refresh token configuration, if the credential supports token refresh.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -229,7 +229,7 @@ private constructor(
          */
         fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
 
-        /** OAuth refresh token parameters for creating a credential with refresh support. */
+        /** Refresh token configuration, if the credential supports token refresh. */
         fun refresh(refresh: BetaManagedAgentsMcpOAuthRefreshParams?) =
             refresh(JsonField.ofNullable(refresh))
 

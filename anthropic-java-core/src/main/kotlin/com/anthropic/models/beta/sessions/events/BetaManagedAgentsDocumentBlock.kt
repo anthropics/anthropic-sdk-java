@@ -49,7 +49,7 @@ private constructor(
     ) : this(source, type, context, title, mutableMapOf())
 
     /**
-     * Union type for document source variants.
+     * The source of the document data.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -152,7 +152,7 @@ private constructor(
                 betaManagedAgentsDocumentBlock.additionalProperties.toMutableMap()
         }
 
-        /** Union type for document source variants. */
+        /** The source of the document data. */
         fun source(source: Source) = source(JsonField.of(source))
 
         /**
@@ -331,7 +331,7 @@ private constructor(
             (if (context.asKnown().isPresent) 1 else 0) +
             (if (title.asKnown().isPresent) 1 else 0)
 
-    /** Union type for document source variants. */
+    /** The source of the document data. */
     @JsonDeserialize(using = Source.Deserializer::class)
     @JsonSerialize(using = Source.Serializer::class)
     class Source

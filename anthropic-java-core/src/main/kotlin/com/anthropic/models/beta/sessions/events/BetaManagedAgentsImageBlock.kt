@@ -42,7 +42,7 @@ private constructor(
     ) : this(source, type, mutableMapOf())
 
     /**
-     * Union type for image source variants.
+     * The source of the image data.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -109,7 +109,7 @@ private constructor(
             additionalProperties = betaManagedAgentsImageBlock.additionalProperties.toMutableMap()
         }
 
-        /** Union type for image source variants. */
+        /** The source of the image data. */
         fun source(source: Source) = source(JsonField.of(source))
 
         /**
@@ -251,7 +251,7 @@ private constructor(
         (source.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Union type for image source variants. */
+    /** The source of the image data. */
     @JsonDeserialize(using = Source.Deserializer::class)
     @JsonSerialize(using = Source.Serializer::class)
     class Source
