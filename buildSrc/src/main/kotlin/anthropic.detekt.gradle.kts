@@ -1,6 +1,7 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 plugins {
     id("io.gitlab.arturbosch.detekt")
@@ -59,7 +60,60 @@ tasks.named("detekt") {
     enabled = false
 }
 
-// Hook the type-resolving variants into `lint` so `./scripts/lint` and CI run them alongside ktfmt.
+// Hook the type-resolving variants, which check every file, into `lint` alongside ktfmt.
 tasks.named("lint") {
     dependsOn(tasks.named("detektMain"), tasks.named("detektTest"))
+}
+
+private val toolchainJdkHome =
+    extensions
+        .getByType<JavaToolchainService>()
+        .launcherFor(extensions.getByType<JavaPluginExtension>().toolchain)
+        .map { it.metadata.installationPath }
+
+listOf("main", "test").forEach { sourceSetName ->
+    val sourceSet = the<SourceSetContainer>()[sourceSetName]
+    // The files that `detektMain` and `detektTest` check.
+    val kotlinFiles =
+        the<KotlinJvmProjectExtension>().sourceSets[sourceSetName].kotlin.matching {
+            include("**/*.kt", "**/*.kts")
+        }
+    val taskSuffix = sourceSetName.replaceFirstChar(Char::uppercase)
+    val typeResolutionClasspath = files(sourceSet.output.classesDirs, sourceSet.compileClasspath)
+    val configFiles = the<DetektExtension>().config
+    val baselineFile = baselineFileFor("detekt$taskSuffix")
+    val passedFile = layout.buildDirectory.file("detekt-changed/$sourceSetName-passed")
+    val changedFiles =
+        tasks.register<DetektChangedFiles>("detektChangedFiles$taskSuffix") {
+            source.from(kotlinFiles)
+            classpath.from(typeResolutionClasspath)
+            settings.from(
+                configFiles,
+                baselineFile,
+                configurations["detekt"],
+                configurations["detektPlugins"],
+            )
+            passed.set(passedFile)
+            fileList.set(layout.buildDirectory.file("detekt-changed/$sourceSetName.txt"))
+        }
+    tasks.register<Detekt>("detektChanged$taskSuffix") {
+        description =
+            "Runs detekt on the $sourceSetName Kotlin files changed since this task last passed."
+        val fileList = changedFiles.flatMap { it.fileList }.map { it.asFile }
+        // There is no list in a module with no Kotlin files.
+        setSource(files(fileList.map { if (it.exists()) it.readLines() else emptyList() }))
+        // `source` is compared by file name and content. With the list as an input too, a result
+        // is taken from the build cache only for the same paths.
+        inputs.files(fileList).withPropertyName("fileList")
+        // The plugin sets these only on tasks it registers. Keep them as on `detekt$taskSuffix`.
+        classpath.setFrom(typeResolutionClasspath)
+        jdkHome.set(toolchainJdkHome)
+        config.setFrom(configFiles)
+        baseline.fileProvider(provider { baselineFile.takeIf(File::exists) })
+        // `detektChangedMain` and `detektChangedTest` would write the same report files.
+        reports { listOf(xml, html, txt, sarif, md).forEach { it.required.set(false) } }
+        // See `DetektChangedFiles.passed`.
+        outputs.file(passedFile).withPropertyName("passed")
+        doLast { passedFile.get().asFile.writeText("") }
+    }
 }

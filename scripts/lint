@@ -10,7 +10,14 @@ echo "==> Running lints"
 # formatter, then run them in a single invocation so we pay buildSrc
 # compilation and project configuration once instead of per language.
 # detekt has no standalone CLI fast-path here, so it always runs via Gradle.
-gradle_tasks=(detektMain detektTest)
+if [[ -n "${CI:-}" ]]; then
+    # Checking only the changed files cannot show a problem that an edit causes
+    # in a file that did not change, so CI checks every file.
+    gradle_tasks=(detektMain detektTest)
+else
+    echo "==> detekt checks only the files that changed since it last passed; ./gradlew lint checks every file"
+    gradle_tasks=(detektChangedMain detektChangedTest)
+fi
 
 if command -v ktfmt &> /dev/null; then
     echo "==> Checking ktfmt"
