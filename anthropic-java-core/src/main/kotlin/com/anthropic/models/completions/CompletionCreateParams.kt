@@ -43,6 +43,9 @@ private constructor(
 ) : Params {
 
     /** Optional header to specify the beta version(s) you want to use. */
+    @Deprecated(
+        "Deprecated. This parameter has no effect on this method and will be removed in a future release."
+    )
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -275,9 +278,15 @@ private constructor(
         }
 
         /** Optional header to specify the beta version(s) you want to use. */
+        @Deprecated(
+            "Deprecated. This parameter has no effect on this method and will be removed in a future release."
+        )
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
+        @Deprecated(
+            "Deprecated. This parameter has no effect on this method and will be removed in a future release."
+        )
         fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
 
         /**
@@ -285,6 +294,9 @@ private constructor(
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
+        @Deprecated(
+            "Deprecated. This parameter has no effect on this method and will be removed in a future release."
+        )
         fun addBeta(beta: AnthropicBeta) = apply {
             betas = (betas ?: mutableListOf()).apply { add(beta) }
         }
@@ -296,6 +308,9 @@ private constructor(
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
+        @Deprecated(
+            "Deprecated. This parameter has no effect on this method and will be removed in a future release."
+        )
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         /**
