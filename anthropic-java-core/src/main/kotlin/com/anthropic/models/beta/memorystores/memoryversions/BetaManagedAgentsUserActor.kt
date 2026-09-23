@@ -15,7 +15,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Attribution for a write made by a human user through the Anthropic Console. */
+/** A human user, for example acting through the Anthropic Console. */
 class BetaManagedAgentsUserActor
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -37,7 +37,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * ID of the user who performed the write (a `user_...` value).
+     * ID of the user (a `user_...` value).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -108,7 +108,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** ID of the user who performed the write (a `user_...` value). */
+        /** ID of the user (a `user_...` value). */
         fun userId(userId: String) = userId(JsonField.of(userId))
 
         /**

@@ -171,7 +171,10 @@ private constructor(
     /**
      * Who performed this write: one of `session_actor`, `api_actor`, `user_actor`, or
      * `service_account_actor`; `null` when no writer is recorded. Captured at write time and
-     * preserved through redaction.
+     * preserved through redaction. A `session_actor` is an agent writing through the store's
+     * mounted filesystem at `/mnt/memory/`. The API key that created that session is not recorded
+     * on agent writes, so attribution names who made the write, not who is ultimately responsible;
+     * look up session provenance via the [Sessions API](/en/api/beta/sessions/retrieve).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -532,7 +535,11 @@ private constructor(
         /**
          * Who performed this write: one of `session_actor`, `api_actor`, `user_actor`, or
          * `service_account_actor`; `null` when no writer is recorded. Captured at write time and
-         * preserved through redaction.
+         * preserved through redaction. A `session_actor` is an agent writing through the store's
+         * mounted filesystem at `/mnt/memory/`. The API key that created that session is not
+         * recorded on agent writes, so attribution names who made the write, not who is ultimately
+         * responsible; look up session provenance via the
+         * [Sessions API](/en/api/beta/sessions/retrieve).
          */
         fun createdBy(createdBy: BetaManagedAgentsActor) = createdBy(JsonField.of(createdBy))
 

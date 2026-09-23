@@ -13,10 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-/**
- * Attribution for a write made by a workload authenticated as a service account, for example via
- * Workload Identity Federation.
- */
+/** A workload authenticated as a service account, for example via Workload Identity Federation. */
 class BetaManagedAgentsServiceAccountActor
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -34,7 +31,7 @@ private constructor(
     ) : this(serviceAccountId, type, mutableMapOf())
 
     /**
-     * ID of the service account that performed the write (a `svac_...` value).
+     * ID of the service account (a `svac_...` value).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -112,7 +109,7 @@ private constructor(
                 betaManagedAgentsServiceAccountActor.additionalProperties.toMutableMap()
         }
 
-        /** ID of the service account that performed the write (a `svac_...` value). */
+        /** ID of the service account (a `svac_...` value). */
         fun serviceAccountId(serviceAccountId: String) =
             serviceAccountId(JsonField.of(serviceAccountId))
 
