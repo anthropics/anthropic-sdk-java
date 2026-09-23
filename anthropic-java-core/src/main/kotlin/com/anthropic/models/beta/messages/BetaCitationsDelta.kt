@@ -806,7 +806,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -820,20 +820,32 @@ private constructor(
 
             companion object {
 
-                @JvmField val CHAR_LOCATION = of("char_location")
+                @JvmField val CHAR_LOCATION = Type(JsonField.of("char_location"))
 
-                @JvmField val PAGE_LOCATION = of("page_location")
+                @JvmField val PAGE_LOCATION = Type(JsonField.of("page_location"))
 
-                @JvmField val CONTENT_BLOCK_LOCATION = of("content_block_location")
+                @JvmField val CONTENT_BLOCK_LOCATION = Type(JsonField.of("content_block_location"))
 
-                @JvmField val WEB_SEARCH_RESULT_LOCATION = of("web_search_result_location")
+                @JvmField
+                val WEB_SEARCH_RESULT_LOCATION = Type(JsonField.of("web_search_result_location"))
 
-                @JvmField val SEARCH_RESULT_LOCATION = of("search_result_location")
+                @JvmField val SEARCH_RESULT_LOCATION = Type(JsonField.of("search_result_location"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "char_location" -> CHAR_LOCATION
+                        "page_location" -> PAGE_LOCATION
+                        "content_block_location" -> CONTENT_BLOCK_LOCATION
+                        "web_search_result_location" -> WEB_SEARCH_RESULT_LOCATION
+                        "search_result_location" -> SEARCH_RESULT_LOCATION
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

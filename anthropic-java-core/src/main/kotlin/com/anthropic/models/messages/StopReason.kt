@@ -6,7 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class StopReason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+class StopReason private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -19,24 +19,39 @@ class StopReason @JsonCreator private constructor(private val value: JsonField<S
 
     companion object {
 
-        @JvmField val END_TURN = of("end_turn")
+        @JvmField val END_TURN = StopReason(JsonField.of("end_turn"))
 
-        @JvmField val MAX_TOKENS = of("max_tokens")
+        @JvmField val MAX_TOKENS = StopReason(JsonField.of("max_tokens"))
 
-        @JvmField val STOP_SEQUENCE = of("stop_sequence")
+        @JvmField val STOP_SEQUENCE = StopReason(JsonField.of("stop_sequence"))
 
-        @JvmField val TOOL_USE = of("tool_use")
+        @JvmField val TOOL_USE = StopReason(JsonField.of("tool_use"))
 
-        @JvmField val PAUSE_TURN = of("pause_turn")
+        @JvmField val PAUSE_TURN = StopReason(JsonField.of("pause_turn"))
 
-        @JvmField val REFUSAL = of("refusal")
+        @JvmField val REFUSAL = StopReason(JsonField.of("refusal"))
 
-        @JvmField val MODEL_CONTEXT_WINDOW_EXCEEDED = of("model_context_window_exceeded")
+        @JvmField
+        val MODEL_CONTEXT_WINDOW_EXCEEDED =
+            StopReason(JsonField.of("model_context_window_exceeded"))
 
-        @JvmStatic fun of(value: String) = StopReason(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): StopReason =
+            // Intern known values so `==` works
+            when (value) {
+                "end_turn" -> END_TURN
+                "max_tokens" -> MAX_TOKENS
+                "stop_sequence" -> STOP_SEQUENCE
+                "tool_use" -> TOOL_USE
+                "pause_turn" -> PAUSE_TURN
+                "refusal" -> REFUSAL
+                "model_context_window_exceeded" -> MODEL_CONTEXT_WINDOW_EXCEEDED
+                else -> StopReason(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): StopReason =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): StopReason =
             value.asString().getOrNull()?.let { of(it) } ?: StopReason(value)
     }
 

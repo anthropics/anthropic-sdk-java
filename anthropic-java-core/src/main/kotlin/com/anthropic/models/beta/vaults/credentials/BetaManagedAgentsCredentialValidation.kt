@@ -479,7 +479,7 @@ private constructor(
             (if (validatedAt.asKnown().isPresent) 1 else 0) +
             (if (vaultId.asKnown().isPresent) 1 else 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -493,12 +493,20 @@ private constructor(
 
         companion object {
 
-            @JvmField val VAULT_CREDENTIAL_VALIDATION = of("vault_credential_validation")
+            @JvmField
+            val VAULT_CREDENTIAL_VALIDATION = Type(JsonField.of("vault_credential_validation"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "vault_credential_validation" -> VAULT_CREDENTIAL_VALIDATION
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

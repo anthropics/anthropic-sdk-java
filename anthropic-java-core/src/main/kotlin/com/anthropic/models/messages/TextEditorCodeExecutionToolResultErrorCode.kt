@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
 class TextEditorCodeExecutionToolResultErrorCode
-@JsonCreator
 private constructor(private val value: JsonField<String>) : Enum {
 
     /**
@@ -21,21 +20,40 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val INVALID_TOOL_INPUT = of("invalid_tool_input")
+        @JvmField
+        val INVALID_TOOL_INPUT =
+            TextEditorCodeExecutionToolResultErrorCode(JsonField.of("invalid_tool_input"))
 
-        @JvmField val UNAVAILABLE = of("unavailable")
+        @JvmField
+        val UNAVAILABLE = TextEditorCodeExecutionToolResultErrorCode(JsonField.of("unavailable"))
 
-        @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
+        @JvmField
+        val TOO_MANY_REQUESTS =
+            TextEditorCodeExecutionToolResultErrorCode(JsonField.of("too_many_requests"))
 
-        @JvmField val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
+        @JvmField
+        val EXECUTION_TIME_EXCEEDED =
+            TextEditorCodeExecutionToolResultErrorCode(JsonField.of("execution_time_exceeded"))
 
-        @JvmField val FILE_NOT_FOUND = of("file_not_found")
+        @JvmField
+        val FILE_NOT_FOUND =
+            TextEditorCodeExecutionToolResultErrorCode(JsonField.of("file_not_found"))
 
         @JvmStatic
-        fun of(value: String) = TextEditorCodeExecutionToolResultErrorCode(JsonField.of(value))
+        fun of(value: String): TextEditorCodeExecutionToolResultErrorCode =
+            // Intern known values so `==` works
+            when (value) {
+                "invalid_tool_input" -> INVALID_TOOL_INPUT
+                "unavailable" -> UNAVAILABLE
+                "too_many_requests" -> TOO_MANY_REQUESTS
+                "execution_time_exceeded" -> EXECUTION_TIME_EXCEEDED
+                "file_not_found" -> FILE_NOT_FOUND
+                else -> TextEditorCodeExecutionToolResultErrorCode(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): TextEditorCodeExecutionToolResultErrorCode =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): TextEditorCodeExecutionToolResultErrorCode =
             value.asString().getOrNull()?.let { of(it) }
                 ?: TextEditorCodeExecutionToolResultErrorCode(value)
     }

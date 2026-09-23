@@ -200,7 +200,7 @@ private constructor(
     internal fun validity(): Int =
         (if (message.asKnown().isPresent) 1 else 0) + (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -214,12 +214,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val SKILL_NOT_FOUND_ERROR = of("skill_not_found_error")
+            @JvmField val SKILL_NOT_FOUND_ERROR = Type(JsonField.of("skill_not_found_error"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "skill_not_found_error" -> SKILL_NOT_FOUND_ERROR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

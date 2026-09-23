@@ -245,7 +245,7 @@ private constructor(
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -259,12 +259,20 @@ private constructor(
 
         companion object {
 
-            @JvmField val SESSION_STATUS_TERMINATED = of("session.status_terminated")
+            @JvmField
+            val SESSION_STATUS_TERMINATED = Type(JsonField.of("session.status_terminated"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "session.status_terminated" -> SESSION_STATUS_TERMINATED
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

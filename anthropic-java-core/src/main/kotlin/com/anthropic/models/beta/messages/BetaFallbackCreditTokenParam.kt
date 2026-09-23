@@ -234,7 +234,7 @@ private constructor(
      * failures stay hard in both modes: a malformed token, and combining `fallback_credit_token`
      * with `fallbacks`.
      */
-    class Mode @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Mode private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -248,14 +248,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val STRICT = of("strict")
+            @JvmField val STRICT = Mode(JsonField.of("strict"))
 
-            @JvmField val BEST_EFFORT = of("best_effort")
+            @JvmField val BEST_EFFORT = Mode(JsonField.of("best_effort"))
 
-            @JvmStatic fun of(value: String) = Mode(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Mode =
+                // Intern known values so `==` works
+                when (value) {
+                    "strict" -> STRICT
+                    "best_effort" -> BEST_EFFORT
+                    else -> Mode(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Mode =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Mode =
                 value.asString().getOrNull()?.let { of(it) } ?: Mode(value)
         }
 

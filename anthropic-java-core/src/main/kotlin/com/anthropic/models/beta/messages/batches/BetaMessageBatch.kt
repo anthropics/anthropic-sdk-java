@@ -612,8 +612,7 @@ private constructor(
             type.let { if (it == JsonValue.from("message_batch")) 1 else 0 }
 
     /** Processing status of the Message Batch. */
-    class ProcessingStatus @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class ProcessingStatus private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -627,16 +626,25 @@ private constructor(
 
         companion object {
 
-            @JvmField val IN_PROGRESS = of("in_progress")
+            @JvmField val IN_PROGRESS = ProcessingStatus(JsonField.of("in_progress"))
 
-            @JvmField val CANCELING = of("canceling")
+            @JvmField val CANCELING = ProcessingStatus(JsonField.of("canceling"))
 
-            @JvmField val ENDED = of("ended")
+            @JvmField val ENDED = ProcessingStatus(JsonField.of("ended"))
 
-            @JvmStatic fun of(value: String) = ProcessingStatus(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): ProcessingStatus =
+                // Intern known values so `==` works
+                when (value) {
+                    "in_progress" -> IN_PROGRESS
+                    "canceling" -> CANCELING
+                    "ended" -> ENDED
+                    else -> ProcessingStatus(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): ProcessingStatus =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): ProcessingStatus =
                 value.asString().getOrNull()?.let { of(it) } ?: ProcessingStatus(value)
         }
 

@@ -201,7 +201,7 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) + (type.asKnown().getOrNull()?.validity() ?: 0)
 
     /** The type of response */
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -215,12 +215,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val ENVIRONMENT_DELETED = of("environment_deleted")
+            @JvmField val ENVIRONMENT_DELETED = Type(JsonField.of("environment_deleted"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "environment_deleted" -> ENVIRONMENT_DELETED
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

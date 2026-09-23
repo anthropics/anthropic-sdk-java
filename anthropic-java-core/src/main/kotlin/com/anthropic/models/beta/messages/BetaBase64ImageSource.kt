@@ -232,7 +232,7 @@ private constructor(
             (mediaType.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("base64")) 1 else 0 }
 
-    class MediaType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class MediaType private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -246,18 +246,28 @@ private constructor(
 
         companion object {
 
-            @JvmField val IMAGE_JPEG = of("image/jpeg")
+            @JvmField val IMAGE_JPEG = MediaType(JsonField.of("image/jpeg"))
 
-            @JvmField val IMAGE_PNG = of("image/png")
+            @JvmField val IMAGE_PNG = MediaType(JsonField.of("image/png"))
 
-            @JvmField val IMAGE_GIF = of("image/gif")
+            @JvmField val IMAGE_GIF = MediaType(JsonField.of("image/gif"))
 
-            @JvmField val IMAGE_WEBP = of("image/webp")
+            @JvmField val IMAGE_WEBP = MediaType(JsonField.of("image/webp"))
 
-            @JvmStatic fun of(value: String) = MediaType(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): MediaType =
+                // Intern known values so `==` works
+                when (value) {
+                    "image/jpeg" -> IMAGE_JPEG
+                    "image/png" -> IMAGE_PNG
+                    "image/gif" -> IMAGE_GIF
+                    "image/webp" -> IMAGE_WEBP
+                    else -> MediaType(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): MediaType =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): MediaType =
                 value.asString().getOrNull()?.let { of(it) } ?: MediaType(value)
         }
 

@@ -1088,7 +1088,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1102,37 +1102,59 @@ private constructor(
 
             companion object {
 
-                @JvmField val TEXT = of("text")
+                @JvmField val TEXT = Type(JsonField.of("text"))
 
-                @JvmField val THINKING = of("thinking")
+                @JvmField val THINKING = Type(JsonField.of("thinking"))
 
-                @JvmField val REDACTED_THINKING = of("redacted_thinking")
+                @JvmField val REDACTED_THINKING = Type(JsonField.of("redacted_thinking"))
 
-                @JvmField val TOOL_USE = of("tool_use")
+                @JvmField val TOOL_USE = Type(JsonField.of("tool_use"))
 
-                @JvmField val SERVER_TOOL_USE = of("server_tool_use")
+                @JvmField val SERVER_TOOL_USE = Type(JsonField.of("server_tool_use"))
 
-                @JvmField val WEB_SEARCH_TOOL_RESULT = of("web_search_tool_result")
+                @JvmField val WEB_SEARCH_TOOL_RESULT = Type(JsonField.of("web_search_tool_result"))
 
-                @JvmField val WEB_FETCH_TOOL_RESULT = of("web_fetch_tool_result")
-
-                @JvmField val CODE_EXECUTION_TOOL_RESULT = of("code_execution_tool_result")
+                @JvmField val WEB_FETCH_TOOL_RESULT = Type(JsonField.of("web_fetch_tool_result"))
 
                 @JvmField
-                val BASH_CODE_EXECUTION_TOOL_RESULT = of("bash_code_execution_tool_result")
+                val CODE_EXECUTION_TOOL_RESULT = Type(JsonField.of("code_execution_tool_result"))
+
+                @JvmField
+                val BASH_CODE_EXECUTION_TOOL_RESULT =
+                    Type(JsonField.of("bash_code_execution_tool_result"))
 
                 @JvmField
                 val TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT =
-                    of("text_editor_code_execution_tool_result")
+                    Type(JsonField.of("text_editor_code_execution_tool_result"))
 
-                @JvmField val TOOL_SEARCH_TOOL_RESULT = of("tool_search_tool_result")
+                @JvmField
+                val TOOL_SEARCH_TOOL_RESULT = Type(JsonField.of("tool_search_tool_result"))
 
-                @JvmField val CONTAINER_UPLOAD = of("container_upload")
+                @JvmField val CONTAINER_UPLOAD = Type(JsonField.of("container_upload"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "text" -> TEXT
+                        "thinking" -> THINKING
+                        "redacted_thinking" -> REDACTED_THINKING
+                        "tool_use" -> TOOL_USE
+                        "server_tool_use" -> SERVER_TOOL_USE
+                        "web_search_tool_result" -> WEB_SEARCH_TOOL_RESULT
+                        "web_fetch_tool_result" -> WEB_FETCH_TOOL_RESULT
+                        "code_execution_tool_result" -> CODE_EXECUTION_TOOL_RESULT
+                        "bash_code_execution_tool_result" -> BASH_CODE_EXECUTION_TOOL_RESULT
+                        "text_editor_code_execution_tool_result" ->
+                            TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
+                        "tool_search_tool_result" -> TOOL_SEARCH_TOOL_RESULT
+                        "container_upload" -> CONTAINER_UPLOAD
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

@@ -174,7 +174,7 @@ private constructor(
      */
     @JvmSynthetic internal fun validity(): Int = (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -188,12 +188,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val VAULT_ARCHIVED_ERROR = of("vault_archived_error")
+            @JvmField val VAULT_ARCHIVED_ERROR = Type(JsonField.of("vault_archived_error"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "vault_archived_error" -> VAULT_ARCHIVED_ERROR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

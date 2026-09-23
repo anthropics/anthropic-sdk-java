@@ -6,7 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class AnthropicBeta @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+class AnthropicBeta private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -19,116 +19,214 @@ class AnthropicBeta @JsonCreator private constructor(private val value: JsonFiel
 
     companion object {
 
-        @JvmField val MESSAGE_BATCHES_2024_09_24 = of("message-batches-2024-09-24")
+        @JvmField
+        val MESSAGE_BATCHES_2024_09_24 = AnthropicBeta(JsonField.of("message-batches-2024-09-24"))
 
-        @JvmField val PROMPT_CACHING_2024_07_31 = of("prompt-caching-2024-07-31")
+        @JvmField
+        val PROMPT_CACHING_2024_07_31 = AnthropicBeta(JsonField.of("prompt-caching-2024-07-31"))
 
-        @JvmField val COMPUTER_USE_2024_10_22 = of("computer-use-2024-10-22")
+        @JvmField
+        val COMPUTER_USE_2024_10_22 = AnthropicBeta(JsonField.of("computer-use-2024-10-22"))
 
-        @JvmField val COMPUTER_USE_2025_01_24 = of("computer-use-2025-01-24")
+        @JvmField
+        val COMPUTER_USE_2025_01_24 = AnthropicBeta(JsonField.of("computer-use-2025-01-24"))
 
-        @JvmField val PDFS_2024_09_25 = of("pdfs-2024-09-25")
+        @JvmField val PDFS_2024_09_25 = AnthropicBeta(JsonField.of("pdfs-2024-09-25"))
 
-        @JvmField val TOKEN_COUNTING_2024_11_01 = of("token-counting-2024-11-01")
+        @JvmField
+        val TOKEN_COUNTING_2024_11_01 = AnthropicBeta(JsonField.of("token-counting-2024-11-01"))
 
-        @JvmField val TOKEN_EFFICIENT_TOOLS_2025_02_19 = of("token-efficient-tools-2025-02-19")
+        @JvmField
+        val TOKEN_EFFICIENT_TOOLS_2025_02_19 =
+            AnthropicBeta(JsonField.of("token-efficient-tools-2025-02-19"))
 
-        @JvmField val OUTPUT_128K_2025_02_19 = of("output-128k-2025-02-19")
+        @JvmField val OUTPUT_128K_2025_02_19 = AnthropicBeta(JsonField.of("output-128k-2025-02-19"))
 
-        @JvmField val FILES_API_2025_04_14 = of("files-api-2025-04-14")
+        @JvmField val FILES_API_2025_04_14 = AnthropicBeta(JsonField.of("files-api-2025-04-14"))
 
-        @JvmField val MCP_CLIENT_2025_04_04 = of("mcp-client-2025-04-04")
+        @JvmField val MCP_CLIENT_2025_04_04 = AnthropicBeta(JsonField.of("mcp-client-2025-04-04"))
 
-        @JvmField val MCP_CLIENT_2025_11_20 = of("mcp-client-2025-11-20")
+        @JvmField val MCP_CLIENT_2025_11_20 = AnthropicBeta(JsonField.of("mcp-client-2025-11-20"))
 
-        @JvmField val DEV_FULL_THINKING_2025_05_14 = of("dev-full-thinking-2025-05-14")
+        @JvmField
+        val DEV_FULL_THINKING_2025_05_14 =
+            AnthropicBeta(JsonField.of("dev-full-thinking-2025-05-14"))
 
-        @JvmField val INTERLEAVED_THINKING_2025_05_14 = of("interleaved-thinking-2025-05-14")
+        @JvmField
+        val INTERLEAVED_THINKING_2025_05_14 =
+            AnthropicBeta(JsonField.of("interleaved-thinking-2025-05-14"))
 
-        @JvmField val CODE_EXECUTION_2025_05_22 = of("code-execution-2025-05-22")
+        @JvmField
+        val CODE_EXECUTION_2025_05_22 = AnthropicBeta(JsonField.of("code-execution-2025-05-22"))
 
-        @JvmField val EXTENDED_CACHE_TTL_2025_04_11 = of("extended-cache-ttl-2025-04-11")
+        @JvmField
+        val EXTENDED_CACHE_TTL_2025_04_11 =
+            AnthropicBeta(JsonField.of("extended-cache-ttl-2025-04-11"))
 
-        @JvmField val CONTEXT_1M_2025_08_07 = of("context-1m-2025-08-07")
+        @JvmField val CONTEXT_1M_2025_08_07 = AnthropicBeta(JsonField.of("context-1m-2025-08-07"))
 
-        @JvmField val CONTEXT_MANAGEMENT_2025_06_27 = of("context-management-2025-06-27")
+        @JvmField
+        val CONTEXT_MANAGEMENT_2025_06_27 =
+            AnthropicBeta(JsonField.of("context-management-2025-06-27"))
 
         @JvmField
         val MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26 =
-            of("model-context-window-exceeded-2025-08-26")
+            AnthropicBeta(JsonField.of("model-context-window-exceeded-2025-08-26"))
 
-        @JvmField val SKILLS_2025_10_02 = of("skills-2025-10-02")
+        @JvmField val SKILLS_2025_10_02 = AnthropicBeta(JsonField.of("skills-2025-10-02"))
 
-        @JvmField val FAST_MODE_2026_02_01 = of("fast-mode-2026-02-01")
+        @JvmField val FAST_MODE_2026_02_01 = AnthropicBeta(JsonField.of("fast-mode-2026-02-01"))
 
-        @JvmField val OUTPUT_300K_2026_03_24 = of("output-300k-2026-03-24")
+        @JvmField val OUTPUT_300K_2026_03_24 = AnthropicBeta(JsonField.of("output-300k-2026-03-24"))
 
-        @JvmField val USER_PROFILES_2026_03_24 = of("user-profiles-2026-03-24")
+        @JvmField
+        val USER_PROFILES_2026_03_24 = AnthropicBeta(JsonField.of("user-profiles-2026-03-24"))
 
-        @JvmField val USER_PROFILES_2026_08_18 = of("user-profiles-2026-08-18")
+        @JvmField
+        val USER_PROFILES_2026_08_18 = AnthropicBeta(JsonField.of("user-profiles-2026-08-18"))
 
-        @JvmField val USER_PROFILES_2026_09_04 = of("user-profiles-2026-09-04")
+        @JvmField
+        val USER_PROFILES_2026_09_04 = AnthropicBeta(JsonField.of("user-profiles-2026-09-04"))
 
-        @JvmField val ADVISOR_TOOL_2026_03_01 = of("advisor-tool-2026-03-01")
+        @JvmField
+        val ADVISOR_TOOL_2026_03_01 = AnthropicBeta(JsonField.of("advisor-tool-2026-03-01"))
 
-        @JvmField val MANAGED_AGENTS_2026_04_01 = of("managed-agents-2026-04-01")
+        @JvmField
+        val MANAGED_AGENTS_2026_04_01 = AnthropicBeta(JsonField.of("managed-agents-2026-04-01"))
 
-        @JvmField val CACHE_DIAGNOSIS_2026_04_07 = of("cache-diagnosis-2026-04-07")
+        @JvmField
+        val CACHE_DIAGNOSIS_2026_04_07 = AnthropicBeta(JsonField.of("cache-diagnosis-2026-04-07"))
 
-        @JvmField val DREAMING_2026_04_21 = of("dreaming-2026-04-21")
+        @JvmField val DREAMING_2026_04_21 = AnthropicBeta(JsonField.of("dreaming-2026-04-21"))
 
-        @JvmField val THINKING_TOKEN_COUNT_2026_05_13 = of("thinking-token-count-2026-05-13")
+        @JvmField
+        val THINKING_TOKEN_COUNT_2026_05_13 =
+            AnthropicBeta(JsonField.of("thinking-token-count-2026-05-13"))
 
-        @JvmField val SERVER_SIDE_FALLBACK_2026_06_01 = of("server-side-fallback-2026-06-01")
+        @JvmField
+        val SERVER_SIDE_FALLBACK_2026_06_01 =
+            AnthropicBeta(JsonField.of("server-side-fallback-2026-06-01"))
 
-        @JvmField val SERVER_SIDE_FALLBACK_2026_07_01 = of("server-side-fallback-2026-07-01")
+        @JvmField
+        val SERVER_SIDE_FALLBACK_2026_07_01 =
+            AnthropicBeta(JsonField.of("server-side-fallback-2026-07-01"))
 
-        @JvmField val FALLBACK_CREDIT_2026_06_01 = of("fallback-credit-2026-06-01")
+        @JvmField
+        val FALLBACK_CREDIT_2026_06_01 = AnthropicBeta(JsonField.of("fallback-credit-2026-06-01"))
 
-        @JvmField val FALLBACK_CREDIT_2026_07_01 = of("fallback-credit-2026-07-01")
+        @JvmField
+        val FALLBACK_CREDIT_2026_07_01 = AnthropicBeta(JsonField.of("fallback-credit-2026-07-01"))
 
-        @JvmField val AGENT_MEMORY_2026_07_22 = of("agent-memory-2026-07-22")
+        @JvmField
+        val AGENT_MEMORY_2026_07_22 = AnthropicBeta(JsonField.of("agent-memory-2026-07-22"))
 
         @JvmField
         val MID_CONVERSATION_TOOL_CHANGES_2026_07_01 =
-            of("mid-conversation-tool-changes-2026-07-01")
+            AnthropicBeta(JsonField.of("mid-conversation-tool-changes-2026-07-01"))
 
-        @JvmField val COMPACT_2026_01_12 = of("compact-2026-01-12")
-
-        @JvmField val COMPUTER_USE_2025_11_24 = of("computer-use-2025-11-24")
-
-        @JvmField val MCP_TUNNELS_2026_06_22 = of("mcp-tunnels-2026-06-22")
-
-        @JvmField val STRUCTURED_OUTPUTS_2025_11_13 = of("structured-outputs-2025-11-13")
-
-        @JvmField val TASK_BUDGETS_2026_03_13 = of("task-budgets-2026-03-13")
+        @JvmField val COMPACT_2026_01_12 = AnthropicBeta(JsonField.of("compact-2026-01-12"))
 
         @JvmField
-        val THINKING_DISPLAY_UPDATES_2026_08_18 = of("thinking-display-updates-2026-08-18")
+        val COMPUTER_USE_2025_11_24 = AnthropicBeta(JsonField.of("computer-use-2025-11-24"))
 
-        @JvmField val CE_USER_MANAGEMENT_2026_07_13 = of("ce-user-management-2026-07-13")
+        @JvmField val MCP_TUNNELS_2026_06_22 = AnthropicBeta(JsonField.of("mcp-tunnels-2026-06-22"))
+
+        @JvmField
+        val STRUCTURED_OUTPUTS_2025_11_13 =
+            AnthropicBeta(JsonField.of("structured-outputs-2025-11-13"))
+
+        @JvmField
+        val TASK_BUDGETS_2026_03_13 = AnthropicBeta(JsonField.of("task-budgets-2026-03-13"))
+
+        @JvmField
+        val THINKING_DISPLAY_UPDATES_2026_08_18 =
+            AnthropicBeta(JsonField.of("thinking-display-updates-2026-08-18"))
+
+        @JvmField
+        val CE_USER_MANAGEMENT_2026_07_13 =
+            AnthropicBeta(JsonField.of("ce-user-management-2026-07-13"))
 
         @JvmField
         val MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01 =
-            of("mid-conversation-output-config-2026-07-01")
+            AnthropicBeta(JsonField.of("mid-conversation-output-config-2026-07-01"))
 
         @JvmField
-        val THINKING_BINDING_CONTROLS_2026_08_01 = of("thinking-binding-controls-2026-08-01")
+        val THINKING_BINDING_CONTROLS_2026_08_01 =
+            AnthropicBeta(JsonField.of("thinking-binding-controls-2026-08-01"))
 
         @JvmField
         val MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21 =
-            of("mid-conversation-system-clear-at-2026-08-21")
+            AnthropicBeta(JsonField.of("mid-conversation-system-clear-at-2026-08-21"))
 
-        @JvmField val COMPACT_2026_09_04 = of("compact-2026-09-04")
+        @JvmField val COMPACT_2026_09_04 = AnthropicBeta(JsonField.of("compact-2026-09-04"))
 
-        @JvmField val INLINE_TOOLS_2026_09_15 = of("inline-tools-2026-09-15")
+        @JvmField
+        val INLINE_TOOLS_2026_09_15 = AnthropicBeta(JsonField.of("inline-tools-2026-09-15"))
 
-        @JvmField val MCP_CLIENT_2026_09_15 = of("mcp-client-2026-09-15")
+        @JvmField val MCP_CLIENT_2026_09_15 = AnthropicBeta(JsonField.of("mcp-client-2026-09-15"))
 
-        @JvmStatic fun of(value: String) = AnthropicBeta(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): AnthropicBeta =
+            // Intern known values so `==` works
+            when (value) {
+                "message-batches-2024-09-24" -> MESSAGE_BATCHES_2024_09_24
+                "prompt-caching-2024-07-31" -> PROMPT_CACHING_2024_07_31
+                "computer-use-2024-10-22" -> COMPUTER_USE_2024_10_22
+                "computer-use-2025-01-24" -> COMPUTER_USE_2025_01_24
+                "pdfs-2024-09-25" -> PDFS_2024_09_25
+                "token-counting-2024-11-01" -> TOKEN_COUNTING_2024_11_01
+                "token-efficient-tools-2025-02-19" -> TOKEN_EFFICIENT_TOOLS_2025_02_19
+                "output-128k-2025-02-19" -> OUTPUT_128K_2025_02_19
+                "files-api-2025-04-14" -> FILES_API_2025_04_14
+                "mcp-client-2025-04-04" -> MCP_CLIENT_2025_04_04
+                "mcp-client-2025-11-20" -> MCP_CLIENT_2025_11_20
+                "dev-full-thinking-2025-05-14" -> DEV_FULL_THINKING_2025_05_14
+                "interleaved-thinking-2025-05-14" -> INTERLEAVED_THINKING_2025_05_14
+                "code-execution-2025-05-22" -> CODE_EXECUTION_2025_05_22
+                "extended-cache-ttl-2025-04-11" -> EXTENDED_CACHE_TTL_2025_04_11
+                "context-1m-2025-08-07" -> CONTEXT_1M_2025_08_07
+                "context-management-2025-06-27" -> CONTEXT_MANAGEMENT_2025_06_27
+                "model-context-window-exceeded-2025-08-26" ->
+                    MODEL_CONTEXT_WINDOW_EXCEEDED_2025_08_26
+                "skills-2025-10-02" -> SKILLS_2025_10_02
+                "fast-mode-2026-02-01" -> FAST_MODE_2026_02_01
+                "output-300k-2026-03-24" -> OUTPUT_300K_2026_03_24
+                "user-profiles-2026-03-24" -> USER_PROFILES_2026_03_24
+                "user-profiles-2026-08-18" -> USER_PROFILES_2026_08_18
+                "user-profiles-2026-09-04" -> USER_PROFILES_2026_09_04
+                "advisor-tool-2026-03-01" -> ADVISOR_TOOL_2026_03_01
+                "managed-agents-2026-04-01" -> MANAGED_AGENTS_2026_04_01
+                "cache-diagnosis-2026-04-07" -> CACHE_DIAGNOSIS_2026_04_07
+                "dreaming-2026-04-21" -> DREAMING_2026_04_21
+                "thinking-token-count-2026-05-13" -> THINKING_TOKEN_COUNT_2026_05_13
+                "server-side-fallback-2026-06-01" -> SERVER_SIDE_FALLBACK_2026_06_01
+                "server-side-fallback-2026-07-01" -> SERVER_SIDE_FALLBACK_2026_07_01
+                "fallback-credit-2026-06-01" -> FALLBACK_CREDIT_2026_06_01
+                "fallback-credit-2026-07-01" -> FALLBACK_CREDIT_2026_07_01
+                "agent-memory-2026-07-22" -> AGENT_MEMORY_2026_07_22
+                "mid-conversation-tool-changes-2026-07-01" ->
+                    MID_CONVERSATION_TOOL_CHANGES_2026_07_01
+                "compact-2026-01-12" -> COMPACT_2026_01_12
+                "computer-use-2025-11-24" -> COMPUTER_USE_2025_11_24
+                "mcp-tunnels-2026-06-22" -> MCP_TUNNELS_2026_06_22
+                "structured-outputs-2025-11-13" -> STRUCTURED_OUTPUTS_2025_11_13
+                "task-budgets-2026-03-13" -> TASK_BUDGETS_2026_03_13
+                "thinking-display-updates-2026-08-18" -> THINKING_DISPLAY_UPDATES_2026_08_18
+                "ce-user-management-2026-07-13" -> CE_USER_MANAGEMENT_2026_07_13
+                "mid-conversation-output-config-2026-07-01" ->
+                    MID_CONVERSATION_OUTPUT_CONFIG_2026_07_01
+                "thinking-binding-controls-2026-08-01" -> THINKING_BINDING_CONTROLS_2026_08_01
+                "mid-conversation-system-clear-at-2026-08-21" ->
+                    MID_CONVERSATION_SYSTEM_CLEAR_AT_2026_08_21
+                "compact-2026-09-04" -> COMPACT_2026_09_04
+                "inline-tools-2026-09-15" -> INLINE_TOOLS_2026_09_15
+                "mcp-client-2026-09-15" -> MCP_CLIENT_2026_09_15
+                else -> AnthropicBeta(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): AnthropicBeta =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): AnthropicBeta =
             value.asString().getOrNull()?.let { of(it) } ?: AnthropicBeta(value)
     }
 

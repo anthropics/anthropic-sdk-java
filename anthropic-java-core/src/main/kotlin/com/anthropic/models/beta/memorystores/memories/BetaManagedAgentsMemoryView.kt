@@ -12,9 +12,7 @@ import kotlin.jvm.optionals.getOrNull
  * endpoint-specific: retrieve operations default to `full`; list, create, and update operations
  * default to `basic`. Listing with `view=full` caps `limit` at 20.
  */
-class BetaManagedAgentsMemoryView
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class BetaManagedAgentsMemoryView private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -32,18 +30,26 @@ private constructor(private val value: JsonField<String>) : Enum {
          * `content_sha256` fields remain populated, so sync clients can diff without fetching
          * content.
          */
-        @JvmField val BASIC = of("basic")
+        @JvmField val BASIC = BetaManagedAgentsMemoryView(JsonField.of("basic"))
 
         /**
          * Return the object with `content` populated. On list endpoints, `view=full` caps `limit`
          * at 20.
          */
-        @JvmField val FULL = of("full")
+        @JvmField val FULL = BetaManagedAgentsMemoryView(JsonField.of("full"))
 
-        @JvmStatic fun of(value: String) = BetaManagedAgentsMemoryView(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaManagedAgentsMemoryView =
+            // Intern known values so `==` works
+            when (value) {
+                "basic" -> BASIC
+                "full" -> FULL
+                else -> BetaManagedAgentsMemoryView(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaManagedAgentsMemoryView =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaManagedAgentsMemoryView =
             value.asString().getOrNull()?.let { of(it) } ?: BetaManagedAgentsMemoryView(value)
     }
 

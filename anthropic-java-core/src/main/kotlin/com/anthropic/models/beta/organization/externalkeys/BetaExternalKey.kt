@@ -763,7 +763,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -777,14 +777,22 @@ private constructor(
 
             companion object {
 
-                @JvmField val ATTACHED = of("attached")
+                @JvmField val ATTACHED = Type(JsonField.of("attached"))
 
-                @JvmField val UNATTACHED = of("unattached")
+                @JvmField val UNATTACHED = Type(JsonField.of("unattached"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "attached" -> ATTACHED
+                        "unattached" -> UNATTACHED
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1182,7 +1190,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1196,16 +1204,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val AWS = of("aws")
+                @JvmField val AWS = Type(JsonField.of("aws"))
 
-                @JvmField val GCP = of("gcp")
+                @JvmField val GCP = Type(JsonField.of("gcp"))
 
-                @JvmField val AZURE = of("azure")
+                @JvmField val AZURE = Type(JsonField.of("azure"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "aws" -> AWS
+                        "gcp" -> GCP
+                        "azure" -> AZURE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

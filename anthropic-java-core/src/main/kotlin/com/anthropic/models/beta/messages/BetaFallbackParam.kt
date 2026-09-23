@@ -387,7 +387,7 @@ private constructor(
      * Inference speed mode. `fast` provides significantly faster output token generation at premium
      * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
      */
-    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Speed private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -401,14 +401,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = Speed(JsonField.of("standard"))
 
-            @JvmField val FAST = of("fast")
+            @JvmField val FAST = Speed(JsonField.of("fast"))
 
-            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Speed =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "fast" -> FAST
+                    else -> Speed(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Speed =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Speed =
                 value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 
@@ -808,7 +816,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -822,16 +830,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val ENABLED = of("enabled")
+                @JvmField val ENABLED = Type(JsonField.of("enabled"))
 
-                @JvmField val DISABLED = of("disabled")
+                @JvmField val DISABLED = Type(JsonField.of("disabled"))
 
-                @JvmField val ADAPTIVE = of("adaptive")
+                @JvmField val ADAPTIVE = Type(JsonField.of("adaptive"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "enabled" -> ENABLED
+                        "disabled" -> DISABLED
+                        "adaptive" -> ADAPTIVE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

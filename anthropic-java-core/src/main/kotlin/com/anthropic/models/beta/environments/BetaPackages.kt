@@ -446,7 +446,7 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Package configuration type */
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -460,12 +460,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val PACKAGES = of("packages")
+            @JvmField val PACKAGES = Type(JsonField.of("packages"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "packages" -> PACKAGES
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

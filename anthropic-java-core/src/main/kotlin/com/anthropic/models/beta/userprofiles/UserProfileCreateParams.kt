@@ -934,7 +934,7 @@ private constructor(
      * represents an individual end-user of the platform's product. `passthrough`: the profile
      * identifies a company the platform resells Claude access to.
      */
-    class AccessType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class AccessType private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -952,15 +952,23 @@ private constructor(
              * The user profile represents an individual end-user of a product that the platform
              * builds on the API. New profiles get this value by default.
              */
-            @JvmField val APPLICATION = of("application")
+            @JvmField val APPLICATION = AccessType(JsonField.of("application"))
 
             /** The user profile represents a company that the platform resells Claude access to. */
-            @JvmField val PASSTHROUGH = of("passthrough")
+            @JvmField val PASSTHROUGH = AccessType(JsonField.of("passthrough"))
 
-            @JvmStatic fun of(value: String) = AccessType(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): AccessType =
+                // Intern known values so `==` works
+                when (value) {
+                    "application" -> APPLICATION
+                    "passthrough" -> PASSTHROUGH
+                    else -> AccessType(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): AccessType =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): AccessType =
                 value.asString().getOrNull()?.let { of(it) } ?: AccessType(value)
         }
 

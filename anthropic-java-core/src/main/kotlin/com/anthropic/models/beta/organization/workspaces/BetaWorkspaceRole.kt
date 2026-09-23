@@ -6,8 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class BetaWorkspaceRole @JsonCreator private constructor(private val value: JsonField<String>) :
-    Enum {
+class BetaWorkspaceRole private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -20,20 +19,33 @@ class BetaWorkspaceRole @JsonCreator private constructor(private val value: Json
 
     companion object {
 
-        @JvmField val WORKSPACE_ADMIN = of("workspace_admin")
+        @JvmField val WORKSPACE_ADMIN = BetaWorkspaceRole(JsonField.of("workspace_admin"))
 
-        @JvmField val WORKSPACE_BILLING = of("workspace_billing")
+        @JvmField val WORKSPACE_BILLING = BetaWorkspaceRole(JsonField.of("workspace_billing"))
 
-        @JvmField val WORKSPACE_DEVELOPER = of("workspace_developer")
+        @JvmField val WORKSPACE_DEVELOPER = BetaWorkspaceRole(JsonField.of("workspace_developer"))
 
-        @JvmField val WORKSPACE_RESTRICTED_DEVELOPER = of("workspace_restricted_developer")
+        @JvmField
+        val WORKSPACE_RESTRICTED_DEVELOPER =
+            BetaWorkspaceRole(JsonField.of("workspace_restricted_developer"))
 
-        @JvmField val WORKSPACE_USER = of("workspace_user")
+        @JvmField val WORKSPACE_USER = BetaWorkspaceRole(JsonField.of("workspace_user"))
 
-        @JvmStatic fun of(value: String) = BetaWorkspaceRole(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaWorkspaceRole =
+            // Intern known values so `==` works
+            when (value) {
+                "workspace_admin" -> WORKSPACE_ADMIN
+                "workspace_billing" -> WORKSPACE_BILLING
+                "workspace_developer" -> WORKSPACE_DEVELOPER
+                "workspace_restricted_developer" -> WORKSPACE_RESTRICTED_DEVELOPER
+                "workspace_user" -> WORKSPACE_USER
+                else -> BetaWorkspaceRole(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaWorkspaceRole =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaWorkspaceRole =
             value.asString().getOrNull()?.let { of(it) } ?: BetaWorkspaceRole(value)
     }
 

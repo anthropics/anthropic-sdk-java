@@ -1040,7 +1040,7 @@ private constructor(
     }
 
     /** SessionStatus enum */
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1055,24 +1055,34 @@ private constructor(
         companion object {
 
             /** Transient error occurred, retrying automatically. */
-            @JvmField val RESCHEDULING = of("rescheduling")
+            @JvmField val RESCHEDULING = Status(JsonField.of("rescheduling"))
 
             /** Agent is actively executing. */
-            @JvmField val RUNNING = of("running")
+            @JvmField val RUNNING = Status(JsonField.of("running"))
 
             /**
              * Agent is waiting for input, including user messages or tool confirmations. Sessions
              * start in idle.
              */
-            @JvmField val IDLE = of("idle")
+            @JvmField val IDLE = Status(JsonField.of("idle"))
 
             /** Session has ended, either due to an error or completion. */
-            @JvmField val TERMINATED = of("terminated")
+            @JvmField val TERMINATED = Status(JsonField.of("terminated"))
 
-            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Status =
+                // Intern known values so `==` works
+                when (value) {
+                    "rescheduling" -> RESCHEDULING
+                    "running" -> RUNNING
+                    "idle" -> IDLE
+                    "terminated" -> TERMINATED
+                    else -> Status(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Status =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Status =
                 value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 
@@ -1213,7 +1223,7 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1227,12 +1237,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val SESSION = of("session")
+            @JvmField val SESSION = Type(JsonField.of("session"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "session" -> SESSION
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

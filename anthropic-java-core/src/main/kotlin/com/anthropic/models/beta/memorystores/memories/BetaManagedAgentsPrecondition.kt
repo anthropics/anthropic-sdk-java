@@ -223,7 +223,7 @@ private constructor(
         (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (contentSha256.asKnown().isPresent) 1 else 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -237,12 +237,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val CONTENT_SHA256 = of("content_sha256")
+            @JvmField val CONTENT_SHA256 = Type(JsonField.of("content_sha256"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "content_sha256" -> CONTENT_SHA256
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

@@ -436,7 +436,7 @@ private constructor(
         }
     }
 
-    class Command @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Command private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -450,22 +450,34 @@ private constructor(
 
         companion object {
 
-            @JvmField val VIEW = of("view")
+            @JvmField val VIEW = Command(JsonField.of("view"))
 
-            @JvmField val CREATE = of("create")
+            @JvmField val CREATE = Command(JsonField.of("create"))
 
-            @JvmField val STR_REPLACE = of("str_replace")
+            @JvmField val STR_REPLACE = Command(JsonField.of("str_replace"))
 
-            @JvmField val INSERT = of("insert")
+            @JvmField val INSERT = Command(JsonField.of("insert"))
 
-            @JvmField val DELETE = of("delete")
+            @JvmField val DELETE = Command(JsonField.of("delete"))
 
-            @JvmField val RENAME = of("rename")
+            @JvmField val RENAME = Command(JsonField.of("rename"))
 
-            @JvmStatic fun of(value: String) = Command(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Command =
+                // Intern known values so `==` works
+                when (value) {
+                    "view" -> VIEW
+                    "create" -> CREATE
+                    "str_replace" -> STR_REPLACE
+                    "insert" -> INSERT
+                    "delete" -> DELETE
+                    "rename" -> RENAME
+                    else -> Command(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Command =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Command =
                 value.asString().getOrNull()?.let { of(it) } ?: Command(value)
         }
 

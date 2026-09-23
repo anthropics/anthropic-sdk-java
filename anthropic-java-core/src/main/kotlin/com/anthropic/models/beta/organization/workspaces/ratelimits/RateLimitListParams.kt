@@ -284,7 +284,7 @@ private constructor(
             .build()
 
     /** Filter by group type. */
-    class GroupType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class GroupType private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -298,22 +298,34 @@ private constructor(
 
         companion object {
 
-            @JvmField val BATCH = of("batch")
+            @JvmField val BATCH = GroupType(JsonField.of("batch"))
 
-            @JvmField val FILES = of("files")
+            @JvmField val FILES = GroupType(JsonField.of("files"))
 
-            @JvmField val MODEL_GROUP = of("model_group")
+            @JvmField val MODEL_GROUP = GroupType(JsonField.of("model_group"))
 
-            @JvmField val SKILLS = of("skills")
+            @JvmField val SKILLS = GroupType(JsonField.of("skills"))
 
-            @JvmField val TOKEN_COUNT = of("token_count")
+            @JvmField val TOKEN_COUNT = GroupType(JsonField.of("token_count"))
 
-            @JvmField val WEB_SEARCH = of("web_search")
+            @JvmField val WEB_SEARCH = GroupType(JsonField.of("web_search"))
 
-            @JvmStatic fun of(value: String) = GroupType(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): GroupType =
+                // Intern known values so `==` works
+                when (value) {
+                    "batch" -> BATCH
+                    "files" -> FILES
+                    "model_group" -> MODEL_GROUP
+                    "skills" -> SKILLS
+                    "token_count" -> TOKEN_COUNT
+                    "web_search" -> WEB_SEARCH
+                    else -> GroupType(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): GroupType =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): GroupType =
                 value.asString().getOrNull()?.let { of(it) } ?: GroupType(value)
         }
 

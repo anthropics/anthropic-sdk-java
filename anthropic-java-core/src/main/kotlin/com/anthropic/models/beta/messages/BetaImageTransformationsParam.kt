@@ -180,8 +180,7 @@ private constructor(
      * image's dimensions and the largest dimensions that fit, so you can scale the image
      * deliberately — your image is never silently scaled down.
      */
-    class OversizedImage @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class OversizedImage private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -195,14 +194,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val DOWNSIZE = of("downsize")
+            @JvmField val DOWNSIZE = OversizedImage(JsonField.of("downsize"))
 
-            @JvmField val ERROR = of("error")
+            @JvmField val ERROR = OversizedImage(JsonField.of("error"))
 
-            @JvmStatic fun of(value: String) = OversizedImage(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): OversizedImage =
+                // Intern known values so `==` works
+                when (value) {
+                    "downsize" -> DOWNSIZE
+                    "error" -> ERROR
+                    else -> OversizedImage(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): OversizedImage =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): OversizedImage =
                 value.asString().getOrNull()?.let { of(it) } ?: OversizedImage(value)
         }
 

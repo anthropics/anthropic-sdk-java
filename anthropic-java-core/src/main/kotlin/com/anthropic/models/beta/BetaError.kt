@@ -546,7 +546,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -560,28 +560,43 @@ private constructor(
 
         companion object {
 
-            @JvmField val INVALID_REQUEST_ERROR = of("invalid_request_error")
+            @JvmField val INVALID_REQUEST_ERROR = Type(JsonField.of("invalid_request_error"))
 
-            @JvmField val AUTHENTICATION_ERROR = of("authentication_error")
+            @JvmField val AUTHENTICATION_ERROR = Type(JsonField.of("authentication_error"))
 
-            @JvmField val BILLING_ERROR = of("billing_error")
+            @JvmField val BILLING_ERROR = Type(JsonField.of("billing_error"))
 
-            @JvmField val PERMISSION_ERROR = of("permission_error")
+            @JvmField val PERMISSION_ERROR = Type(JsonField.of("permission_error"))
 
-            @JvmField val NOT_FOUND_ERROR = of("not_found_error")
+            @JvmField val NOT_FOUND_ERROR = Type(JsonField.of("not_found_error"))
 
-            @JvmField val RATE_LIMIT_ERROR = of("rate_limit_error")
+            @JvmField val RATE_LIMIT_ERROR = Type(JsonField.of("rate_limit_error"))
 
-            @JvmField val TIMEOUT_ERROR = of("timeout_error")
+            @JvmField val TIMEOUT_ERROR = Type(JsonField.of("timeout_error"))
 
-            @JvmField val API_ERROR = of("api_error")
+            @JvmField val API_ERROR = Type(JsonField.of("api_error"))
 
-            @JvmField val OVERLOADED_ERROR = of("overloaded_error")
+            @JvmField val OVERLOADED_ERROR = Type(JsonField.of("overloaded_error"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "invalid_request_error" -> INVALID_REQUEST_ERROR
+                    "authentication_error" -> AUTHENTICATION_ERROR
+                    "billing_error" -> BILLING_ERROR
+                    "permission_error" -> PERMISSION_ERROR
+                    "not_found_error" -> NOT_FOUND_ERROR
+                    "rate_limit_error" -> RATE_LIMIT_ERROR
+                    "timeout_error" -> TIMEOUT_ERROR
+                    "api_error" -> API_ERROR
+                    "overloaded_error" -> OVERLOADED_ERROR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

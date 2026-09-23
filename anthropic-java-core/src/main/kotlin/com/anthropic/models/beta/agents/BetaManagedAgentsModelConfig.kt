@@ -697,7 +697,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -711,20 +711,31 @@ private constructor(
 
             companion object {
 
-                @JvmField val LOW = of("low")
+                @JvmField val LOW = Type(JsonField.of("low"))
 
-                @JvmField val MEDIUM = of("medium")
+                @JvmField val MEDIUM = Type(JsonField.of("medium"))
 
-                @JvmField val HIGH = of("high")
+                @JvmField val HIGH = Type(JsonField.of("high"))
 
-                @JvmField val XHIGH = of("xhigh")
+                @JvmField val XHIGH = Type(JsonField.of("xhigh"))
 
-                @JvmField val MAX = of("max")
+                @JvmField val MAX = Type(JsonField.of("max"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "low" -> LOW
+                        "medium" -> MEDIUM
+                        "high" -> HIGH
+                        "xhigh" -> XHIGH
+                        "max" -> MAX
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -862,7 +873,7 @@ private constructor(
      * pricing. Defaults to `standard`. Not all models support `fast`; invalid combinations are
      * rejected at create time.
      */
-    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Speed private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -876,14 +887,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = Speed(JsonField.of("standard"))
 
-            @JvmField val FAST = of("fast")
+            @JvmField val FAST = Speed(JsonField.of("fast"))
 
-            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Speed =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "fast" -> FAST
+                    else -> Speed(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Speed =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Speed =
                 value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 

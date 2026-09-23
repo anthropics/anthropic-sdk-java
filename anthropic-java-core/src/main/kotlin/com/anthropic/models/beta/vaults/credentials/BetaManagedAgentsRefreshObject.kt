@@ -221,7 +221,7 @@ private constructor(
             (status.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Outcome of the refresh attempt. */
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -236,21 +236,31 @@ private constructor(
         companion object {
 
             /** The token endpoint returned a new access token. */
-            @JvmField val SUCCEEDED = of("succeeded")
+            @JvmField val SUCCEEDED = Status(JsonField.of("succeeded"))
 
             /** The token endpoint returned an error response. See `http_response` for detail. */
-            @JvmField val FAILED = of("failed")
+            @JvmField val FAILED = Status(JsonField.of("failed"))
 
             /** The token endpoint could not be reached (DNS, TLS, or connection error). */
-            @JvmField val CONNECT_ERROR = of("connect_error")
+            @JvmField val CONNECT_ERROR = Status(JsonField.of("connect_error"))
 
             /** No refresh token is stored for the credential, so no exchange was attempted. */
-            @JvmField val NO_REFRESH_TOKEN = of("no_refresh_token")
+            @JvmField val NO_REFRESH_TOKEN = Status(JsonField.of("no_refresh_token"))
 
-            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Status =
+                // Intern known values so `==` works
+                when (value) {
+                    "succeeded" -> SUCCEEDED
+                    "failed" -> FAILED
+                    "connect_error" -> CONNECT_ERROR
+                    "no_refresh_token" -> NO_REFRESH_TOKEN
+                    else -> Status(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Status =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Status =
                 value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 

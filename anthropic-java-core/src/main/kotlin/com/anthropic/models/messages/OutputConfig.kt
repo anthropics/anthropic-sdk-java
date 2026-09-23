@@ -206,7 +206,7 @@ private constructor(
      *
      * Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
      */
-    class Effort @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Effort private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -220,20 +220,31 @@ private constructor(
 
         companion object {
 
-            @JvmField val LOW = of("low")
+            @JvmField val LOW = Effort(JsonField.of("low"))
 
-            @JvmField val MEDIUM = of("medium")
+            @JvmField val MEDIUM = Effort(JsonField.of("medium"))
 
-            @JvmField val HIGH = of("high")
+            @JvmField val HIGH = Effort(JsonField.of("high"))
 
-            @JvmField val XHIGH = of("xhigh")
+            @JvmField val XHIGH = Effort(JsonField.of("xhigh"))
 
-            @JvmField val MAX = of("max")
+            @JvmField val MAX = Effort(JsonField.of("max"))
 
-            @JvmStatic fun of(value: String) = Effort(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Effort =
+                // Intern known values so `==` works
+                when (value) {
+                    "low" -> LOW
+                    "medium" -> MEDIUM
+                    "high" -> HIGH
+                    "xhigh" -> XHIGH
+                    "max" -> MAX
+                    else -> Effort(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Effort =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Effort =
                 value.asString().getOrNull()?.let { of(it) } ?: Effort(value)
         }
 

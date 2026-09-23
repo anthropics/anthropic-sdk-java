@@ -6,9 +6,8 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class WebSearchToolResultErrorCode
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class WebSearchToolResultErrorCode private constructor(private val value: JsonField<String>) :
+    Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -21,22 +20,38 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val INVALID_TOOL_INPUT = of("invalid_tool_input")
+        @JvmField
+        val INVALID_TOOL_INPUT = WebSearchToolResultErrorCode(JsonField.of("invalid_tool_input"))
 
-        @JvmField val UNAVAILABLE = of("unavailable")
+        @JvmField val UNAVAILABLE = WebSearchToolResultErrorCode(JsonField.of("unavailable"))
 
-        @JvmField val MAX_USES_EXCEEDED = of("max_uses_exceeded")
+        @JvmField
+        val MAX_USES_EXCEEDED = WebSearchToolResultErrorCode(JsonField.of("max_uses_exceeded"))
 
-        @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
+        @JvmField
+        val TOO_MANY_REQUESTS = WebSearchToolResultErrorCode(JsonField.of("too_many_requests"))
 
-        @JvmField val QUERY_TOO_LONG = of("query_too_long")
+        @JvmField val QUERY_TOO_LONG = WebSearchToolResultErrorCode(JsonField.of("query_too_long"))
 
-        @JvmField val REQUEST_TOO_LARGE = of("request_too_large")
+        @JvmField
+        val REQUEST_TOO_LARGE = WebSearchToolResultErrorCode(JsonField.of("request_too_large"))
 
-        @JvmStatic fun of(value: String) = WebSearchToolResultErrorCode(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): WebSearchToolResultErrorCode =
+            // Intern known values so `==` works
+            when (value) {
+                "invalid_tool_input" -> INVALID_TOOL_INPUT
+                "unavailable" -> UNAVAILABLE
+                "max_uses_exceeded" -> MAX_USES_EXCEEDED
+                "too_many_requests" -> TOO_MANY_REQUESTS
+                "query_too_long" -> QUERY_TOO_LONG
+                "request_too_large" -> REQUEST_TOO_LARGE
+                else -> WebSearchToolResultErrorCode(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): WebSearchToolResultErrorCode =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): WebSearchToolResultErrorCode =
             value.asString().getOrNull()?.let { of(it) } ?: WebSearchToolResultErrorCode(value)
     }
 

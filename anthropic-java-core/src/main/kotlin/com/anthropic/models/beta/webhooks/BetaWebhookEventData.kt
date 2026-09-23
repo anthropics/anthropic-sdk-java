@@ -3005,7 +3005,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -3019,98 +3019,157 @@ private constructor(
 
         companion object {
 
-            @JvmField val SESSION_CREATED = of("session.created")
+            @JvmField val SESSION_CREATED = Type(JsonField.of("session.created"))
 
-            @JvmField val SESSION_PENDING = of("session.pending")
+            @JvmField val SESSION_PENDING = Type(JsonField.of("session.pending"))
 
-            @JvmField val SESSION_RUNNING = of("session.running")
+            @JvmField val SESSION_RUNNING = Type(JsonField.of("session.running"))
 
-            @JvmField val SESSION_IDLED = of("session.idled")
+            @JvmField val SESSION_IDLED = Type(JsonField.of("session.idled"))
 
-            @JvmField val SESSION_REQUIRES_ACTION = of("session.requires_action")
+            @JvmField val SESSION_REQUIRES_ACTION = Type(JsonField.of("session.requires_action"))
 
-            @JvmField val SESSION_ARCHIVED = of("session.archived")
+            @JvmField val SESSION_ARCHIVED = Type(JsonField.of("session.archived"))
 
-            @JvmField val SESSION_DELETED = of("session.deleted")
+            @JvmField val SESSION_DELETED = Type(JsonField.of("session.deleted"))
 
-            @JvmField val SESSION_STATUS_RESCHEDULED = of("session.status_rescheduled")
+            @JvmField
+            val SESSION_STATUS_RESCHEDULED = Type(JsonField.of("session.status_rescheduled"))
 
-            @JvmField val SESSION_STATUS_RUN_STARTED = of("session.status_run_started")
+            @JvmField
+            val SESSION_STATUS_RUN_STARTED = Type(JsonField.of("session.status_run_started"))
 
-            @JvmField val SESSION_STATUS_IDLED = of("session.status_idled")
+            @JvmField val SESSION_STATUS_IDLED = Type(JsonField.of("session.status_idled"))
 
-            @JvmField val SESSION_STATUS_TERMINATED = of("session.status_terminated")
+            @JvmField
+            val SESSION_STATUS_TERMINATED = Type(JsonField.of("session.status_terminated"))
 
-            @JvmField val SESSION_THREAD_CREATED = of("session.thread_created")
+            @JvmField val SESSION_THREAD_CREATED = Type(JsonField.of("session.thread_created"))
 
-            @JvmField val SESSION_THREAD_IDLED = of("session.thread_idled")
+            @JvmField val SESSION_THREAD_IDLED = Type(JsonField.of("session.thread_idled"))
 
-            @JvmField val SESSION_THREAD_TERMINATED = of("session.thread_terminated")
+            @JvmField
+            val SESSION_THREAD_TERMINATED = Type(JsonField.of("session.thread_terminated"))
 
-            @JvmField val SESSION_OUTCOME_EVALUATION_ENDED = of("session.outcome_evaluation_ended")
+            @JvmField
+            val SESSION_OUTCOME_EVALUATION_ENDED =
+                Type(JsonField.of("session.outcome_evaluation_ended"))
 
-            @JvmField val VAULT_CREATED = of("vault.created")
+            @JvmField val VAULT_CREATED = Type(JsonField.of("vault.created"))
 
-            @JvmField val VAULT_ARCHIVED = of("vault.archived")
+            @JvmField val VAULT_ARCHIVED = Type(JsonField.of("vault.archived"))
 
-            @JvmField val VAULT_DELETED = of("vault.deleted")
+            @JvmField val VAULT_DELETED = Type(JsonField.of("vault.deleted"))
 
-            @JvmField val VAULT_CREDENTIAL_CREATED = of("vault_credential.created")
+            @JvmField val VAULT_CREDENTIAL_CREATED = Type(JsonField.of("vault_credential.created"))
 
-            @JvmField val VAULT_CREDENTIAL_ARCHIVED = of("vault_credential.archived")
+            @JvmField
+            val VAULT_CREDENTIAL_ARCHIVED = Type(JsonField.of("vault_credential.archived"))
 
-            @JvmField val VAULT_CREDENTIAL_DELETED = of("vault_credential.deleted")
+            @JvmField val VAULT_CREDENTIAL_DELETED = Type(JsonField.of("vault_credential.deleted"))
 
-            @JvmField val VAULT_CREDENTIAL_REFRESH_FAILED = of("vault_credential.refresh_failed")
+            @JvmField
+            val VAULT_CREDENTIAL_REFRESH_FAILED =
+                Type(JsonField.of("vault_credential.refresh_failed"))
 
-            @JvmField val SESSION_UPDATED = of("session.updated")
+            @JvmField val SESSION_UPDATED = Type(JsonField.of("session.updated"))
 
-            @JvmField val AGENT_CREATED = of("agent.created")
+            @JvmField val AGENT_CREATED = Type(JsonField.of("agent.created"))
 
-            @JvmField val AGENT_ARCHIVED = of("agent.archived")
+            @JvmField val AGENT_ARCHIVED = Type(JsonField.of("agent.archived"))
 
-            @JvmField val AGENT_DELETED = of("agent.deleted")
+            @JvmField val AGENT_DELETED = Type(JsonField.of("agent.deleted"))
 
-            @JvmField val DEPLOYMENT_PAUSED = of("deployment.paused")
+            @JvmField val DEPLOYMENT_PAUSED = Type(JsonField.of("deployment.paused"))
 
-            @JvmField val DEPLOYMENT_RUN_FAILED = of("deployment_run.failed")
+            @JvmField val DEPLOYMENT_RUN_FAILED = Type(JsonField.of("deployment_run.failed"))
 
-            @JvmField val DEPLOYMENT_CREATED = of("deployment.created")
+            @JvmField val DEPLOYMENT_CREATED = Type(JsonField.of("deployment.created"))
 
-            @JvmField val DEPLOYMENT_UPDATED = of("deployment.updated")
+            @JvmField val DEPLOYMENT_UPDATED = Type(JsonField.of("deployment.updated"))
 
-            @JvmField val DEPLOYMENT_UNPAUSED = of("deployment.unpaused")
+            @JvmField val DEPLOYMENT_UNPAUSED = Type(JsonField.of("deployment.unpaused"))
 
-            @JvmField val AGENT_UPDATED = of("agent.updated")
+            @JvmField val AGENT_UPDATED = Type(JsonField.of("agent.updated"))
 
-            @JvmField val DEPLOYMENT_ARCHIVED = of("deployment.archived")
+            @JvmField val DEPLOYMENT_ARCHIVED = Type(JsonField.of("deployment.archived"))
 
-            @JvmField val DEPLOYMENT_RUN_STARTED = of("deployment_run.started")
+            @JvmField val DEPLOYMENT_RUN_STARTED = Type(JsonField.of("deployment_run.started"))
 
-            @JvmField val DEPLOYMENT_DELETED = of("deployment.deleted")
+            @JvmField val DEPLOYMENT_DELETED = Type(JsonField.of("deployment.deleted"))
 
-            @JvmField val DEPLOYMENT_RUN_SUCCEEDED = of("deployment_run.succeeded")
+            @JvmField val DEPLOYMENT_RUN_SUCCEEDED = Type(JsonField.of("deployment_run.succeeded"))
 
-            @JvmField val ENVIRONMENT_CREATED = of("environment.created")
+            @JvmField val ENVIRONMENT_CREATED = Type(JsonField.of("environment.created"))
 
-            @JvmField val ENVIRONMENT_UPDATED = of("environment.updated")
+            @JvmField val ENVIRONMENT_UPDATED = Type(JsonField.of("environment.updated"))
 
-            @JvmField val ENVIRONMENT_ARCHIVED = of("environment.archived")
+            @JvmField val ENVIRONMENT_ARCHIVED = Type(JsonField.of("environment.archived"))
 
-            @JvmField val ENVIRONMENT_DELETED = of("environment.deleted")
+            @JvmField val ENVIRONMENT_DELETED = Type(JsonField.of("environment.deleted"))
 
-            @JvmField val MEMORY_STORE_CREATED = of("memory_store.created")
+            @JvmField val MEMORY_STORE_CREATED = Type(JsonField.of("memory_store.created"))
 
-            @JvmField val MEMORY_STORE_ARCHIVED = of("memory_store.archived")
+            @JvmField val MEMORY_STORE_ARCHIVED = Type(JsonField.of("memory_store.archived"))
 
-            @JvmField val MEMORY_STORE_DELETED = of("memory_store.deleted")
+            @JvmField val MEMORY_STORE_DELETED = Type(JsonField.of("memory_store.deleted"))
 
-            @JvmField val SESSION_BUDGET_REACHED = of("session.budget_reached")
+            @JvmField val SESSION_BUDGET_REACHED = Type(JsonField.of("session.budget_reached"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "session.created" -> SESSION_CREATED
+                    "session.pending" -> SESSION_PENDING
+                    "session.running" -> SESSION_RUNNING
+                    "session.idled" -> SESSION_IDLED
+                    "session.requires_action" -> SESSION_REQUIRES_ACTION
+                    "session.archived" -> SESSION_ARCHIVED
+                    "session.deleted" -> SESSION_DELETED
+                    "session.status_rescheduled" -> SESSION_STATUS_RESCHEDULED
+                    "session.status_run_started" -> SESSION_STATUS_RUN_STARTED
+                    "session.status_idled" -> SESSION_STATUS_IDLED
+                    "session.status_terminated" -> SESSION_STATUS_TERMINATED
+                    "session.thread_created" -> SESSION_THREAD_CREATED
+                    "session.thread_idled" -> SESSION_THREAD_IDLED
+                    "session.thread_terminated" -> SESSION_THREAD_TERMINATED
+                    "session.outcome_evaluation_ended" -> SESSION_OUTCOME_EVALUATION_ENDED
+                    "vault.created" -> VAULT_CREATED
+                    "vault.archived" -> VAULT_ARCHIVED
+                    "vault.deleted" -> VAULT_DELETED
+                    "vault_credential.created" -> VAULT_CREDENTIAL_CREATED
+                    "vault_credential.archived" -> VAULT_CREDENTIAL_ARCHIVED
+                    "vault_credential.deleted" -> VAULT_CREDENTIAL_DELETED
+                    "vault_credential.refresh_failed" -> VAULT_CREDENTIAL_REFRESH_FAILED
+                    "session.updated" -> SESSION_UPDATED
+                    "agent.created" -> AGENT_CREATED
+                    "agent.archived" -> AGENT_ARCHIVED
+                    "agent.deleted" -> AGENT_DELETED
+                    "deployment.paused" -> DEPLOYMENT_PAUSED
+                    "deployment_run.failed" -> DEPLOYMENT_RUN_FAILED
+                    "deployment.created" -> DEPLOYMENT_CREATED
+                    "deployment.updated" -> DEPLOYMENT_UPDATED
+                    "deployment.unpaused" -> DEPLOYMENT_UNPAUSED
+                    "agent.updated" -> AGENT_UPDATED
+                    "deployment.archived" -> DEPLOYMENT_ARCHIVED
+                    "deployment_run.started" -> DEPLOYMENT_RUN_STARTED
+                    "deployment.deleted" -> DEPLOYMENT_DELETED
+                    "deployment_run.succeeded" -> DEPLOYMENT_RUN_SUCCEEDED
+                    "environment.created" -> ENVIRONMENT_CREATED
+                    "environment.updated" -> ENVIRONMENT_UPDATED
+                    "environment.archived" -> ENVIRONMENT_ARCHIVED
+                    "environment.deleted" -> ENVIRONMENT_DELETED
+                    "memory_store.created" -> MEMORY_STORE_CREATED
+                    "memory_store.archived" -> MEMORY_STORE_ARCHIVED
+                    "memory_store.deleted" -> MEMORY_STORE_DELETED
+                    "session.budget_reached" -> SESSION_BUDGET_REACHED
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

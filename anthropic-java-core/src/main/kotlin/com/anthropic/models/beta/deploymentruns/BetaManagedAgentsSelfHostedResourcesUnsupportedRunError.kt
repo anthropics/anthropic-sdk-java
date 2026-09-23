@@ -205,7 +205,7 @@ private constructor(
     internal fun validity(): Int =
         (if (message.asKnown().isPresent) 1 else 0) + (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -221,12 +221,20 @@ private constructor(
 
             @JvmField
             val SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR =
-                of("self_hosted_resources_unsupported_error")
+                Type(JsonField.of("self_hosted_resources_unsupported_error"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "self_hosted_resources_unsupported_error" ->
+                        SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

@@ -474,7 +474,7 @@ private constructor(
     }
 
     /** Status of the API key. */
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -488,16 +488,25 @@ private constructor(
 
         companion object {
 
-            @JvmField val ACTIVE = of("active")
+            @JvmField val ACTIVE = Status(JsonField.of("active"))
 
-            @JvmField val ARCHIVED = of("archived")
+            @JvmField val ARCHIVED = Status(JsonField.of("archived"))
 
-            @JvmField val INACTIVE = of("inactive")
+            @JvmField val INACTIVE = Status(JsonField.of("inactive"))
 
-            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Status =
+                // Intern known values so `==` works
+                when (value) {
+                    "active" -> ACTIVE
+                    "archived" -> ARCHIVED
+                    "inactive" -> INACTIVE
+                    else -> Status(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Status =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Status =
                 value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 

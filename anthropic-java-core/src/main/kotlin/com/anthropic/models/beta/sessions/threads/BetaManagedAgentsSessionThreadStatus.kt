@@ -8,7 +8,6 @@ import kotlin.jvm.optionals.getOrNull
 
 /** SessionThreadStatus enum */
 class BetaManagedAgentsSessionThreadStatus
-@JsonCreator
 private constructor(private val value: JsonField<String>) : Enum {
 
     /**
@@ -22,18 +21,29 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val RUNNING = of("running")
+        @JvmField val RUNNING = BetaManagedAgentsSessionThreadStatus(JsonField.of("running"))
 
-        @JvmField val IDLE = of("idle")
+        @JvmField val IDLE = BetaManagedAgentsSessionThreadStatus(JsonField.of("idle"))
 
-        @JvmField val RESCHEDULING = of("rescheduling")
+        @JvmField
+        val RESCHEDULING = BetaManagedAgentsSessionThreadStatus(JsonField.of("rescheduling"))
 
-        @JvmField val TERMINATED = of("terminated")
+        @JvmField val TERMINATED = BetaManagedAgentsSessionThreadStatus(JsonField.of("terminated"))
 
-        @JvmStatic fun of(value: String) = BetaManagedAgentsSessionThreadStatus(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaManagedAgentsSessionThreadStatus =
+            // Intern known values so `==` works
+            when (value) {
+                "running" -> RUNNING
+                "idle" -> IDLE
+                "rescheduling" -> RESCHEDULING
+                "terminated" -> TERMINATED
+                else -> BetaManagedAgentsSessionThreadStatus(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaManagedAgentsSessionThreadStatus =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaManagedAgentsSessionThreadStatus =
             value.asString().getOrNull()?.let { of(it) }
                 ?: BetaManagedAgentsSessionThreadStatus(value)
     }

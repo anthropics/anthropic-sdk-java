@@ -1305,7 +1305,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1319,18 +1319,28 @@ private constructor(
 
             companion object {
 
-                @JvmField val MESSAGE = of("message")
+                @JvmField val MESSAGE = Type(JsonField.of("message"))
 
-                @JvmField val COMPACTION = of("compaction")
+                @JvmField val COMPACTION = Type(JsonField.of("compaction"))
 
-                @JvmField val ADVISOR_MESSAGE = of("advisor_message")
+                @JvmField val ADVISOR_MESSAGE = Type(JsonField.of("advisor_message"))
 
-                @JvmField val FALLBACK_MESSAGE = of("fallback_message")
+                @JvmField val FALLBACK_MESSAGE = Type(JsonField.of("fallback_message"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "message" -> MESSAGE
+                        "compaction" -> COMPACTION
+                        "advisor_message" -> ADVISOR_MESSAGE
+                        "fallback_message" -> FALLBACK_MESSAGE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1460,8 +1470,7 @@ private constructor(
     }
 
     /** If the request used the priority, standard, or batch tier. */
-    class ServiceTier @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class ServiceTier private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1475,16 +1484,25 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = ServiceTier(JsonField.of("standard"))
 
-            @JvmField val PRIORITY = of("priority")
+            @JvmField val PRIORITY = ServiceTier(JsonField.of("priority"))
 
-            @JvmField val BATCH = of("batch")
+            @JvmField val BATCH = ServiceTier(JsonField.of("batch"))
 
-            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): ServiceTier =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "priority" -> PRIORITY
+                    "batch" -> BATCH
+                    else -> ServiceTier(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): ServiceTier =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): ServiceTier =
                 value.asString().getOrNull()?.let { of(it) } ?: ServiceTier(value)
         }
 
@@ -1610,7 +1628,7 @@ private constructor(
     }
 
     /** The inference speed mode used for this request. */
-    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Speed private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1624,14 +1642,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = Speed(JsonField.of("standard"))
 
-            @JvmField val FAST = of("fast")
+            @JvmField val FAST = Speed(JsonField.of("fast"))
 
-            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Speed =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "fast" -> FAST
+                    else -> Speed(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Speed =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Speed =
                 value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 

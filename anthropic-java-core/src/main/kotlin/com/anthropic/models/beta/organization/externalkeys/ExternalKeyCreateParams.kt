@@ -935,7 +935,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -949,16 +949,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val AWS = of("aws")
+                @JvmField val AWS = Type(JsonField.of("aws"))
 
-                @JvmField val GCP = of("gcp")
+                @JvmField val GCP = Type(JsonField.of("gcp"))
 
-                @JvmField val AZURE = of("azure")
+                @JvmField val AZURE = Type(JsonField.of("azure"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "aws" -> AWS
+                        "gcp" -> GCP
+                        "azure" -> AZURE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1084,7 +1093,7 @@ private constructor(
     }
 
     /** Data residency geo. Only `us` is supported. */
-    class Geo @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Geo private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1098,12 +1107,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val US = of("us")
+            @JvmField val US = Geo(JsonField.of("us"))
 
-            @JvmStatic fun of(value: String) = Geo(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Geo =
+                // Intern known values so `==` works
+                when (value) {
+                    "us" -> US
+                    else -> Geo(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Geo =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Geo =
                 value.asString().getOrNull()?.let { of(it) } ?: Geo(value)
         }
 

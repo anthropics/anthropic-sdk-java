@@ -357,7 +357,7 @@ private constructor(
             (if (startLine.asKnown().isPresent) 1 else 0) +
             (if (totalLines.asKnown().isPresent) 1 else 0)
 
-    class FileType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class FileType private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -371,16 +371,25 @@ private constructor(
 
         companion object {
 
-            @JvmField val TEXT = of("text")
+            @JvmField val TEXT = FileType(JsonField.of("text"))
 
-            @JvmField val IMAGE = of("image")
+            @JvmField val IMAGE = FileType(JsonField.of("image"))
 
-            @JvmField val PDF = of("pdf")
+            @JvmField val PDF = FileType(JsonField.of("pdf"))
 
-            @JvmStatic fun of(value: String) = FileType(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): FileType =
+                // Intern known values so `==` works
+                when (value) {
+                    "text" -> TEXT
+                    "image" -> IMAGE
+                    "pdf" -> PDF
+                    else -> FileType(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): FileType =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): FileType =
                 value.asString().getOrNull()?.let { of(it) } ?: FileType(value)
         }
 

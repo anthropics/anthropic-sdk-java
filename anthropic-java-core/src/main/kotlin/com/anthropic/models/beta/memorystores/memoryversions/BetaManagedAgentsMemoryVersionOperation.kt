@@ -11,7 +11,6 @@ import kotlin.jvm.optionals.getOrNull
  * exactly one version row with one of these values.
  */
 class BetaManagedAgentsMemoryVersionOperation
-@JsonCreator
 private constructor(private val value: JsonField<String>) : Enum {
 
     /**
@@ -26,26 +25,34 @@ private constructor(private val value: JsonField<String>) : Enum {
     companion object {
 
         /** The memory was created. The first version in any memory's lineage. */
-        @JvmField val CREATED = of("created")
+        @JvmField val CREATED = BetaManagedAgentsMemoryVersionOperation(JsonField.of("created"))
 
         /**
          * The memory's `content`, `path`, or both were changed via update. Writes the agent makes
          * through the filesystem mount also appear as `modified`.
          */
-        @JvmField val MODIFIED = of("modified")
+        @JvmField val MODIFIED = BetaManagedAgentsMemoryVersionOperation(JsonField.of("modified"))
 
         /**
          * The memory was deleted. The `content`, `content_size_bytes`, and `content_sha256` fields
          * are `null` on this version. The preceding version, while it is retained, records the
          * deleted content's size and hash.
          */
-        @JvmField val DELETED = of("deleted")
+        @JvmField val DELETED = BetaManagedAgentsMemoryVersionOperation(JsonField.of("deleted"))
 
         @JvmStatic
-        fun of(value: String) = BetaManagedAgentsMemoryVersionOperation(JsonField.of(value))
+        fun of(value: String): BetaManagedAgentsMemoryVersionOperation =
+            // Intern known values so `==` works
+            when (value) {
+                "created" -> CREATED
+                "modified" -> MODIFIED
+                "deleted" -> DELETED
+                else -> BetaManagedAgentsMemoryVersionOperation(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaManagedAgentsMemoryVersionOperation =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaManagedAgentsMemoryVersionOperation =
             value.asString().getOrNull()?.let { of(it) }
                 ?: BetaManagedAgentsMemoryVersionOperation(value)
     }

@@ -6,7 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class BetaCurrency @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+class BetaCurrency private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -19,12 +19,19 @@ class BetaCurrency @JsonCreator private constructor(private val value: JsonField
 
     companion object {
 
-        @JvmField val USD = of("USD")
+        @JvmField val USD = BetaCurrency(JsonField.of("USD"))
 
-        @JvmStatic fun of(value: String) = BetaCurrency(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaCurrency =
+            // Intern known values so `==` works
+            when (value) {
+                "USD" -> USD
+                else -> BetaCurrency(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaCurrency =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaCurrency =
             value.asString().getOrNull()?.let { of(it) } ?: BetaCurrency(value)
     }
 

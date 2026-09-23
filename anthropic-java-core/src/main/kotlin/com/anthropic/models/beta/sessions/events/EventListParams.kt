@@ -425,7 +425,7 @@ private constructor(
      * Sort direction for results, ordered by the event's `processed_at`. Defaults to `asc`
      * (chronological).
      */
-    class Order @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Order private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -439,14 +439,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val ASC = of("asc")
+            @JvmField val ASC = Order(JsonField.of("asc"))
 
-            @JvmField val DESC = of("desc")
+            @JvmField val DESC = Order(JsonField.of("desc"))
 
-            @JvmStatic fun of(value: String) = Order(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Order =
+                // Intern known values so `==` works
+                when (value) {
+                    "asc" -> ASC
+                    "desc" -> DESC
+                    else -> Order(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Order =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Order =
                 value.asString().getOrNull()?.let { of(it) } ?: Order(value)
         }
 

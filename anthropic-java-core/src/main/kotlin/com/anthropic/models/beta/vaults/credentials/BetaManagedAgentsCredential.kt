@@ -877,7 +877,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -891,16 +891,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val MCP_OAUTH = of("mcp_oauth")
+                @JvmField val MCP_OAUTH = Type(JsonField.of("mcp_oauth"))
 
-                @JvmField val STATIC_BEARER = of("static_bearer")
+                @JvmField val STATIC_BEARER = Type(JsonField.of("static_bearer"))
 
-                @JvmField val ENVIRONMENT_VARIABLE = of("environment_variable")
+                @JvmField val ENVIRONMENT_VARIABLE = Type(JsonField.of("environment_variable"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "mcp_oauth" -> MCP_OAUTH
+                        "static_bearer" -> STATIC_BEARER
+                        "environment_variable" -> ENVIRONMENT_VARIABLE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1134,7 +1143,7 @@ private constructor(
         override fun toString() = "Metadata{additionalProperties=$additionalProperties}"
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1148,12 +1157,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val VAULT_CREDENTIAL = of("vault_credential")
+            @JvmField val VAULT_CREDENTIAL = Type(JsonField.of("vault_credential"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "vault_credential" -> VAULT_CREDENTIAL
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

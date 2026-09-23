@@ -273,7 +273,7 @@ private constructor(
      * on its own, so `thinking_mismatch_allowed` entries are a lower bound on what enforcement
      * would remove.
      */
-    class Reason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Reason private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -287,18 +287,31 @@ private constructor(
 
         companion object {
 
-            @JvmField val MODEL_BINDING_MISMATCH = of("model_binding_mismatch")
+            @JvmField val MODEL_BINDING_MISMATCH = Reason(JsonField.of("model_binding_mismatch"))
 
-            @JvmField val PREFIX_BINDING_MISMATCH = of("prefix_binding_mismatch")
+            @JvmField val PREFIX_BINDING_MISMATCH = Reason(JsonField.of("prefix_binding_mismatch"))
 
-            @JvmField val ORGANIZATION_BINDING_MISMATCH = of("organization_binding_mismatch")
+            @JvmField
+            val ORGANIZATION_BINDING_MISMATCH =
+                Reason(JsonField.of("organization_binding_mismatch"))
 
-            @JvmField val END_USER_BINDING_MISMATCH = of("end_user_binding_mismatch")
+            @JvmField
+            val END_USER_BINDING_MISMATCH = Reason(JsonField.of("end_user_binding_mismatch"))
 
-            @JvmStatic fun of(value: String) = Reason(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Reason =
+                // Intern known values so `==` works
+                when (value) {
+                    "model_binding_mismatch" -> MODEL_BINDING_MISMATCH
+                    "prefix_binding_mismatch" -> PREFIX_BINDING_MISMATCH
+                    "organization_binding_mismatch" -> ORGANIZATION_BINDING_MISMATCH
+                    "end_user_binding_mismatch" -> END_USER_BINDING_MISMATCH
+                    else -> Reason(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Reason =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Reason =
                 value.asString().getOrNull()?.let { of(it) } ?: Reason(value)
         }
 

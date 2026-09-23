@@ -319,7 +319,7 @@ private constructor(
             }
             .build()
 
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -333,16 +333,25 @@ private constructor(
 
         companion object {
 
-            @JvmField val ACCEPTED = of("accepted")
+            @JvmField val ACCEPTED = Status(JsonField.of("accepted"))
 
-            @JvmField val EXPIRED = of("expired")
+            @JvmField val EXPIRED = Status(JsonField.of("expired"))
 
-            @JvmField val PENDING = of("pending")
+            @JvmField val PENDING = Status(JsonField.of("pending"))
 
-            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Status =
+                // Intern known values so `==` works
+                when (value) {
+                    "accepted" -> ACCEPTED
+                    "expired" -> EXPIRED
+                    "pending" -> PENDING
+                    else -> Status(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Status =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Status =
                 value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 

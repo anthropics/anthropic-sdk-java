@@ -2179,7 +2179,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -2193,46 +2193,78 @@ private constructor(
 
             companion object {
 
-                @JvmField val ENVIRONMENT_ARCHIVED_ERROR = of("environment_archived_error")
+                @JvmField
+                val ENVIRONMENT_ARCHIVED_ERROR = Type(JsonField.of("environment_archived_error"))
 
-                @JvmField val AGENT_ARCHIVED_ERROR = of("agent_archived_error")
-
-                @JvmField val ENVIRONMENT_NOT_FOUND_ERROR = of("environment_not_found_error")
-
-                @JvmField val VAULT_NOT_FOUND_ERROR = of("vault_not_found_error")
-
-                @JvmField val VAULT_ARCHIVED_ERROR = of("vault_archived_error")
-
-                @JvmField val FILE_NOT_FOUND_ERROR = of("file_not_found_error")
-
-                @JvmField val MEMORY_STORE_ARCHIVED_ERROR = of("memory_store_archived_error")
-
-                @JvmField val SKILL_NOT_FOUND_ERROR = of("skill_not_found_error")
+                @JvmField val AGENT_ARCHIVED_ERROR = Type(JsonField.of("agent_archived_error"))
 
                 @JvmField
-                val SESSION_RESOURCE_NOT_FOUND_ERROR = of("session_resource_not_found_error")
+                val ENVIRONMENT_NOT_FOUND_ERROR = Type(JsonField.of("environment_not_found_error"))
 
-                @JvmField val WORKSPACE_ARCHIVED_ERROR = of("workspace_archived_error")
+                @JvmField val VAULT_NOT_FOUND_ERROR = Type(JsonField.of("vault_not_found_error"))
 
-                @JvmField val ORGANIZATION_DISABLED_ERROR = of("organization_disabled_error")
+                @JvmField val VAULT_ARCHIVED_ERROR = Type(JsonField.of("vault_archived_error"))
 
-                @JvmField val SESSION_RATE_LIMITED_ERROR = of("session_rate_limited_error")
+                @JvmField val FILE_NOT_FOUND_ERROR = Type(JsonField.of("file_not_found_error"))
 
                 @JvmField
-                val SESSION_CREATION_REJECTED_ERROR = of("session_creation_rejected_error")
+                val MEMORY_STORE_ARCHIVED_ERROR = Type(JsonField.of("memory_store_archived_error"))
 
-                @JvmField val UNKNOWN_ERROR = of("unknown_error")
+                @JvmField val SKILL_NOT_FOUND_ERROR = Type(JsonField.of("skill_not_found_error"))
+
+                @JvmField
+                val SESSION_RESOURCE_NOT_FOUND_ERROR =
+                    Type(JsonField.of("session_resource_not_found_error"))
+
+                @JvmField
+                val WORKSPACE_ARCHIVED_ERROR = Type(JsonField.of("workspace_archived_error"))
+
+                @JvmField
+                val ORGANIZATION_DISABLED_ERROR = Type(JsonField.of("organization_disabled_error"))
+
+                @JvmField
+                val SESSION_RATE_LIMITED_ERROR = Type(JsonField.of("session_rate_limited_error"))
+
+                @JvmField
+                val SESSION_CREATION_REJECTED_ERROR =
+                    Type(JsonField.of("session_creation_rejected_error"))
+
+                @JvmField val UNKNOWN_ERROR = Type(JsonField.of("unknown_error"))
 
                 @JvmField
                 val SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR =
-                    of("self_hosted_resources_unsupported_error")
+                    Type(JsonField.of("self_hosted_resources_unsupported_error"))
 
-                @JvmField val MCP_EGRESS_BLOCKED_ERROR = of("mcp_egress_blocked_error")
+                @JvmField
+                val MCP_EGRESS_BLOCKED_ERROR = Type(JsonField.of("mcp_egress_blocked_error"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "environment_archived_error" -> ENVIRONMENT_ARCHIVED_ERROR
+                        "agent_archived_error" -> AGENT_ARCHIVED_ERROR
+                        "environment_not_found_error" -> ENVIRONMENT_NOT_FOUND_ERROR
+                        "vault_not_found_error" -> VAULT_NOT_FOUND_ERROR
+                        "vault_archived_error" -> VAULT_ARCHIVED_ERROR
+                        "file_not_found_error" -> FILE_NOT_FOUND_ERROR
+                        "memory_store_archived_error" -> MEMORY_STORE_ARCHIVED_ERROR
+                        "skill_not_found_error" -> SKILL_NOT_FOUND_ERROR
+                        "session_resource_not_found_error" -> SESSION_RESOURCE_NOT_FOUND_ERROR
+                        "workspace_archived_error" -> WORKSPACE_ARCHIVED_ERROR
+                        "organization_disabled_error" -> ORGANIZATION_DISABLED_ERROR
+                        "session_rate_limited_error" -> SESSION_RATE_LIMITED_ERROR
+                        "session_creation_rejected_error" -> SESSION_CREATION_REJECTED_ERROR
+                        "unknown_error" -> UNKNOWN_ERROR
+                        "self_hosted_resources_unsupported_error" ->
+                            SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
+                        "mcp_egress_blocked_error" -> MCP_EGRESS_BLOCKED_ERROR
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -2411,7 +2443,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -2425,12 +2457,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val DEPLOYMENT_RUN = of("deployment_run")
+            @JvmField val DEPLOYMENT_RUN = Type(JsonField.of("deployment_run"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "deployment_run" -> DEPLOYMENT_RUN
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

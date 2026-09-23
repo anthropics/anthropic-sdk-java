@@ -634,7 +634,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -648,26 +648,40 @@ private constructor(
 
         companion object {
 
-            @JvmField val BASH = of("bash")
+            @JvmField val BASH = Type(JsonField.of("bash"))
 
-            @JvmField val EDIT = of("edit")
+            @JvmField val EDIT = Type(JsonField.of("edit"))
 
-            @JvmField val READ = of("read")
+            @JvmField val READ = Type(JsonField.of("read"))
 
-            @JvmField val WRITE = of("write")
+            @JvmField val WRITE = Type(JsonField.of("write"))
 
-            @JvmField val GLOB = of("glob")
+            @JvmField val GLOB = Type(JsonField.of("glob"))
 
-            @JvmField val GREP = of("grep")
+            @JvmField val GREP = Type(JsonField.of("grep"))
 
-            @JvmField val WEB_FETCH = of("web_fetch")
+            @JvmField val WEB_FETCH = Type(JsonField.of("web_fetch"))
 
-            @JvmField val WEB_SEARCH = of("web_search")
+            @JvmField val WEB_SEARCH = Type(JsonField.of("web_search"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "bash" -> BASH
+                    "edit" -> EDIT
+                    "read" -> READ
+                    "write" -> WRITE
+                    "glob" -> GLOB
+                    "grep" -> GREP
+                    "web_fetch" -> WEB_FETCH
+                    "web_search" -> WEB_SEARCH
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

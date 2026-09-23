@@ -423,7 +423,7 @@ private constructor(
             (if (sessionThreadId.asKnown().isPresent) 1 else 0)
 
     /** The confirmation result: 'allow' or 'deny'. */
-    class Result @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Result private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -437,14 +437,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val ALLOW = of("allow")
+            @JvmField val ALLOW = Result(JsonField.of("allow"))
 
-            @JvmField val DENY = of("deny")
+            @JvmField val DENY = Result(JsonField.of("deny"))
 
-            @JvmStatic fun of(value: String) = Result(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Result =
+                // Intern known values so `==` works
+                when (value) {
+                    "allow" -> ALLOW
+                    "deny" -> DENY
+                    else -> Result(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Result =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Result =
                 value.asString().getOrNull()?.let { of(it) } ?: Result(value)
         }
 
@@ -563,7 +571,7 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -577,12 +585,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER_TOOL_CONFIRMATION = of("user.tool_confirmation")
+            @JvmField val USER_TOOL_CONFIRMATION = Type(JsonField.of("user.tool_confirmation"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "user.tool_confirmation" -> USER_TOOL_CONFIRMATION
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

@@ -7,9 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
 /** EventDeltaType enum */
-class BetaManagedAgentsDeltaType
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class BetaManagedAgentsDeltaType private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -22,14 +20,22 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val AGENT_MESSAGE = of("agent.message")
+        @JvmField val AGENT_MESSAGE = BetaManagedAgentsDeltaType(JsonField.of("agent.message"))
 
-        @JvmField val AGENT_THINKING = of("agent.thinking")
+        @JvmField val AGENT_THINKING = BetaManagedAgentsDeltaType(JsonField.of("agent.thinking"))
 
-        @JvmStatic fun of(value: String) = BetaManagedAgentsDeltaType(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaManagedAgentsDeltaType =
+            // Intern known values so `==` works
+            when (value) {
+                "agent.message" -> AGENT_MESSAGE
+                "agent.thinking" -> AGENT_THINKING
+                else -> BetaManagedAgentsDeltaType(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaManagedAgentsDeltaType =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaManagedAgentsDeltaType =
             value.asString().getOrNull()?.let { of(it) } ?: BetaManagedAgentsDeltaType(value)
     }
 

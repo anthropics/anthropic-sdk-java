@@ -536,9 +536,7 @@ private constructor(
      * omitted. Must be a member of `allowed_inference_geos` unless `allowed_inference_geos` is
      * `"unrestricted"`.
      */
-    class DefaultInferenceGeo
-    @JsonCreator
-    private constructor(private val value: JsonField<String>) : Enum {
+    class DefaultInferenceGeo private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -552,14 +550,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val GLOBAL = of("global")
+            @JvmField val GLOBAL = DefaultInferenceGeo(JsonField.of("global"))
 
-            @JvmField val US = of("us")
+            @JvmField val US = DefaultInferenceGeo(JsonField.of("us"))
 
-            @JvmStatic fun of(value: String) = DefaultInferenceGeo(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): DefaultInferenceGeo =
+                // Intern known values so `==` works
+                when (value) {
+                    "global" -> GLOBAL
+                    "us" -> US
+                    else -> DefaultInferenceGeo(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): DefaultInferenceGeo =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): DefaultInferenceGeo =
                 value.asString().getOrNull()?.let { of(it) } ?: DefaultInferenceGeo(value)
         }
 
@@ -685,8 +691,7 @@ private constructor(
      * Geographic region for workspace data storage. Immutable after creation. Defaults to 'us' if
      * omitted.
      */
-    class WorkspaceGeo @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class WorkspaceGeo private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -700,12 +705,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val US = of("us")
+            @JvmField val US = WorkspaceGeo(JsonField.of("us"))
 
-            @JvmStatic fun of(value: String) = WorkspaceGeo(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): WorkspaceGeo =
+                // Intern known values so `==` works
+                when (value) {
+                    "us" -> US
+                    else -> WorkspaceGeo(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): WorkspaceGeo =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): WorkspaceGeo =
                 value.asString().getOrNull()?.let { of(it) } ?: WorkspaceGeo(value)
         }
 

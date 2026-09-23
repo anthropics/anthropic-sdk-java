@@ -764,7 +764,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -778,22 +778,35 @@ private constructor(
 
             companion object {
 
-                @JvmField val MODEL_CHANGED = of("model_changed")
+                @JvmField val MODEL_CHANGED = Type(JsonField.of("model_changed"))
 
-                @JvmField val SYSTEM_CHANGED = of("system_changed")
+                @JvmField val SYSTEM_CHANGED = Type(JsonField.of("system_changed"))
 
-                @JvmField val TOOLS_CHANGED = of("tools_changed")
+                @JvmField val TOOLS_CHANGED = Type(JsonField.of("tools_changed"))
 
-                @JvmField val MESSAGES_CHANGED = of("messages_changed")
+                @JvmField val MESSAGES_CHANGED = Type(JsonField.of("messages_changed"))
 
-                @JvmField val PREVIOUS_MESSAGE_NOT_FOUND = of("previous_message_not_found")
+                @JvmField
+                val PREVIOUS_MESSAGE_NOT_FOUND = Type(JsonField.of("previous_message_not_found"))
 
-                @JvmField val UNAVAILABLE = of("unavailable")
+                @JvmField val UNAVAILABLE = Type(JsonField.of("unavailable"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "model_changed" -> MODEL_CHANGED
+                        "system_changed" -> SYSTEM_CHANGED
+                        "tools_changed" -> TOOLS_CHANGED
+                        "messages_changed" -> MESSAGES_CHANGED
+                        "previous_message_not_found" -> PREVIOUS_MESSAGE_NOT_FOUND
+                        "unavailable" -> UNAVAILABLE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

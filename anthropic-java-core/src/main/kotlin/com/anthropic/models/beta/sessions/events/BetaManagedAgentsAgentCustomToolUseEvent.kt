@@ -481,7 +481,7 @@ private constructor(
         override fun toString() = "Input{additionalProperties=$additionalProperties}"
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -495,12 +495,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val AGENT_CUSTOM_TOOL_USE = of("agent.custom_tool_use")
+            @JvmField val AGENT_CUSTOM_TOOL_USE = Type(JsonField.of("agent.custom_tool_use"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "agent.custom_tool_use" -> AGENT_CUSTOM_TOOL_USE
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

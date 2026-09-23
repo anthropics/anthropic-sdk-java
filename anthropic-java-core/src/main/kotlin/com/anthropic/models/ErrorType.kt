@@ -6,7 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class ErrorType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+class ErrorType private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -19,28 +19,43 @@ class ErrorType @JsonCreator private constructor(private val value: JsonField<St
 
     companion object {
 
-        @JvmField val INVALID_REQUEST_ERROR = of("invalid_request_error")
+        @JvmField val INVALID_REQUEST_ERROR = ErrorType(JsonField.of("invalid_request_error"))
 
-        @JvmField val AUTHENTICATION_ERROR = of("authentication_error")
+        @JvmField val AUTHENTICATION_ERROR = ErrorType(JsonField.of("authentication_error"))
 
-        @JvmField val PERMISSION_ERROR = of("permission_error")
+        @JvmField val PERMISSION_ERROR = ErrorType(JsonField.of("permission_error"))
 
-        @JvmField val NOT_FOUND_ERROR = of("not_found_error")
+        @JvmField val NOT_FOUND_ERROR = ErrorType(JsonField.of("not_found_error"))
 
-        @JvmField val RATE_LIMIT_ERROR = of("rate_limit_error")
+        @JvmField val RATE_LIMIT_ERROR = ErrorType(JsonField.of("rate_limit_error"))
 
-        @JvmField val TIMEOUT_ERROR = of("timeout_error")
+        @JvmField val TIMEOUT_ERROR = ErrorType(JsonField.of("timeout_error"))
 
-        @JvmField val OVERLOADED_ERROR = of("overloaded_error")
+        @JvmField val OVERLOADED_ERROR = ErrorType(JsonField.of("overloaded_error"))
 
-        @JvmField val API_ERROR = of("api_error")
+        @JvmField val API_ERROR = ErrorType(JsonField.of("api_error"))
 
-        @JvmField val BILLING_ERROR = of("billing_error")
+        @JvmField val BILLING_ERROR = ErrorType(JsonField.of("billing_error"))
 
-        @JvmStatic fun of(value: String) = ErrorType(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): ErrorType =
+            // Intern known values so `==` works
+            when (value) {
+                "invalid_request_error" -> INVALID_REQUEST_ERROR
+                "authentication_error" -> AUTHENTICATION_ERROR
+                "permission_error" -> PERMISSION_ERROR
+                "not_found_error" -> NOT_FOUND_ERROR
+                "rate_limit_error" -> RATE_LIMIT_ERROR
+                "timeout_error" -> TIMEOUT_ERROR
+                "overloaded_error" -> OVERLOADED_ERROR
+                "api_error" -> API_ERROR
+                "billing_error" -> BILLING_ERROR
+                else -> ErrorType(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): ErrorType =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): ErrorType =
             value.asString().getOrNull()?.let { of(it) } ?: ErrorType(value)
     }
 

@@ -702,7 +702,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -716,16 +716,27 @@ private constructor(
 
             companion object {
 
-                @JvmField val DIRECT = of("direct")
+                @JvmField val DIRECT = Type(JsonField.of("direct"))
 
-                @JvmField val CODE_EXECUTION_20250825 = of("code_execution_20250825")
+                @JvmField
+                val CODE_EXECUTION_20250825 = Type(JsonField.of("code_execution_20250825"))
 
-                @JvmField val CODE_EXECUTION_20260120 = of("code_execution_20260120")
+                @JvmField
+                val CODE_EXECUTION_20260120 = Type(JsonField.of("code_execution_20260120"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "direct" -> DIRECT
+                        "code_execution_20250825" -> CODE_EXECUTION_20250825
+                        "code_execution_20260120" -> CODE_EXECUTION_20260120
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

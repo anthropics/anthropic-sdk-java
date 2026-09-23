@@ -209,7 +209,7 @@ private constructor(
         (errorCode.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("advisor_tool_result_error")) 1 else 0 }
 
-    class ErrorCode @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class ErrorCode private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -223,24 +223,38 @@ private constructor(
 
         companion object {
 
-            @JvmField val MAX_USES_EXCEEDED = of("max_uses_exceeded")
+            @JvmField val MAX_USES_EXCEEDED = ErrorCode(JsonField.of("max_uses_exceeded"))
 
-            @JvmField val PROMPT_TOO_LONG = of("prompt_too_long")
+            @JvmField val PROMPT_TOO_LONG = ErrorCode(JsonField.of("prompt_too_long"))
 
-            @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
+            @JvmField val TOO_MANY_REQUESTS = ErrorCode(JsonField.of("too_many_requests"))
 
-            @JvmField val OVERLOADED = of("overloaded")
+            @JvmField val OVERLOADED = ErrorCode(JsonField.of("overloaded"))
 
-            @JvmField val UNAVAILABLE = of("unavailable")
+            @JvmField val UNAVAILABLE = ErrorCode(JsonField.of("unavailable"))
 
-            @JvmField val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
+            @JvmField
+            val EXECUTION_TIME_EXCEEDED = ErrorCode(JsonField.of("execution_time_exceeded"))
 
-            @JvmField val MODEL_NOT_FOUND = of("model_not_found")
+            @JvmField val MODEL_NOT_FOUND = ErrorCode(JsonField.of("model_not_found"))
 
-            @JvmStatic fun of(value: String) = ErrorCode(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): ErrorCode =
+                // Intern known values so `==` works
+                when (value) {
+                    "max_uses_exceeded" -> MAX_USES_EXCEEDED
+                    "prompt_too_long" -> PROMPT_TOO_LONG
+                    "too_many_requests" -> TOO_MANY_REQUESTS
+                    "overloaded" -> OVERLOADED
+                    "unavailable" -> UNAVAILABLE
+                    "execution_time_exceeded" -> EXECUTION_TIME_EXCEEDED
+                    "model_not_found" -> MODEL_NOT_FOUND
+                    else -> ErrorCode(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): ErrorCode =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): ErrorCode =
                 value.asString().getOrNull()?.let { of(it) } ?: ErrorCode(value)
         }
 

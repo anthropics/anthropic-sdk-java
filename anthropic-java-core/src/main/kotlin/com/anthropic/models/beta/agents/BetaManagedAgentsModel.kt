@@ -12,9 +12,7 @@ import kotlin.jvm.optionals.getOrNull
  * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
  * options.
  */
-class BetaManagedAgentsModel
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class BetaManagedAgentsModel private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -28,57 +26,84 @@ private constructor(private val value: JsonField<String>) : Enum {
     companion object {
 
         /** Powerful intelligence for coding, knowledge work, and long-running agents */
-        @JvmField val CLAUDE_OPUS_5_5 = of("claude-opus-5-5")
+        @JvmField val CLAUDE_OPUS_5_5 = BetaManagedAgentsModel(JsonField.of("claude-opus-5-5"))
 
         /**
          * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
          * enterprise workflows
          */
-        @JvmField val CLAUDE_FABLE_5_1 = of("claude-fable-5-1")
+        @JvmField val CLAUDE_FABLE_5_1 = BetaManagedAgentsModel(JsonField.of("claude-fable-5-1"))
 
         /** High-performance model for coding and agents */
-        @JvmField val CLAUDE_SONNET_5 = of("claude-sonnet-5")
+        @JvmField val CLAUDE_SONNET_5 = BetaManagedAgentsModel(JsonField.of("claude-sonnet-5"))
 
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
-        @JvmField val CLAUDE_FABLE_5 = of("claude-fable-5")
+        @JvmField val CLAUDE_FABLE_5 = BetaManagedAgentsModel(JsonField.of("claude-fable-5"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_5 = of("claude-opus-5")
+        @JvmField val CLAUDE_OPUS_5 = BetaManagedAgentsModel(JsonField.of("claude-opus-5"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_8 = of("claude-opus-4-8")
+        @JvmField val CLAUDE_OPUS_4_8 = BetaManagedAgentsModel(JsonField.of("claude-opus-4-8"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_7 = of("claude-opus-4-7")
+        @JvmField val CLAUDE_OPUS_4_7 = BetaManagedAgentsModel(JsonField.of("claude-opus-4-7"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_6 = of("claude-opus-4-6")
+        @JvmField val CLAUDE_OPUS_4_6 = BetaManagedAgentsModel(JsonField.of("claude-opus-4-6"))
 
         /** Best combination of speed and intelligence */
-        @JvmField val CLAUDE_SONNET_4_6 = of("claude-sonnet-4-6")
+        @JvmField val CLAUDE_SONNET_4_6 = BetaManagedAgentsModel(JsonField.of("claude-sonnet-4-6"))
 
         /** Fastest model with near-frontier intelligence */
-        @JvmField val CLAUDE_HAIKU_4_5 = of("claude-haiku-4-5")
+        @JvmField val CLAUDE_HAIKU_4_5 = BetaManagedAgentsModel(JsonField.of("claude-haiku-4-5"))
 
         /** Fastest model with near-frontier intelligence */
-        @JvmField val CLAUDE_HAIKU_4_5_20251001 = of("claude-haiku-4-5-20251001")
+        @JvmField
+        val CLAUDE_HAIKU_4_5_20251001 =
+            BetaManagedAgentsModel(JsonField.of("claude-haiku-4-5-20251001"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_5 = of("claude-opus-4-5")
+        @JvmField val CLAUDE_OPUS_4_5 = BetaManagedAgentsModel(JsonField.of("claude-opus-4-5"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
+        @JvmField
+        val CLAUDE_OPUS_4_5_20251101 =
+            BetaManagedAgentsModel(JsonField.of("claude-opus-4-5-20251101"))
 
         /** High-performance model for agents and coding */
-        @JvmField val CLAUDE_SONNET_4_5 = of("claude-sonnet-4-5")
+        @JvmField val CLAUDE_SONNET_4_5 = BetaManagedAgentsModel(JsonField.of("claude-sonnet-4-5"))
 
         /** High-performance model for agents and coding */
-        @JvmField val CLAUDE_SONNET_4_5_20250929 = of("claude-sonnet-4-5-20250929")
+        @JvmField
+        val CLAUDE_SONNET_4_5_20250929 =
+            BetaManagedAgentsModel(JsonField.of("claude-sonnet-4-5-20250929"))
 
-        @JvmStatic fun of(value: String) = BetaManagedAgentsModel(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaManagedAgentsModel =
+            // Intern known values so `==` works
+            when (value) {
+                "claude-opus-5-5" -> CLAUDE_OPUS_5_5
+                "claude-fable-5-1" -> CLAUDE_FABLE_5_1
+                "claude-sonnet-5" -> CLAUDE_SONNET_5
+                "claude-fable-5" -> CLAUDE_FABLE_5
+                "claude-opus-5" -> CLAUDE_OPUS_5
+                "claude-opus-4-8" -> CLAUDE_OPUS_4_8
+                "claude-opus-4-7" -> CLAUDE_OPUS_4_7
+                "claude-opus-4-6" -> CLAUDE_OPUS_4_6
+                "claude-sonnet-4-6" -> CLAUDE_SONNET_4_6
+                "claude-haiku-4-5" -> CLAUDE_HAIKU_4_5
+                "claude-haiku-4-5-20251001" -> CLAUDE_HAIKU_4_5_20251001
+                "claude-opus-4-5" -> CLAUDE_OPUS_4_5
+                "claude-opus-4-5-20251101" -> CLAUDE_OPUS_4_5_20251101
+                "claude-sonnet-4-5" -> CLAUDE_SONNET_4_5
+                "claude-sonnet-4-5-20250929" -> CLAUDE_SONNET_4_5_20250929
+                else -> BetaManagedAgentsModel(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaManagedAgentsModel =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaManagedAgentsModel =
             value.asString().getOrNull()?.let { of(it) } ?: BetaManagedAgentsModel(value)
     }
 

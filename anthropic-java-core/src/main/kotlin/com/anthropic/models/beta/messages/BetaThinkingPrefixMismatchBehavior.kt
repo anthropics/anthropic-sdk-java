@@ -12,9 +12,8 @@ import kotlin.jvm.optionals.getOrNull
  * fails the request with a 400 error. `"drop_block"` removes the failing blocks and the request
  * proceeds; the model no longer sees the dropped reasoning.
  */
-class BetaThinkingPrefixMismatchBehavior
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class BetaThinkingPrefixMismatchBehavior private constructor(private val value: JsonField<String>) :
+    Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -27,14 +26,22 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val ERROR = of("error")
+        @JvmField val ERROR = BetaThinkingPrefixMismatchBehavior(JsonField.of("error"))
 
-        @JvmField val DROP_BLOCK = of("drop_block")
+        @JvmField val DROP_BLOCK = BetaThinkingPrefixMismatchBehavior(JsonField.of("drop_block"))
 
-        @JvmStatic fun of(value: String) = BetaThinkingPrefixMismatchBehavior(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaThinkingPrefixMismatchBehavior =
+            // Intern known values so `==` works
+            when (value) {
+                "error" -> ERROR
+                "drop_block" -> DROP_BLOCK
+                else -> BetaThinkingPrefixMismatchBehavior(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaThinkingPrefixMismatchBehavior =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaThinkingPrefixMismatchBehavior =
             value.asString().getOrNull()?.let { of(it) }
                 ?: BetaThinkingPrefixMismatchBehavior(value)
     }
