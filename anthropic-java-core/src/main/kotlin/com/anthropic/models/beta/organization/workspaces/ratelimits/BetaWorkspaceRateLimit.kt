@@ -89,8 +89,9 @@ private constructor(
     fun groupType(): GroupType = groupType.getRequired("group_type")
 
     /**
-     * The limiter values overridden for this group in this workspace. Limiter types without a
-     * workspace override are omitted and inherit the organization value.
+     * The workspace's limiter values for this group. By default only the limiter types with a
+     * workspace-level override are listed. With `include_inherited` set to `true`, the limiter
+     * types the workspace inherits from the organization are listed too, each marked by `source`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -107,7 +108,7 @@ private constructor(
     fun models(): Optional<List<String>> = models.getOptional("models")
 
     /**
-     * The `id` of the organization's RateLimit entry this override applies to.
+     * The `id` of the organization's RateLimit entry this entry applies to.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -128,7 +129,7 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * ID of the Workspace this override applies to.
+     * ID of the Workspace this entry applies to.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -358,8 +359,10 @@ private constructor(
         fun groupType(groupType: JsonField<GroupType>) = apply { this.groupType = groupType }
 
         /**
-         * The limiter values overridden for this group in this workspace. Limiter types without a
-         * workspace override are omitted and inherit the organization value.
+         * The workspace's limiter values for this group. By default only the limiter types with a
+         * workspace-level override are listed. With `include_inherited` set to `true`, the limiter
+         * types the workspace inherits from the organization are listed too, each marked by
+         * `source`.
          */
         fun limits(limits: List<BetaWorkspaceRateLimitValue>) = limits(JsonField.of(limits))
 
@@ -418,7 +421,7 @@ private constructor(
                 }
         }
 
-        /** The `id` of the organization's RateLimit entry this override applies to. */
+        /** The `id` of the organization's RateLimit entry this entry applies to. */
         fun rateLimitId(rateLimitId: String) = rateLimitId(JsonField.of(rateLimitId))
 
         /**
@@ -444,7 +447,7 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
-        /** ID of the Workspace this override applies to. */
+        /** ID of the Workspace this entry applies to. */
         fun workspaceId(workspaceId: String) = workspaceId(JsonField.of(workspaceId))
 
         /**

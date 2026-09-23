@@ -10,9 +10,20 @@ internal class BetaWorkspaceRateLimitValueTest {
     @Test
     fun create() {
         val betaWorkspaceRateLimitValue =
-            BetaWorkspaceRateLimitValue.builder().orgLimit(0L).type("type").value(0L).build()
+            BetaWorkspaceRateLimitValue.builder()
+                .orgLimit(0L)
+                .source(BetaWorkspaceRateLimitWorkspaceSource.builder().build())
+                .type("type")
+                .value(0L)
+                .build()
 
         assertThat(betaWorkspaceRateLimitValue.orgLimit()).contains(0L)
+        assertThat(betaWorkspaceRateLimitValue.source())
+            .isEqualTo(
+                BetaWorkspaceRateLimitValue.Source.ofWorkspace(
+                    BetaWorkspaceRateLimitWorkspaceSource.builder().build()
+                )
+            )
         assertThat(betaWorkspaceRateLimitValue.type()).isEqualTo("type")
         assertThat(betaWorkspaceRateLimitValue.value()).isEqualTo(0L)
     }
@@ -21,7 +32,12 @@ internal class BetaWorkspaceRateLimitValueTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaWorkspaceRateLimitValue =
-            BetaWorkspaceRateLimitValue.builder().orgLimit(0L).type("type").value(0L).build()
+            BetaWorkspaceRateLimitValue.builder()
+                .orgLimit(0L)
+                .source(BetaWorkspaceRateLimitWorkspaceSource.builder().build())
+                .type("type")
+                .value(0L)
+                .build()
 
         val roundtrippedBetaWorkspaceRateLimitValue =
             jsonMapper.readValue(

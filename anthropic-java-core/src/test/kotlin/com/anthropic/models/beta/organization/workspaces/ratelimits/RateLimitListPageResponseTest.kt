@@ -24,6 +24,7 @@ internal class RateLimitListPageResponseTest {
                         .addLimit(
                             BetaWorkspaceRateLimitValue.builder()
                                 .orgLimit(0L)
+                                .source(BetaWorkspaceRateLimitWorkspaceSource.builder().build())
                                 .type("type")
                                 .value(0L)
                                 .build()
@@ -49,6 +50,7 @@ internal class RateLimitListPageResponseTest {
                     .addLimit(
                         BetaWorkspaceRateLimitValue.builder()
                             .orgLimit(0L)
+                            .source(BetaWorkspaceRateLimitWorkspaceSource.builder().build())
                             .type("type")
                             .value(0L)
                             .build()
@@ -78,6 +80,7 @@ internal class RateLimitListPageResponseTest {
                         .addLimit(
                             BetaWorkspaceRateLimitValue.builder()
                                 .orgLimit(0L)
+                                .source(BetaWorkspaceRateLimitWorkspaceSource.builder().build())
                                 .type("type")
                                 .value(0L)
                                 .build()

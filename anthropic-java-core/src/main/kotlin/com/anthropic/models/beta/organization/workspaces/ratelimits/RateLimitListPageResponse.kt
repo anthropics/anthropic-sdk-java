@@ -34,7 +34,9 @@ private constructor(
     ) : this(data, nextPage, mutableMapOf())
 
     /**
-     * Rate-limit entries for the workspace, one per group that has at least one override.
+     * Rate-limit entries for the workspace: one per group with at least one override, or, with
+     * `include_inherited` set to `true`, one per group the workspace can see that has
+     * organization-level limits.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -109,7 +111,11 @@ private constructor(
             additionalProperties = rateLimitListPageResponse.additionalProperties.toMutableMap()
         }
 
-        /** Rate-limit entries for the workspace, one per group that has at least one override. */
+        /**
+         * Rate-limit entries for the workspace: one per group with at least one override, or, with
+         * `include_inherited` set to `true`, one per group the workspace can see that has
+         * organization-level limits.
+         */
         fun data(data: List<BetaWorkspaceRateLimit>) = data(JsonField.of(data))
 
         /**
