@@ -41,6 +41,7 @@ internal class MessageTest {
                         .text("Hi! My name is Claude.")
                         .build()
                 )
+                .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
                 .model(Model.CLAUDE_OPUS_5)
                 .stopDetails(
                     RefusalStopDetails.builder()
@@ -110,6 +111,8 @@ internal class MessageTest {
                         .build()
                 )
             )
+        assertThat(message.diagnostics())
+            .contains(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
         assertThat(message.model()).isEqualTo(Model.CLAUDE_OPUS_5)
         assertThat(message.stopDetails())
             .contains(
@@ -179,6 +182,7 @@ internal class MessageTest {
                         .text("Hi! My name is Claude.")
                         .build()
                 )
+                .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
                 .model(Model.CLAUDE_OPUS_5)
                 .stopDetails(
                     RefusalStopDetails.builder()

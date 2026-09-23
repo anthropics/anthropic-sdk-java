@@ -42,6 +42,7 @@ internal class RawMessageStartEventTest {
                             .text("Hi! My name is Claude.")
                             .build()
                     )
+                    .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
                     .model(Model.CLAUDE_OPUS_5)
                     .stopDetails(
                         RefusalStopDetails.builder()
@@ -111,6 +112,7 @@ internal class RawMessageStartEventTest {
                             .text("Hi! My name is Claude.")
                             .build()
                     )
+                    .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
                     .model(Model.CLAUDE_OPUS_5)
                     .stopDetails(
                         RefusalStopDetails.builder()
@@ -184,6 +186,7 @@ internal class RawMessageStartEventTest {
                             .text("Hi! My name is Claude.")
                             .build()
                     )
+                    .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
                     .model(Model.CLAUDE_OPUS_5)
                     .stopDetails(
                         RefusalStopDetails.builder()

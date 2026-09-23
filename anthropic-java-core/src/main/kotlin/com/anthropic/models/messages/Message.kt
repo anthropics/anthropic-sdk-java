@@ -23,6 +23,7 @@ private constructor(
     private val id: JsonField<String>,
     private val container: JsonField<Container>,
     private val content: JsonField<List<ContentBlock>>,
+    private val diagnostics: JsonField<Diagnostics>,
     private val model: JsonField<Model>,
     private val role: JsonValue,
     private val stopDetails: JsonField<RefusalStopDetails>,
@@ -42,6 +43,9 @@ private constructor(
         @JsonProperty("content")
         @ExcludeMissing
         content: JsonField<List<ContentBlock>> = JsonMissing.of(),
+        @JsonProperty("diagnostics")
+        @ExcludeMissing
+        diagnostics: JsonField<Diagnostics> = JsonMissing.of(),
         @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
         @JsonProperty("role") @ExcludeMissing role: JsonValue = JsonMissing.of(),
         @JsonProperty("stop_details")
@@ -59,6 +63,7 @@ private constructor(
         id,
         container,
         content,
+        diagnostics,
         model,
         role,
         stopDetails,
@@ -130,6 +135,15 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun content(): List<ContentBlock> = content.getRequired("content")
+
+    /**
+     * Request-level diagnostics. `null` when the request did not supply `diagnostics`, or when it
+     * did and no prompt-cache divergence was detected.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun diagnostics(): Optional<Diagnostics> = diagnostics.getOptional("diagnostics")
 
     /**
      * The model that will complete your prompt.
@@ -256,6 +270,15 @@ private constructor(
     @JsonProperty("content") @ExcludeMissing fun _content(): JsonField<List<ContentBlock>> = content
 
     /**
+     * Returns the raw JSON value of [diagnostics].
+     *
+     * Unlike [diagnostics], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("diagnostics")
+    @ExcludeMissing
+    fun _diagnostics(): JsonField<Diagnostics> = diagnostics
+
+    /**
      * Returns the raw JSON value of [model].
      *
      * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
@@ -318,6 +341,7 @@ private constructor(
          * .id()
          * .container()
          * .content()
+         * .diagnostics()
          * .model()
          * .stopDetails()
          * .stopReason()
@@ -334,6 +358,7 @@ private constructor(
         private var id: JsonField<String>? = null
         private var container: JsonField<Container> = JsonMissing.of()
         private var content: JsonField<MutableList<ContentBlock>>? = null
+        private var diagnostics: JsonField<Diagnostics>? = null
         private var model: JsonField<Model>? = null
         private var role: JsonValue = JsonValue.from("assistant")
         private var stopDetails: JsonField<RefusalStopDetails>? = null
@@ -348,6 +373,7 @@ private constructor(
             id = message.id
             container = message.container
             content = message.content.map { it.toMutableList() }.takeUnless { it.isMissing() }
+            diagnostics = message.diagnostics
             model = message.model
             role = message.role
             stopDetails = message.stopDetails
@@ -536,6 +562,26 @@ private constructor(
             addContent(ContainerUploadBlock.builder().fileId(fileId).build())
 
         /**
+         * Request-level diagnostics. `null` when the request did not supply `diagnostics`, or when
+         * it did and no prompt-cache divergence was detected.
+         */
+        fun diagnostics(diagnostics: Diagnostics?) = diagnostics(JsonField.ofNullable(diagnostics))
+
+        /** Alias for calling [Builder.diagnostics] with `diagnostics.orElse(null)`. */
+        fun diagnostics(diagnostics: Optional<Diagnostics>) = diagnostics(diagnostics.getOrNull())
+
+        /**
+         * Sets [Builder.diagnostics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.diagnostics] with a well-typed [Diagnostics] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun diagnostics(diagnostics: JsonField<Diagnostics>) = apply {
+            this.diagnostics = diagnostics
+        }
+
+        /**
          * The model that will complete your prompt.
          *
          * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details
@@ -717,6 +763,7 @@ private constructor(
          * .id()
          * .container()
          * .content()
+         * .diagnostics()
          * .model()
          * .stopDetails()
          * .stopReason()
@@ -731,6 +778,7 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("container", container),
                 checkRequired("content", content).map { it.toImmutable() },
+                checkRequired("diagnostics", diagnostics),
                 checkRequired("model", model),
                 role,
                 checkRequired("stopDetails", stopDetails),
@@ -760,6 +808,7 @@ private constructor(
         id()
         container().ifPresent { it.validate() }
         content().forEach { it.validate() }
+        diagnostics().ifPresent { it.validate() }
         model()
         _role().let {
             if (it != JsonValue.from("assistant")) {
@@ -796,6 +845,7 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (container.asKnown().getOrNull()?.validity() ?: 0) +
             (content.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (diagnostics.asKnown().getOrNull()?.validity() ?: 0) +
             (if (model.asKnown().isPresent) 1 else 0) +
             role.let { if (it == JsonValue.from("assistant")) 1 else 0 } +
             (stopDetails.asKnown().getOrNull()?.validity() ?: 0) +
@@ -813,6 +863,7 @@ private constructor(
             id == other.id &&
             container == other.container &&
             content == other.content &&
+            diagnostics == other.diagnostics &&
             model == other.model &&
             role == other.role &&
             stopDetails == other.stopDetails &&
@@ -828,6 +879,7 @@ private constructor(
             id,
             container,
             content,
+            diagnostics,
             model,
             role,
             stopDetails,
@@ -842,5 +894,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Message{id=$id, container=$container, content=$content, model=$model, role=$role, stopDetails=$stopDetails, stopReason=$stopReason, stopSequence=$stopSequence, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
+        "Message{id=$id, container=$container, content=$content, diagnostics=$diagnostics, model=$model, role=$role, stopDetails=$stopDetails, stopReason=$stopReason, stopSequence=$stopSequence, type=$type, usage=$usage, additionalProperties=$additionalProperties}"
 }

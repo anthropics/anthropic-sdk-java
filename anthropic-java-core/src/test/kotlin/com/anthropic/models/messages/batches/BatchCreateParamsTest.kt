@@ -5,6 +5,7 @@ import com.anthropic.core.http.Headers
 import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CitationCharLocationParam
 import com.anthropic.models.messages.ContainerParams
+import com.anthropic.models.messages.DiagnosticsParam
 import com.anthropic.models.messages.JsonOutputFormat
 import com.anthropic.models.messages.Metadata
 import com.anthropic.models.messages.Model
@@ -47,6 +48,11 @@ internal class BatchCreateParamsTest {
                                             .version("latest")
                                             .build()
                                     )
+                                    .build()
+                            )
+                            .diagnostics(
+                                DiagnosticsParam.builder()
+                                    .previousMessageId("previous_message_id")
                                     .build()
                             )
                             .inferenceGeo("inference_geo")
@@ -176,6 +182,11 @@ internal class BatchCreateParamsTest {
                                                 .version("latest")
                                                 .build()
                                         )
+                                        .build()
+                                )
+                                .diagnostics(
+                                    DiagnosticsParam.builder()
+                                        .previousMessageId("previous_message_id")
                                         .build()
                                 )
                                 .inferenceGeo("inference_geo")
@@ -345,6 +356,11 @@ internal class BatchCreateParamsTest {
                                         )
                                         .build()
                                 )
+                                .diagnostics(
+                                    DiagnosticsParam.builder()
+                                        .previousMessageId("previous_message_id")
+                                        .build()
+                                )
                                 .inferenceGeo("inference_geo")
                                 .metadata(
                                     Metadata.builder()
@@ -473,6 +489,11 @@ internal class BatchCreateParamsTest {
                                             .version("latest")
                                             .build()
                                     )
+                                    .build()
+                            )
+                            .diagnostics(
+                                DiagnosticsParam.builder()
+                                    .previousMessageId("previous_message_id")
                                     .build()
                             )
                             .inferenceGeo("inference_geo")

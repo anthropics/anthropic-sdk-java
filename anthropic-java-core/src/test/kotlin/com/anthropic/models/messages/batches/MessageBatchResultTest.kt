@@ -8,6 +8,7 @@ import com.anthropic.models.messages.CacheCreation
 import com.anthropic.models.messages.CitationCharLocation
 import com.anthropic.models.messages.Container
 import com.anthropic.models.messages.ContainerSkill
+import com.anthropic.models.messages.Diagnostics
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.Model
 import com.anthropic.models.messages.OutputTokensDetails
@@ -60,6 +61,7 @@ internal class MessageBatchResultTest {
                             .text("Hi! My name is Claude.")
                             .build()
                     )
+                    .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
                     .model(Model.CLAUDE_OPUS_5)
                     .stopDetails(
                         RefusalStopDetails.builder()
@@ -141,6 +143,7 @@ internal class MessageBatchResultTest {
                                 .text("Hi! My name is Claude.")
                                 .build()
                         )
+                        .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
                         .model(Model.CLAUDE_OPUS_5)
                         .stopDetails(
                             RefusalStopDetails.builder()

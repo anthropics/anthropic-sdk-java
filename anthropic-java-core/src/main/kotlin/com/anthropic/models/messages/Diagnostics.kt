@@ -1,4 +1,4 @@
-package com.anthropic.models.beta.messages
+package com.anthropic.models.messages
 
 import com.anthropic.core.ExcludeMissing
 import com.anthropic.core.JsonField
@@ -19,10 +19,10 @@ import kotlin.jvm.optionals.getOrNull
  * Request-level diagnostics: why the prompt cache could not fully reuse the prefix of the request
  * named by `diagnostics.previous_message_id`.
  */
-class BetaDiagnostics
+class Diagnostics
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val cacheMissReason: JsonField<BetaCacheMissReason>,
+    private val cacheMissReason: JsonField<CacheMissReason>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -30,7 +30,7 @@ private constructor(
     private constructor(
         @JsonProperty("cache_miss_reason")
         @ExcludeMissing
-        cacheMissReason: JsonField<BetaCacheMissReason> = JsonMissing.of()
+        cacheMissReason: JsonField<CacheMissReason> = JsonMissing.of()
     ) : this(cacheMissReason, mutableMapOf())
 
     /**
@@ -41,7 +41,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun cacheMissReason(): Optional<BetaCacheMissReason> =
+    fun cacheMissReason(): Optional<CacheMissReason> =
         cacheMissReason.getOptional("cache_miss_reason")
 
     /**
@@ -51,7 +51,7 @@ private constructor(
      */
     @JsonProperty("cache_miss_reason")
     @ExcludeMissing
-    fun _cacheMissReason(): JsonField<BetaCacheMissReason> = cacheMissReason
+    fun _cacheMissReason(): JsonField<CacheMissReason> = cacheMissReason
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -68,7 +68,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [BetaDiagnostics].
+         * Returns a mutable builder for constructing an instance of [Diagnostics].
          *
          * The following fields are required:
          * ```java
@@ -78,28 +78,28 @@ private constructor(
         @JvmStatic fun builder() = Builder()
 
         /**
-         * Returns an immutable instance of [BetaDiagnostics] with the required [cacheMissReason]
-         * set to the given value.
+         * Returns an immutable instance of [Diagnostics] with the required [cacheMissReason] set to
+         * the given value.
          */
         @JvmStatic
-        fun of(cacheMissReason: BetaCacheMissReason?) =
+        fun of(cacheMissReason: CacheMissReason?) =
             builder().cacheMissReason(cacheMissReason).build()
 
         /** Alias for calling [of] with `cacheMissReason.orElse(null)`. */
         @JvmStatic
-        fun of(cacheMissReason: Optional<BetaCacheMissReason>) = of(cacheMissReason.getOrNull())
+        fun of(cacheMissReason: Optional<CacheMissReason>) = of(cacheMissReason.getOrNull())
     }
 
-    /** A builder for [BetaDiagnostics]. */
+    /** A builder for [Diagnostics]. */
     class Builder internal constructor() {
 
-        private var cacheMissReason: JsonField<BetaCacheMissReason>? = null
+        private var cacheMissReason: JsonField<CacheMissReason>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaDiagnostics: BetaDiagnostics) = apply {
-            cacheMissReason = betaDiagnostics.cacheMissReason
-            additionalProperties = betaDiagnostics.additionalProperties.toMutableMap()
+        internal fun from(diagnostics: Diagnostics) = apply {
+            cacheMissReason = diagnostics.cacheMissReason
+            additionalProperties = diagnostics.additionalProperties.toMutableMap()
         }
 
         /**
@@ -107,125 +107,122 @@ private constructor(
          * identified by `diagnostics.previous_message_id`. `null` means diagnosis is still pending
          * — the response was serialized before the background comparison completed.
          */
-        fun cacheMissReason(cacheMissReason: BetaCacheMissReason?) =
+        fun cacheMissReason(cacheMissReason: CacheMissReason?) =
             cacheMissReason(JsonField.ofNullable(cacheMissReason))
 
         /** Alias for calling [Builder.cacheMissReason] with `cacheMissReason.orElse(null)`. */
-        fun cacheMissReason(cacheMissReason: Optional<BetaCacheMissReason>) =
+        fun cacheMissReason(cacheMissReason: Optional<CacheMissReason>) =
             cacheMissReason(cacheMissReason.getOrNull())
 
         /**
          * Sets [Builder.cacheMissReason] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.cacheMissReason] with a well-typed [BetaCacheMissReason]
+         * You should usually call [Builder.cacheMissReason] with a well-typed [CacheMissReason]
          * value instead. This method is primarily for setting the field to an undocumented or not
          * yet supported value.
          */
-        fun cacheMissReason(cacheMissReason: JsonField<BetaCacheMissReason>) = apply {
+        fun cacheMissReason(cacheMissReason: JsonField<CacheMissReason>) = apply {
             this.cacheMissReason = cacheMissReason
         }
 
         /**
-         * Alias for calling [cacheMissReason] with
-         * `BetaCacheMissReason.ofModelChanged(modelChanged)`.
+         * Alias for calling [cacheMissReason] with `CacheMissReason.ofModelChanged(modelChanged)`.
          */
-        fun cacheMissReason(modelChanged: BetaCacheMissModelChanged) =
-            cacheMissReason(BetaCacheMissReason.ofModelChanged(modelChanged))
+        fun cacheMissReason(modelChanged: CacheMissModelChanged) =
+            cacheMissReason(CacheMissReason.ofModelChanged(modelChanged))
 
         /**
          * Alias for calling [cacheMissReason] with the following:
          * ```java
-         * BetaCacheMissModelChanged.builder()
+         * CacheMissModelChanged.builder()
          *     .cacheMissedInputTokens(cacheMissedInputTokens)
          *     .build()
          * ```
          */
         fun modelChangedCacheMissReason(cacheMissedInputTokens: Long) =
             cacheMissReason(
-                BetaCacheMissModelChanged.builder()
+                CacheMissModelChanged.builder()
                     .cacheMissedInputTokens(cacheMissedInputTokens)
                     .build()
             )
 
         /**
          * Alias for calling [cacheMissReason] with
-         * `BetaCacheMissReason.ofSystemChanged(systemChanged)`.
+         * `CacheMissReason.ofSystemChanged(systemChanged)`.
          */
-        fun cacheMissReason(systemChanged: BetaCacheMissSystemChanged) =
-            cacheMissReason(BetaCacheMissReason.ofSystemChanged(systemChanged))
+        fun cacheMissReason(systemChanged: CacheMissSystemChanged) =
+            cacheMissReason(CacheMissReason.ofSystemChanged(systemChanged))
 
         /**
          * Alias for calling [cacheMissReason] with the following:
          * ```java
-         * BetaCacheMissSystemChanged.builder()
+         * CacheMissSystemChanged.builder()
          *     .cacheMissedInputTokens(cacheMissedInputTokens)
          *     .build()
          * ```
          */
         fun systemChangedCacheMissReason(cacheMissedInputTokens: Long) =
             cacheMissReason(
-                BetaCacheMissSystemChanged.builder()
+                CacheMissSystemChanged.builder()
                     .cacheMissedInputTokens(cacheMissedInputTokens)
                     .build()
             )
 
         /**
-         * Alias for calling [cacheMissReason] with
-         * `BetaCacheMissReason.ofToolsChanged(toolsChanged)`.
+         * Alias for calling [cacheMissReason] with `CacheMissReason.ofToolsChanged(toolsChanged)`.
          */
-        fun cacheMissReason(toolsChanged: BetaCacheMissToolsChanged) =
-            cacheMissReason(BetaCacheMissReason.ofToolsChanged(toolsChanged))
+        fun cacheMissReason(toolsChanged: CacheMissToolsChanged) =
+            cacheMissReason(CacheMissReason.ofToolsChanged(toolsChanged))
 
         /**
          * Alias for calling [cacheMissReason] with the following:
          * ```java
-         * BetaCacheMissToolsChanged.builder()
+         * CacheMissToolsChanged.builder()
          *     .cacheMissedInputTokens(cacheMissedInputTokens)
          *     .build()
          * ```
          */
         fun toolsChangedCacheMissReason(cacheMissedInputTokens: Long) =
             cacheMissReason(
-                BetaCacheMissToolsChanged.builder()
+                CacheMissToolsChanged.builder()
                     .cacheMissedInputTokens(cacheMissedInputTokens)
                     .build()
             )
 
         /**
          * Alias for calling [cacheMissReason] with
-         * `BetaCacheMissReason.ofMessagesChanged(messagesChanged)`.
+         * `CacheMissReason.ofMessagesChanged(messagesChanged)`.
          */
-        fun cacheMissReason(messagesChanged: BetaCacheMissMessagesChanged) =
-            cacheMissReason(BetaCacheMissReason.ofMessagesChanged(messagesChanged))
+        fun cacheMissReason(messagesChanged: CacheMissMessagesChanged) =
+            cacheMissReason(CacheMissReason.ofMessagesChanged(messagesChanged))
 
         /**
          * Alias for calling [cacheMissReason] with the following:
          * ```java
-         * BetaCacheMissMessagesChanged.builder()
+         * CacheMissMessagesChanged.builder()
          *     .cacheMissedInputTokens(cacheMissedInputTokens)
          *     .build()
          * ```
          */
         fun messagesChangedCacheMissReason(cacheMissedInputTokens: Long) =
             cacheMissReason(
-                BetaCacheMissMessagesChanged.builder()
+                CacheMissMessagesChanged.builder()
                     .cacheMissedInputTokens(cacheMissedInputTokens)
                     .build()
             )
 
         /**
          * Alias for calling [cacheMissReason] with
-         * `BetaCacheMissReason.ofPreviousMessageNotFound(previousMessageNotFound)`.
+         * `CacheMissReason.ofPreviousMessageNotFound(previousMessageNotFound)`.
          */
-        fun cacheMissReason(previousMessageNotFound: BetaCacheMissPreviousMessageNotFound) =
-            cacheMissReason(BetaCacheMissReason.ofPreviousMessageNotFound(previousMessageNotFound))
+        fun cacheMissReason(previousMessageNotFound: CacheMissPreviousMessageNotFound) =
+            cacheMissReason(CacheMissReason.ofPreviousMessageNotFound(previousMessageNotFound))
 
         /**
-         * Alias for calling [cacheMissReason] with
-         * `BetaCacheMissReason.ofUnavailable(unavailable)`.
+         * Alias for calling [cacheMissReason] with `CacheMissReason.ofUnavailable(unavailable)`.
          */
-        fun cacheMissReason(unavailable: BetaCacheMissUnavailable) =
-            cacheMissReason(BetaCacheMissReason.ofUnavailable(unavailable))
+        fun cacheMissReason(unavailable: CacheMissUnavailable) =
+            cacheMissReason(CacheMissReason.ofUnavailable(unavailable))
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -247,7 +244,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaDiagnostics].
+         * Returns an immutable instance of [Diagnostics].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -258,8 +255,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BetaDiagnostics =
-            BetaDiagnostics(
+        fun build(): Diagnostics =
+            Diagnostics(
                 checkRequired("cacheMissReason", cacheMissReason),
                 additionalProperties.toMutableMap(),
             )
@@ -275,7 +272,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BetaDiagnostics = apply {
+    fun validate(): Diagnostics = apply {
         if (validated) {
             return@apply
         }
@@ -305,7 +302,7 @@ private constructor(
             return true
         }
 
-        return other is BetaDiagnostics &&
+        return other is Diagnostics &&
             cacheMissReason == other.cacheMissReason &&
             additionalProperties == other.additionalProperties
     }
@@ -315,5 +312,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaDiagnostics{cacheMissReason=$cacheMissReason, additionalProperties=$additionalProperties}"
+        "Diagnostics{cacheMissReason=$cacheMissReason, additionalProperties=$additionalProperties}"
 }
