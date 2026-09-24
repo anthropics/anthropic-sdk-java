@@ -2032,6 +2032,9 @@ private constructor(
                 fun thinking(disabled: ThinkingConfigDisabled) =
                     thinking(ThinkingConfigParam.ofDisabled(disabled))
 
+                /** Alias for calling [thinking] with `ThinkingConfigParam.ofBetweenTools()`. */
+                fun thinkingBetweenTools() = thinking(ThinkingConfigParam.ofBetweenTools())
+
                 /** Alias for calling [thinking] with `ThinkingConfigParam.ofAdaptive(adaptive)`. */
                 fun thinking(adaptive: ThinkingConfigAdaptive) =
                     thinking(ThinkingConfigParam.ofAdaptive(adaptive))

@@ -675,6 +675,9 @@ private constructor(
         /** Alias for calling [thinking] with `ThinkingConfigParam.ofDisabled(disabled)`. */
         fun thinking(disabled: ThinkingConfigDisabled) = apply { body.thinking(disabled) }
 
+        /** Alias for calling [thinking] with `ThinkingConfigParam.ofBetweenTools()`. */
+        fun thinkingBetweenTools() = apply { body.thinkingBetweenTools() }
+
         /** Alias for calling [thinking] with `ThinkingConfigParam.ofAdaptive(adaptive)`. */
         fun thinking(adaptive: ThinkingConfigAdaptive) = apply { body.thinking(adaptive) }
 
@@ -1795,6 +1798,9 @@ private constructor(
             /** Alias for calling [thinking] with `ThinkingConfigParam.ofDisabled(disabled)`. */
             fun thinking(disabled: ThinkingConfigDisabled) =
                 thinking(ThinkingConfigParam.ofDisabled(disabled))
+
+            /** Alias for calling [thinking] with `ThinkingConfigParam.ofBetweenTools()`. */
+            fun thinkingBetweenTools() = thinking(ThinkingConfigParam.ofBetweenTools())
 
             /** Alias for calling [thinking] with `ThinkingConfigParam.ofAdaptive(adaptive)`. */
             fun thinking(adaptive: ThinkingConfigAdaptive) =

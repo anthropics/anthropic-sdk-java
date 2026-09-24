@@ -2542,6 +2542,9 @@ private constructor(
                 fun thinking(disabled: BetaThinkingConfigDisabled) =
                     thinking(BetaThinkingConfigParam.ofDisabled(disabled))
 
+                /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofBetweenTools()`. */
+                fun thinkingBetweenTools() = thinking(BetaThinkingConfigParam.ofBetweenTools())
+
                 /**
                  * Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`.
                  */
