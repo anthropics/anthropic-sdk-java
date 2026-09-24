@@ -82,6 +82,7 @@ internal class StructuredMessageCreateParamsTest {
                                 .inferenceGeo(null)
                                 .build()
                         )
+                        .diagnostics(null)
                         .build(),
                 ),
                 DelegationWriteTestCase("addUserMessage", MessageParam.Content.ofString("Hello")),
@@ -113,6 +114,15 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase(
                     "cacheControl",
                     JsonField.of(CacheControlEphemeral.builder().build()),
+                ),
+                DelegationWriteTestCase("diagnostics", null as DiagnosticsParam?),
+                DelegationWriteTestCase(
+                    "diagnostics",
+                    java.util.Optional.of(DiagnosticsParam.builder().build()),
+                ),
+                DelegationWriteTestCase(
+                    "diagnostics",
+                    JsonField.of(DiagnosticsParam.builder().build()),
                 ),
                 DelegationWriteTestCase("metadata", Metadata.builder().build()),
                 DelegationWriteTestCase("metadata", JsonField.of(Metadata.builder().build())),
@@ -153,6 +163,7 @@ internal class StructuredMessageCreateParamsTest {
                 ),
                 DelegationWriteTestCase("enabledThinking", 1024L),
                 DelegationWriteTestCase("thinking", ThinkingConfigDisabled.builder().build()),
+                DelegationWriteTestCase("thinkingBetweenTools"),
                 DelegationWriteTestCase("thinking", ThinkingConfigAdaptive.builder().build()),
                 DelegationWriteTestCase(
                     "toolChoice",

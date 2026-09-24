@@ -275,6 +275,7 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("thinking", THINKING_CONFIG_ENABLED),
                 DelegationWriteTestCase("enabledThinking", LONG),
                 DelegationWriteTestCase("thinking", THINKING_CONFIG_DISABLED),
+                DelegationWriteTestCase("thinkingBetweenTools"),
                 DelegationWriteTestCase("thinking", THINKING_CONFIG_ADAPTIVE),
                 DelegationWriteTestCase("toolChoice", TOOL_CHOICE),
                 DelegationWriteTestCase("toolChoice", JSON_FIELD),

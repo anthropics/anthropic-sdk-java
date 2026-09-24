@@ -31,6 +31,9 @@ internal constructor(
     /** @see Message.content */
     fun content(): List<StructuredContentBlock<T>> = content.getRequired("content")
 
+    /** @see Message.diagnostics */
+    fun diagnostics(): Optional<Diagnostics> = rawMessage.diagnostics()
+
     /** @see Message.model */
     fun model(): Model = rawMessage.model()
 
@@ -63,6 +66,9 @@ internal constructor(
 
     /** @see Message._container */
     fun _container(): JsonField<Container> = rawMessage._container()
+
+    /** @see Message._diagnostics */
+    fun _diagnostics(): JsonField<Diagnostics> = rawMessage._diagnostics()
 
     /** @see Message._model */
     fun _model(): JsonField<Model> = rawMessage._model()
