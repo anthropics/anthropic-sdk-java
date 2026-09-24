@@ -155,6 +155,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("bash")
     }
 
     @Test
@@ -223,6 +225,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("code_execution")
     }
 
     @Test
@@ -286,6 +290,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("code_execution")
     }
 
     @Test
@@ -349,6 +355,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("code_execution")
     }
 
     @Test
@@ -412,6 +420,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("code_execution")
     }
 
     @Test
@@ -850,6 +860,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("memory")
     }
 
     @Test
@@ -1163,6 +1175,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("str_replace_editor")
     }
 
     @Test
@@ -1236,6 +1250,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("str_replace_based_edit_tool")
     }
 
     @Test
@@ -1310,6 +1326,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("str_replace_based_edit_tool")
     }
 
     @Test
@@ -1390,6 +1408,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("web_search")
     }
 
     @Test
@@ -1476,6 +1496,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("web_fetch")
     }
 
     @Test
@@ -1562,6 +1584,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("web_search")
     }
 
     @Test
@@ -1648,6 +1672,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("web_fetch")
     }
 
     @Test
@@ -1736,6 +1762,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("web_fetch")
     }
 
     @Test
@@ -1824,6 +1852,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("web_search")
     }
 
     @Test
@@ -1913,6 +1943,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).contains(webFetchTool20260318)
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("web_fetch")
     }
 
     @Test
@@ -1991,6 +2023,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).contains(searchToolBm25_20251119)
         assertThat(toolUnion.searchToolRegex20251119()).isEmpty
+
+        assertThat(toolUnion.name()).contains("tool_search_tool_bm25")
     }
 
     @Test
@@ -2056,6 +2090,8 @@ internal class ToolUnionTest {
         assertThat(toolUnion.webFetchTool20260318()).isEmpty
         assertThat(toolUnion.searchToolBm25_20251119()).isEmpty
         assertThat(toolUnion.searchToolRegex20251119()).contains(searchToolRegex20251119)
+
+        assertThat(toolUnion.name()).contains("tool_search_tool_regex")
     }
 
     @Test
@@ -2101,6 +2137,7 @@ internal class ToolUnionTest {
         val e = assertThrows<AnthropicInvalidDataException> { toolUnion.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
 
+        assertThat(toolUnion.name()).isEmpty
         assertThat(toolUnion.cacheControl()).isEmpty
         assertThat(toolUnion.deferLoading()).isEmpty
         assertThat(toolUnion.strict()).isEmpty

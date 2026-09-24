@@ -155,6 +155,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("bash")
     }
 
     @Test
@@ -225,6 +227,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("code_execution")
     }
 
     @Test
@@ -290,6 +294,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("code_execution")
     }
 
     @Test
@@ -355,6 +361,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("code_execution")
     }
 
     @Test
@@ -420,6 +428,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("code_execution")
     }
 
     @Test
@@ -859,6 +869,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("memory")
     }
 
     @Test
@@ -1175,6 +1187,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("str_replace_editor")
     }
 
     @Test
@@ -1249,6 +1263,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("str_replace_based_edit_tool")
     }
 
     @Test
@@ -1324,6 +1340,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("str_replace_based_edit_tool")
     }
 
     @Test
@@ -1405,6 +1423,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("web_search")
     }
 
     @Test
@@ -1492,6 +1512,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("web_fetch")
     }
 
     @Test
@@ -1579,6 +1601,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("web_search")
     }
 
     @Test
@@ -1666,6 +1690,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("web_fetch")
     }
 
     @Test
@@ -1755,6 +1781,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("web_fetch")
     }
 
     @Test
@@ -1844,6 +1872,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("web_search")
     }
 
     @Test
@@ -1934,6 +1964,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.webFetchTool20260318()).contains(webFetchTool20260318)
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("web_fetch")
     }
 
     @Test
@@ -2014,6 +2046,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119())
             .contains(toolSearchToolBm25_20251119)
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119()).isEmpty
+
+        assertThat(messageCountTokensTool.name()).contains("tool_search_tool_bm25")
     }
 
     @Test
@@ -2081,6 +2115,8 @@ internal class MessageCountTokensToolTest {
         assertThat(messageCountTokensTool.toolSearchToolBm25_20251119()).isEmpty
         assertThat(messageCountTokensTool.toolSearchToolRegex20251119())
             .contains(toolSearchToolRegex20251119)
+
+        assertThat(messageCountTokensTool.name()).contains("tool_search_tool_regex")
     }
 
     @Test
@@ -2127,6 +2163,7 @@ internal class MessageCountTokensToolTest {
         val e = assertThrows<AnthropicInvalidDataException> { messageCountTokensTool.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
 
+        assertThat(messageCountTokensTool.name()).isEmpty
         assertThat(messageCountTokensTool.cacheControl()).isEmpty
         assertThat(messageCountTokensTool.deferLoading()).isEmpty
         assertThat(messageCountTokensTool.strict()).isEmpty
