@@ -14,6 +14,7 @@ configure<DetektExtension> {
     // SDK's Java-first builder style.
     buildUponDefaultConfig = false
     config.setFrom(rootProject.layout.projectDirectory.file("config/detekt/detekt.yml"))
+    parallel = true
 }
 
 dependencies {
@@ -109,6 +110,7 @@ listOf("main", "test").forEach { sourceSetName ->
         classpath.setFrom(typeResolutionClasspath)
         jdkHome.set(toolchainJdkHome)
         config.setFrom(configFiles)
+        parallel = project.the<DetektExtension>().parallel
         baseline.fileProvider(provider { baselineFile.takeIf(File::exists) })
         // `detektChangedMain` and `detektChangedTest` would write the same report files.
         reports { listOf(xml, html, txt, sarif, md).forEach { it.required.set(false) } }
