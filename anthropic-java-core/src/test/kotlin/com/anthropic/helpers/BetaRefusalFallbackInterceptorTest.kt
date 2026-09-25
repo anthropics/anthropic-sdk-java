@@ -593,6 +593,63 @@ internal class BetaRefusalFallbackInterceptorTest {
 
     @ParameterizedTest
     @ValueSource(booleans = [false, true])
+    fun betweenToolsThinkingDegradesToDisabledOnTheRetry(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(
+                messagesBody()
+                    .toBuilder()
+                    .putAdditionalProperty("thinking", betweenToolsThinking())
+                    .build()
+            ),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        assertThat(httpClient.jsonBodies[0].path("thinking").toString())
+            .isEqualTo("""{"type":"between_tools"}""")
+        assertThat(httpClient.jsonBodies[1].path("thinking").toString())
+            .isEqualTo("""{"type":"disabled"}""")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun aFallbackThatSetsThinkingOverridesBetweenTools(async: Boolean) {
+        val httpClient = FakeHttpClient(refusal("primary-model"), message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(
+                    fallback("fallback-model")
+                        .toBuilder()
+                        .putAdditionalProperty("thinking", betweenToolsThinking())
+                        .build()
+                )
+                .build()
+                .intercept(httpClient)
+
+        interceptedClient.execute(
+            messagesRequest(
+                messagesBody()
+                    .toBuilder()
+                    .putAdditionalProperty("thinking", betweenToolsThinking())
+                    .build()
+            ),
+            RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+            async,
+        )
+
+        assertThat(httpClient.jsonBodies[1].path("thinking").toString())
+            .isEqualTo("""{"type":"between_tools"}""")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
     fun eachHopPatchesTheOriginalParamsNotThePreviousHops(async: Boolean) {
         val httpClient =
             FakeHttpClient(refusal("primary-model"), refusal("mid-model"), message("last-model"))
@@ -1018,6 +1075,8 @@ internal class BetaRefusalFallbackInterceptorTest {
 
     private fun fallback(model: String): BetaFallbackParam =
         BetaFallbackParam.builder().model(model).build()
+
+    private fun betweenToolsThinking(): JsonValue = JsonValue.from(mapOf("type" to "between_tools"))
 
     /** An `output_config` patch setting only `effort`. */
     private fun highEffort(): BetaOutputConfig =

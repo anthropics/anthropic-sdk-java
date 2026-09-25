@@ -148,6 +148,46 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
 
     @ParameterizedTest
     @ValueSource(booleans = [false, true])
+    fun betweenToolsThinkingDegradesToDisabledOnTheHop(async: Boolean) {
+        val httpClient = FakeHttpClient(sse(STREAM_A), sse(STREAM_B))
+
+        val response =
+            httpClient
+                .intercepted(FALLBACK_MODEL)
+                .execute(betweenToolsStreamingRequest(), withState(), async)
+        response.body().readBytes() // drive the splice so the hop request goes out
+
+        assertThat(httpClient.requests).hasSize(2)
+        assertThat(httpClient.jsonBodies[0].path("thinking").toString())
+            .isEqualTo("""{"type":"between_tools"}""")
+        assertThat(httpClient.jsonBodies[1].path("thinking").toString())
+            .isEqualTo("""{"type":"disabled"}""")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun betweenToolsThinkingDegradesOnTheHopEvenWhenTheEntrySetsThinking(async: Boolean) {
+        val httpClient = FakeHttpClient(sse(STREAM_A), sse(STREAM_B))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(
+                    BetaFallbackParam.builder()
+                        .model(FALLBACK_MODEL)
+                        .putAdditionalProperty("thinking", betweenToolsThinking())
+                        .build()
+                )
+                .build()
+                .intercept(httpClient)
+
+        val response = interceptedClient.execute(betweenToolsStreamingRequest(), withState(), async)
+        response.body().readBytes() // drive the splice so the hop request goes out
+
+        assertThat(httpClient.jsonBodies[1].path("thinking").toString())
+            .isEqualTo("""{"type":"disabled"}""")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
     fun trimsReplayedFallbackTurnsOnTheStreamingPath(async: Boolean) {
         val httpClient = FakeHttpClient(sse(STREAM_A), sse(STREAM_B))
         // A turn served by a fallback on an earlier request, echoed back into this stream's
@@ -1044,13 +1084,22 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
             }
     }
 
-    private fun streamingRequest(): HttpRequest {
+    private fun betweenToolsThinking(): JsonValue = JsonValue.from(mapOf("type" to "between_tools"))
+
+    private fun betweenToolsStreamingRequest(): HttpRequest = streamingRequest {
+        putAdditionalProperty("thinking", betweenToolsThinking())
+    }
+
+    private fun streamingRequest(
+        configure: MessageCreateParams.Body.Builder.() -> Unit = {}
+    ): HttpRequest {
         val body =
             MessageCreateParams.Body.builder()
                 .model("primary-model")
                 .maxTokens(1024)
                 .addUserMessage("hi")
                 .putAdditionalProperty("stream", JsonValue.from(true))
+                .apply(configure)
                 .build()
         return HttpRequest.builder()
             .method(HttpMethod.POST)
