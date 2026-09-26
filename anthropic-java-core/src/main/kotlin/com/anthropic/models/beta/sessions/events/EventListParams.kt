@@ -26,7 +26,7 @@ private constructor(
     private val limit: Int?,
     private val order: Order?,
     private val page: String?,
-    private val types: List<String>?,
+    private val types: List<BetaManagedAgentsSessionEventType>?,
     private val betas: List<AnthropicBeta>?,
     private val workspaceId: String?,
     private val additionalHeaders: Headers,
@@ -74,7 +74,7 @@ private constructor(
      * Filter by event type. Values match the `type` field on returned events (for example,
      * `user.message` or `agent.tool_use`). Omit to return all event types.
      */
-    fun types(): Optional<List<String>> = Optional.ofNullable(types)
+    fun types(): Optional<List<BetaManagedAgentsSessionEventType>> = Optional.ofNullable(types)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
@@ -115,7 +115,7 @@ private constructor(
         private var limit: Int? = null
         private var order: Order? = null
         private var page: String? = null
-        private var types: MutableList<String>? = null
+        private var types: MutableList<BetaManagedAgentsSessionEventType>? = null
         private var betas: MutableList<AnthropicBeta>? = null
         private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -214,17 +214,22 @@ private constructor(
          * Filter by event type. Values match the `type` field on returned events (for example,
          * `user.message` or `agent.tool_use`). Omit to return all event types.
          */
-        fun types(types: List<String>?) = apply { this.types = types?.toMutableList() }
+        fun types(types: List<BetaManagedAgentsSessionEventType>?) = apply {
+            this.types = types?.toMutableList()
+        }
 
         /** Alias for calling [Builder.types] with `types.orElse(null)`. */
-        fun types(types: Optional<List<String>>) = types(types.getOrNull())
+        fun types(types: Optional<List<BetaManagedAgentsSessionEventType>>) =
+            types(types.getOrNull())
 
         /**
-         * Adds a single [String] to [types].
+         * Adds a single [BetaManagedAgentsSessionEventType] to [types].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addType(type: String) = apply { types = (types ?: mutableListOf()).apply { add(type) } }
+        fun addType(type: BetaManagedAgentsSessionEventType) = apply {
+            types = (types ?: mutableListOf()).apply { add(type) }
+        }
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
@@ -416,7 +421,7 @@ private constructor(
                 limit?.let { put("limit", it.toString()) }
                 order?.let { put("order", it.toString()) }
                 page?.let { put("page", it) }
-                types?.forEach { put("types[]", it) }
+                types?.forEach { put("types[]", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
