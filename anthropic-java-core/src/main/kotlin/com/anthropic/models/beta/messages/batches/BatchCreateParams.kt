@@ -45,6 +45,7 @@ import com.anthropic.models.beta.messages.BetaResponseTool
 import com.anthropic.models.beta.messages.BetaResponseToolUnion
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaThinkingConfigAdaptive
+import com.anthropic.models.beta.messages.BetaThinkingConfigBetweenTools
 import com.anthropic.models.beta.messages.BetaThinkingConfigDisabled
 import com.anthropic.models.beta.messages.BetaThinkingConfigEnabled
 import com.anthropic.models.beta.messages.BetaThinkingConfigParam
@@ -2550,8 +2551,12 @@ private constructor(
                 fun thinking(disabled: BetaThinkingConfigDisabled) =
                     thinking(BetaThinkingConfigParam.ofDisabled(disabled))
 
-                /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofBetweenTools()`. */
-                fun thinkingBetweenTools() = thinking(BetaThinkingConfigParam.ofBetweenTools())
+                /**
+                 * Alias for calling [thinking] with
+                 * `BetaThinkingConfigParam.ofBetweenTools(betweenTools)`.
+                 */
+                fun thinking(betweenTools: BetaThinkingConfigBetweenTools) =
+                    thinking(BetaThinkingConfigParam.ofBetweenTools(betweenTools))
 
                 /**
                  * Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`.

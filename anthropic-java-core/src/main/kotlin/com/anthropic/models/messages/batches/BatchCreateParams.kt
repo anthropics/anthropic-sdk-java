@@ -35,6 +35,7 @@ import com.anthropic.models.messages.Model
 import com.anthropic.models.messages.OutputConfig
 import com.anthropic.models.messages.TextBlockParam
 import com.anthropic.models.messages.ThinkingConfigAdaptive
+import com.anthropic.models.messages.ThinkingConfigBetweenTools
 import com.anthropic.models.messages.ThinkingConfigDisabled
 import com.anthropic.models.messages.ThinkingConfigEnabled
 import com.anthropic.models.messages.ThinkingConfigParam
@@ -2040,8 +2041,12 @@ private constructor(
                 fun thinking(disabled: ThinkingConfigDisabled) =
                     thinking(ThinkingConfigParam.ofDisabled(disabled))
 
-                /** Alias for calling [thinking] with `ThinkingConfigParam.ofBetweenTools()`. */
-                fun thinkingBetweenTools() = thinking(ThinkingConfigParam.ofBetweenTools())
+                /**
+                 * Alias for calling [thinking] with
+                 * `ThinkingConfigParam.ofBetweenTools(betweenTools)`.
+                 */
+                fun thinking(betweenTools: ThinkingConfigBetweenTools) =
+                    thinking(ThinkingConfigParam.ofBetweenTools(betweenTools))
 
                 /** Alias for calling [thinking] with `ThinkingConfigParam.ofAdaptive(adaptive)`. */
                 fun thinking(adaptive: ThinkingConfigAdaptive) =

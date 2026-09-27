@@ -163,7 +163,7 @@ internal class StructuredMessageCreateParamsTest {
                 ),
                 DelegationWriteTestCase("enabledThinking", 1024L),
                 DelegationWriteTestCase("thinking", ThinkingConfigDisabled.builder().build()),
-                DelegationWriteTestCase("thinkingBetweenTools"),
+                DelegationWriteTestCase("thinking", ThinkingConfigBetweenTools.builder().build()),
                 DelegationWriteTestCase("thinking", ThinkingConfigAdaptive.builder().build()),
                 DelegationWriteTestCase(
                     "toolChoice",

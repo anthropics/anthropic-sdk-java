@@ -310,8 +310,10 @@ internal constructor(
         /** @see MessageCreateParams.Builder.thinking */
         fun thinking(disabled: ThinkingConfigDisabled) = apply { paramsBuilder.thinking(disabled) }
 
-        /** @see MessageCreateParams.Builder.thinkingBetweenTools */
-        fun thinkingBetweenTools() = apply { paramsBuilder.thinkingBetweenTools() }
+        /** @see MessageCreateParams.Builder.thinking */
+        fun thinking(betweenTools: ThinkingConfigBetweenTools) = apply {
+            paramsBuilder.thinking(betweenTools)
+        }
 
         /** @see MessageCreateParams.Builder.thinking */
         fun thinking(adaptive: ThinkingConfigAdaptive) = apply { paramsBuilder.thinking(adaptive) }

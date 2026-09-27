@@ -510,8 +510,10 @@ internal constructor(
             paramsBuilder.thinking(disabled)
         }
 
-        /** @see MessageCreateParams.Builder.thinkingBetweenTools */
-        fun thinkingBetweenTools() = apply { paramsBuilder.thinkingBetweenTools() }
+        /** @see MessageCreateParams.Builder.thinking */
+        fun thinking(betweenTools: BetaThinkingConfigBetweenTools) = apply {
+            paramsBuilder.thinking(betweenTools)
+        }
 
         /** @see MessageCreateParams.Builder.thinking */
         fun thinking(adaptive: BetaThinkingConfigAdaptive) = apply {

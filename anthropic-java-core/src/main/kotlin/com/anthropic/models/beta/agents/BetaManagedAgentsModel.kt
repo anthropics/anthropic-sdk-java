@@ -25,6 +25,9 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
 
     companion object {
 
+        /** Efficient model for coding and agents */
+        @JvmField val CLAUDE_SONNET_5_5 = BetaManagedAgentsModel(JsonField.of("claude-sonnet-5-5"))
+
         /** Powerful intelligence for coding, knowledge work, and long-running agents */
         @JvmField val CLAUDE_OPUS_5_5 = BetaManagedAgentsModel(JsonField.of("claude-opus-5-5"))
 
@@ -34,7 +37,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
          */
         @JvmField val CLAUDE_FABLE_5_1 = BetaManagedAgentsModel(JsonField.of("claude-fable-5-1"))
 
-        /** High-performance model for coding and agents */
+        /** Efficient model for coding and agents */
         @JvmField val CLAUDE_SONNET_5 = BetaManagedAgentsModel(JsonField.of("claude-sonnet-5"))
 
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
@@ -83,6 +86,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
         fun of(value: String): BetaManagedAgentsModel =
             // Intern known values so `==` works
             when (value) {
+                "claude-sonnet-5-5" -> CLAUDE_SONNET_5_5
                 "claude-opus-5-5" -> CLAUDE_OPUS_5_5
                 "claude-fable-5-1" -> CLAUDE_FABLE_5_1
                 "claude-sonnet-5" -> CLAUDE_SONNET_5
@@ -109,6 +113,8 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
 
     /** An enum containing [BetaManagedAgentsModel]'s known values. */
     enum class Known {
+        /** Efficient model for coding and agents */
+        CLAUDE_SONNET_5_5,
         /** Powerful intelligence for coding, knowledge work, and long-running agents */
         CLAUDE_OPUS_5_5,
         /**
@@ -116,7 +122,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
          * enterprise workflows
          */
         CLAUDE_FABLE_5_1,
-        /** High-performance model for coding and agents */
+        /** Efficient model for coding and agents */
         CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         CLAUDE_FABLE_5,
@@ -154,6 +160,8 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Efficient model for coding and agents */
+        CLAUDE_SONNET_5_5,
         /** Powerful intelligence for coding, knowledge work, and long-running agents */
         CLAUDE_OPUS_5_5,
         /**
@@ -161,7 +169,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
          * enterprise workflows
          */
         CLAUDE_FABLE_5_1,
-        /** High-performance model for coding and agents */
+        /** Efficient model for coding and agents */
         CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         CLAUDE_FABLE_5,
@@ -203,6 +211,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_SONNET_5_5 -> Value.CLAUDE_SONNET_5_5
             CLAUDE_OPUS_5_5 -> Value.CLAUDE_OPUS_5_5
             CLAUDE_FABLE_5_1 -> Value.CLAUDE_FABLE_5_1
             CLAUDE_SONNET_5 -> Value.CLAUDE_SONNET_5
@@ -231,6 +240,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_SONNET_5_5 -> Known.CLAUDE_SONNET_5_5
             CLAUDE_OPUS_5_5 -> Known.CLAUDE_OPUS_5_5
             CLAUDE_FABLE_5_1 -> Known.CLAUDE_FABLE_5_1
             CLAUDE_SONNET_5 -> Known.CLAUDE_SONNET_5

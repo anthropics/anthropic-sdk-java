@@ -37,7 +37,7 @@ class BetaThinkingConfigParam
 private constructor(
     private val enabled: BetaThinkingConfigEnabled? = null,
     private val disabled: BetaThinkingConfigDisabled? = null,
-    private val betweenTools: JsonValue? = null,
+    private val betweenTools: BetaThinkingConfigBetweenTools? = null,
     private val adaptive: BetaThinkingConfigAdaptive? = null,
     private val _json: JsonValue? = null,
 ) {
@@ -50,7 +50,8 @@ private constructor(
                 override fun visitDisabled(disabled: BetaThinkingConfigDisabled): Type =
                     Type.DISABLED
 
-                override fun visitBetweenTools(betweenTools: JsonValue): Type = Type.BETWEEN_TOOLS
+                override fun visitBetweenTools(betweenTools: BetaThinkingConfigBetweenTools): Type =
+                    Type.BETWEEN_TOOLS
 
                 override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive): Type =
                     Type.ADAPTIVE
@@ -72,7 +73,7 @@ private constructor(
                 ): Optional<BetaThinkingBlockBinding> = Optional.empty()
 
                 override fun visitBetweenTools(
-                    betweenTools: JsonValue
+                    betweenTools: BetaThinkingConfigBetweenTools
                 ): Optional<BetaThinkingBlockBinding> = Optional.empty()
 
                 override fun visitAdaptive(
@@ -88,7 +89,7 @@ private constructor(
 
     fun disabled(): Optional<BetaThinkingConfigDisabled> = Optional.ofNullable(disabled)
 
-    fun betweenTools(): Optional<JsonValue> = Optional.ofNullable(betweenTools)
+    fun betweenTools(): Optional<BetaThinkingConfigBetweenTools> = Optional.ofNullable(betweenTools)
 
     fun adaptive(): Optional<BetaThinkingConfigAdaptive> = Optional.ofNullable(adaptive)
 
@@ -104,7 +105,7 @@ private constructor(
 
     fun asDisabled(): BetaThinkingConfigDisabled = disabled.getOrThrow("disabled")
 
-    fun asBetweenTools(): JsonValue = betweenTools.getOrThrow("betweenTools")
+    fun asBetweenTools(): BetaThinkingConfigBetweenTools = betweenTools.getOrThrow("betweenTools")
 
     fun asAdaptive(): BetaThinkingConfigAdaptive = adaptive.getOrThrow("adaptive")
 
@@ -173,14 +174,8 @@ private constructor(
                     disabled.validate()
                 }
 
-                override fun visitBetweenTools(betweenTools: JsonValue) {
-                    betweenTools.let {
-                        if (it != JsonValue.from(mapOf("type" to "between_tools"))) {
-                            throw AnthropicInvalidDataException(
-                                "'betweenTools' is invalid, received $it"
-                            )
-                        }
-                    }
+                override fun visitBetweenTools(betweenTools: BetaThinkingConfigBetweenTools) {
+                    betweenTools.validate()
                 }
 
                 override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive) {
@@ -213,10 +208,8 @@ private constructor(
                 override fun visitDisabled(disabled: BetaThinkingConfigDisabled) =
                     disabled.validity()
 
-                override fun visitBetweenTools(betweenTools: JsonValue) =
-                    betweenTools.let {
-                        if (it == JsonValue.from(mapOf("type" to "between_tools"))) 1 else 0
-                    }
+                override fun visitBetweenTools(betweenTools: BetaThinkingConfigBetweenTools) =
+                    betweenTools.validity()
 
                 override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive) =
                     adaptive.validity()
@@ -267,8 +260,8 @@ private constructor(
             BetaThinkingConfigParam(disabled = disabled)
 
         @JvmStatic
-        fun ofBetweenTools() =
-            BetaThinkingConfigParam(betweenTools = JsonValue.from(mapOf("type" to "between_tools")))
+        fun ofBetweenTools(betweenTools: BetaThinkingConfigBetweenTools) =
+            BetaThinkingConfigParam(betweenTools = betweenTools)
 
         @JvmStatic
         fun ofAdaptive(adaptive: BetaThinkingConfigAdaptive) =
@@ -285,7 +278,7 @@ private constructor(
 
         fun visitDisabled(disabled: BetaThinkingConfigDisabled): T
 
-        fun visitBetweenTools(betweenTools: JsonValue): T
+        fun visitBetweenTools(betweenTools: BetaThinkingConfigBetweenTools): T
 
         fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive): T
 
@@ -323,9 +316,9 @@ private constructor(
                     } ?: BetaThinkingConfigParam(_json = json)
                 }
                 "between_tools" -> {
-                    return tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                    return tryDeserialize(node, jacksonTypeRef<BetaThinkingConfigBetweenTools>())
                         ?.let { BetaThinkingConfigParam(betweenTools = it, _json = json) }
-                        ?.takeIf { it.isValid() } ?: BetaThinkingConfigParam(_json = json)
+                        ?: BetaThinkingConfigParam(_json = json)
                 }
                 "adaptive" -> {
                     return tryDeserialize(node, jacksonTypeRef<BetaThinkingConfigAdaptive>())?.let {

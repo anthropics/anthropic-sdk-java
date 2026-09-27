@@ -77,19 +77,21 @@ internal class ThinkingConfigParamTest {
 
     @Test
     fun ofBetweenTools() {
-        val thinkingConfigParam = ThinkingConfigParam.ofBetweenTools()
+        val betweenTools = ThinkingConfigBetweenTools.builder().build()
+
+        val thinkingConfigParam = ThinkingConfigParam.ofBetweenTools(betweenTools)
 
         assertThat(thinkingConfigParam.enabled()).isEmpty
         assertThat(thinkingConfigParam.disabled()).isEmpty
-        assertThat(thinkingConfigParam.betweenTools())
-            .contains(JsonValue.from(mapOf("type" to "between_tools")))
+        assertThat(thinkingConfigParam.betweenTools()).contains(betweenTools)
         assertThat(thinkingConfigParam.adaptive()).isEmpty
     }
 
     @Test
     fun ofBetweenToolsRoundtrip() {
         val jsonMapper = jsonMapper()
-        val thinkingConfigParam = ThinkingConfigParam.ofBetweenTools()
+        val thinkingConfigParam =
+            ThinkingConfigParam.ofBetweenTools(ThinkingConfigBetweenTools.builder().build())
 
         val roundtrippedThinkingConfigParam =
             jsonMapper.readValue(

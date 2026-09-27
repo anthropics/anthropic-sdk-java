@@ -126,6 +126,7 @@ internal class StructuredMessageCreateParamsTest {
         private val THINKING_CONFIG_ENABLED =
             BetaThinkingConfigEnabled.builder().budgetTokens(LONG).build()
         private val THINKING_CONFIG_DISABLED = BetaThinkingConfigDisabled.builder().build()
+        private val THINKING_CONFIG_BETWEEN_TOOLS = BetaThinkingConfigBetweenTools.builder().build()
         private val THINKING_CONFIG_ADAPTIVE = BetaThinkingConfigAdaptive.builder().build()
         private val THINKING_CONFIG = BetaThinkingConfigParam.ofEnabled(THINKING_CONFIG_ENABLED)
 
@@ -275,7 +276,7 @@ internal class StructuredMessageCreateParamsTest {
                 DelegationWriteTestCase("thinking", THINKING_CONFIG_ENABLED),
                 DelegationWriteTestCase("enabledThinking", LONG),
                 DelegationWriteTestCase("thinking", THINKING_CONFIG_DISABLED),
-                DelegationWriteTestCase("thinkingBetweenTools"),
+                DelegationWriteTestCase("thinking", THINKING_CONFIG_BETWEEN_TOOLS),
                 DelegationWriteTestCase("thinking", THINKING_CONFIG_ADAPTIVE),
                 DelegationWriteTestCase("toolChoice", TOOL_CHOICE),
                 DelegationWriteTestCase("toolChoice", JSON_FIELD),

@@ -59,7 +59,7 @@ public final class VertexMessagesExample {
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model("claude-sonnet-5")
+                .model("claude-sonnet-5-5")
                 .maxTokens(2048)
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();

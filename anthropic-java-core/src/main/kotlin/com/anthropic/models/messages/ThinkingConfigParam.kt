@@ -36,7 +36,7 @@ class ThinkingConfigParam
 private constructor(
     private val enabled: ThinkingConfigEnabled? = null,
     private val disabled: ThinkingConfigDisabled? = null,
-    private val betweenTools: JsonValue? = null,
+    private val betweenTools: ThinkingConfigBetweenTools? = null,
     private val adaptive: ThinkingConfigAdaptive? = null,
     private val _json: JsonValue? = null,
 ) {
@@ -48,7 +48,8 @@ private constructor(
 
                 override fun visitDisabled(disabled: ThinkingConfigDisabled): Type = Type.DISABLED
 
-                override fun visitBetweenTools(betweenTools: JsonValue): Type = Type.BETWEEN_TOOLS
+                override fun visitBetweenTools(betweenTools: ThinkingConfigBetweenTools): Type =
+                    Type.BETWEEN_TOOLS
 
                 override fun visitAdaptive(adaptive: ThinkingConfigAdaptive): Type = Type.ADAPTIVE
 
@@ -61,7 +62,7 @@ private constructor(
 
     fun disabled(): Optional<ThinkingConfigDisabled> = Optional.ofNullable(disabled)
 
-    fun betweenTools(): Optional<JsonValue> = Optional.ofNullable(betweenTools)
+    fun betweenTools(): Optional<ThinkingConfigBetweenTools> = Optional.ofNullable(betweenTools)
 
     fun adaptive(): Optional<ThinkingConfigAdaptive> = Optional.ofNullable(adaptive)
 
@@ -77,7 +78,7 @@ private constructor(
 
     fun asDisabled(): ThinkingConfigDisabled = disabled.getOrThrow("disabled")
 
-    fun asBetweenTools(): JsonValue = betweenTools.getOrThrow("betweenTools")
+    fun asBetweenTools(): ThinkingConfigBetweenTools = betweenTools.getOrThrow("betweenTools")
 
     fun asAdaptive(): ThinkingConfigAdaptive = adaptive.getOrThrow("adaptive")
 
@@ -146,14 +147,8 @@ private constructor(
                     disabled.validate()
                 }
 
-                override fun visitBetweenTools(betweenTools: JsonValue) {
-                    betweenTools.let {
-                        if (it != JsonValue.from(mapOf("type" to "between_tools"))) {
-                            throw AnthropicInvalidDataException(
-                                "'betweenTools' is invalid, received $it"
-                            )
-                        }
-                    }
+                override fun visitBetweenTools(betweenTools: ThinkingConfigBetweenTools) {
+                    betweenTools.validate()
                 }
 
                 override fun visitAdaptive(adaptive: ThinkingConfigAdaptive) {
@@ -185,10 +180,8 @@ private constructor(
 
                 override fun visitDisabled(disabled: ThinkingConfigDisabled) = disabled.validity()
 
-                override fun visitBetweenTools(betweenTools: JsonValue) =
-                    betweenTools.let {
-                        if (it == JsonValue.from(mapOf("type" to "between_tools"))) 1 else 0
-                    }
+                override fun visitBetweenTools(betweenTools: ThinkingConfigBetweenTools) =
+                    betweenTools.validity()
 
                 override fun visitAdaptive(adaptive: ThinkingConfigAdaptive) = adaptive.validity()
 
@@ -236,8 +229,8 @@ private constructor(
         fun ofDisabled(disabled: ThinkingConfigDisabled) = ThinkingConfigParam(disabled = disabled)
 
         @JvmStatic
-        fun ofBetweenTools() =
-            ThinkingConfigParam(betweenTools = JsonValue.from(mapOf("type" to "between_tools")))
+        fun ofBetweenTools(betweenTools: ThinkingConfigBetweenTools) =
+            ThinkingConfigParam(betweenTools = betweenTools)
 
         @JvmStatic
         fun ofAdaptive(adaptive: ThinkingConfigAdaptive) = ThinkingConfigParam(adaptive = adaptive)
@@ -253,7 +246,7 @@ private constructor(
 
         fun visitDisabled(disabled: ThinkingConfigDisabled): T
 
-        fun visitBetweenTools(betweenTools: JsonValue): T
+        fun visitBetweenTools(betweenTools: ThinkingConfigBetweenTools): T
 
         fun visitAdaptive(adaptive: ThinkingConfigAdaptive): T
 
@@ -291,9 +284,9 @@ private constructor(
                     } ?: ThinkingConfigParam(_json = json)
                 }
                 "between_tools" -> {
-                    return tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                        ?.let { ThinkingConfigParam(betweenTools = it, _json = json) }
-                        ?.takeIf { it.isValid() } ?: ThinkingConfigParam(_json = json)
+                    return tryDeserialize(node, jacksonTypeRef<ThinkingConfigBetweenTools>())?.let {
+                        ThinkingConfigParam(betweenTools = it, _json = json)
+                    } ?: ThinkingConfigParam(_json = json)
                 }
                 "adaptive" -> {
                     return tryDeserialize(node, jacksonTypeRef<ThinkingConfigAdaptive>())?.let {

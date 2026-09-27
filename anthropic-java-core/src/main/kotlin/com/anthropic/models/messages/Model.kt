@@ -25,6 +25,9 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
+        /** Efficient model for coding and agents */
+        @JvmField val CLAUDE_SONNET_5_5 = Model(JsonField.of("claude-sonnet-5-5"))
+
         /**
          * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
          * enterprise workflows
@@ -40,7 +43,7 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
          */
         @JvmField val CLAUDE_MYTHOS_5_1 = Model(JsonField.of("claude-mythos-5-1"))
 
-        /** High-performance model for coding and agents */
+        /** Efficient model for coding and agents */
         @JvmField val CLAUDE_SONNET_5 = Model(JsonField.of("claude-sonnet-5"))
 
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
@@ -93,6 +96,7 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
         fun of(value: String): Model =
             // Intern known values so `==` works
             when (value) {
+                "claude-sonnet-5-5" -> CLAUDE_SONNET_5_5
                 "claude-fable-5-1" -> CLAUDE_FABLE_5_1
                 "claude-opus-5-5" -> CLAUDE_OPUS_5_5
                 "claude-mythos-5-1" -> CLAUDE_MYTHOS_5_1
@@ -122,6 +126,8 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [Model]'s known values. */
     enum class Known {
+        /** Efficient model for coding and agents */
+        CLAUDE_SONNET_5_5,
         /**
          * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
          * enterprise workflows
@@ -134,7 +140,7 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
          * access programs
          */
         CLAUDE_MYTHOS_5_1,
-        /** High-performance model for coding and agents */
+        /** Efficient model for coding and agents */
         CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         CLAUDE_FABLE_5,
@@ -179,6 +185,8 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Efficient model for coding and agents */
+        CLAUDE_SONNET_5_5,
         /**
          * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
          * enterprise workflows
@@ -191,7 +199,7 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
          * access programs
          */
         CLAUDE_MYTHOS_5_1,
-        /** High-performance model for coding and agents */
+        /** Efficient model for coding and agents */
         CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         CLAUDE_FABLE_5,
@@ -237,6 +245,7 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_SONNET_5_5 -> Value.CLAUDE_SONNET_5_5
             CLAUDE_FABLE_5_1 -> Value.CLAUDE_FABLE_5_1
             CLAUDE_OPUS_5_5 -> Value.CLAUDE_OPUS_5_5
             CLAUDE_MYTHOS_5_1 -> Value.CLAUDE_MYTHOS_5_1
@@ -268,6 +277,7 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_SONNET_5_5 -> Known.CLAUDE_SONNET_5_5
             CLAUDE_FABLE_5_1 -> Known.CLAUDE_FABLE_5_1
             CLAUDE_OPUS_5_5 -> Known.CLAUDE_OPUS_5_5
             CLAUDE_MYTHOS_5_1 -> Known.CLAUDE_MYTHOS_5_1

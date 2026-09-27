@@ -936,8 +936,12 @@ private constructor(
         /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofDisabled(disabled)`. */
         fun thinking(disabled: BetaThinkingConfigDisabled) = apply { body.thinking(disabled) }
 
-        /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofBetweenTools()`. */
-        fun thinkingBetweenTools() = apply { body.thinkingBetweenTools() }
+        /**
+         * Alias for calling [thinking] with `BetaThinkingConfigParam.ofBetweenTools(betweenTools)`.
+         */
+        fun thinking(betweenTools: BetaThinkingConfigBetweenTools) = apply {
+            body.thinking(betweenTools)
+        }
 
         /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`. */
         fun thinking(adaptive: BetaThinkingConfigAdaptive) = apply { body.thinking(adaptive) }
@@ -2402,8 +2406,12 @@ private constructor(
             fun thinking(disabled: BetaThinkingConfigDisabled) =
                 thinking(BetaThinkingConfigParam.ofDisabled(disabled))
 
-            /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofBetweenTools()`. */
-            fun thinkingBetweenTools() = thinking(BetaThinkingConfigParam.ofBetweenTools())
+            /**
+             * Alias for calling [thinking] with
+             * `BetaThinkingConfigParam.ofBetweenTools(betweenTools)`.
+             */
+            fun thinking(betweenTools: BetaThinkingConfigBetweenTools) =
+                thinking(BetaThinkingConfigParam.ofBetweenTools(betweenTools))
 
             /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`. */
             fun thinking(adaptive: BetaThinkingConfigAdaptive) =

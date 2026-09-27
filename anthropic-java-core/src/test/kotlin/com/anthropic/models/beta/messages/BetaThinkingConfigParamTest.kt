@@ -87,19 +87,21 @@ internal class BetaThinkingConfigParamTest {
 
     @Test
     fun ofBetweenTools() {
-        val betaThinkingConfigParam = BetaThinkingConfigParam.ofBetweenTools()
+        val betweenTools = BetaThinkingConfigBetweenTools.builder().build()
+
+        val betaThinkingConfigParam = BetaThinkingConfigParam.ofBetweenTools(betweenTools)
 
         assertThat(betaThinkingConfigParam.enabled()).isEmpty
         assertThat(betaThinkingConfigParam.disabled()).isEmpty
-        assertThat(betaThinkingConfigParam.betweenTools())
-            .contains(JsonValue.from(mapOf("type" to "between_tools")))
+        assertThat(betaThinkingConfigParam.betweenTools()).contains(betweenTools)
         assertThat(betaThinkingConfigParam.adaptive()).isEmpty
     }
 
     @Test
     fun ofBetweenToolsRoundtrip() {
         val jsonMapper = jsonMapper()
-        val betaThinkingConfigParam = BetaThinkingConfigParam.ofBetweenTools()
+        val betaThinkingConfigParam =
+            BetaThinkingConfigParam.ofBetweenTools(BetaThinkingConfigBetweenTools.builder().build())
 
         val roundtrippedBetaThinkingConfigParam =
             jsonMapper.readValue(
