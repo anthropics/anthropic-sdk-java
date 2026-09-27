@@ -1,0 +1,425 @@
+{
+  "reflection": [
+    {
+      "type": "com.anthropic.client.AnthropicClient"
+    },
+    {
+      "type": "com.anthropic.core.Enum"
+    },
+    {
+      "type": "com.anthropic.core.JsonField"
+    },
+    {
+      "type": "com.anthropic.core.JsonField$Deserializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.core.JsonField$IsMissing",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.core.JsonField$Visitor"
+    },
+    {
+      "type": "com.anthropic.core.JsonMissing$Serializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.core.JsonValue"
+    },
+    {
+      "type": "com.anthropic.core.JsonValue$Deserializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.core.KnownValue",
+      "fields": [
+        {
+          "name": "value"
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.core.KnownValue$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.CacheControlEphemeral"
+    },
+    {
+      "type": "com.anthropic.models.messages.CacheCreation",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.CacheCreation$Builder"
+    },
+    {
+      "type": "com.anthropic.models.messages.CacheCreation$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.Container"
+    },
+    {
+      "type": "com.anthropic.models.messages.ContentBlock"
+    },
+    {
+      "type": "com.anthropic.models.messages.ContentBlock$Deserializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.Message",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonValue",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonValue",
+            "com.anthropic.core.JsonField"
+          ]
+        },
+        {
+          "name": "putAdditionalProperty",
+          "parameterTypes": [
+            "java.lang.String",
+            "com.anthropic.core.JsonValue"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.Message$Builder"
+    },
+    {
+      "type": "com.anthropic.models.messages.Message$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageCreateParams"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageCreateParams$Body",
+      "methods": [
+        {
+          "name": "_additionalProperties",
+          "parameterTypes": []
+        },
+        {
+          "name": "_cacheControl",
+          "parameterTypes": []
+        },
+        {
+          "name": "_container",
+          "parameterTypes": []
+        },
+        {
+          "name": "_inferenceGeo",
+          "parameterTypes": []
+        },
+        {
+          "name": "_maxTokens",
+          "parameterTypes": []
+        },
+        {
+          "name": "_messages",
+          "parameterTypes": []
+        },
+        {
+          "name": "_metadata",
+          "parameterTypes": []
+        },
+        {
+          "name": "_model",
+          "parameterTypes": []
+        },
+        {
+          "name": "_outputConfig",
+          "parameterTypes": []
+        },
+        {
+          "name": "_serviceTier",
+          "parameterTypes": []
+        },
+        {
+          "name": "_stopSequences",
+          "parameterTypes": []
+        },
+        {
+          "name": "_system",
+          "parameterTypes": []
+        },
+        {
+          "name": "_temperature",
+          "parameterTypes": []
+        },
+        {
+          "name": "_thinking",
+          "parameterTypes": []
+        },
+        {
+          "name": "_toolChoice",
+          "parameterTypes": []
+        },
+        {
+          "name": "_tools",
+          "parameterTypes": []
+        },
+        {
+          "name": "_topK",
+          "parameterTypes": []
+        },
+        {
+          "name": "_topP",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageCreateParams$Body$Builder"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageCreateParams$Body$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageCreateParams$ServiceTier"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageCreateParams$System"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageCreateParamsContainer"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageParam",
+      "methods": [
+        {
+          "name": "_additionalProperties",
+          "parameterTypes": []
+        },
+        {
+          "name": "_content",
+          "parameterTypes": []
+        },
+        {
+          "name": "_role",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageParam$Builder"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageParam$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageParam$Content"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageParam$Content$Serializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageParam$Role",
+      "methods": [
+        {
+          "name": "_value",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageParam$Role$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageParam$Role$Known"
+    },
+    {
+      "type": "com.anthropic.models.messages.MessageParam$Role$Value"
+    },
+    {
+      "type": "com.anthropic.models.messages.Metadata"
+    },
+    {
+      "type": "com.anthropic.models.messages.Model",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "com.anthropic.core.JsonField"
+          ]
+        },
+        {
+          "name": "_value",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.Model$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.Model$Known"
+    },
+    {
+      "type": "com.anthropic.models.messages.Model$Value"
+    },
+    {
+      "type": "com.anthropic.models.messages.OutputConfig"
+    },
+    {
+      "type": "com.anthropic.models.messages.OutputTokensDetails"
+    },
+    {
+      "type": "com.anthropic.models.messages.RefusalStopDetails"
+    },
+    {
+      "type": "com.anthropic.models.messages.ServerToolUsage"
+    },
+    {
+      "type": "com.anthropic.models.messages.StopReason",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "com.anthropic.core.JsonField"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.StopReason$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.StopReason$Known"
+    },
+    {
+      "type": "com.anthropic.models.messages.StopReason$Value"
+    },
+    {
+      "type": "com.anthropic.models.messages.TextBlock",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonValue",
+            "int",
+            "kotlin.jvm.internal.DefaultConstructorMarker"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.TextBlock$Builder"
+    },
+    {
+      "type": "com.anthropic.models.messages.TextBlock$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.TextBlockParam"
+    },
+    {
+      "type": "com.anthropic.models.messages.TextCitation"
+    },
+    {
+      "type": "com.anthropic.models.messages.ThinkingConfigParam"
+    },
+    {
+      "type": "com.anthropic.models.messages.ToolChoice"
+    },
+    {
+      "type": "com.anthropic.models.messages.ToolUnion"
+    },
+    {
+      "type": "com.anthropic.models.messages.Usage",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "com.anthropic.core.JsonField",
+            "int",
+            "kotlin.jvm.internal.DefaultConstructorMarker"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.Usage$Builder"
+    },
+    {
+      "type": "com.anthropic.models.messages.Usage$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.Usage$ServiceTier",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "com.anthropic.core.JsonField"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.anthropic.models.messages.Usage$ServiceTier$Companion"
+    },
+    {
+      "type": "com.anthropic.models.messages.Usage$ServiceTier$Known"
+    },
+    {
+      "type": "com.anthropic.models.messages.Usage$ServiceTier$Value"
+    }
+  ]
+}
