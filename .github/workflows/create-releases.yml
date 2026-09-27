@@ -1,4 +1,5 @@
 name: Create releases
+
 on:
   schedule:
     - cron: '0 5 * * *' # every day at 5am UTC
@@ -34,6 +35,50 @@ jobs:
       - name: Set up Gradle
         if: ${{ steps.release.outputs.releases_created }}
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+
+      - name: Compile anthropic-java-core
+        if: ${{ steps.release.outputs.releases_created }}
+        run: >-
+          ./gradlew
+          :anthropic-java-core:compileJava
+          :anthropic-java-core:compileKotlin
+          :anthropic-java-core:compileTestJava
+          :anthropic-java-core:compileTestKotlin
+          -x test
+
+      - name: Stop pre-GraalVM Gradle daemon
+        if: ${{ steps.release.outputs.releases_created }}
+        run: ./gradlew --stop
+
+      - name: Run mock server
+        if: ${{ steps.release.outputs.releases_created }}
+        run: ./scripts/mock --daemon
+
+      - name: Set up GraalVM
+        if: ${{ steps.release.outputs.releases_created }}
+        uses: graalvm/setup-graalvm@0426e2e191540e8514dff98dc52a5f5146a2a276 # v1
+        with:
+          java-version: 21
+          distribution: graalvm-community
+
+      - name: Generate GraalVM reachability metadata
+        if: ${{ steps.release.outputs.releases_created }}
+        run: >-
+          ./gradlew :anthropic-java-core:test
+          -x compileJava
+          -x compileKotlin
+          -x compileTestJava
+          -x compileTestKotlin
+          -PgraalvmAgent
+
+      - name: Check generated GraalVM metadata
+        if: ${{ steps.release.outputs.releases_created }}
+        run: |
+          directory="anthropic-java-core/src/main/resources/META-INF/native-image"
+          if [[ ! -d "$directory" || -z "$(ls -A "$directory")" ]]; then
+            echo "::error::No GraalVM metadata found in $directory"
+            exit 1
+          fi
 
       - name: Publish to Sonatype
         if: ${{ steps.release.outputs.releases_created }}

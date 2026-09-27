@@ -1,6 +1,7 @@
 # workflow for re-running publishing to Sonatype in case it fails for some reason
 # you can run this workflow by navigating to https://www.github.com/anthropics/anthropic-sdk-java/actions/workflows/publish-sonatype.yml
 name: Publish Sonatype
+
 on:
   workflow_dispatch:
 
@@ -23,6 +24,44 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+
+      - name: Compile anthropic-java-core
+        run: >-
+          ./gradlew
+          :anthropic-java-core:compileJava
+          :anthropic-java-core:compileKotlin
+          :anthropic-java-core:compileTestJava
+          :anthropic-java-core:compileTestKotlin
+          -x test
+
+      - name: Stop pre-GraalVM Gradle daemon
+        run: ./gradlew --stop
+
+      - name: Run mock server
+        run: ./scripts/mock --daemon
+
+      - name: Set up GraalVM
+        uses: graalvm/setup-graalvm@0426e2e191540e8514dff98dc52a5f5146a2a276 # v1
+        with:
+          java-version: 21
+          distribution: graalvm-community
+
+      - name: Generate GraalVM reachability metadata
+        run: >-
+          ./gradlew :anthropic-java-core:test
+          -x compileJava
+          -x compileKotlin
+          -x compileTestJava
+          -x compileTestKotlin
+          -PgraalvmAgent
+
+      - name: Check generated GraalVM metadata
+        run: |
+          directory="anthropic-java-core/src/main/resources/META-INF/native-image"
+          if [[ ! -d "$directory" || -z "$(ls -A "$directory")" ]]; then
+            echo "::error::No GraalVM metadata found in $directory"
+            exit 1
+          fi
 
       - name: Publish to Sonatype
         run: |-

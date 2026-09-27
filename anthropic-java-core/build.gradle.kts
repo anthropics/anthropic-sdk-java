@@ -89,3 +89,20 @@ dependencies {
     testImplementation(libs.mockito.junit.jupiter)
     testImplementation(libs.mockito.kotlin)
 }
+
+if (project.hasProperty("graalvmAgent")) {
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+            vendor.set(JvmVendorSpec.GRAAL_VM)
+        }
+    }
+
+    tasks.test {
+        maxParallelForks = 1
+        forkEvery = 0
+        jvmArgs(
+            "-agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image"
+        )
+    }
+}
