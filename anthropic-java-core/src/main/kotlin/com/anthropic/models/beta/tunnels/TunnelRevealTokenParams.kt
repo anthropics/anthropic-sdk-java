@@ -15,9 +15,12 @@ import kotlin.jvm.optionals.getOrNull
  * header and may change without a deprecation period. It supersedes the Admin API endpoints at
  * `/v1/organizations/tunnels`, which remain available during a migration window.
  *
- * Reveals a tunnel's connector token. The value is fetched live on each call; Anthropic does not
- * store it. Repeated calls return the same value until the token is rotated. Exposed as POST so the
- * token does not appear in intermediary access logs.
+ * Reveals a `cloudflare` tunnel's connector token. The value is fetched live on each call;
+ * Anthropic does not store it. Repeated calls return the same value until the token is rotated.
+ * Exposed as POST so the token does not appear in intermediary access logs. A tunnel on the `relay`
+ * transport has no token to reveal: its relay token was returned once when it was issued and only a
+ * hash is kept, so the request is refused with an `invalid_request_error` whose error code is
+ * `tunnel_token_not_revealable`, and `rotate_token` is the way to obtain a new value.
  */
 class TunnelRevealTokenParams
 private constructor(

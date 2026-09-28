@@ -25,6 +25,7 @@ private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
     private val displayName: JsonField<String>,
     private val domain: JsonField<String>,
+    private val transport: JsonField<BetaTunnelTransport>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -42,8 +43,11 @@ private constructor(
         @ExcludeMissing
         displayName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("domain") @ExcludeMissing domain: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("transport")
+        @ExcludeMissing
+        transport: JsonField<BetaTunnelTransport> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(id, archivedAt, createdAt, displayName, domain, type, mutableMapOf())
+    ) : this(id, archivedAt, createdAt, displayName, domain, transport, type, mutableMapOf())
 
     /**
      * Unique identifier for the tunnel, prefixed with `tnl_`.
@@ -86,6 +90,18 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun domain(): String = domain.getRequired("domain")
+
+    /**
+     * How traffic reaches the tunnel. Chosen by Anthropic per organization when the tunnel is
+     * created; read-only and present on every tunnel, so automation can tell which connector to
+     * deploy. A union discriminated on `type`: `{"type": "cloudflare"}` or `{"type": "relay"}`. In
+     * the create response a `relay` tunnel's transport also carries `token`, its relay token, shown
+     * that once; no read carries a token.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun transport(): BetaTunnelTransport = transport.getRequired("transport")
 
     /**
      * Expected to always return the following:
@@ -139,6 +155,15 @@ private constructor(
      */
     @JsonProperty("domain") @ExcludeMissing fun _domain(): JsonField<String> = domain
 
+    /**
+     * Returns the raw JSON value of [transport].
+     *
+     * Unlike [transport], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("transport")
+    @ExcludeMissing
+    fun _transport(): JsonField<BetaTunnelTransport> = transport
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -163,6 +188,7 @@ private constructor(
          * .createdAt()
          * .displayName()
          * .domain()
+         * .transport()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -176,6 +202,7 @@ private constructor(
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var displayName: JsonField<String>? = null
         private var domain: JsonField<String>? = null
+        private var transport: JsonField<BetaTunnelTransport>? = null
         private var type: JsonValue = JsonValue.from("tunnel")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -186,6 +213,7 @@ private constructor(
             createdAt = betaTunnel.createdAt
             displayName = betaTunnel.displayName
             domain = betaTunnel.domain
+            transport = betaTunnel.transport
             type = betaTunnel.type
             additionalProperties = betaTunnel.additionalProperties.toMutableMap()
         }
@@ -264,6 +292,34 @@ private constructor(
         fun domain(domain: JsonField<String>) = apply { this.domain = domain }
 
         /**
+         * How traffic reaches the tunnel. Chosen by Anthropic per organization when the tunnel is
+         * created; read-only and present on every tunnel, so automation can tell which connector to
+         * deploy. A union discriminated on `type`: `{"type": "cloudflare"}` or `{"type": "relay"}`.
+         * In the create response a `relay` tunnel's transport also carries `token`, its relay
+         * token, shown that once; no read carries a token.
+         */
+        fun transport(transport: BetaTunnelTransport) = transport(JsonField.of(transport))
+
+        /**
+         * Sets [Builder.transport] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.transport] with a well-typed [BetaTunnelTransport] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun transport(transport: JsonField<BetaTunnelTransport>) = apply {
+            this.transport = transport
+        }
+
+        /** Alias for calling [transport] with `BetaTunnelTransport.ofCloudflare(cloudflare)`. */
+        fun transport(cloudflare: BetaCloudflareTunnelTransport) =
+            transport(BetaTunnelTransport.ofCloudflare(cloudflare))
+
+        /** Alias for calling [transport] with `BetaTunnelTransport.ofRelay(relay)`. */
+        fun transport(relay: BetaRelayTunnelTransport) =
+            transport(BetaTunnelTransport.ofRelay(relay))
+
+        /**
          * Sets the field to an arbitrary JSON value.
          *
          * It is usually unnecessary to call this method because the field defaults to the
@@ -308,6 +364,7 @@ private constructor(
          * .createdAt()
          * .displayName()
          * .domain()
+         * .transport()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -319,6 +376,7 @@ private constructor(
                 checkRequired("createdAt", createdAt),
                 checkRequired("displayName", displayName),
                 checkRequired("domain", domain),
+                checkRequired("transport", transport),
                 type,
                 additionalProperties.toMutableMap(),
             )
@@ -344,6 +402,7 @@ private constructor(
         createdAt()
         displayName()
         domain()
+        transport().validate()
         _type().let {
             if (it != JsonValue.from("tunnel")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -372,6 +431,7 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (displayName.asKnown().isPresent) 1 else 0) +
             (if (domain.asKnown().isPresent) 1 else 0) +
+            (transport.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("tunnel")) 1 else 0 }
 
     override fun equals(other: Any?): Boolean {
@@ -385,16 +445,26 @@ private constructor(
             createdAt == other.createdAt &&
             displayName == other.displayName &&
             domain == other.domain &&
+            transport == other.transport &&
             type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, archivedAt, createdAt, displayName, domain, type, additionalProperties)
+        Objects.hash(
+            id,
+            archivedAt,
+            createdAt,
+            displayName,
+            domain,
+            transport,
+            type,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaTunnel{id=$id, archivedAt=$archivedAt, createdAt=$createdAt, displayName=$displayName, domain=$domain, type=$type, additionalProperties=$additionalProperties}"
+        "BetaTunnel{id=$id, archivedAt=$archivedAt, createdAt=$createdAt, displayName=$displayName, domain=$domain, transport=$transport, type=$type, additionalProperties=$additionalProperties}"
 }

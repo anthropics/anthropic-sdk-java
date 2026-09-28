@@ -24,9 +24,13 @@ import kotlin.jvm.optionals.getOrNull
  * header and may change without a deprecation period. It supersedes the Admin API endpoints at
  * `/v1/organizations/tunnels`, which remain available during a migration window.
  *
- * Rotates a tunnel's connector token. Rotation invalidates the current token for new connections
- * and returns a fresh value; established connections are not severed. A connector restarted after
- * rotation must use the new value.
+ * Rotates a tunnel's connector token and returns the fresh value. On the `cloudflare` transport the
+ * previous token stops working for new connections and established connections are not severed; a
+ * connector restarted after rotation must use the new value. On the `relay` transport the new relay
+ * token is returned in this response and never again (only a hash is kept), and the relay
+ * connections established with the previous token are closed, so the relay connector keeps carrying
+ * traffic only after it is redeployed with the new token; relay token rotations are also rate
+ * limited per tunnel.
  */
 class TunnelRotateTokenParams
 private constructor(
