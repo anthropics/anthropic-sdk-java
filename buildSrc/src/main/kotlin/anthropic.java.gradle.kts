@@ -86,6 +86,10 @@ tasks.withType<Test>().configureEach {
     // suppresses the warning at the JVM level.
     jvmArgs("-XX:+EnableDynamicAgentLoading")
 
+    // Use only the JVM's fast, lightly optimizing compiler (C1). Test JVMs are short-lived, so the
+    // slower, fully optimizing one (C2) costs them more CPU than it saves.
+    jvmArgs("-XX:TieredStopAtLevel=1")
+
     testLogging {
         exceptionFormat = TestExceptionFormat.FULL
     }
