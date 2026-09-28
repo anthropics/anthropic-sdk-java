@@ -8,7 +8,6 @@ import kotlin.jvm.optionals.getOrNull
 
 /** AgentEvaluatedPermission enum */
 class BetaManagedAgentsAgentEvaluatedPermission
-@JsonCreator
 private constructor(private val value: JsonField<String>) : Enum {
 
     /**
@@ -22,17 +21,25 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val ALLOW = of("allow")
+        @JvmField val ALLOW = BetaManagedAgentsAgentEvaluatedPermission(JsonField.of("allow"))
 
-        @JvmField val ASK = of("ask")
+        @JvmField val ASK = BetaManagedAgentsAgentEvaluatedPermission(JsonField.of("ask"))
 
-        @JvmField val DENY = of("deny")
+        @JvmField val DENY = BetaManagedAgentsAgentEvaluatedPermission(JsonField.of("deny"))
 
         @JvmStatic
-        fun of(value: String) = BetaManagedAgentsAgentEvaluatedPermission(JsonField.of(value))
+        fun of(value: String): BetaManagedAgentsAgentEvaluatedPermission =
+            // Intern known values so `==` works
+            when (value) {
+                "allow" -> ALLOW
+                "ask" -> ASK
+                "deny" -> DENY
+                else -> BetaManagedAgentsAgentEvaluatedPermission(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaManagedAgentsAgentEvaluatedPermission =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaManagedAgentsAgentEvaluatedPermission =
             value.asString().getOrNull()?.let { of(it) }
                 ?: BetaManagedAgentsAgentEvaluatedPermission(value)
     }

@@ -4018,7 +4018,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -4032,81 +4032,137 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER_MESSAGE = of("user.message")
+            @JvmField val USER_MESSAGE = Type(JsonField.of("user.message"))
 
-            @JvmField val USER_INTERRUPT = of("user.interrupt")
+            @JvmField val USER_INTERRUPT = Type(JsonField.of("user.interrupt"))
 
-            @JvmField val USER_TOOL_CONFIRMATION = of("user.tool_confirmation")
+            @JvmField val USER_TOOL_CONFIRMATION = Type(JsonField.of("user.tool_confirmation"))
 
-            @JvmField val USER_CUSTOM_TOOL_RESULT = of("user.custom_tool_result")
+            @JvmField val USER_CUSTOM_TOOL_RESULT = Type(JsonField.of("user.custom_tool_result"))
 
-            @JvmField val AGENT_CUSTOM_TOOL_USE = of("agent.custom_tool_use")
+            @JvmField val AGENT_CUSTOM_TOOL_USE = Type(JsonField.of("agent.custom_tool_use"))
 
-            @JvmField val AGENT_MESSAGE = of("agent.message")
+            @JvmField val AGENT_MESSAGE = Type(JsonField.of("agent.message"))
 
-            @JvmField val AGENT_THINKING = of("agent.thinking")
+            @JvmField val AGENT_THINKING = Type(JsonField.of("agent.thinking"))
 
-            @JvmField val AGENT_MCP_TOOL_USE = of("agent.mcp_tool_use")
+            @JvmField val AGENT_MCP_TOOL_USE = Type(JsonField.of("agent.mcp_tool_use"))
 
-            @JvmField val AGENT_MCP_TOOL_RESULT = of("agent.mcp_tool_result")
+            @JvmField val AGENT_MCP_TOOL_RESULT = Type(JsonField.of("agent.mcp_tool_result"))
 
-            @JvmField val AGENT_TOOL_USE = of("agent.tool_use")
+            @JvmField val AGENT_TOOL_USE = Type(JsonField.of("agent.tool_use"))
 
-            @JvmField val AGENT_TOOL_RESULT = of("agent.tool_result")
-
-            @JvmField val AGENT_THREAD_MESSAGE_RECEIVED = of("agent.thread_message_received")
-
-            @JvmField val AGENT_THREAD_MESSAGE_SENT = of("agent.thread_message_sent")
-
-            @JvmField val AGENT_THREAD_CONTEXT_COMPACTED = of("agent.thread_context_compacted")
-
-            @JvmField val SESSION_ERROR = of("session.error")
-
-            @JvmField val SESSION_STATUS_RESCHEDULED = of("session.status_rescheduled")
-
-            @JvmField val SESSION_STATUS_RUNNING = of("session.status_running")
-
-            @JvmField val SESSION_STATUS_IDLE = of("session.status_idle")
-
-            @JvmField val SESSION_STATUS_TERMINATED = of("session.status_terminated")
-
-            @JvmField val SESSION_THREAD_CREATED = of("session.thread_created")
-
-            @JvmField val SPAN_OUTCOME_EVALUATION_START = of("span.outcome_evaluation_start")
-
-            @JvmField val SPAN_OUTCOME_EVALUATION_END = of("span.outcome_evaluation_end")
-
-            @JvmField val SPAN_MODEL_REQUEST_START = of("span.model_request_start")
-
-            @JvmField val SPAN_MODEL_REQUEST_END = of("span.model_request_end")
-
-            @JvmField val SPAN_OUTCOME_EVALUATION_ONGOING = of("span.outcome_evaluation_ongoing")
-
-            @JvmField val USER_DEFINE_OUTCOME = of("user.define_outcome")
-
-            @JvmField val SESSION_DELETED = of("session.deleted")
-
-            @JvmField val SESSION_THREAD_STATUS_RUNNING = of("session.thread_status_running")
-
-            @JvmField val SESSION_THREAD_STATUS_IDLE = of("session.thread_status_idle")
-
-            @JvmField val SESSION_THREAD_STATUS_TERMINATED = of("session.thread_status_terminated")
-
-            @JvmField val USER_TOOL_RESULT = of("user.tool_result")
+            @JvmField val AGENT_TOOL_RESULT = Type(JsonField.of("agent.tool_result"))
 
             @JvmField
-            val SESSION_THREAD_STATUS_RESCHEDULED = of("session.thread_status_rescheduled")
+            val AGENT_THREAD_MESSAGE_RECEIVED = Type(JsonField.of("agent.thread_message_received"))
 
-            @JvmField val SESSION_UPDATED = of("session.updated")
+            @JvmField
+            val AGENT_THREAD_MESSAGE_SENT = Type(JsonField.of("agent.thread_message_sent"))
 
-            @JvmField val SYSTEM_MESSAGE = of("system.message")
+            @JvmField
+            val AGENT_THREAD_CONTEXT_COMPACTED =
+                Type(JsonField.of("agent.thread_context_compacted"))
 
-            @JvmField val SESSION_USAGE = of("session.usage")
+            @JvmField val SESSION_ERROR = Type(JsonField.of("session.error"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmField
+            val SESSION_STATUS_RESCHEDULED = Type(JsonField.of("session.status_rescheduled"))
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JvmField val SESSION_STATUS_RUNNING = Type(JsonField.of("session.status_running"))
+
+            @JvmField val SESSION_STATUS_IDLE = Type(JsonField.of("session.status_idle"))
+
+            @JvmField
+            val SESSION_STATUS_TERMINATED = Type(JsonField.of("session.status_terminated"))
+
+            @JvmField val SESSION_THREAD_CREATED = Type(JsonField.of("session.thread_created"))
+
+            @JvmField
+            val SPAN_OUTCOME_EVALUATION_START = Type(JsonField.of("span.outcome_evaluation_start"))
+
+            @JvmField
+            val SPAN_OUTCOME_EVALUATION_END = Type(JsonField.of("span.outcome_evaluation_end"))
+
+            @JvmField val SPAN_MODEL_REQUEST_START = Type(JsonField.of("span.model_request_start"))
+
+            @JvmField val SPAN_MODEL_REQUEST_END = Type(JsonField.of("span.model_request_end"))
+
+            @JvmField
+            val SPAN_OUTCOME_EVALUATION_ONGOING =
+                Type(JsonField.of("span.outcome_evaluation_ongoing"))
+
+            @JvmField val USER_DEFINE_OUTCOME = Type(JsonField.of("user.define_outcome"))
+
+            @JvmField val SESSION_DELETED = Type(JsonField.of("session.deleted"))
+
+            @JvmField
+            val SESSION_THREAD_STATUS_RUNNING = Type(JsonField.of("session.thread_status_running"))
+
+            @JvmField
+            val SESSION_THREAD_STATUS_IDLE = Type(JsonField.of("session.thread_status_idle"))
+
+            @JvmField
+            val SESSION_THREAD_STATUS_TERMINATED =
+                Type(JsonField.of("session.thread_status_terminated"))
+
+            @JvmField val USER_TOOL_RESULT = Type(JsonField.of("user.tool_result"))
+
+            @JvmField
+            val SESSION_THREAD_STATUS_RESCHEDULED =
+                Type(JsonField.of("session.thread_status_rescheduled"))
+
+            @JvmField val SESSION_UPDATED = Type(JsonField.of("session.updated"))
+
+            @JvmField val SYSTEM_MESSAGE = Type(JsonField.of("system.message"))
+
+            @JvmField val SESSION_USAGE = Type(JsonField.of("session.usage"))
+
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "user.message" -> USER_MESSAGE
+                    "user.interrupt" -> USER_INTERRUPT
+                    "user.tool_confirmation" -> USER_TOOL_CONFIRMATION
+                    "user.custom_tool_result" -> USER_CUSTOM_TOOL_RESULT
+                    "agent.custom_tool_use" -> AGENT_CUSTOM_TOOL_USE
+                    "agent.message" -> AGENT_MESSAGE
+                    "agent.thinking" -> AGENT_THINKING
+                    "agent.mcp_tool_use" -> AGENT_MCP_TOOL_USE
+                    "agent.mcp_tool_result" -> AGENT_MCP_TOOL_RESULT
+                    "agent.tool_use" -> AGENT_TOOL_USE
+                    "agent.tool_result" -> AGENT_TOOL_RESULT
+                    "agent.thread_message_received" -> AGENT_THREAD_MESSAGE_RECEIVED
+                    "agent.thread_message_sent" -> AGENT_THREAD_MESSAGE_SENT
+                    "agent.thread_context_compacted" -> AGENT_THREAD_CONTEXT_COMPACTED
+                    "session.error" -> SESSION_ERROR
+                    "session.status_rescheduled" -> SESSION_STATUS_RESCHEDULED
+                    "session.status_running" -> SESSION_STATUS_RUNNING
+                    "session.status_idle" -> SESSION_STATUS_IDLE
+                    "session.status_terminated" -> SESSION_STATUS_TERMINATED
+                    "session.thread_created" -> SESSION_THREAD_CREATED
+                    "span.outcome_evaluation_start" -> SPAN_OUTCOME_EVALUATION_START
+                    "span.outcome_evaluation_end" -> SPAN_OUTCOME_EVALUATION_END
+                    "span.model_request_start" -> SPAN_MODEL_REQUEST_START
+                    "span.model_request_end" -> SPAN_MODEL_REQUEST_END
+                    "span.outcome_evaluation_ongoing" -> SPAN_OUTCOME_EVALUATION_ONGOING
+                    "user.define_outcome" -> USER_DEFINE_OUTCOME
+                    "session.deleted" -> SESSION_DELETED
+                    "session.thread_status_running" -> SESSION_THREAD_STATUS_RUNNING
+                    "session.thread_status_idle" -> SESSION_THREAD_STATUS_IDLE
+                    "session.thread_status_terminated" -> SESSION_THREAD_STATUS_TERMINATED
+                    "user.tool_result" -> USER_TOOL_RESULT
+                    "session.thread_status_rescheduled" -> SESSION_THREAD_STATUS_RESCHEDULED
+                    "session.updated" -> SESSION_UPDATED
+                    "system.message" -> SYSTEM_MESSAGE
+                    "session.usage" -> SESSION_USAGE
+                    else -> Type(JsonField.of(value))
+                }
+
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

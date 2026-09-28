@@ -60,7 +60,7 @@ private constructor(
     fun description(): String = description.getRequired("description")
 
     /**
-     * Rubric for grading the quality of an outcome.
+     * How to grade the outcome. Text or file reference.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -174,7 +174,7 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
-        /** Rubric for grading the quality of an outcome. */
+        /** How to grade the outcome. Text or file reference. */
         fun rubric(rubric: Rubric) = rubric(JsonField.of(rubric))
 
         /**
@@ -344,7 +344,7 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (maxIterations.asKnown().isPresent) 1 else 0)
 
-    /** Rubric for grading the quality of an outcome. */
+    /** How to grade the outcome. Text or file reference. */
     @JsonDeserialize(using = Rubric.Deserializer::class)
     @JsonSerialize(using = Rubric.Serializer::class)
     class Rubric
@@ -590,7 +590,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -604,14 +604,22 @@ private constructor(
 
             companion object {
 
-                @JvmField val FILE = of("file")
+                @JvmField val FILE = Type(JsonField.of("file"))
 
-                @JvmField val TEXT = of("text")
+                @JvmField val TEXT = Type(JsonField.of("text"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "file" -> FILE
+                        "text" -> TEXT
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -732,7 +740,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -746,12 +754,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER_DEFINE_OUTCOME = of("user.define_outcome")
+            @JvmField val USER_DEFINE_OUTCOME = Type(JsonField.of("user.define_outcome"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "user.define_outcome" -> USER_DEFINE_OUTCOME
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

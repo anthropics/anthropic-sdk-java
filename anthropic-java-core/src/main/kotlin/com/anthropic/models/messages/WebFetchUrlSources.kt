@@ -715,7 +715,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -729,18 +729,28 @@ private constructor(
 
             companion object {
 
-                @JvmField val ALL = of("all")
+                @JvmField val ALL = Type(JsonField.of("all"))
 
-                @JvmField val NONE = of("none")
+                @JvmField val NONE = Type(JsonField.of("none"))
 
-                @JvmField val ONLY = of("only")
+                @JvmField val ONLY = Type(JsonField.of("only"))
 
-                @JvmField val EXCEPT = of("except")
+                @JvmField val EXCEPT = Type(JsonField.of("except"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "all" -> ALL
+                        "none" -> NONE
+                        "only" -> ONLY
+                        "except" -> EXCEPT
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1236,7 +1246,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1250,18 +1260,28 @@ private constructor(
 
             companion object {
 
-                @JvmField val ALL = of("all")
+                @JvmField val ALL = Type(JsonField.of("all"))
 
-                @JvmField val NONE = of("none")
+                @JvmField val NONE = Type(JsonField.of("none"))
 
-                @JvmField val ONLY = of("only")
+                @JvmField val ONLY = Type(JsonField.of("only"))
 
-                @JvmField val EXCEPT = of("except")
+                @JvmField val EXCEPT = Type(JsonField.of("except"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "all" -> ALL
+                        "none" -> NONE
+                        "only" -> ONLY
+                        "except" -> EXCEPT
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1638,7 +1658,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1652,14 +1672,22 @@ private constructor(
 
             companion object {
 
-                @JvmField val ALL = of("all")
+                @JvmField val ALL = Type(JsonField.of("all"))
 
-                @JvmField val NONE = of("none")
+                @JvmField val NONE = Type(JsonField.of("none"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "all" -> ALL
+                        "none" -> NONE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

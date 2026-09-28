@@ -82,8 +82,7 @@ private constructor(
     fun inferenceGeo(): Optional<String> = inferenceGeo.getOptional("inference_geo")
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * Inference speed mode. Defaults to `standard`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -279,11 +278,7 @@ private constructor(
             this.inferenceGeo = inferenceGeo
         }
 
-        /**
-         * Inference speed mode. `fast` provides significantly faster output token generation at
-         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-         * create time.
-         */
+        /** Inference speed mode. Defaults to `standard`. */
         fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
         /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
@@ -858,7 +853,6 @@ private constructor(
          * all models accept every level; invalid combinations are rejected at create time.
          */
         class BetaManagedAgentsEffortLevel
-        @JsonCreator
         private constructor(private val value: JsonField<String>) : Enum {
 
             /**
@@ -874,24 +868,35 @@ private constructor(
             companion object {
 
                 /** Low effort. Favors latency over reasoning depth. */
-                @JvmField val LOW = of("low")
+                @JvmField val LOW = BetaManagedAgentsEffortLevel(JsonField.of("low"))
 
                 /** Medium effort. Balances latency and reasoning depth. */
-                @JvmField val MEDIUM = of("medium")
+                @JvmField val MEDIUM = BetaManagedAgentsEffortLevel(JsonField.of("medium"))
 
                 /** High effort. Favors reasoning depth. */
-                @JvmField val HIGH = of("high")
+                @JvmField val HIGH = BetaManagedAgentsEffortLevel(JsonField.of("high"))
 
                 /** Extra-high effort. Not all models accept this level. */
-                @JvmField val XHIGH = of("xhigh")
+                @JvmField val XHIGH = BetaManagedAgentsEffortLevel(JsonField.of("xhigh"))
 
                 /** Maximum effort. Favors reasoning depth over latency. */
-                @JvmField val MAX = of("max")
+                @JvmField val MAX = BetaManagedAgentsEffortLevel(JsonField.of("max"))
 
-                @JvmStatic fun of(value: String) = BetaManagedAgentsEffortLevel(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): BetaManagedAgentsEffortLevel =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "low" -> LOW
+                        "medium" -> MEDIUM
+                        "high" -> HIGH
+                        "xhigh" -> XHIGH
+                        "max" -> MAX
+                        else -> BetaManagedAgentsEffortLevel(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): BetaManagedAgentsEffortLevel =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): BetaManagedAgentsEffortLevel =
                     value.asString().getOrNull()?.let { of(it) }
                         ?: BetaManagedAgentsEffortLevel(value)
             }
@@ -1043,11 +1048,8 @@ private constructor(
         }
     }
 
-    /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
-     */
-    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    /** Inference speed mode. Defaults to `standard`. */
+    class Speed private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1061,14 +1063,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = Speed(JsonField.of("standard"))
 
-            @JvmField val FAST = of("fast")
+            @JvmField val FAST = Speed(JsonField.of("fast"))
 
-            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Speed =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "fast" -> FAST
+                    else -> Speed(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Speed =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Speed =
                 value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 

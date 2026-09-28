@@ -76,7 +76,7 @@ private constructor(
     fun activeSeconds(): Optional<Double> = activeSeconds.getOptional("active_seconds")
 
     /**
-     * Prompt-cache creation token usage broken down by cache lifetime.
+     * Tokens used to create prompt cache entries, broken down by cache TTL.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -102,7 +102,7 @@ private constructor(
     fun inputTokens(): Optional<Int> = inputTokens.getOptional("input_tokens")
 
     /**
-     * A monetary amount in a specific currency.
+     * Cumulative list cost of the session across all turns, priced at public list rates.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -118,7 +118,7 @@ private constructor(
     fun outputTokens(): Optional<Int> = outputTokens.getOptional("output_tokens")
 
     /**
-     * Cumulative count of server-executed tool invocations, broken down by tool.
+     * Cumulative server-executed tool usage across all turns.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -254,7 +254,7 @@ private constructor(
             this.activeSeconds = activeSeconds
         }
 
-        /** Prompt-cache creation token usage broken down by cache lifetime. */
+        /** Tokens used to create prompt cache entries, broken down by cache TTL. */
         fun cacheCreation(cacheCreation: BetaManagedAgentsCacheCreationUsage) =
             cacheCreation(JsonField.of(cacheCreation))
 
@@ -295,7 +295,7 @@ private constructor(
          */
         fun inputTokens(inputTokens: JsonField<Int>) = apply { this.inputTokens = inputTokens }
 
-        /** A monetary amount in a specific currency. */
+        /** Cumulative list cost of the session across all turns, priced at public list rates. */
         fun listCost(listCost: BetaMonetaryAmount) = listCost(JsonField.of(listCost))
 
         /**
@@ -319,7 +319,7 @@ private constructor(
          */
         fun outputTokens(outputTokens: JsonField<Int>) = apply { this.outputTokens = outputTokens }
 
-        /** Cumulative count of server-executed tool invocations, broken down by tool. */
+        /** Cumulative server-executed tool usage across all turns. */
         fun serverToolUse(serverToolUse: BetaManagedAgentsServerToolUsage) =
             serverToolUse(JsonField.of(serverToolUse))
 

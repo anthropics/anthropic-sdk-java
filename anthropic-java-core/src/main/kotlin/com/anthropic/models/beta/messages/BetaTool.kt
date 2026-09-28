@@ -987,8 +987,7 @@ private constructor(
      * called from the code execution environment (v2 with persistence). code_execution_20260521:
      * The tool can be called from the code execution environment (v2 with persistence).
      */
-    class AllowedCaller @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class AllowedCaller private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1002,18 +1001,31 @@ private constructor(
 
         companion object {
 
-            @JvmField val DIRECT = of("direct")
+            @JvmField val DIRECT = AllowedCaller(JsonField.of("direct"))
 
-            @JvmField val CODE_EXECUTION_20250825 = of("code_execution_20250825")
+            @JvmField
+            val CODE_EXECUTION_20250825 = AllowedCaller(JsonField.of("code_execution_20250825"))
 
-            @JvmField val CODE_EXECUTION_20260120 = of("code_execution_20260120")
+            @JvmField
+            val CODE_EXECUTION_20260120 = AllowedCaller(JsonField.of("code_execution_20260120"))
 
-            @JvmField val CODE_EXECUTION_20260521 = of("code_execution_20260521")
+            @JvmField
+            val CODE_EXECUTION_20260521 = AllowedCaller(JsonField.of("code_execution_20260521"))
 
-            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): AllowedCaller =
+                // Intern known values so `==` works
+                when (value) {
+                    "direct" -> DIRECT
+                    "code_execution_20250825" -> CODE_EXECUTION_20250825
+                    "code_execution_20260120" -> CODE_EXECUTION_20260120
+                    "code_execution_20260521" -> CODE_EXECUTION_20260521
+                    else -> AllowedCaller(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): AllowedCaller =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): AllowedCaller =
                 value.asString().getOrNull()?.let { of(it) } ?: AllowedCaller(value)
         }
 
@@ -1251,7 +1263,7 @@ private constructor(
         override fun toString() = "InputExample{additionalProperties=$additionalProperties}"
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1265,12 +1277,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val CUSTOM = of("custom")
+            @JvmField val CUSTOM = Type(JsonField.of("custom"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "custom" -> CUSTOM
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

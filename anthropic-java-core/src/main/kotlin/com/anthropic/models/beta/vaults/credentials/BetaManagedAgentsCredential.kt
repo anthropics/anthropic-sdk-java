@@ -86,7 +86,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the credential was archived. Null if not archived.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -94,7 +94,7 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
-     * Authentication details for a credential.
+     * Authentication configuration for this credential.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -289,7 +289,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A timestamp in RFC 3339 format */
+        /** When the credential was archived. Null if not archived. */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
         /** Alias for calling [Builder.archivedAt] with `archivedAt.orElse(null)`. */
@@ -306,7 +306,7 @@ private constructor(
             this.archivedAt = archivedAt
         }
 
-        /** Authentication details for a credential. */
+        /** Authentication configuration for this credential. */
         fun auth(auth: Auth) = auth(JsonField.of(auth))
 
         /**
@@ -539,7 +539,7 @@ private constructor(
             (if (vaultId.asKnown().isPresent) 1 else 0) +
             (if (displayName.asKnown().isPresent) 1 else 0)
 
-    /** Authentication details for a credential. */
+    /** Authentication configuration for this credential. */
     @JsonDeserialize(using = Auth.Deserializer::class)
     @JsonSerialize(using = Auth.Serializer::class)
     class Auth
@@ -877,7 +877,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -891,16 +891,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val MCP_OAUTH = of("mcp_oauth")
+                @JvmField val MCP_OAUTH = Type(JsonField.of("mcp_oauth"))
 
-                @JvmField val STATIC_BEARER = of("static_bearer")
+                @JvmField val STATIC_BEARER = Type(JsonField.of("static_bearer"))
 
-                @JvmField val ENVIRONMENT_VARIABLE = of("environment_variable")
+                @JvmField val ENVIRONMENT_VARIABLE = Type(JsonField.of("environment_variable"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "mcp_oauth" -> MCP_OAUTH
+                        "static_bearer" -> STATIC_BEARER
+                        "environment_variable" -> ENVIRONMENT_VARIABLE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1134,7 +1143,7 @@ private constructor(
         override fun toString() = "Metadata{additionalProperties=$additionalProperties}"
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1148,12 +1157,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val VAULT_CREDENTIAL = of("vault_credential")
+            @JvmField val VAULT_CREDENTIAL = Type(JsonField.of("vault_credential"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "vault_credential" -> VAULT_CREDENTIAL
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

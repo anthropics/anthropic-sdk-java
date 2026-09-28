@@ -18,7 +18,7 @@ internal class BetaFallbacksParamTest {
         val fallbackParams =
             listOf(
                 BetaFallbackParam.builder()
-                    .model(Model.CLAUDE_FABLE_5_1)
+                    .model(Model.CLAUDE_SONNET_5_5)
                     .maxTokens(0L)
                     .outputConfig(
                         BetaOutputConfig.builder()
@@ -65,7 +65,7 @@ internal class BetaFallbacksParamTest {
             BetaFallbacksParam.ofFallbackParams(
                 listOf(
                     BetaFallbackParam.builder()
-                        .model(Model.CLAUDE_FABLE_5_1)
+                        .model(Model.CLAUDE_SONNET_5_5)
                         .maxTokens(0L)
                         .outputConfig(
                             BetaOutputConfig.builder()

@@ -6,9 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class BetaNoBillingWorkspaceRole
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class BetaNoBillingWorkspaceRole private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -21,18 +19,31 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val WORKSPACE_ADMIN = of("workspace_admin")
+        @JvmField val WORKSPACE_ADMIN = BetaNoBillingWorkspaceRole(JsonField.of("workspace_admin"))
 
-        @JvmField val WORKSPACE_DEVELOPER = of("workspace_developer")
+        @JvmField
+        val WORKSPACE_DEVELOPER = BetaNoBillingWorkspaceRole(JsonField.of("workspace_developer"))
 
-        @JvmField val WORKSPACE_RESTRICTED_DEVELOPER = of("workspace_restricted_developer")
+        @JvmField
+        val WORKSPACE_RESTRICTED_DEVELOPER =
+            BetaNoBillingWorkspaceRole(JsonField.of("workspace_restricted_developer"))
 
-        @JvmField val WORKSPACE_USER = of("workspace_user")
+        @JvmField val WORKSPACE_USER = BetaNoBillingWorkspaceRole(JsonField.of("workspace_user"))
 
-        @JvmStatic fun of(value: String) = BetaNoBillingWorkspaceRole(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaNoBillingWorkspaceRole =
+            // Intern known values so `==` works
+            when (value) {
+                "workspace_admin" -> WORKSPACE_ADMIN
+                "workspace_developer" -> WORKSPACE_DEVELOPER
+                "workspace_restricted_developer" -> WORKSPACE_RESTRICTED_DEVELOPER
+                "workspace_user" -> WORKSPACE_USER
+                else -> BetaNoBillingWorkspaceRole(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaNoBillingWorkspaceRole =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaNoBillingWorkspaceRole =
             value.asString().getOrNull()?.let { of(it) } ?: BetaNoBillingWorkspaceRole(value)
     }
 

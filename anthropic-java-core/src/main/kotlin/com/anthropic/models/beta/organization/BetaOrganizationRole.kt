@@ -6,8 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class BetaOrganizationRole @JsonCreator private constructor(private val value: JsonField<String>) :
-    Enum {
+class BetaOrganizationRole private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -20,28 +19,43 @@ class BetaOrganizationRole @JsonCreator private constructor(private val value: J
 
     companion object {
 
-        @JvmField val ADMIN = of("admin")
+        @JvmField val ADMIN = BetaOrganizationRole(JsonField.of("admin"))
 
-        @JvmField val BILLING = of("billing")
+        @JvmField val BILLING = BetaOrganizationRole(JsonField.of("billing"))
 
-        @JvmField val CLAUDE_CODE_USER = of("claude_code_user")
+        @JvmField val CLAUDE_CODE_USER = BetaOrganizationRole(JsonField.of("claude_code_user"))
 
-        @JvmField val DEVELOPER = of("developer")
+        @JvmField val DEVELOPER = BetaOrganizationRole(JsonField.of("developer"))
 
-        @JvmField val MANAGED = of("managed")
+        @JvmField val MANAGED = BetaOrganizationRole(JsonField.of("managed"))
 
-        @JvmField val MEMBERSHIP_ADMIN = of("membership_admin")
+        @JvmField val MEMBERSHIP_ADMIN = BetaOrganizationRole(JsonField.of("membership_admin"))
 
-        @JvmField val OWNER = of("owner")
+        @JvmField val OWNER = BetaOrganizationRole(JsonField.of("owner"))
 
-        @JvmField val PRIMARY_OWNER = of("primary_owner")
+        @JvmField val PRIMARY_OWNER = BetaOrganizationRole(JsonField.of("primary_owner"))
 
-        @JvmField val USER = of("user")
+        @JvmField val USER = BetaOrganizationRole(JsonField.of("user"))
 
-        @JvmStatic fun of(value: String) = BetaOrganizationRole(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaOrganizationRole =
+            // Intern known values so `==` works
+            when (value) {
+                "admin" -> ADMIN
+                "billing" -> BILLING
+                "claude_code_user" -> CLAUDE_CODE_USER
+                "developer" -> DEVELOPER
+                "managed" -> MANAGED
+                "membership_admin" -> MEMBERSHIP_ADMIN
+                "owner" -> OWNER
+                "primary_owner" -> PRIMARY_OWNER
+                "user" -> USER
+                else -> BetaOrganizationRole(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaOrganizationRole =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaOrganizationRole =
             value.asString().getOrNull()?.let { of(it) } ?: BetaOrganizationRole(value)
     }
 

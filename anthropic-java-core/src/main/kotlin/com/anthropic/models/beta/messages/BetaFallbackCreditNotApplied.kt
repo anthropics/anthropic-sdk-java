@@ -298,7 +298,7 @@ private constructor(
      * A closed enum; additions to the redemption-check vocabulary arrive as deliberate schema
      * updates.
      */
-    class Reason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Reason private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -312,34 +312,52 @@ private constructor(
 
         companion object {
 
-            @JvmField val BODY_MISMATCH = of("body_mismatch")
+            @JvmField val BODY_MISMATCH = Reason(JsonField.of("body_mismatch"))
 
-            @JvmField val CONTINUATION_EXCLUDED = of("continuation_excluded")
+            @JvmField val CONTINUATION_EXCLUDED = Reason(JsonField.of("continuation_excluded"))
 
-            @JvmField val CONTINUATION_ONLY = of("continuation_only")
+            @JvmField val CONTINUATION_ONLY = Reason(JsonField.of("continuation_only"))
 
-            @JvmField val EXPIRED = of("expired")
+            @JvmField val EXPIRED = Reason(JsonField.of("expired"))
 
-            @JvmField val INVALID_TARGET_MODEL = of("invalid_target_model")
+            @JvmField val INVALID_TARGET_MODEL = Reason(JsonField.of("invalid_target_model"))
 
-            @JvmField val NOT_ENABLED = of("not_enabled")
+            @JvmField val NOT_ENABLED = Reason(JsonField.of("not_enabled"))
 
-            @JvmField val REPRICE_UNAVAILABLE = of("reprice_unavailable")
+            @JvmField val REPRICE_UNAVAILABLE = Reason(JsonField.of("reprice_unavailable"))
 
-            @JvmField val TEMPORARILY_UNAVAILABLE = of("temporarily_unavailable")
+            @JvmField val TEMPORARILY_UNAVAILABLE = Reason(JsonField.of("temporarily_unavailable"))
 
-            @JvmField val VARIANT_FIELDS_PRESENT = of("variant_fields_present")
+            @JvmField val VARIANT_FIELDS_PRESENT = Reason(JsonField.of("variant_fields_present"))
 
-            @JvmField val WRONG_ORGANIZATION = of("wrong_organization")
+            @JvmField val WRONG_ORGANIZATION = Reason(JsonField.of("wrong_organization"))
 
-            @JvmField val WRONG_PLATFORM = of("wrong_platform")
+            @JvmField val WRONG_PLATFORM = Reason(JsonField.of("wrong_platform"))
 
-            @JvmField val WRONG_WORKSPACE = of("wrong_workspace")
+            @JvmField val WRONG_WORKSPACE = Reason(JsonField.of("wrong_workspace"))
 
-            @JvmStatic fun of(value: String) = Reason(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Reason =
+                // Intern known values so `==` works
+                when (value) {
+                    "body_mismatch" -> BODY_MISMATCH
+                    "continuation_excluded" -> CONTINUATION_EXCLUDED
+                    "continuation_only" -> CONTINUATION_ONLY
+                    "expired" -> EXPIRED
+                    "invalid_target_model" -> INVALID_TARGET_MODEL
+                    "not_enabled" -> NOT_ENABLED
+                    "reprice_unavailable" -> REPRICE_UNAVAILABLE
+                    "temporarily_unavailable" -> TEMPORARILY_UNAVAILABLE
+                    "variant_fields_present" -> VARIANT_FIELDS_PRESENT
+                    "wrong_organization" -> WRONG_ORGANIZATION
+                    "wrong_platform" -> WRONG_PLATFORM
+                    "wrong_workspace" -> WRONG_WORKSPACE
+                    else -> Reason(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Reason =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Reason =
                 value.asString().getOrNull()?.let { of(it) } ?: Reason(value)
         }
 

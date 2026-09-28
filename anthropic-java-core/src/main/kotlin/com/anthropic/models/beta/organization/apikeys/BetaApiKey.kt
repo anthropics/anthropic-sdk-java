@@ -934,7 +934,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -948,14 +948,22 @@ private constructor(
 
             companion object {
 
-                @JvmField val USER_ACTOR = of("user_actor")
+                @JvmField val USER_ACTOR = Type(JsonField.of("user_actor"))
 
-                @JvmField val SERVICE_ACCOUNT_ACTOR = of("service_account_actor")
+                @JvmField val SERVICE_ACCOUNT_ACTOR = Type(JsonField.of("service_account_actor"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "user_actor" -> USER_ACTOR
+                        "service_account_actor" -> SERVICE_ACCOUNT_ACTOR
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1312,7 +1320,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1326,14 +1334,22 @@ private constructor(
 
             companion object {
 
-                @JvmField val ORGANIZATION = of("organization")
+                @JvmField val ORGANIZATION = Type(JsonField.of("organization"))
 
-                @JvmField val WORKSPACE = of("workspace")
+                @JvmField val WORKSPACE = Type(JsonField.of("workspace"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "organization" -> ORGANIZATION
+                        "workspace" -> WORKSPACE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1455,7 +1471,7 @@ private constructor(
     }
 
     /** Status of the API key. */
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1469,18 +1485,28 @@ private constructor(
 
         companion object {
 
-            @JvmField val ACTIVE = of("active")
+            @JvmField val ACTIVE = Status(JsonField.of("active"))
 
-            @JvmField val ARCHIVED = of("archived")
+            @JvmField val ARCHIVED = Status(JsonField.of("archived"))
 
-            @JvmField val EXPIRED = of("expired")
+            @JvmField val EXPIRED = Status(JsonField.of("expired"))
 
-            @JvmField val INACTIVE = of("inactive")
+            @JvmField val INACTIVE = Status(JsonField.of("inactive"))
 
-            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Status =
+                // Intern known values so `==` works
+                when (value) {
+                    "active" -> ACTIVE
+                    "archived" -> ARCHIVED
+                    "expired" -> EXPIRED
+                    "inactive" -> INACTIVE
+                    else -> Status(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Status =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Status =
                 value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 

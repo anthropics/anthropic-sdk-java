@@ -44,7 +44,7 @@ public final class SessionsStreamingDeltasExample {
                 .create(AgentCreateParams.builder()
                         .name("streaming-deltas-example")
                         .model(BetaManagedAgentsModelConfigParams.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_SONNET_5)
+                                .id(BetaManagedAgentsModel.CLAUDE_SONNET_5_5)
                                 .build())
                         .build());
         System.out.println("Created agent: " + agent.id());

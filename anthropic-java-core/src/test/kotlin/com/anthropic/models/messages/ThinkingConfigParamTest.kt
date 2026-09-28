@@ -24,6 +24,7 @@ internal class ThinkingConfigParamTest {
 
         assertThat(thinkingConfigParam.enabled()).contains(enabled)
         assertThat(thinkingConfigParam.disabled()).isEmpty
+        assertThat(thinkingConfigParam.betweenTools()).isEmpty
         assertThat(thinkingConfigParam.adaptive()).isEmpty
     }
 
@@ -55,6 +56,7 @@ internal class ThinkingConfigParamTest {
 
         assertThat(thinkingConfigParam.enabled()).isEmpty
         assertThat(thinkingConfigParam.disabled()).contains(disabled)
+        assertThat(thinkingConfigParam.betweenTools()).isEmpty
         assertThat(thinkingConfigParam.adaptive()).isEmpty
     }
 
@@ -63,6 +65,33 @@ internal class ThinkingConfigParamTest {
         val jsonMapper = jsonMapper()
         val thinkingConfigParam =
             ThinkingConfigParam.ofDisabled(ThinkingConfigDisabled.builder().build())
+
+        val roundtrippedThinkingConfigParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(thinkingConfigParam),
+                jacksonTypeRef<ThinkingConfigParam>(),
+            )
+
+        assertThat(roundtrippedThinkingConfigParam).isEqualTo(thinkingConfigParam)
+    }
+
+    @Test
+    fun ofBetweenTools() {
+        val betweenTools = ThinkingConfigBetweenTools.builder().build()
+
+        val thinkingConfigParam = ThinkingConfigParam.ofBetweenTools(betweenTools)
+
+        assertThat(thinkingConfigParam.enabled()).isEmpty
+        assertThat(thinkingConfigParam.disabled()).isEmpty
+        assertThat(thinkingConfigParam.betweenTools()).contains(betweenTools)
+        assertThat(thinkingConfigParam.adaptive()).isEmpty
+    }
+
+    @Test
+    fun ofBetweenToolsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val thinkingConfigParam =
+            ThinkingConfigParam.ofBetweenTools(ThinkingConfigBetweenTools.builder().build())
 
         val roundtrippedThinkingConfigParam =
             jsonMapper.readValue(
@@ -84,6 +113,7 @@ internal class ThinkingConfigParamTest {
 
         assertThat(thinkingConfigParam.enabled()).isEmpty
         assertThat(thinkingConfigParam.disabled()).isEmpty
+        assertThat(thinkingConfigParam.betweenTools()).isEmpty
         assertThat(thinkingConfigParam.adaptive()).contains(adaptive)
     }
 

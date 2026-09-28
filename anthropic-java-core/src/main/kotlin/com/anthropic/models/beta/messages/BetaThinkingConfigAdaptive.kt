@@ -46,7 +46,7 @@ private constructor(
 
     /**
      * Controls for block binding: what happens when a thinking block this request sends back fails
-     * the conversation check. Every field is optional; an empty object means every default.
+     * the conversation check. `null`, absent or an empty object means every default.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -132,8 +132,7 @@ private constructor(
 
         /**
          * Controls for block binding: what happens when a thinking block this request sends back
-         * fails the conversation check. Every field is optional; an empty object means every
-         * default.
+         * fails the conversation check. `null`, absent or an empty object means every default.
          */
         fun blockBinding(blockBinding: BetaThinkingBlockBinding?) =
             blockBinding(JsonField.ofNullable(blockBinding))
@@ -253,7 +252,7 @@ private constructor(
      * returned normally. When set to `omitted`, thinking content is redacted but a signature is
      * returned for multi-turn continuity. Defaults to `summarized`.
      */
-    class Display @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Display private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -267,16 +266,25 @@ private constructor(
 
         companion object {
 
-            @JvmField val SUMMARIZED = of("summarized")
+            @JvmField val SUMMARIZED = Display(JsonField.of("summarized"))
 
-            @JvmField val OMITTED = of("omitted")
+            @JvmField val OMITTED = Display(JsonField.of("omitted"))
 
-            @JvmField val UPDATES = of("updates")
+            @JvmField val UPDATES = Display(JsonField.of("updates"))
 
-            @JvmStatic fun of(value: String) = Display(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Display =
+                // Intern known values so `==` works
+                when (value) {
+                    "summarized" -> SUMMARIZED
+                    "omitted" -> OMITTED
+                    "updates" -> UPDATES
+                    else -> Display(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Display =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Display =
                 value.asString().getOrNull()?.let { of(it) } ?: Display(value)
         }
 

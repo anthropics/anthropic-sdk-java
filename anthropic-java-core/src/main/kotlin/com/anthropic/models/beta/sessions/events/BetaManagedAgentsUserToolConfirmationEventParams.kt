@@ -40,7 +40,7 @@ private constructor(
     ) : this(result, toolUseId, type, denyMessage, mutableMapOf())
 
     /**
-     * UserToolConfirmationResult enum
+     * The confirmation result: 'allow' or 'deny'.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -152,7 +152,7 @@ private constructor(
                 betaManagedAgentsUserToolConfirmationEventParams.additionalProperties.toMutableMap()
         }
 
-        /** UserToolConfirmationResult enum */
+        /** The confirmation result: 'allow' or 'deny'. */
         fun result(result: Result) = result(JsonField.of(result))
 
         /**
@@ -293,8 +293,8 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (denyMessage.asKnown().isPresent) 1 else 0)
 
-    /** UserToolConfirmationResult enum */
-    class Result @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    /** The confirmation result: 'allow' or 'deny'. */
+    class Result private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -308,14 +308,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val ALLOW = of("allow")
+            @JvmField val ALLOW = Result(JsonField.of("allow"))
 
-            @JvmField val DENY = of("deny")
+            @JvmField val DENY = Result(JsonField.of("deny"))
 
-            @JvmStatic fun of(value: String) = Result(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Result =
+                // Intern known values so `==` works
+                when (value) {
+                    "allow" -> ALLOW
+                    "deny" -> DENY
+                    else -> Result(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Result =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Result =
                 value.asString().getOrNull()?.let { of(it) } ?: Result(value)
         }
 
@@ -434,7 +442,7 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -448,12 +456,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER_TOOL_CONFIRMATION = of("user.tool_confirmation")
+            @JvmField val USER_TOOL_CONFIRMATION = Type(JsonField.of("user.tool_confirmation"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "user.tool_confirmation" -> USER_TOOL_CONFIRMATION
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

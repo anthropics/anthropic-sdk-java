@@ -6,9 +6,8 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class CodeExecutionToolResultErrorCode
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class CodeExecutionToolResultErrorCode private constructor(private val value: JsonField<String>) :
+    Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -21,18 +20,33 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val INVALID_TOOL_INPUT = of("invalid_tool_input")
+        @JvmField
+        val INVALID_TOOL_INPUT =
+            CodeExecutionToolResultErrorCode(JsonField.of("invalid_tool_input"))
 
-        @JvmField val UNAVAILABLE = of("unavailable")
+        @JvmField val UNAVAILABLE = CodeExecutionToolResultErrorCode(JsonField.of("unavailable"))
 
-        @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
+        @JvmField
+        val TOO_MANY_REQUESTS = CodeExecutionToolResultErrorCode(JsonField.of("too_many_requests"))
 
-        @JvmField val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
+        @JvmField
+        val EXECUTION_TIME_EXCEEDED =
+            CodeExecutionToolResultErrorCode(JsonField.of("execution_time_exceeded"))
 
-        @JvmStatic fun of(value: String) = CodeExecutionToolResultErrorCode(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): CodeExecutionToolResultErrorCode =
+            // Intern known values so `==` works
+            when (value) {
+                "invalid_tool_input" -> INVALID_TOOL_INPUT
+                "unavailable" -> UNAVAILABLE
+                "too_many_requests" -> TOO_MANY_REQUESTS
+                "execution_time_exceeded" -> EXECUTION_TIME_EXCEEDED
+                else -> CodeExecutionToolResultErrorCode(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): CodeExecutionToolResultErrorCode =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): CodeExecutionToolResultErrorCode =
             value.asString().getOrNull()?.let { of(it) } ?: CodeExecutionToolResultErrorCode(value)
     }
 

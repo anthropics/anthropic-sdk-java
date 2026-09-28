@@ -15,6 +15,7 @@ import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.toField
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -155,13 +156,14 @@ private constructor(
     fun cacheControl(): Optional<BetaCacheControlEphemeral> = body.cacheControl()
 
     /**
-     * Compact the whole conversation and return a signed `compaction` block, alone, that a later
-     * request sends back first in `messages`, in place of the messages it summarizes. There is no
-     * trigger and no pause flag: sending the parameter compacts, and nothing is sampled after the
-     * block.
+     * Compaction configuration.
      *
-     * The summarization prompt is the server's own unless `instructions` are given, which then
-     * replace it for this request; a value that is empty or only whitespace counts as absent.
+     * When set on `POST /v1/messages`, the request is a compaction request: the conversation in
+     * `messages` is summarized and the response holds only the resulting `compaction` block
+     * (`stop_reason` `"compaction"`), which later requests send first in `messages` in place of the
+     * messages it summarizes. `POST /v1/messages/count_tokens` accepts this parameter and ignores
+     * it: the count it returns is for the conversation in `messages` as sent. Cannot be combined
+     * with `context_management`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -209,8 +211,8 @@ private constructor(
     fun outputFormat(): Optional<BetaJsonOutputFormat> = body.outputFormat()
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+     * inference.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -733,13 +735,14 @@ private constructor(
         }
 
         /**
-         * Compact the whole conversation and return a signed `compaction` block, alone, that a
-         * later request sends back first in `messages`, in place of the messages it summarizes.
-         * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
-         * sampled after the block.
+         * Compaction configuration.
          *
-         * The summarization prompt is the server's own unless `instructions` are given, which then
-         * replace it for this request; a value that is empty or only whitespace counts as absent.
+         * When set on `POST /v1/messages`, the request is a compaction request: the conversation in
+         * `messages` is summarized and the response holds only the resulting `compaction` block
+         * (`stop_reason` `"compaction"`), which later requests send first in `messages` in place of
+         * the messages it summarizes. `POST /v1/messages/count_tokens` accepts this parameter and
+         * ignores it: the count it returns is for the conversation in `messages` as sent. Cannot be
+         * combined with `context_management`.
          */
         fun compaction(compaction: BetaCompactionConfig?) = apply { body.compaction(compaction) }
 
@@ -852,9 +855,8 @@ private constructor(
         }
 
         /**
-         * Inference speed mode. `fast` provides significantly faster output token generation at
-         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-         * create time.
+         * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+         * inference.
          */
         fun speed(speed: Speed?) = apply { body.speed(speed) }
 
@@ -933,6 +935,13 @@ private constructor(
 
         /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofDisabled(disabled)`. */
         fun thinking(disabled: BetaThinkingConfigDisabled) = apply { body.thinking(disabled) }
+
+        /**
+         * Alias for calling [thinking] with `BetaThinkingConfigParam.ofBetweenTools(betweenTools)`.
+         */
+        fun thinking(betweenTools: BetaThinkingConfigBetweenTools) = apply {
+            body.thinking(betweenTools)
+        }
 
         /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`. */
         fun thinking(adaptive: BetaThinkingConfigAdaptive) = apply { body.thinking(adaptive) }
@@ -1586,13 +1595,14 @@ private constructor(
             cacheControl.getOptional("cache_control")
 
         /**
-         * Compact the whole conversation and return a signed `compaction` block, alone, that a
-         * later request sends back first in `messages`, in place of the messages it summarizes.
-         * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
-         * sampled after the block.
+         * Compaction configuration.
          *
-         * The summarization prompt is the server's own unless `instructions` are given, which then
-         * replace it for this request; a value that is empty or only whitespace counts as absent.
+         * When set on `POST /v1/messages`, the request is a compaction request: the conversation in
+         * `messages` is summarized and the response holds only the resulting `compaction` block
+         * (`stop_reason` `"compaction"`), which later requests send first in `messages` in place of
+         * the messages it summarizes. `POST /v1/messages/count_tokens` accepts this parameter and
+         * ignores it: the count it returns is for the conversation in `messages` as sent. Cannot be
+         * combined with `context_management`.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1643,9 +1653,8 @@ private constructor(
             outputFormat.getOptional("output_format")
 
         /**
-         * Inference speed mode. `fast` provides significantly faster output token generation at
-         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-         * create time.
+         * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+         * inference.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -2185,14 +2194,14 @@ private constructor(
             }
 
             /**
-             * Compact the whole conversation and return a signed `compaction` block, alone, that a
-             * later request sends back first in `messages`, in place of the messages it summarizes.
-             * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
-             * sampled after the block.
+             * Compaction configuration.
              *
-             * The summarization prompt is the server's own unless `instructions` are given, which
-             * then replace it for this request; a value that is empty or only whitespace counts as
-             * absent.
+             * When set on `POST /v1/messages`, the request is a compaction request: the
+             * conversation in `messages` is summarized and the response holds only the resulting
+             * `compaction` block (`stop_reason` `"compaction"`), which later requests send first in
+             * `messages` in place of the messages it summarizes. `POST /v1/messages/count_tokens`
+             * accepts this parameter and ignores it: the count it returns is for the conversation
+             * in `messages` as sent. Cannot be combined with `context_management`.
              */
             fun compaction(compaction: BetaCompactionConfig?) =
                 compaction(JsonField.ofNullable(compaction))
@@ -2310,9 +2319,8 @@ private constructor(
             }
 
             /**
-             * Inference speed mode. `fast` provides significantly faster output token generation at
-             * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-             * create time.
+             * The inference speed mode for this request. `"fast"` enables high
+             * output-tokens-per-second inference.
              */
             fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
@@ -2397,6 +2405,13 @@ private constructor(
             /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofDisabled(disabled)`. */
             fun thinking(disabled: BetaThinkingConfigDisabled) =
                 thinking(BetaThinkingConfigParam.ofDisabled(disabled))
+
+            /**
+             * Alias for calling [thinking] with
+             * `BetaThinkingConfigParam.ofBetweenTools(betweenTools)`.
+             */
+            fun thinking(betweenTools: BetaThinkingConfigBetweenTools) =
+                thinking(BetaThinkingConfigParam.ofBetweenTools(betweenTools))
 
             /** Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`. */
             fun thinking(adaptive: BetaThinkingConfigAdaptive) =
@@ -2891,10 +2906,10 @@ private constructor(
     }
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * The inference speed mode for this request. `"fast"` enables high output-tokens-per-second
+     * inference.
      */
-    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Speed private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -2908,14 +2923,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = Speed(JsonField.of("standard"))
 
-            @JvmField val FAST = of("fast")
+            @JvmField val FAST = Speed(JsonField.of("fast"))
 
-            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Speed =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "fast" -> FAST
+                    else -> Speed(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Speed =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Speed =
                 value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 
@@ -3293,6 +3316,146 @@ private constructor(
         private val betaMcpToolset: BetaMcpToolset? = null,
         private val _json: JsonValue? = null,
     ) {
+
+        fun name(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitBeta(beta: BetaTool): Optional<String> =
+                        Optional.of(beta.name())
+
+                    override fun visitBetaToolBash20241022(
+                        betaToolBash20241022: BetaToolBash20241022
+                    ): Optional<String> = betaToolBash20241022._name().toField<String>().asKnown()
+
+                    override fun visitBetaToolBash20250124(
+                        betaToolBash20250124: BetaToolBash20250124
+                    ): Optional<String> = betaToolBash20250124._name().toField<String>().asKnown()
+
+                    override fun visitBetaCodeExecutionTool20250522(
+                        betaCodeExecutionTool20250522: BetaCodeExecutionTool20250522
+                    ): Optional<String> =
+                        betaCodeExecutionTool20250522._name().toField<String>().asKnown()
+
+                    override fun visitBetaCodeExecutionTool20250825(
+                        betaCodeExecutionTool20250825: BetaCodeExecutionTool20250825
+                    ): Optional<String> =
+                        betaCodeExecutionTool20250825._name().toField<String>().asKnown()
+
+                    override fun visitBetaCodeExecutionTool20260120(
+                        betaCodeExecutionTool20260120: BetaCodeExecutionTool20260120
+                    ): Optional<String> =
+                        betaCodeExecutionTool20260120._name().toField<String>().asKnown()
+
+                    override fun visitBetaCodeExecutionTool20260521(
+                        betaCodeExecutionTool20260521: BetaCodeExecutionTool20260521
+                    ): Optional<String> =
+                        betaCodeExecutionTool20260521._name().toField<String>().asKnown()
+
+                    override fun visitBetaBrowserToolset20260801(
+                        betaBrowserToolset20260801: BetaBrowserToolset20260801
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitBetaToolComputerUse20241022(
+                        betaToolComputerUse20241022: BetaToolComputerUse20241022
+                    ): Optional<String> =
+                        betaToolComputerUse20241022._name().toField<String>().asKnown()
+
+                    override fun visitBetaMemoryTool20250818(
+                        betaMemoryTool20250818: BetaMemoryTool20250818
+                    ): Optional<String> = betaMemoryTool20250818._name().toField<String>().asKnown()
+
+                    override fun visitBetaToolComputerUse20250124(
+                        betaToolComputerUse20250124: BetaToolComputerUse20250124
+                    ): Optional<String> =
+                        betaToolComputerUse20250124._name().toField<String>().asKnown()
+
+                    override fun visitBetaToolTextEditor20241022(
+                        betaToolTextEditor20241022: BetaToolTextEditor20241022
+                    ): Optional<String> =
+                        betaToolTextEditor20241022._name().toField<String>().asKnown()
+
+                    override fun visitBetaToolComputerUse20251124(
+                        betaToolComputerUse20251124: BetaToolComputerUse20251124
+                    ): Optional<String> =
+                        betaToolComputerUse20251124._name().toField<String>().asKnown()
+
+                    override fun visitBetaComputerToolset20260801(
+                        betaComputerToolset20260801: BetaComputerToolset20260801
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitBetaToolTextEditor20250124(
+                        betaToolTextEditor20250124: BetaToolTextEditor20250124
+                    ): Optional<String> =
+                        betaToolTextEditor20250124._name().toField<String>().asKnown()
+
+                    override fun visitBetaToolTextEditor20250429(
+                        betaToolTextEditor20250429: BetaToolTextEditor20250429
+                    ): Optional<String> =
+                        betaToolTextEditor20250429._name().toField<String>().asKnown()
+
+                    override fun visitBetaToolTextEditor20250728(
+                        betaToolTextEditor20250728: BetaToolTextEditor20250728
+                    ): Optional<String> =
+                        betaToolTextEditor20250728._name().toField<String>().asKnown()
+
+                    override fun visitBetaWebSearchTool20250305(
+                        betaWebSearchTool20250305: BetaWebSearchTool20250305
+                    ): Optional<String> =
+                        betaWebSearchTool20250305._name().toField<String>().asKnown()
+
+                    override fun visitBetaWebFetchTool20250910(
+                        betaWebFetchTool20250910: BetaWebFetchTool20250910
+                    ): Optional<String> =
+                        betaWebFetchTool20250910._name().toField<String>().asKnown()
+
+                    override fun visitBetaWebSearchTool20260209(
+                        betaWebSearchTool20260209: BetaWebSearchTool20260209
+                    ): Optional<String> =
+                        betaWebSearchTool20260209._name().toField<String>().asKnown()
+
+                    override fun visitBetaWebFetchTool20260209(
+                        betaWebFetchTool20260209: BetaWebFetchTool20260209
+                    ): Optional<String> =
+                        betaWebFetchTool20260209._name().toField<String>().asKnown()
+
+                    override fun visitBetaWebFetchTool20260309(
+                        betaWebFetchTool20260309: BetaWebFetchTool20260309
+                    ): Optional<String> =
+                        betaWebFetchTool20260309._name().toField<String>().asKnown()
+
+                    override fun visitBetaWebSearchTool20260318(
+                        betaWebSearchTool20260318: BetaWebSearchTool20260318
+                    ): Optional<String> =
+                        betaWebSearchTool20260318._name().toField<String>().asKnown()
+
+                    override fun visitBetaWebFetchTool20260318(
+                        betaWebFetchTool20260318: BetaWebFetchTool20260318
+                    ): Optional<String> =
+                        betaWebFetchTool20260318._name().toField<String>().asKnown()
+
+                    override fun visitBetaAdvisorTool20260301(
+                        betaAdvisorTool20260301: BetaAdvisorTool20260301
+                    ): Optional<String> =
+                        betaAdvisorTool20260301._name().toField<String>().asKnown()
+
+                    override fun visitBetaToolSearchToolBm25_20251119(
+                        betaToolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                    ): Optional<String> =
+                        betaToolSearchToolBm25_20251119._name().toField<String>().asKnown()
+
+                    override fun visitBetaToolSearchToolRegex20251119(
+                        betaToolSearchToolRegex20251119: BetaToolSearchToolRegex20251119
+                    ): Optional<String> =
+                        betaToolSearchToolRegex20251119._name().toField<String>().asKnown()
+
+                    override fun visitBetaMcpToolset(
+                        betaMcpToolset: BetaMcpToolset
+                    ): Optional<String> = Optional.empty()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("name").asKnown()
+                }
+            )
 
         fun cacheControl(): Optional<BetaCacheControlEphemeral> =
             accept(

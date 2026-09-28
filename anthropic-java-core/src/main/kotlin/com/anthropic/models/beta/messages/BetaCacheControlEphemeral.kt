@@ -213,7 +213,7 @@ private constructor(
      * [prompt caching pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
      * for details.
      */
-    class Ttl @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Ttl private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -227,14 +227,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val TTL_5M = of("5m")
+            @JvmField val TTL_5M = Ttl(JsonField.of("5m"))
 
-            @JvmField val TTL_1H = of("1h")
+            @JvmField val TTL_1H = Ttl(JsonField.of("1h"))
 
-            @JvmStatic fun of(value: String) = Ttl(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Ttl =
+                // Intern known values so `==` works
+                when (value) {
+                    "5m" -> TTL_5M
+                    "1h" -> TTL_1H
+                    else -> Ttl(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Ttl =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Ttl =
                 value.asString().getOrNull()?.let { of(it) } ?: Ttl(value)
         }
 

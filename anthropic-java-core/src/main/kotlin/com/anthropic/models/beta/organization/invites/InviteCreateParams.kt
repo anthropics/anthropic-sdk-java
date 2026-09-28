@@ -620,7 +620,7 @@ private constructor(
      * `user`, `developer`, `billing`, and `claude_code_user`; `admin` cannot be assigned through
      * the API. Claude Enterprise organizations accept `user` and `managed`.
      */
-    class Role @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Role private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -634,20 +634,31 @@ private constructor(
 
         companion object {
 
-            @JvmField val BILLING = of("billing")
+            @JvmField val BILLING = Role(JsonField.of("billing"))
 
-            @JvmField val CLAUDE_CODE_USER = of("claude_code_user")
+            @JvmField val CLAUDE_CODE_USER = Role(JsonField.of("claude_code_user"))
 
-            @JvmField val DEVELOPER = of("developer")
+            @JvmField val DEVELOPER = Role(JsonField.of("developer"))
 
-            @JvmField val MANAGED = of("managed")
+            @JvmField val MANAGED = Role(JsonField.of("managed"))
 
-            @JvmField val USER = of("user")
+            @JvmField val USER = Role(JsonField.of("user"))
 
-            @JvmStatic fun of(value: String) = Role(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Role =
+                // Intern known values so `==` works
+                when (value) {
+                    "billing" -> BILLING
+                    "claude_code_user" -> CLAUDE_CODE_USER
+                    "developer" -> DEVELOPER
+                    "managed" -> MANAGED
+                    "user" -> USER
+                    else -> Role(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Role =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Role =
                 value.asString().getOrNull()?.let { of(it) } ?: Role(value)
         }
 

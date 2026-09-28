@@ -101,8 +101,8 @@ private constructor(
     fun model(): Optional<Model> = body.model()
 
     /**
-     * A coordinator topology: the session's primary thread orchestrates work by spawning session
-     * threads, each running an agent drawn from the `agents` roster.
+     * Multiagent orchestration configuration. Full replacement. Omit to preserve; send null to
+     * clear.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -415,8 +415,8 @@ private constructor(
         }
 
         /**
-         * A coordinator topology: the session's primary thread orchestrates work by spawning
-         * session threads, each running an agent drawn from the `agents` roster.
+         * Multiagent orchestration configuration. Full replacement. Omit to preserve; send null to
+         * clear.
          */
         fun multiagent(multiagent: BetaManagedAgentsMultiagentParams?) = apply {
             body.multiagent(multiagent)
@@ -847,8 +847,8 @@ private constructor(
         fun model(): Optional<Model> = model.getOptional("model")
 
         /**
-         * A coordinator topology: the session's primary thread orchestrates work by spawning
-         * session threads, each running an agent drawn from the `agents` roster.
+         * Multiagent orchestration configuration. Full replacement. Omit to preserve; send null to
+         * clear.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1132,8 +1132,8 @@ private constructor(
                 )
 
             /**
-             * A coordinator topology: the session's primary thread orchestrates work by spawning
-             * session threads, each running an agent drawn from the `agents` roster.
+             * Multiagent orchestration configuration. Full replacement. Omit to preserve; send null
+             * to clear.
              */
             fun multiagent(multiagent: BetaManagedAgentsMultiagentParams?) =
                 multiagent(JsonField.ofNullable(multiagent))
@@ -2222,7 +2222,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -2236,16 +2236,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val AGENT_TOOLSET_20260401 = of("agent_toolset_20260401")
+                @JvmField val AGENT_TOOLSET_20260401 = Type(JsonField.of("agent_toolset_20260401"))
 
-                @JvmField val MCP_TOOLSET = of("mcp_toolset")
+                @JvmField val MCP_TOOLSET = Type(JsonField.of("mcp_toolset"))
 
-                @JvmField val CUSTOM = of("custom")
+                @JvmField val CUSTOM = Type(JsonField.of("custom"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "agent_toolset_20260401" -> AGENT_TOOLSET_20260401
+                        "mcp_toolset" -> MCP_TOOLSET
+                        "custom" -> CUSTOM
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

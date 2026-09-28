@@ -587,8 +587,7 @@ private constructor(
             (serviceTier.asKnown().getOrNull()?.validity() ?: 0)
 
     /** If the request used the priority, standard, or batch tier. */
-    class ServiceTier @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class ServiceTier private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -602,16 +601,25 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = ServiceTier(JsonField.of("standard"))
 
-            @JvmField val PRIORITY = of("priority")
+            @JvmField val PRIORITY = ServiceTier(JsonField.of("priority"))
 
-            @JvmField val BATCH = of("batch")
+            @JvmField val BATCH = ServiceTier(JsonField.of("batch"))
 
-            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): ServiceTier =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "priority" -> PRIORITY
+                    "batch" -> BATCH
+                    else -> ServiceTier(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): ServiceTier =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): ServiceTier =
                 value.asString().getOrNull()?.let { of(it) } ?: ServiceTier(value)
         }
 

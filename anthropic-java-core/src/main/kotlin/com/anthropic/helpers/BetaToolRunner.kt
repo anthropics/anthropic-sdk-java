@@ -673,13 +673,7 @@ internal constructor(
         when {
             isReference() -> asReference().name()
             // Not every kind of tool definition has a name (e.g. an MCP toolset).
-            isDefinition() ->
-                JsonValue.from(asDefinition()._definition())
-                    .asObject()
-                    .getOrNull()
-                    ?.get("name")
-                    ?.asString()
-                    ?.getOrNull()
+            isDefinition() -> asDefinition().definition().name().getOrNull()
             // MCP references are executed server-side, so they don't affect runnable tools.
             else -> null // unknown reference types are ignored for forward compatibility
         }

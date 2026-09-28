@@ -15,7 +15,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Attribution for a write made directly via the public API (outside of any session). */
+/** A direct caller of the public API, identified by the API key that authenticated the request. */
 class BetaManagedAgentsApiActor
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -31,7 +31,7 @@ private constructor(
     ) : this(apiKeyId, type, mutableMapOf())
 
     /**
-     * ID of the API key that performed the write. This identifies the key, not the secret.
+     * ID of the API key (an `apikey_...` value). This identifies the key, not the secret.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -98,7 +98,7 @@ private constructor(
             additionalProperties = betaManagedAgentsApiActor.additionalProperties.toMutableMap()
         }
 
-        /** ID of the API key that performed the write. This identifies the key, not the secret. */
+        /** ID of the API key (an `apikey_...` value). This identifies the key, not the secret. */
         fun apiKeyId(apiKeyId: String) = apiKeyId(JsonField.of(apiKeyId))
 
         /**
@@ -196,7 +196,7 @@ private constructor(
     internal fun validity(): Int =
         (if (apiKeyId.asKnown().isPresent) 1 else 0) + (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -210,12 +210,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val API_ACTOR = of("api_actor")
+            @JvmField val API_ACTOR = Type(JsonField.of("api_actor"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "api_actor" -> API_ACTOR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

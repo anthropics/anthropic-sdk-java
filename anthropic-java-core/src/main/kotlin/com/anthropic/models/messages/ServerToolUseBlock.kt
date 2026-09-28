@@ -672,7 +672,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -686,16 +686,27 @@ private constructor(
 
             companion object {
 
-                @JvmField val DIRECT = of("direct")
+                @JvmField val DIRECT = Type(JsonField.of("direct"))
 
-                @JvmField val CODE_EXECUTION_20250825 = of("code_execution_20250825")
+                @JvmField
+                val CODE_EXECUTION_20250825 = Type(JsonField.of("code_execution_20250825"))
 
-                @JvmField val CODE_EXECUTION_20260120 = of("code_execution_20260120")
+                @JvmField
+                val CODE_EXECUTION_20260120 = Type(JsonField.of("code_execution_20260120"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "direct" -> DIRECT
+                        "code_execution_20250825" -> CODE_EXECUTION_20250825
+                        "code_execution_20260120" -> CODE_EXECUTION_20260120
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -928,7 +939,7 @@ private constructor(
         override fun toString() = "Input{additionalProperties=$additionalProperties}"
     }
 
-    class Name @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Name private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -942,24 +953,38 @@ private constructor(
 
         companion object {
 
-            @JvmField val WEB_SEARCH = of("web_search")
+            @JvmField val WEB_SEARCH = Name(JsonField.of("web_search"))
 
-            @JvmField val WEB_FETCH = of("web_fetch")
+            @JvmField val WEB_FETCH = Name(JsonField.of("web_fetch"))
 
-            @JvmField val CODE_EXECUTION = of("code_execution")
+            @JvmField val CODE_EXECUTION = Name(JsonField.of("code_execution"))
 
-            @JvmField val BASH_CODE_EXECUTION = of("bash_code_execution")
+            @JvmField val BASH_CODE_EXECUTION = Name(JsonField.of("bash_code_execution"))
 
-            @JvmField val TEXT_EDITOR_CODE_EXECUTION = of("text_editor_code_execution")
+            @JvmField
+            val TEXT_EDITOR_CODE_EXECUTION = Name(JsonField.of("text_editor_code_execution"))
 
-            @JvmField val TOOL_SEARCH_TOOL_REGEX = of("tool_search_tool_regex")
+            @JvmField val TOOL_SEARCH_TOOL_REGEX = Name(JsonField.of("tool_search_tool_regex"))
 
-            @JvmField val TOOL_SEARCH_TOOL_BM25 = of("tool_search_tool_bm25")
+            @JvmField val TOOL_SEARCH_TOOL_BM25 = Name(JsonField.of("tool_search_tool_bm25"))
 
-            @JvmStatic fun of(value: String) = Name(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Name =
+                // Intern known values so `==` works
+                when (value) {
+                    "web_search" -> WEB_SEARCH
+                    "web_fetch" -> WEB_FETCH
+                    "code_execution" -> CODE_EXECUTION
+                    "bash_code_execution" -> BASH_CODE_EXECUTION
+                    "text_editor_code_execution" -> TEXT_EDITOR_CODE_EXECUTION
+                    "tool_search_tool_regex" -> TOOL_SEARCH_TOOL_REGEX
+                    "tool_search_tool_bm25" -> TOOL_SEARCH_TOOL_BM25
+                    else -> Name(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Name =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Name =
                 value.asString().getOrNull()?.let { of(it) } ?: Name(value)
         }
 

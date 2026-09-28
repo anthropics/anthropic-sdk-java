@@ -181,11 +181,7 @@ private constructor(
     fun strict(): Optional<Boolean> = strict.getOptional("strict")
 
     /**
-     * Which sources contribute to the set of URLs web fetch may fetch.
-     *
-     * Each key is a tagged variant: ``user_input`` is ``all`` or ``none``; the two tool filters are
-     * ``all``, ``none``, ``only`` (only the named tools' results) or ``except`` (every result but
-     * the named tools'). A named tool must be declared in this request's ``tools[]``.
+     * Which sources contribute to the set of URLs the tool may fetch. Omitted means every source.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -571,12 +567,8 @@ private constructor(
         fun strict(strict: JsonField<Boolean>) = apply { this.strict = strict }
 
         /**
-         * Which sources contribute to the set of URLs web fetch may fetch.
-         *
-         * Each key is a tagged variant: ``user_input`` is ``all`` or ``none``; the two tool filters
-         * are ``all``, ``none``, ``only`` (only the named tools' results) or ``except`` (every
-         * result but the named tools'). A named tool must be declared in this request's
-         * ``tools[]``.
+         * Which sources contribute to the set of URLs the tool may fetch. Omitted means every
+         * source.
          */
         fun urlSources(urlSources: WebFetchUrlSources?) =
             urlSources(JsonField.ofNullable(urlSources))
@@ -712,8 +704,7 @@ private constructor(
      * called from the code execution environment (v2 with persistence). code_execution_20260521:
      * The tool can be called from the code execution environment (v2 with persistence).
      */
-    class AllowedCaller @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class AllowedCaller private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -727,18 +718,31 @@ private constructor(
 
         companion object {
 
-            @JvmField val DIRECT = of("direct")
+            @JvmField val DIRECT = AllowedCaller(JsonField.of("direct"))
 
-            @JvmField val CODE_EXECUTION_20250825 = of("code_execution_20250825")
+            @JvmField
+            val CODE_EXECUTION_20250825 = AllowedCaller(JsonField.of("code_execution_20250825"))
 
-            @JvmField val CODE_EXECUTION_20260120 = of("code_execution_20260120")
+            @JvmField
+            val CODE_EXECUTION_20260120 = AllowedCaller(JsonField.of("code_execution_20260120"))
 
-            @JvmField val CODE_EXECUTION_20260521 = of("code_execution_20260521")
+            @JvmField
+            val CODE_EXECUTION_20260521 = AllowedCaller(JsonField.of("code_execution_20260521"))
 
-            @JvmStatic fun of(value: String) = AllowedCaller(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): AllowedCaller =
+                // Intern known values so `==` works
+                when (value) {
+                    "direct" -> DIRECT
+                    "code_execution_20250825" -> CODE_EXECUTION_20250825
+                    "code_execution_20260120" -> CODE_EXECUTION_20260120
+                    "code_execution_20260521" -> CODE_EXECUTION_20260521
+                    else -> AllowedCaller(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): AllowedCaller =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): AllowedCaller =
                 value.asString().getOrNull()?.let { of(it) } ?: AllowedCaller(value)
         }
 

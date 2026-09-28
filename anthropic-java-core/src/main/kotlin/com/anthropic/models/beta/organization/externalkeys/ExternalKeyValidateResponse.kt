@@ -252,7 +252,7 @@ private constructor(
      * `success` — encrypt/decrypt roundtrip succeeded. `failure` — the roundtrip failed or timed
      * out; see `error`.
      */
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -266,14 +266,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val FAILURE = of("failure")
+            @JvmField val FAILURE = Status(JsonField.of("failure"))
 
-            @JvmField val SUCCESS = of("success")
+            @JvmField val SUCCESS = Status(JsonField.of("success"))
 
-            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Status =
+                // Intern known values so `==` works
+                when (value) {
+                    "failure" -> FAILURE
+                    "success" -> SUCCESS
+                    else -> Status(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Status =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Status =
                 value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 

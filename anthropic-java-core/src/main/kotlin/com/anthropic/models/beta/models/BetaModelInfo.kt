@@ -83,7 +83,8 @@ private constructor(
         allowedFallbackModels.getOptional("allowed_fallback_models")
 
     /**
-     * Model capability information.
+     * Object mapping capability names to their support details. Keys are always present for all
+     * known capabilities.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -306,7 +307,10 @@ private constructor(
                 }
         }
 
-        /** Model capability information. */
+        /**
+         * Object mapping capability names to their support details. Keys are always present for all
+         * known capabilities.
+         */
         fun capabilities(capabilities: BetaModelCapabilities?) =
             capabilities(JsonField.ofNullable(capabilities))
 

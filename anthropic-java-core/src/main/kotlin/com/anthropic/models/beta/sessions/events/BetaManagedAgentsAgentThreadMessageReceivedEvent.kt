@@ -88,7 +88,7 @@ private constructor(
     fun fromSessionThreadId(): String = fromSessionThreadId.getRequired("from_session_thread_id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the message was received.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -452,7 +452,7 @@ private constructor(
             this.fromSessionThreadId = fromSessionThreadId
         }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the message was received. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**
@@ -948,7 +948,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -962,18 +962,28 @@ private constructor(
 
             companion object {
 
-                @JvmField val TEXT = of("text")
+                @JvmField val TEXT = Type(JsonField.of("text"))
 
-                @JvmField val IMAGE = of("image")
+                @JvmField val IMAGE = Type(JsonField.of("image"))
 
-                @JvmField val DOCUMENT = of("document")
+                @JvmField val DOCUMENT = Type(JsonField.of("document"))
 
-                @JvmField val REDACTED = of("redacted")
+                @JvmField val REDACTED = Type(JsonField.of("redacted"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "text" -> TEXT
+                        "image" -> IMAGE
+                        "document" -> DOCUMENT
+                        "redacted" -> REDACTED
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1102,7 +1112,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1116,12 +1126,20 @@ private constructor(
 
         companion object {
 
-            @JvmField val AGENT_THREAD_MESSAGE_RECEIVED = of("agent.thread_message_received")
+            @JvmField
+            val AGENT_THREAD_MESSAGE_RECEIVED = Type(JsonField.of("agent.thread_message_received"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "agent.thread_message_received" -> AGENT_THREAD_MESSAGE_RECEIVED
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

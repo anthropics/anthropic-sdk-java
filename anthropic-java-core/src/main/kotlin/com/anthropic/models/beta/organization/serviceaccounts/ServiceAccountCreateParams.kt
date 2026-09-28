@@ -632,8 +632,7 @@ private constructor(
     }
 
     /** Org-level role. Defaults to `developer`. */
-    class OrganizationRole @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class OrganizationRole private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -647,14 +646,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val ADMIN = of("admin")
+            @JvmField val ADMIN = OrganizationRole(JsonField.of("admin"))
 
-            @JvmField val DEVELOPER = of("developer")
+            @JvmField val DEVELOPER = OrganizationRole(JsonField.of("developer"))
 
-            @JvmStatic fun of(value: String) = OrganizationRole(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): OrganizationRole =
+                // Intern known values so `==` works
+                when (value) {
+                    "admin" -> ADMIN
+                    "developer" -> DEVELOPER
+                    else -> OrganizationRole(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): OrganizationRole =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): OrganizationRole =
                 value.asString().getOrNull()?.let { of(it) } ?: OrganizationRole(value)
         }
 

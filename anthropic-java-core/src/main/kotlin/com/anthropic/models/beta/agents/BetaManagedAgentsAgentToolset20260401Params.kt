@@ -59,7 +59,7 @@ private constructor(
         configs.getOptional("configs")
 
     /**
-     * Default configuration for all tools in a toolset.
+     * Default configuration applied to all tools in this set.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -236,7 +236,7 @@ private constructor(
         fun addConfig(webSearch: BetaManagedAgentsWebSearchToolConfigParams) =
             addConfig(BetaManagedAgentsAgentToolConfigParams.ofWebSearch(webSearch))
 
-        /** Default configuration for all tools in a toolset. */
+        /** Default configuration applied to all tools in this set. */
         fun defaultConfig(defaultConfig: BetaManagedAgentsAgentToolsetDefaultConfigParams?) =
             defaultConfig(JsonField.ofNullable(defaultConfig))
 
@@ -336,7 +336,7 @@ private constructor(
             (configs.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (defaultConfig.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -350,12 +350,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val AGENT_TOOLSET_20260401 = of("agent_toolset_20260401")
+            @JvmField val AGENT_TOOLSET_20260401 = Type(JsonField.of("agent_toolset_20260401"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "agent_toolset_20260401" -> AGENT_TOOLSET_20260401
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

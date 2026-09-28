@@ -7,9 +7,8 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
 /** Lifecycle status of a deployment. */
-class BetaManagedAgentsDeploymentStatus
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class BetaManagedAgentsDeploymentStatus private constructor(private val value: JsonField<String>) :
+    Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -26,18 +25,26 @@ private constructor(private val value: JsonField<String>) : Enum {
          * The deployment is active and can run sessions. Archived deployments also report this
          * status; check `archived_at` to distinguish them.
          */
-        @JvmField val ACTIVE = of("active")
+        @JvmField val ACTIVE = BetaManagedAgentsDeploymentStatus(JsonField.of("active"))
 
         /**
          * The deployment is paused. Autonomous triggers are suppressed; manual runs are still
          * permitted.
          */
-        @JvmField val PAUSED = of("paused")
+        @JvmField val PAUSED = BetaManagedAgentsDeploymentStatus(JsonField.of("paused"))
 
-        @JvmStatic fun of(value: String) = BetaManagedAgentsDeploymentStatus(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaManagedAgentsDeploymentStatus =
+            // Intern known values so `==` works
+            when (value) {
+                "active" -> ACTIVE
+                "paused" -> PAUSED
+                else -> BetaManagedAgentsDeploymentStatus(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaManagedAgentsDeploymentStatus =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaManagedAgentsDeploymentStatus =
             value.asString().getOrNull()?.let { of(it) } ?: BetaManagedAgentsDeploymentStatus(value)
     }
 

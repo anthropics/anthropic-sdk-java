@@ -293,7 +293,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -307,14 +307,23 @@ private constructor(
 
         companion object {
 
-            @JvmField val THINKING_DROPPED = of("thinking_dropped")
+            @JvmField val THINKING_DROPPED = Type(JsonField.of("thinking_dropped"))
 
-            @JvmField val THINKING_MISMATCH_ALLOWED = of("thinking_mismatch_allowed")
+            @JvmField
+            val THINKING_MISMATCH_ALLOWED = Type(JsonField.of("thinking_mismatch_allowed"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "thinking_dropped" -> THINKING_DROPPED
+                    "thinking_mismatch_allowed" -> THINKING_MISMATCH_ALLOWED
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

@@ -13,7 +13,7 @@ public final class CountTokensAsyncExample {
         AnthropicClientAsync client = AnthropicOkHttpClientAsync.fromEnv();
 
         MessageCountTokensParams countTokensParams = MessageCountTokensParams.builder()
-                .model(Model.CLAUDE_SONNET_5)
+                .model(Model.CLAUDE_SONNET_5_5)
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();
 

@@ -95,7 +95,7 @@ public final class StructuredOutputsRawExample {
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model(Model.CLAUDE_SONNET_5)
+                .model(Model.CLAUDE_SONNET_5_5)
                 .maxTokens(2048)
                 .outputConfig(outputConfig)
                 .addUserMessage("List some famous late twentieth century novels.")

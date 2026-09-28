@@ -6,6 +6,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.allMaxBy
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
+import com.anthropic.core.toField
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.core.JsonGenerator
@@ -52,6 +53,124 @@ private constructor(
     private val mcpToolset: BetaMcpToolset? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun name(): Optional<String> =
+        accept(
+            object : Visitor<Optional<String>> {
+                override fun visitBetaTool(betaTool: BetaTool): Optional<String> =
+                    Optional.of(betaTool.name())
+
+                override fun visitBash20241022(
+                    bash20241022: BetaToolBash20241022
+                ): Optional<String> = bash20241022._name().toField<String>().asKnown()
+
+                override fun visitBash20250124(
+                    bash20250124: BetaToolBash20250124
+                ): Optional<String> = bash20250124._name().toField<String>().asKnown()
+
+                override fun visitCodeExecutionTool20250522(
+                    codeExecutionTool20250522: BetaCodeExecutionTool20250522
+                ): Optional<String> = codeExecutionTool20250522._name().toField<String>().asKnown()
+
+                override fun visitCodeExecutionTool20250825(
+                    codeExecutionTool20250825: BetaCodeExecutionTool20250825
+                ): Optional<String> = codeExecutionTool20250825._name().toField<String>().asKnown()
+
+                override fun visitCodeExecutionTool20260120(
+                    codeExecutionTool20260120: BetaCodeExecutionTool20260120
+                ): Optional<String> = codeExecutionTool20260120._name().toField<String>().asKnown()
+
+                override fun visitCodeExecutionTool20260521(
+                    codeExecutionTool20260521: BetaCodeExecutionTool20260521
+                ): Optional<String> = codeExecutionTool20260521._name().toField<String>().asKnown()
+
+                override fun visitBrowserToolset20260801(
+                    browserToolset20260801: BetaBrowserToolset20260801
+                ): Optional<String> = Optional.empty()
+
+                override fun visitComputerUse20241022(
+                    computerUse20241022: BetaToolComputerUse20241022
+                ): Optional<String> = computerUse20241022._name().toField<String>().asKnown()
+
+                override fun visitMemoryTool20250818(
+                    memoryTool20250818: BetaMemoryTool20250818
+                ): Optional<String> = memoryTool20250818._name().toField<String>().asKnown()
+
+                override fun visitComputerUse20250124(
+                    computerUse20250124: BetaToolComputerUse20250124
+                ): Optional<String> = computerUse20250124._name().toField<String>().asKnown()
+
+                override fun visitTextEditor20241022(
+                    textEditor20241022: BetaToolTextEditor20241022
+                ): Optional<String> = textEditor20241022._name().toField<String>().asKnown()
+
+                override fun visitComputerUse20251124(
+                    computerUse20251124: BetaToolComputerUse20251124
+                ): Optional<String> = computerUse20251124._name().toField<String>().asKnown()
+
+                override fun visitComputerToolset20260801(
+                    computerToolset20260801: BetaComputerToolset20260801
+                ): Optional<String> = Optional.empty()
+
+                override fun visitTextEditor20250124(
+                    textEditor20250124: BetaToolTextEditor20250124
+                ): Optional<String> = textEditor20250124._name().toField<String>().asKnown()
+
+                override fun visitTextEditor20250429(
+                    textEditor20250429: BetaToolTextEditor20250429
+                ): Optional<String> = textEditor20250429._name().toField<String>().asKnown()
+
+                override fun visitTextEditor20250728(
+                    textEditor20250728: BetaToolTextEditor20250728
+                ): Optional<String> = textEditor20250728._name().toField<String>().asKnown()
+
+                override fun visitWebSearchTool20250305(
+                    webSearchTool20250305: BetaWebSearchTool20250305
+                ): Optional<String> = webSearchTool20250305._name().toField<String>().asKnown()
+
+                override fun visitWebFetchTool20250910(
+                    webFetchTool20250910: BetaWebFetchTool20250910
+                ): Optional<String> = webFetchTool20250910._name().toField<String>().asKnown()
+
+                override fun visitWebSearchTool20260209(
+                    webSearchTool20260209: BetaWebSearchTool20260209
+                ): Optional<String> = webSearchTool20260209._name().toField<String>().asKnown()
+
+                override fun visitWebFetchTool20260209(
+                    webFetchTool20260209: BetaWebFetchTool20260209
+                ): Optional<String> = webFetchTool20260209._name().toField<String>().asKnown()
+
+                override fun visitWebFetchTool20260309(
+                    webFetchTool20260309: BetaWebFetchTool20260309
+                ): Optional<String> = webFetchTool20260309._name().toField<String>().asKnown()
+
+                override fun visitWebSearchTool20260318(
+                    webSearchTool20260318: BetaWebSearchTool20260318
+                ): Optional<String> = webSearchTool20260318._name().toField<String>().asKnown()
+
+                override fun visitWebFetchTool20260318(
+                    webFetchTool20260318: BetaWebFetchTool20260318
+                ): Optional<String> = webFetchTool20260318._name().toField<String>().asKnown()
+
+                override fun visitAdvisorTool20260301(
+                    advisorTool20260301: BetaAdvisorTool20260301
+                ): Optional<String> = advisorTool20260301._name().toField<String>().asKnown()
+
+                override fun visitSearchToolBm25_20251119(
+                    searchToolBm25_20251119: BetaToolSearchToolBm25_20251119
+                ): Optional<String> = searchToolBm25_20251119._name().toField<String>().asKnown()
+
+                override fun visitSearchToolRegex20251119(
+                    searchToolRegex20251119: BetaToolSearchToolRegex20251119
+                ): Optional<String> = searchToolRegex20251119._name().toField<String>().asKnown()
+
+                override fun visitMcpToolset(mcpToolset: BetaMcpToolset): Optional<String> =
+                    Optional.empty()
+
+                override fun unknown(json: JsonValue?): Optional<String> =
+                    json.getProperty<String>("name").asKnown()
+            }
+        )
 
     fun cacheControl(): Optional<BetaCacheControlEphemeral> =
         accept(

@@ -43,7 +43,7 @@ private constructor(
     ) : this(citations, content, source, title, type, mutableMapOf())
 
     /**
-     * Citation settings for a search result.
+     * Citation settings for this search result.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -174,7 +174,7 @@ private constructor(
                     betaManagedAgentsSearchResultBlock.additionalProperties.toMutableMap()
             }
 
-        /** Citation settings for a search result. */
+        /** Citation settings for this search result. */
         fun citations(citations: BetaManagedAgentsSearchResultCitations) =
             citations(JsonField.of(citations))
 
@@ -338,7 +338,7 @@ private constructor(
             (if (title.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -352,12 +352,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val SEARCH_RESULT = of("search_result")
+            @JvmField val SEARCH_RESULT = Type(JsonField.of("search_result"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "search_result" -> SEARCH_RESULT
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

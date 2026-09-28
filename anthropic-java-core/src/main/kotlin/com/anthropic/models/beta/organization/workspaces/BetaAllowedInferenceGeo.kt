@@ -6,9 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class BetaAllowedInferenceGeo
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class BetaAllowedInferenceGeo private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -21,14 +19,22 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val GLOBAL = of("global")
+        @JvmField val GLOBAL = BetaAllowedInferenceGeo(JsonField.of("global"))
 
-        @JvmField val US = of("us")
+        @JvmField val US = BetaAllowedInferenceGeo(JsonField.of("us"))
 
-        @JvmStatic fun of(value: String) = BetaAllowedInferenceGeo(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaAllowedInferenceGeo =
+            // Intern known values so `==` works
+            when (value) {
+                "global" -> GLOBAL
+                "us" -> US
+                else -> BetaAllowedInferenceGeo(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaAllowedInferenceGeo =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaAllowedInferenceGeo =
             value.asString().getOrNull()?.let { of(it) } ?: BetaAllowedInferenceGeo(value)
     }
 

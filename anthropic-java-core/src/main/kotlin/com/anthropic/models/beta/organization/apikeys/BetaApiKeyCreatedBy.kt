@@ -199,7 +199,7 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) + (type.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Type of the actor that created the object. */
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -213,14 +213,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val SERVICE_ACCOUNT = of("service_account")
+            @JvmField val SERVICE_ACCOUNT = Type(JsonField.of("service_account"))
 
-            @JvmField val USER = of("user")
+            @JvmField val USER = Type(JsonField.of("user"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "service_account" -> SERVICE_ACCOUNT
+                    "user" -> USER
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

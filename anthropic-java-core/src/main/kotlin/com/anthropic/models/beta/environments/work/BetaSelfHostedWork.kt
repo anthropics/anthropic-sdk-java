@@ -787,7 +787,7 @@ private constructor(
     }
 
     /** Current state of the work item */
-    class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class State private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -801,20 +801,31 @@ private constructor(
 
         companion object {
 
-            @JvmField val QUEUED = of("queued")
+            @JvmField val QUEUED = State(JsonField.of("queued"))
 
-            @JvmField val STARTING = of("starting")
+            @JvmField val STARTING = State(JsonField.of("starting"))
 
-            @JvmField val ACTIVE = of("active")
+            @JvmField val ACTIVE = State(JsonField.of("active"))
 
-            @JvmField val STOPPING = of("stopping")
+            @JvmField val STOPPING = State(JsonField.of("stopping"))
 
-            @JvmField val STOPPED = of("stopped")
+            @JvmField val STOPPED = State(JsonField.of("stopped"))
 
-            @JvmStatic fun of(value: String) = State(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): State =
+                // Intern known values so `==` works
+                when (value) {
+                    "queued" -> QUEUED
+                    "starting" -> STARTING
+                    "active" -> ACTIVE
+                    "stopping" -> STOPPING
+                    "stopped" -> STOPPED
+                    else -> State(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): State =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): State =
                 value.asString().getOrNull()?.let { of(it) } ?: State(value)
         }
 

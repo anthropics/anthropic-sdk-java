@@ -89,8 +89,9 @@ private constructor(
     fun groupType(): GroupType = groupType.getRequired("group_type")
 
     /**
-     * The limiter values overridden for this group in this workspace. Limiter types without a
-     * workspace override are omitted and inherit the organization value.
+     * The workspace's limiter values for this group. By default only the limiter types with a
+     * workspace-level override are listed. With `include_inherited` set to `true`, the limiter
+     * types the workspace inherits from the organization are listed too, each marked by `source`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -107,7 +108,7 @@ private constructor(
     fun models(): Optional<List<String>> = models.getOptional("models")
 
     /**
-     * The `id` of the organization's RateLimit entry this override applies to.
+     * The `id` of the organization's RateLimit entry this entry applies to.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -128,7 +129,7 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * ID of the Workspace this override applies to.
+     * ID of the Workspace this entry applies to.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -358,8 +359,10 @@ private constructor(
         fun groupType(groupType: JsonField<GroupType>) = apply { this.groupType = groupType }
 
         /**
-         * The limiter values overridden for this group in this workspace. Limiter types without a
-         * workspace override are omitted and inherit the organization value.
+         * The workspace's limiter values for this group. By default only the limiter types with a
+         * workspace-level override are listed. With `include_inherited` set to `true`, the limiter
+         * types the workspace inherits from the organization are listed too, each marked by
+         * `source`.
          */
         fun limits(limits: List<BetaWorkspaceRateLimitValue>) = limits(JsonField.of(limits))
 
@@ -418,7 +421,7 @@ private constructor(
                 }
         }
 
-        /** The `id` of the organization's RateLimit entry this override applies to. */
+        /** The `id` of the organization's RateLimit entry this entry applies to. */
         fun rateLimitId(rateLimitId: String) = rateLimitId(JsonField.of(rateLimitId))
 
         /**
@@ -444,7 +447,7 @@ private constructor(
          */
         fun type(type: JsonValue) = apply { this.type = type }
 
-        /** ID of the Workspace this override applies to. */
+        /** ID of the Workspace this entry applies to. */
         fun workspaceId(workspaceId: String) = workspaceId(JsonField.of(workspaceId))
 
         /**
@@ -993,7 +996,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1007,22 +1010,34 @@ private constructor(
 
             companion object {
 
-                @JvmField val MODEL_GROUP = of("model_group")
+                @JvmField val MODEL_GROUP = Type(JsonField.of("model_group"))
 
-                @JvmField val BATCH = of("batch")
+                @JvmField val BATCH = Type(JsonField.of("batch"))
 
-                @JvmField val TOKEN_COUNT = of("token_count")
+                @JvmField val TOKEN_COUNT = Type(JsonField.of("token_count"))
 
-                @JvmField val FILES = of("files")
+                @JvmField val FILES = Type(JsonField.of("files"))
 
-                @JvmField val SKILLS = of("skills")
+                @JvmField val SKILLS = Type(JsonField.of("skills"))
 
-                @JvmField val WEB_SEARCH = of("web_search")
+                @JvmField val WEB_SEARCH = Type(JsonField.of("web_search"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "model_group" -> MODEL_GROUP
+                        "batch" -> BATCH
+                        "token_count" -> TOKEN_COUNT
+                        "files" -> FILES
+                        "skills" -> SKILLS
+                        "web_search" -> WEB_SEARCH
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1167,7 +1182,7 @@ private constructor(
     @Deprecated(
         "Use `group.type` instead. `group_type` is still returned and always equals `group.type`."
     )
-    class GroupType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class GroupType private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1181,22 +1196,34 @@ private constructor(
 
         companion object {
 
-            @JvmField val BATCH = of("batch")
+            @JvmField val BATCH = GroupType(JsonField.of("batch"))
 
-            @JvmField val FILES = of("files")
+            @JvmField val FILES = GroupType(JsonField.of("files"))
 
-            @JvmField val MODEL_GROUP = of("model_group")
+            @JvmField val MODEL_GROUP = GroupType(JsonField.of("model_group"))
 
-            @JvmField val SKILLS = of("skills")
+            @JvmField val SKILLS = GroupType(JsonField.of("skills"))
 
-            @JvmField val TOKEN_COUNT = of("token_count")
+            @JvmField val TOKEN_COUNT = GroupType(JsonField.of("token_count"))
 
-            @JvmField val WEB_SEARCH = of("web_search")
+            @JvmField val WEB_SEARCH = GroupType(JsonField.of("web_search"))
 
-            @JvmStatic fun of(value: String) = GroupType(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): GroupType =
+                // Intern known values so `==` works
+                when (value) {
+                    "batch" -> BATCH
+                    "files" -> FILES
+                    "model_group" -> MODEL_GROUP
+                    "skills" -> SKILLS
+                    "token_count" -> TOKEN_COUNT
+                    "web_search" -> WEB_SEARCH
+                    else -> GroupType(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): GroupType =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): GroupType =
                 value.asString().getOrNull()?.let { of(it) } ?: GroupType(value)
         }
 

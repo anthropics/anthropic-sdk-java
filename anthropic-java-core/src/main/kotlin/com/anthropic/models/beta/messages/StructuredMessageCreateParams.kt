@@ -511,6 +511,11 @@ internal constructor(
         }
 
         /** @see MessageCreateParams.Builder.thinking */
+        fun thinking(betweenTools: BetaThinkingConfigBetweenTools) = apply {
+            paramsBuilder.thinking(betweenTools)
+        }
+
+        /** @see MessageCreateParams.Builder.thinking */
         fun thinking(adaptive: BetaThinkingConfigAdaptive) = apply {
             paramsBuilder.thinking(adaptive)
         }

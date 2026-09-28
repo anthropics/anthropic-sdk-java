@@ -54,7 +54,8 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Access mode for an attached memory store.
+     * Access mode for the mounted store. Defaults to `read_write`. `read_only` mounts the store as
+     * a read-only filesystem.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -177,7 +178,10 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** Access mode for an attached memory store. */
+        /**
+         * Access mode for the mounted store. Defaults to `read_write`. `read_only` mounts the store
+         * as a read-only filesystem.
+         */
         fun access(access: Access?) = access(JsonField.ofNullable(access))
 
         /** Alias for calling [Builder.access] with `access.orElse(null)`. */
@@ -295,7 +299,7 @@ private constructor(
             (access.asKnown().getOrNull()?.validity() ?: 0) +
             (if (instructions.asKnown().isPresent) 1 else 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -309,12 +313,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val MEMORY_STORE = of("memory_store")
+            @JvmField val MEMORY_STORE = Type(JsonField.of("memory_store"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "memory_store" -> MEMORY_STORE
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
@@ -429,8 +440,11 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Access mode for an attached memory store. */
-    class Access @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    /**
+     * Access mode for the mounted store. Defaults to `read_write`. `read_only` mounts the store as
+     * a read-only filesystem.
+     */
+    class Access private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -444,14 +458,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val READ_WRITE = of("read_write")
+            @JvmField val READ_WRITE = Access(JsonField.of("read_write"))
 
-            @JvmField val READ_ONLY = of("read_only")
+            @JvmField val READ_ONLY = Access(JsonField.of("read_only"))
 
-            @JvmStatic fun of(value: String) = Access(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Access =
+                // Intern known values so `==` works
+                when (value) {
+                    "read_write" -> READ_WRITE
+                    "read_only" -> READ_ONLY
+                    else -> Access(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Access =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Access =
                 value.asString().getOrNull()?.let { of(it) } ?: Access(value)
         }
 

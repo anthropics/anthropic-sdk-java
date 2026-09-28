@@ -65,7 +65,7 @@ private constructor(
     fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expires_at")
 
     /**
-     * OAuth refresh token configuration returned in credential responses.
+     * Refresh token configuration, if the credential supports token refresh.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -194,7 +194,7 @@ private constructor(
          */
         fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
 
-        /** OAuth refresh token configuration returned in credential responses. */
+        /** Refresh token configuration, if the credential supports token refresh. */
         fun refresh(refresh: BetaManagedAgentsMcpOAuthRefreshResponse?) =
             refresh(JsonField.ofNullable(refresh))
 
@@ -297,7 +297,7 @@ private constructor(
             (if (expiresAt.asKnown().isPresent) 1 else 0) +
             (refresh.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -311,12 +311,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val MCP_OAUTH = of("mcp_oauth")
+            @JvmField val MCP_OAUTH = Type(JsonField.of("mcp_oauth"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "mcp_oauth" -> MCP_OAUTH
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

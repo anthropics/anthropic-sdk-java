@@ -313,7 +313,7 @@ private constructor(
             (if (conflictingPath.asKnown().isPresent) 1 else 0) +
             (if (message.asKnown().isPresent) 1 else 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -327,12 +327,20 @@ private constructor(
 
         companion object {
 
-            @JvmField val MEMORY_PATH_CONFLICT_ERROR = of("memory_path_conflict_error")
+            @JvmField
+            val MEMORY_PATH_CONFLICT_ERROR = Type(JsonField.of("memory_path_conflict_error"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "memory_path_conflict_error" -> MEMORY_PATH_CONFLICT_ERROR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

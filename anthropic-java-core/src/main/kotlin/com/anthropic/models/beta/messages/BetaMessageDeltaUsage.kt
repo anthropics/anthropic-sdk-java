@@ -101,7 +101,11 @@ private constructor(
         cacheReadInputTokens.getOptional("cache_read_input_tokens")
 
     /**
-     * Outcome of the ``fallback_credit_token`` presented on this request.
+     * Outcome of the `fallback_credit_token` presented on this request.
+     *
+     * Present on every response to a non-batch request that carried a `fallback_credit_token`, in
+     * either redemption mode; absent otherwise (batch items accept and ignore the token and carry
+     * no outcome object).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -367,7 +371,13 @@ private constructor(
             this.cacheReadInputTokens = cacheReadInputTokens
         }
 
-        /** Outcome of the ``fallback_credit_token`` presented on this request. */
+        /**
+         * Outcome of the `fallback_credit_token` presented on this request.
+         *
+         * Present on every response to a non-batch request that carried a `fallback_credit_token`,
+         * in either redemption mode; absent otherwise (batch items accept and ignore the token and
+         * carry no outcome object).
+         */
         fun fallbackCredit(fallbackCredit: BetaFallbackCreditUsage?) =
             fallbackCredit(JsonField.ofNullable(fallbackCredit))
 
@@ -1128,7 +1138,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1142,18 +1152,28 @@ private constructor(
 
             companion object {
 
-                @JvmField val MESSAGE = of("message")
+                @JvmField val MESSAGE = Type(JsonField.of("message"))
 
-                @JvmField val COMPACTION = of("compaction")
+                @JvmField val COMPACTION = Type(JsonField.of("compaction"))
 
-                @JvmField val ADVISOR_MESSAGE = of("advisor_message")
+                @JvmField val ADVISOR_MESSAGE = Type(JsonField.of("advisor_message"))
 
-                @JvmField val FALLBACK_MESSAGE = of("fallback_message")
+                @JvmField val FALLBACK_MESSAGE = Type(JsonField.of("fallback_message"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "message" -> MESSAGE
+                        "compaction" -> COMPACTION
+                        "advisor_message" -> ADVISOR_MESSAGE
+                        "fallback_message" -> FALLBACK_MESSAGE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

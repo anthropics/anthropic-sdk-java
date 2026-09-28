@@ -120,7 +120,7 @@ private constructor(
     fun isError(): Optional<Boolean> = isError.getOptional("is_error")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when this result was processed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -513,7 +513,7 @@ private constructor(
          */
         fun isError(isError: JsonField<Boolean>) = apply { this.isError = isError }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when this result was processed. */
         fun processedAt(processedAt: OffsetDateTime?) =
             processedAt(JsonField.ofNullable(processedAt))
 
@@ -648,7 +648,7 @@ private constructor(
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (if (sessionThreadId.asKnown().isPresent) 1 else 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -662,12 +662,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER_TOOL_RESULT = of("user.tool_result")
+            @JvmField val USER_TOOL_RESULT = Type(JsonField.of("user.tool_result"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "user.tool_result" -> USER_TOOL_RESULT
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
@@ -1161,7 +1168,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1175,18 +1182,28 @@ private constructor(
 
             companion object {
 
-                @JvmField val TEXT = of("text")
+                @JvmField val TEXT = Type(JsonField.of("text"))
 
-                @JvmField val IMAGE = of("image")
+                @JvmField val IMAGE = Type(JsonField.of("image"))
 
-                @JvmField val DOCUMENT = of("document")
+                @JvmField val DOCUMENT = Type(JsonField.of("document"))
 
-                @JvmField val SEARCH_RESULT = of("search_result")
+                @JvmField val SEARCH_RESULT = Type(JsonField.of("search_result"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "text" -> TEXT
+                        "image" -> IMAGE
+                        "document" -> DOCUMENT
+                        "search_result" -> SEARCH_RESULT
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

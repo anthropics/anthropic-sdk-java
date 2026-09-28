@@ -11,6 +11,7 @@ internal class RateLimitListParamsTest {
         RateLimitListParams.builder()
             .workspaceId("workspace_id")
             .groupType(RateLimitListParams.GroupType.BATCH)
+            .includeInherited(true)
             .limit(1L)
             .page("page")
             .build()
@@ -31,6 +32,7 @@ internal class RateLimitListParamsTest {
             RateLimitListParams.builder()
                 .workspaceId("workspace_id")
                 .groupType(RateLimitListParams.GroupType.BATCH)
+                .includeInherited(true)
                 .limit(1L)
                 .page("page")
                 .build()
@@ -41,6 +43,7 @@ internal class RateLimitListParamsTest {
             .isEqualTo(
                 QueryParams.builder()
                     .put("group_type", "batch")
+                    .put("include_inherited", "true")
                     .put("limit", "1")
                     .put("page", "page")
                     .build()

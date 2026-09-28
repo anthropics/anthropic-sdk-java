@@ -294,6 +294,10 @@ private constructor(
         /** Alias for calling [thinking] with `Thinking.ofDisabled(disabled)`. */
         fun thinking(disabled: BetaThinkingConfigDisabled) = thinking(Thinking.ofDisabled(disabled))
 
+        /** Alias for calling [thinking] with `Thinking.ofBetweenTools(betweenTools)`. */
+        fun thinking(betweenTools: BetaThinkingConfigBetweenTools) =
+            thinking(Thinking.ofBetweenTools(betweenTools))
+
         /** Alias for calling [thinking] with `Thinking.ofAdaptive(adaptive)`. */
         fun thinking(adaptive: BetaThinkingConfigAdaptive) = thinking(Thinking.ofAdaptive(adaptive))
 
@@ -387,7 +391,7 @@ private constructor(
      * Inference speed mode. `fast` provides significantly faster output token generation at premium
      * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
      */
-    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Speed private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -401,14 +405,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = Speed(JsonField.of("standard"))
 
-            @JvmField val FAST = of("fast")
+            @JvmField val FAST = Speed(JsonField.of("fast"))
 
-            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Speed =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "fast" -> FAST
+                    else -> Speed(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Speed =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Speed =
                 value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 
@@ -533,6 +545,7 @@ private constructor(
     private constructor(
         private val enabled: BetaThinkingConfigEnabled? = null,
         private val disabled: BetaThinkingConfigDisabled? = null,
+        private val betweenTools: BetaThinkingConfigBetweenTools? = null,
         private val adaptive: BetaThinkingConfigAdaptive? = null,
         private val _json: JsonValue? = null,
     ) {
@@ -545,6 +558,10 @@ private constructor(
 
                     override fun visitDisabled(disabled: BetaThinkingConfigDisabled): Type =
                         Type.DISABLED
+
+                    override fun visitBetweenTools(
+                        betweenTools: BetaThinkingConfigBetweenTools
+                    ): Type = Type.BETWEEN_TOOLS
 
                     override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive): Type =
                         Type.ADAPTIVE
@@ -565,6 +582,10 @@ private constructor(
                         disabled: BetaThinkingConfigDisabled
                     ): Optional<BetaThinkingBlockBinding> = Optional.empty()
 
+                    override fun visitBetweenTools(
+                        betweenTools: BetaThinkingConfigBetweenTools
+                    ): Optional<BetaThinkingBlockBinding> = Optional.empty()
+
                     override fun visitAdaptive(
                         adaptive: BetaThinkingConfigAdaptive
                     ): Optional<BetaThinkingBlockBinding> = adaptive.blockBinding()
@@ -578,17 +599,25 @@ private constructor(
 
         fun disabled(): Optional<BetaThinkingConfigDisabled> = Optional.ofNullable(disabled)
 
+        fun betweenTools(): Optional<BetaThinkingConfigBetweenTools> =
+            Optional.ofNullable(betweenTools)
+
         fun adaptive(): Optional<BetaThinkingConfigAdaptive> = Optional.ofNullable(adaptive)
 
         fun isEnabled(): Boolean = enabled != null
 
         fun isDisabled(): Boolean = disabled != null
 
+        fun isBetweenTools(): Boolean = betweenTools != null
+
         fun isAdaptive(): Boolean = adaptive != null
 
         fun asEnabled(): BetaThinkingConfigEnabled = enabled.getOrThrow("enabled")
 
         fun asDisabled(): BetaThinkingConfigDisabled = disabled.getOrThrow("disabled")
+
+        fun asBetweenTools(): BetaThinkingConfigBetweenTools =
+            betweenTools.getOrThrow("betweenTools")
 
         fun asAdaptive(): BetaThinkingConfigAdaptive = adaptive.getOrThrow("adaptive")
 
@@ -627,6 +656,7 @@ private constructor(
             when {
                 enabled != null -> visitor.visitEnabled(enabled)
                 disabled != null -> visitor.visitDisabled(disabled)
+                betweenTools != null -> visitor.visitBetweenTools(betweenTools)
                 adaptive != null -> visitor.visitAdaptive(adaptive)
                 else -> visitor.unknown(_json)
             }
@@ -655,6 +685,10 @@ private constructor(
 
                     override fun visitDisabled(disabled: BetaThinkingConfigDisabled) {
                         disabled.validate()
+                    }
+
+                    override fun visitBetweenTools(betweenTools: BetaThinkingConfigBetweenTools) {
+                        betweenTools.validate()
                     }
 
                     override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive) {
@@ -689,6 +723,9 @@ private constructor(
                     override fun visitDisabled(disabled: BetaThinkingConfigDisabled) =
                         disabled.validity()
 
+                    override fun visitBetweenTools(betweenTools: BetaThinkingConfigBetweenTools) =
+                        betweenTools.validity()
+
                     override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive) =
                         adaptive.validity()
 
@@ -704,15 +741,17 @@ private constructor(
             return other is Thinking &&
                 enabled == other.enabled &&
                 disabled == other.disabled &&
+                betweenTools == other.betweenTools &&
                 adaptive == other.adaptive
         }
 
-        override fun hashCode(): Int = Objects.hash(enabled, disabled, adaptive)
+        override fun hashCode(): Int = Objects.hash(enabled, disabled, betweenTools, adaptive)
 
         override fun toString(): String =
             when {
                 enabled != null -> "Thinking{enabled=$enabled}"
                 disabled != null -> "Thinking{disabled=$disabled}"
+                betweenTools != null -> "Thinking{betweenTools=$betweenTools}"
                 adaptive != null -> "Thinking{adaptive=$adaptive}"
                 _json != null -> "Thinking{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Thinking")
@@ -735,6 +774,10 @@ private constructor(
             fun ofDisabled(disabled: BetaThinkingConfigDisabled) = Thinking(disabled = disabled)
 
             @JvmStatic
+            fun ofBetweenTools(betweenTools: BetaThinkingConfigBetweenTools) =
+                Thinking(betweenTools = betweenTools)
+
+            @JvmStatic
             fun ofAdaptive(adaptive: BetaThinkingConfigAdaptive) = Thinking(adaptive = adaptive)
         }
 
@@ -746,6 +789,8 @@ private constructor(
             fun visitEnabled(enabled: BetaThinkingConfigEnabled): T
 
             fun visitDisabled(disabled: BetaThinkingConfigDisabled): T
+
+            fun visitBetweenTools(betweenTools: BetaThinkingConfigBetweenTools): T
 
             fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive): T
 
@@ -780,6 +825,14 @@ private constructor(
                             ?.let { Thinking(disabled = it, _json = json) }
                             ?: Thinking(_json = json)
                     }
+                    "between_tools" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaThinkingConfigBetweenTools>(),
+                            )
+                            ?.let { Thinking(betweenTools = it, _json = json) }
+                            ?: Thinking(_json = json)
+                    }
                     "adaptive" -> {
                         return tryDeserialize(node, jacksonTypeRef<BetaThinkingConfigAdaptive>())
                             ?.let { Thinking(adaptive = it, _json = json) }
@@ -801,6 +854,7 @@ private constructor(
                 when {
                     value.enabled != null -> generator.writeObject(value.enabled)
                     value.disabled != null -> generator.writeObject(value.disabled)
+                    value.betweenTools != null -> generator.writeObject(value.betweenTools)
                     value.adaptive != null -> generator.writeObject(value.adaptive)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Thinking")
@@ -808,7 +862,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -822,16 +876,28 @@ private constructor(
 
             companion object {
 
-                @JvmField val ENABLED = of("enabled")
+                @JvmField val ENABLED = Type(JsonField.of("enabled"))
 
-                @JvmField val DISABLED = of("disabled")
+                @JvmField val DISABLED = Type(JsonField.of("disabled"))
 
-                @JvmField val ADAPTIVE = of("adaptive")
+                @JvmField val BETWEEN_TOOLS = Type(JsonField.of("between_tools"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmField val ADAPTIVE = Type(JsonField.of("adaptive"))
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "enabled" -> ENABLED
+                        "disabled" -> DISABLED
+                        "between_tools" -> BETWEEN_TOOLS
+                        "adaptive" -> ADAPTIVE
+                        else -> Type(JsonField.of(value))
+                    }
+
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -839,6 +905,7 @@ private constructor(
             enum class Known {
                 ENABLED,
                 DISABLED,
+                BETWEEN_TOOLS,
                 ADAPTIVE,
             }
 
@@ -854,6 +921,7 @@ private constructor(
             enum class Value {
                 ENABLED,
                 DISABLED,
+                BETWEEN_TOOLS,
                 ADAPTIVE,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
@@ -870,6 +938,7 @@ private constructor(
                 when (this) {
                     ENABLED -> Value.ENABLED
                     DISABLED -> Value.DISABLED
+                    BETWEEN_TOOLS -> Value.BETWEEN_TOOLS
                     ADAPTIVE -> Value.ADAPTIVE
                     else -> Value._UNKNOWN
                 }
@@ -887,6 +956,7 @@ private constructor(
                 when (this) {
                     ENABLED -> Known.ENABLED
                     DISABLED -> Known.DISABLED
+                    BETWEEN_TOOLS -> Known.BETWEEN_TOOLS
                     ADAPTIVE -> Known.ADAPTIVE
                     else -> throw AnthropicInvalidDataException("Unknown Type: $value")
                 }

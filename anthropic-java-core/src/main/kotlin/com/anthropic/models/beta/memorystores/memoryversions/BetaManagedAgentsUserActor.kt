@@ -15,7 +15,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Attribution for a write made by a human user through the Anthropic Console. */
+/** A human user, for example acting through the Anthropic Console. */
 class BetaManagedAgentsUserActor
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -37,7 +37,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * ID of the user who performed the write (a `user_...` value).
+     * ID of the user (a `user_...` value).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -108,7 +108,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** ID of the user who performed the write (a `user_...` value). */
+        /** ID of the user (a `user_...` value). */
         fun userId(userId: String) = userId(JsonField.of(userId))
 
         /**
@@ -196,7 +196,7 @@ private constructor(
     internal fun validity(): Int =
         (type.asKnown().getOrNull()?.validity() ?: 0) + (if (userId.asKnown().isPresent) 1 else 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -210,12 +210,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER_ACTOR = of("user_actor")
+            @JvmField val USER_ACTOR = Type(JsonField.of("user_actor"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "user_actor" -> USER_ACTOR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

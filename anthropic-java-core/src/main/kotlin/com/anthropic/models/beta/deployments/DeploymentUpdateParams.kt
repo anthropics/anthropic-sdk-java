@@ -79,8 +79,10 @@ private constructor(
     fun agent(): Optional<Agent> = body.agent()
 
     /**
-     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
-     * reaches `max_list_cost`.
+     * Spend ceiling for future sessions. Full replacement. Omit to preserve; send null to clear
+     * (sessions created afterwards are uncapped). The deployment agent's model must have a public
+     * list price, or the request is rejected; a multiagent roster is re-validated in full when each
+     * fire copies the cap, which fails closed the same way.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -141,7 +143,8 @@ private constructor(
     fun resources(): Optional<List<Resource>> = body.resources()
 
     /**
-     * 5-field POSIX cron schedule. Literal wall-clock matching in the configured timezone.
+     * Cron schedule. Full replacement. Omit to preserve; send null to clear (revert to
+     * manual-only).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -348,8 +351,10 @@ private constructor(
         }
 
         /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
+         * Spend ceiling for future sessions. Full replacement. Omit to preserve; send null to clear
+         * (sessions created afterwards are uncapped). The deployment agent's model must have a
+         * public list price, or the request is rejected; a multiagent roster is re-validated in
+         * full when each fire copies the cap, which fails closed the same way.
          */
         fun budget(budget: BetaManagedAgentsBudgetLimit?) = apply { body.budget(budget) }
 
@@ -593,7 +598,10 @@ private constructor(
             body.addMemoryStoreResource(memoryStoreId)
         }
 
-        /** 5-field POSIX cron schedule. Literal wall-clock matching in the configured timezone. */
+        /**
+         * Cron schedule. Full replacement. Omit to preserve; send null to clear (revert to
+         * manual-only).
+         */
         fun schedule(schedule: BetaManagedAgentsScheduleParams?) = apply { body.schedule(schedule) }
 
         /** Alias for calling [Builder.schedule] with `schedule.orElse(null)`. */
@@ -861,8 +869,10 @@ private constructor(
         fun agent(): Optional<Agent> = agent.getOptional("agent")
 
         /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
+         * Spend ceiling for future sessions. Full replacement. Omit to preserve; send null to clear
+         * (sessions created afterwards are uncapped). The deployment agent's model must have a
+         * public list price, or the request is rejected; a multiagent roster is re-validated in
+         * full when each fire copies the cap, which fails closed the same way.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -923,7 +933,8 @@ private constructor(
         fun resources(): Optional<List<Resource>> = resources.getOptional("resources")
 
         /**
-         * 5-field POSIX cron schedule. Literal wall-clock matching in the configured timezone.
+         * Cron schedule. Full replacement. Omit to preserve; send null to clear (revert to
+         * manual-only).
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1104,8 +1115,10 @@ private constructor(
                 agent(Agent.ofBetaManagedAgentsAgentParams(betaManagedAgentsAgentParams))
 
             /**
-             * A hard spend ceiling. The session stops issuing new model requests once the tracked
-             * list cost reaches `max_list_cost`.
+             * Spend ceiling for future sessions. Full replacement. Omit to preserve; send null to
+             * clear (sessions created afterwards are uncapped). The deployment agent's model must
+             * have a public list price, or the request is rejected; a multiagent roster is
+             * re-validated in full when each fire copies the cap, which fails closed the same way.
              */
             fun budget(budget: BetaManagedAgentsBudgetLimit?) = budget(JsonField.ofNullable(budget))
 
@@ -1398,7 +1411,8 @@ private constructor(
                 )
 
             /**
-             * 5-field POSIX cron schedule. Literal wall-clock matching in the configured timezone.
+             * Cron schedule. Full replacement. Omit to preserve; send null to clear (revert to
+             * manual-only).
              */
             fun schedule(schedule: BetaManagedAgentsScheduleParams?) =
                 schedule(JsonField.ofNullable(schedule))
@@ -2294,7 +2308,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -2308,16 +2322,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val GITHUB_REPOSITORY = of("github_repository")
+                @JvmField val GITHUB_REPOSITORY = Type(JsonField.of("github_repository"))
 
-                @JvmField val FILE = of("file")
+                @JvmField val FILE = Type(JsonField.of("file"))
 
-                @JvmField val MEMORY_STORE = of("memory_store")
+                @JvmField val MEMORY_STORE = Type(JsonField.of("memory_store"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "github_repository" -> GITHUB_REPOSITORY
+                        "file" -> FILE
+                        "memory_store" -> MEMORY_STORE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

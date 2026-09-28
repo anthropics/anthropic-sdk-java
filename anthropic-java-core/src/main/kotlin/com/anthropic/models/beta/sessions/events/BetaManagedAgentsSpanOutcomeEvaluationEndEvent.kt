@@ -112,7 +112,7 @@ private constructor(
     fun outcomeId(): String = outcomeId.getRequired("outcome_id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when outcome evaluation ended.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -139,7 +139,8 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Token usage for a single model request.
+     * Aggregate token usage for this evaluation cycle. Sums across all grader model requests within
+     * the cycle.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -347,7 +348,7 @@ private constructor(
          */
         fun outcomeId(outcomeId: JsonField<String>) = apply { this.outcomeId = outcomeId }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when outcome evaluation ended. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**
@@ -389,7 +390,10 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** Token usage for a single model request. */
+        /**
+         * Aggregate token usage for this evaluation cycle. Sums across all grader model requests
+         * within the cycle.
+         */
         fun usage(usage: BetaManagedAgentsSpanModelUsage) = usage(JsonField.of(usage))
 
         /**
@@ -507,7 +511,7 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (usage.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -521,12 +525,20 @@ private constructor(
 
         companion object {
 
-            @JvmField val SPAN_OUTCOME_EVALUATION_END = of("span.outcome_evaluation_end")
+            @JvmField
+            val SPAN_OUTCOME_EVALUATION_END = Type(JsonField.of("span.outcome_evaluation_end"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "span.outcome_evaluation_end" -> SPAN_OUTCOME_EVALUATION_END
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

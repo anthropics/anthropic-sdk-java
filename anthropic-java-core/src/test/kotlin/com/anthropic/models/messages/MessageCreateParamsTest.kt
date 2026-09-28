@@ -31,6 +31,9 @@ internal class MessageCreateParamsTest {
                     )
                     .build()
             )
+            .diagnostics(
+                DiagnosticsParam.builder().previousMessageId("previous_message_id").build()
+            )
             .inferenceGeo("inference_geo")
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
             .outputConfig(
@@ -135,6 +138,9 @@ internal class MessageCreateParamsTest {
                                 .build()
                         )
                         .build()
+                )
+                .diagnostics(
+                    DiagnosticsParam.builder().previousMessageId("previous_message_id").build()
                 )
                 .inferenceGeo("inference_geo")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
@@ -265,6 +271,9 @@ internal class MessageCreateParamsTest {
                         )
                         .build()
                 )
+                .diagnostics(
+                    DiagnosticsParam.builder().previousMessageId("previous_message_id").build()
+                )
                 .inferenceGeo("inference_geo")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .outputConfig(
@@ -370,6 +379,8 @@ internal class MessageCreateParamsTest {
                         .build()
                 )
             )
+        assertThat(body.diagnostics())
+            .contains(DiagnosticsParam.builder().previousMessageId("previous_message_id").build())
         assertThat(body.inferenceGeo()).contains("inference_geo")
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())

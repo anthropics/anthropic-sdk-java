@@ -425,7 +425,7 @@ private constructor(
         }
     }
 
-    class Role @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Role private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -439,16 +439,25 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER = of("user")
+            @JvmField val USER = Role(JsonField.of("user"))
 
-            @JvmField val ASSISTANT = of("assistant")
+            @JvmField val ASSISTANT = Role(JsonField.of("assistant"))
 
-            @JvmField val SYSTEM = of("system")
+            @JvmField val SYSTEM = Role(JsonField.of("system"))
 
-            @JvmStatic fun of(value: String) = Role(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Role =
+                // Intern known values so `==` works
+                when (value) {
+                    "user" -> USER
+                    "assistant" -> ASSISTANT
+                    "system" -> SYSTEM
+                    else -> Role(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Role =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Role =
                 value.asString().getOrNull()?.let { of(it) } ?: Role(value)
         }
 

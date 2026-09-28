@@ -33,10 +33,10 @@ private constructor(
     ) : this(prefixMismatchBehavior, mutableMapOf())
 
     /**
-     * What happens when a thinking block in `messages` fails the conversation check: it was created
-     * in a different conversation, or the messages before it have changed since. `"error"` (the
-     * default) fails the request with a 400 error. `"drop_block"` removes the failing blocks and
-     * the request proceeds; the model no longer sees the dropped reasoning.
+     * "error" (default) | "drop_block". What happens when a thinking block in `messages` fails the
+     * conversation check (it was created in a different conversation, or the messages before it
+     * have changed since). "error" fails the request with a 400 error. "drop_block" removes the
+     * failing blocks and the request proceeds; each removal is reported in `input_transformations`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -87,10 +87,11 @@ private constructor(
         }
 
         /**
-         * What happens when a thinking block in `messages` fails the conversation check: it was
-         * created in a different conversation, or the messages before it have changed since.
-         * `"error"` (the default) fails the request with a 400 error. `"drop_block"` removes the
-         * failing blocks and the request proceeds; the model no longer sees the dropped reasoning.
+         * "error" (default) | "drop_block". What happens when a thinking block in `messages` fails
+         * the conversation check (it was created in a different conversation, or the messages
+         * before it have changed since). "error" fails the request with a 400 error. "drop_block"
+         * removes the failing blocks and the request proceeds; each removal is reported in
+         * `input_transformations`.
          */
         fun prefixMismatchBehavior(prefixMismatchBehavior: BetaThinkingPrefixMismatchBehavior?) =
             prefixMismatchBehavior(JsonField.ofNullable(prefixMismatchBehavior))

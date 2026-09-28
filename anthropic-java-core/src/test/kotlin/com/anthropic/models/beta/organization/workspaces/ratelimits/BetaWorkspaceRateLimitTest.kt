@@ -23,6 +23,7 @@ internal class BetaWorkspaceRateLimitTest {
                 .addLimit(
                     BetaWorkspaceRateLimitValue.builder()
                         .orgLimit(0L)
+                        .source(BetaWorkspaceRateLimitWorkspaceSource.builder().build())
                         .type("type")
                         .value(0L)
                         .build()
@@ -45,7 +46,12 @@ internal class BetaWorkspaceRateLimitTest {
             .isEqualTo(BetaWorkspaceRateLimit.GroupType.BATCH)
         assertThat(betaWorkspaceRateLimit.limits())
             .containsExactly(
-                BetaWorkspaceRateLimitValue.builder().orgLimit(0L).type("type").value(0L).build()
+                BetaWorkspaceRateLimitValue.builder()
+                    .orgLimit(0L)
+                    .source(BetaWorkspaceRateLimitWorkspaceSource.builder().build())
+                    .type("type")
+                    .value(0L)
+                    .build()
             )
         assertThat(betaWorkspaceRateLimit.models().getOrNull()).containsExactly("string")
         assertThat(betaWorkspaceRateLimit.rateLimitId()).isEqualTo("rate_limit_id")
@@ -67,6 +73,7 @@ internal class BetaWorkspaceRateLimitTest {
                 .addLimit(
                     BetaWorkspaceRateLimitValue.builder()
                         .orgLimit(0L)
+                        .source(BetaWorkspaceRateLimitWorkspaceSource.builder().build())
                         .type("type")
                         .value(0L)
                         .build()

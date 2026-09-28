@@ -17,11 +17,10 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Optimistic-concurrency precondition: the update applies only if the memory's stored
- * `content_sha256` equals the supplied value. On mismatch, the request returns
- * `memory_precondition_failed_error` (HTTP 409); re-read the memory and retry against the fresh
- * state. If the precondition fails but the stored state already exactly matches the requested
- * `content` and `path`, the server returns 200 instead of 409.
+ * Optional condition that must hold for an update to apply. When omitted, the update is
+ * unconditional. Asserts the current state of the memory being updated. When an update changes
+ * `path`, the precondition still refers to the memory's current content, not the destination path.
+ * Currently the only supported variant is `content_sha256`.
  */
 class BetaManagedAgentsPrecondition
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -224,7 +223,7 @@ private constructor(
         (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (contentSha256.asKnown().isPresent) 1 else 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -238,12 +237,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val CONTENT_SHA256 = of("content_sha256")
+            @JvmField val CONTENT_SHA256 = Type(JsonField.of("content_sha256"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "content_sha256" -> CONTENT_SHA256
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

@@ -56,7 +56,9 @@ private constructor(
     )
 
     /**
-     * The policy category that triggered a refusal.
+     * The policy category that triggered the refusal.
+     *
+     * `null` when the refusal doesn't map to a named category.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -239,7 +241,11 @@ private constructor(
             additionalProperties = betaRefusalStopDetails.additionalProperties.toMutableMap()
         }
 
-        /** The policy category that triggered a refusal. */
+        /**
+         * The policy category that triggered the refusal.
+         *
+         * `null` when the refusal doesn't map to a named category.
+         */
         fun category(category: Category?) = category(JsonField.ofNullable(category))
 
         /** Alias for calling [Builder.category] with `category.orElse(null)`. */
@@ -495,8 +501,12 @@ private constructor(
             (if (recommendedModel.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("refusal")) 1 else 0 }
 
-    /** The policy category that triggered a refusal. */
-    class Category @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    /**
+     * The policy category that triggered the refusal.
+     *
+     * `null` when the refusal doesn't map to a named category.
+     */
+    class Category private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -514,13 +524,13 @@ private constructor(
              * The request could enable cyber harm, such as malware or exploit development. Benign
              * cybersecurity work can also trigger this category.
              */
-            @JvmField val CYBER = of("cyber")
+            @JvmField val CYBER = Category(JsonField.of("cyber"))
 
             /**
              * The request could enable biological harm, such as dangerous lab methods. Beneficial
              * life sciences work can also trigger this category.
              */
-            @JvmField val BIO = of("bio")
+            @JvmField val BIO = Category(JsonField.of("bio"))
 
             /**
              * The request could assist the development of competing AI models, which is restricted
@@ -528,25 +538,36 @@ private constructor(
              * [Anthropic's commercial terms](https://www.anthropic.com/legal/commercial-terms).
              * Benign machine learning work can also trigger this category.
              */
-            @JvmField val FRONTIER_LLM = of("frontier_llm")
+            @JvmField val FRONTIER_LLM = Category(JsonField.of("frontier_llm"))
 
             /**
              * The request asks the model to reproduce its internal reasoning in the response text.
              * To get reasoning in a structured form instead, use
              * [adaptive thinking](https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking).
              */
-            @JvmField val REASONING_EXTRACTION = of("reasoning_extraction")
+            @JvmField val REASONING_EXTRACTION = Category(JsonField.of("reasoning_extraction"))
 
             /**
              * The request could be related to an area that was determined as harmful. Benign work
              * might sometimes trigger this category.
              */
-            @JvmField val GENERAL_HARMS = of("general_harms")
+            @JvmField val GENERAL_HARMS = Category(JsonField.of("general_harms"))
 
-            @JvmStatic fun of(value: String) = Category(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Category =
+                // Intern known values so `==` works
+                when (value) {
+                    "cyber" -> CYBER
+                    "bio" -> BIO
+                    "frontier_llm" -> FRONTIER_LLM
+                    "reasoning_extraction" -> REASONING_EXTRACTION
+                    "general_harms" -> GENERAL_HARMS
+                    else -> Category(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Category =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Category =
                 value.asString().getOrNull()?.let { of(it) } ?: Category(value)
         }
 

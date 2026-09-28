@@ -6,9 +6,8 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class BetaWebFetchToolResultErrorCode
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class BetaWebFetchToolResultErrorCode private constructor(private val value: JsonField<String>) :
+    Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -21,30 +20,56 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val INVALID_TOOL_INPUT = of("invalid_tool_input")
+        @JvmField
+        val INVALID_TOOL_INPUT = BetaWebFetchToolResultErrorCode(JsonField.of("invalid_tool_input"))
 
-        @JvmField val URL_TOO_LONG = of("url_too_long")
+        @JvmField val URL_TOO_LONG = BetaWebFetchToolResultErrorCode(JsonField.of("url_too_long"))
 
-        @JvmField val URL_NOT_ALLOWED = of("url_not_allowed")
+        @JvmField
+        val URL_NOT_ALLOWED = BetaWebFetchToolResultErrorCode(JsonField.of("url_not_allowed"))
 
-        @JvmField val URL_NOT_IN_PRIOR_CONTEXT = of("url_not_in_prior_context")
+        @JvmField
+        val URL_NOT_IN_PRIOR_CONTEXT =
+            BetaWebFetchToolResultErrorCode(JsonField.of("url_not_in_prior_context"))
 
-        @JvmField val URL_NOT_ACCESSIBLE = of("url_not_accessible")
+        @JvmField
+        val URL_NOT_ACCESSIBLE = BetaWebFetchToolResultErrorCode(JsonField.of("url_not_accessible"))
 
-        @JvmField val UNSUPPORTED_CONTENT_TYPE = of("unsupported_content_type")
+        @JvmField
+        val UNSUPPORTED_CONTENT_TYPE =
+            BetaWebFetchToolResultErrorCode(JsonField.of("unsupported_content_type"))
 
-        @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
+        @JvmField
+        val TOO_MANY_REQUESTS = BetaWebFetchToolResultErrorCode(JsonField.of("too_many_requests"))
 
-        @JvmField val MAX_USES_EXCEEDED = of("max_uses_exceeded")
+        @JvmField
+        val MAX_USES_EXCEEDED = BetaWebFetchToolResultErrorCode(JsonField.of("max_uses_exceeded"))
 
-        @JvmField val UNAVAILABLE = of("unavailable")
+        @JvmField val UNAVAILABLE = BetaWebFetchToolResultErrorCode(JsonField.of("unavailable"))
 
-        @JvmField val CONTENT_TOO_LARGE = of("content_too_large")
+        @JvmField
+        val CONTENT_TOO_LARGE = BetaWebFetchToolResultErrorCode(JsonField.of("content_too_large"))
 
-        @JvmStatic fun of(value: String) = BetaWebFetchToolResultErrorCode(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaWebFetchToolResultErrorCode =
+            // Intern known values so `==` works
+            when (value) {
+                "invalid_tool_input" -> INVALID_TOOL_INPUT
+                "url_too_long" -> URL_TOO_LONG
+                "url_not_allowed" -> URL_NOT_ALLOWED
+                "url_not_in_prior_context" -> URL_NOT_IN_PRIOR_CONTEXT
+                "url_not_accessible" -> URL_NOT_ACCESSIBLE
+                "unsupported_content_type" -> UNSUPPORTED_CONTENT_TYPE
+                "too_many_requests" -> TOO_MANY_REQUESTS
+                "max_uses_exceeded" -> MAX_USES_EXCEEDED
+                "unavailable" -> UNAVAILABLE
+                "content_too_large" -> CONTENT_TOO_LARGE
+                else -> BetaWebFetchToolResultErrorCode(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaWebFetchToolResultErrorCode =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaWebFetchToolResultErrorCode =
             value.asString().getOrNull()?.let { of(it) } ?: BetaWebFetchToolResultErrorCode(value)
     }
 

@@ -6,6 +6,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CitationCharLocationParam
 import com.anthropic.models.messages.ContainerParams
+import com.anthropic.models.messages.DiagnosticsParam
 import com.anthropic.models.messages.JsonOutputFormat
 import com.anthropic.models.messages.MessageCreateParams
 import com.anthropic.models.messages.Metadata
@@ -71,6 +72,9 @@ internal class ServiceParamsTest {
                                 .build()
                         )
                         .build()
+                )
+                .diagnostics(
+                    DiagnosticsParam.builder().previousMessageId("previous_message_id").build()
                 )
                 .inferenceGeo("inference_geo")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())

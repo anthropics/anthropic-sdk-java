@@ -42,7 +42,7 @@ private constructor(
     ) : this(source, type, mutableMapOf())
 
     /**
-     * Union type for image source variants.
+     * The source of the image data.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -109,7 +109,7 @@ private constructor(
             additionalProperties = betaManagedAgentsImageBlock.additionalProperties.toMutableMap()
         }
 
-        /** Union type for image source variants. */
+        /** The source of the image data. */
         fun source(source: Source) = source(JsonField.of(source))
 
         /**
@@ -251,7 +251,7 @@ private constructor(
         (source.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Union type for image source variants. */
+    /** The source of the image data. */
     @JsonDeserialize(using = Source.Deserializer::class)
     @JsonSerialize(using = Source.Serializer::class)
     class Source
@@ -542,7 +542,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -556,16 +556,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val BASE64 = of("base64")
+                @JvmField val BASE64 = Type(JsonField.of("base64"))
 
-                @JvmField val URL = of("url")
+                @JvmField val URL = Type(JsonField.of("url"))
 
-                @JvmField val FILE = of("file")
+                @JvmField val FILE = Type(JsonField.of("file"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "base64" -> BASE64
+                        "url" -> URL
+                        "file" -> FILE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -690,7 +699,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -704,12 +713,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val IMAGE = of("image")
+            @JvmField val IMAGE = Type(JsonField.of("image"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "image" -> IMAGE
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

@@ -463,7 +463,7 @@ private constructor(
             .build()
 
     /** Sort direction for results, ordered by `created_at`. Defaults to `desc` (newest first). */
-    class Order @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Order private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -477,14 +477,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val ASC = of("asc")
+            @JvmField val ASC = Order(JsonField.of("asc"))
 
-            @JvmField val DESC = of("desc")
+            @JvmField val DESC = Order(JsonField.of("desc"))
 
-            @JvmStatic fun of(value: String) = Order(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Order =
+                // Intern known values so `==` works
+                when (value) {
+                    "asc" -> ASC
+                    "desc" -> DESC
+                    else -> Order(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Order =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Order =
                 value.asString().getOrNull()?.let { of(it) } ?: Order(value)
         }
 
@@ -604,7 +612,7 @@ private constructor(
     }
 
     /** SessionStatus enum */
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -619,24 +627,34 @@ private constructor(
         companion object {
 
             /** Transient error occurred, retrying automatically. */
-            @JvmField val RESCHEDULING = of("rescheduling")
+            @JvmField val RESCHEDULING = Status(JsonField.of("rescheduling"))
 
             /** Agent is actively executing. */
-            @JvmField val RUNNING = of("running")
+            @JvmField val RUNNING = Status(JsonField.of("running"))
 
             /**
              * Agent is waiting for input, including user messages or tool confirmations. Sessions
              * start in idle.
              */
-            @JvmField val IDLE = of("idle")
+            @JvmField val IDLE = Status(JsonField.of("idle"))
 
             /** Session has ended, either due to an error or completion. */
-            @JvmField val TERMINATED = of("terminated")
+            @JvmField val TERMINATED = Status(JsonField.of("terminated"))
 
-            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Status =
+                // Intern known values so `==` works
+                when (value) {
+                    "rescheduling" -> RESCHEDULING
+                    "running" -> RUNNING
+                    "idle" -> IDLE
+                    "terminated" -> TERMINATED
+                    else -> Status(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Status =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Status =
                 value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 

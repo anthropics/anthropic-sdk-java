@@ -54,7 +54,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * RFC 3339 datetime string indicating when the tunnel was archived. Null if it is not archived.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -62,7 +62,7 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
-     * A timestamp in RFC 3339 format
+     * RFC 3339 datetime string indicating when the tunnel was created.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -201,7 +201,10 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * RFC 3339 datetime string indicating when the tunnel was archived. Null if it is not
+         * archived.
+         */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
         /** Alias for calling [Builder.archivedAt] with `archivedAt.orElse(null)`. */
@@ -218,7 +221,7 @@ private constructor(
             this.archivedAt = archivedAt
         }
 
-        /** A timestamp in RFC 3339 format */
+        /** RFC 3339 datetime string indicating when the tunnel was created. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**

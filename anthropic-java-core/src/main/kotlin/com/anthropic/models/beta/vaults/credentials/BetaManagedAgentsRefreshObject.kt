@@ -34,7 +34,8 @@ private constructor(
     ) : this(httpResponse, status, mutableMapOf())
 
     /**
-     * An HTTP response captured during a credential validation probe.
+     * The captured HTTP error response from the token endpoint. Populated only when `status` is
+     * `failed`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -43,7 +44,7 @@ private constructor(
         httpResponse.getOptional("http_response")
 
     /**
-     * Outcome of a refresh-token exchange attempted during credential validation.
+     * Outcome of the refresh attempt.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -108,7 +109,10 @@ private constructor(
                 betaManagedAgentsRefreshObject.additionalProperties.toMutableMap()
         }
 
-        /** An HTTP response captured during a credential validation probe. */
+        /**
+         * The captured HTTP error response from the token endpoint. Populated only when `status` is
+         * `failed`.
+         */
         fun httpResponse(httpResponse: BetaManagedAgentsRefreshHttpResponse?) =
             httpResponse(JsonField.ofNullable(httpResponse))
 
@@ -127,7 +131,7 @@ private constructor(
             this.httpResponse = httpResponse
         }
 
-        /** Outcome of a refresh-token exchange attempted during credential validation. */
+        /** Outcome of the refresh attempt. */
         fun status(status: Status) = status(JsonField.of(status))
 
         /**
@@ -216,8 +220,8 @@ private constructor(
         (httpResponse.asKnown().getOrNull()?.validity() ?: 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Outcome of a refresh-token exchange attempted during credential validation. */
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    /** Outcome of the refresh attempt. */
+    class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -232,21 +236,31 @@ private constructor(
         companion object {
 
             /** The token endpoint returned a new access token. */
-            @JvmField val SUCCEEDED = of("succeeded")
+            @JvmField val SUCCEEDED = Status(JsonField.of("succeeded"))
 
             /** The token endpoint returned an error response. See `http_response` for detail. */
-            @JvmField val FAILED = of("failed")
+            @JvmField val FAILED = Status(JsonField.of("failed"))
 
             /** The token endpoint could not be reached (DNS, TLS, or connection error). */
-            @JvmField val CONNECT_ERROR = of("connect_error")
+            @JvmField val CONNECT_ERROR = Status(JsonField.of("connect_error"))
 
             /** No refresh token is stored for the credential, so no exchange was attempted. */
-            @JvmField val NO_REFRESH_TOKEN = of("no_refresh_token")
+            @JvmField val NO_REFRESH_TOKEN = Status(JsonField.of("no_refresh_token"))
 
-            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Status =
+                // Intern known values so `==` works
+                when (value) {
+                    "succeeded" -> SUCCEEDED
+                    "failed" -> FAILED
+                    "connect_error" -> CONNECT_ERROR
+                    "no_refresh_token" -> NO_REFRESH_TOKEN
+                    else -> Status(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Status =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Status =
                 value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 

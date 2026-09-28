@@ -46,6 +46,9 @@ private constructor(
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /** Optional header to specify the beta version(s) you want to use. */
+    @Deprecated(
+        "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
+    )
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -131,9 +134,15 @@ private constructor(
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
         /** Optional header to specify the beta version(s) you want to use. */
+        @Deprecated(
+            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
+        )
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
+        @Deprecated(
+            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
+        )
         fun betas(betas: Optional<List<AnthropicBeta>>) = betas(betas.getOrNull())
 
         /**
@@ -141,6 +150,9 @@ private constructor(
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
+        @Deprecated(
+            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
+        )
         fun addBeta(beta: AnthropicBeta) = apply {
             betas = (betas ?: mutableListOf()).apply { add(beta) }
         }
@@ -152,6 +164,9 @@ private constructor(
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
+        @Deprecated(
+            "Deprecated. This parameter will be removed from this method in a future release. To use beta features, call the beta models methods (`client.beta.models`) instead."
+        )
         fun addBeta(value: String) = addBeta(AnthropicBeta.of(value))
 
         /**

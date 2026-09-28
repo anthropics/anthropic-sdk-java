@@ -6,6 +6,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.models.messages.CacheControlEphemeral
 import com.anthropic.models.messages.CitationCharLocationParam
 import com.anthropic.models.messages.ContainerParams
+import com.anthropic.models.messages.DiagnosticsParam
 import com.anthropic.models.messages.JsonOutputFormat
 import com.anthropic.models.messages.MessageCountTokensParams
 import com.anthropic.models.messages.MessageCreateParams
@@ -56,6 +57,9 @@ internal class MessageServiceAsyncTest {
                                     .build()
                             )
                             .build()
+                    )
+                    .diagnostics(
+                        DiagnosticsParam.builder().previousMessageId("previous_message_id").build()
                     )
                     .inferenceGeo("inference_geo")
                     .metadata(
@@ -180,6 +184,9 @@ internal class MessageServiceAsyncTest {
                                     .build()
                             )
                             .build()
+                    )
+                    .diagnostics(
+                        DiagnosticsParam.builder().previousMessageId("previous_message_id").build()
                     )
                     .inferenceGeo("inference_geo")
                     .metadata(

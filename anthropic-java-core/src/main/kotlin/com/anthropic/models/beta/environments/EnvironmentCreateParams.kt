@@ -1043,7 +1043,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1057,14 +1057,22 @@ private constructor(
 
             companion object {
 
-                @JvmField val CLOUD = of("cloud")
+                @JvmField val CLOUD = Type(JsonField.of("cloud"))
 
-                @JvmField val SELF_HOSTED = of("self_hosted")
+                @JvmField val SELF_HOSTED = Type(JsonField.of("self_hosted"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "cloud" -> CLOUD
+                        "self_hosted" -> SELF_HOSTED
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1300,7 +1308,7 @@ private constructor(
      * support only 'organization'; 'account' is rejected. If not specified, defaults based on
      * organization type.
      */
-    class Scope @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Scope private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1314,14 +1322,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val ORGANIZATION = of("organization")
+            @JvmField val ORGANIZATION = Scope(JsonField.of("organization"))
 
-            @JvmField val ACCOUNT = of("account")
+            @JvmField val ACCOUNT = Scope(JsonField.of("account"))
 
-            @JvmStatic fun of(value: String) = Scope(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Scope =
+                // Intern known values so `==` works
+                when (value) {
+                    "organization" -> ORGANIZATION
+                    "account" -> ACCOUNT
+                    else -> Scope(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Scope =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Scope =
                 value.asString().getOrNull()?.let { of(it) } ?: Scope(value)
         }
 

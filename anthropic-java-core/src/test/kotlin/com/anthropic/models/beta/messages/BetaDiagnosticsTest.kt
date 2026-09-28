@@ -12,7 +12,7 @@ internal class BetaDiagnosticsTest {
         val betaDiagnostics = BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build()
 
         assertThat(betaDiagnostics.cacheMissReason())
-            .contains(BetaDiagnostics.CacheMissReason.ofModelChanged(0L))
+            .contains(BetaCacheMissReason.ofModelChanged(0L))
     }
 
     @Test

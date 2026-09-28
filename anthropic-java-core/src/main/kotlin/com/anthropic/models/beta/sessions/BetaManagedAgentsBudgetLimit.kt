@@ -37,7 +37,8 @@ private constructor(
     ) : this(maxListCost, type, mutableMapOf())
 
     /**
-     * A monetary amount in a specific currency.
+     * Maximum list cost the session may accrue. List price is used regardless of any negotiated
+     * discount, so the cap fires at or before the actual charge.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -106,7 +107,10 @@ private constructor(
             additionalProperties = betaManagedAgentsBudgetLimit.additionalProperties.toMutableMap()
         }
 
-        /** A monetary amount in a specific currency. */
+        /**
+         * Maximum list cost the session may accrue. List price is used regardless of any negotiated
+         * discount, so the cap fires at or before the actual charge.
+         */
         fun maxListCost(maxListCost: BetaMonetaryAmount) = maxListCost(JsonField.of(maxListCost))
 
         /**
@@ -208,7 +212,7 @@ private constructor(
         (maxListCost.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -222,12 +226,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val LIMIT = of("limit")
+            @JvmField val LIMIT = Type(JsonField.of("limit"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "limit" -> LIMIT
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

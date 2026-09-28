@@ -29,6 +29,7 @@ internal class BetaThinkingConfigParamTest {
 
         assertThat(betaThinkingConfigParam.enabled()).contains(enabled)
         assertThat(betaThinkingConfigParam.disabled()).isEmpty
+        assertThat(betaThinkingConfigParam.betweenTools()).isEmpty
         assertThat(betaThinkingConfigParam.adaptive()).isEmpty
     }
 
@@ -65,6 +66,7 @@ internal class BetaThinkingConfigParamTest {
 
         assertThat(betaThinkingConfigParam.enabled()).isEmpty
         assertThat(betaThinkingConfigParam.disabled()).contains(disabled)
+        assertThat(betaThinkingConfigParam.betweenTools()).isEmpty
         assertThat(betaThinkingConfigParam.adaptive()).isEmpty
     }
 
@@ -73,6 +75,33 @@ internal class BetaThinkingConfigParamTest {
         val jsonMapper = jsonMapper()
         val betaThinkingConfigParam =
             BetaThinkingConfigParam.ofDisabled(BetaThinkingConfigDisabled.builder().build())
+
+        val roundtrippedBetaThinkingConfigParam =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaThinkingConfigParam),
+                jacksonTypeRef<BetaThinkingConfigParam>(),
+            )
+
+        assertThat(roundtrippedBetaThinkingConfigParam).isEqualTo(betaThinkingConfigParam)
+    }
+
+    @Test
+    fun ofBetweenTools() {
+        val betweenTools = BetaThinkingConfigBetweenTools.builder().build()
+
+        val betaThinkingConfigParam = BetaThinkingConfigParam.ofBetweenTools(betweenTools)
+
+        assertThat(betaThinkingConfigParam.enabled()).isEmpty
+        assertThat(betaThinkingConfigParam.disabled()).isEmpty
+        assertThat(betaThinkingConfigParam.betweenTools()).contains(betweenTools)
+        assertThat(betaThinkingConfigParam.adaptive()).isEmpty
+    }
+
+    @Test
+    fun ofBetweenToolsRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaThinkingConfigParam =
+            BetaThinkingConfigParam.ofBetweenTools(BetaThinkingConfigBetweenTools.builder().build())
 
         val roundtrippedBetaThinkingConfigParam =
             jsonMapper.readValue(
@@ -99,6 +128,7 @@ internal class BetaThinkingConfigParamTest {
 
         assertThat(betaThinkingConfigParam.enabled()).isEmpty
         assertThat(betaThinkingConfigParam.disabled()).isEmpty
+        assertThat(betaThinkingConfigParam.betweenTools()).isEmpty
         assertThat(betaThinkingConfigParam.adaptive()).contains(adaptive)
     }
 

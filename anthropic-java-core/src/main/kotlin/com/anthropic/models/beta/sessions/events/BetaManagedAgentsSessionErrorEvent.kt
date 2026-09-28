@@ -64,7 +64,7 @@ private constructor(
     fun error(): Error = error.getRequired("error")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the error occurred.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -213,7 +213,7 @@ private constructor(
         fun error(credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError) =
             error(Error.ofCredentialHostUnreachable(credentialHostUnreachable))
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the error occurred. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**
@@ -972,7 +972,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -986,28 +986,47 @@ private constructor(
 
             companion object {
 
-                @JvmField val UNKNOWN_ERROR = of("unknown_error")
+                @JvmField val UNKNOWN_ERROR = Type(JsonField.of("unknown_error"))
 
-                @JvmField val MODEL_OVERLOADED_ERROR = of("model_overloaded_error")
-
-                @JvmField val MODEL_RATE_LIMITED_ERROR = of("model_rate_limited_error")
-
-                @JvmField val MODEL_REQUEST_FAILED_ERROR = of("model_request_failed_error")
-
-                @JvmField val MCP_CONNECTION_FAILED_ERROR = of("mcp_connection_failed_error")
+                @JvmField val MODEL_OVERLOADED_ERROR = Type(JsonField.of("model_overloaded_error"))
 
                 @JvmField
-                val MCP_AUTHENTICATION_FAILED_ERROR = of("mcp_authentication_failed_error")
-
-                @JvmField val BILLING_ERROR = of("billing_error")
+                val MODEL_RATE_LIMITED_ERROR = Type(JsonField.of("model_rate_limited_error"))
 
                 @JvmField
-                val CREDENTIAL_HOST_UNREACHABLE_ERROR = of("credential_host_unreachable_error")
+                val MODEL_REQUEST_FAILED_ERROR = Type(JsonField.of("model_request_failed_error"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmField
+                val MCP_CONNECTION_FAILED_ERROR = Type(JsonField.of("mcp_connection_failed_error"))
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JvmField
+                val MCP_AUTHENTICATION_FAILED_ERROR =
+                    Type(JsonField.of("mcp_authentication_failed_error"))
+
+                @JvmField val BILLING_ERROR = Type(JsonField.of("billing_error"))
+
+                @JvmField
+                val CREDENTIAL_HOST_UNREACHABLE_ERROR =
+                    Type(JsonField.of("credential_host_unreachable_error"))
+
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "unknown_error" -> UNKNOWN_ERROR
+                        "model_overloaded_error" -> MODEL_OVERLOADED_ERROR
+                        "model_rate_limited_error" -> MODEL_RATE_LIMITED_ERROR
+                        "model_request_failed_error" -> MODEL_REQUEST_FAILED_ERROR
+                        "mcp_connection_failed_error" -> MCP_CONNECTION_FAILED_ERROR
+                        "mcp_authentication_failed_error" -> MCP_AUTHENTICATION_FAILED_ERROR
+                        "billing_error" -> BILLING_ERROR
+                        "credential_host_unreachable_error" -> CREDENTIAL_HOST_UNREACHABLE_ERROR
+                        else -> Type(JsonField.of(value))
+                    }
+
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1152,7 +1171,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1166,12 +1185,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val SESSION_ERROR = of("session.error")
+            @JvmField val SESSION_ERROR = Type(JsonField.of("session.error"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "session.error" -> SESSION_ERROR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

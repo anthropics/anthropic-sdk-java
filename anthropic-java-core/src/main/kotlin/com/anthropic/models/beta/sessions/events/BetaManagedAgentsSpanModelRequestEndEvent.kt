@@ -71,7 +71,7 @@ private constructor(
     fun modelRequestStartId(): String = modelRequestStartId.getRequired("model_request_start_id")
 
     /**
-     * Token usage for a single model request.
+     * Token usage for this model request.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -79,7 +79,7 @@ private constructor(
     fun modelUsage(): BetaManagedAgentsSpanModelUsage = modelUsage.getRequired("model_usage")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the model request completed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -244,7 +244,7 @@ private constructor(
             this.modelRequestStartId = modelRequestStartId
         }
 
-        /** Token usage for a single model request. */
+        /** Token usage for this model request. */
         fun modelUsage(modelUsage: BetaManagedAgentsSpanModelUsage) =
             modelUsage(JsonField.of(modelUsage))
 
@@ -259,7 +259,7 @@ private constructor(
             this.modelUsage = modelUsage
         }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the model request completed. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**
@@ -377,7 +377,7 @@ private constructor(
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -391,12 +391,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val SPAN_MODEL_REQUEST_END = of("span.model_request_end")
+            @JvmField val SPAN_MODEL_REQUEST_END = Type(JsonField.of("span.model_request_end"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "span.model_request_end" -> SPAN_MODEL_REQUEST_END
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

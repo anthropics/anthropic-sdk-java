@@ -58,7 +58,7 @@ private constructor(
     )
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the outcome reached a terminal result. Null while `pending`/`running`/`evaluating`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -225,7 +225,9 @@ private constructor(
                 betaManagedAgentsOutcomeEvaluationResource.additionalProperties.toMutableMap()
         }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When the outcome reached a terminal result. Null while `pending`/`running`/`evaluating`.
+         */
         fun completedAt(completedAt: OffsetDateTime?) =
             completedAt(JsonField.ofNullable(completedAt))
 
@@ -421,7 +423,7 @@ private constructor(
             (if (result.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -435,12 +437,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val OUTCOME_EVALUATION = of("outcome_evaluation")
+            @JvmField val OUTCOME_EVALUATION = Type(JsonField.of("outcome_evaluation"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "outcome_evaluation" -> OUTCOME_EVALUATION
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

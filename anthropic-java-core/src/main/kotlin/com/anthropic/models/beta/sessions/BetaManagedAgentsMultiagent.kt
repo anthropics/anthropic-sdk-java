@@ -30,7 +30,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Resolved coordinator topology with a concrete agent roster. */
+/** Resolved multiagent orchestration configuration as returned in API responses. */
 class BetaManagedAgentsMultiagent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -505,7 +505,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -519,14 +519,22 @@ private constructor(
 
             companion object {
 
-                @JvmField val AGENT = of("agent")
+                @JvmField val AGENT = Type(JsonField.of("agent"))
 
-                @JvmField val ADVISOR = of("advisor")
+                @JvmField val ADVISOR = Type(JsonField.of("advisor"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "agent" -> AGENT
+                        "advisor" -> ADVISOR
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -647,7 +655,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -661,12 +669,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val COORDINATOR = of("coordinator")
+            @JvmField val COORDINATOR = Type(JsonField.of("coordinator"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "coordinator" -> COORDINATOR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

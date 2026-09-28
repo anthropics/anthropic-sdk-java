@@ -68,7 +68,7 @@ private constructor(
     fun outcomeId(): String = outcomeId.getRequired("outcome_id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when this heartbeat was emitted.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -207,7 +207,7 @@ private constructor(
          */
         fun outcomeId(outcomeId: JsonField<String>) = apply { this.outcomeId = outcomeId }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when this heartbeat was emitted. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**
@@ -321,7 +321,7 @@ private constructor(
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -335,12 +335,21 @@ private constructor(
 
         companion object {
 
-            @JvmField val SPAN_OUTCOME_EVALUATION_ONGOING = of("span.outcome_evaluation_ongoing")
+            @JvmField
+            val SPAN_OUTCOME_EVALUATION_ONGOING =
+                Type(JsonField.of("span.outcome_evaluation_ongoing"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "span.outcome_evaluation_ongoing" -> SPAN_OUTCOME_EVALUATION_ONGOING
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

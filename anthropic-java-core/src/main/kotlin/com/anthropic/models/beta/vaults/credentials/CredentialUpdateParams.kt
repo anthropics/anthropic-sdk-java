@@ -62,7 +62,8 @@ private constructor(
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
-     * Updated authentication details for a credential.
+     * Updated authentication configuration. The `type` is immutable; the variant sent must match
+     * the stored credential's type.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -208,7 +209,10 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** Updated authentication details for a credential. */
+        /**
+         * Updated authentication configuration. The `type` is immutable; the variant sent must
+         * match the stored credential's type.
+         */
         fun auth(auth: Auth) = apply { body.auth(auth) }
 
         /**
@@ -447,7 +451,8 @@ private constructor(
         ) : this(auth, displayName, metadata, mutableMapOf())
 
         /**
-         * Updated authentication details for a credential.
+         * Updated authentication configuration. The `type` is immutable; the variant sent must
+         * match the stored credential's type.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -528,7 +533,10 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Updated authentication details for a credential. */
+            /**
+             * Updated authentication configuration. The `type` is immutable; the variant sent must
+             * match the stored credential's type.
+             */
             fun auth(auth: Auth) = auth(JsonField.of(auth))
 
             /**
@@ -679,7 +687,10 @@ private constructor(
             "Body{auth=$auth, displayName=$displayName, metadata=$metadata, additionalProperties=$additionalProperties}"
     }
 
-    /** Updated authentication details for a credential. */
+    /**
+     * Updated authentication configuration. The `type` is immutable; the variant sent must match
+     * the stored credential's type.
+     */
     @JsonDeserialize(using = Auth.Deserializer::class)
     @JsonSerialize(using = Auth.Serializer::class)
     class Auth
@@ -1021,7 +1032,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1035,16 +1046,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val MCP_OAUTH = of("mcp_oauth")
+                @JvmField val MCP_OAUTH = Type(JsonField.of("mcp_oauth"))
 
-                @JvmField val STATIC_BEARER = of("static_bearer")
+                @JvmField val STATIC_BEARER = Type(JsonField.of("static_bearer"))
 
-                @JvmField val ENVIRONMENT_VARIABLE = of("environment_variable")
+                @JvmField val ENVIRONMENT_VARIABLE = Type(JsonField.of("environment_variable"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "mcp_oauth" -> MCP_OAUTH
+                        "static_bearer" -> STATIC_BEARER
+                        "environment_variable" -> ENVIRONMENT_VARIABLE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

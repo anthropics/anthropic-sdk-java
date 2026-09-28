@@ -54,7 +54,7 @@ private constructor(
     fun message(): String = message.getRequired("message")
 
     /**
-     * What the client should do next in response to this error.
+     * What the client should do next.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -148,7 +148,7 @@ private constructor(
          */
         fun message(message: JsonField<String>) = apply { this.message = message }
 
-        /** What the client should do next in response to this error. */
+        /** What the client should do next. */
         fun retryStatus(retryStatus: RetryStatus) = retryStatus(JsonField.of(retryStatus))
 
         /**
@@ -266,7 +266,7 @@ private constructor(
             (retryStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** What the client should do next in response to this error. */
+    /** What the client should do next. */
     @JsonDeserialize(using = RetryStatus.Deserializer::class)
     @JsonSerialize(using = RetryStatus.Serializer::class)
     class RetryStatus
@@ -604,7 +604,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -618,16 +618,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val RETRYING = of("retrying")
+                @JvmField val RETRYING = Type(JsonField.of("retrying"))
 
-                @JvmField val EXHAUSTED = of("exhausted")
+                @JvmField val EXHAUSTED = Type(JsonField.of("exhausted"))
 
-                @JvmField val TERMINAL = of("terminal")
+                @JvmField val TERMINAL = Type(JsonField.of("terminal"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "retrying" -> RETRYING
+                        "exhausted" -> EXHAUSTED
+                        "terminal" -> TERMINAL
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -752,7 +761,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -766,12 +775,20 @@ private constructor(
 
         companion object {
 
-            @JvmField val MODEL_REQUEST_FAILED_ERROR = of("model_request_failed_error")
+            @JvmField
+            val MODEL_REQUEST_FAILED_ERROR = Type(JsonField.of("model_request_failed_error"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "model_request_failed_error" -> MODEL_REQUEST_FAILED_ERROR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

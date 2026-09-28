@@ -21,10 +21,9 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Identifies who performed a write or redact operation. Captured at write time on the
- * `memory_version` row. The API key that created a session is not recorded on agent writes;
- * attribution answers who made the write, not who is ultimately responsible. Look up session
- * provenance separately via the [Sessions API](/en/api/beta/sessions/retrieve).
+ * Identifies who performed an operation. Recorded when the operation happens and not updated
+ * afterwards, so the ID may refer to a user, service account, API key, or session that has since
+ * been deleted.
  */
 @JsonDeserialize(using = BetaManagedAgentsActor.Deserializer::class)
 @JsonSerialize(using = BetaManagedAgentsActor.Serializer::class)
@@ -57,20 +56,21 @@ private constructor(
         )
 
     /**
-     * Attribution for a write made by an agent during a session, through the mounted filesystem at
-     * `/mnt/memory/`.
+     * An agent acting during a session, for example through the session's mounted filesystem. It
+     * names the session itself, not the user or API key that started the session.
      */
     fun session(): Optional<BetaManagedAgentsSessionActor> = Optional.ofNullable(session)
 
-    /** Attribution for a write made directly via the public API (outside of any session). */
+    /**
+     * A direct caller of the public API, identified by the API key that authenticated the request.
+     */
     fun api(): Optional<BetaManagedAgentsApiActor> = Optional.ofNullable(api)
 
-    /** Attribution for a write made by a human user through the Anthropic Console. */
+    /** A human user, for example acting through the Anthropic Console. */
     fun user(): Optional<BetaManagedAgentsUserActor> = Optional.ofNullable(user)
 
     /**
-     * Attribution for a write made by a workload authenticated as a service account, for example
-     * via Workload Identity Federation.
+     * A workload authenticated as a service account, for example via Workload Identity Federation.
      */
     fun serviceAccount(): Optional<BetaManagedAgentsServiceAccountActor> =
         Optional.ofNullable(serviceAccount)
@@ -84,20 +84,21 @@ private constructor(
     fun isServiceAccount(): Boolean = serviceAccount != null
 
     /**
-     * Attribution for a write made by an agent during a session, through the mounted filesystem at
-     * `/mnt/memory/`.
+     * An agent acting during a session, for example through the session's mounted filesystem. It
+     * names the session itself, not the user or API key that started the session.
      */
     fun asSession(): BetaManagedAgentsSessionActor = session.getOrThrow("session")
 
-    /** Attribution for a write made directly via the public API (outside of any session). */
+    /**
+     * A direct caller of the public API, identified by the API key that authenticated the request.
+     */
     fun asApi(): BetaManagedAgentsApiActor = api.getOrThrow("api")
 
-    /** Attribution for a write made by a human user through the Anthropic Console. */
+    /** A human user, for example acting through the Anthropic Console. */
     fun asUser(): BetaManagedAgentsUserActor = user.getOrThrow("user")
 
     /**
-     * Attribution for a write made by a workload authenticated as a service account, for example
-     * via Workload Identity Federation.
+     * A workload authenticated as a service account, for example via Workload Identity Federation.
      */
     fun asServiceAccount(): BetaManagedAgentsServiceAccountActor =
         serviceAccount.getOrThrow("serviceAccount")
@@ -240,8 +241,8 @@ private constructor(
     companion object {
 
         /**
-         * Attribution for a write made by an agent during a session, through the mounted filesystem
-         * at `/mnt/memory/`.
+         * An agent acting during a session, for example through the session's mounted filesystem.
+         * It names the session itself, not the user or API key that started the session.
          */
         @JvmStatic
         fun ofSession(session: BetaManagedAgentsSessionActor) =
@@ -260,7 +261,10 @@ private constructor(
                     .build()
             )
 
-        /** Attribution for a write made directly via the public API (outside of any session). */
+        /**
+         * A direct caller of the public API, identified by the API key that authenticated the
+         * request.
+         */
         @JvmStatic fun ofApi(api: BetaManagedAgentsApiActor) = BetaManagedAgentsActor(api = api)
 
         /**
@@ -276,7 +280,7 @@ private constructor(
                     .build()
             )
 
-        /** Attribution for a write made by a human user through the Anthropic Console. */
+        /** A human user, for example acting through the Anthropic Console. */
         @JvmStatic
         fun ofUser(user: BetaManagedAgentsUserActor) = BetaManagedAgentsActor(user = user)
 
@@ -294,8 +298,8 @@ private constructor(
             )
 
         /**
-         * Attribution for a write made by a workload authenticated as a service account, for
-         * example via Workload Identity Federation.
+         * A workload authenticated as a service account, for example via Workload Identity
+         * Federation.
          */
         @JvmStatic
         fun ofServiceAccount(serviceAccount: BetaManagedAgentsServiceAccountActor) =
@@ -317,20 +321,23 @@ private constructor(
     interface Visitor<out T> {
 
         /**
-         * Attribution for a write made by an agent during a session, through the mounted filesystem
-         * at `/mnt/memory/`.
+         * An agent acting during a session, for example through the session's mounted filesystem.
+         * It names the session itself, not the user or API key that started the session.
          */
         fun visitSession(session: BetaManagedAgentsSessionActor): T
 
-        /** Attribution for a write made directly via the public API (outside of any session). */
+        /**
+         * A direct caller of the public API, identified by the API key that authenticated the
+         * request.
+         */
         fun visitApi(api: BetaManagedAgentsApiActor): T
 
-        /** Attribution for a write made by a human user through the Anthropic Console. */
+        /** A human user, for example acting through the Anthropic Console. */
         fun visitUser(user: BetaManagedAgentsUserActor): T
 
         /**
-         * Attribution for a write made by a workload authenticated as a service account, for
-         * example via Workload Identity Federation.
+         * A workload authenticated as a service account, for example via Workload Identity
+         * Federation.
          */
         fun visitServiceAccount(serviceAccount: BetaManagedAgentsServiceAccountActor): T
 
@@ -405,7 +412,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -419,18 +426,28 @@ private constructor(
 
         companion object {
 
-            @JvmField val SESSION_ACTOR = of("session_actor")
+            @JvmField val SESSION_ACTOR = Type(JsonField.of("session_actor"))
 
-            @JvmField val API_ACTOR = of("api_actor")
+            @JvmField val API_ACTOR = Type(JsonField.of("api_actor"))
 
-            @JvmField val USER_ACTOR = of("user_actor")
+            @JvmField val USER_ACTOR = Type(JsonField.of("user_actor"))
 
-            @JvmField val SERVICE_ACCOUNT_ACTOR = of("service_account_actor")
+            @JvmField val SERVICE_ACCOUNT_ACTOR = Type(JsonField.of("service_account_actor"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "session_actor" -> SESSION_ACTOR
+                    "api_actor" -> API_ACTOR
+                    "user_actor" -> USER_ACTOR
+                    "service_account_actor" -> SERVICE_ACCOUNT_ACTOR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

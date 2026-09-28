@@ -1127,6 +1127,7 @@ internal class MessageAccumulatorTest {
                         .stopDetails(NOT_SET)
                         .stopReason(NOT_SET)
                         .stopSequence(NOT_SET)
+                        .diagnostics(null)
                         // The default non-null value for `role` suffices.
                         .build()
                 )

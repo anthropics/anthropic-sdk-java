@@ -16,20 +16,25 @@ internal fun <T : Any> T?.getOrThrow(name: String): T =
     this ?: throw AnthropicInvalidDataException("`${name}` is not present")
 
 /**
- * Returns this JSON object's property with the given [name] as a [JsonField] of type [T],
- * deserialized the way an SDK class's `JsonField` property is: a "known" value if the raw property
- * deserializes to [T], the raw [JsonValue] if it doesn't, or [JsonMissing] if this isn't a JSON
- * object with that property.
+ * Returns this JSON object's property with the given [name] as a [JsonField] of type [T] (see
+ * [toField]), or [JsonMissing] if this isn't a JSON object with that property.
  */
 @JvmSynthetic
-internal inline fun <reified T : Any> JsonValue?.getProperty(name: String): JsonField<T> {
-    val value = this?.asObject()?.getOrNull()?.get(name) ?: return JsonMissing.of()
-    return try {
-        value.convert(jacksonTypeRef<T>())?.let { JsonField.of(it) } ?: value
+internal inline fun <reified T : Any> JsonValue?.getProperty(name: String): JsonField<T> =
+    this?.asObject()?.getOrNull()?.get(name)?.toField<T>() ?: JsonMissing.of()
+
+/**
+ * Returns this raw value as a [JsonField] of type [T], deserialized the way an SDK class's
+ * `JsonField` property is: a "known" value if this deserializes to [T], or this raw value if it
+ * doesn't.
+ */
+@JvmSynthetic
+internal inline fun <reified T : Any> JsonValue.toField(): JsonField<T> =
+    try {
+        convert(jacksonTypeRef<T>())?.let { JsonField.of(it) } ?: this
     } catch (e: Exception) {
-        value
+        this
     }
-}
 
 @JvmSynthetic
 internal fun <T> List<T>.toImmutable(): List<T> =

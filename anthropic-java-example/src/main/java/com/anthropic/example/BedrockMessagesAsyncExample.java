@@ -55,7 +55,7 @@ public final class BedrockMessagesAsyncExample {
                 .build();
 
         MessageCreateParams createParams = MessageCreateParams.builder()
-                .model("global.anthropic.claude-sonnet-5")
+                .model("global.anthropic.claude-sonnet-5-5")
                 .maxTokens(2048)
                 .addUserMessage("Tell me a story about building the best SDK!")
                 .build();

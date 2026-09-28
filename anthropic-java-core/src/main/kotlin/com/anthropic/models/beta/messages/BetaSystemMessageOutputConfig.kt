@@ -35,7 +35,10 @@ private constructor(
     ) : this(effort, mutableMapOf())
 
     /**
-     * All possible effort levels.
+     * How much effort the model should put into its response. Higher effort levels may result in
+     * more thorough analysis but take longer.
+     *
+     * Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -82,7 +85,12 @@ private constructor(
             additionalProperties = betaSystemMessageOutputConfig.additionalProperties.toMutableMap()
         }
 
-        /** All possible effort levels. */
+        /**
+         * How much effort the model should put into its response. Higher effort levels may result
+         * in more thorough analysis but take longer.
+         *
+         * Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
+         */
         fun effort(effort: Effort?) = effort(JsonField.ofNullable(effort))
 
         /** Alias for calling [Builder.effort] with `effort.orElse(null)`. */
@@ -158,8 +166,13 @@ private constructor(
      */
     @JvmSynthetic internal fun validity(): Int = (effort.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** All possible effort levels. */
-    class Effort @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    /**
+     * How much effort the model should put into its response. Higher effort levels may result in
+     * more thorough analysis but take longer.
+     *
+     * Valid values are `low`, `medium`, `high`, `xhigh`, or `max`.
+     */
+    class Effort private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -173,20 +186,31 @@ private constructor(
 
         companion object {
 
-            @JvmField val LOW = of("low")
+            @JvmField val LOW = Effort(JsonField.of("low"))
 
-            @JvmField val MEDIUM = of("medium")
+            @JvmField val MEDIUM = Effort(JsonField.of("medium"))
 
-            @JvmField val HIGH = of("high")
+            @JvmField val HIGH = Effort(JsonField.of("high"))
 
-            @JvmField val XHIGH = of("xhigh")
+            @JvmField val XHIGH = Effort(JsonField.of("xhigh"))
 
-            @JvmField val MAX = of("max")
+            @JvmField val MAX = Effort(JsonField.of("max"))
 
-            @JvmStatic fun of(value: String) = Effort(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Effort =
+                // Intern known values so `==` works
+                when (value) {
+                    "low" -> LOW
+                    "medium" -> MEDIUM
+                    "high" -> HIGH
+                    "xhigh" -> XHIGH
+                    "max" -> MAX
+                    else -> Effort(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Effort =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Effort =
                 value.asString().getOrNull()?.let { of(it) } ?: Effort(value)
         }
 

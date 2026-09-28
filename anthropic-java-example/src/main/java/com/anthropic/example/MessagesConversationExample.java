@@ -16,7 +16,7 @@ public final class MessagesConversationExample {
         // Use a builder so that we can append more messages to it below.
         // Each time we call .build()` we get an immutable object that's unaffected by future mutations of the builder.
         MessageCreateParams.Builder createParamsBuilder = MessageCreateParams.builder()
-                .model(Model.CLAUDE_SONNET_5)
+                .model(Model.CLAUDE_SONNET_5_5)
                 .maxTokens(2048)
                 .addUserMessage("Tell me a story about building the best SDK!");
 

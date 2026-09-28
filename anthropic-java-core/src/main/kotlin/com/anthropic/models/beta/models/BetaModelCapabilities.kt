@@ -103,8 +103,8 @@ private constructor(
     fun codeExecution(): BetaCapabilitySupport = codeExecution.getRequired("code_execution")
 
     /**
-     * Compaction capability details: whether the model accepts the top-level `compaction` request
-     * parameter, with one entry per supported `compaction.type` value.
+     * Server-side compaction support (the top-level `compaction` parameter) and the accepted
+     * `compaction.type` values.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -355,8 +355,8 @@ private constructor(
         }
 
         /**
-         * Compaction capability details: whether the model accepts the top-level `compaction`
-         * request parameter, with one entry per supported `compaction.type` value.
+         * Server-side compaction support (the top-level `compaction` parameter) and the accepted
+         * `compaction.type` values.
          */
         fun compaction(compaction: BetaCompactionCapability?) =
             compaction(JsonField.ofNullable(compaction))

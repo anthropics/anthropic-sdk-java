@@ -58,10 +58,7 @@ private constructor(
     )
 
     /**
-     * The status of the entity's account on the platform, as the platform states it: `active`;
-     * `suspended`, when the platform has restricted the account and may restore it; or `blocked`,
-     * when the platform has barred it. It records the platform's decision only; the statuses in
-     * `trust_grants` are Anthropic's and do not follow it.
+     * The status of the entity's account on the platform: `active`, `suspended` or `blocked`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -88,8 +85,8 @@ private constructor(
     fun emailHash(): Optional<String> = emailHash.getOptional("email_hash")
 
     /**
-     * What kind of entity the profile represents, as the platform states it: `individual`,
-     * `business`, `non_profit` or `government`.
+     * What kind of entity the profile represents: `individual`, `business`, `non_profit` or
+     * `government`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -106,7 +103,10 @@ private constructor(
     fun nameHash(): Optional<String> = nameHash.getOptional("name_hash")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the entity opened its account with the platform, in RFC 3339 format: for an
+     * `application` profile, when the end-user signed up; for a `passthrough` profile, when the
+     * company became the platform's customer. Must be a complete timestamp no more than 1 minute in
+     * the future.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -229,10 +229,7 @@ private constructor(
         }
 
         /**
-         * The status of the entity's account on the platform, as the platform states it: `active`;
-         * `suspended`, when the platform has restricted the account and may restore it; or
-         * `blocked`, when the platform has barred it. It records the platform's decision only; the
-         * statuses in `trust_grants` are Anthropic's and do not follow it.
+         * The status of the entity's account on the platform: `active`, `suspended` or `blocked`.
          */
         fun accountStatus(accountStatus: AccountStatus?) =
             accountStatus(JsonField.ofNullable(accountStatus))
@@ -289,8 +286,8 @@ private constructor(
         fun emailHash(emailHash: JsonField<String>) = apply { this.emailHash = emailHash }
 
         /**
-         * What kind of entity the profile represents, as the platform states it: `individual`,
-         * `business`, `non_profit` or `government`.
+         * What kind of entity the profile represents: `individual`, `business`, `non_profit` or
+         * `government`.
          */
         fun entityType(entityType: EntityType?) = entityType(JsonField.ofNullable(entityType))
 
@@ -323,7 +320,12 @@ private constructor(
          */
         fun nameHash(nameHash: JsonField<String>) = apply { this.nameHash = nameHash }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When the entity opened its account with the platform, in RFC 3339 format: for an
+         * `application` profile, when the end-user signed up; for a `passthrough` profile, when the
+         * company became the platform's customer. Must be a complete timestamp no more than 1
+         * minute in the future.
+         */
         fun onboardedAt(onboardedAt: OffsetDateTime) = onboardedAt(JsonField.of(onboardedAt))
 
         /**
@@ -441,14 +443,8 @@ private constructor(
             (if (onboardedAt.asKnown().isPresent) 1 else 0) +
             (if (referenceId.asKnown().isPresent) 1 else 0)
 
-    /**
-     * The status of the entity's account on the platform, as the platform states it: `active`;
-     * `suspended`, when the platform has restricted the account and may restore it; or `blocked`,
-     * when the platform has barred it. It records the platform's decision only; the statuses in
-     * `trust_grants` are Anthropic's and do not follow it.
-     */
-    class AccountStatus @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    /** The status of the entity's account on the platform: `active`, `suspended` or `blocked`. */
+    class AccountStatus private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -466,23 +462,32 @@ private constructor(
              * The platform has neither restricted nor barred the account of the entity that the
              * user profile represents.
              */
-            @JvmField val ACTIVE = of("active")
+            @JvmField val ACTIVE = AccountStatus(JsonField.of("active"))
 
             /**
              * The platform has restricted the account of the entity that the user profile
              * represents and may restore it.
              */
-            @JvmField val SUSPENDED = of("suspended")
+            @JvmField val SUSPENDED = AccountStatus(JsonField.of("suspended"))
 
             /**
              * The platform has barred the account of the entity that the user profile represents.
              */
-            @JvmField val BLOCKED = of("blocked")
+            @JvmField val BLOCKED = AccountStatus(JsonField.of("blocked"))
 
-            @JvmStatic fun of(value: String) = AccountStatus(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): AccountStatus =
+                // Intern known values so `==` works
+                when (value) {
+                    "active" -> ACTIVE
+                    "suspended" -> SUSPENDED
+                    "blocked" -> BLOCKED
+                    else -> AccountStatus(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): AccountStatus =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): AccountStatus =
                 value.asString().getOrNull()?.let { of(it) } ?: AccountStatus(value)
         }
 
@@ -631,10 +636,10 @@ private constructor(
     }
 
     /**
-     * What kind of entity the profile represents, as the platform states it: `individual`,
-     * `business`, `non_profit` or `government`.
+     * What kind of entity the profile represents: `individual`, `business`, `non_profit` or
+     * `government`.
      */
-    class EntityType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class EntityType private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -648,18 +653,28 @@ private constructor(
 
         companion object {
 
-            @JvmField val INDIVIDUAL = of("individual")
+            @JvmField val INDIVIDUAL = EntityType(JsonField.of("individual"))
 
-            @JvmField val BUSINESS = of("business")
+            @JvmField val BUSINESS = EntityType(JsonField.of("business"))
 
-            @JvmField val NON_PROFIT = of("non_profit")
+            @JvmField val NON_PROFIT = EntityType(JsonField.of("non_profit"))
 
-            @JvmField val GOVERNMENT = of("government")
+            @JvmField val GOVERNMENT = EntityType(JsonField.of("government"))
 
-            @JvmStatic fun of(value: String) = EntityType(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): EntityType =
+                // Intern known values so `==` works
+                when (value) {
+                    "individual" -> INDIVIDUAL
+                    "business" -> BUSINESS
+                    "non_profit" -> NON_PROFIT
+                    "government" -> GOVERNMENT
+                    else -> EntityType(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): EntityType =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): EntityType =
                 value.asString().getOrNull()?.let { of(it) } ?: EntityType(value)
         }
 

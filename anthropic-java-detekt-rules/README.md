@@ -7,7 +7,7 @@ Custom detekt rules for the Java SDK house style: the "Kotlin source, Java calle
 ```bash
 ./gradlew :anthropic-java-detekt-rules:test   # unit tests
 ./scripts/detekt-baseline                     # regenerate config/detekt/baseline-*.xml
-./scripts/lint                                # ktfmt + detektMain + detektTest
+./scripts/lint                                # ktfmt + detekt
 ```
 
 After editing rule code, run `./scripts/detekt-baseline` to regenerate violations.

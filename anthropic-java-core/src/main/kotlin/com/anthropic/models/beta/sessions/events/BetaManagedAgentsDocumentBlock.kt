@@ -49,7 +49,7 @@ private constructor(
     ) : this(source, type, context, title, mutableMapOf())
 
     /**
-     * Union type for document source variants.
+     * The source of the document data.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -152,7 +152,7 @@ private constructor(
                 betaManagedAgentsDocumentBlock.additionalProperties.toMutableMap()
         }
 
-        /** Union type for document source variants. */
+        /** The source of the document data. */
         fun source(source: Source) = source(JsonField.of(source))
 
         /**
@@ -331,7 +331,7 @@ private constructor(
             (if (context.asKnown().isPresent) 1 else 0) +
             (if (title.asKnown().isPresent) 1 else 0)
 
-    /** Union type for document source variants. */
+    /** The source of the document data. */
     @JsonDeserialize(using = Source.Deserializer::class)
     @JsonSerialize(using = Source.Serializer::class)
     class Source
@@ -685,7 +685,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -699,18 +699,28 @@ private constructor(
 
             companion object {
 
-                @JvmField val BASE64 = of("base64")
+                @JvmField val BASE64 = Type(JsonField.of("base64"))
 
-                @JvmField val TEXT = of("text")
+                @JvmField val TEXT = Type(JsonField.of("text"))
 
-                @JvmField val URL = of("url")
+                @JvmField val URL = Type(JsonField.of("url"))
 
-                @JvmField val FILE = of("file")
+                @JvmField val FILE = Type(JsonField.of("file"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "base64" -> BASE64
+                        "text" -> TEXT
+                        "url" -> URL
+                        "file" -> FILE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -839,7 +849,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -853,12 +863,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val DOCUMENT = of("document")
+            @JvmField val DOCUMENT = Type(JsonField.of("document"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "document" -> DOCUMENT
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

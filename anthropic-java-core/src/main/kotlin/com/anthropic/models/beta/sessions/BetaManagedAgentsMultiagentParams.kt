@@ -18,10 +18,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * A coordinator topology: the session's primary thread orchestrates work by spawning session
- * threads, each running an agent drawn from the `agents` roster.
- */
+/** Multiagent orchestration configuration. Currently supports the `coordinator` topology. */
 class BetaManagedAgentsMultiagentParams
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
@@ -268,7 +265,7 @@ private constructor(
         (agents.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -282,12 +279,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val COORDINATOR = of("coordinator")
+            @JvmField val COORDINATOR = Type(JsonField.of("coordinator"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "coordinator" -> COORDINATOR
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

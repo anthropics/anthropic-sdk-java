@@ -34,7 +34,8 @@ private constructor(
     ) : this(scheduledAt, type, mutableMapOf())
 
     /**
-     * A timestamp in RFC 3339 format
+     * The UTC instant at which the cron expression matched in the configured timezone, before
+     * jitter is applied. At most one run is recorded per (`deployment_id`, `scheduled_at`) pair.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -107,7 +108,11 @@ private constructor(
                 betaManagedAgentsScheduleTriggerContext.additionalProperties.toMutableMap()
         }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * The UTC instant at which the cron expression matched in the configured timezone, before
+         * jitter is applied. At most one run is recorded per (`deployment_id`, `scheduled_at`)
+         * pair.
+         */
         fun scheduledAt(scheduledAt: OffsetDateTime) = scheduledAt(JsonField.of(scheduledAt))
 
         /**
@@ -209,7 +214,7 @@ private constructor(
         (if (scheduledAt.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -223,12 +228,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val SCHEDULE = of("schedule")
+            @JvmField val SCHEDULE = Type(JsonField.of("schedule"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "schedule" -> SCHEDULE
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

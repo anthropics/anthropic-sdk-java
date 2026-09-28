@@ -539,7 +539,7 @@ private constructor(
         }
     }
 
-    class Role @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Role private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -553,16 +553,25 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER = of("user")
+            @JvmField val USER = Role(JsonField.of("user"))
 
-            @JvmField val ASSISTANT = of("assistant")
+            @JvmField val ASSISTANT = Role(JsonField.of("assistant"))
 
-            @JvmField val SYSTEM = of("system")
+            @JvmField val SYSTEM = Role(JsonField.of("system"))
 
-            @JvmStatic fun of(value: String) = Role(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Role =
+                // Intern known values so `==` works
+                when (value) {
+                    "user" -> USER
+                    "assistant" -> ASSISTANT
+                    "system" -> SYSTEM
+                    else -> Role(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Role =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Role =
                 value.asString().getOrNull()?.let { of(it) } ?: Role(value)
         }
 
@@ -692,7 +701,7 @@ private constructor(
      * stays in the array (send it unchanged) but is no longer shown to the model. Only permitted on
      * `role: "system"` messages.
      */
-    class ClearAt @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class ClearAt private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -706,14 +715,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val NEXT_USER_MESSAGE = of("next_user_message")
+            @JvmField val NEXT_USER_MESSAGE = ClearAt(JsonField.of("next_user_message"))
 
-            @JvmField val NEVER = of("never")
+            @JvmField val NEVER = ClearAt(JsonField.of("never"))
 
-            @JvmStatic fun of(value: String) = ClearAt(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): ClearAt =
+                // Intern known values so `==` works
+                when (value) {
+                    "next_user_message" -> NEXT_USER_MESSAGE
+                    "never" -> NEVER
+                    else -> ClearAt(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): ClearAt =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): ClearAt =
                 value.asString().getOrNull()?.let { of(it) } ?: ClearAt(value)
         }
 

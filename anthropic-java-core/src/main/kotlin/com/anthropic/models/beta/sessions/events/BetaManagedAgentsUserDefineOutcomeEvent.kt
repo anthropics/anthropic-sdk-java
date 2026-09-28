@@ -95,7 +95,7 @@ private constructor(
     fun outcomeId(): String = outcomeId.getRequired("outcome_id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the outcome was accepted.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -103,7 +103,8 @@ private constructor(
     fun processedAt(): OffsetDateTime = processedAt.getRequired("processed_at")
 
     /**
-     * Rubric for grading the quality of an outcome.
+     * How to grade the outcome. File rubrics are currently resolved to their text content; clients
+     * should handle both variants.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -290,7 +291,7 @@ private constructor(
          */
         fun outcomeId(outcomeId: JsonField<String>) = apply { this.outcomeId = outcomeId }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the outcome was accepted. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**
@@ -304,7 +305,10 @@ private constructor(
             this.processedAt = processedAt
         }
 
-        /** Rubric for grading the quality of an outcome. */
+        /**
+         * How to grade the outcome. File rubrics are currently resolved to their text content;
+         * clients should handle both variants.
+         */
         fun rubric(rubric: Rubric) = rubric(JsonField.of(rubric))
 
         /**
@@ -463,7 +467,10 @@ private constructor(
             (rubric.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Rubric for grading the quality of an outcome. */
+    /**
+     * How to grade the outcome. File rubrics are currently resolved to their text content; clients
+     * should handle both variants.
+     */
     @JsonDeserialize(using = Rubric.Deserializer::class)
     @JsonSerialize(using = Rubric.Serializer::class)
     class Rubric
@@ -709,7 +716,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -723,14 +730,22 @@ private constructor(
 
             companion object {
 
-                @JvmField val FILE = of("file")
+                @JvmField val FILE = Type(JsonField.of("file"))
 
-                @JvmField val TEXT = of("text")
+                @JvmField val TEXT = Type(JsonField.of("text"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "file" -> FILE
+                        "text" -> TEXT
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -851,7 +866,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -865,12 +880,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER_DEFINE_OUTCOME = of("user.define_outcome")
+            @JvmField val USER_DEFINE_OUTCOME = Type(JsonField.of("user.define_outcome"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "user.define_outcome" -> USER_DEFINE_OUTCOME
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

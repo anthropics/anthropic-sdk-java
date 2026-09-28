@@ -83,7 +83,7 @@ private constructor(
     fun supported(): Boolean = supported.getRequired("supported")
 
     /**
-     * Indicates whether a capability is supported.
+     * Whether the model supports xhigh effort level.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -244,7 +244,7 @@ private constructor(
          */
         fun supported(supported: JsonField<Boolean>) = apply { this.supported = supported }
 
-        /** Indicates whether a capability is supported. */
+        /** Whether the model supports xhigh effort level. */
         fun xhigh(xhigh: CapabilitySupport?) = xhigh(JsonField.ofNullable(xhigh))
 
         /** Alias for calling [Builder.xhigh] with `xhigh.orElse(null)`. */

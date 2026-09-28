@@ -93,7 +93,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When this user profile was created, in RFC 3339 format.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -126,7 +126,8 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When this user profile was last modified, in RFC 3339 format. Trust-grant status changes also
+     * bump this timestamp.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -134,10 +135,8 @@ private constructor(
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
     /**
-     * How the platform uses the API on behalf of the entity this profile represents. `application`:
-     * the platform sells a product that uses the API behind the scenes, and the profile represents
-     * an individual end-user of that product. `passthrough`: the platform resells raw inference,
-     * and the profile identifies the resold-to company.
+     * How the platform uses the API for this entity: `application` (default) or `passthrough`.
+     * Present under the `user-profiles-2026-08-18` and later beta headers.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -155,8 +154,11 @@ private constructor(
     fun externalId(): Optional<String> = externalId.getOptional("external_id")
 
     /**
-     * Details about the entity this profile represents, as the platform states them. Anthropic does
-     * not verify them. Every field is present, `null` until the platform supplies a value.
+     * Details about the entity this profile represents, as the platform states them; not verified
+     * by Anthropic. Present under the `user-profiles-2026-09-04` beta header, with every field
+     * present and `null` until the platform supplies a value; the earlier beta headers serve
+     * `reference_id` as the top-level `external_id`, and `user-profiles-2026-08-18` serves
+     * `onboarded_at` as `external_user_onboarded_at`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -165,7 +167,10 @@ private constructor(
         externalUserDetails.getOptional("external_user_details")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the entity this profile represents opened its account with the platform, as stated by
+     * the platform, in RFC 3339 format (UTC). `null` until the platform supplies one. Present under
+     * the `user-profiles-2026-08-18` beta header; under `user-profiles-2026-09-04` the value is
+     * `external_user_details.onboarded_at`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -348,7 +353,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A timestamp in RFC 3339 format */
+        /** When this user profile was created, in RFC 3339 format. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
@@ -403,7 +408,10 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When this user profile was last modified, in RFC 3339 format. Trust-grant status changes
+         * also bump this timestamp.
+         */
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
         /**
@@ -416,10 +424,8 @@ private constructor(
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
 
         /**
-         * How the platform uses the API on behalf of the entity this profile represents.
-         * `application`: the platform sells a product that uses the API behind the scenes, and the
-         * profile represents an individual end-user of that product. `passthrough`: the platform
-         * resells raw inference, and the profile identifies the resold-to company.
+         * How the platform uses the API for this entity: `application` (default) or `passthrough`.
+         * Present under the `user-profiles-2026-08-18` and later beta headers.
          */
         fun accessType(accessType: AccessType) = accessType(JsonField.of(accessType))
 
@@ -452,8 +458,11 @@ private constructor(
         fun externalId(externalId: JsonField<String>) = apply { this.externalId = externalId }
 
         /**
-         * Details about the entity this profile represents, as the platform states them. Anthropic
-         * does not verify them. Every field is present, `null` until the platform supplies a value.
+         * Details about the entity this profile represents, as the platform states them; not
+         * verified by Anthropic. Present under the `user-profiles-2026-09-04` beta header, with
+         * every field present and `null` until the platform supplies a value; the earlier beta
+         * headers serve `reference_id` as the top-level `external_id`, and
+         * `user-profiles-2026-08-18` serves `onboarded_at` as `external_user_onboarded_at`.
          */
         fun externalUserDetails(externalUserDetails: BetaUserProfileExternalUserDetails) =
             externalUserDetails(JsonField.of(externalUserDetails))
@@ -469,7 +478,12 @@ private constructor(
             externalUserDetails: JsonField<BetaUserProfileExternalUserDetails>
         ) = apply { this.externalUserDetails = externalUserDetails }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When the entity this profile represents opened its account with the platform, as stated
+         * by the platform, in RFC 3339 format (UTC). `null` until the platform supplies one.
+         * Present under the `user-profiles-2026-08-18` beta header; under
+         * `user-profiles-2026-09-04` the value is `external_user_details.onboarded_at`.
+         */
         fun externalUserOnboardedAt(externalUserOnboardedAt: OffsetDateTime?) =
             externalUserOnboardedAt(JsonField.ofNullable(externalUserOnboardedAt))
 
@@ -842,7 +856,7 @@ private constructor(
     }
 
     /** Object type. Always `user_profile`. */
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -856,12 +870,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val USER_PROFILE = of("user_profile")
+            @JvmField val USER_PROFILE = Type(JsonField.of("user_profile"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "user_profile" -> USER_PROFILE
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
@@ -977,12 +998,10 @@ private constructor(
     }
 
     /**
-     * How the platform uses the API on behalf of the entity this profile represents. `application`:
-     * the platform sells a product that uses the API behind the scenes, and the profile represents
-     * an individual end-user of that product. `passthrough`: the platform resells raw inference,
-     * and the profile identifies the resold-to company.
+     * How the platform uses the API for this entity: `application` (default) or `passthrough`.
+     * Present under the `user-profiles-2026-08-18` and later beta headers.
      */
-    class AccessType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class AccessType private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1000,15 +1019,23 @@ private constructor(
              * The user profile represents an individual end-user of a product that the platform
              * builds on the API. New profiles get this value by default.
              */
-            @JvmField val APPLICATION = of("application")
+            @JvmField val APPLICATION = AccessType(JsonField.of("application"))
 
             /** The user profile represents a company that the platform resells Claude access to. */
-            @JvmField val PASSTHROUGH = of("passthrough")
+            @JvmField val PASSTHROUGH = AccessType(JsonField.of("passthrough"))
 
-            @JvmStatic fun of(value: String) = AccessType(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): AccessType =
+                // Intern known values so `==` works
+                when (value) {
+                    "application" -> APPLICATION
+                    "passthrough" -> PASSTHROUGH
+                    else -> AccessType(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): AccessType =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): AccessType =
                 value.asString().getOrNull()?.let { of(it) } ?: AccessType(value)
         }
 

@@ -12,7 +12,7 @@ import kotlin.jvm.optionals.getOrNull
  * See [models](https://docs.anthropic.com/en/docs/models-overview) for additional details and
  * options.
  */
-class Model @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+class Model private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -25,79 +25,109 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
 
     companion object {
 
+        /** Efficient model for coding and agents */
+        @JvmField val CLAUDE_SONNET_5_5 = Model(JsonField.of("claude-sonnet-5-5"))
+
         /**
          * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
          * enterprise workflows
          */
-        @JvmField val CLAUDE_FABLE_5_1 = of("claude-fable-5-1")
+        @JvmField val CLAUDE_FABLE_5_1 = Model(JsonField.of("claude-fable-5-1"))
 
         /** Powerful intelligence for coding, knowledge work, and long-running agents */
-        @JvmField val CLAUDE_OPUS_5_5 = of("claude-opus-5-5")
+        @JvmField val CLAUDE_OPUS_5_5 = Model(JsonField.of("claude-opus-5-5"))
 
         /**
          * Our most capable model for cybersecurity and biology research, available through trusted
          * access programs
          */
-        @JvmField val CLAUDE_MYTHOS_5_1 = of("claude-mythos-5-1")
+        @JvmField val CLAUDE_MYTHOS_5_1 = Model(JsonField.of("claude-mythos-5-1"))
 
-        /** High-performance model for coding and agents */
-        @JvmField val CLAUDE_SONNET_5 = of("claude-sonnet-5")
+        /** Efficient model for coding and agents */
+        @JvmField val CLAUDE_SONNET_5 = Model(JsonField.of("claude-sonnet-5"))
 
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
-        @JvmField val CLAUDE_FABLE_5 = of("claude-fable-5")
+        @JvmField val CLAUDE_FABLE_5 = Model(JsonField.of("claude-fable-5"))
 
         /** Most capable model for cybersecurity and biology research */
-        @JvmField val CLAUDE_MYTHOS_5 = of("claude-mythos-5")
+        @JvmField val CLAUDE_MYTHOS_5 = Model(JsonField.of("claude-mythos-5"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_5 = of("claude-opus-5")
+        @JvmField val CLAUDE_OPUS_5 = Model(JsonField.of("claude-opus-5"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_8 = of("claude-opus-4-8")
+        @JvmField val CLAUDE_OPUS_4_8 = Model(JsonField.of("claude-opus-4-8"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_7 = of("claude-opus-4-7")
+        @JvmField val CLAUDE_OPUS_4_7 = Model(JsonField.of("claude-opus-4-7"))
 
         /** New class of intelligence, strongest in coding and cybersecurity */
         @Deprecated(
             "Will reach end-of-life on June 30, 2026. Please migrate to claude-mythos-5. Visit https://docs.anthropic.com/en/docs/resources/model-deprecations for more information."
         )
         @JvmField
-        val CLAUDE_MYTHOS_PREVIEW = of("claude-mythos-preview")
+        val CLAUDE_MYTHOS_PREVIEW = Model(JsonField.of("claude-mythos-preview"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_6 = of("claude-opus-4-6")
+        @JvmField val CLAUDE_OPUS_4_6 = Model(JsonField.of("claude-opus-4-6"))
 
         /** Best combination of speed and intelligence */
-        @JvmField val CLAUDE_SONNET_4_6 = of("claude-sonnet-4-6")
+        @JvmField val CLAUDE_SONNET_4_6 = Model(JsonField.of("claude-sonnet-4-6"))
 
         /** Fastest model with near-frontier intelligence */
-        @JvmField val CLAUDE_HAIKU_4_5 = of("claude-haiku-4-5")
+        @JvmField val CLAUDE_HAIKU_4_5 = Model(JsonField.of("claude-haiku-4-5"))
 
         /** Fastest model with near-frontier intelligence */
-        @JvmField val CLAUDE_HAIKU_4_5_20251001 = of("claude-haiku-4-5-20251001")
+        @JvmField val CLAUDE_HAIKU_4_5_20251001 = Model(JsonField.of("claude-haiku-4-5-20251001"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_5 = of("claude-opus-4-5")
+        @JvmField val CLAUDE_OPUS_4_5 = Model(JsonField.of("claude-opus-4-5"))
 
         /** Powerful intelligence for long-running agents and coding */
-        @JvmField val CLAUDE_OPUS_4_5_20251101 = of("claude-opus-4-5-20251101")
+        @JvmField val CLAUDE_OPUS_4_5_20251101 = Model(JsonField.of("claude-opus-4-5-20251101"))
 
         /** High-performance model for agents and coding */
-        @JvmField val CLAUDE_SONNET_4_5 = of("claude-sonnet-4-5")
+        @JvmField val CLAUDE_SONNET_4_5 = Model(JsonField.of("claude-sonnet-4-5"))
 
         /** High-performance model for agents and coding */
-        @JvmField val CLAUDE_SONNET_4_5_20250929 = of("claude-sonnet-4-5-20250929")
+        @JvmField val CLAUDE_SONNET_4_5_20250929 = Model(JsonField.of("claude-sonnet-4-5-20250929"))
 
-        @JvmStatic fun of(value: String) = Model(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): Model =
+            // Intern known values so `==` works
+            when (value) {
+                "claude-sonnet-5-5" -> CLAUDE_SONNET_5_5
+                "claude-fable-5-1" -> CLAUDE_FABLE_5_1
+                "claude-opus-5-5" -> CLAUDE_OPUS_5_5
+                "claude-mythos-5-1" -> CLAUDE_MYTHOS_5_1
+                "claude-sonnet-5" -> CLAUDE_SONNET_5
+                "claude-fable-5" -> CLAUDE_FABLE_5
+                "claude-mythos-5" -> CLAUDE_MYTHOS_5
+                "claude-opus-5" -> CLAUDE_OPUS_5
+                "claude-opus-4-8" -> CLAUDE_OPUS_4_8
+                "claude-opus-4-7" -> CLAUDE_OPUS_4_7
+                "claude-mythos-preview" -> CLAUDE_MYTHOS_PREVIEW
+                "claude-opus-4-6" -> CLAUDE_OPUS_4_6
+                "claude-sonnet-4-6" -> CLAUDE_SONNET_4_6
+                "claude-haiku-4-5" -> CLAUDE_HAIKU_4_5
+                "claude-haiku-4-5-20251001" -> CLAUDE_HAIKU_4_5_20251001
+                "claude-opus-4-5" -> CLAUDE_OPUS_4_5
+                "claude-opus-4-5-20251101" -> CLAUDE_OPUS_4_5_20251101
+                "claude-sonnet-4-5" -> CLAUDE_SONNET_4_5
+                "claude-sonnet-4-5-20250929" -> CLAUDE_SONNET_4_5_20250929
+                else -> Model(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): Model =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): Model =
             value.asString().getOrNull()?.let { of(it) } ?: Model(value)
     }
 
     /** An enum containing [Model]'s known values. */
     enum class Known {
+        /** Efficient model for coding and agents */
+        CLAUDE_SONNET_5_5,
         /**
          * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
          * enterprise workflows
@@ -110,7 +140,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
          * access programs
          */
         CLAUDE_MYTHOS_5_1,
-        /** High-performance model for coding and agents */
+        /** Efficient model for coding and agents */
         CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         CLAUDE_FABLE_5,
@@ -155,6 +185,8 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Efficient model for coding and agents */
+        CLAUDE_SONNET_5_5,
         /**
          * Frontier intelligence for ambitious tasks across coding, scientific discovery, and
          * enterprise workflows
@@ -167,7 +199,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
          * access programs
          */
         CLAUDE_MYTHOS_5_1,
-        /** High-performance model for coding and agents */
+        /** Efficient model for coding and agents */
         CLAUDE_SONNET_5,
         /** Next generation of intelligence for the hardest knowledge work and coding problems */
         CLAUDE_FABLE_5,
@@ -213,6 +245,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_SONNET_5_5 -> Value.CLAUDE_SONNET_5_5
             CLAUDE_FABLE_5_1 -> Value.CLAUDE_FABLE_5_1
             CLAUDE_OPUS_5_5 -> Value.CLAUDE_OPUS_5_5
             CLAUDE_MYTHOS_5_1 -> Value.CLAUDE_MYTHOS_5_1
@@ -244,6 +277,7 @@ class Model @JsonCreator private constructor(private val value: JsonField<String
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_SONNET_5_5 -> Known.CLAUDE_SONNET_5_5
             CLAUDE_FABLE_5_1 -> Known.CLAUDE_FABLE_5_1
             CLAUDE_OPUS_5_5 -> Known.CLAUDE_OPUS_5_5
             CLAUDE_MYTHOS_5_1 -> Known.CLAUDE_MYTHOS_5_1

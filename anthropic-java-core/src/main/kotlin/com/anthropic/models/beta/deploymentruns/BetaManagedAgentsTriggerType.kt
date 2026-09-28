@@ -7,9 +7,8 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
 /** What triggered a deployment run. */
-class BetaManagedAgentsTriggerType
-@JsonCreator
-private constructor(private val value: JsonField<String>) : Enum {
+class BetaManagedAgentsTriggerType private constructor(private val value: JsonField<String>) :
+    Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -23,15 +22,23 @@ private constructor(private val value: JsonField<String>) : Enum {
     companion object {
 
         /** The run was fired by the deployment's cron schedule. */
-        @JvmField val SCHEDULE = of("schedule")
+        @JvmField val SCHEDULE = BetaManagedAgentsTriggerType(JsonField.of("schedule"))
 
         /** The run was started manually by creating a session directly against the deployment. */
-        @JvmField val MANUAL = of("manual")
+        @JvmField val MANUAL = BetaManagedAgentsTriggerType(JsonField.of("manual"))
 
-        @JvmStatic fun of(value: String) = BetaManagedAgentsTriggerType(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaManagedAgentsTriggerType =
+            // Intern known values so `==` works
+            when (value) {
+                "schedule" -> SCHEDULE
+                "manual" -> MANUAL
+                else -> BetaManagedAgentsTriggerType(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaManagedAgentsTriggerType =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaManagedAgentsTriggerType =
             value.asString().getOrNull()?.let { of(it) } ?: BetaManagedAgentsTriggerType(value)
     }
 

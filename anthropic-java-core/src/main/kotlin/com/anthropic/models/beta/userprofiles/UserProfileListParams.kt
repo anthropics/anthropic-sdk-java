@@ -308,7 +308,7 @@ private constructor(
             .build()
 
     /** The sort direction, applied to the field that `order_by` selects. Defaults to `desc`. */
-    class Order @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Order private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -326,18 +326,26 @@ private constructor(
              * Oldest first when `order_by` is `created_at`, or names in ascending order when
              * `order_by` is `name`.
              */
-            @JvmField val ASC = of("asc")
+            @JvmField val ASC = Order(JsonField.of("asc"))
 
             /**
              * Newest first when `order_by` is `created_at`, or names in descending order when
              * `order_by` is `name`. This is the default.
              */
-            @JvmField val DESC = of("desc")
+            @JvmField val DESC = Order(JsonField.of("desc"))
 
-            @JvmStatic fun of(value: String) = Order(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Order =
+                // Intern known values so `==` works
+                when (value) {
+                    "asc" -> ASC
+                    "desc" -> DESC
+                    else -> Order(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Order =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Order =
                 value.asString().getOrNull()?.let { of(it) } ?: Order(value)
         }
 
@@ -476,7 +484,7 @@ private constructor(
      * The field to sort user profiles by, in the direction that `order` sets. Defaults to
      * `created_at`.
      */
-    class OrderBy @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class OrderBy private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -491,18 +499,26 @@ private constructor(
         companion object {
 
             /** Sort by when each user profile was created. This is the default. */
-            @JvmField val CREATED_AT = of("created_at")
+            @JvmField val CREATED_AT = OrderBy(JsonField.of("created_at"))
 
             /**
              * Sort by `name`, ignoring the case of ASCII letters. Profiles without a name come last
              * in either direction.
              */
-            @JvmField val NAME = of("name")
+            @JvmField val NAME = OrderBy(JsonField.of("name"))
 
-            @JvmStatic fun of(value: String) = OrderBy(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): OrderBy =
+                // Intern known values so `==` works
+                when (value) {
+                    "created_at" -> CREATED_AT
+                    "name" -> NAME
+                    else -> OrderBy(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): OrderBy =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): OrderBy =
                 value.asString().getOrNull()?.let { of(it) } ?: OrderBy(value)
         }
 

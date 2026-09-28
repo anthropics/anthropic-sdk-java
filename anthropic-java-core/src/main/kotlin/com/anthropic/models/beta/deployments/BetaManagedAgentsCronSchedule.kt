@@ -72,7 +72,8 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Time the most recent scheduled run actually started. Null until one completes; preserved
+     * after the deployment is archived. Manual runs do not update this.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -219,7 +220,10 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * Time the most recent scheduled run actually started. Null until one completes; preserved
+         * after the deployment is archived. Manual runs do not update this.
+         */
         fun lastRunAt(lastRunAt: OffsetDateTime?) = lastRunAt(JsonField.ofNullable(lastRunAt))
 
         /** Alias for calling [Builder.lastRunAt] with `lastRunAt.orElse(null)`. */
@@ -354,7 +358,7 @@ private constructor(
             (if (lastRunAt.asKnown().isPresent) 1 else 0) +
             (upcomingRunsAt.asKnown().getOrNull()?.size ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -368,12 +372,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val CRON = of("cron")
+            @JvmField val CRON = Type(JsonField.of("cron"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "cron" -> CRON
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

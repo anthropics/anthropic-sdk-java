@@ -127,7 +127,11 @@ private constructor(
         cacheReadInputTokens.getOptional("cache_read_input_tokens")
 
     /**
-     * Outcome of the ``fallback_credit_token`` presented on this request.
+     * Outcome of the `fallback_credit_token` presented on this request.
+     *
+     * Present on every response to a non-batch request that carried a `fallback_credit_token`, in
+     * either redemption mode; absent otherwise (batch items accept and ignore the token and carry
+     * no outcome object).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -216,8 +220,7 @@ private constructor(
     fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * The inference speed mode used for this request.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -481,7 +484,13 @@ private constructor(
             this.cacheReadInputTokens = cacheReadInputTokens
         }
 
-        /** Outcome of the ``fallback_credit_token`` presented on this request. */
+        /**
+         * Outcome of the `fallback_credit_token` presented on this request.
+         *
+         * Present on every response to a non-batch request that carried a `fallback_credit_token`,
+         * in either redemption mode; absent otherwise (batch items accept and ignore the token and
+         * carry no outcome object).
+         */
         fun fallbackCredit(fallbackCredit: BetaFallbackCreditUsage?) =
             fallbackCredit(JsonField.ofNullable(fallbackCredit))
 
@@ -670,11 +679,7 @@ private constructor(
             this.serviceTier = serviceTier
         }
 
-        /**
-         * Inference speed mode. `fast` provides significantly faster output token generation at
-         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-         * create time.
-         */
+        /** The inference speed mode used for this request. */
         fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
         /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
@@ -1300,7 +1305,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1314,18 +1319,28 @@ private constructor(
 
             companion object {
 
-                @JvmField val MESSAGE = of("message")
+                @JvmField val MESSAGE = Type(JsonField.of("message"))
 
-                @JvmField val COMPACTION = of("compaction")
+                @JvmField val COMPACTION = Type(JsonField.of("compaction"))
 
-                @JvmField val ADVISOR_MESSAGE = of("advisor_message")
+                @JvmField val ADVISOR_MESSAGE = Type(JsonField.of("advisor_message"))
 
-                @JvmField val FALLBACK_MESSAGE = of("fallback_message")
+                @JvmField val FALLBACK_MESSAGE = Type(JsonField.of("fallback_message"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "message" -> MESSAGE
+                        "compaction" -> COMPACTION
+                        "advisor_message" -> ADVISOR_MESSAGE
+                        "fallback_message" -> FALLBACK_MESSAGE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -1455,8 +1470,7 @@ private constructor(
     }
 
     /** If the request used the priority, standard, or batch tier. */
-    class ServiceTier @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class ServiceTier private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1470,16 +1484,25 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = ServiceTier(JsonField.of("standard"))
 
-            @JvmField val PRIORITY = of("priority")
+            @JvmField val PRIORITY = ServiceTier(JsonField.of("priority"))
 
-            @JvmField val BATCH = of("batch")
+            @JvmField val BATCH = ServiceTier(JsonField.of("batch"))
 
-            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): ServiceTier =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "priority" -> PRIORITY
+                    "batch" -> BATCH
+                    else -> ServiceTier(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): ServiceTier =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): ServiceTier =
                 value.asString().getOrNull()?.let { of(it) } ?: ServiceTier(value)
         }
 
@@ -1604,11 +1627,8 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
-     */
-    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    /** The inference speed mode used for this request. */
+    class Speed private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1622,14 +1642,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = Speed(JsonField.of("standard"))
 
-            @JvmField val FAST = of("fast")
+            @JvmField val FAST = Speed(JsonField.of("fast"))
 
-            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Speed =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "fast" -> FAST
+                    else -> Speed(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Speed =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Speed =
                 value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 

@@ -88,7 +88,8 @@ import kotlin.streams.asSequence
  * — until a model accepts or the chain is exhausted. A message served by a fallback retry mirrors
  * the server-side stitched envelope: one `fallback` content block per model boundary (`from`: the
  * model that refused, as the caller spelled it; `to`: the next entry's model) is prepended to the
- * serving hop's content.
+ * serving hop's content. A `between_tools` thinking config is sent to a fallback as `disabled`
+ * unless the entry sets `thinking` itself.
  *
  * When a streaming response ends in `stop_reason: "refusal"`, a second request is issued to the
  * fallback model — carrying the refused model's partial output as a trailing assistant prefill when
@@ -96,9 +97,10 @@ import kotlin.streams.asSequence
  * — and the fallback's events are spliced onto the still-open stream, so the client sees one
  * continuous message in the server-side `fallbacks` wire shape: a `fallback` content block at each
  * model boundary, monotonic block indices, and per-hop `usage.iterations` on the final
- * `message_delta`. Only `model` is honored from each entry on this path: the credit token is
- * redeemable only against the refused request's body, so the other per-entry overrides
- * (`max_tokens`, `thinking`, ...) would be rejected.
+ * `message_delta`. Only `model` is honored from each entry on this path (a `between_tools` thinking
+ * config is sent as `disabled` whatever the entry sets): the credit token is redeemable only
+ * against the refused request's body, so the other per-entry overrides (`max_tokens`, `thinking`,
+ * ...) would be rejected.
  *
  * The fallback-credit beta the credit tokens require is sent by default on every request the
  * interceptor handles — the original request included, since refusals only carry a
@@ -787,7 +789,11 @@ private constructor(
             val patched = bodyNode.deepCopy()
             // The entry serializes to exactly its patch: set fields as values, explicit nulls
             // as JSON nulls, absent fields omitted (@ExcludeMissing) — one level down included.
-            patched.mergePatch(jsonMapper.valueToTree(fallbacks[index]))
+            val patch = jsonMapper.valueToTree<ObjectNode>(fallbacks[index])
+            patched.mergePatch(patch)
+            if (!patch.has("thinking")) {
+                patched.degradeBetweenToolsThinking()
+            }
             fallbackCreditToken.ifPresent {
                 patched.set<ObjectNode>(
                     "fallback_credit_token",
@@ -827,6 +833,13 @@ private fun ObjectNode.mergeFlat(patch: ObjectNode) {
 
 private fun ObjectNode.mergeField(name: String, value: JsonNode) {
     if (value.isNull) remove(name) else set<JsonNode>(name, value)
+}
+
+/** Replaces a `between_tools` thinking config with `disabled`: a fallback may not accept it. */
+private fun ObjectNode.degradeBetweenToolsThinking() {
+    if (path("thinking").path("type").asText() == "between_tools") {
+        putObject("thinking").put("type", "disabled")
+    }
 }
 
 // --- streaming fallback (credit-token continuation) -----------------------------------------
@@ -1274,6 +1287,7 @@ private class FallbackStreamSplicer(
         val body = initialRequest.body!!.json(ObjectNode::class.java)
 
         body.put("model", model)
+        body.degradeBetweenToolsThinking()
         body.set<ObjectNode>(
             "fallback_credit_token",
             jsonMapper.valueToTree(creditTokenParam(creditToken)),
@@ -1283,7 +1297,8 @@ private class FallbackStreamSplicer(
         // everything else — max_tokens included — must stay identical to the refused request: the
         // token is only redeemable against the same body, so model, fallback_credit_token, and the
         // one appended assistant turn are the only permitted deltas; anything else is a 400. This
-        // is also why the per-entry BetaFallbackParam overrides are ignored on the streaming path.
+        // is also why the per-entry BetaFallbackParam overrides are ignored on the streaming path
+        // (the `between_tools` thinking degrade above aside).
         if (continuation.isNotEmpty()) {
             val messages = body.get("messages") as? ArrayNode ?: body.putArray("messages")
             val turn = jsonMapper.createObjectNode()

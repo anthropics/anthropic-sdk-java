@@ -208,10 +208,10 @@ private constructor(
     fun name(): String = name.getRequired("name")
 
     /**
-     * Status of automatic JWKS polling for a federation issuer.
-     *
-     * Anthropic periodically fetches the issuer's signing keys in the background. These fields
-     * summarize the most recent fetches so the health of the JWKS endpoint can be monitored.
+     * Live state of Anthropic's JWKS polling for this issuer. Populated on both single-issuer
+     * retrieval and list responses, including archived issuers. Typically null for inline-key
+     * issuers (no polling), or when poll status is temporarily unavailable or polling has not
+     * started yet.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -650,10 +650,10 @@ private constructor(
         fun name(name: JsonField<String>) = apply { this.name = name }
 
         /**
-         * Status of automatic JWKS polling for a federation issuer.
-         *
-         * Anthropic periodically fetches the issuer's signing keys in the background. These fields
-         * summarize the most recent fetches so the health of the JWKS endpoint can be monitored.
+         * Live state of Anthropic's JWKS polling for this issuer. Populated on both single-issuer
+         * retrieval and list responses, including archived issuers. Typically null for inline-key
+         * issuers (no polling), or when poll status is temporarily unavailable or polling has not
+         * started yet.
          */
         fun pollStatus(pollStatus: BetaFederationIssuerPollStatus?) =
             pollStatus(JsonField.ofNullable(pollStatus))
@@ -1140,7 +1140,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -1154,16 +1154,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val DISCOVERY = of("discovery")
+                @JvmField val DISCOVERY = Type(JsonField.of("discovery"))
 
-                @JvmField val EXPLICIT_URL = of("explicit_url")
+                @JvmField val EXPLICIT_URL = Type(JsonField.of("explicit_url"))
 
-                @JvmField val INLINE = of("inline")
+                @JvmField val INLINE = Type(JsonField.of("inline"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "discovery" -> DISCOVERY
+                        "explicit_url" -> EXPLICIT_URL
+                        "inline" -> INLINE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

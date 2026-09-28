@@ -72,13 +72,9 @@ private constructor(
     fun networking(): Optional<Networking> = networking.getOptional("networking")
 
     /**
-     * Specify packages (and optionally their versions) available in this environment.
-     *
-     * When versioning, use the version semantics relevant for the package manager, e.g. for `pip`
-     * use `package==1.0.0`. You are responsible for validating the package and version exist.
-     * Unversioned installs the latest.
-     *
-     * Under `limited` networking, requires `networking.allow_package_managers` to be `true`.
+     * Package manager configuration. Under `limited` networking, requires
+     * `networking.allow_package_managers` to be `true`. Omit on update to preserve the existing
+     * value.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -175,13 +171,9 @@ private constructor(
             networking(Networking.ofLimited(limited))
 
         /**
-         * Specify packages (and optionally their versions) available in this environment.
-         *
-         * When versioning, use the version semantics relevant for the package manager, e.g. for
-         * `pip` use `package==1.0.0`. You are responsible for validating the package and version
-         * exist. Unversioned installs the latest.
-         *
-         * Under `limited` networking, requires `networking.allow_package_managers` to be `true`.
+         * Package manager configuration. Under `limited` networking, requires
+         * `networking.allow_package_managers` to be `true`. Omit on update to preserve the existing
+         * value.
          */
         fun packages(packages: BetaPackagesParams?) = packages(JsonField.ofNullable(packages))
 
@@ -518,7 +510,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -532,14 +524,22 @@ private constructor(
 
             companion object {
 
-                @JvmField val UNRESTRICTED = of("unrestricted")
+                @JvmField val UNRESTRICTED = Type(JsonField.of("unrestricted"))
 
-                @JvmField val LIMITED = of("limited")
+                @JvmField val LIMITED = Type(JsonField.of("limited"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "unrestricted" -> UNRESTRICTED
+                        "limited" -> LIMITED
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

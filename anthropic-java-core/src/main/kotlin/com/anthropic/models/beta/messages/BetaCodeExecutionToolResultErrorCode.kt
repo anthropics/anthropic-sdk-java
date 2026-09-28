@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
 class BetaCodeExecutionToolResultErrorCode
-@JsonCreator
 private constructor(private val value: JsonField<String>) : Enum {
 
     /**
@@ -21,18 +20,35 @@ private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
-        @JvmField val INVALID_TOOL_INPUT = of("invalid_tool_input")
+        @JvmField
+        val INVALID_TOOL_INPUT =
+            BetaCodeExecutionToolResultErrorCode(JsonField.of("invalid_tool_input"))
 
-        @JvmField val UNAVAILABLE = of("unavailable")
+        @JvmField
+        val UNAVAILABLE = BetaCodeExecutionToolResultErrorCode(JsonField.of("unavailable"))
 
-        @JvmField val TOO_MANY_REQUESTS = of("too_many_requests")
+        @JvmField
+        val TOO_MANY_REQUESTS =
+            BetaCodeExecutionToolResultErrorCode(JsonField.of("too_many_requests"))
 
-        @JvmField val EXECUTION_TIME_EXCEEDED = of("execution_time_exceeded")
+        @JvmField
+        val EXECUTION_TIME_EXCEEDED =
+            BetaCodeExecutionToolResultErrorCode(JsonField.of("execution_time_exceeded"))
 
-        @JvmStatic fun of(value: String) = BetaCodeExecutionToolResultErrorCode(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaCodeExecutionToolResultErrorCode =
+            // Intern known values so `==` works
+            when (value) {
+                "invalid_tool_input" -> INVALID_TOOL_INPUT
+                "unavailable" -> UNAVAILABLE
+                "too_many_requests" -> TOO_MANY_REQUESTS
+                "execution_time_exceeded" -> EXECUTION_TIME_EXCEEDED
+                else -> BetaCodeExecutionToolResultErrorCode(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaCodeExecutionToolResultErrorCode =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaCodeExecutionToolResultErrorCode =
             value.asString().getOrNull()?.let { of(it) }
                 ?: BetaCodeExecutionToolResultErrorCode(value)
     }

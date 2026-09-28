@@ -45,6 +45,7 @@ import com.anthropic.models.beta.messages.BetaResponseTool
 import com.anthropic.models.beta.messages.BetaResponseToolUnion
 import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaThinkingConfigAdaptive
+import com.anthropic.models.beta.messages.BetaThinkingConfigBetweenTools
 import com.anthropic.models.beta.messages.BetaThinkingConfigDisabled
 import com.anthropic.models.beta.messages.BetaThinkingConfigEnabled
 import com.anthropic.models.beta.messages.BetaThinkingConfigParam
@@ -1074,14 +1075,14 @@ private constructor(
                 cacheControl.getOptional("cache_control")
 
             /**
-             * Compact the whole conversation and return a signed `compaction` block, alone, that a
-             * later request sends back first in `messages`, in place of the messages it summarizes.
-             * There is no trigger and no pause flag: sending the parameter compacts, and nothing is
-             * sampled after the block.
+             * Compaction configuration.
              *
-             * The summarization prompt is the server's own unless `instructions` are given, which
-             * then replace it for this request; a value that is empty or only whitespace counts as
-             * absent.
+             * When set on `POST /v1/messages`, the request is a compaction request: the
+             * conversation in `messages` is summarized and the response holds only the resulting
+             * `compaction` block (`stop_reason` `"compaction"`), which later requests send first in
+             * `messages` in place of the messages it summarizes. `POST /v1/messages/count_tokens`
+             * accepts this parameter and ignores it: the count it returns is for the conversation
+             * in `messages` as sent. Cannot be combined with `context_management`.
              *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
@@ -1109,8 +1110,9 @@ private constructor(
                 contextManagement.getOptional("context_management")
 
             /**
-             * Request-level diagnostics. Currently carries the previous response id for
-             * prompt-cache divergence reporting.
+             * Request-level diagnostics. Supply `previous_message_id` to have the response include
+             * `diagnostics.cache_miss_reason` explaining any prompt-cache divergence from that
+             * prior request.
              *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
@@ -1217,9 +1219,8 @@ private constructor(
             fun serviceTier(): Optional<ServiceTier> = serviceTier.getOptional("service_tier")
 
             /**
-             * Inference speed mode. `fast` provides significantly faster output token generation at
-             * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-             * create time.
+             * The inference speed mode for this request. `"fast"` enables high
+             * output-tokens-per-second inference.
              *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
@@ -1244,10 +1245,14 @@ private constructor(
                 stopSequences.getOptional("stop_sequences")
 
             /**
-             * Whether to incrementally stream the response using server-sent events.
+             * Whether to incrementally stream the response using server-sent events. When `true`,
+             * SDKs return a raw event stream.
              *
-             * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming) for
-             * details.
+             * In the TypeScript, Python and Ruby SDKs, the recommended way to stream is
+             * `messages.stream()`. It sets `stream` for you and accumulates the events into the
+             * final message. See
+             * [Streaming with SDKs](https://platform.claude.com/docs/en/build-with-claude/streaming#streaming-with-sdks)
+             * for an example in each language.
              *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
@@ -2037,14 +2042,15 @@ private constructor(
                 }
 
                 /**
-                 * Compact the whole conversation and return a signed `compaction` block, alone,
-                 * that a later request sends back first in `messages`, in place of the messages it
-                 * summarizes. There is no trigger and no pause flag: sending the parameter
-                 * compacts, and nothing is sampled after the block.
+                 * Compaction configuration.
                  *
-                 * The summarization prompt is the server's own unless `instructions` are given,
-                 * which then replace it for this request; a value that is empty or only whitespace
-                 * counts as absent.
+                 * When set on `POST /v1/messages`, the request is a compaction request: the
+                 * conversation in `messages` is summarized and the response holds only the
+                 * resulting `compaction` block (`stop_reason` `"compaction"`), which later requests
+                 * send first in `messages` in place of the messages it summarizes. `POST
+                 * /v1/messages/count_tokens` accepts this parameter and ignores it: the count it
+                 * returns is for the conversation in `messages` as sent. Cannot be combined with
+                 * `context_management`.
                  */
                 fun compaction(compaction: BetaCompactionConfig?) =
                     compaction(JsonField.ofNullable(compaction))
@@ -2120,8 +2126,9 @@ private constructor(
                     }
 
                 /**
-                 * Request-level diagnostics. Currently carries the previous response id for
-                 * prompt-cache divergence reporting.
+                 * Request-level diagnostics. Supply `previous_message_id` to have the response
+                 * include `diagnostics.cache_miss_reason` explaining any prompt-cache divergence
+                 * from that prior request.
                  */
                 fun diagnostics(diagnostics: BetaDiagnosticsParam?) =
                     diagnostics(JsonField.ofNullable(diagnostics))
@@ -2365,9 +2372,8 @@ private constructor(
                 }
 
                 /**
-                 * Inference speed mode. `fast` provides significantly faster output token
-                 * generation at premium pricing. Not all models support `fast`; invalid
-                 * combinations are rejected at create time.
+                 * The inference speed mode for this request. `"fast"` enables high
+                 * output-tokens-per-second inference.
                  */
                 fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
@@ -2421,10 +2427,14 @@ private constructor(
                 }
 
                 /**
-                 * Whether to incrementally stream the response using server-sent events.
+                 * Whether to incrementally stream the response using server-sent events. When
+                 * `true`, SDKs return a raw event stream.
                  *
-                 * See [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming)
-                 * for details.
+                 * In the TypeScript, Python and Ruby SDKs, the recommended way to stream is
+                 * `messages.stream()`. It sets `stream` for you and accumulates the events into the
+                 * final message. See
+                 * [Streaming with SDKs](https://platform.claude.com/docs/en/build-with-claude/streaming#streaming-with-sdks)
+                 * for an example in each language.
                  */
                 fun stream(stream: Boolean) = stream(JsonField.of(stream))
 
@@ -2540,6 +2550,13 @@ private constructor(
                  */
                 fun thinking(disabled: BetaThinkingConfigDisabled) =
                     thinking(BetaThinkingConfigParam.ofDisabled(disabled))
+
+                /**
+                 * Alias for calling [thinking] with
+                 * `BetaThinkingConfigParam.ofBetweenTools(betweenTools)`.
+                 */
+                fun thinking(betweenTools: BetaThinkingConfigBetweenTools) =
+                    thinking(BetaThinkingConfigParam.ofBetweenTools(betweenTools))
 
                 /**
                  * Alias for calling [thinking] with `BetaThinkingConfigParam.ofAdaptive(adaptive)`.
@@ -3659,9 +3676,7 @@ private constructor(
              * Anthropic offers different levels of service for your API requests. See
              * [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
              */
-            class ServiceTier
-            @JsonCreator
-            private constructor(private val value: JsonField<String>) : Enum {
+            class ServiceTier private constructor(private val value: JsonField<String>) : Enum {
 
                 /**
                  * Returns this class instance's raw value.
@@ -3675,14 +3690,22 @@ private constructor(
 
                 companion object {
 
-                    @JvmField val AUTO = of("auto")
+                    @JvmField val AUTO = ServiceTier(JsonField.of("auto"))
 
-                    @JvmField val STANDARD_ONLY = of("standard_only")
+                    @JvmField val STANDARD_ONLY = ServiceTier(JsonField.of("standard_only"))
 
-                    @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+                    @JvmStatic
+                    fun of(value: String): ServiceTier =
+                        // Intern known values so `==` works
+                        when (value) {
+                            "auto" -> AUTO
+                            "standard_only" -> STANDARD_ONLY
+                            else -> ServiceTier(JsonField.of(value))
+                        }
 
-                    @JvmSynthetic
-                    internal fun of(value: JsonField<String>): ServiceTier =
+                    @JsonCreator
+                    @JvmStatic
+                    fun of(value: JsonField<String>): ServiceTier =
                         value.asString().getOrNull()?.let { of(it) } ?: ServiceTier(value)
                 }
 
@@ -3806,12 +3829,10 @@ private constructor(
             }
 
             /**
-             * Inference speed mode. `fast` provides significantly faster output token generation at
-             * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-             * create time.
+             * The inference speed mode for this request. `"fast"` enables high
+             * output-tokens-per-second inference.
              */
-            class Speed @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
+            class Speed private constructor(private val value: JsonField<String>) : Enum {
 
                 /**
                  * Returns this class instance's raw value.
@@ -3825,14 +3846,22 @@ private constructor(
 
                 companion object {
 
-                    @JvmField val STANDARD = of("standard")
+                    @JvmField val STANDARD = Speed(JsonField.of("standard"))
 
-                    @JvmField val FAST = of("fast")
+                    @JvmField val FAST = Speed(JsonField.of("fast"))
 
-                    @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+                    @JvmStatic
+                    fun of(value: String): Speed =
+                        // Intern known values so `==` works
+                        when (value) {
+                            "standard" -> STANDARD
+                            "fast" -> FAST
+                            else -> Speed(JsonField.of(value))
+                        }
 
-                    @JvmSynthetic
-                    internal fun of(value: JsonField<String>): Speed =
+                    @JsonCreator
+                    @JvmStatic
+                    fun of(value: JsonField<String>): Speed =
                         value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
                 }
 

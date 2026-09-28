@@ -1,5 +1,42 @@
 # Changelog
 
+## 2.66.0 (2026-09-28)
+
+Full Changelog: [v2.65.0...v2.66.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.65.0...v2.66.0)
+
+### Features
+
+* **api:** add between_tools thinking type ([2ed42c1](https://github.com/anthropics/anthropic-sdk-java/commit/2ed42c1440ff3410b4d32b3772141b30991421e6))
+* **api:** add claude-sonnet-5-5 ([e40d197](https://github.com/anthropics/anthropic-sdk-java/commit/e40d197aa2c5a63d7089a273ab8ab16922e4463f))
+* **api:** add include_inherited and source to workspace rate limits ([df1c06a](https://github.com/anthropics/anthropic-sdk-java/commit/df1c06ae5ae519ed365b93f2493bc04c815b231e))
+* **api:** add typed event type values to the Managed Agents events list filter ([10ecefe](https://github.com/anthropics/anthropic-sdk-java/commit/10ecefe225da0a9953d78c2b0ca1d6bacf452ec1))
+* **api:** cache diagnostics GA — diagnostics on Message / MessageCreateParams ([d74559f](https://github.com/anthropics/anthropic-sdk-java/commit/d74559fab8fded22fa287e0369935df41d54fbbf))
+* **client:** include constant properties in common union accessors ([3c38213](https://github.com/anthropics/anthropic-sdk-java/commit/3c3821320cc29f7023401f825383955f9e17518f))
+
+
+### Bug Fixes
+
+* **client:** intern known enum values so `==` works from Java ([0e31570](https://github.com/anthropics/anthropic-sdk-java/commit/0e31570e816c7852768fb32a08b0a7212bd2ebe2))
+* **helpers:** degrade between_tools thinking to disabled on fallback hops ([#330](https://github.com/anthropics/anthropic-sdk-java/issues/330)) ([e51da39](https://github.com/anthropics/anthropic-sdk-java/commit/e51da39c63e82adb64c1a88e126574a005aa0976))
+* **helpers:** update fields to match Messages in helpers and tests ([7404bc3](https://github.com/anthropics/anthropic-sdk-java/commit/7404bc3a6835c4a4b7e58faddfe4613d60ab4535))
+
+
+### Chores
+
+* **api:** deprecate the betas param on GA models and completions methods ([baa6561](https://github.com/anthropics/anthropic-sdk-java/commit/baa65619e1a1da76bd84843594486ebe533eebb9))
+* **client:** read tool names through the union accessor in the tool runner ([#325](https://github.com/anthropics/anthropic-sdk-java/issues/325))w ([85c943d](https://github.com/anthropics/anthropic-sdk-java/commit/85c943d50391d87a9e5b7edcb8c746c40383cf8d))
+* **docs:** clarify that stream: true returns the raw event stream ([a69064a](https://github.com/anthropics/anthropic-sdk-java/commit/a69064a52cc1d63c1586f5a5eac08ebe38e90a6c))
+* **docs:** make Managed Agents actor descriptions resource-neutral ([1a02100](https://github.com/anthropics/anthropic-sdk-java/commit/1a021004e995de8654a7fab98b24148bdc353d17))
+* **docs:** restore the research-preview notice on the Dream type ([b4a9b77](https://github.com/anthropics/anthropic-sdk-java/commit/b4a9b77a30d7616f7b5b0b94b5aa5a870d5ed82b))
+* **internal:** always check formatting through Gradle in scripts/lint ([8f95fe8](https://github.com/anthropics/anthropic-sdk-java/commit/8f95fe8fba1351e6db6752459320801aa0d99cd0))
+* **internal:** run detekt only on changed files in local lint runs ([a3b199d](https://github.com/anthropics/anthropic-sdk-java/commit/a3b199ded44203cc2c67ca71866161277fcb77a8))
+* **internal:** turn on detekt's parallel option ([81c01a9](https://github.com/anthropics/anthropic-sdk-java/commit/81c01a9ed564461f336dc40964e653104367fee4))
+
+
+### Documentation
+
+* **api:** prefer each field's own description over its shared type's ([3bd2a79](https://github.com/anthropics/anthropic-sdk-java/commit/3bd2a79a05bff7c0909210e9bff1f34dfa1c5331))
+
 ## 2.65.0 (2026-09-22)
 
 Full Changelog: [v2.64.0...v2.65.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.64.0...v2.65.0)

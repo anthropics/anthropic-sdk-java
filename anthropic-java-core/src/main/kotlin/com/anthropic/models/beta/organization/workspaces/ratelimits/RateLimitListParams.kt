@@ -12,11 +12,12 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * List rate-limit overrides configured for a workspace.
+ * List a workspace's rate limits.
  *
- * Returns only the groups and limiter types that have a workspace-level override. Groups without
- * overrides inherit the organization limits and are not listed; use `GET
- * /v1/organizations/rate_limits` to see those.
+ * By default, returns only the groups and limiter types that have a workspace-level override. With
+ * `include_inherited=true`, returns every group with organization-level limits the workspace can
+ * see, listing for each the values it inherits from the organization as well as its own overrides.
+ * Each value's `source` says which it is.
  *
  * When `limit` is omitted, every matching entry is returned in a single page; when `limit`
  * truncates the result, follow `next_page` to fetch the remaining entries.
@@ -25,6 +26,7 @@ class RateLimitListParams
 private constructor(
     private val workspaceId: String?,
     private val groupType: GroupType?,
+    private val includeInherited: Boolean?,
     private val limit: Long?,
     private val page: String?,
     private val additionalHeaders: Headers,
@@ -36,6 +38,12 @@ private constructor(
 
     /** Filter by group type. */
     fun groupType(): Optional<GroupType> = Optional.ofNullable(groupType)
+
+    /**
+     * Also list the limiter values the workspace inherits from the organization, including groups
+     * with no workspace-level override.
+     */
+    fun includeInherited(): Optional<Boolean> = Optional.ofNullable(includeInherited)
 
     /**
      * Maximum number of items to return per page. Ranges from `1` to `1000`.
@@ -68,6 +76,7 @@ private constructor(
 
         private var workspaceId: String? = null
         private var groupType: GroupType? = null
+        private var includeInherited: Boolean? = null
         private var limit: Long? = null
         private var page: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -77,6 +86,7 @@ private constructor(
         internal fun from(rateLimitListParams: RateLimitListParams) = apply {
             workspaceId = rateLimitListParams.workspaceId
             groupType = rateLimitListParams.groupType
+            includeInherited = rateLimitListParams.includeInherited
             limit = rateLimitListParams.limit
             page = rateLimitListParams.page
             additionalHeaders = rateLimitListParams.additionalHeaders.toBuilder()
@@ -94,6 +104,26 @@ private constructor(
 
         /** Alias for calling [Builder.groupType] with `groupType.orElse(null)`. */
         fun groupType(groupType: Optional<GroupType>) = groupType(groupType.getOrNull())
+
+        /**
+         * Also list the limiter values the workspace inherits from the organization, including
+         * groups with no workspace-level override.
+         */
+        fun includeInherited(includeInherited: Boolean?) = apply {
+            this.includeInherited = includeInherited
+        }
+
+        /**
+         * Alias for [Builder.includeInherited].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun includeInherited(includeInherited: Boolean) =
+            includeInherited(includeInherited as Boolean?)
+
+        /** Alias for calling [Builder.includeInherited] with `includeInherited.orElse(null)`. */
+        fun includeInherited(includeInherited: Optional<Boolean>) =
+            includeInherited(includeInherited.getOrNull())
 
         /**
          * Maximum number of items to return per page. Ranges from `1` to `1000`.
@@ -226,6 +256,7 @@ private constructor(
             RateLimitListParams(
                 workspaceId,
                 groupType,
+                includeInherited,
                 limit,
                 page,
                 additionalHeaders.build(),
@@ -245,6 +276,7 @@ private constructor(
         QueryParams.builder()
             .apply {
                 groupType?.let { put("group_type", it.toString()) }
+                includeInherited?.let { put("include_inherited", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
                 page?.let { put("page", it) }
                 putAll(additionalQueryParams)
@@ -252,7 +284,7 @@ private constructor(
             .build()
 
     /** Filter by group type. */
-    class GroupType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class GroupType private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -266,22 +298,34 @@ private constructor(
 
         companion object {
 
-            @JvmField val BATCH = of("batch")
+            @JvmField val BATCH = GroupType(JsonField.of("batch"))
 
-            @JvmField val FILES = of("files")
+            @JvmField val FILES = GroupType(JsonField.of("files"))
 
-            @JvmField val MODEL_GROUP = of("model_group")
+            @JvmField val MODEL_GROUP = GroupType(JsonField.of("model_group"))
 
-            @JvmField val SKILLS = of("skills")
+            @JvmField val SKILLS = GroupType(JsonField.of("skills"))
 
-            @JvmField val TOKEN_COUNT = of("token_count")
+            @JvmField val TOKEN_COUNT = GroupType(JsonField.of("token_count"))
 
-            @JvmField val WEB_SEARCH = of("web_search")
+            @JvmField val WEB_SEARCH = GroupType(JsonField.of("web_search"))
 
-            @JvmStatic fun of(value: String) = GroupType(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): GroupType =
+                // Intern known values so `==` works
+                when (value) {
+                    "batch" -> BATCH
+                    "files" -> FILES
+                    "model_group" -> MODEL_GROUP
+                    "skills" -> SKILLS
+                    "token_count" -> TOKEN_COUNT
+                    "web_search" -> WEB_SEARCH
+                    else -> GroupType(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): GroupType =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): GroupType =
                 value.asString().getOrNull()?.let { of(it) } ?: GroupType(value)
         }
 
@@ -426,6 +470,7 @@ private constructor(
         return other is RateLimitListParams &&
             workspaceId == other.workspaceId &&
             groupType == other.groupType &&
+            includeInherited == other.includeInherited &&
             limit == other.limit &&
             page == other.page &&
             additionalHeaders == other.additionalHeaders &&
@@ -433,8 +478,16 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(workspaceId, groupType, limit, page, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            workspaceId,
+            groupType,
+            includeInherited,
+            limit,
+            page,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "RateLimitListParams{workspaceId=$workspaceId, groupType=$groupType, limit=$limit, page=$page, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "RateLimitListParams{workspaceId=$workspaceId, groupType=$groupType, includeInherited=$includeInherited, limit=$limit, page=$page, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

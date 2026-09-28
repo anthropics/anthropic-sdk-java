@@ -86,8 +86,8 @@ private constructor(
     fun outputTokens(): Int = outputTokens.getRequired("output_tokens")
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * Inference speed tier this request actually ran at. Mirrors `usage.speed` on /v1/messages.
+     * Only present when the fast-mode beta is active.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -242,9 +242,8 @@ private constructor(
         fun outputTokens(outputTokens: JsonField<Int>) = apply { this.outputTokens = outputTokens }
 
         /**
-         * Inference speed mode. `fast` provides significantly faster output token generation at
-         * premium pricing. Not all models support `fast`; invalid combinations are rejected at
-         * create time.
+         * Inference speed tier this request actually ran at. Mirrors `usage.speed` on /v1/messages.
+         * Only present when the fast-mode beta is active.
          */
         fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
@@ -349,10 +348,10 @@ private constructor(
             (speed.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
-     * Inference speed mode. `fast` provides significantly faster output token generation at premium
-     * pricing. Not all models support `fast`; invalid combinations are rejected at create time.
+     * Inference speed tier this request actually ran at. Mirrors `usage.speed` on /v1/messages.
+     * Only present when the fast-mode beta is active.
      */
-    class Speed @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Speed private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -366,14 +365,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val STANDARD = of("standard")
+            @JvmField val STANDARD = Speed(JsonField.of("standard"))
 
-            @JvmField val FAST = of("fast")
+            @JvmField val FAST = Speed(JsonField.of("fast"))
 
-            @JvmStatic fun of(value: String) = Speed(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Speed =
+                // Intern known values so `==` works
+                when (value) {
+                    "standard" -> STANDARD
+                    "fast" -> FAST
+                    else -> Speed(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Speed =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Speed =
                 value.asString().getOrNull()?.let { of(it) } ?: Speed(value)
         }
 

@@ -240,7 +240,7 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
     /** MIME type of the text content. Must be "text/plain". */
-    class MediaType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class MediaType private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -254,12 +254,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val TEXT_PLAIN = of("text/plain")
+            @JvmField val TEXT_PLAIN = MediaType(JsonField.of("text/plain"))
 
-            @JvmStatic fun of(value: String) = MediaType(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): MediaType =
+                // Intern known values so `==` works
+                when (value) {
+                    "text/plain" -> TEXT_PLAIN
+                    else -> MediaType(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): MediaType =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): MediaType =
                 value.asString().getOrNull()?.let { of(it) } ?: MediaType(value)
         }
 
@@ -376,7 +383,7 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -390,12 +397,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val TEXT = of("text")
+            @JvmField val TEXT = Type(JsonField.of("text"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "text" -> TEXT
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

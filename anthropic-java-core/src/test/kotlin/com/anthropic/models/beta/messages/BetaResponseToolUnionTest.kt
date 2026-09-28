@@ -164,6 +164,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("bash")
     }
 
     @Test
@@ -246,6 +248,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("bash")
     }
 
     @Test
@@ -325,6 +329,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("code_execution")
     }
 
     @Test
@@ -399,6 +405,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("code_execution")
     }
 
     @Test
@@ -473,6 +481,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("code_execution")
     }
 
     @Test
@@ -547,6 +557,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("code_execution")
     }
 
     @Test
@@ -1061,6 +1073,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("computer")
     }
 
     @Test
@@ -1146,6 +1160,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("memory")
     }
 
     @Test
@@ -1233,6 +1249,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("computer")
     }
 
     @Test
@@ -1319,6 +1337,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("str_replace_editor")
     }
 
     @Test
@@ -1407,6 +1427,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("computer")
     }
 
     @Test
@@ -1771,6 +1793,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("str_replace_editor")
     }
 
     @Test
@@ -1854,6 +1878,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("str_replace_based_edit_tool")
     }
 
     @Test
@@ -1938,6 +1964,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("str_replace_based_edit_tool")
     }
 
     @Test
@@ -2028,6 +2056,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("web_search")
     }
 
     @Test
@@ -2124,6 +2154,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("web_fetch")
     }
 
     @Test
@@ -2220,6 +2252,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("web_search")
     }
 
     @Test
@@ -2316,6 +2350,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("web_fetch")
     }
 
     @Test
@@ -2414,6 +2450,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("web_fetch")
     }
 
     @Test
@@ -2512,6 +2550,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("web_search")
     }
 
     @Test
@@ -2611,6 +2651,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("web_fetch")
     }
 
     @Test
@@ -2657,7 +2699,7 @@ internal class BetaResponseToolUnionTest {
     fun ofAdvisorTool20260301() {
         val advisorTool20260301 =
             BetaAdvisorTool20260301.builder()
-                .model(Model.CLAUDE_FABLE_5_1)
+                .model(Model.CLAUDE_SONNET_5_5)
                 .addAllowedCaller(BetaAdvisorTool20260301.AllowedCaller.DIRECT)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
@@ -2705,6 +2747,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolBm25_20251119()).isEmpty
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("advisor")
     }
 
     @Test
@@ -2713,7 +2757,7 @@ internal class BetaResponseToolUnionTest {
         val betaResponseToolUnion =
             BetaResponseToolUnion.ofAdvisorTool20260301(
                 BetaAdvisorTool20260301.builder()
-                    .model(Model.CLAUDE_FABLE_5_1)
+                    .model(Model.CLAUDE_SONNET_5_5)
                     .addAllowedCaller(BetaAdvisorTool20260301.AllowedCaller.DIRECT)
                     .cacheControl(
                         BetaCacheControlEphemeral.builder()
@@ -2788,6 +2832,8 @@ internal class BetaResponseToolUnionTest {
             .contains(toolSearchToolBm25_20251119)
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119()).isEmpty
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("tool_search_tool_bm25")
     }
 
     @Test
@@ -2864,6 +2910,8 @@ internal class BetaResponseToolUnionTest {
         assertThat(betaResponseToolUnion.toolSearchToolRegex20251119())
             .contains(toolSearchToolRegex20251119)
         assertThat(betaResponseToolUnion.mcpToolset()).isEmpty
+
+        assertThat(betaResponseToolUnion.name()).contains("tool_search_tool_regex")
     }
 
     @Test
@@ -3022,6 +3070,7 @@ internal class BetaResponseToolUnionTest {
         val e = assertThrows<AnthropicInvalidDataException> { betaResponseToolUnion.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
 
+        assertThat(betaResponseToolUnion.name()).isEmpty
         assertThat(betaResponseToolUnion.deferLoading()).isEmpty
         assertThat(betaResponseToolUnion.strict()).isEmpty
         assertThat(betaResponseToolUnion.cacheControl()).isEmpty

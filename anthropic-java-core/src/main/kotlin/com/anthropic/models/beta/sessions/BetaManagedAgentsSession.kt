@@ -129,7 +129,7 @@ private constructor(
     fun agent(): BetaManagedAgentsSessionAgent = agent.getRequired("agent")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the session was archived. Null if not archived.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -137,8 +137,7 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
-     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
-     * reaches `max_list_cost`.
+     * The session's enforced spend ceiling, or null when no budget is set.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -181,7 +180,7 @@ private constructor(
     fun resources(): List<BetaManagedAgentsSessionResource> = resources.getRequired("resources")
 
     /**
-     * Timing statistics for a session.
+     * Timing statistics for the session.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -217,7 +216,7 @@ private constructor(
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
     /**
-     * Cumulative token usage for a session across all turns.
+     * Cumulative token usage for the session.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -503,7 +502,7 @@ private constructor(
          */
         fun agent(agent: JsonField<BetaManagedAgentsSessionAgent>) = apply { this.agent = agent }
 
-        /** A timestamp in RFC 3339 format */
+        /** When the session was archived. Null if not archived. */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
         /** Alias for calling [Builder.archivedAt] with `archivedAt.orElse(null)`. */
@@ -520,10 +519,7 @@ private constructor(
             this.archivedAt = archivedAt
         }
 
-        /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
-         */
+        /** The session's enforced spend ceiling, or null when no budget is set. */
         fun budget(budget: BetaManagedAgentsBudgetLimit?) = budget(JsonField.ofNullable(budget))
 
         /** Alias for calling [Builder.budget] with `budget.orElse(null)`. */
@@ -683,7 +679,7 @@ private constructor(
                     .build()
             )
 
-        /** Timing statistics for a session. */
+        /** Timing statistics for the session. */
         fun stats(stats: BetaManagedAgentsSessionStats) = stats(JsonField.of(stats))
 
         /**
@@ -741,7 +737,7 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
 
-        /** Cumulative token usage for a session across all turns. */
+        /** Cumulative token usage for the session. */
         fun usage(usage: BetaManagedAgentsSessionUsage) = usage(JsonField.of(usage))
 
         /**
@@ -1044,7 +1040,7 @@ private constructor(
     }
 
     /** SessionStatus enum */
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1059,24 +1055,34 @@ private constructor(
         companion object {
 
             /** Transient error occurred, retrying automatically. */
-            @JvmField val RESCHEDULING = of("rescheduling")
+            @JvmField val RESCHEDULING = Status(JsonField.of("rescheduling"))
 
             /** Agent is actively executing. */
-            @JvmField val RUNNING = of("running")
+            @JvmField val RUNNING = Status(JsonField.of("running"))
 
             /**
              * Agent is waiting for input, including user messages or tool confirmations. Sessions
              * start in idle.
              */
-            @JvmField val IDLE = of("idle")
+            @JvmField val IDLE = Status(JsonField.of("idle"))
 
             /** Session has ended, either due to an error or completion. */
-            @JvmField val TERMINATED = of("terminated")
+            @JvmField val TERMINATED = Status(JsonField.of("terminated"))
 
-            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Status =
+                // Intern known values so `==` works
+                when (value) {
+                    "rescheduling" -> RESCHEDULING
+                    "running" -> RUNNING
+                    "idle" -> IDLE
+                    "terminated" -> TERMINATED
+                    else -> Status(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Status =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Status =
                 value.asString().getOrNull()?.let { of(it) } ?: Status(value)
         }
 
@@ -1217,7 +1223,7 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -1231,12 +1237,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val SESSION = of("session")
+            @JvmField val SESSION = Type(JsonField.of("session"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "session" -> SESSION
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

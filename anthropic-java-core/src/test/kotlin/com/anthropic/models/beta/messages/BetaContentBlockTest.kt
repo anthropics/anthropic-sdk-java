@@ -904,8 +904,8 @@ internal class BetaContentBlockTest {
     fun ofFallback() {
         val fallback =
             BetaFallbackBlock.builder()
-                .from(BetaFallbackInfo.of(Model.CLAUDE_FABLE_5_1))
-                .to(BetaFallbackInfo.of(Model.CLAUDE_FABLE_5_1))
+                .from(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5_5))
+                .to(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5_5))
                 .trigger(BetaFallbackRefusalTrigger.of(BetaFallbackRefusalTrigger.Category.CYBER))
                 .build()
 
@@ -937,8 +937,8 @@ internal class BetaContentBlockTest {
         val betaContentBlock =
             BetaContentBlock.ofFallback(
                 BetaFallbackBlock.builder()
-                    .from(BetaFallbackInfo.of(Model.CLAUDE_FABLE_5_1))
-                    .to(BetaFallbackInfo.of(Model.CLAUDE_FABLE_5_1))
+                    .from(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5_5))
+                    .to(BetaFallbackInfo.of(Model.CLAUDE_SONNET_5_5))
                     .trigger(
                         BetaFallbackRefusalTrigger.of(BetaFallbackRefusalTrigger.Category.CYBER)
                     )

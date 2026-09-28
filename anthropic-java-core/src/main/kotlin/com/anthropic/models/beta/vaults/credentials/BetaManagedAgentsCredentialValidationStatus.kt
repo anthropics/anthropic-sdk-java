@@ -8,7 +8,6 @@ import kotlin.jvm.optionals.getOrNull
 
 /** Overall verdict of a credential validation probe. */
 class BetaManagedAgentsCredentialValidationStatus
-@JsonCreator
 private constructor(private val value: JsonField<String>) : Enum {
 
     /**
@@ -23,25 +22,33 @@ private constructor(private val value: JsonField<String>) : Enum {
     companion object {
 
         /** The credential successfully authenticated against its MCP server. */
-        @JvmField val VALID = of("valid")
+        @JvmField val VALID = BetaManagedAgentsCredentialValidationStatus(JsonField.of("valid"))
 
         /**
          * The probe reached the MCP server and was rejected, and a refresh (if attempted) did not
          * recover it.
          */
-        @JvmField val INVALID = of("invalid")
+        @JvmField val INVALID = BetaManagedAgentsCredentialValidationStatus(JsonField.of("invalid"))
 
         /**
          * The probe could not determine validity — for example, a transport error or a successful
          * refresh that was not re-probed.
          */
-        @JvmField val UNKNOWN = of("unknown")
+        @JvmField val UNKNOWN = BetaManagedAgentsCredentialValidationStatus(JsonField.of("unknown"))
 
         @JvmStatic
-        fun of(value: String) = BetaManagedAgentsCredentialValidationStatus(JsonField.of(value))
+        fun of(value: String): BetaManagedAgentsCredentialValidationStatus =
+            // Intern known values so `==` works
+            when (value) {
+                "valid" -> VALID
+                "invalid" -> INVALID
+                "unknown" -> UNKNOWN
+                else -> BetaManagedAgentsCredentialValidationStatus(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaManagedAgentsCredentialValidationStatus =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaManagedAgentsCredentialValidationStatus =
             value.asString().getOrNull()?.let { of(it) }
                 ?: BetaManagedAgentsCredentialValidationStatus(value)
     }

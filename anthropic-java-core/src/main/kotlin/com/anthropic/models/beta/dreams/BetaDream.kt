@@ -25,7 +25,10 @@ import kotlin.jvm.optionals.getOrNull
  *
  * By default the dream writes its result to a new memory store and doesn't change the input memory
  * store. With `output_behavior` set to `update_existing`, it writes its result into the input
- * memory store instead. The Dreams API is in research preview, so this resource can still change.
+ * memory store instead.
+ *
+ * The Dreams API is in research preview: the request and response shapes are volatile and may
+ * change without the deprecation period that applies to generally-available endpoints.
  *
  * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#how-it-works)
  * for what a dream reads and produces.
@@ -111,7 +114,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the dream was archived, in RFC 3339, or `null` if it hasn't been archived.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -119,7 +122,9 @@ private constructor(
     fun archivedAt(): Optional<OffsetDateTime> = archivedAt.getOptional("archived_at")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the dream was created, in RFC 3339.
+     *
+     * Lists of dreams are sorted by this time, newest first.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -127,7 +132,8 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the dream reached `completed`, `failed`, or `canceled`, in RFC 3339, or `null` if it is
+     * still `pending` or `running`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -135,7 +141,7 @@ private constructor(
     fun endedAt(): Optional<OffsetDateTime> = endedAt.getOptional("ended_at")
 
     /**
-     * Failure detail for a Dream whose `status` is `failed`.
+     * Why the dream failed, or `null` if `status` isn't `failed`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -170,8 +176,8 @@ private constructor(
     fun model(): BetaDreamModelConfig = model.getRequired("model")
 
     /**
-     * Which memory store a dream writes its result to. Defaults to `create_new` when left out of a
-     * create request.
+     * Where the dream writes its result, as set in the request that created the dream. If that
+     * request left out `output_behavior`, the dream used the `create_new` behavior.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -231,15 +237,8 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * The tokens that a dream has used so far.
-     *
-     * The counts are zero while the dream is `pending` and update while it is `running`. They can
-     * keep changing after a cancel.
-     *
-     * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#billing) for
-     * how dreams are billed. See the
-     * [prompt caching guide](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#tracking-cache-performance)
-     * for how the input token counts add up.
+     * The dream's token counts, which stop changing once its `status` is `completed` or `failed`.
+     * After a cancel, they can keep changing.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -441,7 +440,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A timestamp in RFC 3339 format */
+        /** When the dream was archived, in RFC 3339, or `null` if it hasn't been archived. */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
 
         /** Alias for calling [Builder.archivedAt] with `archivedAt.orElse(null)`. */
@@ -458,7 +457,11 @@ private constructor(
             this.archivedAt = archivedAt
         }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When the dream was created, in RFC 3339.
+         *
+         * Lists of dreams are sorted by this time, newest first.
+         */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
@@ -470,7 +473,10 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When the dream reached `completed`, `failed`, or `canceled`, in RFC 3339, or `null` if it
+         * is still `pending` or `running`.
+         */
         fun endedAt(endedAt: OffsetDateTime?) = endedAt(JsonField.ofNullable(endedAt))
 
         /** Alias for calling [Builder.endedAt] with `endedAt.orElse(null)`. */
@@ -485,7 +491,7 @@ private constructor(
          */
         fun endedAt(endedAt: JsonField<OffsetDateTime>) = apply { this.endedAt = endedAt }
 
-        /** Failure detail for a Dream whose `status` is `failed`. */
+        /** Why the dream failed, or `null` if `status` isn't `failed`. */
         fun error(error: BetaDreamError?) = error(JsonField.ofNullable(error))
 
         /** Alias for calling [Builder.error] with `error.orElse(null)`. */
@@ -603,8 +609,8 @@ private constructor(
         fun model(model: JsonField<BetaDreamModelConfig>) = apply { this.model = model }
 
         /**
-         * Which memory store a dream writes its result to. Defaults to `create_new` when left out
-         * of a create request.
+         * Where the dream writes its result, as set in the request that created the dream. If that
+         * request left out `output_behavior`, the dream used the `create_new` behavior.
          */
         fun outputBehavior(outputBehavior: BetaOutputBehavior) =
             outputBehavior(JsonField.of(outputBehavior))
@@ -758,15 +764,8 @@ private constructor(
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /**
-         * The tokens that a dream has used so far.
-         *
-         * The counts are zero while the dream is `pending` and update while it is `running`. They
-         * can keep changing after a cancel.
-         *
-         * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#billing)
-         * for how dreams are billed. See the
-         * [prompt caching guide](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#tracking-cache-performance)
-         * for how the input token counts add up.
+         * The dream's token counts, which stop changing once its `status` is `completed` or
+         * `failed`. After a cancel, they can keep changing.
          */
         fun usage(usage: BetaDreamUsage) = usage(JsonField.of(usage))
 
@@ -905,7 +904,7 @@ private constructor(
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (usage.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -919,12 +918,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val DREAM = of("dream")
+            @JvmField val DREAM = Type(JsonField.of("dream"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "dream" -> DREAM
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

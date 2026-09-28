@@ -68,7 +68,7 @@ private constructor(
         configs.getOptional("configs")
 
     /**
-     * Default configuration for all tools from an MCP server.
+     * Default configuration for all tools from this server.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -215,7 +215,7 @@ private constructor(
                 }
         }
 
-        /** Default configuration for all tools from an MCP server. */
+        /** Default configuration for all tools from this server. */
         fun defaultConfig(defaultConfig: BetaManagedAgentsMcpToolsetDefaultConfigParams?) =
             defaultConfig(JsonField.ofNullable(defaultConfig))
 
@@ -318,7 +318,7 @@ private constructor(
             (configs.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (defaultConfig.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -332,12 +332,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val MCP_TOOLSET = of("mcp_toolset")
+            @JvmField val MCP_TOOLSET = Type(JsonField.of("mcp_toolset"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "mcp_toolset" -> MCP_TOOLSET
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

@@ -6,7 +6,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-class BetaStopReason @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+class BetaStopReason private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -19,26 +19,42 @@ class BetaStopReason @JsonCreator private constructor(private val value: JsonFie
 
     companion object {
 
-        @JvmField val END_TURN = of("end_turn")
+        @JvmField val END_TURN = BetaStopReason(JsonField.of("end_turn"))
 
-        @JvmField val MAX_TOKENS = of("max_tokens")
+        @JvmField val MAX_TOKENS = BetaStopReason(JsonField.of("max_tokens"))
 
-        @JvmField val STOP_SEQUENCE = of("stop_sequence")
+        @JvmField val STOP_SEQUENCE = BetaStopReason(JsonField.of("stop_sequence"))
 
-        @JvmField val TOOL_USE = of("tool_use")
+        @JvmField val TOOL_USE = BetaStopReason(JsonField.of("tool_use"))
 
-        @JvmField val PAUSE_TURN = of("pause_turn")
+        @JvmField val PAUSE_TURN = BetaStopReason(JsonField.of("pause_turn"))
 
-        @JvmField val COMPACTION = of("compaction")
+        @JvmField val COMPACTION = BetaStopReason(JsonField.of("compaction"))
 
-        @JvmField val REFUSAL = of("refusal")
+        @JvmField val REFUSAL = BetaStopReason(JsonField.of("refusal"))
 
-        @JvmField val MODEL_CONTEXT_WINDOW_EXCEEDED = of("model_context_window_exceeded")
+        @JvmField
+        val MODEL_CONTEXT_WINDOW_EXCEEDED =
+            BetaStopReason(JsonField.of("model_context_window_exceeded"))
 
-        @JvmStatic fun of(value: String) = BetaStopReason(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaStopReason =
+            // Intern known values so `==` works
+            when (value) {
+                "end_turn" -> END_TURN
+                "max_tokens" -> MAX_TOKENS
+                "stop_sequence" -> STOP_SEQUENCE
+                "tool_use" -> TOOL_USE
+                "pause_turn" -> PAUSE_TURN
+                "compaction" -> COMPACTION
+                "refusal" -> REFUSAL
+                "model_context_window_exceeded" -> MODEL_CONTEXT_WINDOW_EXCEEDED
+                else -> BetaStopReason(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaStopReason =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaStopReason =
             value.asString().getOrNull()?.let { of(it) } ?: BetaStopReason(value)
     }
 

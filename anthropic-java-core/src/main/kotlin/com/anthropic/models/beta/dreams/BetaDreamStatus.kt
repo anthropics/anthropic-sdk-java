@@ -15,8 +15,7 @@ import kotlin.jvm.optionals.getOrNull
  * See the [Dreams guide](https://platform.claude.com/docs/en/managed-agents/dreams#lifecycle) for
  * what each status means.
  */
-class BetaDreamStatus @JsonCreator private constructor(private val value: JsonField<String>) :
-    Enum {
+class BetaDreamStatus private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -34,17 +33,17 @@ class BetaDreamStatus @JsonCreator private constructor(private val value: JsonFi
          *
          * `outputs` is empty and every `usage` count is zero.
          */
-        @JvmField val PENDING = of("pending")
+        @JvmField val PENDING = BetaDreamStatus(JsonField.of("pending"))
 
         /**
          * The dream is reading its inputs and writing its result.
          *
          * `usage` updates while the dream has this status.
          */
-        @JvmField val RUNNING = of("running")
+        @JvmField val RUNNING = BetaDreamStatus(JsonField.of("running"))
 
         /** The dream finished and its output memory store holds the complete result. */
-        @JvmField val COMPLETED = of("completed")
+        @JvmField val COMPLETED = BetaDreamStatus(JsonField.of("completed"))
 
         /**
          * The dream stopped with an error, which `error` describes.
@@ -52,7 +51,7 @@ class BetaDreamStatus @JsonCreator private constructor(private val value: JsonFi
          * If `outputs` references a memory store, that memory store keeps what the dream wrote
          * before it stopped.
          */
-        @JvmField val FAILED = of("failed")
+        @JvmField val FAILED = BetaDreamStatus(JsonField.of("failed"))
 
         /**
          * A cancel request stopped the dream before it reached `completed` or `failed`.
@@ -60,12 +59,23 @@ class BetaDreamStatus @JsonCreator private constructor(private val value: JsonFi
          * If `outputs` references a memory store, that memory store keeps what the dream wrote.
          * `usage` can keep changing after the cancel.
          */
-        @JvmField val CANCELED = of("canceled")
+        @JvmField val CANCELED = BetaDreamStatus(JsonField.of("canceled"))
 
-        @JvmStatic fun of(value: String) = BetaDreamStatus(JsonField.of(value))
+        @JvmStatic
+        fun of(value: String): BetaDreamStatus =
+            // Intern known values so `==` works
+            when (value) {
+                "pending" -> PENDING
+                "running" -> RUNNING
+                "completed" -> COMPLETED
+                "failed" -> FAILED
+                "canceled" -> CANCELED
+                else -> BetaDreamStatus(JsonField.of(value))
+            }
 
-        @JvmSynthetic
-        internal fun of(value: JsonField<String>): BetaDreamStatus =
+        @JsonCreator
+        @JvmStatic
+        fun of(value: JsonField<String>): BetaDreamStatus =
             value.asString().getOrNull()?.let { of(it) } ?: BetaDreamStatus(value)
     }
 

@@ -68,7 +68,8 @@ private constructor(
     fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
 
     /**
-     * Permission policy for tool execution.
+     * Permission policy for this tool. Controls whether tool calls are auto-approved or require
+     * confirmation.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -186,7 +187,10 @@ private constructor(
          */
         fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
 
-        /** Permission policy for tool execution. */
+        /**
+         * Permission policy for this tool. Controls whether tool calls are auto-approved or require
+         * confirmation.
+         */
         fun permissionPolicy(permissionPolicy: PermissionPolicy?) =
             permissionPolicy(JsonField.ofNullable(permissionPolicy))
 
@@ -309,7 +313,10 @@ private constructor(
             (permissionPolicy.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Permission policy for tool execution. */
+    /**
+     * Permission policy for this tool. Controls whether tool calls are auto-approved or require
+     * confirmation.
+     */
     @JsonDeserialize(using = PermissionPolicy.Deserializer::class)
     @JsonSerialize(using = PermissionPolicy.Serializer::class)
     class PermissionPolicy
@@ -621,7 +628,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -635,16 +642,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val ALWAYS_ALLOW = of("always_allow")
+                @JvmField val ALWAYS_ALLOW = Type(JsonField.of("always_allow"))
 
-                @JvmField val ALWAYS_ASK = of("always_ask")
+                @JvmField val ALWAYS_ASK = Type(JsonField.of("always_ask"))
 
-                @JvmField val AUTO = of("auto")
+                @JvmField val AUTO = Type(JsonField.of("auto"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "always_allow" -> ALWAYS_ALLOW
+                        "always_ask" -> ALWAYS_ASK
+                        "auto" -> AUTO
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -769,7 +785,7 @@ private constructor(
         }
     }
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -783,12 +799,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val BASH = of("bash")
+            @JvmField val BASH = Type(JsonField.of("bash"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "bash" -> BASH
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

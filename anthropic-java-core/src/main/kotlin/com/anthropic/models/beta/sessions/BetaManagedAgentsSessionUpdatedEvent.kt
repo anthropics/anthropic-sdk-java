@@ -63,7 +63,7 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * A timestamp in RFC 3339 format
+     * Timestamp when the update was applied.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -77,8 +77,9 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Resolved `agent` definition for a `session`. Snapshot of the `agent` at `session` creation
-     * time.
+     * The session's effective agent configuration after the update. Present only when the update
+     * changed `agent` (tools or mcp_servers); when present it is the full materialised snapshot,
+     * not a diff.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -86,8 +87,8 @@ private constructor(
     fun agent(): Optional<BetaManagedAgentsSessionAgent> = agent.getOptional("agent")
 
     /**
-     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
-     * reaches `max_list_cost`.
+     * The session's budget after the update: the new budget when set or replaced, or null when the
+     * update removed it. Present only when the update changed the budget.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -232,7 +233,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** A timestamp in RFC 3339 format */
+        /** Timestamp when the update was applied. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
         /**
@@ -257,8 +258,9 @@ private constructor(
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
         /**
-         * Resolved `agent` definition for a `session`. Snapshot of the `agent` at `session`
-         * creation time.
+         * The session's effective agent configuration after the update. Present only when the
+         * update changed `agent` (tools or mcp_servers); when present it is the full materialised
+         * snapshot, not a diff.
          */
         fun agent(agent: BetaManagedAgentsSessionAgent?) = agent(JsonField.ofNullable(agent))
 
@@ -275,8 +277,8 @@ private constructor(
         fun agent(agent: JsonField<BetaManagedAgentsSessionAgent>) = apply { this.agent = agent }
 
         /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
+         * The session's budget after the update: the new budget when set or replaced, or null when
+         * the update removed it. Present only when the update changed the budget.
          */
         fun budget(budget: BetaManagedAgentsBudgetLimit?) = budget(JsonField.ofNullable(budget))
 
@@ -432,7 +434,7 @@ private constructor(
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (title.asKnown().isPresent) 1 else 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -446,12 +448,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val SESSION_UPDATED = of("session.updated")
+            @JvmField val SESSION_UPDATED = Type(JsonField.of("session.updated"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "session.updated" -> SESSION_UPDATED
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 

@@ -175,6 +175,16 @@ private constructor(
     fun container(): Optional<MessageCreateParamsContainer> = body.container()
 
     /**
+     * Request-level diagnostics. Supply `previous_message_id` to have the response include
+     * `diagnostics.cache_miss_reason` explaining any prompt-cache divergence from that prior
+     * request.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun diagnostics(): Optional<DiagnosticsParam> = body.diagnostics()
+
+    /**
      * Specifies the geographic region for inference processing. If not specified, the workspace's
      * `default_inference_geo` is used.
      *
@@ -423,6 +433,13 @@ private constructor(
      * Unlike [container], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _container(): JsonField<MessageCreateParamsContainer> = body._container()
+
+    /**
+     * Returns the raw JSON value of [diagnostics].
+     *
+     * Unlike [diagnostics], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _diagnostics(): JsonField<DiagnosticsParam> = body._diagnostics()
 
     /**
      * Returns the raw JSON value of [inferenceGeo].
@@ -846,6 +863,28 @@ private constructor(
         fun container(string: String) = apply { body.container(string) }
 
         /**
+         * Request-level diagnostics. Supply `previous_message_id` to have the response include
+         * `diagnostics.cache_miss_reason` explaining any prompt-cache divergence from that prior
+         * request.
+         */
+        fun diagnostics(diagnostics: DiagnosticsParam?) = apply { body.diagnostics(diagnostics) }
+
+        /** Alias for calling [Builder.diagnostics] with `diagnostics.orElse(null)`. */
+        fun diagnostics(diagnostics: Optional<DiagnosticsParam>) =
+            diagnostics(diagnostics.getOrNull())
+
+        /**
+         * Sets [Builder.diagnostics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.diagnostics] with a well-typed [DiagnosticsParam] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun diagnostics(diagnostics: JsonField<DiagnosticsParam>) = apply {
+            body.diagnostics(diagnostics)
+        }
+
+        /**
          * Specifies the geographic region for inference processing. If not specified, the
          * workspace's `default_inference_geo` is used.
          */
@@ -1078,6 +1117,11 @@ private constructor(
 
         /** Alias for calling [thinking] with `ThinkingConfigParam.ofDisabled(disabled)`. */
         fun thinking(disabled: ThinkingConfigDisabled) = apply { body.thinking(disabled) }
+
+        /** Alias for calling [thinking] with `ThinkingConfigParam.ofBetweenTools(betweenTools)`. */
+        fun thinking(betweenTools: ThinkingConfigBetweenTools) = apply {
+            body.thinking(betweenTools)
+        }
 
         /** Alias for calling [thinking] with `ThinkingConfigParam.ofAdaptive(adaptive)`. */
         fun thinking(adaptive: ThinkingConfigAdaptive) = apply { body.thinking(adaptive) }
@@ -1574,6 +1618,7 @@ private constructor(
         private val model: JsonField<Model>,
         private val cacheControl: JsonField<CacheControlEphemeral>,
         private val container: JsonField<MessageCreateParamsContainer>,
+        private val diagnostics: JsonField<DiagnosticsParam>,
         private val inferenceGeo: JsonField<String>,
         private val metadata: JsonField<Metadata>,
         private val outputConfig: JsonField<OutputConfig>,
@@ -1604,6 +1649,9 @@ private constructor(
             @JsonProperty("container")
             @ExcludeMissing
             container: JsonField<MessageCreateParamsContainer> = JsonMissing.of(),
+            @JsonProperty("diagnostics")
+            @ExcludeMissing
+            diagnostics: JsonField<DiagnosticsParam> = JsonMissing.of(),
             @JsonProperty("inference_geo")
             @ExcludeMissing
             inferenceGeo: JsonField<String> = JsonMissing.of(),
@@ -1640,6 +1688,7 @@ private constructor(
             model,
             cacheControl,
             container,
+            diagnostics,
             inferenceGeo,
             metadata,
             outputConfig,
@@ -1765,6 +1814,16 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun container(): Optional<MessageCreateParamsContainer> = container.getOptional("container")
+
+        /**
+         * Request-level diagnostics. Supply `previous_message_id` to have the response include
+         * `diagnostics.cache_miss_reason` explaining any prompt-cache divergence from that prior
+         * request.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun diagnostics(): Optional<DiagnosticsParam> = diagnostics.getOptional("diagnostics")
 
         /**
          * Specifies the geographic region for inference processing. If not specified, the
@@ -2025,6 +2084,15 @@ private constructor(
         fun _container(): JsonField<MessageCreateParamsContainer> = container
 
         /**
+         * Returns the raw JSON value of [diagnostics].
+         *
+         * Unlike [diagnostics], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("diagnostics")
+        @ExcludeMissing
+        fun _diagnostics(): JsonField<DiagnosticsParam> = diagnostics
+
+        /**
          * Returns the raw JSON value of [inferenceGeo].
          *
          * Unlike [inferenceGeo], this method doesn't throw if the JSON field has an unexpected
@@ -2173,6 +2241,7 @@ private constructor(
             private var model: JsonField<Model>? = null
             private var cacheControl: JsonField<CacheControlEphemeral> = JsonMissing.of()
             private var container: JsonField<MessageCreateParamsContainer> = JsonMissing.of()
+            private var diagnostics: JsonField<DiagnosticsParam> = JsonMissing.of()
             private var inferenceGeo: JsonField<String> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var outputConfig: JsonField<OutputConfig> = JsonMissing.of()
@@ -2194,6 +2263,7 @@ private constructor(
                 model = body.model
                 cacheControl = body.cacheControl
                 container = body.container
+                diagnostics = body.diagnostics
                 inferenceGeo = body.inferenceGeo
                 metadata = body.metadata
                 outputConfig = body.outputConfig
@@ -2485,6 +2555,29 @@ private constructor(
             fun container(string: String) = container(MessageCreateParamsContainer.ofString(string))
 
             /**
+             * Request-level diagnostics. Supply `previous_message_id` to have the response include
+             * `diagnostics.cache_miss_reason` explaining any prompt-cache divergence from that
+             * prior request.
+             */
+            fun diagnostics(diagnostics: DiagnosticsParam?) =
+                diagnostics(JsonField.ofNullable(diagnostics))
+
+            /** Alias for calling [Builder.diagnostics] with `diagnostics.orElse(null)`. */
+            fun diagnostics(diagnostics: Optional<DiagnosticsParam>) =
+                diagnostics(diagnostics.getOrNull())
+
+            /**
+             * Sets [Builder.diagnostics] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.diagnostics] with a well-typed [DiagnosticsParam]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun diagnostics(diagnostics: JsonField<DiagnosticsParam>) = apply {
+                this.diagnostics = diagnostics
+            }
+
+            /**
              * Specifies the geographic region for inference processing. If not specified, the
              * workspace's `default_inference_geo` is used.
              */
@@ -2690,6 +2783,12 @@ private constructor(
             /** Alias for calling [thinking] with `ThinkingConfigParam.ofDisabled(disabled)`. */
             fun thinking(disabled: ThinkingConfigDisabled) =
                 thinking(ThinkingConfigParam.ofDisabled(disabled))
+
+            /**
+             * Alias for calling [thinking] with `ThinkingConfigParam.ofBetweenTools(betweenTools)`.
+             */
+            fun thinking(betweenTools: ThinkingConfigBetweenTools) =
+                thinking(ThinkingConfigParam.ofBetweenTools(betweenTools))
 
             /** Alias for calling [thinking] with `ThinkingConfigParam.ofAdaptive(adaptive)`. */
             fun thinking(adaptive: ThinkingConfigAdaptive) =
@@ -3064,6 +3163,7 @@ private constructor(
                     checkRequired("model", model),
                     cacheControl,
                     container,
+                    diagnostics,
                     inferenceGeo,
                     metadata,
                     outputConfig,
@@ -3101,6 +3201,7 @@ private constructor(
             model()
             cacheControl().ifPresent { it.validate() }
             container().ifPresent { it.validate() }
+            diagnostics().ifPresent { it.validate() }
             inferenceGeo()
             metadata().ifPresent { it.validate() }
             outputConfig().ifPresent { it.validate() }
@@ -3137,6 +3238,7 @@ private constructor(
                 (if (model.asKnown().isPresent) 1 else 0) +
                 (cacheControl.asKnown().getOrNull()?.validity() ?: 0) +
                 (container.asKnown().getOrNull()?.validity() ?: 0) +
+                (diagnostics.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (inferenceGeo.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (outputConfig.asKnown().getOrNull()?.validity() ?: 0) +
@@ -3161,6 +3263,7 @@ private constructor(
                 model == other.model &&
                 cacheControl == other.cacheControl &&
                 container == other.container &&
+                diagnostics == other.diagnostics &&
                 inferenceGeo == other.inferenceGeo &&
                 metadata == other.metadata &&
                 outputConfig == other.outputConfig &&
@@ -3183,6 +3286,7 @@ private constructor(
                 model,
                 cacheControl,
                 container,
+                diagnostics,
                 inferenceGeo,
                 metadata,
                 outputConfig,
@@ -3202,7 +3306,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, inferenceGeo=$inferenceGeo, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
+            "Body{maxTokens=$maxTokens, messages=$messages, model=$model, cacheControl=$cacheControl, container=$container, diagnostics=$diagnostics, inferenceGeo=$inferenceGeo, metadata=$metadata, outputConfig=$outputConfig, serviceTier=$serviceTier, stopSequences=$stopSequences, system=$system, temperature=$temperature, thinking=$thinking, toolChoice=$toolChoice, tools=$tools, topK=$topK, topP=$topP, additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -3212,8 +3316,7 @@ private constructor(
      * Anthropic offers different levels of service for your API requests. See
      * [service-tiers](https://platform.claude.com/docs/en/api/service-tiers) for details.
      */
-    class ServiceTier @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class ServiceTier private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -3227,14 +3330,22 @@ private constructor(
 
         companion object {
 
-            @JvmField val AUTO = of("auto")
+            @JvmField val AUTO = ServiceTier(JsonField.of("auto"))
 
-            @JvmField val STANDARD_ONLY = of("standard_only")
+            @JvmField val STANDARD_ONLY = ServiceTier(JsonField.of("standard_only"))
 
-            @JvmStatic fun of(value: String) = ServiceTier(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): ServiceTier =
+                // Intern known values so `==` works
+                when (value) {
+                    "auto" -> AUTO
+                    "standard_only" -> STANDARD_ONLY
+                    else -> ServiceTier(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): ServiceTier =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): ServiceTier =
                 value.asString().getOrNull()?.let { of(it) } ?: ServiceTier(value)
         }
 

@@ -77,8 +77,9 @@ private constructor(
     fun environmentId(): String = body.environmentId()
 
     /**
-     * A hard spend ceiling. The session stops issuing new model requests once the tracked list cost
-     * reaches `max_list_cost`.
+     * Enforced spend ceiling for the session. Omit to create an uncapped session. Every model the
+     * session can run — the agent's model and each callable agent's model — must have a public list
+     * price, or the request is rejected with reason `model_not_budgetable`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -323,8 +324,9 @@ private constructor(
         }
 
         /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
+         * Enforced spend ceiling for the session. Omit to create an uncapped session. Every model
+         * the session can run — the agent's model and each callable agent's model — must have a
+         * public list price, or the request is rejected with reason `model_not_budgetable`.
          */
         fun budget(budget: BetaManagedAgentsBudgetLimit) = apply { body.budget(budget) }
 
@@ -742,8 +744,9 @@ private constructor(
         fun environmentId(): String = environmentId.getRequired("environment_id")
 
         /**
-         * A hard spend ceiling. The session stops issuing new model requests once the tracked list
-         * cost reaches `max_list_cost`.
+         * Enforced spend ceiling for the session. Omit to create an uncapped session. Every model
+         * the session can run — the agent's model and each callable agent's model — must have a
+         * public list price, or the request is rejected with reason `model_not_budgetable`.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -967,8 +970,10 @@ private constructor(
             }
 
             /**
-             * A hard spend ceiling. The session stops issuing new model requests once the tracked
-             * list cost reaches `max_list_cost`.
+             * Enforced spend ceiling for the session. Omit to create an uncapped session. Every
+             * model the session can run — the agent's model and each callable agent's model — must
+             * have a public list price, or the request is rejected with reason
+             * `model_not_budgetable`.
              */
             fun budget(budget: BetaManagedAgentsBudgetLimit) = budget(JsonField.of(budget))
 
@@ -1994,7 +1999,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -2008,14 +2013,22 @@ private constructor(
 
             companion object {
 
-                @JvmField val USER_MESSAGE = of("user.message")
+                @JvmField val USER_MESSAGE = Type(JsonField.of("user.message"))
 
-                @JvmField val USER_DEFINE_OUTCOME = of("user.define_outcome")
+                @JvmField val USER_DEFINE_OUTCOME = Type(JsonField.of("user.define_outcome"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "user.message" -> USER_MESSAGE
+                        "user.define_outcome" -> USER_DEFINE_OUTCOME
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 
@@ -2600,7 +2613,7 @@ private constructor(
             }
         }
 
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Type private constructor(private val value: JsonField<String>) : Enum {
 
             /**
              * Returns this class instance's raw value.
@@ -2614,16 +2627,25 @@ private constructor(
 
             companion object {
 
-                @JvmField val GITHUB_REPOSITORY = of("github_repository")
+                @JvmField val GITHUB_REPOSITORY = Type(JsonField.of("github_repository"))
 
-                @JvmField val FILE = of("file")
+                @JvmField val FILE = Type(JsonField.of("file"))
 
-                @JvmField val MEMORY_STORE = of("memory_store")
+                @JvmField val MEMORY_STORE = Type(JsonField.of("memory_store"))
 
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+                @JvmStatic
+                fun of(value: String): Type =
+                    // Intern known values so `==` works
+                    when (value) {
+                        "github_repository" -> GITHUB_REPOSITORY
+                        "file" -> FILE
+                        "memory_store" -> MEMORY_STORE
+                        else -> Type(JsonField.of(value))
+                    }
 
-                @JvmSynthetic
-                internal fun of(value: JsonField<String>): Type =
+                @JsonCreator
+                @JvmStatic
+                fun of(value: JsonField<String>): Type =
                     value.asString().getOrNull()?.let { of(it) } ?: Type(value)
             }
 

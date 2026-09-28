@@ -51,7 +51,7 @@ private constructor(
     fun description(): String = description.getRequired("description")
 
     /**
-     * JSON Schema for custom tool input parameters.
+     * JSON Schema defining the expected input parameters for the tool.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -167,7 +167,7 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
-        /** JSON Schema for custom tool input parameters. */
+        /** JSON Schema defining the expected input parameters for the tool. */
         fun inputSchema(inputSchema: BetaManagedAgentsCustomToolInputSchema) =
             inputSchema(JsonField.of(inputSchema))
 
@@ -291,7 +291,7 @@ private constructor(
             (if (name.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -305,12 +305,19 @@ private constructor(
 
         companion object {
 
-            @JvmField val CUSTOM = of("custom")
+            @JvmField val CUSTOM = Type(JsonField.of("custom"))
 
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            @JvmStatic
+            fun of(value: String): Type =
+                // Intern known values so `==` works
+                when (value) {
+                    "custom" -> CUSTOM
+                    else -> Type(JsonField.of(value))
+                }
 
-            @JvmSynthetic
-            internal fun of(value: JsonField<String>): Type =
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Type =
                 value.asString().getOrNull()?.let { of(it) } ?: Type(value)
         }
 
