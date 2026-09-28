@@ -10,6 +10,8 @@ import com.anthropic.services.async.beta.organization.ComplianceSettingServiceAs
 import com.anthropic.services.async.beta.organization.ExternalKeyServiceAsync
 import com.anthropic.services.async.beta.organization.FederationServiceAsync
 import com.anthropic.services.async.beta.organization.InviteServiceAsync
+import com.anthropic.services.async.beta.organization.PluginMarketplaceServiceAsync
+import com.anthropic.services.async.beta.organization.PluginServiceAsync
 import com.anthropic.services.async.beta.organization.RateLimitServiceAsync
 import com.anthropic.services.async.beta.organization.ServiceAccountServiceAsync
 import com.anthropic.services.async.beta.organization.UserServiceAsync
@@ -48,6 +50,10 @@ interface OrganizationServiceAsync {
     fun rateLimits(): RateLimitServiceAsync
 
     fun complianceSettings(): ComplianceSettingServiceAsync
+
+    fun plugins(): PluginServiceAsync
+
+    fun pluginMarketplaces(): PluginMarketplaceServiceAsync
 
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): CompletableFuture<BetaOrganization> =
@@ -100,6 +106,10 @@ interface OrganizationServiceAsync {
         fun rateLimits(): RateLimitServiceAsync.WithRawResponse
 
         fun complianceSettings(): ComplianceSettingServiceAsync.WithRawResponse
+
+        fun plugins(): PluginServiceAsync.WithRawResponse
+
+        fun pluginMarketplaces(): PluginMarketplaceServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/me?beta=true`, but is otherwise

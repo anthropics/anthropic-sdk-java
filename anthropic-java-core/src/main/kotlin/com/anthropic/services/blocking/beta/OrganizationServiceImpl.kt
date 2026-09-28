@@ -24,6 +24,10 @@ import com.anthropic.services.blocking.beta.organization.FederationService
 import com.anthropic.services.blocking.beta.organization.FederationServiceImpl
 import com.anthropic.services.blocking.beta.organization.InviteService
 import com.anthropic.services.blocking.beta.organization.InviteServiceImpl
+import com.anthropic.services.blocking.beta.organization.PluginMarketplaceService
+import com.anthropic.services.blocking.beta.organization.PluginMarketplaceServiceImpl
+import com.anthropic.services.blocking.beta.organization.PluginService
+import com.anthropic.services.blocking.beta.organization.PluginServiceImpl
 import com.anthropic.services.blocking.beta.organization.RateLimitService
 import com.anthropic.services.blocking.beta.organization.RateLimitServiceImpl
 import com.anthropic.services.blocking.beta.organization.ServiceAccountService
@@ -63,6 +67,12 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
         ComplianceSettingServiceImpl(clientOptions)
     }
 
+    private val plugins: PluginService by lazy { PluginServiceImpl(clientOptions) }
+
+    private val pluginMarketplaces: PluginMarketplaceService by lazy {
+        PluginMarketplaceServiceImpl(clientOptions)
+    }
+
     override fun withRawResponse(): OrganizationService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrganizationService =
@@ -85,6 +95,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
     override fun rateLimits(): RateLimitService = rateLimits
 
     override fun complianceSettings(): ComplianceSettingService = complianceSettings
+
+    override fun plugins(): PluginService = plugins
+
+    override fun pluginMarketplaces(): PluginMarketplaceService = pluginMarketplaces
 
     override fun retrieve(
         params: OrganizationRetrieveParams,
@@ -135,6 +149,14 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
             ComplianceSettingServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val plugins: PluginService.WithRawResponse by lazy {
+            PluginServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val pluginMarketplaces: PluginMarketplaceService.WithRawResponse by lazy {
+            PluginMarketplaceServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): OrganizationService.WithRawResponse =
@@ -160,6 +182,11 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
         override fun complianceSettings(): ComplianceSettingService.WithRawResponse =
             complianceSettings
+
+        override fun plugins(): PluginService.WithRawResponse = plugins
+
+        override fun pluginMarketplaces(): PluginMarketplaceService.WithRawResponse =
+            pluginMarketplaces
 
         private val retrieveHandler: Handler<BetaOrganization> =
             jsonHandler<BetaOrganization>(clientOptions.jsonMapper)

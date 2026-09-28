@@ -165,6 +165,8 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
 
         @JvmField val MCP_CLIENT_2026_09_15 = AnthropicBeta(JsonField.of("mcp-client-2026-09-15"))
 
+        @JvmField val CE_PLUGINS_2026_09_01 = AnthropicBeta(JsonField.of("ce-plugins-2026-09-01"))
+
         @JvmStatic
         fun of(value: String): AnthropicBeta =
             // Intern known values so `==` works
@@ -221,6 +223,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
                 "compact-2026-09-04" -> COMPACT_2026_09_04
                 "inline-tools-2026-09-15" -> INLINE_TOOLS_2026_09_15
                 "mcp-client-2026-09-15" -> MCP_CLIENT_2026_09_15
+                "ce-plugins-2026-09-01" -> CE_PLUGINS_2026_09_01
                 else -> AnthropicBeta(JsonField.of(value))
             }
 
@@ -280,6 +283,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         COMPACT_2026_09_04,
         INLINE_TOOLS_2026_09_15,
         MCP_CLIENT_2026_09_15,
+        CE_PLUGINS_2026_09_01,
     }
 
     /**
@@ -340,6 +344,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         COMPACT_2026_09_04,
         INLINE_TOOLS_2026_09_15,
         MCP_CLIENT_2026_09_15,
+        CE_PLUGINS_2026_09_01,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -407,6 +412,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             COMPACT_2026_09_04 -> Value.COMPACT_2026_09_04
             INLINE_TOOLS_2026_09_15 -> Value.INLINE_TOOLS_2026_09_15
             MCP_CLIENT_2026_09_15 -> Value.MCP_CLIENT_2026_09_15
+            CE_PLUGINS_2026_09_01 -> Value.CE_PLUGINS_2026_09_01
             else -> Value._UNKNOWN
         }
 
@@ -472,6 +478,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             COMPACT_2026_09_04 -> Known.COMPACT_2026_09_04
             INLINE_TOOLS_2026_09_15 -> Known.INLINE_TOOLS_2026_09_15
             MCP_CLIENT_2026_09_15 -> Known.MCP_CLIENT_2026_09_15
+            CE_PLUGINS_2026_09_01 -> Known.CE_PLUGINS_2026_09_01
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

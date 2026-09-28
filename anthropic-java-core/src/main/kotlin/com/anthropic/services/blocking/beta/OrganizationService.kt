@@ -10,6 +10,8 @@ import com.anthropic.services.blocking.beta.organization.ComplianceSettingServic
 import com.anthropic.services.blocking.beta.organization.ExternalKeyService
 import com.anthropic.services.blocking.beta.organization.FederationService
 import com.anthropic.services.blocking.beta.organization.InviteService
+import com.anthropic.services.blocking.beta.organization.PluginMarketplaceService
+import com.anthropic.services.blocking.beta.organization.PluginService
 import com.anthropic.services.blocking.beta.organization.RateLimitService
 import com.anthropic.services.blocking.beta.organization.ServiceAccountService
 import com.anthropic.services.blocking.beta.organization.UserService
@@ -48,6 +50,10 @@ interface OrganizationService {
     fun rateLimits(): RateLimitService
 
     fun complianceSettings(): ComplianceSettingService
+
+    fun plugins(): PluginService
+
+    fun pluginMarketplaces(): PluginMarketplaceService
 
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): BetaOrganization = retrieve(OrganizationRetrieveParams.none())
@@ -98,6 +104,10 @@ interface OrganizationService {
         fun rateLimits(): RateLimitService.WithRawResponse
 
         fun complianceSettings(): ComplianceSettingService.WithRawResponse
+
+        fun plugins(): PluginService.WithRawResponse
+
+        fun pluginMarketplaces(): PluginMarketplaceService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/me?beta=true`, but is otherwise

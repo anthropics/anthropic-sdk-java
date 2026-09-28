@@ -52,6 +52,11 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.organization.federation.rules;
     exports com.anthropic.models.beta.organization.federation.rules.workspaces;
     exports com.anthropic.models.beta.organization.invites;
+    exports com.anthropic.models.beta.organization.pluginmarketplaces;
+    exports com.anthropic.models.beta.organization.plugins;
+    exports com.anthropic.models.beta.organization.plugins.installationsettings;
+    exports com.anthropic.models.beta.organization.plugins.shares;
+    exports com.anthropic.models.beta.organization.plugins.versions;
     exports com.anthropic.models.beta.organization.ratelimits;
     exports com.anthropic.models.beta.organization.serviceaccounts;
     exports com.anthropic.models.beta.organization.serviceaccounts.workspaces;
@@ -89,6 +94,7 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.beta.organization;
     exports com.anthropic.services.async.beta.organization.federation;
     exports com.anthropic.services.async.beta.organization.federation.rules;
+    exports com.anthropic.services.async.beta.organization.plugins;
     exports com.anthropic.services.async.beta.organization.serviceaccounts;
     exports com.anthropic.services.async.beta.organization.workspaces;
     exports com.anthropic.services.async.beta.sessions;
@@ -107,6 +113,7 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.beta.organization;
     exports com.anthropic.services.blocking.beta.organization.federation;
     exports com.anthropic.services.blocking.beta.organization.federation.rules;
+    exports com.anthropic.services.blocking.beta.organization.plugins;
     exports com.anthropic.services.blocking.beta.organization.serviceaccounts;
     exports com.anthropic.services.blocking.beta.organization.workspaces;
     exports com.anthropic.services.blocking.beta.sessions;
