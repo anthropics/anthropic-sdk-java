@@ -33,7 +33,7 @@ private constructor(
 
     override fun items(): List<BetaManagedAgentsSessionThread> = data()
 
-    override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
+    override fun hasNextPage(): Boolean = nextPageRaw().isPresent
 
     fun nextPageParams(): ThreadListParams {
         val nextCursor =

@@ -36,7 +36,7 @@ private constructor(
 
     override fun items(): List<BetaManagedAgentsMemoryVersion> = data()
 
-    override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
+    override fun hasNextPage(): Boolean = nextPageRaw().isPresent
 
     fun nextPageParams(): MemoryVersionListParams {
         val nextCursor =
