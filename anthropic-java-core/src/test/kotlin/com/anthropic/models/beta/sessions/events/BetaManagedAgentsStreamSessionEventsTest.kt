@@ -1190,14 +1190,16 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
             BetaManagedAgentsSessionErrorEvent.builder()
                 .id("id")
                 .error(
-                    BetaManagedAgentsUnknownError.builder()
-                        .message("message")
+                    BetaManagedAgentsRepositoryAuthenticationError.builder()
+                        .message(
+                            "The repository host rejected the credentials for the repository, or required credentials and received none."
+                        )
+                        .repositoryUrl("https://github.com/example-org/example-repo")
                         .retryStatus(
                             BetaManagedAgentsRetryStatusRetrying.of(
                                 BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                             )
                         )
-                        .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                         .build()
                 )
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1254,14 +1256,16 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 BetaManagedAgentsSessionErrorEvent.builder()
                     .id("id")
                     .error(
-                        BetaManagedAgentsUnknownError.builder()
-                            .message("message")
+                        BetaManagedAgentsRepositoryAuthenticationError.builder()
+                            .message(
+                                "The repository host rejected the credentials for the repository, or required credentials and received none."
+                            )
+                            .repositoryUrl("https://github.com/example-org/example-repo")
                             .retryStatus(
                                 BetaManagedAgentsRetryStatusRetrying.of(
                                     BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                                 )
                             )
-                            .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                             .build()
                     )
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))

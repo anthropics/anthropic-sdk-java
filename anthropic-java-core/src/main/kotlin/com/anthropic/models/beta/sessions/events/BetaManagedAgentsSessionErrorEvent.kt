@@ -213,6 +213,29 @@ private constructor(
         fun error(credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError) =
             error(Error.ofCredentialHostUnreachable(credentialHostUnreachable))
 
+        /**
+         * Alias for calling [error] with
+         * `Error.ofRepositoryAuthentication(repositoryAuthentication)`.
+         */
+        fun error(repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError) =
+            error(Error.ofRepositoryAuthentication(repositoryAuthentication))
+
+        /** Alias for calling [error] with `Error.ofRepositoryForbidden(repositoryForbidden)`. */
+        fun error(repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError) =
+            error(Error.ofRepositoryForbidden(repositoryForbidden))
+
+        /** Alias for calling [error] with `Error.ofRepositoryNotFound(repositoryNotFound)`. */
+        fun error(repositoryNotFound: BetaManagedAgentsRepositoryNotFoundError) =
+            error(Error.ofRepositoryNotFound(repositoryNotFound))
+
+        /** Alias for calling [error] with `Error.ofRepositoryCheckout(repositoryCheckout)`. */
+        fun error(repositoryCheckout: BetaManagedAgentsRepositoryCheckoutError) =
+            error(Error.ofRepositoryCheckout(repositoryCheckout))
+
+        /** Alias for calling [error] with `Error.ofRepositoryClone(repositoryClone)`. */
+        fun error(repositoryClone: BetaManagedAgentsRepositoryCloneError) =
+            error(Error.ofRepositoryClone(repositoryClone))
+
         /** Timestamp when the error occurred. */
         fun processedAt(processedAt: OffsetDateTime) = processedAt(JsonField.of(processedAt))
 
@@ -336,6 +359,12 @@ private constructor(
         private val billing: BetaManagedAgentsBillingError? = null,
         private val credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError? =
             null,
+        private val repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError? =
+            null,
+        private val repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError? = null,
+        private val repositoryNotFound: BetaManagedAgentsRepositoryNotFoundError? = null,
+        private val repositoryCheckout: BetaManagedAgentsRepositoryCheckoutError? = null,
+        private val repositoryClone: BetaManagedAgentsRepositoryCloneError? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -371,6 +400,26 @@ private constructor(
                     override fun visitCredentialHostUnreachable(
                         credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
                     ): Type = Type.CREDENTIAL_HOST_UNREACHABLE_ERROR
+
+                    override fun visitRepositoryAuthentication(
+                        repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError
+                    ): Type = Type.REPOSITORY_AUTHENTICATION_ERROR
+
+                    override fun visitRepositoryForbidden(
+                        repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError
+                    ): Type = Type.REPOSITORY_FORBIDDEN_ERROR
+
+                    override fun visitRepositoryNotFound(
+                        repositoryNotFound: BetaManagedAgentsRepositoryNotFoundError
+                    ): Type = Type.REPOSITORY_NOT_FOUND_ERROR
+
+                    override fun visitRepositoryCheckout(
+                        repositoryCheckout: BetaManagedAgentsRepositoryCheckoutError
+                    ): Type = Type.REPOSITORY_CHECKOUT_ERROR
+
+                    override fun visitRepositoryClone(
+                        repositoryClone: BetaManagedAgentsRepositoryCloneError
+                    ): Type = Type.REPOSITORY_CLONE_ERROR
 
                     override fun unknown(json: JsonValue?): Type =
                         Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
@@ -409,6 +458,26 @@ private constructor(
                     override fun visitCredentialHostUnreachable(
                         credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
                     ): String = credentialHostUnreachable.message()
+
+                    override fun visitRepositoryAuthentication(
+                        repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError
+                    ): String = repositoryAuthentication.message()
+
+                    override fun visitRepositoryForbidden(
+                        repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError
+                    ): String = repositoryForbidden.message()
+
+                    override fun visitRepositoryNotFound(
+                        repositoryNotFound: BetaManagedAgentsRepositoryNotFoundError
+                    ): String = repositoryNotFound.message()
+
+                    override fun visitRepositoryCheckout(
+                        repositoryCheckout: BetaManagedAgentsRepositoryCheckoutError
+                    ): String = repositoryCheckout.message()
+
+                    override fun visitRepositoryClone(
+                        repositoryClone: BetaManagedAgentsRepositoryCloneError
+                    ): String = repositoryClone.message()
 
                     override fun unknown(json: JsonValue?): String =
                         json.getProperty<String>("message").getRequired("message")
@@ -450,8 +519,88 @@ private constructor(
                         credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
                     ): Optional<String> = Optional.empty()
 
+                    override fun visitRepositoryAuthentication(
+                        repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitRepositoryForbidden(
+                        repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitRepositoryNotFound(
+                        repositoryNotFound: BetaManagedAgentsRepositoryNotFoundError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitRepositoryCheckout(
+                        repositoryCheckout: BetaManagedAgentsRepositoryCheckoutError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitRepositoryClone(
+                        repositoryClone: BetaManagedAgentsRepositoryCloneError
+                    ): Optional<String> = Optional.empty()
+
                     override fun unknown(json: JsonValue?): Optional<String> =
                         json.getProperty<String>("mcp_server_name").asKnown()
+                }
+            )
+
+        fun repositoryUrl(): Optional<String> =
+            accept(
+                object : Visitor<Optional<String>> {
+                    override fun visitUnknown(
+                        unknown: BetaManagedAgentsUnknownError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitModelOverloaded(
+                        modelOverloaded: BetaManagedAgentsModelOverloadedError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitModelRateLimited(
+                        modelRateLimited: BetaManagedAgentsModelRateLimitedError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitModelRequestFailed(
+                        modelRequestFailed: BetaManagedAgentsModelRequestFailedError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitMcpConnectionFailed(
+                        mcpConnectionFailed: BetaManagedAgentsMcpConnectionFailedError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitMcpAuthenticationFailed(
+                        mcpAuthenticationFailed: BetaManagedAgentsMcpAuthenticationFailedError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitBilling(
+                        billing: BetaManagedAgentsBillingError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitCredentialHostUnreachable(
+                        credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
+                    ): Optional<String> = Optional.empty()
+
+                    override fun visitRepositoryAuthentication(
+                        repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError
+                    ): Optional<String> = repositoryAuthentication.repositoryUrl()
+
+                    override fun visitRepositoryForbidden(
+                        repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError
+                    ): Optional<String> = repositoryForbidden.repositoryUrl()
+
+                    override fun visitRepositoryNotFound(
+                        repositoryNotFound: BetaManagedAgentsRepositoryNotFoundError
+                    ): Optional<String> = repositoryNotFound.repositoryUrl()
+
+                    override fun visitRepositoryCheckout(
+                        repositoryCheckout: BetaManagedAgentsRepositoryCheckoutError
+                    ): Optional<String> = repositoryCheckout.repositoryUrl()
+
+                    override fun visitRepositoryClone(
+                        repositoryClone: BetaManagedAgentsRepositoryCloneError
+                    ): Optional<String> = repositoryClone.repositoryUrl()
+
+                    override fun unknown(json: JsonValue?): Optional<String> =
+                        json.getProperty<String>("repository_url").asKnown()
                 }
             )
 
@@ -496,6 +645,28 @@ private constructor(
         fun credentialHostUnreachable(): Optional<BetaManagedAgentsCredentialHostUnreachableError> =
             Optional.ofNullable(credentialHostUnreachable)
 
+        /**
+         * The repository host rejected the credentials, or required credentials and received none.
+         */
+        fun repositoryAuthentication(): Optional<BetaManagedAgentsRepositoryAuthenticationError> =
+            Optional.ofNullable(repositoryAuthentication)
+
+        /** The repository host refused access to the repository. */
+        fun repositoryForbidden(): Optional<BetaManagedAgentsRepositoryForbiddenError> =
+            Optional.ofNullable(repositoryForbidden)
+
+        /** The repository host reported the repository as not found. */
+        fun repositoryNotFound(): Optional<BetaManagedAgentsRepositoryNotFoundError> =
+            Optional.ofNullable(repositoryNotFound)
+
+        /** The requested branch or commit does not exist in the repository. */
+        fun repositoryCheckout(): Optional<BetaManagedAgentsRepositoryCheckoutError> =
+            Optional.ofNullable(repositoryCheckout)
+
+        /** The repository could not be cloned. */
+        fun repositoryClone(): Optional<BetaManagedAgentsRepositoryCloneError> =
+            Optional.ofNullable(repositoryClone)
+
         fun isUnknown(): Boolean = unknown != null
 
         fun isModelOverloaded(): Boolean = modelOverloaded != null
@@ -511,6 +682,16 @@ private constructor(
         fun isBilling(): Boolean = billing != null
 
         fun isCredentialHostUnreachable(): Boolean = credentialHostUnreachable != null
+
+        fun isRepositoryAuthentication(): Boolean = repositoryAuthentication != null
+
+        fun isRepositoryForbidden(): Boolean = repositoryForbidden != null
+
+        fun isRepositoryNotFound(): Boolean = repositoryNotFound != null
+
+        fun isRepositoryCheckout(): Boolean = repositoryCheckout != null
+
+        fun isRepositoryClone(): Boolean = repositoryClone != null
 
         /**
          * An unknown or unexpected error occurred during session execution. A fallback variant;
@@ -552,6 +733,28 @@ private constructor(
          */
         fun asCredentialHostUnreachable(): BetaManagedAgentsCredentialHostUnreachableError =
             credentialHostUnreachable.getOrThrow("credentialHostUnreachable")
+
+        /**
+         * The repository host rejected the credentials, or required credentials and received none.
+         */
+        fun asRepositoryAuthentication(): BetaManagedAgentsRepositoryAuthenticationError =
+            repositoryAuthentication.getOrThrow("repositoryAuthentication")
+
+        /** The repository host refused access to the repository. */
+        fun asRepositoryForbidden(): BetaManagedAgentsRepositoryForbiddenError =
+            repositoryForbidden.getOrThrow("repositoryForbidden")
+
+        /** The repository host reported the repository as not found. */
+        fun asRepositoryNotFound(): BetaManagedAgentsRepositoryNotFoundError =
+            repositoryNotFound.getOrThrow("repositoryNotFound")
+
+        /** The requested branch or commit does not exist in the repository. */
+        fun asRepositoryCheckout(): BetaManagedAgentsRepositoryCheckoutError =
+            repositoryCheckout.getOrThrow("repositoryCheckout")
+
+        /** The repository could not be cloned. */
+        fun asRepositoryClone(): BetaManagedAgentsRepositoryCloneError =
+            repositoryClone.getOrThrow("repositoryClone")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -596,6 +799,12 @@ private constructor(
                 billing != null -> visitor.visitBilling(billing)
                 credentialHostUnreachable != null ->
                     visitor.visitCredentialHostUnreachable(credentialHostUnreachable)
+                repositoryAuthentication != null ->
+                    visitor.visitRepositoryAuthentication(repositoryAuthentication)
+                repositoryForbidden != null -> visitor.visitRepositoryForbidden(repositoryForbidden)
+                repositoryNotFound != null -> visitor.visitRepositoryNotFound(repositoryNotFound)
+                repositoryCheckout != null -> visitor.visitRepositoryCheckout(repositoryCheckout)
+                repositoryClone != null -> visitor.visitRepositoryClone(repositoryClone)
                 else -> visitor.unknown(_json)
             }
 
@@ -660,6 +869,36 @@ private constructor(
                     ) {
                         credentialHostUnreachable.validate()
                     }
+
+                    override fun visitRepositoryAuthentication(
+                        repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError
+                    ) {
+                        repositoryAuthentication.validate()
+                    }
+
+                    override fun visitRepositoryForbidden(
+                        repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError
+                    ) {
+                        repositoryForbidden.validate()
+                    }
+
+                    override fun visitRepositoryNotFound(
+                        repositoryNotFound: BetaManagedAgentsRepositoryNotFoundError
+                    ) {
+                        repositoryNotFound.validate()
+                    }
+
+                    override fun visitRepositoryCheckout(
+                        repositoryCheckout: BetaManagedAgentsRepositoryCheckoutError
+                    ) {
+                        repositoryCheckout.validate()
+                    }
+
+                    override fun visitRepositoryClone(
+                        repositoryClone: BetaManagedAgentsRepositoryCloneError
+                    ) {
+                        repositoryClone.validate()
+                    }
                 }
             )
             validated = true
@@ -713,6 +952,26 @@ private constructor(
                         credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
                     ) = credentialHostUnreachable.validity()
 
+                    override fun visitRepositoryAuthentication(
+                        repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError
+                    ) = repositoryAuthentication.validity()
+
+                    override fun visitRepositoryForbidden(
+                        repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError
+                    ) = repositoryForbidden.validity()
+
+                    override fun visitRepositoryNotFound(
+                        repositoryNotFound: BetaManagedAgentsRepositoryNotFoundError
+                    ) = repositoryNotFound.validity()
+
+                    override fun visitRepositoryCheckout(
+                        repositoryCheckout: BetaManagedAgentsRepositoryCheckoutError
+                    ) = repositoryCheckout.validity()
+
+                    override fun visitRepositoryClone(
+                        repositoryClone: BetaManagedAgentsRepositoryCloneError
+                    ) = repositoryClone.validity()
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -730,7 +989,12 @@ private constructor(
                 mcpConnectionFailed == other.mcpConnectionFailed &&
                 mcpAuthenticationFailed == other.mcpAuthenticationFailed &&
                 billing == other.billing &&
-                credentialHostUnreachable == other.credentialHostUnreachable
+                credentialHostUnreachable == other.credentialHostUnreachable &&
+                repositoryAuthentication == other.repositoryAuthentication &&
+                repositoryForbidden == other.repositoryForbidden &&
+                repositoryNotFound == other.repositoryNotFound &&
+                repositoryCheckout == other.repositoryCheckout &&
+                repositoryClone == other.repositoryClone
         }
 
         override fun hashCode(): Int =
@@ -743,6 +1007,11 @@ private constructor(
                 mcpAuthenticationFailed,
                 billing,
                 credentialHostUnreachable,
+                repositoryAuthentication,
+                repositoryForbidden,
+                repositoryNotFound,
+                repositoryCheckout,
+                repositoryClone,
             )
 
         override fun toString(): String =
@@ -757,6 +1026,12 @@ private constructor(
                 billing != null -> "Error{billing=$billing}"
                 credentialHostUnreachable != null ->
                     "Error{credentialHostUnreachable=$credentialHostUnreachable}"
+                repositoryAuthentication != null ->
+                    "Error{repositoryAuthentication=$repositoryAuthentication}"
+                repositoryForbidden != null -> "Error{repositoryForbidden=$repositoryForbidden}"
+                repositoryNotFound != null -> "Error{repositoryNotFound=$repositoryNotFound}"
+                repositoryCheckout != null -> "Error{repositoryCheckout=$repositoryCheckout}"
+                repositoryClone != null -> "Error{repositoryClone=$repositoryClone}"
                 _json != null -> "Error{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Error")
             }
@@ -814,6 +1089,36 @@ private constructor(
             fun ofCredentialHostUnreachable(
                 credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
             ) = Error(credentialHostUnreachable = credentialHostUnreachable)
+
+            /**
+             * The repository host rejected the credentials, or required credentials and received
+             * none.
+             */
+            @JvmStatic
+            fun ofRepositoryAuthentication(
+                repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError
+            ) = Error(repositoryAuthentication = repositoryAuthentication)
+
+            /** The repository host refused access to the repository. */
+            @JvmStatic
+            fun ofRepositoryForbidden(
+                repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError
+            ) = Error(repositoryForbidden = repositoryForbidden)
+
+            /** The repository host reported the repository as not found. */
+            @JvmStatic
+            fun ofRepositoryNotFound(repositoryNotFound: BetaManagedAgentsRepositoryNotFoundError) =
+                Error(repositoryNotFound = repositoryNotFound)
+
+            /** The requested branch or commit does not exist in the repository. */
+            @JvmStatic
+            fun ofRepositoryCheckout(repositoryCheckout: BetaManagedAgentsRepositoryCheckoutError) =
+                Error(repositoryCheckout = repositoryCheckout)
+
+            /** The repository could not be cloned. */
+            @JvmStatic
+            fun ofRepositoryClone(repositoryClone: BetaManagedAgentsRepositoryCloneError) =
+                Error(repositoryClone = repositoryClone)
         }
 
         /** An interface that defines how to map each variant of [Error] to a value of type [T]. */
@@ -861,6 +1166,32 @@ private constructor(
             fun visitCredentialHostUnreachable(
                 credentialHostUnreachable: BetaManagedAgentsCredentialHostUnreachableError
             ): T
+
+            /**
+             * The repository host rejected the credentials, or required credentials and received
+             * none.
+             */
+            fun visitRepositoryAuthentication(
+                repositoryAuthentication: BetaManagedAgentsRepositoryAuthenticationError
+            ): T
+
+            /** The repository host refused access to the repository. */
+            fun visitRepositoryForbidden(
+                repositoryForbidden: BetaManagedAgentsRepositoryForbiddenError
+            ): T
+
+            /** The repository host reported the repository as not found. */
+            fun visitRepositoryNotFound(
+                repositoryNotFound: BetaManagedAgentsRepositoryNotFoundError
+            ): T
+
+            /** The requested branch or commit does not exist in the repository. */
+            fun visitRepositoryCheckout(
+                repositoryCheckout: BetaManagedAgentsRepositoryCheckoutError
+            ): T
+
+            /** The repository could not be cloned. */
+            fun visitRepositoryClone(repositoryClone: BetaManagedAgentsRepositoryCloneError): T
 
             /**
              * Maps an unknown variant of [Error] to a value of type [T].
@@ -940,6 +1271,46 @@ private constructor(
                             ?.let { Error(credentialHostUnreachable = it, _json = json) }
                             ?: Error(_json = json)
                     }
+                    "repository_authentication_error" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsRepositoryAuthenticationError>(),
+                            )
+                            ?.let { Error(repositoryAuthentication = it, _json = json) }
+                            ?: Error(_json = json)
+                    }
+                    "repository_forbidden_error" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsRepositoryForbiddenError>(),
+                            )
+                            ?.let { Error(repositoryForbidden = it, _json = json) }
+                            ?: Error(_json = json)
+                    }
+                    "repository_not_found_error" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsRepositoryNotFoundError>(),
+                            )
+                            ?.let { Error(repositoryNotFound = it, _json = json) }
+                            ?: Error(_json = json)
+                    }
+                    "repository_checkout_error" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsRepositoryCheckoutError>(),
+                            )
+                            ?.let { Error(repositoryCheckout = it, _json = json) }
+                            ?: Error(_json = json)
+                    }
+                    "repository_clone_error" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsRepositoryCloneError>(),
+                            )
+                            ?.let { Error(repositoryClone = it, _json = json) }
+                            ?: Error(_json = json)
+                    }
                 }
 
                 return Error(_json = json)
@@ -966,6 +1337,15 @@ private constructor(
                     value.billing != null -> generator.writeObject(value.billing)
                     value.credentialHostUnreachable != null ->
                         generator.writeObject(value.credentialHostUnreachable)
+                    value.repositoryAuthentication != null ->
+                        generator.writeObject(value.repositoryAuthentication)
+                    value.repositoryForbidden != null ->
+                        generator.writeObject(value.repositoryForbidden)
+                    value.repositoryNotFound != null ->
+                        generator.writeObject(value.repositoryNotFound)
+                    value.repositoryCheckout != null ->
+                        generator.writeObject(value.repositoryCheckout)
+                    value.repositoryClone != null -> generator.writeObject(value.repositoryClone)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Error")
                 }
@@ -1009,6 +1389,21 @@ private constructor(
                 val CREDENTIAL_HOST_UNREACHABLE_ERROR =
                     Type(JsonField.of("credential_host_unreachable_error"))
 
+                @JvmField
+                val REPOSITORY_AUTHENTICATION_ERROR =
+                    Type(JsonField.of("repository_authentication_error"))
+
+                @JvmField
+                val REPOSITORY_FORBIDDEN_ERROR = Type(JsonField.of("repository_forbidden_error"))
+
+                @JvmField
+                val REPOSITORY_NOT_FOUND_ERROR = Type(JsonField.of("repository_not_found_error"))
+
+                @JvmField
+                val REPOSITORY_CHECKOUT_ERROR = Type(JsonField.of("repository_checkout_error"))
+
+                @JvmField val REPOSITORY_CLONE_ERROR = Type(JsonField.of("repository_clone_error"))
+
                 @JvmStatic
                 fun of(value: String): Type =
                     // Intern known values so `==` works
@@ -1021,6 +1416,11 @@ private constructor(
                         "mcp_authentication_failed_error" -> MCP_AUTHENTICATION_FAILED_ERROR
                         "billing_error" -> BILLING_ERROR
                         "credential_host_unreachable_error" -> CREDENTIAL_HOST_UNREACHABLE_ERROR
+                        "repository_authentication_error" -> REPOSITORY_AUTHENTICATION_ERROR
+                        "repository_forbidden_error" -> REPOSITORY_FORBIDDEN_ERROR
+                        "repository_not_found_error" -> REPOSITORY_NOT_FOUND_ERROR
+                        "repository_checkout_error" -> REPOSITORY_CHECKOUT_ERROR
+                        "repository_clone_error" -> REPOSITORY_CLONE_ERROR
                         else -> Type(JsonField.of(value))
                     }
 
@@ -1040,6 +1440,11 @@ private constructor(
                 MCP_AUTHENTICATION_FAILED_ERROR,
                 BILLING_ERROR,
                 CREDENTIAL_HOST_UNREACHABLE_ERROR,
+                REPOSITORY_AUTHENTICATION_ERROR,
+                REPOSITORY_FORBIDDEN_ERROR,
+                REPOSITORY_NOT_FOUND_ERROR,
+                REPOSITORY_CHECKOUT_ERROR,
+                REPOSITORY_CLONE_ERROR,
             }
 
             /**
@@ -1060,6 +1465,11 @@ private constructor(
                 MCP_AUTHENTICATION_FAILED_ERROR,
                 BILLING_ERROR,
                 CREDENTIAL_HOST_UNREACHABLE_ERROR,
+                REPOSITORY_AUTHENTICATION_ERROR,
+                REPOSITORY_FORBIDDEN_ERROR,
+                REPOSITORY_NOT_FOUND_ERROR,
+                REPOSITORY_CHECKOUT_ERROR,
+                REPOSITORY_CLONE_ERROR,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
@@ -1081,6 +1491,11 @@ private constructor(
                     MCP_AUTHENTICATION_FAILED_ERROR -> Value.MCP_AUTHENTICATION_FAILED_ERROR
                     BILLING_ERROR -> Value.BILLING_ERROR
                     CREDENTIAL_HOST_UNREACHABLE_ERROR -> Value.CREDENTIAL_HOST_UNREACHABLE_ERROR
+                    REPOSITORY_AUTHENTICATION_ERROR -> Value.REPOSITORY_AUTHENTICATION_ERROR
+                    REPOSITORY_FORBIDDEN_ERROR -> Value.REPOSITORY_FORBIDDEN_ERROR
+                    REPOSITORY_NOT_FOUND_ERROR -> Value.REPOSITORY_NOT_FOUND_ERROR
+                    REPOSITORY_CHECKOUT_ERROR -> Value.REPOSITORY_CHECKOUT_ERROR
+                    REPOSITORY_CLONE_ERROR -> Value.REPOSITORY_CLONE_ERROR
                     else -> Value._UNKNOWN
                 }
 
@@ -1103,6 +1518,11 @@ private constructor(
                     MCP_AUTHENTICATION_FAILED_ERROR -> Known.MCP_AUTHENTICATION_FAILED_ERROR
                     BILLING_ERROR -> Known.BILLING_ERROR
                     CREDENTIAL_HOST_UNREACHABLE_ERROR -> Known.CREDENTIAL_HOST_UNREACHABLE_ERROR
+                    REPOSITORY_AUTHENTICATION_ERROR -> Known.REPOSITORY_AUTHENTICATION_ERROR
+                    REPOSITORY_FORBIDDEN_ERROR -> Known.REPOSITORY_FORBIDDEN_ERROR
+                    REPOSITORY_NOT_FOUND_ERROR -> Known.REPOSITORY_NOT_FOUND_ERROR
+                    REPOSITORY_CHECKOUT_ERROR -> Known.REPOSITORY_CHECKOUT_ERROR
+                    REPOSITORY_CLONE_ERROR -> Known.REPOSITORY_CLONE_ERROR
                     else -> throw AnthropicInvalidDataException("Unknown Type: $value")
                 }
 
