@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("anthropic.java")
@@ -51,6 +52,11 @@ kotlin {
         // this version (nearest-wins), so it sets the stdlib floor our jar must run on.
         coreLibrariesVersion = libs.findVersion("kotlin-compat-stdlib").get().requiredVersion
     }
+}
+
+// CI builds from a clean checkout, so tracking changes for the next compile is wasted work.
+if (!providers.environmentVariable("CI").orNull.isNullOrEmpty()) {
+    tasks.withType<KotlinCompile>().configureEach { incremental = false }
 }
 
 tasks.withType<Test>().configureEach {
