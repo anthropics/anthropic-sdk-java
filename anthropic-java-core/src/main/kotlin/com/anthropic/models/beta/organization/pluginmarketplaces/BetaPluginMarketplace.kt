@@ -373,16 +373,6 @@ private constructor(
         ) = apply { this.defaultInstallationPreference = defaultInstallationPreference }
 
         /**
-         * Sets [defaultInstallationPreference] to an arbitrary [String].
-         *
-         * You should usually call [defaultInstallationPreference] with a well-typed
-         * [DefaultInstallationPreference] constant instead. This method is primarily for setting
-         * the field to an undocumented or not yet supported value.
-         */
-        fun defaultInstallationPreference(value: String) =
-            defaultInstallationPreference(DefaultInstallationPreference.of(value))
-
-        /**
          * RFC 3339. When the most recent synchronization attempt to finish did so, whatever its
          * outcome; for a repository plugin marketplace no synchronization has run on yet, when it
          * was created. Null for a plugin marketplace that is not synchronized from a repository.
@@ -486,14 +476,6 @@ private constructor(
         fun source(source: JsonField<Source>) = apply { this.source = source }
 
         /**
-         * Sets [source] to an arbitrary [String].
-         *
-         * You should usually call [source] with a well-typed [Source] constant instead. This method
-         * is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun source(value: String) = source(Source.of(value))
-
-        /**
          * Outcome of the plugin marketplace's most recent synchronization: one of `success`,
          * `in_progress`, `failed_content`, `failed_transient`, `failed_auth`, `failed_limits`; a
          * value this API does not yet name is returned as stored. Null until a synchronization is
@@ -512,15 +494,6 @@ private constructor(
          * supported value.
          */
         fun syncStatus(syncStatus: JsonField<SyncStatus>) = apply { this.syncStatus = syncStatus }
-
-        /**
-         * Sets [syncStatus] to an arbitrary [String].
-         *
-         * You should usually call [syncStatus] with a well-typed [SyncStatus] constant instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun syncStatus(value: String) = syncStatus(SyncStatus.of(value))
 
         /**
          * Sets the field to an arbitrary JSON value.
@@ -608,13 +581,13 @@ private constructor(
 
         id()
         createdAt()
-        defaultInstallationPreference()
+        defaultInstallationPreference().ifPresent { it.validate() }
         lastSyncEndedAt()
         lastSyncReadSha()
         name()
         owner().validate()
-        source()
-        syncStatus()
+        source().validate()
+        syncStatus().ifPresent { it.validate() }
         _type().let {
             if (it != JsonValue.from("plugin_marketplace")) {
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
@@ -640,13 +613,13 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (defaultInstallationPreference.asKnown().isPresent) 1 else 0) +
+            (defaultInstallationPreference.asKnown().getOrNull()?.validity() ?: 0) +
             (if (lastSyncEndedAt.asKnown().isPresent) 1 else 0) +
             (if (lastSyncReadSha.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (owner.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (source.asKnown().isPresent) 1 else 0) +
-            (if (syncStatus.asKnown().isPresent) 1 else 0) +
+            (source.asKnown().getOrNull()?.validity() ?: 0) +
+            (syncStatus.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("plugin_marketplace")) 1 else 0 }
 
     /**

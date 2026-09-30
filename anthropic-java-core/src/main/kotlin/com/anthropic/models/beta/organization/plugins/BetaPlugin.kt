@@ -781,16 +781,6 @@ private constructor(
         ) = apply { this.organizationInstallationPreference = organizationInstallationPreference }
 
         /**
-         * Sets [organizationInstallationPreference] to an arbitrary [String].
-         *
-         * You should usually call [organizationInstallationPreference] with a well-typed
-         * [OrganizationInstallationPreference] constant instead. This method is primarily for
-         * setting the field to an undocumented or not yet supported value.
-         */
-        fun organizationInstallationPreference(value: String) =
-            organizationInstallationPreference(OrganizationInstallationPreference.of(value))
-
-        /**
          * Organization-owned Plugin: true while it has no organization-wide setting of its own and
          * `organization_installation_preference` is its plugin marketplace's default. Null for a
          * member-owned Plugin.
@@ -1055,7 +1045,7 @@ private constructor(
         manifestVersion()
         marketplaceId()
         name()
-        organizationInstallationPreference()
+        organizationInstallationPreference().ifPresent { it.validate() }
         organizationInstallationPreferenceInherited()
         owner().validate()
         reach().ifPresent { it.validate() }
@@ -1096,7 +1086,7 @@ private constructor(
             (if (manifestVersion.asKnown().isPresent) 1 else 0) +
             (if (marketplaceId.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
-            (if (organizationInstallationPreference.asKnown().isPresent) 1 else 0) +
+            (organizationInstallationPreference.asKnown().getOrNull()?.validity() ?: 0) +
             (if (organizationInstallationPreferenceInherited.asKnown().isPresent) 1 else 0) +
             (owner.asKnown().getOrNull()?.validity() ?: 0) +
             (reach.asKnown().getOrNull()?.validity() ?: 0) +

@@ -243,16 +243,6 @@ private constructor(
                 this.installationPreference = installationPreference
             }
 
-        /**
-         * Sets [installationPreference] to an arbitrary [String].
-         *
-         * You should usually call [installationPreference] with a well-typed
-         * [InstallationPreference] constant instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
-         */
-        fun installationPreference(value: String) =
-            installationPreference(InstallationPreference.of(value))
-
         /** The Plugin's ID. */
         fun pluginId(pluginId: String) = pluginId(JsonField.of(pluginId))
 
@@ -400,7 +390,7 @@ private constructor(
         }
 
         createdAt()
-        installationPreference()
+        installationPreference().validate()
         pluginId()
         target().validate()
         _type().let {
@@ -428,7 +418,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (installationPreference.asKnown().isPresent) 1 else 0) +
+            (installationPreference.asKnown().getOrNull()?.validity() ?: 0) +
             (if (pluginId.asKnown().isPresent) 1 else 0) +
             (target.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("plugin_installation_setting")) 1 else 0 } +
