@@ -6,6 +6,8 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimit
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitDeleteParams
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitDeleteResponse
+import com.anthropic.models.beta.organization.spendlimits.SpendLimitListPage
+import com.anthropic.models.beta.organization.spendlimits.SpendLimitListParams
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitRetrieveParams
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitSetParams
 import com.anthropic.services.blocking.beta.organization.spendlimits.EffectiveService
@@ -62,6 +64,30 @@ interface SpendLimitService {
     /** @see retrieve */
     fun retrieve(spendLimitId: String, requestOptions: RequestOptions): BetaSpendLimit =
         retrieve(spendLimitId, SpendLimitRetrieveParams.none(), requestOptions)
+
+    /**
+     * List the organization's spend limits.
+     *
+     * A Claude Console organization's limits come in an order that is stable across pages. A Claude
+     * Enterprise organization's are grouped by scope type, in the order `organization`,
+     * `seat_tier`, `rbac_group`, `organization_service`, `user`; within a type they come in a fixed
+     * order that is not creation order.
+     */
+    fun list(): SpendLimitListPage = list(SpendLimitListParams.none())
+
+    /** @see list */
+    fun list(
+        params: SpendLimitListParams = SpendLimitListParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): SpendLimitListPage
+
+    /** @see list */
+    fun list(params: SpendLimitListParams = SpendLimitListParams.none()): SpendLimitListPage =
+        list(params, RequestOptions.none())
+
+    /** @see list */
+    fun list(requestOptions: RequestOptions): SpendLimitListPage =
+        list(SpendLimitListParams.none(), requestOptions)
 
     /**
      * Delete a spend limit.
@@ -181,6 +207,31 @@ interface SpendLimitService {
             requestOptions: RequestOptions,
         ): HttpResponseFor<BetaSpendLimit> =
             retrieve(spendLimitId, SpendLimitRetrieveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /v1/organizations/spend_limits?beta=true`, but is
+         * otherwise the same as [SpendLimitService.list].
+         */
+        @MustBeClosed
+        fun list(): HttpResponseFor<SpendLimitListPage> = list(SpendLimitListParams.none())
+
+        /** @see list */
+        @MustBeClosed
+        fun list(
+            params: SpendLimitListParams = SpendLimitListParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<SpendLimitListPage>
+
+        /** @see list */
+        @MustBeClosed
+        fun list(
+            params: SpendLimitListParams = SpendLimitListParams.none()
+        ): HttpResponseFor<SpendLimitListPage> = list(params, RequestOptions.none())
+
+        /** @see list */
+        @MustBeClosed
+        fun list(requestOptions: RequestOptions): HttpResponseFor<SpendLimitListPage> =
+            list(SpendLimitListParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete

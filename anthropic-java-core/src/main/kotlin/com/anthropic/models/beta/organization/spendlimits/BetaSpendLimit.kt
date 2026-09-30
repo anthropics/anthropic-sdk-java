@@ -35,6 +35,7 @@ private constructor(
     private val amount: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val currency: JsonField<String>,
+    private val isEnabled: JsonField<Boolean>,
     private val period: JsonField<BetaSpendLimitPeriod>,
     private val scope: JsonField<Scope>,
     private val type: JsonValue,
@@ -50,6 +51,9 @@ private constructor(
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("currency") @ExcludeMissing currency: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("is_enabled")
+        @ExcludeMissing
+        isEnabled: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("period")
         @ExcludeMissing
         period: JsonField<BetaSpendLimitPeriod> = JsonMissing.of(),
@@ -58,7 +62,18 @@ private constructor(
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(id, amount, createdAt, currency, period, scope, type, updatedAt, mutableMapOf())
+    ) : this(
+        id,
+        amount,
+        createdAt,
+        currency,
+        isEnabled,
+        period,
+        scope,
+        type,
+        updatedAt,
+        mutableMapOf(),
+    )
 
     /**
      * Unique tagged ID of the spend limit (`spl_...`).
@@ -93,6 +108,16 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun currency(): String = currency.getRequired("currency")
+
+    /**
+     * Read-only. `false` when extra usage is switched off for this organization (`organization`
+     * limit) or for this member (`user` limit); `amount` is kept and applies again when it's
+     * switched back on. Always `true` for other limits.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun isEnabled(): Boolean = isEnabled.getRequired("is_enabled")
 
     /**
      * Length of the window the limit resets over. `amount` caps spend within each period.
@@ -163,6 +188,13 @@ private constructor(
     @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<String> = currency
 
     /**
+     * Returns the raw JSON value of [isEnabled].
+     *
+     * Unlike [isEnabled], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("is_enabled") @ExcludeMissing fun _isEnabled(): JsonField<Boolean> = isEnabled
+
+    /**
      * Returns the raw JSON value of [period].
      *
      * Unlike [period], this method doesn't throw if the JSON field has an unexpected type.
@@ -208,6 +240,7 @@ private constructor(
          * .amount()
          * .createdAt()
          * .currency()
+         * .isEnabled()
          * .period()
          * .scope()
          * .updatedAt()
@@ -223,6 +256,7 @@ private constructor(
         private var amount: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var currency: JsonField<String>? = null
+        private var isEnabled: JsonField<Boolean>? = null
         private var period: JsonField<BetaSpendLimitPeriod>? = null
         private var scope: JsonField<Scope>? = null
         private var type: JsonValue = JsonValue.from("spend_limit")
@@ -235,6 +269,7 @@ private constructor(
             amount = betaSpendLimit.amount
             createdAt = betaSpendLimit.createdAt
             currency = betaSpendLimit.currency
+            isEnabled = betaSpendLimit.isEnabled
             period = betaSpendLimit.period
             scope = betaSpendLimit.scope
             type = betaSpendLimit.type
@@ -293,6 +328,22 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun currency(currency: JsonField<String>) = apply { this.currency = currency }
+
+        /**
+         * Read-only. `false` when extra usage is switched off for this organization (`organization`
+         * limit) or for this member (`user` limit); `amount` is kept and applies again when it's
+         * switched back on. Always `true` for other limits.
+         */
+        fun isEnabled(isEnabled: Boolean) = isEnabled(JsonField.of(isEnabled))
+
+        /**
+         * Sets [Builder.isEnabled] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.isEnabled] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun isEnabled(isEnabled: JsonField<Boolean>) = apply { this.isEnabled = isEnabled }
 
         /** Length of the window the limit resets over. `amount` caps spend within each period. */
         fun period(period: BetaSpendLimitPeriod) = period(JsonField.of(period))
@@ -451,6 +502,7 @@ private constructor(
          * .amount()
          * .createdAt()
          * .currency()
+         * .isEnabled()
          * .period()
          * .scope()
          * .updatedAt()
@@ -464,6 +516,7 @@ private constructor(
                 checkRequired("amount", amount),
                 checkRequired("createdAt", createdAt),
                 checkRequired("currency", currency),
+                checkRequired("isEnabled", isEnabled),
                 checkRequired("period", period),
                 checkRequired("scope", scope),
                 type,
@@ -491,6 +544,7 @@ private constructor(
         amount()
         createdAt()
         currency()
+        isEnabled()
         period().validate()
         scope().validate()
         _type().let {
@@ -521,6 +575,7 @@ private constructor(
             (if (amount.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (currency.asKnown().isPresent) 1 else 0) +
+            (if (isEnabled.asKnown().isPresent) 1 else 0) +
             (period.asKnown().getOrNull()?.validity() ?: 0) +
             (scope.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("spend_limit")) 1 else 0 } +
@@ -1071,6 +1126,7 @@ private constructor(
             amount == other.amount &&
             createdAt == other.createdAt &&
             currency == other.currency &&
+            isEnabled == other.isEnabled &&
             period == other.period &&
             scope == other.scope &&
             type == other.type &&
@@ -1084,6 +1140,7 @@ private constructor(
             amount,
             createdAt,
             currency,
+            isEnabled,
             period,
             scope,
             type,
@@ -1095,5 +1152,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaSpendLimit{id=$id, amount=$amount, createdAt=$createdAt, currency=$currency, period=$period, scope=$scope, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "BetaSpendLimit{id=$id, amount=$amount, createdAt=$createdAt, currency=$currency, isEnabled=$isEnabled, period=$period, scope=$scope, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

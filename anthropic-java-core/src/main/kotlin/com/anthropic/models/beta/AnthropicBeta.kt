@@ -167,6 +167,10 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
 
         @JvmField val CE_PLUGINS_2026_09_01 = AnthropicBeta(JsonField.of("ce-plugins-2026-09-01"))
 
+        @JvmField
+        val SPEND_LIMIT_READS_2026_09_26 =
+            AnthropicBeta(JsonField.of("spend-limit-reads-2026-09-26"))
+
         @JvmStatic
         fun of(value: String): AnthropicBeta =
             // Intern known values so `==` works
@@ -224,6 +228,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
                 "inline-tools-2026-09-15" -> INLINE_TOOLS_2026_09_15
                 "mcp-client-2026-09-15" -> MCP_CLIENT_2026_09_15
                 "ce-plugins-2026-09-01" -> CE_PLUGINS_2026_09_01
+                "spend-limit-reads-2026-09-26" -> SPEND_LIMIT_READS_2026_09_26
                 else -> AnthropicBeta(JsonField.of(value))
             }
 
@@ -284,6 +289,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         INLINE_TOOLS_2026_09_15,
         MCP_CLIENT_2026_09_15,
         CE_PLUGINS_2026_09_01,
+        SPEND_LIMIT_READS_2026_09_26,
     }
 
     /**
@@ -345,6 +351,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
         INLINE_TOOLS_2026_09_15,
         MCP_CLIENT_2026_09_15,
         CE_PLUGINS_2026_09_01,
+        SPEND_LIMIT_READS_2026_09_26,
         /**
          * An enum member indicating that [AnthropicBeta] was instantiated with an unknown value.
          */
@@ -413,6 +420,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             INLINE_TOOLS_2026_09_15 -> Value.INLINE_TOOLS_2026_09_15
             MCP_CLIENT_2026_09_15 -> Value.MCP_CLIENT_2026_09_15
             CE_PLUGINS_2026_09_01 -> Value.CE_PLUGINS_2026_09_01
+            SPEND_LIMIT_READS_2026_09_26 -> Value.SPEND_LIMIT_READS_2026_09_26
             else -> Value._UNKNOWN
         }
 
@@ -479,6 +487,7 @@ class AnthropicBeta private constructor(private val value: JsonField<String>) : 
             INLINE_TOOLS_2026_09_15 -> Known.INLINE_TOOLS_2026_09_15
             MCP_CLIENT_2026_09_15 -> Known.MCP_CLIENT_2026_09_15
             CE_PLUGINS_2026_09_01 -> Known.CE_PLUGINS_2026_09_01
+            SPEND_LIMIT_READS_2026_09_26 -> Known.SPEND_LIMIT_READS_2026_09_26
             else -> throw AnthropicInvalidDataException("Unknown AnthropicBeta: $value")
         }
 

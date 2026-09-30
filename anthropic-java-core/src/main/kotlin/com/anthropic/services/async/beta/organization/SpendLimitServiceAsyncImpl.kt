@@ -17,6 +17,9 @@ import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimit
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitDeleteParams
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitDeleteResponse
+import com.anthropic.models.beta.organization.spendlimits.SpendLimitListPageAsync
+import com.anthropic.models.beta.organization.spendlimits.SpendLimitListPageResponse
+import com.anthropic.models.beta.organization.spendlimits.SpendLimitListParams
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitRetrieveParams
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitSetParams
 import com.anthropic.services.async.beta.organization.spendlimits.EffectiveServiceAsync
@@ -57,6 +60,13 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
     ): CompletableFuture<BetaSpendLimit> =
         // get /v1/organizations/spend_limits/{spend_limit_id}?beta=true
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+
+    override fun list(
+        params: SpendLimitListParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<SpendLimitListPageAsync> =
+        // get /v1/organizations/spend_limits?beta=true
+        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: SpendLimitDeleteParams,
@@ -127,6 +137,45 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
                                 }
+                            }
+                    }
+                }
+        }
+
+        private val listHandler: Handler<SpendLimitListPageResponse> =
+            jsonHandler<SpendLimitListPageResponse>(clientOptions.jsonMapper)
+
+        override fun list(
+            params: SpendLimitListParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<SpendLimitListPageAsync>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "spend_limits")
+                    .putQueryParam("beta", "true")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { listHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                            .let {
+                                SpendLimitListPageAsync.builder()
+                                    .service(SpendLimitServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .response(it)
+                                    .build()
                             }
                     }
                 }

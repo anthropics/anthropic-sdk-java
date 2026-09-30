@@ -26,6 +26,21 @@ internal class SpendLimitServiceAsyncTest {
     }
 
     @Test
+    fun list() {
+        val client =
+            AnthropicOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("my-anthropic-api-key")
+                .build()
+        val spendLimitServiceAsync = client.beta().organization().spendLimits()
+
+        val pageFuture = spendLimitServiceAsync.list()
+
+        val page = pageFuture.get()
+        page.response().validate()
+    }
+
+    @Test
     fun delete() {
         val client =
             AnthropicOkHttpClientAsync.builder()
