@@ -36,43 +36,20 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitAllow(
-                    allow: BetaManagedAgentsAgentAutoEvaluatedPermissionAllow
-                ): Type = Type.ALLOW
-
-                override fun visitAsk(ask: BetaManagedAgentsAgentAutoEvaluatedPermissionAsk): Type =
-                    Type.ASK
-
-                override fun visitDeny(
-                    deny: BetaManagedAgentsAgentAutoEvaluatedPermissionDeny
-                ): Type = Type.DENY
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            allow != null -> Type.ALLOW
+            ask != null -> Type.ASK
+            deny != null -> Type.DENY
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun reasonCode(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitAllow(
-                    allow: BetaManagedAgentsAgentAutoEvaluatedPermissionAllow
-                ): Optional<String> = Optional.empty()
-
-                override fun visitAsk(
-                    ask: BetaManagedAgentsAgentAutoEvaluatedPermissionAsk
-                ): Optional<String> = Optional.of(ask.reasonCode())
-
-                override fun visitDeny(
-                    deny: BetaManagedAgentsAgentAutoEvaluatedPermissionDeny
-                ): Optional<String> = Optional.of(deny.reasonCode())
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("reason_code").asKnown()
-            }
-        )
+        when {
+            allow != null -> Optional.empty()
+            ask != null -> Optional.of(ask.reasonCode())
+            deny != null -> Optional.of(deny.reasonCode())
+            else -> _json.getProperty<String>("reason_code").asKnown()
+        }
 
     /** The server judged the invocation safe to execute without client approval. */
     fun allow(): Optional<BetaManagedAgentsAgentAutoEvaluatedPermissionAllow> =
@@ -160,21 +137,15 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitAllow(allow: BetaManagedAgentsAgentAutoEvaluatedPermissionAllow) {
-                    allow.validate()
-                }
-
-                override fun visitAsk(ask: BetaManagedAgentsAgentAutoEvaluatedPermissionAsk) {
-                    ask.validate()
-                }
-
-                override fun visitDeny(deny: BetaManagedAgentsAgentAutoEvaluatedPermissionDeny) {
-                    deny.validate()
-                }
-            }
-        )
+        when {
+            allow != null -> allow.validate()
+            ask != null -> ask.validate()
+            deny != null -> deny.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsAgentAutoEvaluatedPermission: $_json"
+                )
+        }
         validated = true
     }
 
@@ -193,20 +164,12 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitAllow(allow: BetaManagedAgentsAgentAutoEvaluatedPermissionAllow) =
-                    allow.validity()
-
-                override fun visitAsk(ask: BetaManagedAgentsAgentAutoEvaluatedPermissionAsk) =
-                    ask.validity()
-
-                override fun visitDeny(deny: BetaManagedAgentsAgentAutoEvaluatedPermissionDeny) =
-                    deny.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            allow != null -> allow.validity()
+            ask != null -> ask.validity()
+            deny != null -> deny.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

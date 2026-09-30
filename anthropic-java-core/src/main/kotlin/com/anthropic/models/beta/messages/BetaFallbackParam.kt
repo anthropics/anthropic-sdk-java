@@ -551,49 +551,22 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitEnabled(enabled: BetaThinkingConfigEnabled): Type =
-                        Type.ENABLED
-
-                    override fun visitDisabled(disabled: BetaThinkingConfigDisabled): Type =
-                        Type.DISABLED
-
-                    override fun visitBetweenTools(
-                        betweenTools: BetaThinkingConfigBetweenTools
-                    ): Type = Type.BETWEEN_TOOLS
-
-                    override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive): Type =
-                        Type.ADAPTIVE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                enabled != null -> Type.ENABLED
+                disabled != null -> Type.DISABLED
+                betweenTools != null -> Type.BETWEEN_TOOLS
+                adaptive != null -> Type.ADAPTIVE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun blockBinding(): Optional<BetaThinkingBlockBinding> =
-            accept(
-                object : Visitor<Optional<BetaThinkingBlockBinding>> {
-                    override fun visitEnabled(
-                        enabled: BetaThinkingConfigEnabled
-                    ): Optional<BetaThinkingBlockBinding> = enabled.blockBinding()
-
-                    override fun visitDisabled(
-                        disabled: BetaThinkingConfigDisabled
-                    ): Optional<BetaThinkingBlockBinding> = Optional.empty()
-
-                    override fun visitBetweenTools(
-                        betweenTools: BetaThinkingConfigBetweenTools
-                    ): Optional<BetaThinkingBlockBinding> = Optional.empty()
-
-                    override fun visitAdaptive(
-                        adaptive: BetaThinkingConfigAdaptive
-                    ): Optional<BetaThinkingBlockBinding> = adaptive.blockBinding()
-
-                    override fun unknown(json: JsonValue?): Optional<BetaThinkingBlockBinding> =
-                        json.getProperty<BetaThinkingBlockBinding>("block_binding").asKnown()
-                }
-            )
+            when {
+                enabled != null -> enabled.blockBinding()
+                disabled != null -> Optional.empty()
+                betweenTools != null -> Optional.empty()
+                adaptive != null -> adaptive.blockBinding()
+                else -> _json.getProperty<BetaThinkingBlockBinding>("block_binding").asKnown()
+            }
 
         fun enabled(): Optional<BetaThinkingConfigEnabled> = Optional.ofNullable(enabled)
 
@@ -677,25 +650,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitEnabled(enabled: BetaThinkingConfigEnabled) {
-                        enabled.validate()
-                    }
-
-                    override fun visitDisabled(disabled: BetaThinkingConfigDisabled) {
-                        disabled.validate()
-                    }
-
-                    override fun visitBetweenTools(betweenTools: BetaThinkingConfigBetweenTools) {
-                        betweenTools.validate()
-                    }
-
-                    override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive) {
-                        adaptive.validate()
-                    }
-                }
-            )
+            when {
+                enabled != null -> enabled.validate()
+                disabled != null -> disabled.validate()
+                betweenTools != null -> betweenTools.validate()
+                adaptive != null -> adaptive.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Thinking: $_json")
+            }
             validated = true
         }
 
@@ -715,23 +676,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitEnabled(enabled: BetaThinkingConfigEnabled) =
-                        enabled.validity()
-
-                    override fun visitDisabled(disabled: BetaThinkingConfigDisabled) =
-                        disabled.validity()
-
-                    override fun visitBetweenTools(betweenTools: BetaThinkingConfigBetweenTools) =
-                        betweenTools.validity()
-
-                    override fun visitAdaptive(adaptive: BetaThinkingConfigAdaptive) =
-                        adaptive.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                enabled != null -> enabled.validity()
+                disabled != null -> disabled.validity()
+                betweenTools != null -> betweenTools.validity()
+                adaptive != null -> adaptive.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

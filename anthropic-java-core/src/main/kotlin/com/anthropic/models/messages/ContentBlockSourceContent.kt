@@ -31,30 +31,18 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitText(text: TextBlockParam): Type = Type.TEXT
-
-                override fun visitImage(image: ImageBlockParam): Type = Type.IMAGE
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            text != null -> Type.TEXT
+            image != null -> Type.IMAGE
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun cacheControl(): Optional<CacheControlEphemeral> =
-        accept(
-            object : Visitor<Optional<CacheControlEphemeral>> {
-                override fun visitText(text: TextBlockParam): Optional<CacheControlEphemeral> =
-                    text.cacheControl()
-
-                override fun visitImage(image: ImageBlockParam): Optional<CacheControlEphemeral> =
-                    image.cacheControl()
-
-                override fun unknown(json: JsonValue?): Optional<CacheControlEphemeral> =
-                    json.getProperty<CacheControlEphemeral>("cache_control").asKnown()
-            }
-        )
+        when {
+            text != null -> text.cacheControl()
+            image != null -> image.cacheControl()
+            else -> _json.getProperty<CacheControlEphemeral>("cache_control").asKnown()
+        }
 
     fun text(): Optional<TextBlockParam> = Optional.ofNullable(text)
 
@@ -121,17 +109,11 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitText(text: TextBlockParam) {
-                    text.validate()
-                }
-
-                override fun visitImage(image: ImageBlockParam) {
-                    image.validate()
-                }
-            }
-        )
+        when {
+            text != null -> text.validate()
+            image != null -> image.validate()
+            else -> throw AnthropicInvalidDataException("Unknown ContentBlockSourceContent: $_json")
+        }
         validated = true
     }
 
@@ -150,15 +132,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitText(text: TextBlockParam) = text.validity()
-
-                override fun visitImage(image: ImageBlockParam) = image.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            text != null -> text.validity()
+            image != null -> image.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

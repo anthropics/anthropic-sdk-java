@@ -36,36 +36,18 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitThinkingDropped(
-                    thinkingDropped: BetaThinkingDroppedInputTransformation
-                ): Type = Type.THINKING_DROPPED
-
-                override fun visitThinkingMismatchAllowed(
-                    thinkingMismatchAllowed: BetaThinkingMismatchAllowedInputTransformation
-                ): Type = Type.THINKING_MISMATCH_ALLOWED
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            thinkingDropped != null -> Type.THINKING_DROPPED
+            thinkingMismatchAllowed != null -> Type.THINKING_MISMATCH_ALLOWED
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun path(): String =
-        accept(
-            object : Visitor<String> {
-                override fun visitThinkingDropped(
-                    thinkingDropped: BetaThinkingDroppedInputTransformation
-                ): String = thinkingDropped.path()
-
-                override fun visitThinkingMismatchAllowed(
-                    thinkingMismatchAllowed: BetaThinkingMismatchAllowedInputTransformation
-                ): String = thinkingMismatchAllowed.path()
-
-                override fun unknown(json: JsonValue?): String =
-                    json.getProperty<String>("path").getRequired("path")
-            }
-        )
+        when {
+            thinkingDropped != null -> thinkingDropped.path()
+            thinkingMismatchAllowed != null -> thinkingMismatchAllowed.path()
+            else -> _json.getProperty<String>("path").getRequired("path")
+        }
 
     fun thinkingDropped(): Optional<BetaThinkingDroppedInputTransformation> =
         Optional.ofNullable(thinkingDropped)
@@ -137,21 +119,11 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitThinkingDropped(
-                    thinkingDropped: BetaThinkingDroppedInputTransformation
-                ) {
-                    thinkingDropped.validate()
-                }
-
-                override fun visitThinkingMismatchAllowed(
-                    thinkingMismatchAllowed: BetaThinkingMismatchAllowedInputTransformation
-                ) {
-                    thinkingMismatchAllowed.validate()
-                }
-            }
-        )
+        when {
+            thinkingDropped != null -> thinkingDropped.validate()
+            thinkingMismatchAllowed != null -> thinkingMismatchAllowed.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaInputTransformation: $_json")
+        }
         validated = true
     }
 
@@ -170,19 +142,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitThinkingDropped(
-                    thinkingDropped: BetaThinkingDroppedInputTransformation
-                ) = thinkingDropped.validity()
-
-                override fun visitThinkingMismatchAllowed(
-                    thinkingMismatchAllowed: BetaThinkingMismatchAllowedInputTransformation
-                ) = thinkingMismatchAllowed.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            thinkingDropped != null -> thinkingDropped.validity()
+            thinkingMismatchAllowed != null -> thinkingMismatchAllowed.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

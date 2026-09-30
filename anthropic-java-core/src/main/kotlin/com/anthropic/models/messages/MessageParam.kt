@@ -288,15 +288,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitString(string: String) {}
-
-                    override fun visitBlockParams(blockParams: List<ContentBlockParam>) {
-                        blockParams.forEach { it.validate() }
-                    }
-                }
-            )
+            when {
+                string != null -> {}
+                blockParams != null -> blockParams.forEach { it.validate() }
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -316,16 +312,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitString(string: String) = 1
-
-                    override fun visitBlockParams(blockParams: List<ContentBlockParam>) =
-                        blockParams.sumOf { it.validity().toInt() }
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                string != null -> 1
+                blockParams != null -> blockParams.sumOf { it.validity().toInt() }
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

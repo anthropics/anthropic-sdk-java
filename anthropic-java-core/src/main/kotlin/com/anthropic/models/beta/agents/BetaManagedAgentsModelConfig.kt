@@ -354,23 +354,14 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitLow(low: BetaManagedAgentsEffortLow): Type = Type.LOW
-
-                    override fun visitMedium(medium: BetaManagedAgentsEffortMedium): Type =
-                        Type.MEDIUM
-
-                    override fun visitHigh(high: BetaManagedAgentsEffortHigh): Type = Type.HIGH
-
-                    override fun visitXhigh(xhigh: BetaManagedAgentsEffortXhigh): Type = Type.XHIGH
-
-                    override fun visitMax(max: BetaManagedAgentsEffortMax): Type = Type.MAX
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                low != null -> Type.LOW
+                medium != null -> Type.MEDIUM
+                high != null -> Type.HIGH
+                xhigh != null -> Type.XHIGH
+                max != null -> Type.MAX
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /** Low effort. Favors latency over reasoning depth. */
         fun low(): Optional<BetaManagedAgentsEffortLow> = Optional.ofNullable(low)
@@ -469,29 +460,14 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitLow(low: BetaManagedAgentsEffortLow) {
-                        low.validate()
-                    }
-
-                    override fun visitMedium(medium: BetaManagedAgentsEffortMedium) {
-                        medium.validate()
-                    }
-
-                    override fun visitHigh(high: BetaManagedAgentsEffortHigh) {
-                        high.validate()
-                    }
-
-                    override fun visitXhigh(xhigh: BetaManagedAgentsEffortXhigh) {
-                        xhigh.validate()
-                    }
-
-                    override fun visitMax(max: BetaManagedAgentsEffortMax) {
-                        max.validate()
-                    }
-                }
-            )
+            when {
+                low != null -> low.validate()
+                medium != null -> medium.validate()
+                high != null -> high.validate()
+                xhigh != null -> xhigh.validate()
+                max != null -> max.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Effort: $_json")
+            }
             validated = true
         }
 
@@ -511,22 +487,14 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitLow(low: BetaManagedAgentsEffortLow) = low.validity()
-
-                    override fun visitMedium(medium: BetaManagedAgentsEffortMedium) =
-                        medium.validity()
-
-                    override fun visitHigh(high: BetaManagedAgentsEffortHigh) = high.validity()
-
-                    override fun visitXhigh(xhigh: BetaManagedAgentsEffortXhigh) = xhigh.validity()
-
-                    override fun visitMax(max: BetaManagedAgentsEffortMax) = max.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                low != null -> low.validity()
+                medium != null -> medium.validity()
+                high != null -> high.validity()
+                xhigh != null -> xhigh.validity()
+                max != null -> max.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

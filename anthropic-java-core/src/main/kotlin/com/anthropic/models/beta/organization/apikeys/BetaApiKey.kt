@@ -699,19 +699,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitUserActor(userActor: BetaApiKeyUserActor): Type =
-                        Type.USER_ACTOR
-
-                    override fun visitServiceAccountActor(
-                        serviceAccountActor: BetaApiKeyServiceAccountActor
-                    ): Type = Type.SERVICE_ACCOUNT_ACTOR
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                userActor != null -> Type.USER_ACTOR
+                serviceAccountActor != null -> Type.SERVICE_ACCOUNT_ACTOR
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun userActor(): Optional<BetaApiKeyUserActor> = Optional.ofNullable(userActor)
 
@@ -781,19 +773,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitUserActor(userActor: BetaApiKeyUserActor) {
-                        userActor.validate()
-                    }
-
-                    override fun visitServiceAccountActor(
-                        serviceAccountActor: BetaApiKeyServiceAccountActor
-                    ) {
-                        serviceAccountActor.validate()
-                    }
-                }
-            )
+            when {
+                userActor != null -> userActor.validate()
+                serviceAccountActor != null -> serviceAccountActor.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Principal: $_json")
+            }
             validated = true
         }
 
@@ -813,18 +797,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitUserActor(userActor: BetaApiKeyUserActor) =
-                        userActor.validity()
-
-                    override fun visitServiceAccountActor(
-                        serviceAccountActor: BetaApiKeyServiceAccountActor
-                    ) = serviceAccountActor.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                userActor != null -> userActor.validity()
+                serviceAccountActor != null -> serviceAccountActor.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1100,19 +1077,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitOrganization(
-                        organization: BetaApiKeyOrganizationScope
-                    ): Type = Type.ORGANIZATION
-
-                    override fun visitWorkspace(workspace: BetaApiKeyWorkspaceScope): Type =
-                        Type.WORKSPACE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                organization != null -> Type.ORGANIZATION
+                workspace != null -> Type.WORKSPACE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun organization(): Optional<BetaApiKeyOrganizationScope> =
             Optional.ofNullable(organization)
@@ -1181,17 +1150,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitOrganization(organization: BetaApiKeyOrganizationScope) {
-                        organization.validate()
-                    }
-
-                    override fun visitWorkspace(workspace: BetaApiKeyWorkspaceScope) {
-                        workspace.validate()
-                    }
-                }
-            )
+            when {
+                organization != null -> organization.validate()
+                workspace != null -> workspace.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Scope: $_json")
+            }
             validated = true
         }
 
@@ -1211,17 +1174,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitOrganization(organization: BetaApiKeyOrganizationScope) =
-                        organization.validity()
-
-                    override fun visitWorkspace(workspace: BetaApiKeyWorkspaceScope) =
-                        workspace.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                organization != null -> organization.validity()
+                workspace != null -> workspace.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

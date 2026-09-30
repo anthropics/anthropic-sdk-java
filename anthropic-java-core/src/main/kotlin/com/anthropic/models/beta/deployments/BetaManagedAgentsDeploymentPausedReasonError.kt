@@ -57,74 +57,23 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitEnvironmentArchived(
-                    environmentArchived:
-                        BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError
-                ): Type = Type.ENVIRONMENT_ARCHIVED_ERROR
-
-                override fun visitAgentArchived(
-                    agentArchived: BetaManagedAgentsAgentArchivedDeploymentPausedReasonError
-                ): Type = Type.AGENT_ARCHIVED_ERROR
-
-                override fun visitEnvironmentNotFound(
-                    environmentNotFound:
-                        BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError
-                ): Type = Type.ENVIRONMENT_NOT_FOUND_ERROR
-
-                override fun visitVaultNotFound(
-                    vaultNotFound: BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError
-                ): Type = Type.VAULT_NOT_FOUND_ERROR
-
-                override fun visitFileNotFound(
-                    fileNotFound: BetaManagedAgentsFileNotFoundDeploymentPausedReasonError
-                ): Type = Type.FILE_NOT_FOUND_ERROR
-
-                override fun visitSessionResourceNotFound(
-                    sessionResourceNotFound:
-                        BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError
-                ): Type = Type.SESSION_RESOURCE_NOT_FOUND_ERROR
-
-                override fun visitWorkspaceArchived(
-                    workspaceArchived: BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError
-                ): Type = Type.WORKSPACE_ARCHIVED_ERROR
-
-                override fun visitOrganizationDisabled(
-                    organizationDisabled:
-                        BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError
-                ): Type = Type.ORGANIZATION_DISABLED_ERROR
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived:
-                        BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError
-                ): Type = Type.MEMORY_STORE_ARCHIVED_ERROR
-
-                override fun visitSkillNotFound(
-                    skillNotFound: BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError
-                ): Type = Type.SKILL_NOT_FOUND_ERROR
-
-                override fun visitVaultArchived(
-                    vaultArchived: BetaManagedAgentsVaultArchivedDeploymentPausedReasonError
-                ): Type = Type.VAULT_ARCHIVED_ERROR
-
-                override fun visitUnknown(
-                    unknown: BetaManagedAgentsUnknownDeploymentPausedReasonError
-                ): Type = Type.UNKNOWN_ERROR
-
-                override fun visitSelfHostedResourcesUnsupported(
-                    selfHostedResourcesUnsupported:
-                        BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError
-                ): Type = Type.SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
-
-                override fun visitMcpEgressBlocked(
-                    mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError
-                ): Type = Type.MCP_EGRESS_BLOCKED_ERROR
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            environmentArchived != null -> Type.ENVIRONMENT_ARCHIVED_ERROR
+            agentArchived != null -> Type.AGENT_ARCHIVED_ERROR
+            environmentNotFound != null -> Type.ENVIRONMENT_NOT_FOUND_ERROR
+            vaultNotFound != null -> Type.VAULT_NOT_FOUND_ERROR
+            fileNotFound != null -> Type.FILE_NOT_FOUND_ERROR
+            sessionResourceNotFound != null -> Type.SESSION_RESOURCE_NOT_FOUND_ERROR
+            workspaceArchived != null -> Type.WORKSPACE_ARCHIVED_ERROR
+            organizationDisabled != null -> Type.ORGANIZATION_DISABLED_ERROR
+            memoryStoreArchived != null -> Type.MEMORY_STORE_ARCHIVED_ERROR
+            skillNotFound != null -> Type.SKILL_NOT_FOUND_ERROR
+            vaultArchived != null -> Type.VAULT_ARCHIVED_ERROR
+            unknown != null -> Type.UNKNOWN_ERROR
+            selfHostedResourcesUnsupported != null -> Type.SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
+            mcpEgressBlocked != null -> Type.MCP_EGRESS_BLOCKED_ERROR
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     /** The deployment's environment was archived. */
     fun environmentArchived():
@@ -360,99 +309,26 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitEnvironmentArchived(
-                    environmentArchived:
-                        BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError
-                ) {
-                    environmentArchived.validate()
-                }
-
-                override fun visitAgentArchived(
-                    agentArchived: BetaManagedAgentsAgentArchivedDeploymentPausedReasonError
-                ) {
-                    agentArchived.validate()
-                }
-
-                override fun visitEnvironmentNotFound(
-                    environmentNotFound:
-                        BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError
-                ) {
-                    environmentNotFound.validate()
-                }
-
-                override fun visitVaultNotFound(
-                    vaultNotFound: BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError
-                ) {
-                    vaultNotFound.validate()
-                }
-
-                override fun visitFileNotFound(
-                    fileNotFound: BetaManagedAgentsFileNotFoundDeploymentPausedReasonError
-                ) {
-                    fileNotFound.validate()
-                }
-
-                override fun visitSessionResourceNotFound(
-                    sessionResourceNotFound:
-                        BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError
-                ) {
-                    sessionResourceNotFound.validate()
-                }
-
-                override fun visitWorkspaceArchived(
-                    workspaceArchived: BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError
-                ) {
-                    workspaceArchived.validate()
-                }
-
-                override fun visitOrganizationDisabled(
-                    organizationDisabled:
-                        BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError
-                ) {
-                    organizationDisabled.validate()
-                }
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived:
-                        BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError
-                ) {
-                    memoryStoreArchived.validate()
-                }
-
-                override fun visitSkillNotFound(
-                    skillNotFound: BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError
-                ) {
-                    skillNotFound.validate()
-                }
-
-                override fun visitVaultArchived(
-                    vaultArchived: BetaManagedAgentsVaultArchivedDeploymentPausedReasonError
-                ) {
-                    vaultArchived.validate()
-                }
-
-                override fun visitUnknown(
-                    unknown: BetaManagedAgentsUnknownDeploymentPausedReasonError
-                ) {
-                    unknown.validate()
-                }
-
-                override fun visitSelfHostedResourcesUnsupported(
-                    selfHostedResourcesUnsupported:
-                        BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError
-                ) {
-                    selfHostedResourcesUnsupported.validate()
-                }
-
-                override fun visitMcpEgressBlocked(
-                    mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError
-                ) {
-                    mcpEgressBlocked.validate()
-                }
-            }
-        )
+        when {
+            environmentArchived != null -> environmentArchived.validate()
+            agentArchived != null -> agentArchived.validate()
+            environmentNotFound != null -> environmentNotFound.validate()
+            vaultNotFound != null -> vaultNotFound.validate()
+            fileNotFound != null -> fileNotFound.validate()
+            sessionResourceNotFound != null -> sessionResourceNotFound.validate()
+            workspaceArchived != null -> workspaceArchived.validate()
+            organizationDisabled != null -> organizationDisabled.validate()
+            memoryStoreArchived != null -> memoryStoreArchived.validate()
+            skillNotFound != null -> skillNotFound.validate()
+            vaultArchived != null -> vaultArchived.validate()
+            unknown != null -> unknown.validate()
+            selfHostedResourcesUnsupported != null -> selfHostedResourcesUnsupported.validate()
+            mcpEgressBlocked != null -> mcpEgressBlocked.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsDeploymentPausedReasonError: $_json"
+                )
+        }
         validated = true
     }
 
@@ -471,73 +347,23 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitEnvironmentArchived(
-                    environmentArchived:
-                        BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError
-                ) = environmentArchived.validity()
-
-                override fun visitAgentArchived(
-                    agentArchived: BetaManagedAgentsAgentArchivedDeploymentPausedReasonError
-                ) = agentArchived.validity()
-
-                override fun visitEnvironmentNotFound(
-                    environmentNotFound:
-                        BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError
-                ) = environmentNotFound.validity()
-
-                override fun visitVaultNotFound(
-                    vaultNotFound: BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError
-                ) = vaultNotFound.validity()
-
-                override fun visitFileNotFound(
-                    fileNotFound: BetaManagedAgentsFileNotFoundDeploymentPausedReasonError
-                ) = fileNotFound.validity()
-
-                override fun visitSessionResourceNotFound(
-                    sessionResourceNotFound:
-                        BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError
-                ) = sessionResourceNotFound.validity()
-
-                override fun visitWorkspaceArchived(
-                    workspaceArchived: BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError
-                ) = workspaceArchived.validity()
-
-                override fun visitOrganizationDisabled(
-                    organizationDisabled:
-                        BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError
-                ) = organizationDisabled.validity()
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived:
-                        BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError
-                ) = memoryStoreArchived.validity()
-
-                override fun visitSkillNotFound(
-                    skillNotFound: BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError
-                ) = skillNotFound.validity()
-
-                override fun visitVaultArchived(
-                    vaultArchived: BetaManagedAgentsVaultArchivedDeploymentPausedReasonError
-                ) = vaultArchived.validity()
-
-                override fun visitUnknown(
-                    unknown: BetaManagedAgentsUnknownDeploymentPausedReasonError
-                ) = unknown.validity()
-
-                override fun visitSelfHostedResourcesUnsupported(
-                    selfHostedResourcesUnsupported:
-                        BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError
-                ) = selfHostedResourcesUnsupported.validity()
-
-                override fun visitMcpEgressBlocked(
-                    mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError
-                ) = mcpEgressBlocked.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            environmentArchived != null -> environmentArchived.validity()
+            agentArchived != null -> agentArchived.validity()
+            environmentNotFound != null -> environmentNotFound.validity()
+            vaultNotFound != null -> vaultNotFound.validity()
+            fileNotFound != null -> fileNotFound.validity()
+            sessionResourceNotFound != null -> sessionResourceNotFound.validity()
+            workspaceArchived != null -> workspaceArchived.validity()
+            organizationDisabled != null -> organizationDisabled.validity()
+            memoryStoreArchived != null -> memoryStoreArchived.validity()
+            skillNotFound != null -> skillNotFound.validity()
+            vaultArchived != null -> vaultArchived.validity()
+            unknown != null -> unknown.validity()
+            selfHostedResourcesUnsupported != null -> selfHostedResourcesUnsupported.validity()
+            mcpEgressBlocked != null -> mcpEgressBlocked.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

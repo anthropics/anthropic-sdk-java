@@ -34,17 +34,11 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitCloudflare(cloudflare: BetaCloudflareTunnelTransport): Type =
-                    Type.CLOUDFLARE
-
-                override fun visitRelay(relay: BetaRelayTunnelTransport): Type = Type.RELAY
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            cloudflare != null -> Type.CLOUDFLARE
+            relay != null -> Type.RELAY
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     /**
      * The tunnel is connected through the Cloudflare connector. Its connector token is fetched with
@@ -131,17 +125,11 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitCloudflare(cloudflare: BetaCloudflareTunnelTransport) {
-                    cloudflare.validate()
-                }
-
-                override fun visitRelay(relay: BetaRelayTunnelTransport) {
-                    relay.validate()
-                }
-            }
-        )
+        when {
+            cloudflare != null -> cloudflare.validate()
+            relay != null -> relay.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaTunnelTransport: $_json")
+        }
         validated = true
     }
 
@@ -160,16 +148,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitCloudflare(cloudflare: BetaCloudflareTunnelTransport) =
-                    cloudflare.validity()
-
-                override fun visitRelay(relay: BetaRelayTunnelTransport) = relay.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            cloudflare != null -> cloudflare.validity()
+            relay != null -> relay.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

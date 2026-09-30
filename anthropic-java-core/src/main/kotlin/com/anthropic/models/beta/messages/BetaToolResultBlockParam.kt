@@ -457,15 +457,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitString(string: String) {}
-
-                    override fun visitBlocks(blocks: List<Block>) {
-                        blocks.forEach { it.validate() }
-                    }
-                }
-            )
+            when {
+                string != null -> {}
+                blocks != null -> blocks.forEach { it.validate() }
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -485,16 +481,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitString(string: String) = 1
-
-                    override fun visitBlocks(blocks: List<Block>) =
-                        blocks.sumOf { it.validity().toInt() }
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                string != null -> 1
+                blocks != null -> blocks.sumOf { it.validity().toInt() }
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -605,95 +596,37 @@ private constructor(
         ) {
 
             fun type(): Type =
-                accept(
-                    object : Visitor<Type> {
-                        override fun visitText(text: BetaTextBlockParam): Type = Type.TEXT
-
-                        override fun visitImage(image: BetaImageBlockParam): Type = Type.IMAGE
-
-                        override fun visitSearchResult(
-                            searchResult: BetaSearchResultBlockParam
-                        ): Type = Type.SEARCH_RESULT
-
-                        override fun visitDocument(document: BetaRequestDocumentBlock): Type =
-                            Type.DOCUMENT
-
-                        override fun visitToolReference(
-                            toolReference: BetaToolReferenceBlockParam
-                        ): Type = Type.TOOL_REFERENCE
-
-                        override fun visitBrowserState(
-                            browserState: BetaBrowserStateBlockParam
-                        ): Type = Type.BROWSER_STATE
-
-                        override fun unknown(json: JsonValue?): Type =
-                            Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                    }
-                )
+                when {
+                    text != null -> Type.TEXT
+                    image != null -> Type.IMAGE
+                    searchResult != null -> Type.SEARCH_RESULT
+                    document != null -> Type.DOCUMENT
+                    toolReference != null -> Type.TOOL_REFERENCE
+                    browserState != null -> Type.BROWSER_STATE
+                    else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+                }
 
             fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-                accept(
-                    object : Visitor<Optional<BetaCacheControlEphemeral>> {
-                        override fun visitText(
-                            text: BetaTextBlockParam
-                        ): Optional<BetaCacheControlEphemeral> = text.cacheControl()
-
-                        override fun visitImage(
-                            image: BetaImageBlockParam
-                        ): Optional<BetaCacheControlEphemeral> = image.cacheControl()
-
-                        override fun visitSearchResult(
-                            searchResult: BetaSearchResultBlockParam
-                        ): Optional<BetaCacheControlEphemeral> = searchResult.cacheControl()
-
-                        override fun visitDocument(
-                            document: BetaRequestDocumentBlock
-                        ): Optional<BetaCacheControlEphemeral> = document.cacheControl()
-
-                        override fun visitToolReference(
-                            toolReference: BetaToolReferenceBlockParam
-                        ): Optional<BetaCacheControlEphemeral> = toolReference.cacheControl()
-
-                        override fun visitBrowserState(
-                            browserState: BetaBrowserStateBlockParam
-                        ): Optional<BetaCacheControlEphemeral> = browserState.cacheControl()
-
-                        override fun unknown(
-                            json: JsonValue?
-                        ): Optional<BetaCacheControlEphemeral> =
-                            json.getProperty<BetaCacheControlEphemeral>("cache_control").asKnown()
-                    }
-                )
+                when {
+                    text != null -> text.cacheControl()
+                    image != null -> image.cacheControl()
+                    searchResult != null -> searchResult.cacheControl()
+                    document != null -> document.cacheControl()
+                    toolReference != null -> toolReference.cacheControl()
+                    browserState != null -> browserState.cacheControl()
+                    else -> _json.getProperty<BetaCacheControlEphemeral>("cache_control").asKnown()
+                }
 
             fun title(): Optional<String> =
-                accept(
-                    object : Visitor<Optional<String>> {
-                        override fun visitText(text: BetaTextBlockParam): Optional<String> =
-                            Optional.empty()
-
-                        override fun visitImage(image: BetaImageBlockParam): Optional<String> =
-                            Optional.empty()
-
-                        override fun visitSearchResult(
-                            searchResult: BetaSearchResultBlockParam
-                        ): Optional<String> = Optional.of(searchResult.title())
-
-                        override fun visitDocument(
-                            document: BetaRequestDocumentBlock
-                        ): Optional<String> = document.title()
-
-                        override fun visitToolReference(
-                            toolReference: BetaToolReferenceBlockParam
-                        ): Optional<String> = Optional.empty()
-
-                        override fun visitBrowserState(
-                            browserState: BetaBrowserStateBlockParam
-                        ): Optional<String> = Optional.empty()
-
-                        override fun unknown(json: JsonValue?): Optional<String> =
-                            json.getProperty<String>("title").asKnown()
-                    }
-                )
+                when {
+                    text != null -> Optional.empty()
+                    image != null -> Optional.empty()
+                    searchResult != null -> Optional.of(searchResult.title())
+                    document != null -> document.title()
+                    toolReference != null -> Optional.empty()
+                    browserState != null -> Optional.empty()
+                    else -> _json.getProperty<String>("title").asKnown()
+                }
 
             fun text(): Optional<BetaTextBlockParam> = Optional.ofNullable(text)
 
@@ -817,35 +750,15 @@ private constructor(
                     return@apply
                 }
 
-                accept(
-                    object : Visitor<Unit> {
-                        override fun visitText(text: BetaTextBlockParam) {
-                            text.validate()
-                        }
-
-                        override fun visitImage(image: BetaImageBlockParam) {
-                            image.validate()
-                        }
-
-                        override fun visitSearchResult(searchResult: BetaSearchResultBlockParam) {
-                            searchResult.validate()
-                        }
-
-                        override fun visitDocument(document: BetaRequestDocumentBlock) {
-                            document.validate()
-                        }
-
-                        override fun visitToolReference(
-                            toolReference: BetaToolReferenceBlockParam
-                        ) {
-                            toolReference.validate()
-                        }
-
-                        override fun visitBrowserState(browserState: BetaBrowserStateBlockParam) {
-                            browserState.validate()
-                        }
-                    }
-                )
+                when {
+                    text != null -> text.validate()
+                    image != null -> image.validate()
+                    searchResult != null -> searchResult.validate()
+                    document != null -> document.validate()
+                    toolReference != null -> toolReference.validate()
+                    browserState != null -> browserState.validate()
+                    else -> throw AnthropicInvalidDataException("Unknown Block: $_json")
+                }
                 validated = true
             }
 
@@ -865,28 +778,15 @@ private constructor(
              */
             @JvmSynthetic
             internal fun validity(): Int =
-                accept(
-                    object : Visitor<Int> {
-                        override fun visitText(text: BetaTextBlockParam) = text.validity()
-
-                        override fun visitImage(image: BetaImageBlockParam) = image.validity()
-
-                        override fun visitSearchResult(searchResult: BetaSearchResultBlockParam) =
-                            searchResult.validity()
-
-                        override fun visitDocument(document: BetaRequestDocumentBlock) =
-                            document.validity()
-
-                        override fun visitToolReference(
-                            toolReference: BetaToolReferenceBlockParam
-                        ) = toolReference.validity()
-
-                        override fun visitBrowserState(browserState: BetaBrowserStateBlockParam) =
-                            browserState.validity()
-
-                        override fun unknown(json: JsonValue?) = 0
-                    }
-                )
+                when {
+                    text != null -> text.validity()
+                    image != null -> image.validity()
+                    searchResult != null -> searchResult.validity()
+                    document != null -> document.validity()
+                    toolReference != null -> toolReference.validity()
+                    browserState != null -> browserState.validity()
+                    else -> 0
+                }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {

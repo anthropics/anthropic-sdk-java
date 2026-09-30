@@ -226,18 +226,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitRedeemed(redeemed: BetaFallbackCreditRedeemed): Type =
-                        Type.REDEEMED
-
-                    override fun visitNotApplied(notApplied: BetaFallbackCreditNotApplied): Type =
-                        Type.NOT_APPLIED
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                redeemed != null -> Type.REDEEMED
+                notApplied != null -> Type.NOT_APPLIED
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /**
          * The reprice was applied: the retry is billed as if the conversation had been on the retry
@@ -315,17 +308,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitRedeemed(redeemed: BetaFallbackCreditRedeemed) {
-                        redeemed.validate()
-                    }
-
-                    override fun visitNotApplied(notApplied: BetaFallbackCreditNotApplied) {
-                        notApplied.validate()
-                    }
-                }
-            )
+            when {
+                redeemed != null -> redeemed.validate()
+                notApplied != null -> notApplied.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Status: $_json")
+            }
             validated = true
         }
 
@@ -345,17 +332,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitRedeemed(redeemed: BetaFallbackCreditRedeemed) =
-                        redeemed.validity()
-
-                    override fun visitNotApplied(notApplied: BetaFallbackCreditNotApplied) =
-                        notApplied.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                redeemed != null -> redeemed.validity()
+                notApplied != null -> notApplied.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

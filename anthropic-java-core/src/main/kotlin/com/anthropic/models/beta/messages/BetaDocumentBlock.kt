@@ -328,28 +328,18 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitBase64(base64: BetaBase64PdfSource): Type = Type.BASE64
-
-                    override fun visitText(text: BetaPlainTextSource): Type = Type.TEXT
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                base64 != null -> Type.BASE64
+                text != null -> Type.TEXT
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun data(): String =
-            accept(
-                object : Visitor<String> {
-                    override fun visitBase64(base64: BetaBase64PdfSource): String = base64.data()
-
-                    override fun visitText(text: BetaPlainTextSource): String = text.data()
-
-                    override fun unknown(json: JsonValue?): String =
-                        json.getProperty<String>("data").getRequired("data")
-                }
-            )
+            when {
+                base64 != null -> base64.data()
+                text != null -> text.data()
+                else -> _json.getProperty<String>("data").getRequired("data")
+            }
 
         fun base64(): Optional<BetaBase64PdfSource> = Optional.ofNullable(base64)
 
@@ -417,17 +407,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBase64(base64: BetaBase64PdfSource) {
-                        base64.validate()
-                    }
-
-                    override fun visitText(text: BetaPlainTextSource) {
-                        text.validate()
-                    }
-                }
-            )
+            when {
+                base64 != null -> base64.validate()
+                text != null -> text.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Source: $_json")
+            }
             validated = true
         }
 
@@ -447,15 +431,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBase64(base64: BetaBase64PdfSource) = base64.validity()
-
-                    override fun visitText(text: BetaPlainTextSource) = text.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                base64 != null -> base64.validity()
+                text != null -> text.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

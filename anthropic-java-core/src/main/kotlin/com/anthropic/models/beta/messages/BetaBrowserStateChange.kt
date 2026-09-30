@@ -33,75 +33,31 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitTabOpened(tabOpened: BetaBrowserStateChangeTabOpened): Type =
-                    Type.TAB_OPENED
-
-                override fun visitDownloadStarted(
-                    downloadStarted: BetaBrowserStateChangeDownloadStarted
-                ): Type = Type.DOWNLOAD_STARTED
-
-                override fun visitDownloadCompleted(
-                    downloadCompleted: BetaBrowserStateChangeDownloadCompleted
-                ): Type = Type.DOWNLOAD_COMPLETED
-
-                override fun visitDownloadFailed(
-                    downloadFailed: BetaBrowserStateChangeDownloadFailed
-                ): Type = Type.DOWNLOAD_FAILED
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            tabOpened != null -> Type.TAB_OPENED
+            downloadStarted != null -> Type.DOWNLOAD_STARTED
+            downloadCompleted != null -> Type.DOWNLOAD_COMPLETED
+            downloadFailed != null -> Type.DOWNLOAD_FAILED
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun downloadId(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitTabOpened(
-                    tabOpened: BetaBrowserStateChangeTabOpened
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDownloadStarted(
-                    downloadStarted: BetaBrowserStateChangeDownloadStarted
-                ): Optional<String> = Optional.of(downloadStarted.downloadId())
-
-                override fun visitDownloadCompleted(
-                    downloadCompleted: BetaBrowserStateChangeDownloadCompleted
-                ): Optional<String> = Optional.of(downloadCompleted.downloadId())
-
-                override fun visitDownloadFailed(
-                    downloadFailed: BetaBrowserStateChangeDownloadFailed
-                ): Optional<String> = Optional.of(downloadFailed.downloadId())
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("download_id").asKnown()
-            }
-        )
+        when {
+            tabOpened != null -> Optional.empty()
+            downloadStarted != null -> Optional.of(downloadStarted.downloadId())
+            downloadCompleted != null -> Optional.of(downloadCompleted.downloadId())
+            downloadFailed != null -> Optional.of(downloadFailed.downloadId())
+            else -> _json.getProperty<String>("download_id").asKnown()
+        }
 
     fun url(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitTabOpened(
-                    tabOpened: BetaBrowserStateChangeTabOpened
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDownloadStarted(
-                    downloadStarted: BetaBrowserStateChangeDownloadStarted
-                ): Optional<String> = Optional.of(downloadStarted.url())
-
-                override fun visitDownloadCompleted(
-                    downloadCompleted: BetaBrowserStateChangeDownloadCompleted
-                ): Optional<String> = Optional.of(downloadCompleted.url())
-
-                override fun visitDownloadFailed(
-                    downloadFailed: BetaBrowserStateChangeDownloadFailed
-                ): Optional<String> = Optional.of(downloadFailed.url())
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("url").asKnown()
-            }
-        )
+        when {
+            tabOpened != null -> Optional.empty()
+            downloadStarted != null -> Optional.of(downloadStarted.url())
+            downloadCompleted != null -> Optional.of(downloadCompleted.url())
+            downloadFailed != null -> Optional.of(downloadFailed.url())
+            else -> _json.getProperty<String>("url").asKnown()
+        }
 
     /**
      * A tab this call's execution opened that remains open at its end — the creation delta of the
@@ -218,31 +174,13 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitTabOpened(tabOpened: BetaBrowserStateChangeTabOpened) {
-                    tabOpened.validate()
-                }
-
-                override fun visitDownloadStarted(
-                    downloadStarted: BetaBrowserStateChangeDownloadStarted
-                ) {
-                    downloadStarted.validate()
-                }
-
-                override fun visitDownloadCompleted(
-                    downloadCompleted: BetaBrowserStateChangeDownloadCompleted
-                ) {
-                    downloadCompleted.validate()
-                }
-
-                override fun visitDownloadFailed(
-                    downloadFailed: BetaBrowserStateChangeDownloadFailed
-                ) {
-                    downloadFailed.validate()
-                }
-            }
-        )
+        when {
+            tabOpened != null -> tabOpened.validate()
+            downloadStarted != null -> downloadStarted.validate()
+            downloadCompleted != null -> downloadCompleted.validate()
+            downloadFailed != null -> downloadFailed.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaBrowserStateChange: $_json")
+        }
         validated = true
     }
 
@@ -261,26 +199,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitTabOpened(tabOpened: BetaBrowserStateChangeTabOpened) =
-                    tabOpened.validity()
-
-                override fun visitDownloadStarted(
-                    downloadStarted: BetaBrowserStateChangeDownloadStarted
-                ) = downloadStarted.validity()
-
-                override fun visitDownloadCompleted(
-                    downloadCompleted: BetaBrowserStateChangeDownloadCompleted
-                ) = downloadCompleted.validity()
-
-                override fun visitDownloadFailed(
-                    downloadFailed: BetaBrowserStateChangeDownloadFailed
-                ) = downloadFailed.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            tabOpened != null -> tabOpened.validity()
+            downloadStarted != null -> downloadStarted.validity()
+            downloadCompleted != null -> downloadCompleted.validity()
+            downloadFailed != null -> downloadFailed.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

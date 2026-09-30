@@ -132,23 +132,16 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitString(string: String) {}
-
-                override fun visitAgent(agent: BetaManagedAgentsAgentParams) {
-                    agent.validate()
-                }
-
-                override fun visitSelf(self: BetaManagedAgentsMultiagentSelfParams) {
-                    self.validate()
-                }
-
-                override fun visitAdvisor(advisor: BetaManagedAgentsAdvisorParams) {
-                    advisor.validate()
-                }
-            }
-        )
+        when {
+            string != null -> {}
+            agent != null -> agent.validate()
+            self != null -> self.validate()
+            advisor != null -> advisor.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsMultiagentRosterEntryParams: $_json"
+                )
+        }
         validated = true
     }
 
@@ -167,21 +160,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitString(string: String) = 1
-
-                override fun visitAgent(agent: BetaManagedAgentsAgentParams) = agent.validity()
-
-                override fun visitSelf(self: BetaManagedAgentsMultiagentSelfParams) =
-                    self.validity()
-
-                override fun visitAdvisor(advisor: BetaManagedAgentsAdvisorParams) =
-                    advisor.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            string != null -> 1
+            agent != null -> agent.validity()
+            self != null -> self.validity()
+            advisor != null -> advisor.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

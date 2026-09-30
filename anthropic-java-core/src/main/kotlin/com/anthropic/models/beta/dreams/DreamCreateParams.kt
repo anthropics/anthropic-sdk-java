@@ -1055,17 +1055,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitString(string: String) {}
-
-                    override fun visitBetaDreamModelConfigParam(
-                        betaDreamModelConfigParam: BetaDreamModelConfigParam
-                    ) {
-                        betaDreamModelConfigParam.validate()
-                    }
-                }
-            )
+            when {
+                string != null -> {}
+                betaDreamModelConfigParam != null -> betaDreamModelConfigParam.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Model: $_json")
+            }
             validated = true
         }
 
@@ -1085,17 +1079,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitString(string: String) = 1
-
-                    override fun visitBetaDreamModelConfigParam(
-                        betaDreamModelConfigParam: BetaDreamModelConfigParam
-                    ) = betaDreamModelConfigParam.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                string != null -> 1
+                betaDreamModelConfigParam != null -> betaDreamModelConfigParam.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

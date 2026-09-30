@@ -872,34 +872,18 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAddition(addition: BetaRequestToolAdditionBlock): Type =
-                        Type.TOOL_ADDITION
-
-                    override fun visitRemoval(removal: BetaRequestToolRemovalBlock): Type =
-                        Type.TOOL_REMOVAL
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                addition != null -> Type.TOOL_ADDITION
+                removal != null -> Type.TOOL_REMOVAL
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun cacheControl(): Optional<BetaCacheControlEphemeral> =
-            accept(
-                object : Visitor<Optional<BetaCacheControlEphemeral>> {
-                    override fun visitAddition(
-                        addition: BetaRequestToolAdditionBlock
-                    ): Optional<BetaCacheControlEphemeral> = addition.cacheControl()
-
-                    override fun visitRemoval(
-                        removal: BetaRequestToolRemovalBlock
-                    ): Optional<BetaCacheControlEphemeral> = removal.cacheControl()
-
-                    override fun unknown(json: JsonValue?): Optional<BetaCacheControlEphemeral> =
-                        json.getProperty<BetaCacheControlEphemeral>("cache_control").asKnown()
-                }
-            )
+            when {
+                addition != null -> addition.cacheControl()
+                removal != null -> removal.cacheControl()
+                else -> _json.getProperty<BetaCacheControlEphemeral>("cache_control").asKnown()
+            }
 
         /**
          * Mid-conversation directive to make a tool available.
@@ -1001,17 +985,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAddition(addition: BetaRequestToolAdditionBlock) {
-                        addition.validate()
-                    }
-
-                    override fun visitRemoval(removal: BetaRequestToolRemovalBlock) {
-                        removal.validate()
-                    }
-                }
-            )
+            when {
+                addition != null -> addition.validate()
+                removal != null -> removal.validate()
+                else -> throw AnthropicInvalidDataException("Unknown ToolChange: $_json")
+            }
             validated = true
         }
 
@@ -1031,17 +1009,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAddition(addition: BetaRequestToolAdditionBlock) =
-                        addition.validity()
-
-                    override fun visitRemoval(removal: BetaRequestToolRemovalBlock) =
-                        removal.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                addition != null -> addition.validity()
+                removal != null -> removal.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

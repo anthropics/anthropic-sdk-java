@@ -416,17 +416,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitString(string: String) {}
-
-                    override fun visitBetaMcpToolResultBlockParam(
-                        betaMcpToolResultBlockParam: List<BetaTextBlockParam>
-                    ) {
-                        betaMcpToolResultBlockParam.forEach { it.validate() }
-                    }
-                }
-            )
+            when {
+                string != null -> {}
+                betaMcpToolResultBlockParam != null ->
+                    betaMcpToolResultBlockParam.forEach { it.validate() }
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -446,17 +441,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitString(string: String) = 1
-
-                    override fun visitBetaMcpToolResultBlockParam(
-                        betaMcpToolResultBlockParam: List<BetaTextBlockParam>
-                    ) = betaMcpToolResultBlockParam.sumOf { it.validity().toInt() }
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                string != null -> 1
+                betaMcpToolResultBlockParam != null ->
+                    betaMcpToolResultBlockParam.sumOf { it.validity().toInt() }
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -339,27 +339,13 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitEndTurn(endTurn: BetaManagedAgentsSessionEndTurn): Type =
-                        Type.END_TURN
-
-                    override fun visitRequiresAction(
-                        requiresAction: BetaManagedAgentsSessionRequiresAction
-                    ): Type = Type.REQUIRES_ACTION
-
-                    override fun visitRetriesExhausted(
-                        retriesExhausted: BetaManagedAgentsSessionRetriesExhausted
-                    ): Type = Type.RETRIES_EXHAUSTED
-
-                    override fun visitBudgetReached(
-                        budgetReached: BetaManagedAgentsSessionBudgetReached
-                    ): Type = Type.BUDGET_REACHED
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                endTurn != null -> Type.END_TURN
+                requiresAction != null -> Type.REQUIRES_ACTION
+                retriesExhausted != null -> Type.RETRIES_EXHAUSTED
+                budgetReached != null -> Type.BUDGET_REACHED
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /** The agent completed its turn naturally and is ready for the next user message. */
         fun endTurn(): Optional<BetaManagedAgentsSessionEndTurn> = Optional.ofNullable(endTurn)
@@ -477,31 +463,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitEndTurn(endTurn: BetaManagedAgentsSessionEndTurn) {
-                        endTurn.validate()
-                    }
-
-                    override fun visitRequiresAction(
-                        requiresAction: BetaManagedAgentsSessionRequiresAction
-                    ) {
-                        requiresAction.validate()
-                    }
-
-                    override fun visitRetriesExhausted(
-                        retriesExhausted: BetaManagedAgentsSessionRetriesExhausted
-                    ) {
-                        retriesExhausted.validate()
-                    }
-
-                    override fun visitBudgetReached(
-                        budgetReached: BetaManagedAgentsSessionBudgetReached
-                    ) {
-                        budgetReached.validate()
-                    }
-                }
-            )
+            when {
+                endTurn != null -> endTurn.validate()
+                requiresAction != null -> requiresAction.validate()
+                retriesExhausted != null -> retriesExhausted.validate()
+                budgetReached != null -> budgetReached.validate()
+                else -> throw AnthropicInvalidDataException("Unknown StopReason: $_json")
+            }
             validated = true
         }
 
@@ -521,26 +489,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitEndTurn(endTurn: BetaManagedAgentsSessionEndTurn) =
-                        endTurn.validity()
-
-                    override fun visitRequiresAction(
-                        requiresAction: BetaManagedAgentsSessionRequiresAction
-                    ) = requiresAction.validity()
-
-                    override fun visitRetriesExhausted(
-                        retriesExhausted: BetaManagedAgentsSessionRetriesExhausted
-                    ) = retriesExhausted.validity()
-
-                    override fun visitBudgetReached(
-                        budgetReached: BetaManagedAgentsSessionBudgetReached
-                    ) = budgetReached.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                endTurn != null -> endTurn.validity()
+                requiresAction != null -> requiresAction.validity()
+                retriesExhausted != null -> retriesExhausted.validity()
+                budgetReached != null -> budgetReached.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

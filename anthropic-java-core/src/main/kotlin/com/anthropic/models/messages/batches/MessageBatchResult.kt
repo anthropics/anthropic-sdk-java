@@ -40,22 +40,13 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitSucceeded(succeeded: MessageBatchSucceededResult): Type =
-                    Type.SUCCEEDED
-
-                override fun visitErrored(errored: MessageBatchErroredResult): Type = Type.ERRORED
-
-                override fun visitCanceled(canceled: MessageBatchCanceledResult): Type =
-                    Type.CANCELED
-
-                override fun visitExpired(expired: MessageBatchExpiredResult): Type = Type.EXPIRED
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            succeeded != null -> Type.SUCCEEDED
+            errored != null -> Type.ERRORED
+            canceled != null -> Type.CANCELED
+            expired != null -> Type.EXPIRED
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun succeeded(): Optional<MessageBatchSucceededResult> = Optional.ofNullable(succeeded)
 
@@ -136,25 +127,13 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitSucceeded(succeeded: MessageBatchSucceededResult) {
-                    succeeded.validate()
-                }
-
-                override fun visitErrored(errored: MessageBatchErroredResult) {
-                    errored.validate()
-                }
-
-                override fun visitCanceled(canceled: MessageBatchCanceledResult) {
-                    canceled.validate()
-                }
-
-                override fun visitExpired(expired: MessageBatchExpiredResult) {
-                    expired.validate()
-                }
-            }
-        )
+        when {
+            succeeded != null -> succeeded.validate()
+            errored != null -> errored.validate()
+            canceled != null -> canceled.validate()
+            expired != null -> expired.validate()
+            else -> throw AnthropicInvalidDataException("Unknown MessageBatchResult: $_json")
+        }
         validated = true
     }
 
@@ -173,21 +152,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitSucceeded(succeeded: MessageBatchSucceededResult) =
-                    succeeded.validity()
-
-                override fun visitErrored(errored: MessageBatchErroredResult) = errored.validity()
-
-                override fun visitCanceled(canceled: MessageBatchCanceledResult) =
-                    canceled.validity()
-
-                override fun visitExpired(expired: MessageBatchExpiredResult) = expired.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            succeeded != null -> succeeded.validity()
+            errored != null -> errored.validity()
+            canceled != null -> canceled.validity()
+            expired != null -> expired.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

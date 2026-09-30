@@ -399,21 +399,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitToolSearchToolResultErrorParam(
-                        toolSearchToolResultErrorParam: ToolSearchToolResultErrorParam
-                    ) {
-                        toolSearchToolResultErrorParam.validate()
-                    }
-
-                    override fun visitToolSearchToolSearchResultBlockParam(
-                        toolSearchToolSearchResultBlockParam: ToolSearchToolSearchResultBlockParam
-                    ) {
-                        toolSearchToolSearchResultBlockParam.validate()
-                    }
-                }
-            )
+            when {
+                toolSearchToolResultErrorParam != null -> toolSearchToolResultErrorParam.validate()
+                toolSearchToolSearchResultBlockParam != null ->
+                    toolSearchToolSearchResultBlockParam.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -433,19 +424,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitToolSearchToolResultErrorParam(
-                        toolSearchToolResultErrorParam: ToolSearchToolResultErrorParam
-                    ) = toolSearchToolResultErrorParam.validity()
-
-                    override fun visitToolSearchToolSearchResultBlockParam(
-                        toolSearchToolSearchResultBlockParam: ToolSearchToolSearchResultBlockParam
-                    ) = toolSearchToolSearchResultBlockParam.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                toolSearchToolResultErrorParam != null -> toolSearchToolResultErrorParam.validity()
+                toolSearchToolSearchResultBlockParam != null ->
+                    toolSearchToolSearchResultBlockParam.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

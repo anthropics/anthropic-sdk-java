@@ -31,17 +31,11 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitMemoryStore(memoryStore: BetaDreamMemoryStoreInput): Type =
-                    Type.MEMORY_STORE
-
-                override fun visitSessions(sessions: BetaDreamSessionsInput): Type = Type.SESSIONS
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            memoryStore != null -> Type.MEMORY_STORE
+            sessions != null -> Type.SESSIONS
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     /**
      * The memory store that a dream reads, given as an entry in `inputs`.
@@ -122,17 +116,11 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitMemoryStore(memoryStore: BetaDreamMemoryStoreInput) {
-                    memoryStore.validate()
-                }
-
-                override fun visitSessions(sessions: BetaDreamSessionsInput) {
-                    sessions.validate()
-                }
-            }
-        )
+        when {
+            memoryStore != null -> memoryStore.validate()
+            sessions != null -> sessions.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaDreamInput: $_json")
+        }
         validated = true
     }
 
@@ -151,16 +139,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitMemoryStore(memoryStore: BetaDreamMemoryStoreInput) =
-                    memoryStore.validity()
-
-                override fun visitSessions(sessions: BetaDreamSessionsInput) = sessions.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            memoryStore != null -> memoryStore.validity()
+            sessions != null -> sessions.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

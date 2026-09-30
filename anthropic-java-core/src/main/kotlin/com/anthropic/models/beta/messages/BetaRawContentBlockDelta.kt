@@ -34,28 +34,15 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitText(text: BetaTextDelta): Type = Type.TEXT_DELTA
-
-                override fun visitInputJson(inputJson: BetaInputJsonDelta): Type =
-                    Type.INPUT_JSON_DELTA
-
-                override fun visitCitations(citations: BetaCitationsDelta): Type =
-                    Type.CITATIONS_DELTA
-
-                override fun visitThinking(thinking: BetaThinkingDelta): Type = Type.THINKING_DELTA
-
-                override fun visitSignature(signature: BetaSignatureDelta): Type =
-                    Type.SIGNATURE_DELTA
-
-                override fun visitCompaction(compaction: BetaCompactionContentBlockDelta): Type =
-                    Type.COMPACTION_DELTA
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            text != null -> Type.TEXT_DELTA
+            inputJson != null -> Type.INPUT_JSON_DELTA
+            citations != null -> Type.CITATIONS_DELTA
+            thinking != null -> Type.THINKING_DELTA
+            signature != null -> Type.SIGNATURE_DELTA
+            compaction != null -> Type.COMPACTION_DELTA
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun text(): Optional<BetaTextDelta> = Optional.ofNullable(text)
 
@@ -150,33 +137,15 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitText(text: BetaTextDelta) {
-                    text.validate()
-                }
-
-                override fun visitInputJson(inputJson: BetaInputJsonDelta) {
-                    inputJson.validate()
-                }
-
-                override fun visitCitations(citations: BetaCitationsDelta) {
-                    citations.validate()
-                }
-
-                override fun visitThinking(thinking: BetaThinkingDelta) {
-                    thinking.validate()
-                }
-
-                override fun visitSignature(signature: BetaSignatureDelta) {
-                    signature.validate()
-                }
-
-                override fun visitCompaction(compaction: BetaCompactionContentBlockDelta) {
-                    compaction.validate()
-                }
-            }
-        )
+        when {
+            text != null -> text.validate()
+            inputJson != null -> inputJson.validate()
+            citations != null -> citations.validate()
+            thinking != null -> thinking.validate()
+            signature != null -> signature.validate()
+            compaction != null -> compaction.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaRawContentBlockDelta: $_json")
+        }
         validated = true
     }
 
@@ -195,24 +164,15 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitText(text: BetaTextDelta) = text.validity()
-
-                override fun visitInputJson(inputJson: BetaInputJsonDelta) = inputJson.validity()
-
-                override fun visitCitations(citations: BetaCitationsDelta) = citations.validity()
-
-                override fun visitThinking(thinking: BetaThinkingDelta) = thinking.validity()
-
-                override fun visitSignature(signature: BetaSignatureDelta) = signature.validity()
-
-                override fun visitCompaction(compaction: BetaCompactionContentBlockDelta) =
-                    compaction.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            text != null -> text.validity()
+            inputJson != null -> inputJson.validity()
+            citations != null -> citations.validity()
+            thinking != null -> thinking.validity()
+            signature != null -> signature.validity()
+            compaction != null -> compaction.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

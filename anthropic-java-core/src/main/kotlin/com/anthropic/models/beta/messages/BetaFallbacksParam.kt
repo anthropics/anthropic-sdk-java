@@ -97,23 +97,16 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitFallbackParams(fallbackParams: List<BetaFallbackParam>) {
-                    fallbackParams.forEach { it.validate() }
-                }
-
-                override fun visitDefault(default_: JsonValue) {
-                    default_.let {
-                        if (it != JsonValue.from("default")) {
-                            throw AnthropicInvalidDataException(
-                                "'default_' is invalid, received $it"
-                            )
-                        }
+        when {
+            fallbackParams != null -> fallbackParams.forEach { it.validate() }
+            default_ != null ->
+                default_.let {
+                    if (it != JsonValue.from("default")) {
+                        throw AnthropicInvalidDataException("'default_' is invalid, received $it")
                     }
                 }
-            }
-        )
+            else -> throw AnthropicInvalidDataException("Unknown BetaFallbacksParam: $_json")
+        }
         validated = true
     }
 
@@ -132,17 +125,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitFallbackParams(fallbackParams: List<BetaFallbackParam>) =
-                    fallbackParams.sumOf { it.validity().toInt() }
-
-                override fun visitDefault(default_: JsonValue) =
-                    default_.let { if (it == JsonValue.from("default")) 1 else 0 }
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            fallbackParams != null -> fallbackParams.sumOf { it.validity().toInt() }
+            default_ != null -> default_.let { if (it == JsonValue.from("default")) 1 else 0 }
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

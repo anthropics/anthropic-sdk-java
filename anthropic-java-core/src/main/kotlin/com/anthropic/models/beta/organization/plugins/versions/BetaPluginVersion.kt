@@ -705,17 +705,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitUserActor(userActor: BetaPluginUserActor): Type =
-                        Type.USER_ACTOR
-
-                    override fun visitApiActor(apiActor: BetaPluginApiActor): Type = Type.API_ACTOR
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                userActor != null -> Type.USER_ACTOR
+                apiActor != null -> Type.API_ACTOR
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun userActor(): Optional<BetaPluginUserActor> = Optional.ofNullable(userActor)
 
@@ -783,17 +777,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitUserActor(userActor: BetaPluginUserActor) {
-                        userActor.validate()
-                    }
-
-                    override fun visitApiActor(apiActor: BetaPluginApiActor) {
-                        apiActor.validate()
-                    }
-                }
-            )
+            when {
+                userActor != null -> userActor.validate()
+                apiActor != null -> apiActor.validate()
+                else -> throw AnthropicInvalidDataException("Unknown CreatedBy: $_json")
+            }
             validated = true
         }
 
@@ -813,16 +801,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitUserActor(userActor: BetaPluginUserActor) =
-                        userActor.validity()
-
-                    override fun visitApiActor(apiActor: BetaPluginApiActor) = apiActor.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                userActor != null -> userActor.validity()
+                apiActor != null -> apiActor.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

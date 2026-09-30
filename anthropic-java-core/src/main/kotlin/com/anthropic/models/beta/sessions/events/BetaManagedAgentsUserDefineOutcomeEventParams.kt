@@ -355,18 +355,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitFile(file: BetaManagedAgentsFileRubricParams): Type =
-                        Type.FILE
-
-                    override fun visitText(text: BetaManagedAgentsTextRubricParams): Type =
-                        Type.TEXT
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                file != null -> Type.FILE
+                text != null -> Type.TEXT
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /** Rubric referenced by a file uploaded via the Files API. */
         fun file(): Optional<BetaManagedAgentsFileRubricParams> = Optional.ofNullable(file)
@@ -438,17 +431,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitFile(file: BetaManagedAgentsFileRubricParams) {
-                        file.validate()
-                    }
-
-                    override fun visitText(text: BetaManagedAgentsTextRubricParams) {
-                        text.validate()
-                    }
-                }
-            )
+            when {
+                file != null -> file.validate()
+                text != null -> text.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Rubric: $_json")
+            }
             validated = true
         }
 
@@ -468,17 +455,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitFile(file: BetaManagedAgentsFileRubricParams) =
-                        file.validity()
-
-                    override fun visitText(text: BetaManagedAgentsTextRubricParams) =
-                        text.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                file != null -> file.validity()
+                text != null -> text.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

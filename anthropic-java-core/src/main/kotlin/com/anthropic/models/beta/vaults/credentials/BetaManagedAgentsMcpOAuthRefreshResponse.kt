@@ -365,24 +365,12 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitNone(
-                        none: BetaManagedAgentsTokenEndpointAuthNoneResponse
-                    ): Type = Type.NONE
-
-                    override fun visitClientSecretBasic(
-                        clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicResponse
-                    ): Type = Type.CLIENT_SECRET_BASIC
-
-                    override fun visitClientSecretPost(
-                        clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostResponse
-                    ): Type = Type.CLIENT_SECRET_POST
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                none != null -> Type.NONE
+                clientSecretBasic != null -> Type.CLIENT_SECRET_BASIC
+                clientSecretPost != null -> Type.CLIENT_SECRET_POST
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /** Token endpoint requires no client authentication. */
         fun none(): Optional<BetaManagedAgentsTokenEndpointAuthNoneResponse> =
@@ -468,25 +456,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitNone(none: BetaManagedAgentsTokenEndpointAuthNoneResponse) {
-                        none.validate()
-                    }
-
-                    override fun visitClientSecretBasic(
-                        clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicResponse
-                    ) {
-                        clientSecretBasic.validate()
-                    }
-
-                    override fun visitClientSecretPost(
-                        clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostResponse
-                    ) {
-                        clientSecretPost.validate()
-                    }
-                }
-            )
+            when {
+                none != null -> none.validate()
+                clientSecretBasic != null -> clientSecretBasic.validate()
+                clientSecretPost != null -> clientSecretPost.validate()
+                else -> throw AnthropicInvalidDataException("Unknown TokenEndpointAuth: $_json")
+            }
             validated = true
         }
 
@@ -506,22 +481,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitNone(none: BetaManagedAgentsTokenEndpointAuthNoneResponse) =
-                        none.validity()
-
-                    override fun visitClientSecretBasic(
-                        clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicResponse
-                    ) = clientSecretBasic.validity()
-
-                    override fun visitClientSecretPost(
-                        clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostResponse
-                    ) = clientSecretPost.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                none != null -> none.validity()
+                clientSecretBasic != null -> clientSecretBasic.validity()
+                clientSecretPost != null -> clientSecretPost.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -31,19 +31,11 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitManual(
-                    manual: BetaManagedAgentsManualDeploymentPausedReason
-                ): Type = Type.MANUAL
-
-                override fun visitError(error: BetaManagedAgentsErrorDeploymentPausedReason): Type =
-                    Type.ERROR
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            manual != null -> Type.MANUAL
+            error != null -> Type.ERROR
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     /** The caller invoked the pause endpoint on the deployment. */
     fun manual(): Optional<BetaManagedAgentsManualDeploymentPausedReason> =
@@ -115,17 +107,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitManual(manual: BetaManagedAgentsManualDeploymentPausedReason) {
-                    manual.validate()
-                }
-
-                override fun visitError(error: BetaManagedAgentsErrorDeploymentPausedReason) {
-                    error.validate()
-                }
-            }
-        )
+        when {
+            manual != null -> manual.validate()
+            error != null -> error.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsDeploymentPausedReason: $_json"
+                )
+        }
         validated = true
     }
 
@@ -144,17 +133,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitManual(manual: BetaManagedAgentsManualDeploymentPausedReason) =
-                    manual.validity()
-
-                override fun visitError(error: BetaManagedAgentsErrorDeploymentPausedReason) =
-                    error.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            manual != null -> manual.validity()
+            error != null -> error.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

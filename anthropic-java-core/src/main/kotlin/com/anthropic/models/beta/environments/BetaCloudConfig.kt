@@ -275,17 +275,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitUnrestricted(unrestricted: BetaUnrestrictedNetwork): Type =
-                        Type.UNRESTRICTED
-
-                    override fun visitLimited(limited: BetaLimitedNetwork): Type = Type.LIMITED
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                unrestricted != null -> Type.UNRESTRICTED
+                limited != null -> Type.LIMITED
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /** Unrestricted network access. */
         fun unrestricted(): Optional<BetaUnrestrictedNetwork> = Optional.ofNullable(unrestricted)
@@ -357,17 +351,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitUnrestricted(unrestricted: BetaUnrestrictedNetwork) {
-                        unrestricted.validate()
-                    }
-
-                    override fun visitLimited(limited: BetaLimitedNetwork) {
-                        limited.validate()
-                    }
-                }
-            )
+            when {
+                unrestricted != null -> unrestricted.validate()
+                limited != null -> limited.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Networking: $_json")
+            }
             validated = true
         }
 
@@ -387,16 +375,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitUnrestricted(unrestricted: BetaUnrestrictedNetwork) =
-                        unrestricted.validity()
-
-                    override fun visitLimited(limited: BetaLimitedNetwork) = limited.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                unrestricted != null -> unrestricted.validity()
+                limited != null -> limited.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

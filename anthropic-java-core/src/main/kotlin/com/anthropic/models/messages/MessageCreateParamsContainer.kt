@@ -93,15 +93,12 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitContainerParams(containerParams: ContainerParams) {
-                    containerParams.validate()
-                }
-
-                override fun visitString(string: String) {}
-            }
-        )
+        when {
+            containerParams != null -> containerParams.validate()
+            string != null -> {}
+            else ->
+                throw AnthropicInvalidDataException("Unknown MessageCreateParamsContainer: $_json")
+        }
         validated = true
     }
 
@@ -120,16 +117,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitContainerParams(containerParams: ContainerParams) =
-                    containerParams.validity()
-
-                override fun visitString(string: String) = 1
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            containerParams != null -> containerParams.validity()
+            string != null -> 1
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

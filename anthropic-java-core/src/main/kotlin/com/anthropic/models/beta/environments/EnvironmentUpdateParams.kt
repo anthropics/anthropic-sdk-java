@@ -812,17 +812,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitCloud(cloud: BetaCloudConfigParams): Type = Type.CLOUD
-
-                    override fun visitSelfHosted(selfHosted: BetaSelfHostedConfigParams): Type =
-                        Type.SELF_HOSTED
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                cloud != null -> Type.CLOUD
+                selfHosted != null -> Type.SELF_HOSTED
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /**
          * Request params for `cloud` environment configuration.
@@ -902,17 +896,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitCloud(cloud: BetaCloudConfigParams) {
-                        cloud.validate()
-                    }
-
-                    override fun visitSelfHosted(selfHosted: BetaSelfHostedConfigParams) {
-                        selfHosted.validate()
-                    }
-                }
-            )
+            when {
+                cloud != null -> cloud.validate()
+                selfHosted != null -> selfHosted.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Config: $_json")
+            }
             validated = true
         }
 
@@ -932,16 +920,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitCloud(cloud: BetaCloudConfigParams) = cloud.validity()
-
-                    override fun visitSelfHosted(selfHosted: BetaSelfHostedConfigParams) =
-                        selfHosted.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                cloud != null -> cloud.validity()
+                selfHosted != null -> selfHosted.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

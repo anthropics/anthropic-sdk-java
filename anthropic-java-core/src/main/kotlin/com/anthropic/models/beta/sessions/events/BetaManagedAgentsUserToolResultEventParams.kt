@@ -661,45 +661,22 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitText(text: BetaManagedAgentsTextBlock): Type = Type.TEXT
-
-                    override fun visitImage(image: BetaManagedAgentsImageBlock): Type = Type.IMAGE
-
-                    override fun visitDocument(document: BetaManagedAgentsDocumentBlock): Type =
-                        Type.DOCUMENT
-
-                    override fun visitSearchResult(
-                        searchResult: BetaManagedAgentsSearchResultBlock
-                    ): Type = Type.SEARCH_RESULT
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                text != null -> Type.TEXT
+                image != null -> Type.IMAGE
+                document != null -> Type.DOCUMENT
+                searchResult != null -> Type.SEARCH_RESULT
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun title(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitText(text: BetaManagedAgentsTextBlock): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitImage(image: BetaManagedAgentsImageBlock): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitDocument(
-                        document: BetaManagedAgentsDocumentBlock
-                    ): Optional<String> = document.title()
-
-                    override fun visitSearchResult(
-                        searchResult: BetaManagedAgentsSearchResultBlock
-                    ): Optional<String> = Optional.of(searchResult.title())
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("title").asKnown()
-                }
-            )
+            when {
+                text != null -> Optional.empty()
+                image != null -> Optional.empty()
+                document != null -> document.title()
+                searchResult != null -> Optional.of(searchResult.title())
+                else -> _json.getProperty<String>("title").asKnown()
+            }
 
         /** Regular text content. */
         fun text(): Optional<BetaManagedAgentsTextBlock> = Optional.ofNullable(text)
@@ -797,27 +774,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitText(text: BetaManagedAgentsTextBlock) {
-                        text.validate()
-                    }
-
-                    override fun visitImage(image: BetaManagedAgentsImageBlock) {
-                        image.validate()
-                    }
-
-                    override fun visitDocument(document: BetaManagedAgentsDocumentBlock) {
-                        document.validate()
-                    }
-
-                    override fun visitSearchResult(
-                        searchResult: BetaManagedAgentsSearchResultBlock
-                    ) {
-                        searchResult.validate()
-                    }
-                }
-            )
+            when {
+                text != null -> text.validate()
+                image != null -> image.validate()
+                document != null -> document.validate()
+                searchResult != null -> searchResult.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -837,22 +800,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitText(text: BetaManagedAgentsTextBlock) = text.validity()
-
-                    override fun visitImage(image: BetaManagedAgentsImageBlock) = image.validity()
-
-                    override fun visitDocument(document: BetaManagedAgentsDocumentBlock) =
-                        document.validity()
-
-                    override fun visitSearchResult(
-                        searchResult: BetaManagedAgentsSearchResultBlock
-                    ) = searchResult.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                text != null -> text.validity()
+                image != null -> image.validity()
+                document != null -> document.validity()
+                searchResult != null -> searchResult.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

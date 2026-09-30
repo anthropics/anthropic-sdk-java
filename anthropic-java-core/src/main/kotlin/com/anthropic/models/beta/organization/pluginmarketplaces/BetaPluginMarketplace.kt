@@ -811,18 +811,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitOrganization(
-                        organization: BetaPluginOwnerOrganization
-                    ): Type = Type.ORGANIZATION
-
-                    override fun visitUser(user: BetaPluginOwnerUser): Type = Type.USER
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                organization != null -> Type.ORGANIZATION
+                user != null -> Type.USER
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun organization(): Optional<BetaPluginOwnerOrganization> =
             Optional.ofNullable(organization)
@@ -891,17 +884,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitOrganization(organization: BetaPluginOwnerOrganization) {
-                        organization.validate()
-                    }
-
-                    override fun visitUser(user: BetaPluginOwnerUser) {
-                        user.validate()
-                    }
-                }
-            )
+            when {
+                organization != null -> organization.validate()
+                user != null -> user.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Owner: $_json")
+            }
             validated = true
         }
 
@@ -921,16 +908,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitOrganization(organization: BetaPluginOwnerOrganization) =
-                        organization.validity()
-
-                    override fun visitUser(user: BetaPluginOwnerUser) = user.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                organization != null -> organization.validity()
+                user != null -> user.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

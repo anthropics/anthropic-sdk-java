@@ -1707,19 +1707,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaManagedAgents(
-                        betaManagedAgents: BetaManagedAgentsModel
-                    ) {}
-
-                    override fun visitBetaManagedAgentsModelConfigParams(
-                        betaManagedAgentsModelConfigParams: BetaManagedAgentsModelConfigParams
-                    ) {
-                        betaManagedAgentsModelConfigParams.validate()
-                    }
-                }
-            )
+            when {
+                betaManagedAgents != null -> {}
+                betaManagedAgentsModelConfigParams != null ->
+                    betaManagedAgentsModelConfigParams.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Model: $_json")
+            }
             validated = true
         }
 
@@ -1739,18 +1732,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaManagedAgents(betaManagedAgents: BetaManagedAgentsModel) =
-                        1
-
-                    override fun visitBetaManagedAgentsModelConfigParams(
-                        betaManagedAgentsModelConfigParams: BetaManagedAgentsModelConfigParams
-                    ) = betaManagedAgentsModelConfigParams.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaManagedAgents != null -> 1
+                betaManagedAgentsModelConfigParams != null ->
+                    betaManagedAgentsModelConfigParams.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1897,23 +1884,12 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAgentToolset20260401(
-                        agentToolset20260401: BetaManagedAgentsAgentToolset20260401Params
-                    ): Type = Type.AGENT_TOOLSET_20260401
-
-                    override fun visitMcpToolset(
-                        mcpToolset: BetaManagedAgentsMcpToolsetParams
-                    ): Type = Type.MCP_TOOLSET
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomToolParams): Type =
-                        Type.CUSTOM
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                agentToolset20260401 != null -> Type.AGENT_TOOLSET_20260401
+                mcpToolset != null -> Type.MCP_TOOLSET
+                custom != null -> Type.CUSTOM
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /**
          * Configuration for built-in agent tools. Use this to enable or disable groups of tools
@@ -2012,23 +1988,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAgentToolset20260401(
-                        agentToolset20260401: BetaManagedAgentsAgentToolset20260401Params
-                    ) {
-                        agentToolset20260401.validate()
-                    }
-
-                    override fun visitMcpToolset(mcpToolset: BetaManagedAgentsMcpToolsetParams) {
-                        mcpToolset.validate()
-                    }
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomToolParams) {
-                        custom.validate()
-                    }
-                }
-            )
+            when {
+                agentToolset20260401 != null -> agentToolset20260401.validate()
+                mcpToolset != null -> mcpToolset.validate()
+                custom != null -> custom.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Tool: $_json")
+            }
             validated = true
         }
 
@@ -2048,21 +2013,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAgentToolset20260401(
-                        agentToolset20260401: BetaManagedAgentsAgentToolset20260401Params
-                    ) = agentToolset20260401.validity()
-
-                    override fun visitMcpToolset(mcpToolset: BetaManagedAgentsMcpToolsetParams) =
-                        mcpToolset.validity()
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomToolParams) =
-                        custom.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                agentToolset20260401 != null -> agentToolset20260401.validity()
+                mcpToolset != null -> mcpToolset.validity()
+                custom != null -> custom.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

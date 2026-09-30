@@ -416,22 +416,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaToolSearchToolResultErrorParam(
-                        betaToolSearchToolResultErrorParam: BetaToolSearchToolResultErrorParam
-                    ) {
-                        betaToolSearchToolResultErrorParam.validate()
-                    }
-
-                    override fun visitBetaToolSearchToolSearchResultBlockParam(
-                        betaToolSearchToolSearchResultBlockParam:
-                            BetaToolSearchToolSearchResultBlockParam
-                    ) {
-                        betaToolSearchToolSearchResultBlockParam.validate()
-                    }
-                }
-            )
+            when {
+                betaToolSearchToolResultErrorParam != null ->
+                    betaToolSearchToolResultErrorParam.validate()
+                betaToolSearchToolSearchResultBlockParam != null ->
+                    betaToolSearchToolSearchResultBlockParam.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -451,20 +442,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaToolSearchToolResultErrorParam(
-                        betaToolSearchToolResultErrorParam: BetaToolSearchToolResultErrorParam
-                    ) = betaToolSearchToolResultErrorParam.validity()
-
-                    override fun visitBetaToolSearchToolSearchResultBlockParam(
-                        betaToolSearchToolSearchResultBlockParam:
-                            BetaToolSearchToolSearchResultBlockParam
-                    ) = betaToolSearchToolSearchResultBlockParam.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaToolSearchToolResultErrorParam != null ->
+                    betaToolSearchToolResultErrorParam.validity()
+                betaToolSearchToolSearchResultBlockParam != null ->
+                    betaToolSearchToolSearchResultBlockParam.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

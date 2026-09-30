@@ -29,68 +29,31 @@ private constructor(
 ) {
 
     fun content(): Optional<List<CodeExecutionOutputBlockParam>> =
-        accept(
-            object : Visitor<Optional<List<CodeExecutionOutputBlockParam>>> {
-                override fun visitErrorParam(
-                    errorParam: CodeExecutionToolResultErrorParam
-                ): Optional<List<CodeExecutionOutputBlockParam>> = Optional.empty()
-
-                override fun visitResultBlockParam(
-                    resultBlockParam: CodeExecutionResultBlockParam
-                ): Optional<List<CodeExecutionOutputBlockParam>> =
-                    Optional.of(resultBlockParam.content())
-
-                override fun visitEncryptedCodeExecutionResultBlockParam(
-                    encryptedCodeExecutionResultBlockParam: EncryptedCodeExecutionResultBlockParam
-                ): Optional<List<CodeExecutionOutputBlockParam>> =
-                    Optional.of(encryptedCodeExecutionResultBlockParam.content())
-
-                override fun unknown(
-                    json: JsonValue?
-                ): Optional<List<CodeExecutionOutputBlockParam>> =
-                    json.getProperty<List<CodeExecutionOutputBlockParam>>("content").asKnown()
-            }
-        )
+        when {
+            errorParam != null -> Optional.empty()
+            resultBlockParam != null -> Optional.of(resultBlockParam.content())
+            encryptedCodeExecutionResultBlockParam != null ->
+                Optional.of(encryptedCodeExecutionResultBlockParam.content())
+            else -> _json.getProperty<List<CodeExecutionOutputBlockParam>>("content").asKnown()
+        }
 
     fun returnCode(): Optional<Long> =
-        accept(
-            object : Visitor<Optional<Long>> {
-                override fun visitErrorParam(
-                    errorParam: CodeExecutionToolResultErrorParam
-                ): Optional<Long> = Optional.empty()
-
-                override fun visitResultBlockParam(
-                    resultBlockParam: CodeExecutionResultBlockParam
-                ): Optional<Long> = Optional.of(resultBlockParam.returnCode())
-
-                override fun visitEncryptedCodeExecutionResultBlockParam(
-                    encryptedCodeExecutionResultBlockParam: EncryptedCodeExecutionResultBlockParam
-                ): Optional<Long> = Optional.of(encryptedCodeExecutionResultBlockParam.returnCode())
-
-                override fun unknown(json: JsonValue?): Optional<Long> =
-                    json.getProperty<Long>("return_code").asKnown()
-            }
-        )
+        when {
+            errorParam != null -> Optional.empty()
+            resultBlockParam != null -> Optional.of(resultBlockParam.returnCode())
+            encryptedCodeExecutionResultBlockParam != null ->
+                Optional.of(encryptedCodeExecutionResultBlockParam.returnCode())
+            else -> _json.getProperty<Long>("return_code").asKnown()
+        }
 
     fun stderr(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitErrorParam(
-                    errorParam: CodeExecutionToolResultErrorParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitResultBlockParam(
-                    resultBlockParam: CodeExecutionResultBlockParam
-                ): Optional<String> = Optional.of(resultBlockParam.stderr())
-
-                override fun visitEncryptedCodeExecutionResultBlockParam(
-                    encryptedCodeExecutionResultBlockParam: EncryptedCodeExecutionResultBlockParam
-                ): Optional<String> = Optional.of(encryptedCodeExecutionResultBlockParam.stderr())
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("stderr").asKnown()
-            }
-        )
+        when {
+            errorParam != null -> Optional.empty()
+            resultBlockParam != null -> Optional.of(resultBlockParam.stderr())
+            encryptedCodeExecutionResultBlockParam != null ->
+                Optional.of(encryptedCodeExecutionResultBlockParam.stderr())
+            else -> _json.getProperty<String>("stderr").asKnown()
+        }
 
     fun errorParam(): Optional<CodeExecutionToolResultErrorParam> = Optional.ofNullable(errorParam)
 
@@ -174,25 +137,16 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitErrorParam(errorParam: CodeExecutionToolResultErrorParam) {
-                    errorParam.validate()
-                }
-
-                override fun visitResultBlockParam(
-                    resultBlockParam: CodeExecutionResultBlockParam
-                ) {
-                    resultBlockParam.validate()
-                }
-
-                override fun visitEncryptedCodeExecutionResultBlockParam(
-                    encryptedCodeExecutionResultBlockParam: EncryptedCodeExecutionResultBlockParam
-                ) {
-                    encryptedCodeExecutionResultBlockParam.validate()
-                }
-            }
-        )
+        when {
+            errorParam != null -> errorParam.validate()
+            resultBlockParam != null -> resultBlockParam.validate()
+            encryptedCodeExecutionResultBlockParam != null ->
+                encryptedCodeExecutionResultBlockParam.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown CodeExecutionToolResultBlockParamContent: $_json"
+                )
+        }
         validated = true
     }
 
@@ -211,22 +165,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitErrorParam(errorParam: CodeExecutionToolResultErrorParam) =
-                    errorParam.validity()
-
-                override fun visitResultBlockParam(
-                    resultBlockParam: CodeExecutionResultBlockParam
-                ) = resultBlockParam.validity()
-
-                override fun visitEncryptedCodeExecutionResultBlockParam(
-                    encryptedCodeExecutionResultBlockParam: EncryptedCodeExecutionResultBlockParam
-                ) = encryptedCodeExecutionResultBlockParam.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            errorParam != null -> errorParam.validity()
+            resultBlockParam != null -> resultBlockParam.validity()
+            encryptedCodeExecutionResultBlockParam != null ->
+                encryptedCodeExecutionResultBlockParam.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

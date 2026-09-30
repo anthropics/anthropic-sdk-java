@@ -400,301 +400,99 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitText(text: BetaTextBlock): Type = Type.TEXT
-
-                    override fun visitThinking(thinking: BetaThinkingBlock): Type = Type.THINKING
-
-                    override fun visitRedactedThinking(
-                        redactedThinking: BetaRedactedThinkingBlock
-                    ): Type = Type.REDACTED_THINKING
-
-                    override fun visitToolUse(toolUse: BetaToolUseBlock): Type = Type.TOOL_USE
-
-                    override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlock): Type =
-                        Type.SERVER_TOOL_USE
-
-                    override fun visitWebSearchToolResult(
-                        webSearchToolResult: BetaWebSearchToolResultBlock
-                    ): Type = Type.WEB_SEARCH_TOOL_RESULT
-
-                    override fun visitWebFetchToolResult(
-                        webFetchToolResult: BetaWebFetchToolResultBlock
-                    ): Type = Type.WEB_FETCH_TOOL_RESULT
-
-                    override fun visitAdvisorToolResult(
-                        advisorToolResult: BetaAdvisorToolResultBlock
-                    ): Type = Type.ADVISOR_TOOL_RESULT
-
-                    override fun visitCodeExecutionToolResult(
-                        codeExecutionToolResult: BetaCodeExecutionToolResultBlock
-                    ): Type = Type.CODE_EXECUTION_TOOL_RESULT
-
-                    override fun visitBashCodeExecutionToolResult(
-                        bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
-                    ): Type = Type.BASH_CODE_EXECUTION_TOOL_RESULT
-
-                    override fun visitTextEditorCodeExecutionToolResult(
-                        textEditorCodeExecutionToolResult:
-                            BetaTextEditorCodeExecutionToolResultBlock
-                    ): Type = Type.TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
-
-                    override fun visitToolSearchToolResult(
-                        toolSearchToolResult: BetaToolSearchToolResultBlock
-                    ): Type = Type.TOOL_SEARCH_TOOL_RESULT
-
-                    override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock): Type =
-                        Type.MCP_TOOL_USE
-
-                    override fun visitMcpToolResult(mcpToolResult: BetaMcpToolResultBlock): Type =
-                        Type.MCP_TOOL_RESULT
-
-                    override fun visitContainerUpload(
-                        containerUpload: BetaContainerUploadBlock
-                    ): Type = Type.CONTAINER_UPLOAD
-
-                    override fun visitCompaction(compaction: BetaCompactionBlock): Type =
-                        Type.COMPACTION
-
-                    override fun visitFallback(fallback: BetaFallbackBlock): Type = Type.FALLBACK
-
-                    override fun visitMcpToolListing(
-                        mcpToolListing: BetaMcpToolListingBlock
-                    ): Type = Type.MCP_TOOL_LISTING
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                text != null -> Type.TEXT
+                thinking != null -> Type.THINKING
+                redactedThinking != null -> Type.REDACTED_THINKING
+                toolUse != null -> Type.TOOL_USE
+                serverToolUse != null -> Type.SERVER_TOOL_USE
+                webSearchToolResult != null -> Type.WEB_SEARCH_TOOL_RESULT
+                webFetchToolResult != null -> Type.WEB_FETCH_TOOL_RESULT
+                advisorToolResult != null -> Type.ADVISOR_TOOL_RESULT
+                codeExecutionToolResult != null -> Type.CODE_EXECUTION_TOOL_RESULT
+                bashCodeExecutionToolResult != null -> Type.BASH_CODE_EXECUTION_TOOL_RESULT
+                textEditorCodeExecutionToolResult != null ->
+                    Type.TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
+                toolSearchToolResult != null -> Type.TOOL_SEARCH_TOOL_RESULT
+                mcpToolUse != null -> Type.MCP_TOOL_USE
+                mcpToolResult != null -> Type.MCP_TOOL_RESULT
+                containerUpload != null -> Type.CONTAINER_UPLOAD
+                compaction != null -> Type.COMPACTION
+                fallback != null -> Type.FALLBACK
+                mcpToolListing != null -> Type.MCP_TOOL_LISTING
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun signature(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitText(text: BetaTextBlock): Optional<String> = Optional.empty()
-
-                    override fun visitThinking(thinking: BetaThinkingBlock): Optional<String> =
-                        Optional.of(thinking.signature())
-
-                    override fun visitRedactedThinking(
-                        redactedThinking: BetaRedactedThinkingBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitToolUse(toolUse: BetaToolUseBlock): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitServerToolUse(
-                        serverToolUse: BetaServerToolUseBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitWebSearchToolResult(
-                        webSearchToolResult: BetaWebSearchToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitWebFetchToolResult(
-                        webFetchToolResult: BetaWebFetchToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitAdvisorToolResult(
-                        advisorToolResult: BetaAdvisorToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitCodeExecutionToolResult(
-                        codeExecutionToolResult: BetaCodeExecutionToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitBashCodeExecutionToolResult(
-                        bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitTextEditorCodeExecutionToolResult(
-                        textEditorCodeExecutionToolResult:
-                            BetaTextEditorCodeExecutionToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitToolSearchToolResult(
-                        toolSearchToolResult: BetaToolSearchToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitMcpToolUse(
-                        mcpToolUse: BetaMcpToolUseBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitMcpToolResult(
-                        mcpToolResult: BetaMcpToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitContainerUpload(
-                        containerUpload: BetaContainerUploadBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitCompaction(
-                        compaction: BetaCompactionBlock
-                    ): Optional<String> = compaction.signature()
-
-                    override fun visitFallback(fallback: BetaFallbackBlock): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitMcpToolListing(
-                        mcpToolListing: BetaMcpToolListingBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("signature").asKnown()
-                }
-            )
+            when {
+                text != null -> Optional.empty()
+                thinking != null -> Optional.of(thinking.signature())
+                redactedThinking != null -> Optional.empty()
+                toolUse != null -> Optional.empty()
+                serverToolUse != null -> Optional.empty()
+                webSearchToolResult != null -> Optional.empty()
+                webFetchToolResult != null -> Optional.empty()
+                advisorToolResult != null -> Optional.empty()
+                codeExecutionToolResult != null -> Optional.empty()
+                bashCodeExecutionToolResult != null -> Optional.empty()
+                textEditorCodeExecutionToolResult != null -> Optional.empty()
+                toolSearchToolResult != null -> Optional.empty()
+                mcpToolUse != null -> Optional.empty()
+                mcpToolResult != null -> Optional.empty()
+                containerUpload != null -> Optional.empty()
+                compaction != null -> compaction.signature()
+                fallback != null -> Optional.empty()
+                mcpToolListing != null -> Optional.empty()
+                else -> _json.getProperty<String>("signature").asKnown()
+            }
 
         fun id(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitText(text: BetaTextBlock): Optional<String> = Optional.empty()
-
-                    override fun visitThinking(thinking: BetaThinkingBlock): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitRedactedThinking(
-                        redactedThinking: BetaRedactedThinkingBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitToolUse(toolUse: BetaToolUseBlock): Optional<String> =
-                        Optional.of(toolUse.id())
-
-                    override fun visitServerToolUse(
-                        serverToolUse: BetaServerToolUseBlock
-                    ): Optional<String> = Optional.of(serverToolUse.id())
-
-                    override fun visitWebSearchToolResult(
-                        webSearchToolResult: BetaWebSearchToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitWebFetchToolResult(
-                        webFetchToolResult: BetaWebFetchToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitAdvisorToolResult(
-                        advisorToolResult: BetaAdvisorToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitCodeExecutionToolResult(
-                        codeExecutionToolResult: BetaCodeExecutionToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitBashCodeExecutionToolResult(
-                        bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitTextEditorCodeExecutionToolResult(
-                        textEditorCodeExecutionToolResult:
-                            BetaTextEditorCodeExecutionToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitToolSearchToolResult(
-                        toolSearchToolResult: BetaToolSearchToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitMcpToolUse(
-                        mcpToolUse: BetaMcpToolUseBlock
-                    ): Optional<String> = Optional.of(mcpToolUse.id())
-
-                    override fun visitMcpToolResult(
-                        mcpToolResult: BetaMcpToolResultBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitContainerUpload(
-                        containerUpload: BetaContainerUploadBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitCompaction(
-                        compaction: BetaCompactionBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitFallback(fallback: BetaFallbackBlock): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitMcpToolListing(
-                        mcpToolListing: BetaMcpToolListingBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("id").asKnown()
-                }
-            )
+            when {
+                text != null -> Optional.empty()
+                thinking != null -> Optional.empty()
+                redactedThinking != null -> Optional.empty()
+                toolUse != null -> Optional.of(toolUse.id())
+                serverToolUse != null -> Optional.of(serverToolUse.id())
+                webSearchToolResult != null -> Optional.empty()
+                webFetchToolResult != null -> Optional.empty()
+                advisorToolResult != null -> Optional.empty()
+                codeExecutionToolResult != null -> Optional.empty()
+                bashCodeExecutionToolResult != null -> Optional.empty()
+                textEditorCodeExecutionToolResult != null -> Optional.empty()
+                toolSearchToolResult != null -> Optional.empty()
+                mcpToolUse != null -> Optional.of(mcpToolUse.id())
+                mcpToolResult != null -> Optional.empty()
+                containerUpload != null -> Optional.empty()
+                compaction != null -> Optional.empty()
+                fallback != null -> Optional.empty()
+                mcpToolListing != null -> Optional.empty()
+                else -> _json.getProperty<String>("id").asKnown()
+            }
 
         fun toolUseId(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitText(text: BetaTextBlock): Optional<String> = Optional.empty()
-
-                    override fun visitThinking(thinking: BetaThinkingBlock): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitRedactedThinking(
-                        redactedThinking: BetaRedactedThinkingBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitToolUse(toolUse: BetaToolUseBlock): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitServerToolUse(
-                        serverToolUse: BetaServerToolUseBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitWebSearchToolResult(
-                        webSearchToolResult: BetaWebSearchToolResultBlock
-                    ): Optional<String> = Optional.of(webSearchToolResult.toolUseId())
-
-                    override fun visitWebFetchToolResult(
-                        webFetchToolResult: BetaWebFetchToolResultBlock
-                    ): Optional<String> = Optional.of(webFetchToolResult.toolUseId())
-
-                    override fun visitAdvisorToolResult(
-                        advisorToolResult: BetaAdvisorToolResultBlock
-                    ): Optional<String> = Optional.of(advisorToolResult.toolUseId())
-
-                    override fun visitCodeExecutionToolResult(
-                        codeExecutionToolResult: BetaCodeExecutionToolResultBlock
-                    ): Optional<String> = Optional.of(codeExecutionToolResult.toolUseId())
-
-                    override fun visitBashCodeExecutionToolResult(
-                        bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
-                    ): Optional<String> = Optional.of(bashCodeExecutionToolResult.toolUseId())
-
-                    override fun visitTextEditorCodeExecutionToolResult(
-                        textEditorCodeExecutionToolResult:
-                            BetaTextEditorCodeExecutionToolResultBlock
-                    ): Optional<String> = Optional.of(textEditorCodeExecutionToolResult.toolUseId())
-
-                    override fun visitToolSearchToolResult(
-                        toolSearchToolResult: BetaToolSearchToolResultBlock
-                    ): Optional<String> = Optional.of(toolSearchToolResult.toolUseId())
-
-                    override fun visitMcpToolUse(
-                        mcpToolUse: BetaMcpToolUseBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitMcpToolResult(
-                        mcpToolResult: BetaMcpToolResultBlock
-                    ): Optional<String> = Optional.of(mcpToolResult.toolUseId())
-
-                    override fun visitContainerUpload(
-                        containerUpload: BetaContainerUploadBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitCompaction(
-                        compaction: BetaCompactionBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitFallback(fallback: BetaFallbackBlock): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitMcpToolListing(
-                        mcpToolListing: BetaMcpToolListingBlock
-                    ): Optional<String> = Optional.empty()
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("tool_use_id").asKnown()
-                }
-            )
+            when {
+                text != null -> Optional.empty()
+                thinking != null -> Optional.empty()
+                redactedThinking != null -> Optional.empty()
+                toolUse != null -> Optional.empty()
+                serverToolUse != null -> Optional.empty()
+                webSearchToolResult != null -> Optional.of(webSearchToolResult.toolUseId())
+                webFetchToolResult != null -> Optional.of(webFetchToolResult.toolUseId())
+                advisorToolResult != null -> Optional.of(advisorToolResult.toolUseId())
+                codeExecutionToolResult != null -> Optional.of(codeExecutionToolResult.toolUseId())
+                bashCodeExecutionToolResult != null ->
+                    Optional.of(bashCodeExecutionToolResult.toolUseId())
+                textEditorCodeExecutionToolResult != null ->
+                    Optional.of(textEditorCodeExecutionToolResult.toolUseId())
+                toolSearchToolResult != null -> Optional.of(toolSearchToolResult.toolUseId())
+                mcpToolUse != null -> Optional.empty()
+                mcpToolResult != null -> Optional.of(mcpToolResult.toolUseId())
+                containerUpload != null -> Optional.empty()
+                compaction != null -> Optional.empty()
+                fallback != null -> Optional.empty()
+                mcpToolListing != null -> Optional.empty()
+                else -> _json.getProperty<String>("tool_use_id").asKnown()
+            }
 
         fun text(): Optional<BetaTextBlock> = Optional.ofNullable(text)
 
@@ -950,98 +748,28 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitText(text: BetaTextBlock) {
-                        text.validate()
-                    }
-
-                    override fun visitThinking(thinking: BetaThinkingBlock) {
-                        thinking.validate()
-                    }
-
-                    override fun visitRedactedThinking(
-                        redactedThinking: BetaRedactedThinkingBlock
-                    ) {
-                        redactedThinking.validate()
-                    }
-
-                    override fun visitToolUse(toolUse: BetaToolUseBlock) {
-                        toolUse.validate()
-                    }
-
-                    override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlock) {
-                        serverToolUse.validate()
-                    }
-
-                    override fun visitWebSearchToolResult(
-                        webSearchToolResult: BetaWebSearchToolResultBlock
-                    ) {
-                        webSearchToolResult.validate()
-                    }
-
-                    override fun visitWebFetchToolResult(
-                        webFetchToolResult: BetaWebFetchToolResultBlock
-                    ) {
-                        webFetchToolResult.validate()
-                    }
-
-                    override fun visitAdvisorToolResult(
-                        advisorToolResult: BetaAdvisorToolResultBlock
-                    ) {
-                        advisorToolResult.validate()
-                    }
-
-                    override fun visitCodeExecutionToolResult(
-                        codeExecutionToolResult: BetaCodeExecutionToolResultBlock
-                    ) {
-                        codeExecutionToolResult.validate()
-                    }
-
-                    override fun visitBashCodeExecutionToolResult(
-                        bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
-                    ) {
-                        bashCodeExecutionToolResult.validate()
-                    }
-
-                    override fun visitTextEditorCodeExecutionToolResult(
-                        textEditorCodeExecutionToolResult:
-                            BetaTextEditorCodeExecutionToolResultBlock
-                    ) {
-                        textEditorCodeExecutionToolResult.validate()
-                    }
-
-                    override fun visitToolSearchToolResult(
-                        toolSearchToolResult: BetaToolSearchToolResultBlock
-                    ) {
-                        toolSearchToolResult.validate()
-                    }
-
-                    override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) {
-                        mcpToolUse.validate()
-                    }
-
-                    override fun visitMcpToolResult(mcpToolResult: BetaMcpToolResultBlock) {
-                        mcpToolResult.validate()
-                    }
-
-                    override fun visitContainerUpload(containerUpload: BetaContainerUploadBlock) {
-                        containerUpload.validate()
-                    }
-
-                    override fun visitCompaction(compaction: BetaCompactionBlock) {
-                        compaction.validate()
-                    }
-
-                    override fun visitFallback(fallback: BetaFallbackBlock) {
-                        fallback.validate()
-                    }
-
-                    override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlock) {
-                        mcpToolListing.validate()
-                    }
-                }
-            )
+            when {
+                text != null -> text.validate()
+                thinking != null -> thinking.validate()
+                redactedThinking != null -> redactedThinking.validate()
+                toolUse != null -> toolUse.validate()
+                serverToolUse != null -> serverToolUse.validate()
+                webSearchToolResult != null -> webSearchToolResult.validate()
+                webFetchToolResult != null -> webFetchToolResult.validate()
+                advisorToolResult != null -> advisorToolResult.validate()
+                codeExecutionToolResult != null -> codeExecutionToolResult.validate()
+                bashCodeExecutionToolResult != null -> bashCodeExecutionToolResult.validate()
+                textEditorCodeExecutionToolResult != null ->
+                    textEditorCodeExecutionToolResult.validate()
+                toolSearchToolResult != null -> toolSearchToolResult.validate()
+                mcpToolUse != null -> mcpToolUse.validate()
+                mcpToolResult != null -> mcpToolResult.validate()
+                containerUpload != null -> containerUpload.validate()
+                compaction != null -> compaction.validate()
+                fallback != null -> fallback.validate()
+                mcpToolListing != null -> mcpToolListing.validate()
+                else -> throw AnthropicInvalidDataException("Unknown ContentBlock: $_json")
+            }
             validated = true
         }
 
@@ -1061,70 +789,28 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitText(text: BetaTextBlock) = text.validity()
-
-                    override fun visitThinking(thinking: BetaThinkingBlock) = thinking.validity()
-
-                    override fun visitRedactedThinking(
-                        redactedThinking: BetaRedactedThinkingBlock
-                    ) = redactedThinking.validity()
-
-                    override fun visitToolUse(toolUse: BetaToolUseBlock) = toolUse.validity()
-
-                    override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlock) =
-                        serverToolUse.validity()
-
-                    override fun visitWebSearchToolResult(
-                        webSearchToolResult: BetaWebSearchToolResultBlock
-                    ) = webSearchToolResult.validity()
-
-                    override fun visitWebFetchToolResult(
-                        webFetchToolResult: BetaWebFetchToolResultBlock
-                    ) = webFetchToolResult.validity()
-
-                    override fun visitAdvisorToolResult(
-                        advisorToolResult: BetaAdvisorToolResultBlock
-                    ) = advisorToolResult.validity()
-
-                    override fun visitCodeExecutionToolResult(
-                        codeExecutionToolResult: BetaCodeExecutionToolResultBlock
-                    ) = codeExecutionToolResult.validity()
-
-                    override fun visitBashCodeExecutionToolResult(
-                        bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
-                    ) = bashCodeExecutionToolResult.validity()
-
-                    override fun visitTextEditorCodeExecutionToolResult(
-                        textEditorCodeExecutionToolResult:
-                            BetaTextEditorCodeExecutionToolResultBlock
-                    ) = textEditorCodeExecutionToolResult.validity()
-
-                    override fun visitToolSearchToolResult(
-                        toolSearchToolResult: BetaToolSearchToolResultBlock
-                    ) = toolSearchToolResult.validity()
-
-                    override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) =
-                        mcpToolUse.validity()
-
-                    override fun visitMcpToolResult(mcpToolResult: BetaMcpToolResultBlock) =
-                        mcpToolResult.validity()
-
-                    override fun visitContainerUpload(containerUpload: BetaContainerUploadBlock) =
-                        containerUpload.validity()
-
-                    override fun visitCompaction(compaction: BetaCompactionBlock) =
-                        compaction.validity()
-
-                    override fun visitFallback(fallback: BetaFallbackBlock) = fallback.validity()
-
-                    override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlock) =
-                        mcpToolListing.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                text != null -> text.validity()
+                thinking != null -> thinking.validity()
+                redactedThinking != null -> redactedThinking.validity()
+                toolUse != null -> toolUse.validity()
+                serverToolUse != null -> serverToolUse.validity()
+                webSearchToolResult != null -> webSearchToolResult.validity()
+                webFetchToolResult != null -> webFetchToolResult.validity()
+                advisorToolResult != null -> advisorToolResult.validity()
+                codeExecutionToolResult != null -> codeExecutionToolResult.validity()
+                bashCodeExecutionToolResult != null -> bashCodeExecutionToolResult.validity()
+                textEditorCodeExecutionToolResult != null ->
+                    textEditorCodeExecutionToolResult.validity()
+                toolSearchToolResult != null -> toolSearchToolResult.validity()
+                mcpToolUse != null -> mcpToolUse.validity()
+                mcpToolResult != null -> mcpToolResult.validity()
+                containerUpload != null -> containerUpload.validity()
+                compaction != null -> compaction.validity()
+                fallback != null -> fallback.validity()
+                mcpToolListing != null -> mcpToolListing.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

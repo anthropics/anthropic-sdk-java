@@ -304,23 +304,12 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitOrganization(
-                        organization: BetaPluginTargetOrganization
-                    ): Type = Type.ORGANIZATION
-
-                    override fun visitRbacGroup(rbacGroup: BetaPluginTargetRbacGroup): Type =
-                        Type.RBAC_GROUP
-
-                    override fun visitOrganizationMember(
-                        organizationMember: BetaPluginTargetOrganizationMember
-                    ): Type = Type.ORGANIZATION_MEMBER
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                organization != null -> Type.ORGANIZATION
+                rbacGroup != null -> Type.RBAC_GROUP
+                organizationMember != null -> Type.ORGANIZATION_MEMBER
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun organization(): Optional<BetaPluginTargetOrganization> =
             Optional.ofNullable(organization)
@@ -398,23 +387,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitOrganization(organization: BetaPluginTargetOrganization) {
-                        organization.validate()
-                    }
-
-                    override fun visitRbacGroup(rbacGroup: BetaPluginTargetRbacGroup) {
-                        rbacGroup.validate()
-                    }
-
-                    override fun visitOrganizationMember(
-                        organizationMember: BetaPluginTargetOrganizationMember
-                    ) {
-                        organizationMember.validate()
-                    }
-                }
-            )
+            when {
+                organization != null -> organization.validate()
+                rbacGroup != null -> rbacGroup.validate()
+                organizationMember != null -> organizationMember.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Target: $_json")
+            }
             validated = true
         }
 
@@ -434,21 +412,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitOrganization(organization: BetaPluginTargetOrganization) =
-                        organization.validity()
-
-                    override fun visitRbacGroup(rbacGroup: BetaPluginTargetRbacGroup) =
-                        rbacGroup.validity()
-
-                    override fun visitOrganizationMember(
-                        organizationMember: BetaPluginTargetOrganizationMember
-                    ) = organizationMember.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                organization != null -> organization.validity()
+                rbacGroup != null -> rbacGroup.validity()
+                organizationMember != null -> organizationMember.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

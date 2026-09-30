@@ -523,45 +523,15 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaManagedAgentsEffortLevel(
-                        betaManagedAgentsEffortLevel: BetaManagedAgentsEffortLevel
-                    ) {
-                        betaManagedAgentsEffortLevel.validate()
-                    }
-
-                    override fun visitBetaManagedAgentsEffortLow(
-                        betaManagedAgentsEffortLow: BetaManagedAgentsEffortLow
-                    ) {
-                        betaManagedAgentsEffortLow.validate()
-                    }
-
-                    override fun visitBetaManagedAgentsEffortMedium(
-                        betaManagedAgentsEffortMedium: BetaManagedAgentsEffortMedium
-                    ) {
-                        betaManagedAgentsEffortMedium.validate()
-                    }
-
-                    override fun visitBetaManagedAgentsEffortHigh(
-                        betaManagedAgentsEffortHigh: BetaManagedAgentsEffortHigh
-                    ) {
-                        betaManagedAgentsEffortHigh.validate()
-                    }
-
-                    override fun visitBetaManagedAgentsEffortXhigh(
-                        betaManagedAgentsEffortXhigh: BetaManagedAgentsEffortXhigh
-                    ) {
-                        betaManagedAgentsEffortXhigh.validate()
-                    }
-
-                    override fun visitBetaManagedAgentsEffortMax(
-                        betaManagedAgentsEffortMax: BetaManagedAgentsEffortMax
-                    ) {
-                        betaManagedAgentsEffortMax.validate()
-                    }
-                }
-            )
+            when {
+                betaManagedAgentsEffortLevel != null -> betaManagedAgentsEffortLevel.validate()
+                betaManagedAgentsEffortLow != null -> betaManagedAgentsEffortLow.validate()
+                betaManagedAgentsEffortMedium != null -> betaManagedAgentsEffortMedium.validate()
+                betaManagedAgentsEffortHigh != null -> betaManagedAgentsEffortHigh.validate()
+                betaManagedAgentsEffortXhigh != null -> betaManagedAgentsEffortXhigh.validate()
+                betaManagedAgentsEffortMax != null -> betaManagedAgentsEffortMax.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Effort: $_json")
+            }
             validated = true
         }
 
@@ -581,35 +551,15 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaManagedAgentsEffortLevel(
-                        betaManagedAgentsEffortLevel: BetaManagedAgentsEffortLevel
-                    ) = betaManagedAgentsEffortLevel.validity()
-
-                    override fun visitBetaManagedAgentsEffortLow(
-                        betaManagedAgentsEffortLow: BetaManagedAgentsEffortLow
-                    ) = betaManagedAgentsEffortLow.validity()
-
-                    override fun visitBetaManagedAgentsEffortMedium(
-                        betaManagedAgentsEffortMedium: BetaManagedAgentsEffortMedium
-                    ) = betaManagedAgentsEffortMedium.validity()
-
-                    override fun visitBetaManagedAgentsEffortHigh(
-                        betaManagedAgentsEffortHigh: BetaManagedAgentsEffortHigh
-                    ) = betaManagedAgentsEffortHigh.validity()
-
-                    override fun visitBetaManagedAgentsEffortXhigh(
-                        betaManagedAgentsEffortXhigh: BetaManagedAgentsEffortXhigh
-                    ) = betaManagedAgentsEffortXhigh.validity()
-
-                    override fun visitBetaManagedAgentsEffortMax(
-                        betaManagedAgentsEffortMax: BetaManagedAgentsEffortMax
-                    ) = betaManagedAgentsEffortMax.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaManagedAgentsEffortLevel != null -> betaManagedAgentsEffortLevel.validity()
+                betaManagedAgentsEffortLow != null -> betaManagedAgentsEffortLow.validity()
+                betaManagedAgentsEffortMedium != null -> betaManagedAgentsEffortMedium.validity()
+                betaManagedAgentsEffortHigh != null -> betaManagedAgentsEffortHigh.validity()
+                betaManagedAgentsEffortXhigh != null -> betaManagedAgentsEffortXhigh.validity()
+                betaManagedAgentsEffortMax != null -> betaManagedAgentsEffortMax.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

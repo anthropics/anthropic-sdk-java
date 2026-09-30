@@ -28,65 +28,31 @@ private constructor(
 ) {
 
     fun content(): Optional<List<BetaCodeExecutionOutputBlock>> =
-        accept(
-            object : Visitor<Optional<List<BetaCodeExecutionOutputBlock>>> {
-                override fun visitError(
-                    error: BetaCodeExecutionToolResultError
-                ): Optional<List<BetaCodeExecutionOutputBlock>> = Optional.empty()
-
-                override fun visitResultBlock(
-                    resultBlock: BetaCodeExecutionResultBlock
-                ): Optional<List<BetaCodeExecutionOutputBlock>> = Optional.of(resultBlock.content())
-
-                override fun visitEncryptedCodeExecutionResultBlock(
-                    encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
-                ): Optional<List<BetaCodeExecutionOutputBlock>> =
-                    Optional.of(encryptedCodeExecutionResultBlock.content())
-
-                override fun unknown(
-                    json: JsonValue?
-                ): Optional<List<BetaCodeExecutionOutputBlock>> =
-                    json.getProperty<List<BetaCodeExecutionOutputBlock>>("content").asKnown()
-            }
-        )
+        when {
+            error != null -> Optional.empty()
+            resultBlock != null -> Optional.of(resultBlock.content())
+            encryptedCodeExecutionResultBlock != null ->
+                Optional.of(encryptedCodeExecutionResultBlock.content())
+            else -> _json.getProperty<List<BetaCodeExecutionOutputBlock>>("content").asKnown()
+        }
 
     fun returnCode(): Optional<Long> =
-        accept(
-            object : Visitor<Optional<Long>> {
-                override fun visitError(error: BetaCodeExecutionToolResultError): Optional<Long> =
-                    Optional.empty()
-
-                override fun visitResultBlock(
-                    resultBlock: BetaCodeExecutionResultBlock
-                ): Optional<Long> = Optional.of(resultBlock.returnCode())
-
-                override fun visitEncryptedCodeExecutionResultBlock(
-                    encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
-                ): Optional<Long> = Optional.of(encryptedCodeExecutionResultBlock.returnCode())
-
-                override fun unknown(json: JsonValue?): Optional<Long> =
-                    json.getProperty<Long>("return_code").asKnown()
-            }
-        )
+        when {
+            error != null -> Optional.empty()
+            resultBlock != null -> Optional.of(resultBlock.returnCode())
+            encryptedCodeExecutionResultBlock != null ->
+                Optional.of(encryptedCodeExecutionResultBlock.returnCode())
+            else -> _json.getProperty<Long>("return_code").asKnown()
+        }
 
     fun stderr(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitError(error: BetaCodeExecutionToolResultError): Optional<String> =
-                    Optional.empty()
-
-                override fun visitResultBlock(
-                    resultBlock: BetaCodeExecutionResultBlock
-                ): Optional<String> = Optional.of(resultBlock.stderr())
-
-                override fun visitEncryptedCodeExecutionResultBlock(
-                    encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
-                ): Optional<String> = Optional.of(encryptedCodeExecutionResultBlock.stderr())
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("stderr").asKnown()
-            }
-        )
+        when {
+            error != null -> Optional.empty()
+            resultBlock != null -> Optional.of(resultBlock.stderr())
+            encryptedCodeExecutionResultBlock != null ->
+                Optional.of(encryptedCodeExecutionResultBlock.stderr())
+            else -> _json.getProperty<String>("stderr").asKnown()
+        }
 
     fun error(): Optional<BetaCodeExecutionToolResultError> = Optional.ofNullable(error)
 
@@ -165,23 +131,16 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitError(error: BetaCodeExecutionToolResultError) {
-                    error.validate()
-                }
-
-                override fun visitResultBlock(resultBlock: BetaCodeExecutionResultBlock) {
-                    resultBlock.validate()
-                }
-
-                override fun visitEncryptedCodeExecutionResultBlock(
-                    encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
-                ) {
-                    encryptedCodeExecutionResultBlock.validate()
-                }
-            }
-        )
+        when {
+            error != null -> error.validate()
+            resultBlock != null -> resultBlock.validate()
+            encryptedCodeExecutionResultBlock != null ->
+                encryptedCodeExecutionResultBlock.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaCodeExecutionToolResultBlockContent: $_json"
+                )
+        }
         validated = true
     }
 
@@ -200,20 +159,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitError(error: BetaCodeExecutionToolResultError) = error.validity()
-
-                override fun visitResultBlock(resultBlock: BetaCodeExecutionResultBlock) =
-                    resultBlock.validity()
-
-                override fun visitEncryptedCodeExecutionResultBlock(
-                    encryptedCodeExecutionResultBlock: BetaEncryptedCodeExecutionResultBlock
-                ) = encryptedCodeExecutionResultBlock.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            error != null -> error.validity()
+            resultBlock != null -> resultBlock.validity()
+            encryptedCodeExecutionResultBlock != null ->
+                encryptedCodeExecutionResultBlock.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

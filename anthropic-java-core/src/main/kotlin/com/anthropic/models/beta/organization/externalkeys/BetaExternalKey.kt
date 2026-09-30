@@ -539,19 +539,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAttached(attached: BetaExternalKeyAttachedAttachment): Type =
-                        Type.ATTACHED
-
-                    override fun visitUnattached(
-                        unattached: BetaExternalKeyUnattachedAttachment
-                    ): Type = Type.UNATTACHED
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                attached != null -> Type.ATTACHED
+                unattached != null -> Type.UNATTACHED
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun attached(): Optional<BetaExternalKeyAttachedAttachment> = Optional.ofNullable(attached)
 
@@ -621,17 +613,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAttached(attached: BetaExternalKeyAttachedAttachment) {
-                        attached.validate()
-                    }
-
-                    override fun visitUnattached(unattached: BetaExternalKeyUnattachedAttachment) {
-                        unattached.validate()
-                    }
-                }
-            )
+            when {
+                attached != null -> attached.validate()
+                unattached != null -> unattached.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Attachment: $_json")
+            }
             validated = true
         }
 
@@ -651,17 +637,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAttached(attached: BetaExternalKeyAttachedAttachment) =
-                        attached.validity()
-
-                    override fun visitUnattached(unattached: BetaExternalKeyUnattachedAttachment) =
-                        unattached.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                attached != null -> attached.validity()
+                unattached != null -> unattached.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -925,35 +905,20 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAws(aws: BetaAwsExternalKeyConfig): Type = Type.AWS
-
-                    override fun visitGcp(gcp: BetaGcpExternalKeyConfig): Type = Type.GCP
-
-                    override fun visitAzure(azure: BetaAzureExternalKeyConfig): Type = Type.AZURE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                aws != null -> Type.AWS
+                gcp != null -> Type.GCP
+                azure != null -> Type.AZURE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun keyName(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitAws(aws: BetaAwsExternalKeyConfig): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitGcp(gcp: BetaGcpExternalKeyConfig): Optional<String> =
-                        Optional.of(gcp.keyName())
-
-                    override fun visitAzure(azure: BetaAzureExternalKeyConfig): Optional<String> =
-                        Optional.of(azure.keyName())
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("key_name").asKnown()
-                }
-            )
+            when {
+                aws != null -> Optional.empty()
+                gcp != null -> Optional.of(gcp.keyName())
+                azure != null -> Optional.of(azure.keyName())
+                else -> _json.getProperty<String>("key_name").asKnown()
+            }
 
         fun aws(): Optional<BetaAwsExternalKeyConfig> = Optional.ofNullable(aws)
 
@@ -1028,21 +993,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAws(aws: BetaAwsExternalKeyConfig) {
-                        aws.validate()
-                    }
-
-                    override fun visitGcp(gcp: BetaGcpExternalKeyConfig) {
-                        gcp.validate()
-                    }
-
-                    override fun visitAzure(azure: BetaAzureExternalKeyConfig) {
-                        azure.validate()
-                    }
-                }
-            )
+            when {
+                aws != null -> aws.validate()
+                gcp != null -> gcp.validate()
+                azure != null -> azure.validate()
+                else -> throw AnthropicInvalidDataException("Unknown ProviderConfig: $_json")
+            }
             validated = true
         }
 
@@ -1062,17 +1018,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAws(aws: BetaAwsExternalKeyConfig) = aws.validity()
-
-                    override fun visitGcp(gcp: BetaGcpExternalKeyConfig) = gcp.validity()
-
-                    override fun visitAzure(azure: BetaAzureExternalKeyConfig) = azure.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                aws != null -> aws.validity()
+                gcp != null -> gcp.validity()
+                azure != null -> azure.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -340,24 +340,13 @@ private constructor(
     ) {
 
         fun stopReason(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitBetaAdvisorToolResultErrorParam(
-                        betaAdvisorToolResultErrorParam: BetaAdvisorToolResultErrorParam
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitBetaAdvisorResultBlockParam(
-                        betaAdvisorResultBlockParam: BetaAdvisorResultBlockParam
-                    ): Optional<String> = betaAdvisorResultBlockParam.stopReason()
-
-                    override fun visitBetaAdvisorRedactedResultBlockParam(
-                        betaAdvisorRedactedResultBlockParam: BetaAdvisorRedactedResultBlockParam
-                    ): Optional<String> = betaAdvisorRedactedResultBlockParam.stopReason()
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("stop_reason").asKnown()
-                }
-            )
+            when {
+                betaAdvisorToolResultErrorParam != null -> Optional.empty()
+                betaAdvisorResultBlockParam != null -> betaAdvisorResultBlockParam.stopReason()
+                betaAdvisorRedactedResultBlockParam != null ->
+                    betaAdvisorRedactedResultBlockParam.stopReason()
+                else -> _json.getProperty<String>("stop_reason").asKnown()
+            }
 
         fun betaAdvisorToolResultErrorParam(): Optional<BetaAdvisorToolResultErrorParam> =
             Optional.ofNullable(betaAdvisorToolResultErrorParam)
@@ -444,27 +433,14 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaAdvisorToolResultErrorParam(
-                        betaAdvisorToolResultErrorParam: BetaAdvisorToolResultErrorParam
-                    ) {
-                        betaAdvisorToolResultErrorParam.validate()
-                    }
-
-                    override fun visitBetaAdvisorResultBlockParam(
-                        betaAdvisorResultBlockParam: BetaAdvisorResultBlockParam
-                    ) {
-                        betaAdvisorResultBlockParam.validate()
-                    }
-
-                    override fun visitBetaAdvisorRedactedResultBlockParam(
-                        betaAdvisorRedactedResultBlockParam: BetaAdvisorRedactedResultBlockParam
-                    ) {
-                        betaAdvisorRedactedResultBlockParam.validate()
-                    }
-                }
-            )
+            when {
+                betaAdvisorToolResultErrorParam != null ->
+                    betaAdvisorToolResultErrorParam.validate()
+                betaAdvisorResultBlockParam != null -> betaAdvisorResultBlockParam.validate()
+                betaAdvisorRedactedResultBlockParam != null ->
+                    betaAdvisorRedactedResultBlockParam.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -484,23 +460,14 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaAdvisorToolResultErrorParam(
-                        betaAdvisorToolResultErrorParam: BetaAdvisorToolResultErrorParam
-                    ) = betaAdvisorToolResultErrorParam.validity()
-
-                    override fun visitBetaAdvisorResultBlockParam(
-                        betaAdvisorResultBlockParam: BetaAdvisorResultBlockParam
-                    ) = betaAdvisorResultBlockParam.validity()
-
-                    override fun visitBetaAdvisorRedactedResultBlockParam(
-                        betaAdvisorRedactedResultBlockParam: BetaAdvisorRedactedResultBlockParam
-                    ) = betaAdvisorRedactedResultBlockParam.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaAdvisorToolResultErrorParam != null ->
+                    betaAdvisorToolResultErrorParam.validity()
+                betaAdvisorResultBlockParam != null -> betaAdvisorResultBlockParam.validity()
+                betaAdvisorRedactedResultBlockParam != null ->
+                    betaAdvisorRedactedResultBlockParam.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

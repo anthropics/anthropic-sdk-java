@@ -663,48 +663,25 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAnthropic(anthropic: BetaManagedAgentsAnthropicSkill): Type =
-                        Type.ANTHROPIC
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomSkill): Type =
-                        Type.CUSTOM
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                anthropic != null -> Type.ANTHROPIC
+                custom != null -> Type.CUSTOM
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun skillId(): String =
-            accept(
-                object : Visitor<String> {
-                    override fun visitAnthropic(
-                        anthropic: BetaManagedAgentsAnthropicSkill
-                    ): String = anthropic.skillId()
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomSkill): String =
-                        custom.skillId()
-
-                    override fun unknown(json: JsonValue?): String =
-                        json.getProperty<String>("skill_id").getRequired("skill_id")
-                }
-            )
+            when {
+                anthropic != null -> anthropic.skillId()
+                custom != null -> custom.skillId()
+                else -> _json.getProperty<String>("skill_id").getRequired("skill_id")
+            }
 
         fun version(): String =
-            accept(
-                object : Visitor<String> {
-                    override fun visitAnthropic(
-                        anthropic: BetaManagedAgentsAnthropicSkill
-                    ): String = anthropic.version()
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomSkill): String =
-                        custom.version()
-
-                    override fun unknown(json: JsonValue?): String =
-                        json.getProperty<String>("version").getRequired("version")
-                }
-            )
+            when {
+                anthropic != null -> anthropic.version()
+                custom != null -> custom.version()
+                else -> _json.getProperty<String>("version").getRequired("version")
+            }
 
         /** A resolved Anthropic-managed skill. */
         fun anthropic(): Optional<BetaManagedAgentsAnthropicSkill> = Optional.ofNullable(anthropic)
@@ -776,17 +753,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAnthropic(anthropic: BetaManagedAgentsAnthropicSkill) {
-                        anthropic.validate()
-                    }
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomSkill) {
-                        custom.validate()
-                    }
-                }
-            )
+            when {
+                anthropic != null -> anthropic.validate()
+                custom != null -> custom.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Skill: $_json")
+            }
             validated = true
         }
 
@@ -806,17 +777,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAnthropic(anthropic: BetaManagedAgentsAnthropicSkill) =
-                        anthropic.validity()
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomSkill) =
-                        custom.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                anthropic != null -> anthropic.validity()
+                custom != null -> custom.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1073,22 +1038,12 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAgentToolset20260401(
-                        agentToolset20260401: BetaManagedAgentsAgentToolset20260401
-                    ): Type = Type.AGENT_TOOLSET_20260401
-
-                    override fun visitMcpToolset(mcpToolset: BetaManagedAgentsMcpToolset): Type =
-                        Type.MCP_TOOLSET
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomTool): Type =
-                        Type.CUSTOM
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                agentToolset20260401 != null -> Type.AGENT_TOOLSET_20260401
+                mcpToolset != null -> Type.MCP_TOOLSET
+                custom != null -> Type.CUSTOM
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun agentToolset20260401(): Optional<BetaManagedAgentsAgentToolset20260401> =
             Optional.ofNullable(agentToolset20260401)
@@ -1168,23 +1123,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAgentToolset20260401(
-                        agentToolset20260401: BetaManagedAgentsAgentToolset20260401
-                    ) {
-                        agentToolset20260401.validate()
-                    }
-
-                    override fun visitMcpToolset(mcpToolset: BetaManagedAgentsMcpToolset) {
-                        mcpToolset.validate()
-                    }
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomTool) {
-                        custom.validate()
-                    }
-                }
-            )
+            when {
+                agentToolset20260401 != null -> agentToolset20260401.validate()
+                mcpToolset != null -> mcpToolset.validate()
+                custom != null -> custom.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Tool: $_json")
+            }
             validated = true
         }
 
@@ -1204,21 +1148,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAgentToolset20260401(
-                        agentToolset20260401: BetaManagedAgentsAgentToolset20260401
-                    ) = agentToolset20260401.validity()
-
-                    override fun visitMcpToolset(mcpToolset: BetaManagedAgentsMcpToolset) =
-                        mcpToolset.validity()
-
-                    override fun visitCustom(custom: BetaManagedAgentsCustomTool) =
-                        custom.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                agentToolset20260401 != null -> agentToolset20260401.validity()
+                mcpToolset != null -> mcpToolset.validity()
+                custom != null -> custom.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

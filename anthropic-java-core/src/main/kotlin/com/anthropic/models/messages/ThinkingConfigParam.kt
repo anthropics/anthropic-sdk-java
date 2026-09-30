@@ -42,21 +42,13 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitEnabled(enabled: ThinkingConfigEnabled): Type = Type.ENABLED
-
-                override fun visitDisabled(disabled: ThinkingConfigDisabled): Type = Type.DISABLED
-
-                override fun visitBetweenTools(betweenTools: ThinkingConfigBetweenTools): Type =
-                    Type.BETWEEN_TOOLS
-
-                override fun visitAdaptive(adaptive: ThinkingConfigAdaptive): Type = Type.ADAPTIVE
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            enabled != null -> Type.ENABLED
+            disabled != null -> Type.DISABLED
+            betweenTools != null -> Type.BETWEEN_TOOLS
+            adaptive != null -> Type.ADAPTIVE
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun enabled(): Optional<ThinkingConfigEnabled> = Optional.ofNullable(enabled)
 
@@ -137,25 +129,13 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitEnabled(enabled: ThinkingConfigEnabled) {
-                    enabled.validate()
-                }
-
-                override fun visitDisabled(disabled: ThinkingConfigDisabled) {
-                    disabled.validate()
-                }
-
-                override fun visitBetweenTools(betweenTools: ThinkingConfigBetweenTools) {
-                    betweenTools.validate()
-                }
-
-                override fun visitAdaptive(adaptive: ThinkingConfigAdaptive) {
-                    adaptive.validate()
-                }
-            }
-        )
+        when {
+            enabled != null -> enabled.validate()
+            disabled != null -> disabled.validate()
+            betweenTools != null -> betweenTools.validate()
+            adaptive != null -> adaptive.validate()
+            else -> throw AnthropicInvalidDataException("Unknown ThinkingConfigParam: $_json")
+        }
         validated = true
     }
 
@@ -174,20 +154,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitEnabled(enabled: ThinkingConfigEnabled) = enabled.validity()
-
-                override fun visitDisabled(disabled: ThinkingConfigDisabled) = disabled.validity()
-
-                override fun visitBetweenTools(betweenTools: ThinkingConfigBetweenTools) =
-                    betweenTools.validity()
-
-                override fun visitAdaptive(adaptive: ThinkingConfigAdaptive) = adaptive.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            enabled != null -> enabled.validity()
+            disabled != null -> disabled.validity()
+            betweenTools != null -> betweenTools.validity()
+            adaptive != null -> adaptive.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

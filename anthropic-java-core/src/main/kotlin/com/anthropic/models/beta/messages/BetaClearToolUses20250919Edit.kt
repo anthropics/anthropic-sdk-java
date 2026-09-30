@@ -515,13 +515,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBool(bool: Boolean) {}
-
-                    override fun visitStrings(strings: List<String>) {}
-                }
-            )
+            when {
+                bool != null -> {}
+                strings != null -> {}
+                else -> throw AnthropicInvalidDataException("Unknown ClearToolInputs: $_json")
+            }
             validated = true
         }
 
@@ -541,15 +539,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBool(bool: Boolean) = 1
-
-                    override fun visitStrings(strings: List<String>) = strings.size
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                bool != null -> 1
+                strings != null -> strings.size
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -660,31 +654,18 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitInputTokens(inputTokens: BetaInputTokensTrigger): Type =
-                        Type.INPUT_TOKENS
-
-                    override fun visitToolUses(toolUses: BetaToolUsesTrigger): Type = Type.TOOL_USES
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                inputTokens != null -> Type.INPUT_TOKENS
+                toolUses != null -> Type.TOOL_USES
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun value(): Long =
-            accept(
-                object : Visitor<Long> {
-                    override fun visitInputTokens(inputTokens: BetaInputTokensTrigger): Long =
-                        inputTokens.value()
-
-                    override fun visitToolUses(toolUses: BetaToolUsesTrigger): Long =
-                        toolUses.value()
-
-                    override fun unknown(json: JsonValue?): Long =
-                        json.getProperty<Long>("value").getRequired("value")
-                }
-            )
+            when {
+                inputTokens != null -> inputTokens.value()
+                toolUses != null -> toolUses.value()
+                else -> _json.getProperty<Long>("value").getRequired("value")
+            }
 
         fun inputTokens(): Optional<BetaInputTokensTrigger> = Optional.ofNullable(inputTokens)
 
@@ -752,17 +733,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitInputTokens(inputTokens: BetaInputTokensTrigger) {
-                        inputTokens.validate()
-                    }
-
-                    override fun visitToolUses(toolUses: BetaToolUsesTrigger) {
-                        toolUses.validate()
-                    }
-                }
-            )
+            when {
+                inputTokens != null -> inputTokens.validate()
+                toolUses != null -> toolUses.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Trigger: $_json")
+            }
             validated = true
         }
 
@@ -782,16 +757,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitInputTokens(inputTokens: BetaInputTokensTrigger) =
-                        inputTokens.validity()
-
-                    override fun visitToolUses(toolUses: BetaToolUsesTrigger) = toolUses.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                inputTokens != null -> inputTokens.validity()
+                toolUses != null -> toolUses.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -355,18 +355,12 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitBase64(base64: BetaBase64ImageSource): Type = Type.BASE64
-
-                    override fun visitUrl(url: BetaUrlImageSource): Type = Type.URL
-
-                    override fun visitFile(file: BetaFileImageSource): Type = Type.FILE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                base64 != null -> Type.BASE64
+                url != null -> Type.URL
+                file != null -> Type.FILE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun base64(): Optional<BetaBase64ImageSource> = Optional.ofNullable(base64)
 
@@ -441,21 +435,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBase64(base64: BetaBase64ImageSource) {
-                        base64.validate()
-                    }
-
-                    override fun visitUrl(url: BetaUrlImageSource) {
-                        url.validate()
-                    }
-
-                    override fun visitFile(file: BetaFileImageSource) {
-                        file.validate()
-                    }
-                }
-            )
+            when {
+                base64 != null -> base64.validate()
+                url != null -> url.validate()
+                file != null -> file.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Source: $_json")
+            }
             validated = true
         }
 
@@ -475,17 +460,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBase64(base64: BetaBase64ImageSource) = base64.validity()
-
-                    override fun visitUrl(url: BetaUrlImageSource) = url.validity()
-
-                    override fun visitFile(file: BetaFileImageSource) = file.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                base64 != null -> base64.validity()
+                url != null -> url.validity()
+                file != null -> file.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -1106,17 +1106,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitUserActor(userActor: BetaPluginUserActor): Type =
-                        Type.USER_ACTOR
-
-                    override fun visitApiActor(apiActor: BetaPluginApiActor): Type = Type.API_ACTOR
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                userActor != null -> Type.USER_ACTOR
+                apiActor != null -> Type.API_ACTOR
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun userActor(): Optional<BetaPluginUserActor> = Optional.ofNullable(userActor)
 
@@ -1184,17 +1178,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitUserActor(userActor: BetaPluginUserActor) {
-                        userActor.validate()
-                    }
-
-                    override fun visitApiActor(apiActor: BetaPluginApiActor) {
-                        apiActor.validate()
-                    }
-                }
-            )
+            when {
+                userActor != null -> userActor.validate()
+                apiActor != null -> apiActor.validate()
+                else -> throw AnthropicInvalidDataException("Unknown CreatedBy: $_json")
+            }
             validated = true
         }
 
@@ -1214,16 +1202,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitUserActor(userActor: BetaPluginUserActor) =
-                        userActor.validity()
-
-                    override fun visitApiActor(apiActor: BetaPluginApiActor) = apiActor.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                userActor != null -> userActor.validity()
+                apiActor != null -> apiActor.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1666,18 +1649,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitOrganization(
-                        organization: BetaPluginOwnerOrganization
-                    ): Type = Type.ORGANIZATION
-
-                    override fun visitUser(user: BetaPluginOwnerUser): Type = Type.USER
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                organization != null -> Type.ORGANIZATION
+                user != null -> Type.USER
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun organization(): Optional<BetaPluginOwnerOrganization> =
             Optional.ofNullable(organization)
@@ -1746,17 +1722,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitOrganization(organization: BetaPluginOwnerOrganization) {
-                        organization.validate()
-                    }
-
-                    override fun visitUser(user: BetaPluginOwnerUser) {
-                        user.validate()
-                    }
-                }
-            )
+            when {
+                organization != null -> organization.validate()
+                user != null -> user.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Owner: $_json")
+            }
             validated = true
         }
 
@@ -1776,16 +1746,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitOrganization(organization: BetaPluginOwnerOrganization) =
-                        organization.validity()
-
-                    override fun visitUser(user: BetaPluginOwnerUser) = user.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                organization != null -> organization.validity()
+                user != null -> user.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -41,40 +41,28 @@ private constructor(
             .citations(
                 _citations().map {
                     it.map {
-                        it.accept(
-                            object : TextCitation.Visitor<TextCitationParam> {
-                                override fun visitCharLocation(
-                                    charLocation: CitationCharLocation
-                                ): TextCitationParam =
-                                    TextCitationParam.ofCharLocation(charLocation.toParam())
-
-                                override fun visitPageLocation(
-                                    pageLocation: CitationPageLocation
-                                ): TextCitationParam =
-                                    TextCitationParam.ofPageLocation(pageLocation.toParam())
-
-                                override fun visitContentBlockLocation(
-                                    contentBlockLocation: CitationContentBlockLocation
-                                ): TextCitationParam =
-                                    TextCitationParam.ofContentBlockLocation(
-                                        contentBlockLocation.toParam()
-                                    )
-
-                                override fun visitWebSearchResultLocation(
-                                    webSearchResultLocation: CitationsWebSearchResultLocation
-                                ): TextCitationParam =
-                                    TextCitationParam.ofWebSearchResultLocation(
-                                        webSearchResultLocation.toParam()
-                                    )
-
-                                override fun visitSearchResultLocation(
-                                    searchResultLocation: CitationsSearchResultLocation
-                                ): TextCitationParam =
-                                    TextCitationParam.ofSearchResultLocation(
-                                        searchResultLocation.toParam()
-                                    )
-                            }
-                        )
+                        when {
+                            it.isCharLocation() ->
+                                TextCitationParam.ofCharLocation(it.asCharLocation().toParam())
+                            it.isPageLocation() ->
+                                TextCitationParam.ofPageLocation(it.asPageLocation().toParam())
+                            it.isContentBlockLocation() ->
+                                TextCitationParam.ofContentBlockLocation(
+                                    it.asContentBlockLocation().toParam()
+                                )
+                            it.isWebSearchResultLocation() ->
+                                TextCitationParam.ofWebSearchResultLocation(
+                                    it.asWebSearchResultLocation().toParam()
+                                )
+                            it.isSearchResultLocation() ->
+                                TextCitationParam.ofSearchResultLocation(
+                                    it.asSearchResultLocation().toParam()
+                                )
+                            else ->
+                                throw AnthropicInvalidDataException(
+                                    "Unknown TextCitation: ${it._json().getOrNull()}"
+                                )
+                        }
                     }
                 }
             )

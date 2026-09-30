@@ -32,50 +32,25 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitAnthropic(
-                    anthropic: BetaManagedAgentsAnthropicSkillParams
-                ): Type = Type.ANTHROPIC
-
-                override fun visitCustom(custom: BetaManagedAgentsCustomSkillParams): Type =
-                    Type.CUSTOM
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            anthropic != null -> Type.ANTHROPIC
+            custom != null -> Type.CUSTOM
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun skillId(): String =
-        accept(
-            object : Visitor<String> {
-                override fun visitAnthropic(
-                    anthropic: BetaManagedAgentsAnthropicSkillParams
-                ): String = anthropic.skillId()
-
-                override fun visitCustom(custom: BetaManagedAgentsCustomSkillParams): String =
-                    custom.skillId()
-
-                override fun unknown(json: JsonValue?): String =
-                    json.getProperty<String>("skill_id").getRequired("skill_id")
-            }
-        )
+        when {
+            anthropic != null -> anthropic.skillId()
+            custom != null -> custom.skillId()
+            else -> _json.getProperty<String>("skill_id").getRequired("skill_id")
+        }
 
     fun version(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitAnthropic(
-                    anthropic: BetaManagedAgentsAnthropicSkillParams
-                ): Optional<String> = anthropic.version()
-
-                override fun visitCustom(
-                    custom: BetaManagedAgentsCustomSkillParams
-                ): Optional<String> = custom.version()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("version").asKnown()
-            }
-        )
+        when {
+            anthropic != null -> anthropic.version()
+            custom != null -> custom.version()
+            else -> _json.getProperty<String>("version").asKnown()
+        }
 
     /** An Anthropic-managed skill. */
     fun anthropic(): Optional<BetaManagedAgentsAnthropicSkillParams> =
@@ -147,17 +122,12 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitAnthropic(anthropic: BetaManagedAgentsAnthropicSkillParams) {
-                    anthropic.validate()
-                }
-
-                override fun visitCustom(custom: BetaManagedAgentsCustomSkillParams) {
-                    custom.validate()
-                }
-            }
-        )
+        when {
+            anthropic != null -> anthropic.validate()
+            custom != null -> custom.validate()
+            else ->
+                throw AnthropicInvalidDataException("Unknown BetaManagedAgentsSkillParams: $_json")
+        }
         validated = true
     }
 
@@ -176,17 +146,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitAnthropic(anthropic: BetaManagedAgentsAnthropicSkillParams) =
-                    anthropic.validity()
-
-                override fun visitCustom(custom: BetaManagedAgentsCustomSkillParams) =
-                    custom.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            anthropic != null -> anthropic.validity()
+            custom != null -> custom.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

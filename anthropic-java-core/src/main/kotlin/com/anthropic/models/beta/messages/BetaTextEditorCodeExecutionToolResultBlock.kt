@@ -48,48 +48,33 @@ private constructor(
         BetaTextEditorCodeExecutionToolResultBlockParam.builder()
             .content(
                 _content().map {
-                    it.accept(
-                        object :
-                            BetaTextEditorCodeExecutionToolResultBlock.Content.Visitor<
-                                BetaTextEditorCodeExecutionToolResultBlockParam.Content
-                            > {
-                            override fun visitBetaTextEditorCodeExecutionToolResultError(
-                                betaTextEditorCodeExecutionToolResultError:
-                                    BetaTextEditorCodeExecutionToolResultError
-                            ): BetaTextEditorCodeExecutionToolResultBlockParam.Content =
-                                BetaTextEditorCodeExecutionToolResultBlockParam.Content
-                                    .ofBetaTextEditorCodeExecutionToolResultErrorParam(
-                                        betaTextEditorCodeExecutionToolResultError.toParam()
-                                    )
-
-                            override fun visitBetaTextEditorCodeExecutionViewResultBlock(
-                                betaTextEditorCodeExecutionViewResultBlock:
-                                    BetaTextEditorCodeExecutionViewResultBlock
-                            ): BetaTextEditorCodeExecutionToolResultBlockParam.Content =
-                                BetaTextEditorCodeExecutionToolResultBlockParam.Content
-                                    .ofBetaTextEditorCodeExecutionViewResultBlockParam(
-                                        betaTextEditorCodeExecutionViewResultBlock.toParam()
-                                    )
-
-                            override fun visitBetaTextEditorCodeExecutionCreateResultBlock(
-                                betaTextEditorCodeExecutionCreateResultBlock:
-                                    BetaTextEditorCodeExecutionCreateResultBlock
-                            ): BetaTextEditorCodeExecutionToolResultBlockParam.Content =
-                                BetaTextEditorCodeExecutionToolResultBlockParam.Content
-                                    .ofBetaTextEditorCodeExecutionCreateResultBlockParam(
-                                        betaTextEditorCodeExecutionCreateResultBlock.toParam()
-                                    )
-
-                            override fun visitBetaTextEditorCodeExecutionStrReplaceResultBlock(
-                                betaTextEditorCodeExecutionStrReplaceResultBlock:
-                                    BetaTextEditorCodeExecutionStrReplaceResultBlock
-                            ): BetaTextEditorCodeExecutionToolResultBlockParam.Content =
-                                BetaTextEditorCodeExecutionToolResultBlockParam.Content
-                                    .ofBetaTextEditorCodeExecutionStrReplaceResultBlockParam(
-                                        betaTextEditorCodeExecutionStrReplaceResultBlock.toParam()
-                                    )
-                        }
-                    )
+                    when {
+                        it.isBetaTextEditorCodeExecutionToolResultError() ->
+                            BetaTextEditorCodeExecutionToolResultBlockParam.Content
+                                .ofBetaTextEditorCodeExecutionToolResultErrorParam(
+                                    it.asBetaTextEditorCodeExecutionToolResultError().toParam()
+                                )
+                        it.isBetaTextEditorCodeExecutionViewResultBlock() ->
+                            BetaTextEditorCodeExecutionToolResultBlockParam.Content
+                                .ofBetaTextEditorCodeExecutionViewResultBlockParam(
+                                    it.asBetaTextEditorCodeExecutionViewResultBlock().toParam()
+                                )
+                        it.isBetaTextEditorCodeExecutionCreateResultBlock() ->
+                            BetaTextEditorCodeExecutionToolResultBlockParam.Content
+                                .ofBetaTextEditorCodeExecutionCreateResultBlockParam(
+                                    it.asBetaTextEditorCodeExecutionCreateResultBlock().toParam()
+                                )
+                        it.isBetaTextEditorCodeExecutionStrReplaceResultBlock() ->
+                            BetaTextEditorCodeExecutionToolResultBlockParam.Content
+                                .ofBetaTextEditorCodeExecutionStrReplaceResultBlockParam(
+                                    it.asBetaTextEditorCodeExecutionStrReplaceResultBlock()
+                                        .toParam()
+                                )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown Content: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .toolUseId(_toolUseId())
@@ -493,37 +478,17 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaTextEditorCodeExecutionToolResultError(
-                        betaTextEditorCodeExecutionToolResultError:
-                            BetaTextEditorCodeExecutionToolResultError
-                    ) {
-                        betaTextEditorCodeExecutionToolResultError.validate()
-                    }
-
-                    override fun visitBetaTextEditorCodeExecutionViewResultBlock(
-                        betaTextEditorCodeExecutionViewResultBlock:
-                            BetaTextEditorCodeExecutionViewResultBlock
-                    ) {
-                        betaTextEditorCodeExecutionViewResultBlock.validate()
-                    }
-
-                    override fun visitBetaTextEditorCodeExecutionCreateResultBlock(
-                        betaTextEditorCodeExecutionCreateResultBlock:
-                            BetaTextEditorCodeExecutionCreateResultBlock
-                    ) {
-                        betaTextEditorCodeExecutionCreateResultBlock.validate()
-                    }
-
-                    override fun visitBetaTextEditorCodeExecutionStrReplaceResultBlock(
-                        betaTextEditorCodeExecutionStrReplaceResultBlock:
-                            BetaTextEditorCodeExecutionStrReplaceResultBlock
-                    ) {
-                        betaTextEditorCodeExecutionStrReplaceResultBlock.validate()
-                    }
-                }
-            )
+            when {
+                betaTextEditorCodeExecutionToolResultError != null ->
+                    betaTextEditorCodeExecutionToolResultError.validate()
+                betaTextEditorCodeExecutionViewResultBlock != null ->
+                    betaTextEditorCodeExecutionViewResultBlock.validate()
+                betaTextEditorCodeExecutionCreateResultBlock != null ->
+                    betaTextEditorCodeExecutionCreateResultBlock.validate()
+                betaTextEditorCodeExecutionStrReplaceResultBlock != null ->
+                    betaTextEditorCodeExecutionStrReplaceResultBlock.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -543,31 +508,17 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaTextEditorCodeExecutionToolResultError(
-                        betaTextEditorCodeExecutionToolResultError:
-                            BetaTextEditorCodeExecutionToolResultError
-                    ) = betaTextEditorCodeExecutionToolResultError.validity()
-
-                    override fun visitBetaTextEditorCodeExecutionViewResultBlock(
-                        betaTextEditorCodeExecutionViewResultBlock:
-                            BetaTextEditorCodeExecutionViewResultBlock
-                    ) = betaTextEditorCodeExecutionViewResultBlock.validity()
-
-                    override fun visitBetaTextEditorCodeExecutionCreateResultBlock(
-                        betaTextEditorCodeExecutionCreateResultBlock:
-                            BetaTextEditorCodeExecutionCreateResultBlock
-                    ) = betaTextEditorCodeExecutionCreateResultBlock.validity()
-
-                    override fun visitBetaTextEditorCodeExecutionStrReplaceResultBlock(
-                        betaTextEditorCodeExecutionStrReplaceResultBlock:
-                            BetaTextEditorCodeExecutionStrReplaceResultBlock
-                    ) = betaTextEditorCodeExecutionStrReplaceResultBlock.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaTextEditorCodeExecutionToolResultError != null ->
+                    betaTextEditorCodeExecutionToolResultError.validity()
+                betaTextEditorCodeExecutionViewResultBlock != null ->
+                    betaTextEditorCodeExecutionViewResultBlock.validity()
+                betaTextEditorCodeExecutionCreateResultBlock != null ->
+                    betaTextEditorCodeExecutionCreateResultBlock.validity()
+                betaTextEditorCodeExecutionStrReplaceResultBlock != null ->
+                    betaTextEditorCodeExecutionStrReplaceResultBlock.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

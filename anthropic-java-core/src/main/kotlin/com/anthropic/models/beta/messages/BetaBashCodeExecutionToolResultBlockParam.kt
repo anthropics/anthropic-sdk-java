@@ -425,22 +425,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaBashCodeExecutionToolResultErrorParam(
-                        betaBashCodeExecutionToolResultErrorParam:
-                            BetaBashCodeExecutionToolResultErrorParam
-                    ) {
-                        betaBashCodeExecutionToolResultErrorParam.validate()
-                    }
-
-                    override fun visitBetaBashCodeExecutionResultBlockParam(
-                        betaBashCodeExecutionResultBlockParam: BetaBashCodeExecutionResultBlockParam
-                    ) {
-                        betaBashCodeExecutionResultBlockParam.validate()
-                    }
-                }
-            )
+            when {
+                betaBashCodeExecutionToolResultErrorParam != null ->
+                    betaBashCodeExecutionToolResultErrorParam.validate()
+                betaBashCodeExecutionResultBlockParam != null ->
+                    betaBashCodeExecutionResultBlockParam.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -460,20 +451,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaBashCodeExecutionToolResultErrorParam(
-                        betaBashCodeExecutionToolResultErrorParam:
-                            BetaBashCodeExecutionToolResultErrorParam
-                    ) = betaBashCodeExecutionToolResultErrorParam.validity()
-
-                    override fun visitBetaBashCodeExecutionResultBlockParam(
-                        betaBashCodeExecutionResultBlockParam: BetaBashCodeExecutionResultBlockParam
-                    ) = betaBashCodeExecutionResultBlockParam.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaBashCodeExecutionToolResultErrorParam != null ->
+                    betaBashCodeExecutionToolResultErrorParam.validity()
+                betaBashCodeExecutionResultBlockParam != null ->
+                    betaBashCodeExecutionResultBlockParam.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

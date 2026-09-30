@@ -92,17 +92,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitResultBlock(resultBlock: List<BetaWebSearchResultBlockParam>) {
-                    resultBlock.forEach { it.validate() }
-                }
-
-                override fun visitRequestError(requestError: BetaWebSearchToolRequestError) {
-                    requestError.validate()
-                }
-            }
-        )
+        when {
+            resultBlock != null -> resultBlock.forEach { it.validate() }
+            requestError != null -> requestError.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaWebSearchToolResultBlockParamContent: $_json"
+                )
+        }
         validated = true
     }
 
@@ -121,17 +118,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitResultBlock(resultBlock: List<BetaWebSearchResultBlockParam>) =
-                    resultBlock.sumOf { it.validity().toInt() }
-
-                override fun visitRequestError(requestError: BetaWebSearchToolRequestError) =
-                    requestError.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            resultBlock != null -> resultBlock.sumOf { it.validity().toInt() }
+            requestError != null -> requestError.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

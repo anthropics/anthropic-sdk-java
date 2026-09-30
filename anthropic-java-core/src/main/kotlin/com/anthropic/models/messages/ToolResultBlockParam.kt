@@ -456,15 +456,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitString(string: String) {}
-
-                    override fun visitBlocks(blocks: List<Block>) {
-                        blocks.forEach { it.validate() }
-                    }
-                }
-            )
+            when {
+                string != null -> {}
+                blocks != null -> blocks.forEach { it.validate() }
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -484,16 +480,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitString(string: String) = 1
-
-                    override fun visitBlocks(blocks: List<Block>) =
-                        blocks.sumOf { it.validity().toInt() }
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                string != null -> 1
+                blocks != null -> blocks.sumOf { it.validity().toInt() }
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -604,90 +595,37 @@ private constructor(
         ) {
 
             fun type(): Type =
-                accept(
-                    object : Visitor<Type> {
-                        override fun visitText(text: TextBlockParam): Type = Type.TEXT
-
-                        override fun visitImage(image: ImageBlockParam): Type = Type.IMAGE
-
-                        override fun visitSearchResult(searchResult: SearchResultBlockParam): Type =
-                            Type.SEARCH_RESULT
-
-                        override fun visitDocument(document: DocumentBlockParam): Type =
-                            Type.DOCUMENT
-
-                        override fun visitToolReference(
-                            toolReference: ToolReferenceBlockParam
-                        ): Type = Type.TOOL_REFERENCE
-
-                        override fun visitBrowserState(browserState: BrowserStateBlockParam): Type =
-                            Type.BROWSER_STATE
-
-                        override fun unknown(json: JsonValue?): Type =
-                            Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                    }
-                )
+                when {
+                    text != null -> Type.TEXT
+                    image != null -> Type.IMAGE
+                    searchResult != null -> Type.SEARCH_RESULT
+                    document != null -> Type.DOCUMENT
+                    toolReference != null -> Type.TOOL_REFERENCE
+                    browserState != null -> Type.BROWSER_STATE
+                    else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+                }
 
             fun cacheControl(): Optional<CacheControlEphemeral> =
-                accept(
-                    object : Visitor<Optional<CacheControlEphemeral>> {
-                        override fun visitText(
-                            text: TextBlockParam
-                        ): Optional<CacheControlEphemeral> = text.cacheControl()
-
-                        override fun visitImage(
-                            image: ImageBlockParam
-                        ): Optional<CacheControlEphemeral> = image.cacheControl()
-
-                        override fun visitSearchResult(
-                            searchResult: SearchResultBlockParam
-                        ): Optional<CacheControlEphemeral> = searchResult.cacheControl()
-
-                        override fun visitDocument(
-                            document: DocumentBlockParam
-                        ): Optional<CacheControlEphemeral> = document.cacheControl()
-
-                        override fun visitToolReference(
-                            toolReference: ToolReferenceBlockParam
-                        ): Optional<CacheControlEphemeral> = toolReference.cacheControl()
-
-                        override fun visitBrowserState(
-                            browserState: BrowserStateBlockParam
-                        ): Optional<CacheControlEphemeral> = browserState.cacheControl()
-
-                        override fun unknown(json: JsonValue?): Optional<CacheControlEphemeral> =
-                            json.getProperty<CacheControlEphemeral>("cache_control").asKnown()
-                    }
-                )
+                when {
+                    text != null -> text.cacheControl()
+                    image != null -> image.cacheControl()
+                    searchResult != null -> searchResult.cacheControl()
+                    document != null -> document.cacheControl()
+                    toolReference != null -> toolReference.cacheControl()
+                    browserState != null -> browserState.cacheControl()
+                    else -> _json.getProperty<CacheControlEphemeral>("cache_control").asKnown()
+                }
 
             fun title(): Optional<String> =
-                accept(
-                    object : Visitor<Optional<String>> {
-                        override fun visitText(text: TextBlockParam): Optional<String> =
-                            Optional.empty()
-
-                        override fun visitImage(image: ImageBlockParam): Optional<String> =
-                            Optional.empty()
-
-                        override fun visitSearchResult(
-                            searchResult: SearchResultBlockParam
-                        ): Optional<String> = Optional.of(searchResult.title())
-
-                        override fun visitDocument(document: DocumentBlockParam): Optional<String> =
-                            document.title()
-
-                        override fun visitToolReference(
-                            toolReference: ToolReferenceBlockParam
-                        ): Optional<String> = Optional.empty()
-
-                        override fun visitBrowserState(
-                            browserState: BrowserStateBlockParam
-                        ): Optional<String> = Optional.empty()
-
-                        override fun unknown(json: JsonValue?): Optional<String> =
-                            json.getProperty<String>("title").asKnown()
-                    }
-                )
+                when {
+                    text != null -> Optional.empty()
+                    image != null -> Optional.empty()
+                    searchResult != null -> Optional.of(searchResult.title())
+                    document != null -> document.title()
+                    toolReference != null -> Optional.empty()
+                    browserState != null -> Optional.empty()
+                    else -> _json.getProperty<String>("title").asKnown()
+                }
 
             fun text(): Optional<TextBlockParam> = Optional.ofNullable(text)
 
@@ -807,33 +745,15 @@ private constructor(
                     return@apply
                 }
 
-                accept(
-                    object : Visitor<Unit> {
-                        override fun visitText(text: TextBlockParam) {
-                            text.validate()
-                        }
-
-                        override fun visitImage(image: ImageBlockParam) {
-                            image.validate()
-                        }
-
-                        override fun visitSearchResult(searchResult: SearchResultBlockParam) {
-                            searchResult.validate()
-                        }
-
-                        override fun visitDocument(document: DocumentBlockParam) {
-                            document.validate()
-                        }
-
-                        override fun visitToolReference(toolReference: ToolReferenceBlockParam) {
-                            toolReference.validate()
-                        }
-
-                        override fun visitBrowserState(browserState: BrowserStateBlockParam) {
-                            browserState.validate()
-                        }
-                    }
-                )
+                when {
+                    text != null -> text.validate()
+                    image != null -> image.validate()
+                    searchResult != null -> searchResult.validate()
+                    document != null -> document.validate()
+                    toolReference != null -> toolReference.validate()
+                    browserState != null -> browserState.validate()
+                    else -> throw AnthropicInvalidDataException("Unknown Block: $_json")
+                }
                 validated = true
             }
 
@@ -853,27 +773,15 @@ private constructor(
              */
             @JvmSynthetic
             internal fun validity(): Int =
-                accept(
-                    object : Visitor<Int> {
-                        override fun visitText(text: TextBlockParam) = text.validity()
-
-                        override fun visitImage(image: ImageBlockParam) = image.validity()
-
-                        override fun visitSearchResult(searchResult: SearchResultBlockParam) =
-                            searchResult.validity()
-
-                        override fun visitDocument(document: DocumentBlockParam) =
-                            document.validity()
-
-                        override fun visitToolReference(toolReference: ToolReferenceBlockParam) =
-                            toolReference.validity()
-
-                        override fun visitBrowserState(browserState: BrowserStateBlockParam) =
-                            browserState.validity()
-
-                        override fun unknown(json: JsonValue?) = 0
-                    }
-                )
+                when {
+                    text != null -> text.validity()
+                    image != null -> image.validity()
+                    searchResult != null -> searchResult.validity()
+                    document != null -> document.validity()
+                    toolReference != null -> toolReference.validity()
+                    browserState != null -> browserState.validity()
+                    else -> 0
+                }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {

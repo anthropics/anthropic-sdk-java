@@ -30,19 +30,11 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitEnabled(enabled: BetaComplianceSettingsStateEnabledParam): Type =
-                    Type.ENABLED
-
-                override fun visitDisabled(
-                    disabled: BetaComplianceSettingsStateDisabledParam
-                ): Type = Type.DISABLED
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            enabled != null -> Type.ENABLED
+            disabled != null -> Type.DISABLED
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun enabled(): Optional<BetaComplianceSettingsStateEnabledParam> = Optional.ofNullable(enabled)
 
@@ -110,17 +102,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitEnabled(enabled: BetaComplianceSettingsStateEnabledParam) {
-                    enabled.validate()
-                }
-
-                override fun visitDisabled(disabled: BetaComplianceSettingsStateDisabledParam) {
-                    disabled.validate()
-                }
-            }
-        )
+        when {
+            enabled != null -> enabled.validate()
+            disabled != null -> disabled.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaComplianceSettingsStateParam: $_json"
+                )
+        }
         validated = true
     }
 
@@ -139,17 +128,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitEnabled(enabled: BetaComplianceSettingsStateEnabledParam) =
-                    enabled.validity()
-
-                override fun visitDisabled(disabled: BetaComplianceSettingsStateDisabledParam) =
-                    disabled.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            enabled != null -> enabled.validity()
+            disabled != null -> disabled.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

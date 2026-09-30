@@ -365,46 +365,22 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAll(all: WebFetchUrlSourceAll): Type = Type.ALL
-
-                    override fun visitNone(none: WebFetchUrlSourceNone): Type = Type.NONE
-
-                    override fun visitOnly(only: WebFetchUrlSourceOnly): Type = Type.ONLY
-
-                    override fun visitExcept(except: WebFetchUrlSourceExcept): Type = Type.EXCEPT
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                all != null -> Type.ALL
+                none != null -> Type.NONE
+                only != null -> Type.ONLY
+                except != null -> Type.EXCEPT
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun tools(): Optional<List<WebFetchUrlSourceToolReference>> =
-            accept(
-                object : Visitor<Optional<List<WebFetchUrlSourceToolReference>>> {
-                    override fun visitAll(
-                        all: WebFetchUrlSourceAll
-                    ): Optional<List<WebFetchUrlSourceToolReference>> = Optional.empty()
-
-                    override fun visitNone(
-                        none: WebFetchUrlSourceNone
-                    ): Optional<List<WebFetchUrlSourceToolReference>> = Optional.empty()
-
-                    override fun visitOnly(
-                        only: WebFetchUrlSourceOnly
-                    ): Optional<List<WebFetchUrlSourceToolReference>> = Optional.of(only.tools())
-
-                    override fun visitExcept(
-                        except: WebFetchUrlSourceExcept
-                    ): Optional<List<WebFetchUrlSourceToolReference>> = Optional.of(except.tools())
-
-                    override fun unknown(
-                        json: JsonValue?
-                    ): Optional<List<WebFetchUrlSourceToolReference>> =
-                        json.getProperty<List<WebFetchUrlSourceToolReference>>("tools").asKnown()
-                }
-            )
+            when {
+                all != null -> Optional.empty()
+                none != null -> Optional.empty()
+                only != null -> Optional.of(only.tools())
+                except != null -> Optional.of(except.tools())
+                else -> _json.getProperty<List<WebFetchUrlSourceToolReference>>("tools").asKnown()
+            }
 
         /**
          * The ``url_sources`` variant under which a source contributes in full: every result of the
@@ -506,25 +482,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAll(all: WebFetchUrlSourceAll) {
-                        all.validate()
-                    }
-
-                    override fun visitNone(none: WebFetchUrlSourceNone) {
-                        none.validate()
-                    }
-
-                    override fun visitOnly(only: WebFetchUrlSourceOnly) {
-                        only.validate()
-                    }
-
-                    override fun visitExcept(except: WebFetchUrlSourceExcept) {
-                        except.validate()
-                    }
-                }
-            )
+            when {
+                all != null -> all.validate()
+                none != null -> none.validate()
+                only != null -> only.validate()
+                except != null -> except.validate()
+                else -> throw AnthropicInvalidDataException("Unknown ClientToolResults: $_json")
+            }
             validated = true
         }
 
@@ -544,19 +508,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAll(all: WebFetchUrlSourceAll) = all.validity()
-
-                    override fun visitNone(none: WebFetchUrlSourceNone) = none.validity()
-
-                    override fun visitOnly(only: WebFetchUrlSourceOnly) = only.validity()
-
-                    override fun visitExcept(except: WebFetchUrlSourceExcept) = except.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                all != null -> all.validity()
+                none != null -> none.validity()
+                only != null -> only.validity()
+                except != null -> except.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -896,46 +854,22 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAll(all: WebFetchUrlSourceAll): Type = Type.ALL
-
-                    override fun visitNone(none: WebFetchUrlSourceNone): Type = Type.NONE
-
-                    override fun visitOnly(only: WebFetchUrlSourceOnly): Type = Type.ONLY
-
-                    override fun visitExcept(except: WebFetchUrlSourceExcept): Type = Type.EXCEPT
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                all != null -> Type.ALL
+                none != null -> Type.NONE
+                only != null -> Type.ONLY
+                except != null -> Type.EXCEPT
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun tools(): Optional<List<WebFetchUrlSourceToolReference>> =
-            accept(
-                object : Visitor<Optional<List<WebFetchUrlSourceToolReference>>> {
-                    override fun visitAll(
-                        all: WebFetchUrlSourceAll
-                    ): Optional<List<WebFetchUrlSourceToolReference>> = Optional.empty()
-
-                    override fun visitNone(
-                        none: WebFetchUrlSourceNone
-                    ): Optional<List<WebFetchUrlSourceToolReference>> = Optional.empty()
-
-                    override fun visitOnly(
-                        only: WebFetchUrlSourceOnly
-                    ): Optional<List<WebFetchUrlSourceToolReference>> = Optional.of(only.tools())
-
-                    override fun visitExcept(
-                        except: WebFetchUrlSourceExcept
-                    ): Optional<List<WebFetchUrlSourceToolReference>> = Optional.of(except.tools())
-
-                    override fun unknown(
-                        json: JsonValue?
-                    ): Optional<List<WebFetchUrlSourceToolReference>> =
-                        json.getProperty<List<WebFetchUrlSourceToolReference>>("tools").asKnown()
-                }
-            )
+            when {
+                all != null -> Optional.empty()
+                none != null -> Optional.empty()
+                only != null -> Optional.of(only.tools())
+                except != null -> Optional.of(except.tools())
+                else -> _json.getProperty<List<WebFetchUrlSourceToolReference>>("tools").asKnown()
+            }
 
         /**
          * The ``url_sources`` variant under which a source contributes in full: every result of the
@@ -1037,25 +971,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAll(all: WebFetchUrlSourceAll) {
-                        all.validate()
-                    }
-
-                    override fun visitNone(none: WebFetchUrlSourceNone) {
-                        none.validate()
-                    }
-
-                    override fun visitOnly(only: WebFetchUrlSourceOnly) {
-                        only.validate()
-                    }
-
-                    override fun visitExcept(except: WebFetchUrlSourceExcept) {
-                        except.validate()
-                    }
-                }
-            )
+            when {
+                all != null -> all.validate()
+                none != null -> none.validate()
+                only != null -> only.validate()
+                except != null -> except.validate()
+                else -> throw AnthropicInvalidDataException("Unknown ServerToolResults: $_json")
+            }
             validated = true
         }
 
@@ -1075,19 +997,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAll(all: WebFetchUrlSourceAll) = all.validity()
-
-                    override fun visitNone(none: WebFetchUrlSourceNone) = none.validity()
-
-                    override fun visitOnly(only: WebFetchUrlSourceOnly) = only.validity()
-
-                    override fun visitExcept(except: WebFetchUrlSourceExcept) = except.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                all != null -> all.validity()
+                none != null -> none.validity()
+                only != null -> only.validity()
+                except != null -> except.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1421,16 +1337,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAll(all: WebFetchUrlSourceAll): Type = Type.ALL
-
-                    override fun visitNone(none: WebFetchUrlSourceNone): Type = Type.NONE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                all != null -> Type.ALL
+                none != null -> Type.NONE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /**
          * The ``url_sources`` variant under which a source contributes in full: every result of the
@@ -1514,17 +1425,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAll(all: WebFetchUrlSourceAll) {
-                        all.validate()
-                    }
-
-                    override fun visitNone(none: WebFetchUrlSourceNone) {
-                        none.validate()
-                    }
-                }
-            )
+            when {
+                all != null -> all.validate()
+                none != null -> none.validate()
+                else -> throw AnthropicInvalidDataException("Unknown UserInput: $_json")
+            }
             validated = true
         }
 
@@ -1544,15 +1449,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAll(all: WebFetchUrlSourceAll) = all.validity()
-
-                    override fun visitNone(none: WebFetchUrlSourceNone) = none.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                all != null -> all.validity()
+                none != null -> none.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

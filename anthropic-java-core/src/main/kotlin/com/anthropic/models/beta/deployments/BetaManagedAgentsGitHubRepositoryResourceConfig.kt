@@ -484,18 +484,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitBranch(branch: BetaManagedAgentsBranchCheckout): Type =
-                        Type.BRANCH
-
-                    override fun visitCommit(commit: BetaManagedAgentsCommitCheckout): Type =
-                        Type.COMMIT
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                branch != null -> Type.BRANCH
+                commit != null -> Type.COMMIT
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun branch(): Optional<BetaManagedAgentsBranchCheckout> = Optional.ofNullable(branch)
 
@@ -563,17 +556,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBranch(branch: BetaManagedAgentsBranchCheckout) {
-                        branch.validate()
-                    }
-
-                    override fun visitCommit(commit: BetaManagedAgentsCommitCheckout) {
-                        commit.validate()
-                    }
-                }
-            )
+            when {
+                branch != null -> branch.validate()
+                commit != null -> commit.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Checkout: $_json")
+            }
             validated = true
         }
 
@@ -593,17 +580,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBranch(branch: BetaManagedAgentsBranchCheckout) =
-                        branch.validity()
-
-                    override fun visitCommit(commit: BetaManagedAgentsCommitCheckout) =
-                        commit.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                branch != null -> branch.validity()
+                commit != null -> commit.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

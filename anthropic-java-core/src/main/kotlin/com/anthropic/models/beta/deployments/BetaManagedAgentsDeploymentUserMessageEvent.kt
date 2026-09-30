@@ -439,22 +439,13 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitText(text: BetaManagedAgentsTextBlock): Type = Type.TEXT
-
-                    override fun visitImage(image: BetaManagedAgentsImageBlock): Type = Type.IMAGE
-
-                    override fun visitDocument(document: BetaManagedAgentsDocumentBlock): Type =
-                        Type.DOCUMENT
-
-                    override fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock): Type =
-                        Type.REDACTED
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                text != null -> Type.TEXT
+                image != null -> Type.IMAGE
+                document != null -> Type.DOCUMENT
+                redacted != null -> Type.REDACTED
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /** Regular text content. */
         fun text(): Optional<BetaManagedAgentsTextBlock> = Optional.ofNullable(text)
@@ -550,25 +541,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitText(text: BetaManagedAgentsTextBlock) {
-                        text.validate()
-                    }
-
-                    override fun visitImage(image: BetaManagedAgentsImageBlock) {
-                        image.validate()
-                    }
-
-                    override fun visitDocument(document: BetaManagedAgentsDocumentBlock) {
-                        document.validate()
-                    }
-
-                    override fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock) {
-                        redacted.validate()
-                    }
-                }
-            )
+            when {
+                text != null -> text.validate()
+                image != null -> image.validate()
+                document != null -> document.validate()
+                redacted != null -> redacted.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -588,21 +567,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitText(text: BetaManagedAgentsTextBlock) = text.validity()
-
-                    override fun visitImage(image: BetaManagedAgentsImageBlock) = image.validity()
-
-                    override fun visitDocument(document: BetaManagedAgentsDocumentBlock) =
-                        document.validity()
-
-                    override fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock) =
-                        redacted.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                text != null -> text.validity()
+                image != null -> image.validity()
+                document != null -> document.validity()
+                redacted != null -> redacted.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

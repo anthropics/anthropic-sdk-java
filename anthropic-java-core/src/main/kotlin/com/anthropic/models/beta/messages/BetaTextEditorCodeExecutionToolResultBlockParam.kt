@@ -527,37 +527,17 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaTextEditorCodeExecutionToolResultErrorParam(
-                        betaTextEditorCodeExecutionToolResultErrorParam:
-                            BetaTextEditorCodeExecutionToolResultErrorParam
-                    ) {
-                        betaTextEditorCodeExecutionToolResultErrorParam.validate()
-                    }
-
-                    override fun visitBetaTextEditorCodeExecutionViewResultBlockParam(
-                        betaTextEditorCodeExecutionViewResultBlockParam:
-                            BetaTextEditorCodeExecutionViewResultBlockParam
-                    ) {
-                        betaTextEditorCodeExecutionViewResultBlockParam.validate()
-                    }
-
-                    override fun visitBetaTextEditorCodeExecutionCreateResultBlockParam(
-                        betaTextEditorCodeExecutionCreateResultBlockParam:
-                            BetaTextEditorCodeExecutionCreateResultBlockParam
-                    ) {
-                        betaTextEditorCodeExecutionCreateResultBlockParam.validate()
-                    }
-
-                    override fun visitBetaTextEditorCodeExecutionStrReplaceResultBlockParam(
-                        betaTextEditorCodeExecutionStrReplaceResultBlockParam:
-                            BetaTextEditorCodeExecutionStrReplaceResultBlockParam
-                    ) {
-                        betaTextEditorCodeExecutionStrReplaceResultBlockParam.validate()
-                    }
-                }
-            )
+            when {
+                betaTextEditorCodeExecutionToolResultErrorParam != null ->
+                    betaTextEditorCodeExecutionToolResultErrorParam.validate()
+                betaTextEditorCodeExecutionViewResultBlockParam != null ->
+                    betaTextEditorCodeExecutionViewResultBlockParam.validate()
+                betaTextEditorCodeExecutionCreateResultBlockParam != null ->
+                    betaTextEditorCodeExecutionCreateResultBlockParam.validate()
+                betaTextEditorCodeExecutionStrReplaceResultBlockParam != null ->
+                    betaTextEditorCodeExecutionStrReplaceResultBlockParam.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -577,31 +557,17 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaTextEditorCodeExecutionToolResultErrorParam(
-                        betaTextEditorCodeExecutionToolResultErrorParam:
-                            BetaTextEditorCodeExecutionToolResultErrorParam
-                    ) = betaTextEditorCodeExecutionToolResultErrorParam.validity()
-
-                    override fun visitBetaTextEditorCodeExecutionViewResultBlockParam(
-                        betaTextEditorCodeExecutionViewResultBlockParam:
-                            BetaTextEditorCodeExecutionViewResultBlockParam
-                    ) = betaTextEditorCodeExecutionViewResultBlockParam.validity()
-
-                    override fun visitBetaTextEditorCodeExecutionCreateResultBlockParam(
-                        betaTextEditorCodeExecutionCreateResultBlockParam:
-                            BetaTextEditorCodeExecutionCreateResultBlockParam
-                    ) = betaTextEditorCodeExecutionCreateResultBlockParam.validity()
-
-                    override fun visitBetaTextEditorCodeExecutionStrReplaceResultBlockParam(
-                        betaTextEditorCodeExecutionStrReplaceResultBlockParam:
-                            BetaTextEditorCodeExecutionStrReplaceResultBlockParam
-                    ) = betaTextEditorCodeExecutionStrReplaceResultBlockParam.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaTextEditorCodeExecutionToolResultErrorParam != null ->
+                    betaTextEditorCodeExecutionToolResultErrorParam.validity()
+                betaTextEditorCodeExecutionViewResultBlockParam != null ->
+                    betaTextEditorCodeExecutionViewResultBlockParam.validity()
+                betaTextEditorCodeExecutionCreateResultBlockParam != null ->
+                    betaTextEditorCodeExecutionCreateResultBlockParam.validity()
+                betaTextEditorCodeExecutionStrReplaceResultBlockParam != null ->
+                    betaTextEditorCodeExecutionStrReplaceResultBlockParam.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

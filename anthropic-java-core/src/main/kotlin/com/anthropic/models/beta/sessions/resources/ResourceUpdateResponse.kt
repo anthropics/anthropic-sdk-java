@@ -34,100 +34,44 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
-                ): Type = Type.GITHUB_REPOSITORY
-
-                override fun visitFile(file: BetaManagedAgentsFileResource): Type = Type.FILE
-
-                override fun visitMemoryStore(
-                    memoryStore: BetaManagedAgentsMemoryStoreResource
-                ): Type = Type.MEMORY_STORE
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            githubRepository != null -> Type.GITHUB_REPOSITORY
+            file != null -> Type.FILE
+            memoryStore != null -> Type.MEMORY_STORE
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun id(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
-                ): Optional<String> = Optional.of(githubRepository.id())
-
-                override fun visitFile(file: BetaManagedAgentsFileResource): Optional<String> =
-                    Optional.of(file.id())
-
-                override fun visitMemoryStore(
-                    memoryStore: BetaManagedAgentsMemoryStoreResource
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("id").asKnown()
-            }
-        )
+        when {
+            githubRepository != null -> Optional.of(githubRepository.id())
+            file != null -> Optional.of(file.id())
+            memoryStore != null -> Optional.empty()
+            else -> _json.getProperty<String>("id").asKnown()
+        }
 
     fun createdAt(): Optional<OffsetDateTime> =
-        accept(
-            object : Visitor<Optional<OffsetDateTime>> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
-                ): Optional<OffsetDateTime> = Optional.of(githubRepository.createdAt())
-
-                override fun visitFile(
-                    file: BetaManagedAgentsFileResource
-                ): Optional<OffsetDateTime> = Optional.of(file.createdAt())
-
-                override fun visitMemoryStore(
-                    memoryStore: BetaManagedAgentsMemoryStoreResource
-                ): Optional<OffsetDateTime> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<OffsetDateTime> =
-                    json.getProperty<OffsetDateTime>("created_at").asKnown()
-            }
-        )
+        when {
+            githubRepository != null -> Optional.of(githubRepository.createdAt())
+            file != null -> Optional.of(file.createdAt())
+            memoryStore != null -> Optional.empty()
+            else -> _json.getProperty<OffsetDateTime>("created_at").asKnown()
+        }
 
     fun mountPath(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
-                ): Optional<String> = Optional.of(githubRepository.mountPath())
-
-                override fun visitFile(file: BetaManagedAgentsFileResource): Optional<String> =
-                    Optional.of(file.mountPath())
-
-                override fun visitMemoryStore(
-                    memoryStore: BetaManagedAgentsMemoryStoreResource
-                ): Optional<String> = memoryStore.mountPath()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("mount_path").asKnown()
-            }
-        )
+        when {
+            githubRepository != null -> Optional.of(githubRepository.mountPath())
+            file != null -> Optional.of(file.mountPath())
+            memoryStore != null -> memoryStore.mountPath()
+            else -> _json.getProperty<String>("mount_path").asKnown()
+        }
 
     fun updatedAt(): Optional<OffsetDateTime> =
-        accept(
-            object : Visitor<Optional<OffsetDateTime>> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
-                ): Optional<OffsetDateTime> = Optional.of(githubRepository.updatedAt())
-
-                override fun visitFile(
-                    file: BetaManagedAgentsFileResource
-                ): Optional<OffsetDateTime> = Optional.of(file.updatedAt())
-
-                override fun visitMemoryStore(
-                    memoryStore: BetaManagedAgentsMemoryStoreResource
-                ): Optional<OffsetDateTime> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<OffsetDateTime> =
-                    json.getProperty<OffsetDateTime>("updated_at").asKnown()
-            }
-        )
+        when {
+            githubRepository != null -> Optional.of(githubRepository.updatedAt())
+            file != null -> Optional.of(file.updatedAt())
+            memoryStore != null -> Optional.empty()
+            else -> _json.getProperty<OffsetDateTime>("updated_at").asKnown()
+        }
 
     fun githubRepository(): Optional<BetaManagedAgentsGitHubRepositoryResource> =
         Optional.ofNullable(githubRepository)
@@ -207,23 +151,12 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
-                ) {
-                    githubRepository.validate()
-                }
-
-                override fun visitFile(file: BetaManagedAgentsFileResource) {
-                    file.validate()
-                }
-
-                override fun visitMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResource) {
-                    memoryStore.validate()
-                }
-            }
-        )
+        when {
+            githubRepository != null -> githubRepository.validate()
+            file != null -> file.validate()
+            memoryStore != null -> memoryStore.validate()
+            else -> throw AnthropicInvalidDataException("Unknown ResourceUpdateResponse: $_json")
+        }
         validated = true
     }
 
@@ -242,20 +175,12 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResource
-                ) = githubRepository.validity()
-
-                override fun visitFile(file: BetaManagedAgentsFileResource) = file.validity()
-
-                override fun visitMemoryStore(memoryStore: BetaManagedAgentsMemoryStoreResource) =
-                    memoryStore.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            githubRepository != null -> githubRepository.validity()
+            file != null -> file.validity()
+            memoryStore != null -> memoryStore.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

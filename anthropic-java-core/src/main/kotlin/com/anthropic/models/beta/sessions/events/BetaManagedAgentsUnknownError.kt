@@ -278,24 +278,12 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitRetrying(
-                        retrying: BetaManagedAgentsRetryStatusRetrying
-                    ): Type = Type.RETRYING
-
-                    override fun visitExhausted(
-                        exhausted: BetaManagedAgentsRetryStatusExhausted
-                    ): Type = Type.EXHAUSTED
-
-                    override fun visitTerminal(
-                        terminal: BetaManagedAgentsRetryStatusTerminal
-                    ): Type = Type.TERMINAL
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                retrying != null -> Type.RETRYING
+                exhausted != null -> Type.EXHAUSTED
+                terminal != null -> Type.TERMINAL
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /**
          * The server is retrying automatically. Client should wait; the same error type may fire
@@ -391,21 +379,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitRetrying(retrying: BetaManagedAgentsRetryStatusRetrying) {
-                        retrying.validate()
-                    }
-
-                    override fun visitExhausted(exhausted: BetaManagedAgentsRetryStatusExhausted) {
-                        exhausted.validate()
-                    }
-
-                    override fun visitTerminal(terminal: BetaManagedAgentsRetryStatusTerminal) {
-                        terminal.validate()
-                    }
-                }
-            )
+            when {
+                retrying != null -> retrying.validate()
+                exhausted != null -> exhausted.validate()
+                terminal != null -> terminal.validate()
+                else -> throw AnthropicInvalidDataException("Unknown RetryStatus: $_json")
+            }
             validated = true
         }
 
@@ -425,20 +404,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitRetrying(retrying: BetaManagedAgentsRetryStatusRetrying) =
-                        retrying.validity()
-
-                    override fun visitExhausted(exhausted: BetaManagedAgentsRetryStatusExhausted) =
-                        exhausted.validity()
-
-                    override fun visitTerminal(terminal: BetaManagedAgentsRetryStatusTerminal) =
-                        terminal.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                retrying != null -> retrying.validity()
+                exhausted != null -> exhausted.validity()
+                terminal != null -> terminal.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

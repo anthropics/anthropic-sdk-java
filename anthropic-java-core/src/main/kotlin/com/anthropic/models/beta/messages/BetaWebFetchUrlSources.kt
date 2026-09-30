@@ -365,51 +365,23 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAll(all: BetaWebFetchUrlSourceAll): Type = Type.ALL
-
-                    override fun visitNone(none: BetaWebFetchUrlSourceNone): Type = Type.NONE
-
-                    override fun visitOnly(only: BetaWebFetchUrlSourceOnly): Type = Type.ONLY
-
-                    override fun visitExcept(except: BetaWebFetchUrlSourceExcept): Type =
-                        Type.EXCEPT
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                all != null -> Type.ALL
+                none != null -> Type.NONE
+                only != null -> Type.ONLY
+                except != null -> Type.EXCEPT
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun tools(): Optional<List<BetaWebFetchUrlSourceToolReference>> =
-            accept(
-                object : Visitor<Optional<List<BetaWebFetchUrlSourceToolReference>>> {
-                    override fun visitAll(
-                        all: BetaWebFetchUrlSourceAll
-                    ): Optional<List<BetaWebFetchUrlSourceToolReference>> = Optional.empty()
-
-                    override fun visitNone(
-                        none: BetaWebFetchUrlSourceNone
-                    ): Optional<List<BetaWebFetchUrlSourceToolReference>> = Optional.empty()
-
-                    override fun visitOnly(
-                        only: BetaWebFetchUrlSourceOnly
-                    ): Optional<List<BetaWebFetchUrlSourceToolReference>> =
-                        Optional.of(only.tools())
-
-                    override fun visitExcept(
-                        except: BetaWebFetchUrlSourceExcept
-                    ): Optional<List<BetaWebFetchUrlSourceToolReference>> =
-                        Optional.of(except.tools())
-
-                    override fun unknown(
-                        json: JsonValue?
-                    ): Optional<List<BetaWebFetchUrlSourceToolReference>> =
-                        json
-                            .getProperty<List<BetaWebFetchUrlSourceToolReference>>("tools")
-                            .asKnown()
-                }
-            )
+            when {
+                all != null -> Optional.empty()
+                none != null -> Optional.empty()
+                only != null -> Optional.of(only.tools())
+                except != null -> Optional.of(except.tools())
+                else ->
+                    _json.getProperty<List<BetaWebFetchUrlSourceToolReference>>("tools").asKnown()
+            }
 
         /**
          * The ``url_sources`` variant under which a source contributes in full: every result of the
@@ -511,25 +483,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAll(all: BetaWebFetchUrlSourceAll) {
-                        all.validate()
-                    }
-
-                    override fun visitNone(none: BetaWebFetchUrlSourceNone) {
-                        none.validate()
-                    }
-
-                    override fun visitOnly(only: BetaWebFetchUrlSourceOnly) {
-                        only.validate()
-                    }
-
-                    override fun visitExcept(except: BetaWebFetchUrlSourceExcept) {
-                        except.validate()
-                    }
-                }
-            )
+            when {
+                all != null -> all.validate()
+                none != null -> none.validate()
+                only != null -> only.validate()
+                except != null -> except.validate()
+                else -> throw AnthropicInvalidDataException("Unknown ClientToolResults: $_json")
+            }
             validated = true
         }
 
@@ -549,20 +509,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAll(all: BetaWebFetchUrlSourceAll) = all.validity()
-
-                    override fun visitNone(none: BetaWebFetchUrlSourceNone) = none.validity()
-
-                    override fun visitOnly(only: BetaWebFetchUrlSourceOnly) = only.validity()
-
-                    override fun visitExcept(except: BetaWebFetchUrlSourceExcept) =
-                        except.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                all != null -> all.validity()
+                none != null -> none.validity()
+                only != null -> only.validity()
+                except != null -> except.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -902,51 +855,23 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAll(all: BetaWebFetchUrlSourceAll): Type = Type.ALL
-
-                    override fun visitNone(none: BetaWebFetchUrlSourceNone): Type = Type.NONE
-
-                    override fun visitOnly(only: BetaWebFetchUrlSourceOnly): Type = Type.ONLY
-
-                    override fun visitExcept(except: BetaWebFetchUrlSourceExcept): Type =
-                        Type.EXCEPT
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                all != null -> Type.ALL
+                none != null -> Type.NONE
+                only != null -> Type.ONLY
+                except != null -> Type.EXCEPT
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun tools(): Optional<List<BetaWebFetchUrlSourceToolReference>> =
-            accept(
-                object : Visitor<Optional<List<BetaWebFetchUrlSourceToolReference>>> {
-                    override fun visitAll(
-                        all: BetaWebFetchUrlSourceAll
-                    ): Optional<List<BetaWebFetchUrlSourceToolReference>> = Optional.empty()
-
-                    override fun visitNone(
-                        none: BetaWebFetchUrlSourceNone
-                    ): Optional<List<BetaWebFetchUrlSourceToolReference>> = Optional.empty()
-
-                    override fun visitOnly(
-                        only: BetaWebFetchUrlSourceOnly
-                    ): Optional<List<BetaWebFetchUrlSourceToolReference>> =
-                        Optional.of(only.tools())
-
-                    override fun visitExcept(
-                        except: BetaWebFetchUrlSourceExcept
-                    ): Optional<List<BetaWebFetchUrlSourceToolReference>> =
-                        Optional.of(except.tools())
-
-                    override fun unknown(
-                        json: JsonValue?
-                    ): Optional<List<BetaWebFetchUrlSourceToolReference>> =
-                        json
-                            .getProperty<List<BetaWebFetchUrlSourceToolReference>>("tools")
-                            .asKnown()
-                }
-            )
+            when {
+                all != null -> Optional.empty()
+                none != null -> Optional.empty()
+                only != null -> Optional.of(only.tools())
+                except != null -> Optional.of(except.tools())
+                else ->
+                    _json.getProperty<List<BetaWebFetchUrlSourceToolReference>>("tools").asKnown()
+            }
 
         /**
          * The ``url_sources`` variant under which a source contributes in full: every result of the
@@ -1048,25 +973,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAll(all: BetaWebFetchUrlSourceAll) {
-                        all.validate()
-                    }
-
-                    override fun visitNone(none: BetaWebFetchUrlSourceNone) {
-                        none.validate()
-                    }
-
-                    override fun visitOnly(only: BetaWebFetchUrlSourceOnly) {
-                        only.validate()
-                    }
-
-                    override fun visitExcept(except: BetaWebFetchUrlSourceExcept) {
-                        except.validate()
-                    }
-                }
-            )
+            when {
+                all != null -> all.validate()
+                none != null -> none.validate()
+                only != null -> only.validate()
+                except != null -> except.validate()
+                else -> throw AnthropicInvalidDataException("Unknown ServerToolResults: $_json")
+            }
             validated = true
         }
 
@@ -1086,20 +999,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAll(all: BetaWebFetchUrlSourceAll) = all.validity()
-
-                    override fun visitNone(none: BetaWebFetchUrlSourceNone) = none.validity()
-
-                    override fun visitOnly(only: BetaWebFetchUrlSourceOnly) = only.validity()
-
-                    override fun visitExcept(except: BetaWebFetchUrlSourceExcept) =
-                        except.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                all != null -> all.validity()
+                none != null -> none.validity()
+                only != null -> only.validity()
+                except != null -> except.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1433,16 +1339,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAll(all: BetaWebFetchUrlSourceAll): Type = Type.ALL
-
-                    override fun visitNone(none: BetaWebFetchUrlSourceNone): Type = Type.NONE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                all != null -> Type.ALL
+                none != null -> Type.NONE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /**
          * The ``url_sources`` variant under which a source contributes in full: every result of the
@@ -1526,17 +1427,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAll(all: BetaWebFetchUrlSourceAll) {
-                        all.validate()
-                    }
-
-                    override fun visitNone(none: BetaWebFetchUrlSourceNone) {
-                        none.validate()
-                    }
-                }
-            )
+            when {
+                all != null -> all.validate()
+                none != null -> none.validate()
+                else -> throw AnthropicInvalidDataException("Unknown UserInput: $_json")
+            }
             validated = true
         }
 
@@ -1556,15 +1451,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAll(all: BetaWebFetchUrlSourceAll) = all.validity()
-
-                    override fun visitNone(none: BetaWebFetchUrlSourceNone) = none.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                all != null -> all.validity()
+                none != null -> none.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

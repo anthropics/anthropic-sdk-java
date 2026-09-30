@@ -50,36 +50,28 @@ private constructor(
         BetaRequestToolAdditionBlock.builder()
             .tool(
                 _tool().map {
-                    it.accept(
-                        object :
-                            BetaResponseToolAdditionBlock.Tool.Visitor<
-                                BetaRequestToolAdditionBlock.Tool
-                            > {
-                            override fun visitReference(
-                                reference: BetaResponseToolChangeToolReference
-                            ): BetaRequestToolAdditionBlock.Tool =
-                                BetaRequestToolAdditionBlock.Tool.ofReference(reference.toParam())
-
-                            override fun visitMcpToolReference(
-                                mcpToolReference: BetaResponseToolChangeMcpToolReference
-                            ): BetaRequestToolAdditionBlock.Tool =
-                                BetaRequestToolAdditionBlock.Tool.ofMcpToolReference(
-                                    mcpToolReference.toParam()
-                                )
-
-                            override fun visitMcpToolsetReference(
-                                mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference
-                            ): BetaRequestToolAdditionBlock.Tool =
-                                BetaRequestToolAdditionBlock.Tool.ofMcpToolsetReference(
-                                    mcpToolsetReference.toParam()
-                                )
-
-                            override fun visitDefinition(
-                                definition: BetaToolChangeToolDefinition
-                            ): BetaRequestToolAdditionBlock.Tool =
-                                BetaRequestToolAdditionBlock.Tool.ofDefinition(definition.toParam())
-                        }
-                    )
+                    when {
+                        it.isReference() ->
+                            BetaRequestToolAdditionBlock.Tool.ofReference(
+                                it.asReference().toParam()
+                            )
+                        it.isMcpToolReference() ->
+                            BetaRequestToolAdditionBlock.Tool.ofMcpToolReference(
+                                it.asMcpToolReference().toParam()
+                            )
+                        it.isMcpToolsetReference() ->
+                            BetaRequestToolAdditionBlock.Tool.ofMcpToolsetReference(
+                                it.asMcpToolsetReference().toParam()
+                            )
+                        it.isDefinition() ->
+                            BetaRequestToolAdditionBlock.Tool.ofDefinition(
+                                it.asDefinition().toParam()
+                            )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown Tool: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .build()
@@ -536,75 +528,31 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitReference(
-                        reference: BetaResponseToolChangeToolReference
-                    ): Type = Type.TOOL_REFERENCE
-
-                    override fun visitMcpToolReference(
-                        mcpToolReference: BetaResponseToolChangeMcpToolReference
-                    ): Type = Type.MCP_TOOL_REFERENCE
-
-                    override fun visitMcpToolsetReference(
-                        mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference
-                    ): Type = Type.MCP_TOOLSET_REFERENCE
-
-                    override fun visitDefinition(definition: BetaToolChangeToolDefinition): Type =
-                        Type.TOOL_DEFINITION
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                reference != null -> Type.TOOL_REFERENCE
+                mcpToolReference != null -> Type.MCP_TOOL_REFERENCE
+                mcpToolsetReference != null -> Type.MCP_TOOLSET_REFERENCE
+                definition != null -> Type.TOOL_DEFINITION
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun name(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitReference(
-                        reference: BetaResponseToolChangeToolReference
-                    ): Optional<String> = Optional.of(reference.name())
-
-                    override fun visitMcpToolReference(
-                        mcpToolReference: BetaResponseToolChangeMcpToolReference
-                    ): Optional<String> = Optional.of(mcpToolReference.name())
-
-                    override fun visitMcpToolsetReference(
-                        mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitDefinition(
-                        definition: BetaToolChangeToolDefinition
-                    ): Optional<String> = Optional.empty()
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("name").asKnown()
-                }
-            )
+            when {
+                reference != null -> Optional.of(reference.name())
+                mcpToolReference != null -> Optional.of(mcpToolReference.name())
+                mcpToolsetReference != null -> Optional.empty()
+                definition != null -> Optional.empty()
+                else -> _json.getProperty<String>("name").asKnown()
+            }
 
         fun serverName(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitReference(
-                        reference: BetaResponseToolChangeToolReference
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitMcpToolReference(
-                        mcpToolReference: BetaResponseToolChangeMcpToolReference
-                    ): Optional<String> = Optional.of(mcpToolReference.serverName())
-
-                    override fun visitMcpToolsetReference(
-                        mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference
-                    ): Optional<String> = Optional.of(mcpToolsetReference.serverName())
-
-                    override fun visitDefinition(
-                        definition: BetaToolChangeToolDefinition
-                    ): Optional<String> = Optional.empty()
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("server_name").asKnown()
-                }
-            )
+            when {
+                reference != null -> Optional.empty()
+                mcpToolReference != null -> Optional.of(mcpToolReference.serverName())
+                mcpToolsetReference != null -> Optional.of(mcpToolsetReference.serverName())
+                definition != null -> Optional.empty()
+                else -> _json.getProperty<String>("server_name").asKnown()
+            }
 
         /**
          * Reference to a single tool, by the name the model uses to call it, as a ``compaction``
@@ -729,29 +677,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitReference(reference: BetaResponseToolChangeToolReference) {
-                        reference.validate()
-                    }
-
-                    override fun visitMcpToolReference(
-                        mcpToolReference: BetaResponseToolChangeMcpToolReference
-                    ) {
-                        mcpToolReference.validate()
-                    }
-
-                    override fun visitMcpToolsetReference(
-                        mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference
-                    ) {
-                        mcpToolsetReference.validate()
-                    }
-
-                    override fun visitDefinition(definition: BetaToolChangeToolDefinition) {
-                        definition.validate()
-                    }
-                }
-            )
+            when {
+                reference != null -> reference.validate()
+                mcpToolReference != null -> mcpToolReference.validate()
+                mcpToolsetReference != null -> mcpToolsetReference.validate()
+                definition != null -> definition.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Tool: $_json")
+            }
             validated = true
         }
 
@@ -771,25 +703,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitReference(reference: BetaResponseToolChangeToolReference) =
-                        reference.validity()
-
-                    override fun visitMcpToolReference(
-                        mcpToolReference: BetaResponseToolChangeMcpToolReference
-                    ) = mcpToolReference.validity()
-
-                    override fun visitMcpToolsetReference(
-                        mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference
-                    ) = mcpToolsetReference.validity()
-
-                    override fun visitDefinition(definition: BetaToolChangeToolDefinition) =
-                        definition.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                reference != null -> reference.validity()
+                mcpToolReference != null -> mcpToolReference.validity()
+                mcpToolsetReference != null -> mcpToolsetReference.validity()
+                definition != null -> definition.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

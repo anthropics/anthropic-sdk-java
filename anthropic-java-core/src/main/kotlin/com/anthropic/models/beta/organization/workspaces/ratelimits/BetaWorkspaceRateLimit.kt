@@ -575,60 +575,26 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitModel(model: BetaOrganizationRateLimitModelGroup): Type =
-                        Type.MODEL_GROUP
-
-                    override fun visitBatch(batch: BetaOrganizationRateLimitBatchGroup): Type =
-                        Type.BATCH
-
-                    override fun visitTokenCount(
-                        tokenCount: BetaOrganizationRateLimitTokenCountGroup
-                    ): Type = Type.TOKEN_COUNT
-
-                    override fun visitFiles(files: BetaOrganizationRateLimitFilesGroup): Type =
-                        Type.FILES
-
-                    override fun visitSkills(skills: BetaOrganizationRateLimitSkillsGroup): Type =
-                        Type.SKILLS
-
-                    override fun visitWebSearch(
-                        webSearch: BetaOrganizationRateLimitWebSearchGroup
-                    ): Type = Type.WEB_SEARCH
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                model != null -> Type.MODEL_GROUP
+                batch != null -> Type.BATCH
+                tokenCount != null -> Type.TOKEN_COUNT
+                files != null -> Type.FILES
+                skills != null -> Type.SKILLS
+                webSearch != null -> Type.WEB_SEARCH
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun id(): String =
-            accept(
-                object : Visitor<String> {
-                    override fun visitModel(model: BetaOrganizationRateLimitModelGroup): String =
-                        model.id()
-
-                    override fun visitBatch(batch: BetaOrganizationRateLimitBatchGroup): String =
-                        batch.id()
-
-                    override fun visitTokenCount(
-                        tokenCount: BetaOrganizationRateLimitTokenCountGroup
-                    ): String = tokenCount.id()
-
-                    override fun visitFiles(files: BetaOrganizationRateLimitFilesGroup): String =
-                        files.id()
-
-                    override fun visitSkills(skills: BetaOrganizationRateLimitSkillsGroup): String =
-                        skills.id()
-
-                    override fun visitWebSearch(
-                        webSearch: BetaOrganizationRateLimitWebSearchGroup
-                    ): String = webSearch.id()
-
-                    override fun unknown(json: JsonValue?): String =
-                        json.getProperty<String>("id").getRequired("id")
-                }
-            )
+            when {
+                model != null -> model.id()
+                batch != null -> batch.id()
+                tokenCount != null -> tokenCount.id()
+                files != null -> files.id()
+                skills != null -> skills.id()
+                webSearch != null -> webSearch.id()
+                else -> _json.getProperty<String>("id").getRequired("id")
+            }
 
         fun model(): Optional<BetaOrganizationRateLimitModelGroup> = Optional.ofNullable(model)
 
@@ -728,37 +694,15 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitModel(model: BetaOrganizationRateLimitModelGroup) {
-                        model.validate()
-                    }
-
-                    override fun visitBatch(batch: BetaOrganizationRateLimitBatchGroup) {
-                        batch.validate()
-                    }
-
-                    override fun visitTokenCount(
-                        tokenCount: BetaOrganizationRateLimitTokenCountGroup
-                    ) {
-                        tokenCount.validate()
-                    }
-
-                    override fun visitFiles(files: BetaOrganizationRateLimitFilesGroup) {
-                        files.validate()
-                    }
-
-                    override fun visitSkills(skills: BetaOrganizationRateLimitSkillsGroup) {
-                        skills.validate()
-                    }
-
-                    override fun visitWebSearch(
-                        webSearch: BetaOrganizationRateLimitWebSearchGroup
-                    ) {
-                        webSearch.validate()
-                    }
-                }
-            )
+            when {
+                model != null -> model.validate()
+                batch != null -> batch.validate()
+                tokenCount != null -> tokenCount.validate()
+                files != null -> files.validate()
+                skills != null -> skills.validate()
+                webSearch != null -> webSearch.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Group: $_json")
+            }
             validated = true
         }
 
@@ -778,31 +722,15 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitModel(model: BetaOrganizationRateLimitModelGroup) =
-                        model.validity()
-
-                    override fun visitBatch(batch: BetaOrganizationRateLimitBatchGroup) =
-                        batch.validity()
-
-                    override fun visitTokenCount(
-                        tokenCount: BetaOrganizationRateLimitTokenCountGroup
-                    ) = tokenCount.validity()
-
-                    override fun visitFiles(files: BetaOrganizationRateLimitFilesGroup) =
-                        files.validity()
-
-                    override fun visitSkills(skills: BetaOrganizationRateLimitSkillsGroup) =
-                        skills.validity()
-
-                    override fun visitWebSearch(
-                        webSearch: BetaOrganizationRateLimitWebSearchGroup
-                    ) = webSearch.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                model != null -> model.validity()
+                batch != null -> batch.validity()
+                tokenCount != null -> tokenCount.validity()
+                files != null -> files.validity()
+                skills != null -> skills.validity()
+                webSearch != null -> webSearch.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

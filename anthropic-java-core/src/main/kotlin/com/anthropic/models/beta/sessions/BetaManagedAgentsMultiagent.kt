@@ -266,18 +266,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAgent(agent: BetaManagedAgentsAgentReference): Type =
-                        Type.AGENT
-
-                    override fun visitAdvisor(advisor: BetaManagedAgentsAdvisor): Type =
-                        Type.ADVISOR
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                agent != null -> Type.AGENT
+                advisor != null -> Type.ADVISOR
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /** A resolved agent reference with a concrete version. */
         fun agent(): Optional<BetaManagedAgentsAgentReference> = Optional.ofNullable(agent)
@@ -353,17 +346,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAgent(agent: BetaManagedAgentsAgentReference) {
-                        agent.validate()
-                    }
-
-                    override fun visitAdvisor(advisor: BetaManagedAgentsAdvisor) {
-                        advisor.validate()
-                    }
-                }
-            )
+            when {
+                agent != null -> agent.validate()
+                advisor != null -> advisor.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Agent: $_json")
+            }
             validated = true
         }
 
@@ -383,17 +370,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAgent(agent: BetaManagedAgentsAgentReference) =
-                        agent.validity()
-
-                    override fun visitAdvisor(advisor: BetaManagedAgentsAdvisor) =
-                        advisor.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                agent != null -> agent.validity()
+                advisor != null -> advisor.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

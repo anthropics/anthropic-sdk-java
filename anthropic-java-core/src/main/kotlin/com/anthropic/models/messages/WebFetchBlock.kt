@@ -44,20 +44,15 @@ private constructor(
                     DocumentBlockParam.builder()
                         .source(
                             it._source().map {
-                                it.accept(
-                                    object :
-                                        DocumentBlock.Source.Visitor<DocumentBlockParam.Source> {
-                                        override fun visitBase64(
-                                            base64: Base64PdfSource
-                                        ): DocumentBlockParam.Source =
-                                            DocumentBlockParam.Source.ofBase64(base64)
-
-                                        override fun visitText(
-                                            text: PlainTextSource
-                                        ): DocumentBlockParam.Source =
-                                            DocumentBlockParam.Source.ofText(text)
-                                    }
-                                )
+                                when {
+                                    it.isBase64() ->
+                                        DocumentBlockParam.Source.ofBase64(it.asBase64())
+                                    it.isText() -> DocumentBlockParam.Source.ofText(it.asText())
+                                    else ->
+                                        throw AnthropicInvalidDataException(
+                                            "Unknown Source: ${it._json().getOrNull()}"
+                                        )
+                                }
                             }
                         )
                         .citations(
