@@ -6,7 +6,6 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-/** SessionThreadStatus enum */
 class BetaManagedAgentsSessionThreadStatus
 private constructor(private val value: JsonField<String>) : Enum {
 

@@ -611,7 +611,6 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** SessionStatus enum */
     class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**

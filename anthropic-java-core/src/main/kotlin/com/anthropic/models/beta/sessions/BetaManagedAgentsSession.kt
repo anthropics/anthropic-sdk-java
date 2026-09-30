@@ -188,8 +188,6 @@ private constructor(
     fun stats(): BetaManagedAgentsSessionStats = stats.getRequired("stats")
 
     /**
-     * SessionStatus enum
-     *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -691,7 +689,6 @@ private constructor(
          */
         fun stats(stats: JsonField<BetaManagedAgentsSessionStats>) = apply { this.stats = stats }
 
-        /** SessionStatus enum */
         fun status(status: Status) = status(JsonField.of(status))
 
         /**
@@ -1039,7 +1036,6 @@ private constructor(
         override fun toString() = "Metadata{additionalProperties=$additionalProperties}"
     }
 
-    /** SessionStatus enum */
     class Status private constructor(private val value: JsonField<String>) : Enum {
 
         /**

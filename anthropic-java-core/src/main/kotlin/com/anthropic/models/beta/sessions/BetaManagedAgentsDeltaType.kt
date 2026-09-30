@@ -6,7 +6,6 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import kotlin.jvm.optionals.getOrNull
 
-/** EventDeltaType enum */
 class BetaManagedAgentsDeltaType private constructor(private val value: JsonField<String>) : Enum {
 
     /**
