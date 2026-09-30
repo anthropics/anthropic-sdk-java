@@ -17,6 +17,9 @@ import com.anthropic.core.prepare
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimit
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitDeleteParams
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitDeleteResponse
+import com.anthropic.models.beta.organization.spendlimits.SpendLimitListPage
+import com.anthropic.models.beta.organization.spendlimits.SpendLimitListPageResponse
+import com.anthropic.models.beta.organization.spendlimits.SpendLimitListParams
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitRetrieveParams
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitSetParams
 import com.anthropic.services.blocking.beta.organization.spendlimits.EffectiveService
@@ -54,6 +57,13 @@ class SpendLimitServiceImpl internal constructor(private val clientOptions: Clie
     ): BetaSpendLimit =
         // get /v1/organizations/spend_limits/{spend_limit_id}?beta=true
         withRawResponse().retrieve(params, requestOptions).parse()
+
+    override fun list(
+        params: SpendLimitListParams,
+        requestOptions: RequestOptions,
+    ): SpendLimitListPage =
+        // get /v1/organizations/spend_limits?beta=true
+        withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(
         params: SpendLimitDeleteParams,
@@ -118,6 +128,41 @@ class SpendLimitServiceImpl internal constructor(private val clientOptions: Clie
                         if (requestOptions.responseValidation!!) {
                             it.validate()
                         }
+                    }
+            }
+        }
+
+        private val listHandler: Handler<SpendLimitListPageResponse> =
+            jsonHandler<SpendLimitListPageResponse>(clientOptions.jsonMapper)
+
+        override fun list(
+            params: SpendLimitListParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<SpendLimitListPage> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "spend_limits")
+                    .putQueryParam("beta", "true")
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { listHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
+                    .let {
+                        SpendLimitListPage.builder()
+                            .service(SpendLimitServiceImpl(clientOptions))
+                            .params(params)
+                            .response(it)
+                            .build()
                     }
             }
         }
