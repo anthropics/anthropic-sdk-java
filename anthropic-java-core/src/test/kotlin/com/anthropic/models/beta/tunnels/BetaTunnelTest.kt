@@ -17,7 +17,6 @@ internal class BetaTunnelTest {
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
                 .domain("domain")
-                .transport(BetaCloudflareTunnelTransport.builder().build())
                 .build()
 
         assertThat(betaTunnel.id()).isEqualTo("id")
@@ -27,10 +26,6 @@ internal class BetaTunnelTest {
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaTunnel.displayName()).contains("display_name")
         assertThat(betaTunnel.domain()).isEqualTo("domain")
-        assertThat(betaTunnel.transport())
-            .isEqualTo(
-                BetaTunnelTransport.ofCloudflare(BetaCloudflareTunnelTransport.builder().build())
-            )
     }
 
     @Test
@@ -43,7 +38,6 @@ internal class BetaTunnelTest {
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
                 .domain("domain")
-                .transport(BetaCloudflareTunnelTransport.builder().build())
                 .build()
 
         val roundtrippedBetaTunnel =
