@@ -1444,6 +1444,12 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
             BetaManagedAgentsSessionStatusIdleEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .stopDetails(
+                    BetaManagedAgentsSessionRefusalStopDetails.builder()
+                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(
                     BetaManagedAgentsSessionEndTurn.of(
                         BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -1503,6 +1509,12 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 BetaManagedAgentsSessionStatusIdleEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .stopDetails(
+                        BetaManagedAgentsSessionRefusalStopDetails.builder()
+                            .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                            .explanation("explanation")
+                            .build()
+                    )
                     .stopReason(
                         BetaManagedAgentsSessionEndTurn.of(
                             BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -2376,6 +2388,12 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .stopDetails(
+                    BetaManagedAgentsSessionRefusalStopDetails.builder()
+                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(
                     BetaManagedAgentsSessionEndTurn.of(
                         BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -2437,6 +2455,12 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                     .agentName("Researcher")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .stopDetails(
+                        BetaManagedAgentsSessionRefusalStopDetails.builder()
+                            .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                            .explanation("explanation")
+                            .build()
+                    )
                     .stopReason(
                         BetaManagedAgentsSessionEndTurn.of(
                             BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -3544,6 +3568,12 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                             "name" to "name",
                             "evaluated_permission" to "allow",
                             "evaluation" to mapOf("type" to "always_allow"),
+                            "stop_details" to
+                                mapOf(
+                                    "category" to "cyber",
+                                    "explanation" to "explanation",
+                                    "type" to "refusal",
+                                ),
                             "agent_name" to "Researcher",
                             "iteration" to 0,
                             "outcome_id" to "outc_011CZkZRSw2kEfs6ncTVljxP",
@@ -3581,6 +3611,13 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                     BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build()
                 )
             )
+        assertThat(betaManagedAgentsStreamSessionEvents.stopDetails())
+            .contains(
+                BetaManagedAgentsSessionRefusalStopDetails.builder()
+                    .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                    .explanation("explanation")
+                    .build()
+            )
         assertThat(betaManagedAgentsStreamSessionEvents.agentName()).contains("Researcher")
         assertThat(betaManagedAgentsStreamSessionEvents.iteration()).contains(0)
         assertThat(betaManagedAgentsStreamSessionEvents.outcomeId())
@@ -3610,6 +3647,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
                             "tool_use_id" to listOf("invalid"),
                             "is_error" to listOf("invalid"),
                             "name" to listOf("invalid"),
+                            "stop_details" to listOf("invalid"),
                             "agent_name" to listOf("invalid"),
                             "iteration" to listOf("invalid"),
                             "outcome_id" to listOf("invalid"),
@@ -3625,6 +3663,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.toolUseId()).isEmpty
         assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.isError()).isEmpty
         assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.name()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.stopDetails()).isEmpty
         assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.agentName()).isEmpty
         assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.iteration()).isEmpty
         assertThat(mismatchedBetaManagedAgentsStreamSessionEvents.outcomeId()).isEmpty
@@ -3663,6 +3702,7 @@ internal class BetaManagedAgentsStreamSessionEventsTest {
         assertThat(betaManagedAgentsStreamSessionEvents.name()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.evaluatedPermission()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.evaluation()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionEvents.stopDetails()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.agentName()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.iteration()).isEmpty
         assertThat(betaManagedAgentsStreamSessionEvents.outcomeId()).isEmpty

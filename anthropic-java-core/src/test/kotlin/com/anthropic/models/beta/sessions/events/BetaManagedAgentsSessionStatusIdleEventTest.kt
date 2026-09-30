@@ -14,6 +14,12 @@ internal class BetaManagedAgentsSessionStatusIdleEventTest {
             BetaManagedAgentsSessionStatusIdleEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .stopDetails(
+                    BetaManagedAgentsSessionRefusalStopDetails.builder()
+                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(
                     BetaManagedAgentsSessionEndTurn.of(
                         BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -25,6 +31,13 @@ internal class BetaManagedAgentsSessionStatusIdleEventTest {
         assertThat(betaManagedAgentsSessionStatusIdleEvent.id()).isEqualTo("id")
         assertThat(betaManagedAgentsSessionStatusIdleEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(betaManagedAgentsSessionStatusIdleEvent.stopDetails())
+            .contains(
+                BetaManagedAgentsSessionRefusalStopDetails.builder()
+                    .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                    .explanation("explanation")
+                    .build()
+            )
         assertThat(betaManagedAgentsSessionStatusIdleEvent.stopReason())
             .isEqualTo(
                 BetaManagedAgentsSessionStatusIdleEvent.StopReason.ofEndTurn(
@@ -42,6 +55,12 @@ internal class BetaManagedAgentsSessionStatusIdleEventTest {
             BetaManagedAgentsSessionStatusIdleEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .stopDetails(
+                    BetaManagedAgentsSessionRefusalStopDetails.builder()
+                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(
                     BetaManagedAgentsSessionEndTurn.of(
                         BetaManagedAgentsSessionEndTurn.Type.END_TURN

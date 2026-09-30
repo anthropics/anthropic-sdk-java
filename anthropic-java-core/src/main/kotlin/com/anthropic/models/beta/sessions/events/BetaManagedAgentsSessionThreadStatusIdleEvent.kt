@@ -38,6 +38,7 @@ private constructor(
     private val agentName: JsonField<String>,
     private val processedAt: JsonField<OffsetDateTime>,
     private val sessionThreadId: JsonField<String>,
+    private val stopDetails: JsonField<BetaManagedAgentsSessionRefusalStopDetails>,
     private val stopReason: JsonField<StopReason>,
     private val type: JsonField<Type>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -53,11 +54,23 @@ private constructor(
         @JsonProperty("session_thread_id")
         @ExcludeMissing
         sessionThreadId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("stop_details")
+        @ExcludeMissing
+        stopDetails: JsonField<BetaManagedAgentsSessionRefusalStopDetails> = JsonMissing.of(),
         @JsonProperty("stop_reason")
         @ExcludeMissing
         stopReason: JsonField<StopReason> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-    ) : this(id, agentName, processedAt, sessionThreadId, stopReason, type, mutableMapOf())
+    ) : this(
+        id,
+        agentName,
+        processedAt,
+        sessionThreadId,
+        stopDetails,
+        stopReason,
+        type,
+        mutableMapOf(),
+    )
 
     /**
      * Unique identifier for this event.
@@ -90,6 +103,16 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun sessionThreadId(): String = sessionThreadId.getRequired("session_thread_id")
+
+    /**
+     * Structured information about why the thread stopped. `null` when there is nothing more to
+     * report.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun stopDetails(): Optional<BetaManagedAgentsSessionRefusalStopDetails> =
+        stopDetails.getOptional("stop_details")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -136,6 +159,15 @@ private constructor(
     fun _sessionThreadId(): JsonField<String> = sessionThreadId
 
     /**
+     * Returns the raw JSON value of [stopDetails].
+     *
+     * Unlike [stopDetails], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("stop_details")
+    @ExcludeMissing
+    fun _stopDetails(): JsonField<BetaManagedAgentsSessionRefusalStopDetails> = stopDetails
+
+    /**
      * Returns the raw JSON value of [stopReason].
      *
      * Unlike [stopReason], this method doesn't throw if the JSON field has an unexpected type.
@@ -175,6 +207,7 @@ private constructor(
          * .agentName()
          * .processedAt()
          * .sessionThreadId()
+         * .stopDetails()
          * .stopReason()
          * .type()
          * ```
@@ -189,6 +222,7 @@ private constructor(
         private var agentName: JsonField<String>? = null
         private var processedAt: JsonField<OffsetDateTime>? = null
         private var sessionThreadId: JsonField<String>? = null
+        private var stopDetails: JsonField<BetaManagedAgentsSessionRefusalStopDetails>? = null
         private var stopReason: JsonField<StopReason>? = null
         private var type: JsonField<Type>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -202,6 +236,7 @@ private constructor(
             agentName = betaManagedAgentsSessionThreadStatusIdleEvent.agentName
             processedAt = betaManagedAgentsSessionThreadStatusIdleEvent.processedAt
             sessionThreadId = betaManagedAgentsSessionThreadStatusIdleEvent.sessionThreadId
+            stopDetails = betaManagedAgentsSessionThreadStatusIdleEvent.stopDetails
             stopReason = betaManagedAgentsSessionThreadStatusIdleEvent.stopReason
             type = betaManagedAgentsSessionThreadStatusIdleEvent.type
             additionalProperties =
@@ -260,6 +295,29 @@ private constructor(
             this.sessionThreadId = sessionThreadId
         }
 
+        /**
+         * Structured information about why the thread stopped. `null` when there is nothing more to
+         * report.
+         */
+        fun stopDetails(stopDetails: BetaManagedAgentsSessionRefusalStopDetails?) =
+            stopDetails(JsonField.ofNullable(stopDetails))
+
+        /** Alias for calling [Builder.stopDetails] with `stopDetails.orElse(null)`. */
+        fun stopDetails(stopDetails: Optional<BetaManagedAgentsSessionRefusalStopDetails>) =
+            stopDetails(stopDetails.getOrNull())
+
+        /**
+         * Sets [Builder.stopDetails] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.stopDetails] with a well-typed
+         * [BetaManagedAgentsSessionRefusalStopDetails] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
+         */
+        fun stopDetails(stopDetails: JsonField<BetaManagedAgentsSessionRefusalStopDetails>) =
+            apply {
+                this.stopDetails = stopDetails
+            }
+
         fun stopReason(stopReason: StopReason) = stopReason(JsonField.of(stopReason))
 
         /**
@@ -306,6 +364,10 @@ private constructor(
         fun stopReason(budgetReached: BetaManagedAgentsSessionBudgetReached) =
             stopReason(StopReason.ofBudgetReached(budgetReached))
 
+        /** Alias for calling [stopReason] with `StopReason.ofRefusal(refusal)`. */
+        fun stopReason(refusal: BetaManagedAgentsSessionRefusal) =
+            stopReason(StopReason.ofRefusal(refusal))
+
         fun type(type: Type) = type(JsonField.of(type))
 
         /**
@@ -346,6 +408,7 @@ private constructor(
          * .agentName()
          * .processedAt()
          * .sessionThreadId()
+         * .stopDetails()
          * .stopReason()
          * .type()
          * ```
@@ -358,6 +421,7 @@ private constructor(
                 checkRequired("agentName", agentName),
                 checkRequired("processedAt", processedAt),
                 checkRequired("sessionThreadId", sessionThreadId),
+                checkRequired("stopDetails", stopDetails),
                 checkRequired("stopReason", stopReason),
                 checkRequired("type", type),
                 additionalProperties.toMutableMap(),
@@ -383,6 +447,7 @@ private constructor(
         agentName()
         processedAt()
         sessionThreadId()
+        stopDetails().ifPresent { it.validate() }
         stopReason().validate()
         type().validate()
         validated = true
@@ -407,6 +472,7 @@ private constructor(
             (if (agentName.asKnown().isPresent) 1 else 0) +
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (if (sessionThreadId.asKnown().isPresent) 1 else 0) +
+            (stopDetails.asKnown().getOrNull()?.validity() ?: 0) +
             (stopReason.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -418,6 +484,7 @@ private constructor(
         private val requiresAction: BetaManagedAgentsSessionRequiresAction? = null,
         private val retriesExhausted: BetaManagedAgentsSessionRetriesExhausted? = null,
         private val budgetReached: BetaManagedAgentsSessionBudgetReached? = null,
+        private val refusal: BetaManagedAgentsSessionRefusal? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -427,6 +494,7 @@ private constructor(
                 requiresAction != null -> Type.REQUIRES_ACTION
                 retriesExhausted != null -> Type.RETRIES_EXHAUSTED
                 budgetReached != null -> Type.BUDGET_REACHED
+                refusal != null -> Type.REFUSAL
                 else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
             }
 
@@ -456,6 +524,12 @@ private constructor(
         fun budgetReached(): Optional<BetaManagedAgentsSessionBudgetReached> =
             Optional.ofNullable(budgetReached)
 
+        /**
+         * The turn ended because the model's response was refused, for example by a safety
+         * classifier.
+         */
+        fun refusal(): Optional<BetaManagedAgentsSessionRefusal> = Optional.ofNullable(refusal)
+
         fun isEndTurn(): Boolean = endTurn != null
 
         fun isRequiresAction(): Boolean = requiresAction != null
@@ -463,6 +537,8 @@ private constructor(
         fun isRetriesExhausted(): Boolean = retriesExhausted != null
 
         fun isBudgetReached(): Boolean = budgetReached != null
+
+        fun isRefusal(): Boolean = refusal != null
 
         /** The agent completed its turn naturally and is ready for the next user message. */
         fun asEndTurn(): BetaManagedAgentsSessionEndTurn = endTurn.getOrThrow("endTurn")
@@ -489,6 +565,12 @@ private constructor(
          */
         fun asBudgetReached(): BetaManagedAgentsSessionBudgetReached =
             budgetReached.getOrThrow("budgetReached")
+
+        /**
+         * The turn ended because the model's response was refused, for example by a safety
+         * classifier.
+         */
+        fun asRefusal(): BetaManagedAgentsSessionRefusal = refusal.getOrThrow("refusal")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -527,6 +609,7 @@ private constructor(
                 requiresAction != null -> visitor.visitRequiresAction(requiresAction)
                 retriesExhausted != null -> visitor.visitRetriesExhausted(retriesExhausted)
                 budgetReached != null -> visitor.visitBudgetReached(budgetReached)
+                refusal != null -> visitor.visitRefusal(refusal)
                 else -> visitor.unknown(_json)
             }
 
@@ -551,6 +634,7 @@ private constructor(
                 requiresAction != null -> requiresAction.validate()
                 retriesExhausted != null -> retriesExhausted.validate()
                 budgetReached != null -> budgetReached.validate()
+                refusal != null -> refusal.validate()
                 else -> throw AnthropicInvalidDataException("Unknown StopReason: $_json")
             }
             validated = true
@@ -577,6 +661,7 @@ private constructor(
                 requiresAction != null -> requiresAction.validity()
                 retriesExhausted != null -> retriesExhausted.validity()
                 budgetReached != null -> budgetReached.validity()
+                refusal != null -> refusal.validity()
                 else -> 0
             }
 
@@ -589,11 +674,12 @@ private constructor(
                 endTurn == other.endTurn &&
                 requiresAction == other.requiresAction &&
                 retriesExhausted == other.retriesExhausted &&
-                budgetReached == other.budgetReached
+                budgetReached == other.budgetReached &&
+                refusal == other.refusal
         }
 
         override fun hashCode(): Int =
-            Objects.hash(endTurn, requiresAction, retriesExhausted, budgetReached)
+            Objects.hash(endTurn, requiresAction, retriesExhausted, budgetReached, refusal)
 
         override fun toString(): String =
             when {
@@ -601,6 +687,7 @@ private constructor(
                 requiresAction != null -> "StopReason{requiresAction=$requiresAction}"
                 retriesExhausted != null -> "StopReason{retriesExhausted=$retriesExhausted}"
                 budgetReached != null -> "StopReason{budgetReached=$budgetReached}"
+                refusal != null -> "StopReason{refusal=$refusal}"
                 _json != null -> "StopReason{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid StopReason")
             }
@@ -674,6 +761,13 @@ private constructor(
             @JvmStatic
             fun ofBudgetReached(type: BetaManagedAgentsSessionBudgetReached.Type) =
                 ofBudgetReached(BetaManagedAgentsSessionBudgetReached.of(type))
+
+            /**
+             * The turn ended because the model's response was refused, for example by a safety
+             * classifier.
+             */
+            @JvmStatic
+            fun ofRefusal(refusal: BetaManagedAgentsSessionRefusal) = StopReason(refusal = refusal)
         }
 
         /**
@@ -704,6 +798,12 @@ private constructor(
              * has no list price, remove the budget.
              */
             fun visitBudgetReached(budgetReached: BetaManagedAgentsSessionBudgetReached): T
+
+            /**
+             * The turn ended because the model's response was refused, for example by a safety
+             * classifier.
+             */
+            fun visitRefusal(refusal: BetaManagedAgentsSessionRefusal): T
 
             /**
              * Maps an unknown variant of [StopReason] to a value of type [T].
@@ -759,6 +859,14 @@ private constructor(
                             ?.let { StopReason(budgetReached = it, _json = json) }
                             ?: StopReason(_json = json)
                     }
+                    "refusal" -> {
+                        return tryDeserialize(
+                                node,
+                                jacksonTypeRef<BetaManagedAgentsSessionRefusal>(),
+                            )
+                            ?.let { StopReason(refusal = it, _json = json) }
+                            ?: StopReason(_json = json)
+                    }
                 }
 
                 return StopReason(_json = json)
@@ -777,6 +885,7 @@ private constructor(
                     value.requiresAction != null -> generator.writeObject(value.requiresAction)
                     value.retriesExhausted != null -> generator.writeObject(value.retriesExhausted)
                     value.budgetReached != null -> generator.writeObject(value.budgetReached)
+                    value.refusal != null -> generator.writeObject(value.refusal)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid StopReason")
                 }
@@ -805,6 +914,8 @@ private constructor(
 
                 @JvmField val BUDGET_REACHED = Type(JsonField.of("budget_reached"))
 
+                @JvmField val REFUSAL = Type(JsonField.of("refusal"))
+
                 @JvmStatic
                 fun of(value: String): Type =
                     // Intern known values so `==` works
@@ -813,6 +924,7 @@ private constructor(
                         "requires_action" -> REQUIRES_ACTION
                         "retries_exhausted" -> RETRIES_EXHAUSTED
                         "budget_reached" -> BUDGET_REACHED
+                        "refusal" -> REFUSAL
                         else -> Type(JsonField.of(value))
                     }
 
@@ -828,6 +940,7 @@ private constructor(
                 REQUIRES_ACTION,
                 RETRIES_EXHAUSTED,
                 BUDGET_REACHED,
+                REFUSAL,
             }
 
             /**
@@ -844,6 +957,7 @@ private constructor(
                 REQUIRES_ACTION,
                 RETRIES_EXHAUSTED,
                 BUDGET_REACHED,
+                REFUSAL,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
@@ -861,6 +975,7 @@ private constructor(
                     REQUIRES_ACTION -> Value.REQUIRES_ACTION
                     RETRIES_EXHAUSTED -> Value.RETRIES_EXHAUSTED
                     BUDGET_REACHED -> Value.BUDGET_REACHED
+                    REFUSAL -> Value.REFUSAL
                     else -> Value._UNKNOWN
                 }
 
@@ -879,6 +994,7 @@ private constructor(
                     REQUIRES_ACTION -> Known.REQUIRES_ACTION
                     RETRIES_EXHAUSTED -> Known.RETRIES_EXHAUSTED
                     BUDGET_REACHED -> Known.BUDGET_REACHED
+                    REFUSAL -> Known.REFUSAL
                     else -> throw AnthropicInvalidDataException("Unknown Type: $value")
                 }
 
@@ -1099,6 +1215,7 @@ private constructor(
             agentName == other.agentName &&
             processedAt == other.processedAt &&
             sessionThreadId == other.sessionThreadId &&
+            stopDetails == other.stopDetails &&
             stopReason == other.stopReason &&
             type == other.type &&
             additionalProperties == other.additionalProperties
@@ -1110,6 +1227,7 @@ private constructor(
             agentName,
             processedAt,
             sessionThreadId,
+            stopDetails,
             stopReason,
             type,
             additionalProperties,
@@ -1119,5 +1237,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsSessionThreadStatusIdleEvent{id=$id, agentName=$agentName, processedAt=$processedAt, sessionThreadId=$sessionThreadId, stopReason=$stopReason, type=$type, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsSessionThreadStatusIdleEvent{id=$id, agentName=$agentName, processedAt=$processedAt, sessionThreadId=$sessionThreadId, stopDetails=$stopDetails, stopReason=$stopReason, type=$type, additionalProperties=$additionalProperties}"
 }

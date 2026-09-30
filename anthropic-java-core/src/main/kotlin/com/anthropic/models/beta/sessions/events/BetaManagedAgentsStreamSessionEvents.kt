@@ -477,6 +477,51 @@ private constructor(
             else -> _json.getProperty<BetaManagedAgentsAgentToolEvaluation>("evaluation").asKnown()
         }
 
+    fun stopDetails(): Optional<BetaManagedAgentsSessionRefusalStopDetails> =
+        when {
+            userMessage != null -> Optional.empty()
+            userInterrupt != null -> Optional.empty()
+            userToolConfirmation != null -> Optional.empty()
+            userCustomToolResult != null -> Optional.empty()
+            agentCustomToolUse != null -> Optional.empty()
+            agentMessage != null -> Optional.empty()
+            agentThinking != null -> Optional.empty()
+            agentMcpToolUse != null -> Optional.empty()
+            agentMcpToolResult != null -> Optional.empty()
+            agentToolUse != null -> Optional.empty()
+            agentToolResult != null -> Optional.empty()
+            agentThreadMessageReceived != null -> Optional.empty()
+            agentThreadMessageSent != null -> Optional.empty()
+            agentThreadContextCompacted != null -> Optional.empty()
+            sessionError != null -> Optional.empty()
+            sessionStatusRescheduled != null -> Optional.empty()
+            sessionStatusRunning != null -> Optional.empty()
+            sessionStatusIdle != null -> sessionStatusIdle.stopDetails()
+            sessionStatusTerminated != null -> Optional.empty()
+            sessionThreadCreated != null -> Optional.empty()
+            spanOutcomeEvaluationStart != null -> Optional.empty()
+            spanOutcomeEvaluationEnd != null -> Optional.empty()
+            spanModelRequestStart != null -> Optional.empty()
+            spanModelRequestEnd != null -> Optional.empty()
+            spanOutcomeEvaluationOngoing != null -> Optional.empty()
+            userDefineOutcome != null -> Optional.empty()
+            sessionDeleted != null -> Optional.empty()
+            sessionThreadStatusRunning != null -> Optional.empty()
+            sessionThreadStatusIdle != null -> sessionThreadStatusIdle.stopDetails()
+            sessionThreadStatusTerminated != null -> Optional.empty()
+            userToolResult != null -> Optional.empty()
+            sessionThreadStatusRescheduled != null -> Optional.empty()
+            sessionUpdated != null -> Optional.empty()
+            eventStart != null -> Optional.empty()
+            eventDelta != null -> Optional.empty()
+            systemMessage != null -> Optional.empty()
+            sessionUsage != null -> Optional.empty()
+            else ->
+                _json
+                    .getProperty<BetaManagedAgentsSessionRefusalStopDetails>("stop_details")
+                    .asKnown()
+        }
+
     fun agentName(): Optional<String> =
         when {
             userMessage != null -> Optional.empty()

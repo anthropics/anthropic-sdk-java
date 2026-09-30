@@ -47,6 +47,7 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsRetryStatusRet
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionDeletedEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionEndTurn
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionErrorEvent
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionRefusalStopDetails
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionStatusIdleEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionStatusRescheduledEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionStatusRunningEvent
@@ -1541,6 +1542,12 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsSessionStatusIdleEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .stopDetails(
+                    BetaManagedAgentsSessionRefusalStopDetails.builder()
+                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(
                     BetaManagedAgentsSessionEndTurn.of(
                         BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -1603,6 +1610,12 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsSessionStatusIdleEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .stopDetails(
+                        BetaManagedAgentsSessionRefusalStopDetails.builder()
+                            .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                            .explanation("explanation")
+                            .build()
+                    )
                     .stopReason(
                         BetaManagedAgentsSessionEndTurn.of(
                             BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -2510,6 +2523,12 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .stopDetails(
+                    BetaManagedAgentsSessionRefusalStopDetails.builder()
+                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(
                     BetaManagedAgentsSessionEndTurn.of(
                         BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -2576,6 +2595,12 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .agentName("Researcher")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .stopDetails(
+                        BetaManagedAgentsSessionRefusalStopDetails.builder()
+                            .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                            .explanation("explanation")
+                            .build()
+                    )
                     .stopReason(
                         BetaManagedAgentsSessionEndTurn.of(
                             BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -3708,6 +3733,12 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             "name" to "name",
                             "evaluated_permission" to "allow",
                             "evaluation" to mapOf("type" to "always_allow"),
+                            "stop_details" to
+                                mapOf(
+                                    "category" to "cyber",
+                                    "explanation" to "explanation",
+                                    "type" to "refusal",
+                                ),
                             "agent_name" to "Researcher",
                             "iteration" to 0,
                             "outcome_id" to "outc_011CZkZRSw2kEfs6ncTVljxP",
@@ -3745,6 +3776,13 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build()
                 )
             )
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.stopDetails())
+            .contains(
+                BetaManagedAgentsSessionRefusalStopDetails.builder()
+                    .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                    .explanation("explanation")
+                    .build()
+            )
         assertThat(betaManagedAgentsStreamSessionThreadEvents.agentName()).contains("Researcher")
         assertThat(betaManagedAgentsStreamSessionThreadEvents.iteration()).contains(0)
         assertThat(betaManagedAgentsStreamSessionThreadEvents.outcomeId())
@@ -3774,6 +3812,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             "tool_use_id" to listOf("invalid"),
                             "is_error" to listOf("invalid"),
                             "name" to listOf("invalid"),
+                            "stop_details" to listOf("invalid"),
                             "agent_name" to listOf("invalid"),
                             "iteration" to listOf("invalid"),
                             "outcome_id" to listOf("invalid"),
@@ -3789,6 +3828,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.toolUseId()).isEmpty
         assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.isError()).isEmpty
         assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.name()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.stopDetails()).isEmpty
         assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.agentName()).isEmpty
         assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.iteration()).isEmpty
         assertThat(mismatchedBetaManagedAgentsStreamSessionThreadEvents.outcomeId()).isEmpty
@@ -3827,6 +3867,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
         assertThat(betaManagedAgentsStreamSessionThreadEvents.name()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.evaluatedPermission()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.evaluation()).isEmpty
+        assertThat(betaManagedAgentsStreamSessionThreadEvents.stopDetails()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.agentName()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.iteration()).isEmpty
         assertThat(betaManagedAgentsStreamSessionThreadEvents.outcomeId()).isEmpty
