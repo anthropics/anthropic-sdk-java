@@ -1,0 +1,269 @@
+package com.anthropic.models.organization.externalkeys
+
+import com.anthropic.core.ExcludeMissing
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonValue
+import com.anthropic.core.checkRequired
+import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
+import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+class AwsExternalKeyConfig
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+private constructor(
+    private val kmsArn: JsonField<String>,
+    private val type: JsonValue,
+    private val region: JsonField<String>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
+) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("kms_arn") @ExcludeMissing kmsArn: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("region") @ExcludeMissing region: JsonField<String> = JsonMissing.of(),
+    ) : this(kmsArn, type, region, mutableMapOf())
+
+    /**
+     * Full ARN of the AWS KMS key. On Claude Platform on AWS the key must be a single-Region key in
+     * your organization's own AWS account; cross-account keys, multi-Region keys, and alias ARNs
+     * are rejected.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun kmsArn(): String = kmsArn.getRequired("kms_arn")
+
+    /**
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("aws")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+    /**
+     * AWS region. Derived from `kms_arn` if omitted.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun region(): Optional<String> = region.getOptional("region")
+
+    /**
+     * Returns the raw JSON value of [kmsArn].
+     *
+     * Unlike [kmsArn], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("kms_arn") @ExcludeMissing fun _kmsArn(): JsonField<String> = kmsArn
+
+    /**
+     * Returns the raw JSON value of [region].
+     *
+     * Unlike [region], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("region") @ExcludeMissing fun _region(): JsonField<String> = region
+
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
+    @JsonAnyGetter
+    @ExcludeMissing
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [AwsExternalKeyConfig].
+         *
+         * The following fields are required:
+         * ```java
+         * .kmsArn()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [AwsExternalKeyConfig] with the required [kmsArn] set to
+         * the given value.
+         */
+        @JvmStatic fun of(kmsArn: String) = builder().kmsArn(kmsArn).build()
+    }
+
+    /** A builder for [AwsExternalKeyConfig]. */
+    class Builder internal constructor() {
+
+        private var kmsArn: JsonField<String>? = null
+        private var type: JsonValue = JsonValue.from("aws")
+        private var region: JsonField<String> = JsonMissing.of()
+        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+        @JvmSynthetic
+        internal fun from(awsExternalKeyConfig: AwsExternalKeyConfig) = apply {
+            kmsArn = awsExternalKeyConfig.kmsArn
+            type = awsExternalKeyConfig.type
+            region = awsExternalKeyConfig.region
+            additionalProperties = awsExternalKeyConfig.additionalProperties.toMutableMap()
+        }
+
+        /**
+         * Full ARN of the AWS KMS key. On Claude Platform on AWS the key must be a single-Region
+         * key in your organization's own AWS account; cross-account keys, multi-Region keys, and
+         * alias ARNs are rejected.
+         */
+        fun kmsArn(kmsArn: String) = kmsArn(JsonField.of(kmsArn))
+
+        /**
+         * Sets [Builder.kmsArn] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.kmsArn] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun kmsArn(kmsArn: JsonField<String>) = apply { this.kmsArn = kmsArn }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("aws")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun type(type: JsonValue) = apply { this.type = type }
+
+        /** AWS region. Derived from `kms_arn` if omitted. */
+        fun region(region: String?) = region(JsonField.ofNullable(region))
+
+        /** Alias for calling [Builder.region] with `region.orElse(null)`. */
+        fun region(region: Optional<String>) = region(region.getOrNull())
+
+        /**
+         * Sets [Builder.region] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.region] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun region(region: JsonField<String>) = apply { this.region = region }
+
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.clear()
+            putAllAdditionalProperties(additionalProperties)
+        }
+
+        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+            additionalProperties.put(key, value)
+        }
+
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
+        }
+
+        /**
+         * Returns an immutable instance of [AwsExternalKeyConfig].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .kmsArn()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): AwsExternalKeyConfig =
+            AwsExternalKeyConfig(
+                checkRequired("kmsArn", kmsArn),
+                type,
+                region,
+                additionalProperties.toMutableMap(),
+            )
+    }
+
+    private var validated: Boolean = false
+
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
+    fun validate(): AwsExternalKeyConfig = apply {
+        if (validated) {
+            return@apply
+        }
+
+        kmsArn()
+        _type().let {
+            if (it != JsonValue.from("aws")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        region()
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (kmsArn.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("aws")) 1 else 0 } +
+            (if (region.asKnown().isPresent) 1 else 0)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is AwsExternalKeyConfig &&
+            kmsArn == other.kmsArn &&
+            type == other.type &&
+            region == other.region &&
+            additionalProperties == other.additionalProperties
+    }
+
+    private val hashCode: Int by lazy { Objects.hash(kmsArn, type, region, additionalProperties) }
+
+    override fun hashCode(): Int = hashCode
+
+    override fun toString() =
+        "AwsExternalKeyConfig{kmsArn=$kmsArn, type=$type, region=$region, additionalProperties=$additionalProperties}"
+}

@@ -12,6 +12,8 @@ import com.anthropic.services.blocking.MessageService
 import com.anthropic.services.blocking.MessageServiceImpl
 import com.anthropic.services.blocking.ModelService
 import com.anthropic.services.blocking.ModelServiceImpl
+import com.anthropic.services.blocking.OrganizationService
+import com.anthropic.services.blocking.OrganizationServiceImpl
 import com.anthropic.services.blocking.SkillService
 import com.anthropic.services.blocking.SkillServiceImpl
 import java.util.function.Consumer
@@ -45,6 +47,10 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
 
     private val skills: SkillService by lazy { SkillServiceImpl(clientOptionsWithUserAgent) }
 
+    private val organization: OrganizationService by lazy {
+        OrganizationServiceImpl(clientOptionsWithUserAgent)
+    }
+
     private val beta: BetaService by lazy { BetaServiceImpl(clientOptionsWithUserAgent) }
 
     override fun async(): AnthropicClientAsync = async
@@ -63,6 +69,8 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
     override fun files(): FileService = files
 
     override fun skills(): SkillService = skills
+
+    override fun organization(): OrganizationService = organization
 
     override fun beta(): BetaService = beta
 
@@ -100,6 +108,10 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
             SkillServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val organization: OrganizationService.WithRawResponse by lazy {
+            OrganizationServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val beta: BetaService.WithRawResponse by lazy {
             BetaServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -120,6 +132,8 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
         override fun files(): FileService.WithRawResponse = files
 
         override fun skills(): SkillService.WithRawResponse = skills
+
+        override fun organization(): OrganizationService.WithRawResponse = organization
 
         override fun beta(): BetaService.WithRawResponse = beta
     }

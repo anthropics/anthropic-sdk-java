@@ -83,6 +83,22 @@ open module com.anthropic.core {
     exports com.anthropic.models.messages;
     exports com.anthropic.models.messages.batches;
     exports com.anthropic.models.models;
+    exports com.anthropic.models.organization;
+    exports com.anthropic.models.organization.apikeys;
+    exports com.anthropic.models.organization.compliancesettings;
+    exports com.anthropic.models.organization.externalkeys;
+    exports com.anthropic.models.organization.federation.issuers;
+    exports com.anthropic.models.organization.federation.rules;
+    exports com.anthropic.models.organization.federation.rules.workspaces;
+    exports com.anthropic.models.organization.invites;
+    exports com.anthropic.models.organization.ratelimits;
+    exports com.anthropic.models.organization.serviceaccounts;
+    exports com.anthropic.models.organization.serviceaccounts.workspaces;
+    exports com.anthropic.models.organization.users;
+    exports com.anthropic.models.organization.workspaces;
+    exports com.anthropic.models.organization.workspaces.members;
+    exports com.anthropic.models.organization.workspaces.ratelimits;
+    exports com.anthropic.models.organization.workspaces.serviceaccounts;
     exports com.anthropic.models.skills;
     exports com.anthropic.models.skills.versions;
     exports com.anthropic.services.async;
@@ -103,6 +119,11 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.beta.tunnels;
     exports com.anthropic.services.async.beta.vaults;
     exports com.anthropic.services.async.messages;
+    exports com.anthropic.services.async.organization;
+    exports com.anthropic.services.async.organization.federation;
+    exports com.anthropic.services.async.organization.federation.rules;
+    exports com.anthropic.services.async.organization.serviceaccounts;
+    exports com.anthropic.services.async.organization.workspaces;
     exports com.anthropic.services.async.skills;
     exports com.anthropic.services.blocking;
     exports com.anthropic.services.blocking.beta;
@@ -122,5 +143,10 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.beta.tunnels;
     exports com.anthropic.services.blocking.beta.vaults;
     exports com.anthropic.services.blocking.messages;
+    exports com.anthropic.services.blocking.organization;
+    exports com.anthropic.services.blocking.organization.federation;
+    exports com.anthropic.services.blocking.organization.federation.rules;
+    exports com.anthropic.services.blocking.organization.serviceaccounts;
+    exports com.anthropic.services.blocking.organization.workspaces;
     exports com.anthropic.services.blocking.skills;
 }

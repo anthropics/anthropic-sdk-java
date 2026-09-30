@@ -52,6 +52,7 @@ internal class EcosystemCompatibilityTest {
         assertThat(client.models()).isNotNull()
         assertThat(client.files()).isNotNull()
         assertThat(client.skills()).isNotNull()
+        assertThat(client.organization()).isNotNull()
         assertThat(client.beta()).isNotNull()
     }
 
