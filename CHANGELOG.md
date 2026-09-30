@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.68.0 (2026-09-30)
+
+Full Changelog: [v2.67.0...v2.68.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.67.0...v2.68.0)
+
+### Features
+
+* **api:** add list spend limits endpoint ([b6c353e](https://github.com/anthropics/anthropic-sdk-java/commit/b6c353e92106831ca7270d63f5d64dd7d7c904da))
+
+
+### Chores
+
+* **api:** mark Claude Sonnet 4.5 as deprecated (end-of-life November 30, 2026) ([4869fca](https://github.com/anthropics/anthropic-sdk-java/commit/4869fcadb49f48f5b92c0579024598896041ae96))
+
 ## 2.67.0 (2026-09-30)
 
 Full Changelog: [v2.66.0...v2.67.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.66.0...v2.67.0)
