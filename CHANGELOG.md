@@ -1,5 +1,41 @@
 # Changelog
 
+## 2.67.0 (2026-09-30)
+
+Full Changelog: [v2.66.0...v2.67.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.66.0...v2.67.0)
+
+### Features
+
+* **api:** add a refusal stop reason and stop_details to Managed Agents session idle events ([cfd54e5](https://github.com/anthropics/anthropic-sdk-java/commit/cfd54e55e0e48f6811b8dcdd8d368ccc6bfbffa2))
+* **api:** add Claude Enterprise analytics, spend limits, and RBAC groups and roles to the Admin API ([89a9f23](https://github.com/anthropics/anthropic-sdk-java/commit/89a9f23c946eeb4ae96dc186e140da7d7906b4fa))
+* **api:** add per-user usage and cost reports to the Admin API analytics ([f384e99](https://github.com/anthropics/anthropic-sdk-java/commit/f384e9928ea38fd81fcb38e730dc291ac9e1f50f))
+* **api:** add Plugins and Plugin Marketplaces to the Admin API ([483cd89](https://github.com/anthropics/anthropic-sdk-java/commit/483cd89fed3c05f5ec14fabc275213b359ab3ef9))
+* **api:** add repository error types to Managed Agents session errors ([ee72c30](https://github.com/anthropics/anthropic-sdk-java/commit/ee72c30ca773c4169bbd8af6187a89486956cccd))
+* **api:** allow removing a plugin's org-wide installation setting ([241704c](https://github.com/anthropics/anthropic-sdk-java/commit/241704c0a46f41bbc53da1fd623071ba9512229c))
+* **api:** MCP tunnels beta: add read-only `transport` object to Tunnel and return the one-time relay `token` in the create response ([b18808c](https://github.com/anthropics/anthropic-sdk-java/commit/b18808cb4d5e27de97cabb591d35addae86d134b))
+* **api:** Organization API endpoints are now GA ([b10e701](https://github.com/anthropics/anthropic-sdk-java/commit/b10e701528016b8c2d786c3b399aa6c63e8db6bb))
+
+
+### Bug Fixes
+
+* **api:** make memory store description, metadata, archived_at required ([546b86f](https://github.com/anthropics/anthropic-sdk-java/commit/546b86f701f756a7df47cb223350b1cae25a6fb5))
+* **api:** type admin plugin preference and marketplace fields as enums ([02b1346](https://github.com/anthropics/anthropic-sdk-java/commit/02b13469e03c9c54b4739b474e7e521a6c9705b2))
+* **pagination:** auto-paging continues past an empty page while next_page is set ([099fe4d](https://github.com/anthropics/anthropic-sdk-java/commit/099fe4d34357213c5a7c98cfe7cfcf9c76343711))
+
+
+### Chores
+
+* **api:** update MCP Tunnels types and descriptions ([d664a0c](https://github.com/anthropics/anthropic-sdk-java/commit/d664a0c26f9033790917761c376f7d0c81bedab3))
+* **docs:** remove placeholder enum descriptions ([5c88370](https://github.com/anthropics/anthropic-sdk-java/commit/5c88370802dd31f480dc8eb38372b019d3db5833))
+* **internal:** run test JVMs with the C1 compiler only ([009ac80](https://github.com/anthropics/anthropic-sdk-java/commit/009ac802412547c664e2cc74e870038592bbe305))
+* **internal:** skip incremental compilation bookkeeping in CI ([da40aab](https://github.com/anthropics/anthropic-sdk-java/commit/da40aabcdd1da44eed124e1b063c06f4c6453154))
+* **internal:** use when expressions in generated union methods ([c0de878](https://github.com/anthropics/anthropic-sdk-java/commit/c0de8786cdb30c3ec3c809b0024edfbaee462217))
+
+
+### Documentation
+
+* **examples:** stop reading session events on any idle that needs no action ([#333](https://github.com/anthropics/anthropic-sdk-java/issues/333)) ([b72a483](https://github.com/anthropics/anthropic-sdk-java/commit/b72a48369e3f7c37346eeb54c95c909da55fa116))
+
 ## 2.66.0 (2026-09-28)
 
 Full Changelog: [v2.65.0...v2.66.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.65.0...v2.66.0)
