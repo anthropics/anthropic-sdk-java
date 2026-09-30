@@ -193,10 +193,11 @@ public final class ManagedAgentsComprehensiveExample {
                     }
                 }
 
-                // Stop once we reach a terminal idle state (end_turn)
+                // A requires_action idle waits on the tool result sent above; after any other idle
+                // nothing more arrives, so stop reading
                 if (event.isSessionStatusIdle()) {
                     var idle = event.asSessionStatusIdle();
-                    if (idle.stopReason().isEndTurn()) {
+                    if (!idle.stopReason().isRequiresAction()) {
                         break;
                     }
                 }
