@@ -35,23 +35,12 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitAlwaysAllow(
-                    alwaysAllow: BetaManagedAgentsAgentToolEvaluationAlwaysAllow
-                ): Type = Type.ALWAYS_ALLOW
-
-                override fun visitAlwaysAsk(
-                    alwaysAsk: BetaManagedAgentsAgentToolEvaluationAlwaysAsk
-                ): Type = Type.ALWAYS_ASK
-
-                override fun visitAuto(auto: BetaManagedAgentsAgentToolEvaluationAuto): Type =
-                    Type.AUTO
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            alwaysAllow != null -> Type.ALWAYS_ALLOW
+            alwaysAsk != null -> Type.ALWAYS_ASK
+            auto != null -> Type.AUTO
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     /**
      * The resolved permission_policy was always_allow; accompanies evaluated_permission "allow".
@@ -139,25 +128,15 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitAlwaysAllow(
-                    alwaysAllow: BetaManagedAgentsAgentToolEvaluationAlwaysAllow
-                ) {
-                    alwaysAllow.validate()
-                }
-
-                override fun visitAlwaysAsk(
-                    alwaysAsk: BetaManagedAgentsAgentToolEvaluationAlwaysAsk
-                ) {
-                    alwaysAsk.validate()
-                }
-
-                override fun visitAuto(auto: BetaManagedAgentsAgentToolEvaluationAuto) {
-                    auto.validate()
-                }
-            }
-        )
+        when {
+            alwaysAllow != null -> alwaysAllow.validate()
+            alwaysAsk != null -> alwaysAsk.validate()
+            auto != null -> auto.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsAgentToolEvaluation: $_json"
+                )
+        }
         validated = true
     }
 
@@ -176,22 +155,12 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitAlwaysAllow(
-                    alwaysAllow: BetaManagedAgentsAgentToolEvaluationAlwaysAllow
-                ) = alwaysAllow.validity()
-
-                override fun visitAlwaysAsk(
-                    alwaysAsk: BetaManagedAgentsAgentToolEvaluationAlwaysAsk
-                ) = alwaysAsk.validity()
-
-                override fun visitAuto(auto: BetaManagedAgentsAgentToolEvaluationAuto) =
-                    auto.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            alwaysAllow != null -> alwaysAllow.validity()
+            alwaysAsk != null -> alwaysAsk.validity()
+            auto != null -> auto.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

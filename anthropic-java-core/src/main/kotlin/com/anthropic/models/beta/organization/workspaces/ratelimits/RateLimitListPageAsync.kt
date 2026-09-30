@@ -36,7 +36,7 @@ private constructor(
 
     override fun items(): List<BetaWorkspaceRateLimit> = data()
 
-    override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
+    override fun hasNextPage(): Boolean = nextPageRaw().isPresent
 
     fun nextPageParams(): RateLimitListParams {
         val nextCursor =

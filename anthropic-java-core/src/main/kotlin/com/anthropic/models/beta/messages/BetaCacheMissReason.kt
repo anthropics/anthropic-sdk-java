@@ -35,64 +35,26 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitModelChanged(modelChanged: BetaCacheMissModelChanged): Type =
-                    Type.MODEL_CHANGED
-
-                override fun visitSystemChanged(systemChanged: BetaCacheMissSystemChanged): Type =
-                    Type.SYSTEM_CHANGED
-
-                override fun visitToolsChanged(toolsChanged: BetaCacheMissToolsChanged): Type =
-                    Type.TOOLS_CHANGED
-
-                override fun visitMessagesChanged(
-                    messagesChanged: BetaCacheMissMessagesChanged
-                ): Type = Type.MESSAGES_CHANGED
-
-                override fun visitPreviousMessageNotFound(
-                    previousMessageNotFound: BetaCacheMissPreviousMessageNotFound
-                ): Type = Type.PREVIOUS_MESSAGE_NOT_FOUND
-
-                override fun visitUnavailable(unavailable: BetaCacheMissUnavailable): Type =
-                    Type.UNAVAILABLE
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            modelChanged != null -> Type.MODEL_CHANGED
+            systemChanged != null -> Type.SYSTEM_CHANGED
+            toolsChanged != null -> Type.TOOLS_CHANGED
+            messagesChanged != null -> Type.MESSAGES_CHANGED
+            previousMessageNotFound != null -> Type.PREVIOUS_MESSAGE_NOT_FOUND
+            unavailable != null -> Type.UNAVAILABLE
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun cacheMissedInputTokens(): Optional<Long> =
-        accept(
-            object : Visitor<Optional<Long>> {
-                override fun visitModelChanged(
-                    modelChanged: BetaCacheMissModelChanged
-                ): Optional<Long> = Optional.of(modelChanged.cacheMissedInputTokens())
-
-                override fun visitSystemChanged(
-                    systemChanged: BetaCacheMissSystemChanged
-                ): Optional<Long> = Optional.of(systemChanged.cacheMissedInputTokens())
-
-                override fun visitToolsChanged(
-                    toolsChanged: BetaCacheMissToolsChanged
-                ): Optional<Long> = Optional.of(toolsChanged.cacheMissedInputTokens())
-
-                override fun visitMessagesChanged(
-                    messagesChanged: BetaCacheMissMessagesChanged
-                ): Optional<Long> = Optional.of(messagesChanged.cacheMissedInputTokens())
-
-                override fun visitPreviousMessageNotFound(
-                    previousMessageNotFound: BetaCacheMissPreviousMessageNotFound
-                ): Optional<Long> = Optional.empty()
-
-                override fun visitUnavailable(
-                    unavailable: BetaCacheMissUnavailable
-                ): Optional<Long> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<Long> =
-                    json.getProperty<Long>("cache_missed_input_tokens").asKnown()
-            }
-        )
+        when {
+            modelChanged != null -> Optional.of(modelChanged.cacheMissedInputTokens())
+            systemChanged != null -> Optional.of(systemChanged.cacheMissedInputTokens())
+            toolsChanged != null -> Optional.of(toolsChanged.cacheMissedInputTokens())
+            messagesChanged != null -> Optional.of(messagesChanged.cacheMissedInputTokens())
+            previousMessageNotFound != null -> Optional.empty()
+            unavailable != null -> Optional.empty()
+            else -> _json.getProperty<Long>("cache_missed_input_tokens").asKnown()
+        }
 
     fun modelChanged(): Optional<BetaCacheMissModelChanged> = Optional.ofNullable(modelChanged)
 
@@ -192,35 +154,15 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitModelChanged(modelChanged: BetaCacheMissModelChanged) {
-                    modelChanged.validate()
-                }
-
-                override fun visitSystemChanged(systemChanged: BetaCacheMissSystemChanged) {
-                    systemChanged.validate()
-                }
-
-                override fun visitToolsChanged(toolsChanged: BetaCacheMissToolsChanged) {
-                    toolsChanged.validate()
-                }
-
-                override fun visitMessagesChanged(messagesChanged: BetaCacheMissMessagesChanged) {
-                    messagesChanged.validate()
-                }
-
-                override fun visitPreviousMessageNotFound(
-                    previousMessageNotFound: BetaCacheMissPreviousMessageNotFound
-                ) {
-                    previousMessageNotFound.validate()
-                }
-
-                override fun visitUnavailable(unavailable: BetaCacheMissUnavailable) {
-                    unavailable.validate()
-                }
-            }
-        )
+        when {
+            modelChanged != null -> modelChanged.validate()
+            systemChanged != null -> systemChanged.validate()
+            toolsChanged != null -> toolsChanged.validate()
+            messagesChanged != null -> messagesChanged.validate()
+            previousMessageNotFound != null -> previousMessageNotFound.validate()
+            unavailable != null -> unavailable.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaCacheMissReason: $_json")
+        }
         validated = true
     }
 
@@ -239,30 +181,15 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitModelChanged(modelChanged: BetaCacheMissModelChanged) =
-                    modelChanged.validity()
-
-                override fun visitSystemChanged(systemChanged: BetaCacheMissSystemChanged) =
-                    systemChanged.validity()
-
-                override fun visitToolsChanged(toolsChanged: BetaCacheMissToolsChanged) =
-                    toolsChanged.validity()
-
-                override fun visitMessagesChanged(messagesChanged: BetaCacheMissMessagesChanged) =
-                    messagesChanged.validity()
-
-                override fun visitPreviousMessageNotFound(
-                    previousMessageNotFound: BetaCacheMissPreviousMessageNotFound
-                ) = previousMessageNotFound.validity()
-
-                override fun visitUnavailable(unavailable: BetaCacheMissUnavailable) =
-                    unavailable.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            modelChanged != null -> modelChanged.validity()
+            systemChanged != null -> systemChanged.validity()
+            toolsChanged != null -> toolsChanged.validity()
+            messagesChanged != null -> messagesChanged.validity()
+            previousMessageNotFound != null -> previousMessageNotFound.validity()
+            unavailable != null -> unavailable.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

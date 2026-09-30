@@ -91,17 +91,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitItem(item: List<WebSearchResultBlockParam>) {
-                    item.forEach { it.validate() }
-                }
-
-                override fun visitRequestError(requestError: WebSearchToolRequestError) {
-                    requestError.validate()
-                }
-            }
-        )
+        when {
+            item != null -> item.forEach { it.validate() }
+            requestError != null -> requestError.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown WebSearchToolResultBlockParamContent: $_json"
+                )
+        }
         validated = true
     }
 
@@ -120,17 +117,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitItem(item: List<WebSearchResultBlockParam>) =
-                    item.sumOf { it.validity().toInt() }
-
-                override fun visitRequestError(requestError: WebSearchToolRequestError) =
-                    requestError.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            item != null -> item.sumOf { it.validity().toInt() }
+            requestError != null -> requestError.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

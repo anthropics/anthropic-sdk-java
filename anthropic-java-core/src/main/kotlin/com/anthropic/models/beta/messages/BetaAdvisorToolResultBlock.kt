@@ -49,34 +49,26 @@ private constructor(
         BetaAdvisorToolResultBlockParam.builder()
             .content(
                 _content().map {
-                    it.accept(
-                        object :
-                            BetaAdvisorToolResultBlock.Content.Visitor<
-                                BetaAdvisorToolResultBlockParam.Content
-                            > {
-                            override fun visitBetaAdvisorToolResultError(
-                                betaAdvisorToolResultError: BetaAdvisorToolResultError
-                            ): BetaAdvisorToolResultBlockParam.Content =
-                                BetaAdvisorToolResultBlockParam.Content
-                                    .ofBetaAdvisorToolResultErrorParam(
-                                        betaAdvisorToolResultError.toParam()
-                                    )
-
-                            override fun visitBetaAdvisorResultBlock(
-                                betaAdvisorResultBlock: BetaAdvisorResultBlock
-                            ): BetaAdvisorToolResultBlockParam.Content =
-                                BetaAdvisorToolResultBlockParam.Content
-                                    .ofBetaAdvisorResultBlockParam(betaAdvisorResultBlock.toParam())
-
-                            override fun visitBetaAdvisorRedactedResultBlock(
-                                betaAdvisorRedactedResultBlock: BetaAdvisorRedactedResultBlock
-                            ): BetaAdvisorToolResultBlockParam.Content =
-                                BetaAdvisorToolResultBlockParam.Content
-                                    .ofBetaAdvisorRedactedResultBlockParam(
-                                        betaAdvisorRedactedResultBlock.toParam()
-                                    )
-                        }
-                    )
+                    when {
+                        it.isBetaAdvisorToolResultError() ->
+                            BetaAdvisorToolResultBlockParam.Content
+                                .ofBetaAdvisorToolResultErrorParam(
+                                    it.asBetaAdvisorToolResultError().toParam()
+                                )
+                        it.isBetaAdvisorResultBlock() ->
+                            BetaAdvisorToolResultBlockParam.Content.ofBetaAdvisorResultBlockParam(
+                                it.asBetaAdvisorResultBlock().toParam()
+                            )
+                        it.isBetaAdvisorRedactedResultBlock() ->
+                            BetaAdvisorToolResultBlockParam.Content
+                                .ofBetaAdvisorRedactedResultBlockParam(
+                                    it.asBetaAdvisorRedactedResultBlock().toParam()
+                                )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown Content: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .toolUseId(_toolUseId())
@@ -313,24 +305,13 @@ private constructor(
     ) {
 
         fun stopReason(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitBetaAdvisorToolResultError(
-                        betaAdvisorToolResultError: BetaAdvisorToolResultError
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitBetaAdvisorResultBlock(
-                        betaAdvisorResultBlock: BetaAdvisorResultBlock
-                    ): Optional<String> = betaAdvisorResultBlock.stopReason()
-
-                    override fun visitBetaAdvisorRedactedResultBlock(
-                        betaAdvisorRedactedResultBlock: BetaAdvisorRedactedResultBlock
-                    ): Optional<String> = betaAdvisorRedactedResultBlock.stopReason()
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("stop_reason").asKnown()
-                }
-            )
+            when {
+                betaAdvisorToolResultError != null -> Optional.empty()
+                betaAdvisorResultBlock != null -> betaAdvisorResultBlock.stopReason()
+                betaAdvisorRedactedResultBlock != null ->
+                    betaAdvisorRedactedResultBlock.stopReason()
+                else -> _json.getProperty<String>("stop_reason").asKnown()
+            }
 
         fun betaAdvisorToolResultError(): Optional<BetaAdvisorToolResultError> =
             Optional.ofNullable(betaAdvisorToolResultError)
@@ -414,27 +395,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaAdvisorToolResultError(
-                        betaAdvisorToolResultError: BetaAdvisorToolResultError
-                    ) {
-                        betaAdvisorToolResultError.validate()
-                    }
-
-                    override fun visitBetaAdvisorResultBlock(
-                        betaAdvisorResultBlock: BetaAdvisorResultBlock
-                    ) {
-                        betaAdvisorResultBlock.validate()
-                    }
-
-                    override fun visitBetaAdvisorRedactedResultBlock(
-                        betaAdvisorRedactedResultBlock: BetaAdvisorRedactedResultBlock
-                    ) {
-                        betaAdvisorRedactedResultBlock.validate()
-                    }
-                }
-            )
+            when {
+                betaAdvisorToolResultError != null -> betaAdvisorToolResultError.validate()
+                betaAdvisorResultBlock != null -> betaAdvisorResultBlock.validate()
+                betaAdvisorRedactedResultBlock != null -> betaAdvisorRedactedResultBlock.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -454,23 +420,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaAdvisorToolResultError(
-                        betaAdvisorToolResultError: BetaAdvisorToolResultError
-                    ) = betaAdvisorToolResultError.validity()
-
-                    override fun visitBetaAdvisorResultBlock(
-                        betaAdvisorResultBlock: BetaAdvisorResultBlock
-                    ) = betaAdvisorResultBlock.validity()
-
-                    override fun visitBetaAdvisorRedactedResultBlock(
-                        betaAdvisorRedactedResultBlock: BetaAdvisorRedactedResultBlock
-                    ) = betaAdvisorRedactedResultBlock.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaAdvisorToolResultError != null -> betaAdvisorToolResultError.validity()
+                betaAdvisorResultBlock != null -> betaAdvisorResultBlock.validity()
+                betaAdvisorRedactedResultBlock != null -> betaAdvisorRedactedResultBlock.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

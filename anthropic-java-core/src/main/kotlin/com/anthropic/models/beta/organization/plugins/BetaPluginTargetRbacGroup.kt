@@ -1,0 +1,231 @@
+package com.anthropic.models.beta.organization.plugins
+
+import com.anthropic.core.ExcludeMissing
+import com.anthropic.core.JsonField
+import com.anthropic.core.JsonMissing
+import com.anthropic.core.JsonValue
+import com.anthropic.core.checkRequired
+import com.anthropic.errors.AnthropicInvalidDataException
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
+import java.util.Objects
+
+class BetaPluginTargetRbacGroup
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
+private constructor(
+    private val rbacGroupId: JsonField<String>,
+    private val type: JsonValue,
+    private val additionalProperties: MutableMap<String, JsonValue>,
+) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("rbac_group_id")
+        @ExcludeMissing
+        rbacGroupId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(rbacGroupId, type, mutableMapOf())
+
+    /**
+     * The RBAC Group's ID.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun rbacGroupId(): String = rbacGroupId.getRequired("rbac_group_id")
+
+    /**
+     * An RBAC Group.
+     *
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("rbac_group")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+    /**
+     * Returns the raw JSON value of [rbacGroupId].
+     *
+     * Unlike [rbacGroupId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("rbac_group_id")
+    @ExcludeMissing
+    fun _rbacGroupId(): JsonField<String> = rbacGroupId
+
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
+    @JsonAnyGetter
+    @ExcludeMissing
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        /**
+         * Returns a mutable builder for constructing an instance of [BetaPluginTargetRbacGroup].
+         *
+         * The following fields are required:
+         * ```java
+         * .rbacGroupId()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
+
+        /**
+         * Returns an immutable instance of [BetaPluginTargetRbacGroup] with the required
+         * [rbacGroupId] set to the given value.
+         */
+        @JvmStatic fun of(rbacGroupId: String) = builder().rbacGroupId(rbacGroupId).build()
+    }
+
+    /** A builder for [BetaPluginTargetRbacGroup]. */
+    class Builder internal constructor() {
+
+        private var rbacGroupId: JsonField<String>? = null
+        private var type: JsonValue = JsonValue.from("rbac_group")
+        private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+        @JvmSynthetic
+        internal fun from(betaPluginTargetRbacGroup: BetaPluginTargetRbacGroup) = apply {
+            rbacGroupId = betaPluginTargetRbacGroup.rbacGroupId
+            type = betaPluginTargetRbacGroup.type
+            additionalProperties = betaPluginTargetRbacGroup.additionalProperties.toMutableMap()
+        }
+
+        /** The RBAC Group's ID. */
+        fun rbacGroupId(rbacGroupId: String) = rbacGroupId(JsonField.of(rbacGroupId))
+
+        /**
+         * Sets [Builder.rbacGroupId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.rbacGroupId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun rbacGroupId(rbacGroupId: JsonField<String>) = apply { this.rbacGroupId = rbacGroupId }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("rbac_group")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun type(type: JsonValue) = apply { this.type = type }
+
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.clear()
+            putAllAdditionalProperties(additionalProperties)
+        }
+
+        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+            additionalProperties.put(key, value)
+        }
+
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+            this.additionalProperties.putAll(additionalProperties)
+        }
+
+        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalProperty)
+        }
+
+        /**
+         * Returns an immutable instance of [BetaPluginTargetRbacGroup].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .rbacGroupId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): BetaPluginTargetRbacGroup =
+            BetaPluginTargetRbacGroup(
+                checkRequired("rbacGroupId", rbacGroupId),
+                type,
+                additionalProperties.toMutableMap(),
+            )
+    }
+
+    private var validated: Boolean = false
+
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
+    fun validate(): BetaPluginTargetRbacGroup = apply {
+        if (validated) {
+            return@apply
+        }
+
+        rbacGroupId()
+        _type().let {
+            if (it != JsonValue.from("rbac_group")) {
+                throw AnthropicInvalidDataException("'type' is invalid, received $it")
+            }
+        }
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
+            type.let { if (it == JsonValue.from("rbac_group")) 1 else 0 }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return other is BetaPluginTargetRbacGroup &&
+            rbacGroupId == other.rbacGroupId &&
+            type == other.type &&
+            additionalProperties == other.additionalProperties
+    }
+
+    private val hashCode: Int by lazy { Objects.hash(rbacGroupId, type, additionalProperties) }
+
+    override fun hashCode(): Int = hashCode
+
+    override fun toString() =
+        "BetaPluginTargetRbacGroup{rbacGroupId=$rbacGroupId, type=$type, additionalProperties=$additionalProperties}"
+}

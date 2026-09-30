@@ -48,29 +48,22 @@ private constructor(
         BetaToolSearchToolResultBlockParam.builder()
             .content(
                 _content().map {
-                    it.accept(
-                        object :
-                            BetaToolSearchToolResultBlock.Content.Visitor<
-                                BetaToolSearchToolResultBlockParam.Content
-                            > {
-                            override fun visitBetaToolSearchToolResultError(
-                                betaToolSearchToolResultError: BetaToolSearchToolResultError
-                            ): BetaToolSearchToolResultBlockParam.Content =
-                                BetaToolSearchToolResultBlockParam.Content
-                                    .ofBetaToolSearchToolResultErrorParam(
-                                        betaToolSearchToolResultError.toParam()
-                                    )
-
-                            override fun visitBetaToolSearchToolSearchResultBlock(
-                                betaToolSearchToolSearchResultBlock:
-                                    BetaToolSearchToolSearchResultBlock
-                            ): BetaToolSearchToolResultBlockParam.Content =
-                                BetaToolSearchToolResultBlockParam.Content
-                                    .ofBetaToolSearchToolSearchResultBlockParam(
-                                        betaToolSearchToolSearchResultBlock.toParam()
-                                    )
-                        }
-                    )
+                    when {
+                        it.isBetaToolSearchToolResultError() ->
+                            BetaToolSearchToolResultBlockParam.Content
+                                .ofBetaToolSearchToolResultErrorParam(
+                                    it.asBetaToolSearchToolResultError().toParam()
+                                )
+                        it.isBetaToolSearchToolSearchResultBlock() ->
+                            BetaToolSearchToolResultBlockParam.Content
+                                .ofBetaToolSearchToolSearchResultBlockParam(
+                                    it.asBetaToolSearchToolSearchResultBlock().toParam()
+                                )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown Content: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .toolUseId(_toolUseId())
@@ -377,21 +370,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaToolSearchToolResultError(
-                        betaToolSearchToolResultError: BetaToolSearchToolResultError
-                    ) {
-                        betaToolSearchToolResultError.validate()
-                    }
-
-                    override fun visitBetaToolSearchToolSearchResultBlock(
-                        betaToolSearchToolSearchResultBlock: BetaToolSearchToolSearchResultBlock
-                    ) {
-                        betaToolSearchToolSearchResultBlock.validate()
-                    }
-                }
-            )
+            when {
+                betaToolSearchToolResultError != null -> betaToolSearchToolResultError.validate()
+                betaToolSearchToolSearchResultBlock != null ->
+                    betaToolSearchToolSearchResultBlock.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -411,19 +395,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaToolSearchToolResultError(
-                        betaToolSearchToolResultError: BetaToolSearchToolResultError
-                    ) = betaToolSearchToolResultError.validity()
-
-                    override fun visitBetaToolSearchToolSearchResultBlock(
-                        betaToolSearchToolSearchResultBlock: BetaToolSearchToolSearchResultBlock
-                    ) = betaToolSearchToolSearchResultBlock.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaToolSearchToolResultError != null -> betaToolSearchToolResultError.validity()
+                betaToolSearchToolSearchResultBlock != null ->
+                    betaToolSearchToolSearchResultBlock.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -409,21 +409,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBashCodeExecutionToolResultErrorParam(
-                        bashCodeExecutionToolResultErrorParam: BashCodeExecutionToolResultErrorParam
-                    ) {
-                        bashCodeExecutionToolResultErrorParam.validate()
-                    }
-
-                    override fun visitBashCodeExecutionResultBlockParam(
-                        bashCodeExecutionResultBlockParam: BashCodeExecutionResultBlockParam
-                    ) {
-                        bashCodeExecutionResultBlockParam.validate()
-                    }
-                }
-            )
+            when {
+                bashCodeExecutionToolResultErrorParam != null ->
+                    bashCodeExecutionToolResultErrorParam.validate()
+                bashCodeExecutionResultBlockParam != null ->
+                    bashCodeExecutionResultBlockParam.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -443,19 +435,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBashCodeExecutionToolResultErrorParam(
-                        bashCodeExecutionToolResultErrorParam: BashCodeExecutionToolResultErrorParam
-                    ) = bashCodeExecutionToolResultErrorParam.validity()
-
-                    override fun visitBashCodeExecutionResultBlockParam(
-                        bashCodeExecutionResultBlockParam: BashCodeExecutionResultBlockParam
-                    ) = bashCodeExecutionResultBlockParam.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                bashCodeExecutionToolResultErrorParam != null ->
+                    bashCodeExecutionToolResultErrorParam.validity()
+                bashCodeExecutionResultBlockParam != null ->
+                    bashCodeExecutionResultBlockParam.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

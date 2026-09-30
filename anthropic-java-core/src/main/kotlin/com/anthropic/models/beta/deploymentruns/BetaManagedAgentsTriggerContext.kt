@@ -32,19 +32,11 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitSchedule(
-                    schedule: BetaManagedAgentsScheduleTriggerContext
-                ): Type = Type.SCHEDULE
-
-                override fun visitManual(manual: BetaManagedAgentsManualTriggerContext): Type =
-                    Type.MANUAL
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            schedule != null -> Type.SCHEDULE
+            manual != null -> Type.MANUAL
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     /** The run was fired by the deployment's cron schedule. */
     fun schedule(): Optional<BetaManagedAgentsScheduleTriggerContext> =
@@ -116,17 +108,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitSchedule(schedule: BetaManagedAgentsScheduleTriggerContext) {
-                    schedule.validate()
-                }
-
-                override fun visitManual(manual: BetaManagedAgentsManualTriggerContext) {
-                    manual.validate()
-                }
-            }
-        )
+        when {
+            schedule != null -> schedule.validate()
+            manual != null -> manual.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsTriggerContext: $_json"
+                )
+        }
         validated = true
     }
 
@@ -145,17 +134,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitSchedule(schedule: BetaManagedAgentsScheduleTriggerContext) =
-                    schedule.validity()
-
-                override fun visitManual(manual: BetaManagedAgentsManualTriggerContext) =
-                    manual.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            schedule != null -> schedule.validity()
+            manual != null -> manual.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

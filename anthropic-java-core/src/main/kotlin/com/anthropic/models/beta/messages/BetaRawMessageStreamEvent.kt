@@ -35,65 +35,26 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitMessageStart(messageStart: BetaRawMessageStartEvent): Type =
-                    Type.MESSAGE_START
-
-                override fun visitMessageDelta(messageDelta: BetaRawMessageDeltaEvent): Type =
-                    Type.MESSAGE_DELTA
-
-                override fun visitMessageStop(messageStop: BetaRawMessageStopEvent): Type =
-                    Type.MESSAGE_STOP
-
-                override fun visitContentBlockStart(
-                    contentBlockStart: BetaRawContentBlockStartEvent
-                ): Type = Type.CONTENT_BLOCK_START
-
-                override fun visitContentBlockDelta(
-                    contentBlockDelta: BetaRawContentBlockDeltaEvent
-                ): Type = Type.CONTENT_BLOCK_DELTA
-
-                override fun visitContentBlockStop(
-                    contentBlockStop: BetaRawContentBlockStopEvent
-                ): Type = Type.CONTENT_BLOCK_STOP
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            messageStart != null -> Type.MESSAGE_START
+            messageDelta != null -> Type.MESSAGE_DELTA
+            messageStop != null -> Type.MESSAGE_STOP
+            contentBlockStart != null -> Type.CONTENT_BLOCK_START
+            contentBlockDelta != null -> Type.CONTENT_BLOCK_DELTA
+            contentBlockStop != null -> Type.CONTENT_BLOCK_STOP
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun index(): Optional<Long> =
-        accept(
-            object : Visitor<Optional<Long>> {
-                override fun visitMessageStart(
-                    messageStart: BetaRawMessageStartEvent
-                ): Optional<Long> = Optional.empty()
-
-                override fun visitMessageDelta(
-                    messageDelta: BetaRawMessageDeltaEvent
-                ): Optional<Long> = Optional.empty()
-
-                override fun visitMessageStop(
-                    messageStop: BetaRawMessageStopEvent
-                ): Optional<Long> = Optional.empty()
-
-                override fun visitContentBlockStart(
-                    contentBlockStart: BetaRawContentBlockStartEvent
-                ): Optional<Long> = Optional.of(contentBlockStart.index())
-
-                override fun visitContentBlockDelta(
-                    contentBlockDelta: BetaRawContentBlockDeltaEvent
-                ): Optional<Long> = Optional.of(contentBlockDelta.index())
-
-                override fun visitContentBlockStop(
-                    contentBlockStop: BetaRawContentBlockStopEvent
-                ): Optional<Long> = Optional.of(contentBlockStop.index())
-
-                override fun unknown(json: JsonValue?): Optional<Long> =
-                    json.getProperty<Long>("index").asKnown()
-            }
-        )
+        when {
+            messageStart != null -> Optional.empty()
+            messageDelta != null -> Optional.empty()
+            messageStop != null -> Optional.empty()
+            contentBlockStart != null -> Optional.of(contentBlockStart.index())
+            contentBlockDelta != null -> Optional.of(contentBlockDelta.index())
+            contentBlockStop != null -> Optional.of(contentBlockStop.index())
+            else -> _json.getProperty<Long>("index").asKnown()
+        }
 
     fun messageStart(): Optional<BetaRawMessageStartEvent> = Optional.ofNullable(messageStart)
 
@@ -194,37 +155,15 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitMessageStart(messageStart: BetaRawMessageStartEvent) {
-                    messageStart.validate()
-                }
-
-                override fun visitMessageDelta(messageDelta: BetaRawMessageDeltaEvent) {
-                    messageDelta.validate()
-                }
-
-                override fun visitMessageStop(messageStop: BetaRawMessageStopEvent) {
-                    messageStop.validate()
-                }
-
-                override fun visitContentBlockStart(
-                    contentBlockStart: BetaRawContentBlockStartEvent
-                ) {
-                    contentBlockStart.validate()
-                }
-
-                override fun visitContentBlockDelta(
-                    contentBlockDelta: BetaRawContentBlockDeltaEvent
-                ) {
-                    contentBlockDelta.validate()
-                }
-
-                override fun visitContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent) {
-                    contentBlockStop.validate()
-                }
-            }
-        )
+        when {
+            messageStart != null -> messageStart.validate()
+            messageDelta != null -> messageDelta.validate()
+            messageStop != null -> messageStop.validate()
+            contentBlockStart != null -> contentBlockStart.validate()
+            contentBlockDelta != null -> contentBlockDelta.validate()
+            contentBlockStop != null -> contentBlockStop.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaRawMessageStreamEvent: $_json")
+        }
         validated = true
     }
 
@@ -243,31 +182,15 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitMessageStart(messageStart: BetaRawMessageStartEvent) =
-                    messageStart.validity()
-
-                override fun visitMessageDelta(messageDelta: BetaRawMessageDeltaEvent) =
-                    messageDelta.validity()
-
-                override fun visitMessageStop(messageStop: BetaRawMessageStopEvent) =
-                    messageStop.validity()
-
-                override fun visitContentBlockStart(
-                    contentBlockStart: BetaRawContentBlockStartEvent
-                ) = contentBlockStart.validity()
-
-                override fun visitContentBlockDelta(
-                    contentBlockDelta: BetaRawContentBlockDeltaEvent
-                ) = contentBlockDelta.validity()
-
-                override fun visitContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent) =
-                    contentBlockStop.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            messageStart != null -> messageStart.validity()
+            messageDelta != null -> messageDelta.validity()
+            messageStop != null -> messageStop.validity()
+            contentBlockStart != null -> contentBlockStart.validity()
+            contentBlockDelta != null -> contentBlockDelta.validity()
+            contentBlockStop != null -> contentBlockStop.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

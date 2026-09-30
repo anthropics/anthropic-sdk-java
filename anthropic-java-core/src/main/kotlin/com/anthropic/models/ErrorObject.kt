@@ -38,76 +38,32 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitInvalidRequestError(
-                    invalidRequestError: InvalidRequestError
-                ): Type = Type.INVALID_REQUEST_ERROR
-
-                override fun visitAuthenticationError(
-                    authenticationError: AuthenticationError
-                ): Type = Type.AUTHENTICATION_ERROR
-
-                override fun visitBillingError(billingError: BillingError): Type =
-                    Type.BILLING_ERROR
-
-                override fun visitPermissionError(permissionError: PermissionError): Type =
-                    Type.PERMISSION_ERROR
-
-                override fun visitNotFoundError(notFoundError: NotFoundError): Type =
-                    Type.NOT_FOUND_ERROR
-
-                override fun visitRateLimitError(rateLimitError: RateLimitError): Type =
-                    Type.RATE_LIMIT_ERROR
-
-                override fun visitTimeoutError(timeoutError: GatewayTimeoutError): Type =
-                    Type.TIMEOUT_ERROR
-
-                override fun visitApiError(apiError: ApiErrorObject): Type = Type.API_ERROR
-
-                override fun visitOverloadedError(overloadedError: OverloadedError): Type =
-                    Type.OVERLOADED_ERROR
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            invalidRequestError != null -> Type.INVALID_REQUEST_ERROR
+            authenticationError != null -> Type.AUTHENTICATION_ERROR
+            billingError != null -> Type.BILLING_ERROR
+            permissionError != null -> Type.PERMISSION_ERROR
+            notFoundError != null -> Type.NOT_FOUND_ERROR
+            rateLimitError != null -> Type.RATE_LIMIT_ERROR
+            timeoutError != null -> Type.TIMEOUT_ERROR
+            apiError != null -> Type.API_ERROR
+            overloadedError != null -> Type.OVERLOADED_ERROR
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun message(): String =
-        accept(
-            object : Visitor<String> {
-                override fun visitInvalidRequestError(
-                    invalidRequestError: InvalidRequestError
-                ): String = invalidRequestError.message()
-
-                override fun visitAuthenticationError(
-                    authenticationError: AuthenticationError
-                ): String = authenticationError.message()
-
-                override fun visitBillingError(billingError: BillingError): String =
-                    billingError.message()
-
-                override fun visitPermissionError(permissionError: PermissionError): String =
-                    permissionError.message()
-
-                override fun visitNotFoundError(notFoundError: NotFoundError): String =
-                    notFoundError.message()
-
-                override fun visitRateLimitError(rateLimitError: RateLimitError): String =
-                    rateLimitError.message()
-
-                override fun visitTimeoutError(timeoutError: GatewayTimeoutError): String =
-                    timeoutError.message()
-
-                override fun visitApiError(apiError: ApiErrorObject): String = apiError.message()
-
-                override fun visitOverloadedError(overloadedError: OverloadedError): String =
-                    overloadedError.message()
-
-                override fun unknown(json: JsonValue?): String =
-                    json.getProperty<String>("message").getRequired("message")
-            }
-        )
+        when {
+            invalidRequestError != null -> invalidRequestError.message()
+            authenticationError != null -> authenticationError.message()
+            billingError != null -> billingError.message()
+            permissionError != null -> permissionError.message()
+            notFoundError != null -> notFoundError.message()
+            rateLimitError != null -> rateLimitError.message()
+            timeoutError != null -> timeoutError.message()
+            apiError != null -> apiError.message()
+            overloadedError != null -> overloadedError.message()
+            else -> _json.getProperty<String>("message").getRequired("message")
+        }
 
     fun invalidRequestError(): Optional<InvalidRequestError> =
         Optional.ofNullable(invalidRequestError)
@@ -227,45 +183,18 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitInvalidRequestError(invalidRequestError: InvalidRequestError) {
-                    invalidRequestError.validate()
-                }
-
-                override fun visitAuthenticationError(authenticationError: AuthenticationError) {
-                    authenticationError.validate()
-                }
-
-                override fun visitBillingError(billingError: BillingError) {
-                    billingError.validate()
-                }
-
-                override fun visitPermissionError(permissionError: PermissionError) {
-                    permissionError.validate()
-                }
-
-                override fun visitNotFoundError(notFoundError: NotFoundError) {
-                    notFoundError.validate()
-                }
-
-                override fun visitRateLimitError(rateLimitError: RateLimitError) {
-                    rateLimitError.validate()
-                }
-
-                override fun visitTimeoutError(timeoutError: GatewayTimeoutError) {
-                    timeoutError.validate()
-                }
-
-                override fun visitApiError(apiError: ApiErrorObject) {
-                    apiError.validate()
-                }
-
-                override fun visitOverloadedError(overloadedError: OverloadedError) {
-                    overloadedError.validate()
-                }
-            }
-        )
+        when {
+            invalidRequestError != null -> invalidRequestError.validate()
+            authenticationError != null -> authenticationError.validate()
+            billingError != null -> billingError.validate()
+            permissionError != null -> permissionError.validate()
+            notFoundError != null -> notFoundError.validate()
+            rateLimitError != null -> rateLimitError.validate()
+            timeoutError != null -> timeoutError.validate()
+            apiError != null -> apiError.validate()
+            overloadedError != null -> overloadedError.validate()
+            else -> throw AnthropicInvalidDataException("Unknown ErrorObject: $_json")
+        }
         validated = true
     }
 
@@ -284,36 +213,18 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitInvalidRequestError(invalidRequestError: InvalidRequestError) =
-                    invalidRequestError.validity()
-
-                override fun visitAuthenticationError(authenticationError: AuthenticationError) =
-                    authenticationError.validity()
-
-                override fun visitBillingError(billingError: BillingError) = billingError.validity()
-
-                override fun visitPermissionError(permissionError: PermissionError) =
-                    permissionError.validity()
-
-                override fun visitNotFoundError(notFoundError: NotFoundError) =
-                    notFoundError.validity()
-
-                override fun visitRateLimitError(rateLimitError: RateLimitError) =
-                    rateLimitError.validity()
-
-                override fun visitTimeoutError(timeoutError: GatewayTimeoutError) =
-                    timeoutError.validity()
-
-                override fun visitApiError(apiError: ApiErrorObject) = apiError.validity()
-
-                override fun visitOverloadedError(overloadedError: OverloadedError) =
-                    overloadedError.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            invalidRequestError != null -> invalidRequestError.validity()
+            authenticationError != null -> authenticationError.validity()
+            billingError != null -> billingError.validity()
+            permissionError != null -> permissionError.validity()
+            notFoundError != null -> notFoundError.validity()
+            rateLimitError != null -> rateLimitError.validity()
+            timeoutError != null -> timeoutError.validity()
+            apiError != null -> apiError.validity()
+            overloadedError != null -> overloadedError.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

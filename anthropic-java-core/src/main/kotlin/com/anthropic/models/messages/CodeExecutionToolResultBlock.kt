@@ -38,34 +38,25 @@ private constructor(
         CodeExecutionToolResultBlockParam.builder()
             .content(
                 _content().map {
-                    it.accept(
-                        object :
-                            CodeExecutionToolResultBlockContent.Visitor<
-                                CodeExecutionToolResultBlockParamContent
-                            > {
-                            override fun visitError(
-                                error: CodeExecutionToolResultError
-                            ): CodeExecutionToolResultBlockParamContent =
-                                CodeExecutionToolResultBlockParamContent.ofErrorParam(
-                                    error.toParam()
+                    when {
+                        it.isError() ->
+                            CodeExecutionToolResultBlockParamContent.ofErrorParam(
+                                it.asError().toParam()
+                            )
+                        it.isResultBlock() ->
+                            CodeExecutionToolResultBlockParamContent.ofResultBlockParam(
+                                it.asResultBlock().toParam()
+                            )
+                        it.isEncryptedCodeExecutionResultBlock() ->
+                            CodeExecutionToolResultBlockParamContent
+                                .ofEncryptedCodeExecutionResultBlockParam(
+                                    it.asEncryptedCodeExecutionResultBlock().toParam()
                                 )
-
-                            override fun visitResultBlock(
-                                resultBlock: CodeExecutionResultBlock
-                            ): CodeExecutionToolResultBlockParamContent =
-                                CodeExecutionToolResultBlockParamContent.ofResultBlockParam(
-                                    resultBlock.toParam()
-                                )
-
-                            override fun visitEncryptedCodeExecutionResultBlock(
-                                encryptedCodeExecutionResultBlock: EncryptedCodeExecutionResultBlock
-                            ): CodeExecutionToolResultBlockParamContent =
-                                CodeExecutionToolResultBlockParamContent
-                                    .ofEncryptedCodeExecutionResultBlockParam(
-                                        encryptedCodeExecutionResultBlock.toParam()
-                                    )
-                        }
-                    )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown CodeExecutionToolResultBlockContent: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .toolUseId(_toolUseId())

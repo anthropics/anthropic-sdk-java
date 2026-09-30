@@ -44,22 +44,16 @@ private constructor(
                     BetaRequestDocumentBlock.builder()
                         .source(
                             it._source().map {
-                                it.accept(
-                                    object :
-                                        BetaDocumentBlock.Source.Visitor<
-                                            BetaRequestDocumentBlock.Source
-                                        > {
-                                        override fun visitBase64(
-                                            base64: BetaBase64PdfSource
-                                        ): BetaRequestDocumentBlock.Source =
-                                            BetaRequestDocumentBlock.Source.ofBase64(base64)
-
-                                        override fun visitText(
-                                            text: BetaPlainTextSource
-                                        ): BetaRequestDocumentBlock.Source =
-                                            BetaRequestDocumentBlock.Source.ofText(text)
-                                    }
-                                )
+                                when {
+                                    it.isBase64() ->
+                                        BetaRequestDocumentBlock.Source.ofBase64(it.asBase64())
+                                    it.isText() ->
+                                        BetaRequestDocumentBlock.Source.ofText(it.asText())
+                                    else ->
+                                        throw AnthropicInvalidDataException(
+                                            "Unknown Source: ${it._json().getOrNull()}"
+                                        )
+                                }
                             }
                         )
                         .citations(

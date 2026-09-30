@@ -32,7 +32,7 @@ private constructor(
 
     override fun items(): List<BetaDream> = data()
 
-    override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
+    override fun hasNextPage(): Boolean = nextPageRaw().isPresent
 
     fun nextPageParams(): DreamListParams {
         val nextCursor =

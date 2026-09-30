@@ -38,158 +38,56 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitBash(bash: BetaManagedAgentsBashToolConfigParams): Type =
-                    Type.BASH
-
-                override fun visitEdit(edit: BetaManagedAgentsEditToolConfigParams): Type =
-                    Type.EDIT
-
-                override fun visitRead(read: BetaManagedAgentsReadToolConfigParams): Type =
-                    Type.READ
-
-                override fun visitWrite(write: BetaManagedAgentsWriteToolConfigParams): Type =
-                    Type.WRITE
-
-                override fun visitGlob(glob: BetaManagedAgentsGlobToolConfigParams): Type =
-                    Type.GLOB
-
-                override fun visitGrep(grep: BetaManagedAgentsGrepToolConfigParams): Type =
-                    Type.GREP
-
-                override fun visitWebFetch(
-                    webFetch: BetaManagedAgentsWebFetchToolConfigParams
-                ): Type = Type.WEB_FETCH
-
-                override fun visitWebSearch(
-                    webSearch: BetaManagedAgentsWebSearchToolConfigParams
-                ): Type = Type.WEB_SEARCH
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            bash != null -> Type.BASH
+            edit != null -> Type.EDIT
+            read != null -> Type.READ
+            write != null -> Type.WRITE
+            glob != null -> Type.GLOB
+            grep != null -> Type.GREP
+            webFetch != null -> Type.WEB_FETCH
+            webSearch != null -> Type.WEB_SEARCH
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun enabled(): Optional<Boolean> =
-        accept(
-            object : Visitor<Optional<Boolean>> {
-                override fun visitBash(
-                    bash: BetaManagedAgentsBashToolConfigParams
-                ): Optional<Boolean> = bash.enabled()
-
-                override fun visitEdit(
-                    edit: BetaManagedAgentsEditToolConfigParams
-                ): Optional<Boolean> = edit.enabled()
-
-                override fun visitRead(
-                    read: BetaManagedAgentsReadToolConfigParams
-                ): Optional<Boolean> = read.enabled()
-
-                override fun visitWrite(
-                    write: BetaManagedAgentsWriteToolConfigParams
-                ): Optional<Boolean> = write.enabled()
-
-                override fun visitGlob(
-                    glob: BetaManagedAgentsGlobToolConfigParams
-                ): Optional<Boolean> = glob.enabled()
-
-                override fun visitGrep(
-                    grep: BetaManagedAgentsGrepToolConfigParams
-                ): Optional<Boolean> = grep.enabled()
-
-                override fun visitWebFetch(
-                    webFetch: BetaManagedAgentsWebFetchToolConfigParams
-                ): Optional<Boolean> = webFetch.enabled()
-
-                override fun visitWebSearch(
-                    webSearch: BetaManagedAgentsWebSearchToolConfigParams
-                ): Optional<Boolean> = webSearch.enabled()
-
-                override fun unknown(json: JsonValue?): Optional<Boolean> =
-                    json.getProperty<Boolean>("enabled").asKnown()
-            }
-        )
+        when {
+            bash != null -> bash.enabled()
+            edit != null -> edit.enabled()
+            read != null -> read.enabled()
+            write != null -> write.enabled()
+            glob != null -> glob.enabled()
+            grep != null -> grep.enabled()
+            webFetch != null -> webFetch.enabled()
+            webSearch != null -> webSearch.enabled()
+            else -> _json.getProperty<Boolean>("enabled").asKnown()
+        }
 
     fun allowedDomains(): Optional<List<String>> =
-        accept(
-            object : Visitor<Optional<List<String>>> {
-                override fun visitBash(
-                    bash: BetaManagedAgentsBashToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitEdit(
-                    edit: BetaManagedAgentsEditToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitRead(
-                    read: BetaManagedAgentsReadToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitWrite(
-                    write: BetaManagedAgentsWriteToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitGlob(
-                    glob: BetaManagedAgentsGlobToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitGrep(
-                    grep: BetaManagedAgentsGrepToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitWebFetch(
-                    webFetch: BetaManagedAgentsWebFetchToolConfigParams
-                ): Optional<List<String>> = webFetch.allowedDomains()
-
-                override fun visitWebSearch(
-                    webSearch: BetaManagedAgentsWebSearchToolConfigParams
-                ): Optional<List<String>> = webSearch.allowedDomains()
-
-                override fun unknown(json: JsonValue?): Optional<List<String>> =
-                    json.getProperty<List<String>>("allowed_domains").asKnown()
-            }
-        )
+        when {
+            bash != null -> Optional.empty()
+            edit != null -> Optional.empty()
+            read != null -> Optional.empty()
+            write != null -> Optional.empty()
+            glob != null -> Optional.empty()
+            grep != null -> Optional.empty()
+            webFetch != null -> webFetch.allowedDomains()
+            webSearch != null -> webSearch.allowedDomains()
+            else -> _json.getProperty<List<String>>("allowed_domains").asKnown()
+        }
 
     fun blockedDomains(): Optional<List<String>> =
-        accept(
-            object : Visitor<Optional<List<String>>> {
-                override fun visitBash(
-                    bash: BetaManagedAgentsBashToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitEdit(
-                    edit: BetaManagedAgentsEditToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitRead(
-                    read: BetaManagedAgentsReadToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitWrite(
-                    write: BetaManagedAgentsWriteToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitGlob(
-                    glob: BetaManagedAgentsGlobToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitGrep(
-                    grep: BetaManagedAgentsGrepToolConfigParams
-                ): Optional<List<String>> = Optional.empty()
-
-                override fun visitWebFetch(
-                    webFetch: BetaManagedAgentsWebFetchToolConfigParams
-                ): Optional<List<String>> = webFetch.blockedDomains()
-
-                override fun visitWebSearch(
-                    webSearch: BetaManagedAgentsWebSearchToolConfigParams
-                ): Optional<List<String>> = webSearch.blockedDomains()
-
-                override fun unknown(json: JsonValue?): Optional<List<String>> =
-                    json.getProperty<List<String>>("blocked_domains").asKnown()
-            }
-        )
+        when {
+            bash != null -> Optional.empty()
+            edit != null -> Optional.empty()
+            read != null -> Optional.empty()
+            write != null -> Optional.empty()
+            glob != null -> Optional.empty()
+            grep != null -> Optional.empty()
+            webFetch != null -> webFetch.blockedDomains()
+            webSearch != null -> webSearch.blockedDomains()
+            else -> _json.getProperty<List<String>>("blocked_domains").asKnown()
+        }
 
     /** Configuration override for the bash tool. */
     fun bash(): Optional<BetaManagedAgentsBashToolConfigParams> = Optional.ofNullable(bash)
@@ -317,41 +215,20 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitBash(bash: BetaManagedAgentsBashToolConfigParams) {
-                    bash.validate()
-                }
-
-                override fun visitEdit(edit: BetaManagedAgentsEditToolConfigParams) {
-                    edit.validate()
-                }
-
-                override fun visitRead(read: BetaManagedAgentsReadToolConfigParams) {
-                    read.validate()
-                }
-
-                override fun visitWrite(write: BetaManagedAgentsWriteToolConfigParams) {
-                    write.validate()
-                }
-
-                override fun visitGlob(glob: BetaManagedAgentsGlobToolConfigParams) {
-                    glob.validate()
-                }
-
-                override fun visitGrep(grep: BetaManagedAgentsGrepToolConfigParams) {
-                    grep.validate()
-                }
-
-                override fun visitWebFetch(webFetch: BetaManagedAgentsWebFetchToolConfigParams) {
-                    webFetch.validate()
-                }
-
-                override fun visitWebSearch(webSearch: BetaManagedAgentsWebSearchToolConfigParams) {
-                    webSearch.validate()
-                }
-            }
-        )
+        when {
+            bash != null -> bash.validate()
+            edit != null -> edit.validate()
+            read != null -> read.validate()
+            write != null -> write.validate()
+            glob != null -> glob.validate()
+            grep != null -> grep.validate()
+            webFetch != null -> webFetch.validate()
+            webSearch != null -> webSearch.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsAgentToolConfigParams: $_json"
+                )
+        }
         validated = true
     }
 
@@ -370,35 +247,17 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitBash(bash: BetaManagedAgentsBashToolConfigParams) =
-                    bash.validity()
-
-                override fun visitEdit(edit: BetaManagedAgentsEditToolConfigParams) =
-                    edit.validity()
-
-                override fun visitRead(read: BetaManagedAgentsReadToolConfigParams) =
-                    read.validity()
-
-                override fun visitWrite(write: BetaManagedAgentsWriteToolConfigParams) =
-                    write.validity()
-
-                override fun visitGlob(glob: BetaManagedAgentsGlobToolConfigParams) =
-                    glob.validity()
-
-                override fun visitGrep(grep: BetaManagedAgentsGrepToolConfigParams) =
-                    grep.validity()
-
-                override fun visitWebFetch(webFetch: BetaManagedAgentsWebFetchToolConfigParams) =
-                    webFetch.validity()
-
-                override fun visitWebSearch(webSearch: BetaManagedAgentsWebSearchToolConfigParams) =
-                    webSearch.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            bash != null -> bash.validity()
+            edit != null -> edit.validity()
+            read != null -> read.validity()
+            write != null -> write.validity()
+            glob != null -> glob.validity()
+            grep != null -> grep.validity()
+            webFetch != null -> webFetch.validity()
+            webSearch != null -> webSearch.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

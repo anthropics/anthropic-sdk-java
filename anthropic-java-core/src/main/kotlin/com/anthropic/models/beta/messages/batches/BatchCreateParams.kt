@@ -3220,17 +3220,11 @@ private constructor(
                         return@apply
                     }
 
-                    accept(
-                        object : Visitor<Unit> {
-                            override fun visitBetaContainerParams(
-                                betaContainerParams: BetaContainerParams
-                            ) {
-                                betaContainerParams.validate()
-                            }
-
-                            override fun visitString(string: String) {}
-                        }
-                    )
+                    when {
+                        betaContainerParams != null -> betaContainerParams.validate()
+                        string != null -> {}
+                        else -> throw AnthropicInvalidDataException("Unknown Container: $_json")
+                    }
                     validated = true
                 }
 
@@ -3250,17 +3244,11 @@ private constructor(
                  */
                 @JvmSynthetic
                 internal fun validity(): Int =
-                    accept(
-                        object : Visitor<Int> {
-                            override fun visitBetaContainerParams(
-                                betaContainerParams: BetaContainerParams
-                            ) = betaContainerParams.validity()
-
-                            override fun visitString(string: String) = 1
-
-                            override fun unknown(json: JsonValue?) = 0
-                        }
-                    )
+                    when {
+                        betaContainerParams != null -> betaContainerParams.validity()
+                        string != null -> 1
+                        else -> 0
+                    }
 
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
@@ -3483,17 +3471,15 @@ private constructor(
                         return@apply
                     }
 
-                    accept(
-                        object : Visitor<Unit> {
-                            override fun visitString(string: String) {}
-
-                            override fun visitBetaFallbackCreditTokenParam(
-                                betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam
-                            ) {
-                                betaFallbackCreditTokenParam.validate()
-                            }
-                        }
-                    )
+                    when {
+                        string != null -> {}
+                        betaFallbackCreditTokenParam != null ->
+                            betaFallbackCreditTokenParam.validate()
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown FallbackCreditToken: $_json"
+                            )
+                    }
                     validated = true
                 }
 
@@ -3513,17 +3499,12 @@ private constructor(
                  */
                 @JvmSynthetic
                 internal fun validity(): Int =
-                    accept(
-                        object : Visitor<Int> {
-                            override fun visitString(string: String) = 1
-
-                            override fun visitBetaFallbackCreditTokenParam(
-                                betaFallbackCreditTokenParam: BetaFallbackCreditTokenParam
-                            ) = betaFallbackCreditTokenParam.validity()
-
-                            override fun unknown(json: JsonValue?) = 0
-                        }
-                    )
+                    when {
+                        string != null -> 1
+                        betaFallbackCreditTokenParam != null ->
+                            betaFallbackCreditTokenParam.validity()
+                        else -> 0
+                    }
 
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
@@ -4071,17 +4052,11 @@ private constructor(
                         return@apply
                     }
 
-                    accept(
-                        object : Visitor<Unit> {
-                            override fun visitString(string: String) {}
-
-                            override fun visitBetaTextBlockParams(
-                                betaTextBlockParams: List<BetaTextBlockParam>
-                            ) {
-                                betaTextBlockParams.forEach { it.validate() }
-                            }
-                        }
-                    )
+                    when {
+                        string != null -> {}
+                        betaTextBlockParams != null -> betaTextBlockParams.forEach { it.validate() }
+                        else -> throw AnthropicInvalidDataException("Unknown System: $_json")
+                    }
                     validated = true
                 }
 
@@ -4101,17 +4076,12 @@ private constructor(
                  */
                 @JvmSynthetic
                 internal fun validity(): Int =
-                    accept(
-                        object : Visitor<Int> {
-                            override fun visitString(string: String) = 1
-
-                            override fun visitBetaTextBlockParams(
-                                betaTextBlockParams: List<BetaTextBlockParam>
-                            ) = betaTextBlockParams.sumOf { it.validity().toInt() }
-
-                            override fun unknown(json: JsonValue?) = 0
-                        }
-                    )
+                    when {
+                        string != null -> 1
+                        betaTextBlockParams != null ->
+                            betaTextBlockParams.sumOf { it.validity().toInt() }
+                        else -> 0
+                    }
 
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {

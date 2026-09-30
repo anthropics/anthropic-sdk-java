@@ -1368,43 +1368,23 @@ private constructor(
     ) {
 
         fun id(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitString(string: String): Optional<String> = Optional.empty()
-
-                    override fun visitBetaManagedAgentsAgentParams(
-                        betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
-                    ): Optional<String> = Optional.of(betaManagedAgentsAgentParams.id())
-
-                    override fun visitBetaManagedAgentsAgentWithOverridesParams(
-                        betaManagedAgentsAgentWithOverridesParams:
-                            BetaManagedAgentsAgentWithOverridesParams
-                    ): Optional<String> =
-                        Optional.of(betaManagedAgentsAgentWithOverridesParams.id())
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("id").asKnown()
-                }
-            )
+            when {
+                string != null -> Optional.empty()
+                betaManagedAgentsAgentParams != null ->
+                    Optional.of(betaManagedAgentsAgentParams.id())
+                betaManagedAgentsAgentWithOverridesParams != null ->
+                    Optional.of(betaManagedAgentsAgentWithOverridesParams.id())
+                else -> _json.getProperty<String>("id").asKnown()
+            }
 
         fun version(): Optional<Int> =
-            accept(
-                object : Visitor<Optional<Int>> {
-                    override fun visitString(string: String): Optional<Int> = Optional.empty()
-
-                    override fun visitBetaManagedAgentsAgentParams(
-                        betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
-                    ): Optional<Int> = betaManagedAgentsAgentParams.version()
-
-                    override fun visitBetaManagedAgentsAgentWithOverridesParams(
-                        betaManagedAgentsAgentWithOverridesParams:
-                            BetaManagedAgentsAgentWithOverridesParams
-                    ): Optional<Int> = betaManagedAgentsAgentWithOverridesParams.version()
-
-                    override fun unknown(json: JsonValue?): Optional<Int> =
-                        json.getProperty<Int>("version").asKnown()
-                }
-            )
+            when {
+                string != null -> Optional.empty()
+                betaManagedAgentsAgentParams != null -> betaManagedAgentsAgentParams.version()
+                betaManagedAgentsAgentWithOverridesParams != null ->
+                    betaManagedAgentsAgentWithOverridesParams.version()
+                else -> _json.getProperty<Int>("version").asKnown()
+            }
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
@@ -1508,24 +1488,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitString(string: String) {}
-
-                    override fun visitBetaManagedAgentsAgentParams(
-                        betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
-                    ) {
-                        betaManagedAgentsAgentParams.validate()
-                    }
-
-                    override fun visitBetaManagedAgentsAgentWithOverridesParams(
-                        betaManagedAgentsAgentWithOverridesParams:
-                            BetaManagedAgentsAgentWithOverridesParams
-                    ) {
-                        betaManagedAgentsAgentWithOverridesParams.validate()
-                    }
-                }
-            )
+            when {
+                string != null -> {}
+                betaManagedAgentsAgentParams != null -> betaManagedAgentsAgentParams.validate()
+                betaManagedAgentsAgentWithOverridesParams != null ->
+                    betaManagedAgentsAgentWithOverridesParams.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Agent: $_json")
+            }
             validated = true
         }
 
@@ -1545,22 +1514,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitString(string: String) = 1
-
-                    override fun visitBetaManagedAgentsAgentParams(
-                        betaManagedAgentsAgentParams: BetaManagedAgentsAgentParams
-                    ) = betaManagedAgentsAgentParams.validity()
-
-                    override fun visitBetaManagedAgentsAgentWithOverridesParams(
-                        betaManagedAgentsAgentWithOverridesParams:
-                            BetaManagedAgentsAgentWithOverridesParams
-                    ) = betaManagedAgentsAgentWithOverridesParams.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                string != null -> 1
+                betaManagedAgentsAgentParams != null -> betaManagedAgentsAgentParams.validity()
+                betaManagedAgentsAgentWithOverridesParams != null ->
+                    betaManagedAgentsAgentWithOverridesParams.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1728,20 +1688,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitUserMessage(
-                        userMessage: BetaManagedAgentsUserMessageEventParams
-                    ): Type = Type.USER_MESSAGE
-
-                    override fun visitUserDefineOutcome(
-                        userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                    ): Type = Type.USER_DEFINE_OUTCOME
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                userMessage != null -> Type.USER_MESSAGE
+                userDefineOutcome != null -> Type.USER_DEFINE_OUTCOME
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /** Parameters for sending a user message to the session. */
         fun userMessage(): Optional<BetaManagedAgentsUserMessageEventParams> =
@@ -1823,21 +1774,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitUserMessage(
-                        userMessage: BetaManagedAgentsUserMessageEventParams
-                    ) {
-                        userMessage.validate()
-                    }
-
-                    override fun visitUserDefineOutcome(
-                        userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                    ) {
-                        userDefineOutcome.validate()
-                    }
-                }
-            )
+            when {
+                userMessage != null -> userMessage.validate()
+                userDefineOutcome != null -> userDefineOutcome.validate()
+                else -> throw AnthropicInvalidDataException("Unknown InitialEvent: $_json")
+            }
             validated = true
         }
 
@@ -1857,19 +1798,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitUserMessage(
-                        userMessage: BetaManagedAgentsUserMessageEventParams
-                    ) = userMessage.validity()
-
-                    override fun visitUserDefineOutcome(
-                        userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                    ) = userDefineOutcome.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                userMessage != null -> userMessage.validity()
+                userDefineOutcome != null -> userDefineOutcome.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -2273,43 +2206,20 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitGitHubRepository(
-                        githubRepository: BetaManagedAgentsGitHubRepositoryResourceParams
-                    ): Type = Type.GITHUB_REPOSITORY
-
-                    override fun visitFile(file: BetaManagedAgentsFileResourceParams): Type =
-                        Type.FILE
-
-                    override fun visitMemoryStore(
-                        memoryStore: BetaManagedAgentsMemoryStoreResourceParam
-                    ): Type = Type.MEMORY_STORE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                githubRepository != null -> Type.GITHUB_REPOSITORY
+                file != null -> Type.FILE
+                memoryStore != null -> Type.MEMORY_STORE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun mountPath(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitGitHubRepository(
-                        githubRepository: BetaManagedAgentsGitHubRepositoryResourceParams
-                    ): Optional<String> = githubRepository.mountPath()
-
-                    override fun visitFile(
-                        file: BetaManagedAgentsFileResourceParams
-                    ): Optional<String> = file.mountPath()
-
-                    override fun visitMemoryStore(
-                        memoryStore: BetaManagedAgentsMemoryStoreResourceParam
-                    ): Optional<String> = Optional.empty()
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("mount_path").asKnown()
-                }
-            )
+            when {
+                githubRepository != null -> githubRepository.mountPath()
+                file != null -> file.mountPath()
+                memoryStore != null -> Optional.empty()
+                else -> _json.getProperty<String>("mount_path").asKnown()
+            }
 
         /** Mount a GitHub repository into the session's container. */
         fun githubRepository(): Optional<BetaManagedAgentsGitHubRepositoryResourceParams> =
@@ -2394,25 +2304,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitGitHubRepository(
-                        githubRepository: BetaManagedAgentsGitHubRepositoryResourceParams
-                    ) {
-                        githubRepository.validate()
-                    }
-
-                    override fun visitFile(file: BetaManagedAgentsFileResourceParams) {
-                        file.validate()
-                    }
-
-                    override fun visitMemoryStore(
-                        memoryStore: BetaManagedAgentsMemoryStoreResourceParam
-                    ) {
-                        memoryStore.validate()
-                    }
-                }
-            )
+            when {
+                githubRepository != null -> githubRepository.validate()
+                file != null -> file.validate()
+                memoryStore != null -> memoryStore.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Resource: $_json")
+            }
             validated = true
         }
 
@@ -2432,22 +2329,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitGitHubRepository(
-                        githubRepository: BetaManagedAgentsGitHubRepositoryResourceParams
-                    ) = githubRepository.validity()
-
-                    override fun visitFile(file: BetaManagedAgentsFileResourceParams) =
-                        file.validity()
-
-                    override fun visitMemoryStore(
-                        memoryStore: BetaManagedAgentsMemoryStoreResourceParam
-                    ) = memoryStore.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                githubRepository != null -> githubRepository.validity()
+                file != null -> file.validity()
+                memoryStore != null -> memoryStore.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

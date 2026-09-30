@@ -52,57 +52,41 @@ private constructor(
         WebFetchToolResultBlockParam.builder()
             .content(
                 _content().map {
-                    it.accept(
-                        object :
-                            WebFetchToolResultBlock.Content.Visitor<
-                                WebFetchToolResultBlockParam.Content
-                            > {
-                            override fun visitWebFetchToolResultErrorBlock(
-                                webFetchToolResultErrorBlock: WebFetchToolResultErrorBlock
-                            ): WebFetchToolResultBlockParam.Content =
-                                WebFetchToolResultBlockParam.Content
-                                    .ofWebFetchToolResultErrorBlockParam(
-                                        webFetchToolResultErrorBlock.toParam()
-                                    )
-
-                            override fun visitWebFetchBlock(
-                                webFetchBlock: WebFetchBlock
-                            ): WebFetchToolResultBlockParam.Content =
-                                WebFetchToolResultBlockParam.Content.ofWebFetchBlockParam(
-                                    webFetchBlock.toParam()
+                    when {
+                        it.isWebFetchToolResultErrorBlock() ->
+                            WebFetchToolResultBlockParam.Content
+                                .ofWebFetchToolResultErrorBlockParam(
+                                    it.asWebFetchToolResultErrorBlock().toParam()
                                 )
-                        }
-                    )
+                        it.isWebFetchBlock() ->
+                            WebFetchToolResultBlockParam.Content.ofWebFetchBlockParam(
+                                it.asWebFetchBlock().toParam()
+                            )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown Content: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .toolUseId(_toolUseId())
             .caller(
                 _caller().map {
-                    it.accept(
-                        object :
-                            WebFetchToolResultBlock.Caller.Visitor<
-                                WebFetchToolResultBlockParam.Caller
-                            > {
-                            override fun visitDirect(
-                                direct: DirectCaller
-                            ): WebFetchToolResultBlockParam.Caller =
-                                WebFetchToolResultBlockParam.Caller.ofDirect(direct)
-
-                            override fun visitCodeExecution20250825(
-                                codeExecution20250825: ServerToolCaller
-                            ): WebFetchToolResultBlockParam.Caller =
-                                WebFetchToolResultBlockParam.Caller.ofCodeExecution20250825(
-                                    codeExecution20250825
-                                )
-
-                            override fun visitCodeExecution20260120(
-                                codeExecution20260120: ServerToolCaller20260120
-                            ): WebFetchToolResultBlockParam.Caller =
-                                WebFetchToolResultBlockParam.Caller.ofCodeExecution20260120(
-                                    codeExecution20260120
-                                )
-                        }
-                    )
+                    when {
+                        it.isDirect() -> WebFetchToolResultBlockParam.Caller.ofDirect(it.asDirect())
+                        it.isCodeExecution20250825() ->
+                            WebFetchToolResultBlockParam.Caller.ofCodeExecution20250825(
+                                it.asCodeExecution20250825()
+                            )
+                        it.isCodeExecution20260120() ->
+                            WebFetchToolResultBlockParam.Caller.ofCodeExecution20260120(
+                                it.asCodeExecution20260120()
+                            )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown Caller: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .build()
@@ -394,41 +378,20 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitDirect(direct: DirectCaller): Type = Type.DIRECT
-
-                    override fun visitCodeExecution20250825(
-                        codeExecution20250825: ServerToolCaller
-                    ): Type = Type.CODE_EXECUTION_20250825
-
-                    override fun visitCodeExecution20260120(
-                        codeExecution20260120: ServerToolCaller20260120
-                    ): Type = Type.CODE_EXECUTION_20260120
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                direct != null -> Type.DIRECT
+                codeExecution20250825 != null -> Type.CODE_EXECUTION_20250825
+                codeExecution20260120 != null -> Type.CODE_EXECUTION_20260120
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun toolId(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitDirect(direct: DirectCaller): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitCodeExecution20250825(
-                        codeExecution20250825: ServerToolCaller
-                    ): Optional<String> = Optional.of(codeExecution20250825.toolId())
-
-                    override fun visitCodeExecution20260120(
-                        codeExecution20260120: ServerToolCaller20260120
-                    ): Optional<String> = Optional.of(codeExecution20260120.toolId())
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("tool_id").asKnown()
-                }
-            )
+            when {
+                direct != null -> Optional.empty()
+                codeExecution20250825 != null -> Optional.of(codeExecution20250825.toolId())
+                codeExecution20260120 != null -> Optional.of(codeExecution20260120.toolId())
+                else -> _json.getProperty<String>("tool_id").asKnown()
+            }
 
         /** Tool invocation directly from the model. */
         fun direct(): Optional<DirectCaller> = Optional.ofNullable(direct)
@@ -513,25 +476,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitDirect(direct: DirectCaller) {
-                        direct.validate()
-                    }
-
-                    override fun visitCodeExecution20250825(
-                        codeExecution20250825: ServerToolCaller
-                    ) {
-                        codeExecution20250825.validate()
-                    }
-
-                    override fun visitCodeExecution20260120(
-                        codeExecution20260120: ServerToolCaller20260120
-                    ) {
-                        codeExecution20260120.validate()
-                    }
-                }
-            )
+            when {
+                direct != null -> direct.validate()
+                codeExecution20250825 != null -> codeExecution20250825.validate()
+                codeExecution20260120 != null -> codeExecution20260120.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Caller: $_json")
+            }
             validated = true
         }
 
@@ -551,21 +501,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitDirect(direct: DirectCaller) = direct.validity()
-
-                    override fun visitCodeExecution20250825(
-                        codeExecution20250825: ServerToolCaller
-                    ) = codeExecution20250825.validity()
-
-                    override fun visitCodeExecution20260120(
-                        codeExecution20260120: ServerToolCaller20260120
-                    ) = codeExecution20260120.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                direct != null -> direct.validity()
+                codeExecution20250825 != null -> codeExecution20250825.validity()
+                codeExecution20260120 != null -> codeExecution20260120.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -933,19 +874,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitWebFetchToolResultErrorBlock(
-                        webFetchToolResultErrorBlock: WebFetchToolResultErrorBlock
-                    ) {
-                        webFetchToolResultErrorBlock.validate()
-                    }
-
-                    override fun visitWebFetchBlock(webFetchBlock: WebFetchBlock) {
-                        webFetchBlock.validate()
-                    }
-                }
-            )
+            when {
+                webFetchToolResultErrorBlock != null -> webFetchToolResultErrorBlock.validate()
+                webFetchBlock != null -> webFetchBlock.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -965,18 +898,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitWebFetchToolResultErrorBlock(
-                        webFetchToolResultErrorBlock: WebFetchToolResultErrorBlock
-                    ) = webFetchToolResultErrorBlock.validity()
-
-                    override fun visitWebFetchBlock(webFetchBlock: WebFetchBlock) =
-                        webFetchBlock.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                webFetchToolResultErrorBlock != null -> webFetchToolResultErrorBlock.validity()
+                webFetchBlock != null -> webFetchBlock.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

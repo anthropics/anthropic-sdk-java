@@ -38,112 +38,40 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitUserMessage(
-                    userMessage: BetaManagedAgentsUserMessageEventParams
-                ): Type = Type.USER_MESSAGE
-
-                override fun visitUserInterrupt(
-                    userInterrupt: BetaManagedAgentsUserInterruptEventParams
-                ): Type = Type.USER_INTERRUPT
-
-                override fun visitUserToolConfirmation(
-                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEventParams
-                ): Type = Type.USER_TOOL_CONFIRMATION
-
-                override fun visitUserCustomToolResult(
-                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
-                ): Type = Type.USER_CUSTOM_TOOL_RESULT
-
-                override fun visitUserDefineOutcome(
-                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                ): Type = Type.USER_DEFINE_OUTCOME
-
-                override fun visitUserToolResult(
-                    userToolResult: BetaManagedAgentsUserToolResultEventParams
-                ): Type = Type.USER_TOOL_RESULT
-
-                override fun visitSystemMessage(
-                    systemMessage: BetaManagedAgentsSystemMessageEventParams
-                ): Type = Type.SYSTEM_MESSAGE
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            userMessage != null -> Type.USER_MESSAGE
+            userInterrupt != null -> Type.USER_INTERRUPT
+            userToolConfirmation != null -> Type.USER_TOOL_CONFIRMATION
+            userCustomToolResult != null -> Type.USER_CUSTOM_TOOL_RESULT
+            userDefineOutcome != null -> Type.USER_DEFINE_OUTCOME
+            userToolResult != null -> Type.USER_TOOL_RESULT
+            systemMessage != null -> Type.SYSTEM_MESSAGE
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun toolUseId(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitUserMessage(
-                    userMessage: BetaManagedAgentsUserMessageEventParams
-                ): Optional<String> = Optional.empty()
-
-                override fun visitUserInterrupt(
-                    userInterrupt: BetaManagedAgentsUserInterruptEventParams
-                ): Optional<String> = Optional.empty()
-
-                override fun visitUserToolConfirmation(
-                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEventParams
-                ): Optional<String> = Optional.of(userToolConfirmation.toolUseId())
-
-                override fun visitUserCustomToolResult(
-                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
-                ): Optional<String> = Optional.empty()
-
-                override fun visitUserDefineOutcome(
-                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                ): Optional<String> = Optional.empty()
-
-                override fun visitUserToolResult(
-                    userToolResult: BetaManagedAgentsUserToolResultEventParams
-                ): Optional<String> = Optional.of(userToolResult.toolUseId())
-
-                override fun visitSystemMessage(
-                    systemMessage: BetaManagedAgentsSystemMessageEventParams
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("tool_use_id").asKnown()
-            }
-        )
+        when {
+            userMessage != null -> Optional.empty()
+            userInterrupt != null -> Optional.empty()
+            userToolConfirmation != null -> Optional.of(userToolConfirmation.toolUseId())
+            userCustomToolResult != null -> Optional.empty()
+            userDefineOutcome != null -> Optional.empty()
+            userToolResult != null -> Optional.of(userToolResult.toolUseId())
+            systemMessage != null -> Optional.empty()
+            else -> _json.getProperty<String>("tool_use_id").asKnown()
+        }
 
     fun isError(): Optional<Boolean> =
-        accept(
-            object : Visitor<Optional<Boolean>> {
-                override fun visitUserMessage(
-                    userMessage: BetaManagedAgentsUserMessageEventParams
-                ): Optional<Boolean> = Optional.empty()
-
-                override fun visitUserInterrupt(
-                    userInterrupt: BetaManagedAgentsUserInterruptEventParams
-                ): Optional<Boolean> = Optional.empty()
-
-                override fun visitUserToolConfirmation(
-                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEventParams
-                ): Optional<Boolean> = Optional.empty()
-
-                override fun visitUserCustomToolResult(
-                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
-                ): Optional<Boolean> = userCustomToolResult.isError()
-
-                override fun visitUserDefineOutcome(
-                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                ): Optional<Boolean> = Optional.empty()
-
-                override fun visitUserToolResult(
-                    userToolResult: BetaManagedAgentsUserToolResultEventParams
-                ): Optional<Boolean> = userToolResult.isError()
-
-                override fun visitSystemMessage(
-                    systemMessage: BetaManagedAgentsSystemMessageEventParams
-                ): Optional<Boolean> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<Boolean> =
-                    json.getProperty<Boolean>("is_error").asKnown()
-            }
-        )
+        when {
+            userMessage != null -> Optional.empty()
+            userInterrupt != null -> Optional.empty()
+            userToolConfirmation != null -> Optional.empty()
+            userCustomToolResult != null -> userCustomToolResult.isError()
+            userDefineOutcome != null -> Optional.empty()
+            userToolResult != null -> userToolResult.isError()
+            systemMessage != null -> Optional.empty()
+            else -> _json.getProperty<Boolean>("is_error").asKnown()
+        }
 
     /** Parameters for sending a user message to the session. */
     fun userMessage(): Optional<BetaManagedAgentsUserMessageEventParams> =
@@ -299,51 +227,17 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitUserMessage(
-                    userMessage: BetaManagedAgentsUserMessageEventParams
-                ) {
-                    userMessage.validate()
-                }
-
-                override fun visitUserInterrupt(
-                    userInterrupt: BetaManagedAgentsUserInterruptEventParams
-                ) {
-                    userInterrupt.validate()
-                }
-
-                override fun visitUserToolConfirmation(
-                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEventParams
-                ) {
-                    userToolConfirmation.validate()
-                }
-
-                override fun visitUserCustomToolResult(
-                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
-                ) {
-                    userCustomToolResult.validate()
-                }
-
-                override fun visitUserDefineOutcome(
-                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                ) {
-                    userDefineOutcome.validate()
-                }
-
-                override fun visitUserToolResult(
-                    userToolResult: BetaManagedAgentsUserToolResultEventParams
-                ) {
-                    userToolResult.validate()
-                }
-
-                override fun visitSystemMessage(
-                    systemMessage: BetaManagedAgentsSystemMessageEventParams
-                ) {
-                    systemMessage.validate()
-                }
-            }
-        )
+        when {
+            userMessage != null -> userMessage.validate()
+            userInterrupt != null -> userInterrupt.validate()
+            userToolConfirmation != null -> userToolConfirmation.validate()
+            userCustomToolResult != null -> userCustomToolResult.validate()
+            userDefineOutcome != null -> userDefineOutcome.validate()
+            userToolResult != null -> userToolResult.validate()
+            systemMessage != null -> systemMessage.validate()
+            else ->
+                throw AnthropicInvalidDataException("Unknown BetaManagedAgentsEventParams: $_json")
+        }
         validated = true
     }
 
@@ -362,39 +256,16 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitUserMessage(
-                    userMessage: BetaManagedAgentsUserMessageEventParams
-                ) = userMessage.validity()
-
-                override fun visitUserInterrupt(
-                    userInterrupt: BetaManagedAgentsUserInterruptEventParams
-                ) = userInterrupt.validity()
-
-                override fun visitUserToolConfirmation(
-                    userToolConfirmation: BetaManagedAgentsUserToolConfirmationEventParams
-                ) = userToolConfirmation.validity()
-
-                override fun visitUserCustomToolResult(
-                    userCustomToolResult: BetaManagedAgentsUserCustomToolResultEventParams
-                ) = userCustomToolResult.validity()
-
-                override fun visitUserDefineOutcome(
-                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                ) = userDefineOutcome.validity()
-
-                override fun visitUserToolResult(
-                    userToolResult: BetaManagedAgentsUserToolResultEventParams
-                ) = userToolResult.validity()
-
-                override fun visitSystemMessage(
-                    systemMessage: BetaManagedAgentsSystemMessageEventParams
-                ) = systemMessage.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            userMessage != null -> userMessage.validity()
+            userInterrupt != null -> userInterrupt.validity()
+            userToolConfirmation != null -> userToolConfirmation.validity()
+            userCustomToolResult != null -> userCustomToolResult.validity()
+            userDefineOutcome != null -> userDefineOutcome.validity()
+            userToolResult != null -> userToolResult.validity()
+            systemMessage != null -> systemMessage.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

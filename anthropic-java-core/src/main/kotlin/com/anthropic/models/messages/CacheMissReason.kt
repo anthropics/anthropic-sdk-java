@@ -35,62 +35,26 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitModelChanged(modelChanged: CacheMissModelChanged): Type =
-                    Type.MODEL_CHANGED
-
-                override fun visitSystemChanged(systemChanged: CacheMissSystemChanged): Type =
-                    Type.SYSTEM_CHANGED
-
-                override fun visitToolsChanged(toolsChanged: CacheMissToolsChanged): Type =
-                    Type.TOOLS_CHANGED
-
-                override fun visitMessagesChanged(messagesChanged: CacheMissMessagesChanged): Type =
-                    Type.MESSAGES_CHANGED
-
-                override fun visitPreviousMessageNotFound(
-                    previousMessageNotFound: CacheMissPreviousMessageNotFound
-                ): Type = Type.PREVIOUS_MESSAGE_NOT_FOUND
-
-                override fun visitUnavailable(unavailable: CacheMissUnavailable): Type =
-                    Type.UNAVAILABLE
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            modelChanged != null -> Type.MODEL_CHANGED
+            systemChanged != null -> Type.SYSTEM_CHANGED
+            toolsChanged != null -> Type.TOOLS_CHANGED
+            messagesChanged != null -> Type.MESSAGES_CHANGED
+            previousMessageNotFound != null -> Type.PREVIOUS_MESSAGE_NOT_FOUND
+            unavailable != null -> Type.UNAVAILABLE
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun cacheMissedInputTokens(): Optional<Long> =
-        accept(
-            object : Visitor<Optional<Long>> {
-                override fun visitModelChanged(
-                    modelChanged: CacheMissModelChanged
-                ): Optional<Long> = Optional.of(modelChanged.cacheMissedInputTokens())
-
-                override fun visitSystemChanged(
-                    systemChanged: CacheMissSystemChanged
-                ): Optional<Long> = Optional.of(systemChanged.cacheMissedInputTokens())
-
-                override fun visitToolsChanged(
-                    toolsChanged: CacheMissToolsChanged
-                ): Optional<Long> = Optional.of(toolsChanged.cacheMissedInputTokens())
-
-                override fun visitMessagesChanged(
-                    messagesChanged: CacheMissMessagesChanged
-                ): Optional<Long> = Optional.of(messagesChanged.cacheMissedInputTokens())
-
-                override fun visitPreviousMessageNotFound(
-                    previousMessageNotFound: CacheMissPreviousMessageNotFound
-                ): Optional<Long> = Optional.empty()
-
-                override fun visitUnavailable(unavailable: CacheMissUnavailable): Optional<Long> =
-                    Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<Long> =
-                    json.getProperty<Long>("cache_missed_input_tokens").asKnown()
-            }
-        )
+        when {
+            modelChanged != null -> Optional.of(modelChanged.cacheMissedInputTokens())
+            systemChanged != null -> Optional.of(systemChanged.cacheMissedInputTokens())
+            toolsChanged != null -> Optional.of(toolsChanged.cacheMissedInputTokens())
+            messagesChanged != null -> Optional.of(messagesChanged.cacheMissedInputTokens())
+            previousMessageNotFound != null -> Optional.empty()
+            unavailable != null -> Optional.empty()
+            else -> _json.getProperty<Long>("cache_missed_input_tokens").asKnown()
+        }
 
     fun modelChanged(): Optional<CacheMissModelChanged> = Optional.ofNullable(modelChanged)
 
@@ -189,35 +153,15 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitModelChanged(modelChanged: CacheMissModelChanged) {
-                    modelChanged.validate()
-                }
-
-                override fun visitSystemChanged(systemChanged: CacheMissSystemChanged) {
-                    systemChanged.validate()
-                }
-
-                override fun visitToolsChanged(toolsChanged: CacheMissToolsChanged) {
-                    toolsChanged.validate()
-                }
-
-                override fun visitMessagesChanged(messagesChanged: CacheMissMessagesChanged) {
-                    messagesChanged.validate()
-                }
-
-                override fun visitPreviousMessageNotFound(
-                    previousMessageNotFound: CacheMissPreviousMessageNotFound
-                ) {
-                    previousMessageNotFound.validate()
-                }
-
-                override fun visitUnavailable(unavailable: CacheMissUnavailable) {
-                    unavailable.validate()
-                }
-            }
-        )
+        when {
+            modelChanged != null -> modelChanged.validate()
+            systemChanged != null -> systemChanged.validate()
+            toolsChanged != null -> toolsChanged.validate()
+            messagesChanged != null -> messagesChanged.validate()
+            previousMessageNotFound != null -> previousMessageNotFound.validate()
+            unavailable != null -> unavailable.validate()
+            else -> throw AnthropicInvalidDataException("Unknown CacheMissReason: $_json")
+        }
         validated = true
     }
 
@@ -236,30 +180,15 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitModelChanged(modelChanged: CacheMissModelChanged) =
-                    modelChanged.validity()
-
-                override fun visitSystemChanged(systemChanged: CacheMissSystemChanged) =
-                    systemChanged.validity()
-
-                override fun visitToolsChanged(toolsChanged: CacheMissToolsChanged) =
-                    toolsChanged.validity()
-
-                override fun visitMessagesChanged(messagesChanged: CacheMissMessagesChanged) =
-                    messagesChanged.validity()
-
-                override fun visitPreviousMessageNotFound(
-                    previousMessageNotFound: CacheMissPreviousMessageNotFound
-                ) = previousMessageNotFound.validity()
-
-                override fun visitUnavailable(unavailable: CacheMissUnavailable) =
-                    unavailable.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            modelChanged != null -> modelChanged.validity()
+            systemChanged != null -> systemChanged.validity()
+            toolsChanged != null -> toolsChanged.validity()
+            messagesChanged != null -> messagesChanged.validity()
+            previousMessageNotFound != null -> previousMessageNotFound.validity()
+            unavailable != null -> unavailable.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

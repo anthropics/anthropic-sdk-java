@@ -67,24 +67,20 @@ private constructor(
             .toolChanges(
                 _toolChanges().map {
                     it.map {
-                        it.accept(
-                            object :
-                                BetaCompactionBlock.ToolChange.Visitor<
-                                    BetaCompactionBlockParam.ToolChange
-                                > {
-                                override fun visitAddition(
-                                    addition: BetaResponseToolAdditionBlock
-                                ): BetaCompactionBlockParam.ToolChange =
-                                    BetaCompactionBlockParam.ToolChange.ofAddition(
-                                        addition.toParam()
-                                    )
-
-                                override fun visitRemoval(
-                                    removal: BetaResponseToolRemovalBlock
-                                ): BetaCompactionBlockParam.ToolChange =
-                                    BetaCompactionBlockParam.ToolChange.ofRemoval(removal.toParam())
-                            }
-                        )
+                        when {
+                            it.isAddition() ->
+                                BetaCompactionBlockParam.ToolChange.ofAddition(
+                                    it.asAddition().toParam()
+                                )
+                            it.isRemoval() ->
+                                BetaCompactionBlockParam.ToolChange.ofRemoval(
+                                    it.asRemoval().toParam()
+                                )
+                            else ->
+                                throw AnthropicInvalidDataException(
+                                    "Unknown ToolChange: ${it._json().getOrNull()}"
+                                )
+                        }
                     }
                 }
             )
@@ -827,18 +823,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitAddition(addition: BetaResponseToolAdditionBlock): Type =
-                        Type.TOOL_ADDITION
-
-                    override fun visitRemoval(removal: BetaResponseToolRemovalBlock): Type =
-                        Type.TOOL_REMOVAL
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                addition != null -> Type.TOOL_ADDITION
+                removal != null -> Type.TOOL_REMOVAL
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /**
          * An entry of a `compaction` block's `tool_changes`: a tool the compacted range made
@@ -924,17 +913,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitAddition(addition: BetaResponseToolAdditionBlock) {
-                        addition.validate()
-                    }
-
-                    override fun visitRemoval(removal: BetaResponseToolRemovalBlock) {
-                        removal.validate()
-                    }
-                }
-            )
+            when {
+                addition != null -> addition.validate()
+                removal != null -> removal.validate()
+                else -> throw AnthropicInvalidDataException("Unknown ToolChange: $_json")
+            }
             validated = true
         }
 
@@ -954,17 +937,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitAddition(addition: BetaResponseToolAdditionBlock) =
-                        addition.validity()
-
-                    override fun visitRemoval(removal: BetaResponseToolRemovalBlock) =
-                        removal.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                addition != null -> addition.validity()
+                removal != null -> removal.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

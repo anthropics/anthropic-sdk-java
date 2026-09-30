@@ -39,24 +39,12 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitUserMessage(
-                    userMessage: BetaManagedAgentsUserMessageEventParams
-                ): Type = Type.USER_MESSAGE
-
-                override fun visitUserDefineOutcome(
-                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                ): Type = Type.USER_DEFINE_OUTCOME
-
-                override fun visitSystemMessage(
-                    systemMessage: BetaManagedAgentsSystemMessageEventParams
-                ): Type = Type.SYSTEM_MESSAGE
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            userMessage != null -> Type.USER_MESSAGE
+            userDefineOutcome != null -> Type.USER_DEFINE_OUTCOME
+            systemMessage != null -> Type.SYSTEM_MESSAGE
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     /** Parameters for sending a user message to the session. */
     fun userMessage(): Optional<BetaManagedAgentsUserMessageEventParams> =
@@ -160,27 +148,15 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitUserMessage(
-                    userMessage: BetaManagedAgentsUserMessageEventParams
-                ) {
-                    userMessage.validate()
-                }
-
-                override fun visitUserDefineOutcome(
-                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                ) {
-                    userDefineOutcome.validate()
-                }
-
-                override fun visitSystemMessage(
-                    systemMessage: BetaManagedAgentsSystemMessageEventParams
-                ) {
-                    systemMessage.validate()
-                }
-            }
-        )
+        when {
+            userMessage != null -> userMessage.validate()
+            userDefineOutcome != null -> userDefineOutcome.validate()
+            systemMessage != null -> systemMessage.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsDeploymentInitialEventParams: $_json"
+                )
+        }
         validated = true
     }
 
@@ -199,23 +175,12 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitUserMessage(
-                    userMessage: BetaManagedAgentsUserMessageEventParams
-                ) = userMessage.validity()
-
-                override fun visitUserDefineOutcome(
-                    userDefineOutcome: BetaManagedAgentsUserDefineOutcomeEventParams
-                ) = userDefineOutcome.validity()
-
-                override fun visitSystemMessage(
-                    systemMessage: BetaManagedAgentsSystemMessageEventParams
-                ) = systemMessage.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            userMessage != null -> userMessage.validity()
+            userDefineOutcome != null -> userDefineOutcome.validity()
+            systemMessage != null -> systemMessage.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

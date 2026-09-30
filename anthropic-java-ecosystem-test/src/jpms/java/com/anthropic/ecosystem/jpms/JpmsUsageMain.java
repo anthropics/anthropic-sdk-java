@@ -36,6 +36,7 @@ public final class JpmsUsageMain {
         require(client.models() != null, "models");
         require(client.files() != null, "files");
         require(client.skills() != null, "skills");
+        require(client.organization() != null, "organization");
         require(client.beta() != null, "beta");
 
         requireModule(AnthropicOkHttpClient.class, OKHTTP_MODULE);

@@ -466,45 +466,24 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitBase64(base64: BetaBase64PdfSource): Type = Type.BASE64
-
-                    override fun visitText(text: BetaPlainTextSource): Type = Type.TEXT
-
-                    override fun visitContent(content: BetaContentBlockSource): Type = Type.CONTENT
-
-                    override fun visitUrl(url: BetaUrlPdfSource): Type = Type.URL
-
-                    override fun visitFile(file: BetaFileDocumentSource): Type = Type.FILE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                base64 != null -> Type.BASE64
+                text != null -> Type.TEXT
+                content != null -> Type.CONTENT
+                url != null -> Type.URL
+                file != null -> Type.FILE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun data(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitBase64(base64: BetaBase64PdfSource): Optional<String> =
-                        Optional.of(base64.data())
-
-                    override fun visitText(text: BetaPlainTextSource): Optional<String> =
-                        Optional.of(text.data())
-
-                    override fun visitContent(content: BetaContentBlockSource): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitUrl(url: BetaUrlPdfSource): Optional<String> =
-                        Optional.empty()
-
-                    override fun visitFile(file: BetaFileDocumentSource): Optional<String> =
-                        Optional.empty()
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("data").asKnown()
-                }
-            )
+            when {
+                base64 != null -> Optional.of(base64.data())
+                text != null -> Optional.of(text.data())
+                content != null -> Optional.empty()
+                url != null -> Optional.empty()
+                file != null -> Optional.empty()
+                else -> _json.getProperty<String>("data").asKnown()
+            }
 
         fun base64(): Optional<BetaBase64PdfSource> = Optional.ofNullable(base64)
 
@@ -593,29 +572,14 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBase64(base64: BetaBase64PdfSource) {
-                        base64.validate()
-                    }
-
-                    override fun visitText(text: BetaPlainTextSource) {
-                        text.validate()
-                    }
-
-                    override fun visitContent(content: BetaContentBlockSource) {
-                        content.validate()
-                    }
-
-                    override fun visitUrl(url: BetaUrlPdfSource) {
-                        url.validate()
-                    }
-
-                    override fun visitFile(file: BetaFileDocumentSource) {
-                        file.validate()
-                    }
-                }
-            )
+            when {
+                base64 != null -> base64.validate()
+                text != null -> text.validate()
+                content != null -> content.validate()
+                url != null -> url.validate()
+                file != null -> file.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Source: $_json")
+            }
             validated = true
         }
 
@@ -635,21 +599,14 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBase64(base64: BetaBase64PdfSource) = base64.validity()
-
-                    override fun visitText(text: BetaPlainTextSource) = text.validity()
-
-                    override fun visitContent(content: BetaContentBlockSource) = content.validity()
-
-                    override fun visitUrl(url: BetaUrlPdfSource) = url.validity()
-
-                    override fun visitFile(file: BetaFileDocumentSource) = file.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                base64 != null -> base64.validity()
+                text != null -> text.validity()
+                content != null -> content.validity()
+                url != null -> url.validity()
+                file != null -> file.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

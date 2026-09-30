@@ -40,7 +40,7 @@ private constructor(
 
     override fun items(): List<BetaManagedAgentsSession> = data()
 
-    override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
+    override fun hasNextPage(): Boolean = nextPageRaw().isPresent
 
     fun nextPageParams(): SessionListParams {
         val nextCursor =

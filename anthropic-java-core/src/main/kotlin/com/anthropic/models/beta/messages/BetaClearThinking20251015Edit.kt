@@ -302,29 +302,17 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaThinkingTurns(betaThinkingTurns: BetaThinkingTurns) {
-                        betaThinkingTurns.validate()
-                    }
-
-                    override fun visitBetaAllThinkingTurns(
-                        betaAllThinkingTurns: BetaAllThinkingTurns
-                    ) {
-                        betaAllThinkingTurns.validate()
-                    }
-
-                    override fun visitAll(all: JsonValue) {
-                        all.let {
-                            if (it != JsonValue.from("all")) {
-                                throw AnthropicInvalidDataException(
-                                    "'all' is invalid, received $it"
-                                )
-                            }
+            when {
+                betaThinkingTurns != null -> betaThinkingTurns.validate()
+                betaAllThinkingTurns != null -> betaAllThinkingTurns.validate()
+                all != null ->
+                    all.let {
+                        if (it != JsonValue.from("all")) {
+                            throw AnthropicInvalidDataException("'all' is invalid, received $it")
                         }
                     }
-                }
-            )
+                else -> throw AnthropicInvalidDataException("Unknown Keep: $_json")
+            }
             validated = true
         }
 
@@ -344,21 +332,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaThinkingTurns(betaThinkingTurns: BetaThinkingTurns) =
-                        betaThinkingTurns.validity()
-
-                    override fun visitBetaAllThinkingTurns(
-                        betaAllThinkingTurns: BetaAllThinkingTurns
-                    ) = betaAllThinkingTurns.validity()
-
-                    override fun visitAll(all: JsonValue) =
-                        all.let { if (it == JsonValue.from("all")) 1 else 0 }
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaThinkingTurns != null -> betaThinkingTurns.validity()
+                betaAllThinkingTurns != null -> betaAllThinkingTurns.validity()
+                all != null -> all.let { if (it == JsonValue.from("all")) 1 else 0 }
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -324,20 +324,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitWorkspace(
-                        workspace: BetaWorkspaceRateLimitWorkspaceSource
-                    ): Type = Type.WORKSPACE
-
-                    override fun visitOrganization(
-                        organization: BetaWorkspaceRateLimitOrganizationSource
-                    ): Type = Type.ORGANIZATION
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                workspace != null -> Type.WORKSPACE
+                organization != null -> Type.ORGANIZATION
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun workspace(): Optional<BetaWorkspaceRateLimitWorkspaceSource> =
             Optional.ofNullable(workspace)
@@ -408,19 +399,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitWorkspace(workspace: BetaWorkspaceRateLimitWorkspaceSource) {
-                        workspace.validate()
-                    }
-
-                    override fun visitOrganization(
-                        organization: BetaWorkspaceRateLimitOrganizationSource
-                    ) {
-                        organization.validate()
-                    }
-                }
-            )
+            when {
+                workspace != null -> workspace.validate()
+                organization != null -> organization.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Source: $_json")
+            }
             validated = true
         }
 
@@ -440,18 +423,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitWorkspace(workspace: BetaWorkspaceRateLimitWorkspaceSource) =
-                        workspace.validity()
-
-                    override fun visitOrganization(
-                        organization: BetaWorkspaceRateLimitOrganizationSource
-                    ) = organization.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                workspace != null -> workspace.validity()
+                organization != null -> organization.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

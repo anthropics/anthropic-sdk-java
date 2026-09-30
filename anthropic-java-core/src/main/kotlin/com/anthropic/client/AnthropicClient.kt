@@ -6,6 +6,7 @@ import com.anthropic.services.blocking.CompletionService
 import com.anthropic.services.blocking.FileService
 import com.anthropic.services.blocking.MessageService
 import com.anthropic.services.blocking.ModelService
+import com.anthropic.services.blocking.OrganizationService
 import com.anthropic.services.blocking.SkillService
 import java.util.function.Consumer
 
@@ -55,6 +56,8 @@ interface AnthropicClient {
 
     fun skills(): SkillService
 
+    fun organization(): OrganizationService
+
     fun beta(): BetaService
 
     /**
@@ -89,6 +92,8 @@ interface AnthropicClient {
         fun files(): FileService.WithRawResponse
 
         fun skills(): SkillService.WithRawResponse
+
+        fun organization(): OrganizationService.WithRawResponse
 
         fun beta(): BetaService.WithRawResponse
     }

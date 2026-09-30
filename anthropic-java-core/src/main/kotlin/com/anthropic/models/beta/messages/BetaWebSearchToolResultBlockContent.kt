@@ -27,25 +27,20 @@ private constructor(
 ) {
 
     fun toParam(): BetaWebSearchToolResultBlockParamContent =
-        accept(
-            object : Visitor<BetaWebSearchToolResultBlockParamContent> {
-                override fun visitError(
-                    error: BetaWebSearchToolResultError
-                ): BetaWebSearchToolResultBlockParamContent =
-                    BetaWebSearchToolResultBlockParamContent.ofRequestError(
-                        BetaWebSearchToolRequestError.builder()
-                            .errorCode(error._errorCode())
-                            .build()
-                    )
-
-                override fun visitResultBlocks(
-                    resultBlocks: List<BetaWebSearchResultBlock>
-                ): BetaWebSearchToolResultBlockParamContent =
-                    BetaWebSearchToolResultBlockParamContent.ofResultBlock(
-                        resultBlocks.map { it.toParam() }
-                    )
-            }
-        )
+        when {
+            error != null ->
+                BetaWebSearchToolResultBlockParamContent.ofRequestError(
+                    BetaWebSearchToolRequestError.builder().errorCode(error._errorCode()).build()
+                )
+            resultBlocks != null ->
+                BetaWebSearchToolResultBlockParamContent.ofResultBlock(
+                    resultBlocks.map { it.toParam() }
+                )
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaWebSearchToolResultBlockContent: $_json"
+                )
+        }
 
     fun error(): Optional<BetaWebSearchToolResultError> = Optional.ofNullable(error)
 
@@ -112,17 +107,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitError(error: BetaWebSearchToolResultError) {
-                    error.validate()
-                }
-
-                override fun visitResultBlocks(resultBlocks: List<BetaWebSearchResultBlock>) {
-                    resultBlocks.forEach { it.validate() }
-                }
-            }
-        )
+        when {
+            error != null -> error.validate()
+            resultBlocks != null -> resultBlocks.forEach { it.validate() }
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaWebSearchToolResultBlockContent: $_json"
+                )
+        }
         validated = true
     }
 
@@ -141,16 +133,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitError(error: BetaWebSearchToolResultError) = error.validity()
-
-                override fun visitResultBlocks(resultBlocks: List<BetaWebSearchResultBlock>) =
-                    resultBlocks.sumOf { it.validity().toInt() }
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            error != null -> error.validity()
+            resultBlocks != null -> resultBlocks.sumOf { it.validity().toInt() }
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

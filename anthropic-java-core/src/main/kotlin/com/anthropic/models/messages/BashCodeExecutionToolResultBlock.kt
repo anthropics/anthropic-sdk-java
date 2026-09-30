@@ -48,28 +48,22 @@ private constructor(
         BashCodeExecutionToolResultBlockParam.builder()
             .content(
                 _content().map {
-                    it.accept(
-                        object :
-                            BashCodeExecutionToolResultBlock.Content.Visitor<
-                                BashCodeExecutionToolResultBlockParam.Content
-                            > {
-                            override fun visitBashCodeExecutionToolResultError(
-                                bashCodeExecutionToolResultError: BashCodeExecutionToolResultError
-                            ): BashCodeExecutionToolResultBlockParam.Content =
-                                BashCodeExecutionToolResultBlockParam.Content
-                                    .ofBashCodeExecutionToolResultErrorParam(
-                                        bashCodeExecutionToolResultError.toParam()
-                                    )
-
-                            override fun visitBashCodeExecutionResultBlock(
-                                bashCodeExecutionResultBlock: BashCodeExecutionResultBlock
-                            ): BashCodeExecutionToolResultBlockParam.Content =
-                                BashCodeExecutionToolResultBlockParam.Content
-                                    .ofBashCodeExecutionResultBlockParam(
-                                        bashCodeExecutionResultBlock.toParam()
-                                    )
-                        }
-                    )
+                    when {
+                        it.isBashCodeExecutionToolResultError() ->
+                            BashCodeExecutionToolResultBlockParam.Content
+                                .ofBashCodeExecutionToolResultErrorParam(
+                                    it.asBashCodeExecutionToolResultError().toParam()
+                                )
+                        it.isBashCodeExecutionResultBlock() ->
+                            BashCodeExecutionToolResultBlockParam.Content
+                                .ofBashCodeExecutionResultBlockParam(
+                                    it.asBashCodeExecutionResultBlock().toParam()
+                                )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown Content: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .toolUseId(_toolUseId())
@@ -372,21 +366,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBashCodeExecutionToolResultError(
-                        bashCodeExecutionToolResultError: BashCodeExecutionToolResultError
-                    ) {
-                        bashCodeExecutionToolResultError.validate()
-                    }
-
-                    override fun visitBashCodeExecutionResultBlock(
-                        bashCodeExecutionResultBlock: BashCodeExecutionResultBlock
-                    ) {
-                        bashCodeExecutionResultBlock.validate()
-                    }
-                }
-            )
+            when {
+                bashCodeExecutionToolResultError != null ->
+                    bashCodeExecutionToolResultError.validate()
+                bashCodeExecutionResultBlock != null -> bashCodeExecutionResultBlock.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -406,19 +391,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBashCodeExecutionToolResultError(
-                        bashCodeExecutionToolResultError: BashCodeExecutionToolResultError
-                    ) = bashCodeExecutionToolResultError.validity()
-
-                    override fun visitBashCodeExecutionResultBlock(
-                        bashCodeExecutionResultBlock: BashCodeExecutionResultBlock
-                    ) = bashCodeExecutionResultBlock.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                bashCodeExecutionToolResultError != null ->
+                    bashCodeExecutionToolResultError.validity()
+                bashCodeExecutionResultBlock != null -> bashCodeExecutionResultBlock.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

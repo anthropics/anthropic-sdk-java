@@ -518,37 +518,17 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitTextEditorCodeExecutionToolResultErrorParam(
-                        textEditorCodeExecutionToolResultErrorParam:
-                            TextEditorCodeExecutionToolResultErrorParam
-                    ) {
-                        textEditorCodeExecutionToolResultErrorParam.validate()
-                    }
-
-                    override fun visitTextEditorCodeExecutionViewResultBlockParam(
-                        textEditorCodeExecutionViewResultBlockParam:
-                            TextEditorCodeExecutionViewResultBlockParam
-                    ) {
-                        textEditorCodeExecutionViewResultBlockParam.validate()
-                    }
-
-                    override fun visitTextEditorCodeExecutionCreateResultBlockParam(
-                        textEditorCodeExecutionCreateResultBlockParam:
-                            TextEditorCodeExecutionCreateResultBlockParam
-                    ) {
-                        textEditorCodeExecutionCreateResultBlockParam.validate()
-                    }
-
-                    override fun visitTextEditorCodeExecutionStrReplaceResultBlockParam(
-                        textEditorCodeExecutionStrReplaceResultBlockParam:
-                            TextEditorCodeExecutionStrReplaceResultBlockParam
-                    ) {
-                        textEditorCodeExecutionStrReplaceResultBlockParam.validate()
-                    }
-                }
-            )
+            when {
+                textEditorCodeExecutionToolResultErrorParam != null ->
+                    textEditorCodeExecutionToolResultErrorParam.validate()
+                textEditorCodeExecutionViewResultBlockParam != null ->
+                    textEditorCodeExecutionViewResultBlockParam.validate()
+                textEditorCodeExecutionCreateResultBlockParam != null ->
+                    textEditorCodeExecutionCreateResultBlockParam.validate()
+                textEditorCodeExecutionStrReplaceResultBlockParam != null ->
+                    textEditorCodeExecutionStrReplaceResultBlockParam.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -568,31 +548,17 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitTextEditorCodeExecutionToolResultErrorParam(
-                        textEditorCodeExecutionToolResultErrorParam:
-                            TextEditorCodeExecutionToolResultErrorParam
-                    ) = textEditorCodeExecutionToolResultErrorParam.validity()
-
-                    override fun visitTextEditorCodeExecutionViewResultBlockParam(
-                        textEditorCodeExecutionViewResultBlockParam:
-                            TextEditorCodeExecutionViewResultBlockParam
-                    ) = textEditorCodeExecutionViewResultBlockParam.validity()
-
-                    override fun visitTextEditorCodeExecutionCreateResultBlockParam(
-                        textEditorCodeExecutionCreateResultBlockParam:
-                            TextEditorCodeExecutionCreateResultBlockParam
-                    ) = textEditorCodeExecutionCreateResultBlockParam.validity()
-
-                    override fun visitTextEditorCodeExecutionStrReplaceResultBlockParam(
-                        textEditorCodeExecutionStrReplaceResultBlockParam:
-                            TextEditorCodeExecutionStrReplaceResultBlockParam
-                    ) = textEditorCodeExecutionStrReplaceResultBlockParam.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                textEditorCodeExecutionToolResultErrorParam != null ->
+                    textEditorCodeExecutionToolResultErrorParam.validity()
+                textEditorCodeExecutionViewResultBlockParam != null ->
+                    textEditorCodeExecutionViewResultBlockParam.validity()
+                textEditorCodeExecutionCreateResultBlockParam != null ->
+                    textEditorCodeExecutionCreateResultBlockParam.validity()
+                textEditorCodeExecutionStrReplaceResultBlockParam != null ->
+                    textEditorCodeExecutionStrReplaceResultBlockParam.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -34,218 +34,84 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitCharLocation(charLocation: CitationCharLocation): Type =
-                    Type.CHAR_LOCATION
-
-                override fun visitPageLocation(pageLocation: CitationPageLocation): Type =
-                    Type.PAGE_LOCATION
-
-                override fun visitContentBlockLocation(
-                    contentBlockLocation: CitationContentBlockLocation
-                ): Type = Type.CONTENT_BLOCK_LOCATION
-
-                override fun visitWebSearchResultLocation(
-                    webSearchResultLocation: CitationsWebSearchResultLocation
-                ): Type = Type.WEB_SEARCH_RESULT_LOCATION
-
-                override fun visitSearchResultLocation(
-                    searchResultLocation: CitationsSearchResultLocation
-                ): Type = Type.SEARCH_RESULT_LOCATION
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            charLocation != null -> Type.CHAR_LOCATION
+            pageLocation != null -> Type.PAGE_LOCATION
+            contentBlockLocation != null -> Type.CONTENT_BLOCK_LOCATION
+            webSearchResultLocation != null -> Type.WEB_SEARCH_RESULT_LOCATION
+            searchResultLocation != null -> Type.SEARCH_RESULT_LOCATION
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun citedText(): String =
-        accept(
-            object : Visitor<String> {
-                override fun visitCharLocation(charLocation: CitationCharLocation): String =
-                    charLocation.citedText()
-
-                override fun visitPageLocation(pageLocation: CitationPageLocation): String =
-                    pageLocation.citedText()
-
-                override fun visitContentBlockLocation(
-                    contentBlockLocation: CitationContentBlockLocation
-                ): String = contentBlockLocation.citedText()
-
-                override fun visitWebSearchResultLocation(
-                    webSearchResultLocation: CitationsWebSearchResultLocation
-                ): String = webSearchResultLocation.citedText()
-
-                override fun visitSearchResultLocation(
-                    searchResultLocation: CitationsSearchResultLocation
-                ): String = searchResultLocation.citedText()
-
-                override fun unknown(json: JsonValue?): String =
-                    json.getProperty<String>("cited_text").getRequired("cited_text")
-            }
-        )
+        when {
+            charLocation != null -> charLocation.citedText()
+            pageLocation != null -> pageLocation.citedText()
+            contentBlockLocation != null -> contentBlockLocation.citedText()
+            webSearchResultLocation != null -> webSearchResultLocation.citedText()
+            searchResultLocation != null -> searchResultLocation.citedText()
+            else -> _json.getProperty<String>("cited_text").getRequired("cited_text")
+        }
 
     fun documentIndex(): Optional<Long> =
-        accept(
-            object : Visitor<Optional<Long>> {
-                override fun visitCharLocation(charLocation: CitationCharLocation): Optional<Long> =
-                    Optional.of(charLocation.documentIndex())
-
-                override fun visitPageLocation(pageLocation: CitationPageLocation): Optional<Long> =
-                    Optional.of(pageLocation.documentIndex())
-
-                override fun visitContentBlockLocation(
-                    contentBlockLocation: CitationContentBlockLocation
-                ): Optional<Long> = Optional.of(contentBlockLocation.documentIndex())
-
-                override fun visitWebSearchResultLocation(
-                    webSearchResultLocation: CitationsWebSearchResultLocation
-                ): Optional<Long> = Optional.empty()
-
-                override fun visitSearchResultLocation(
-                    searchResultLocation: CitationsSearchResultLocation
-                ): Optional<Long> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<Long> =
-                    json.getProperty<Long>("document_index").asKnown()
-            }
-        )
+        when {
+            charLocation != null -> Optional.of(charLocation.documentIndex())
+            pageLocation != null -> Optional.of(pageLocation.documentIndex())
+            contentBlockLocation != null -> Optional.of(contentBlockLocation.documentIndex())
+            webSearchResultLocation != null -> Optional.empty()
+            searchResultLocation != null -> Optional.empty()
+            else -> _json.getProperty<Long>("document_index").asKnown()
+        }
 
     fun documentTitle(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitCharLocation(
-                    charLocation: CitationCharLocation
-                ): Optional<String> = charLocation.documentTitle()
-
-                override fun visitPageLocation(
-                    pageLocation: CitationPageLocation
-                ): Optional<String> = pageLocation.documentTitle()
-
-                override fun visitContentBlockLocation(
-                    contentBlockLocation: CitationContentBlockLocation
-                ): Optional<String> = contentBlockLocation.documentTitle()
-
-                override fun visitWebSearchResultLocation(
-                    webSearchResultLocation: CitationsWebSearchResultLocation
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSearchResultLocation(
-                    searchResultLocation: CitationsSearchResultLocation
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("document_title").asKnown()
-            }
-        )
+        when {
+            charLocation != null -> charLocation.documentTitle()
+            pageLocation != null -> pageLocation.documentTitle()
+            contentBlockLocation != null -> contentBlockLocation.documentTitle()
+            webSearchResultLocation != null -> Optional.empty()
+            searchResultLocation != null -> Optional.empty()
+            else -> _json.getProperty<String>("document_title").asKnown()
+        }
 
     fun fileId(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitCharLocation(
-                    charLocation: CitationCharLocation
-                ): Optional<String> = charLocation.fileId()
-
-                override fun visitPageLocation(
-                    pageLocation: CitationPageLocation
-                ): Optional<String> = pageLocation.fileId()
-
-                override fun visitContentBlockLocation(
-                    contentBlockLocation: CitationContentBlockLocation
-                ): Optional<String> = contentBlockLocation.fileId()
-
-                override fun visitWebSearchResultLocation(
-                    webSearchResultLocation: CitationsWebSearchResultLocation
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSearchResultLocation(
-                    searchResultLocation: CitationsSearchResultLocation
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("file_id").asKnown()
-            }
-        )
+        when {
+            charLocation != null -> charLocation.fileId()
+            pageLocation != null -> pageLocation.fileId()
+            contentBlockLocation != null -> contentBlockLocation.fileId()
+            webSearchResultLocation != null -> Optional.empty()
+            searchResultLocation != null -> Optional.empty()
+            else -> _json.getProperty<String>("file_id").asKnown()
+        }
 
     fun endBlockIndex(): Optional<Long> =
-        accept(
-            object : Visitor<Optional<Long>> {
-                override fun visitCharLocation(charLocation: CitationCharLocation): Optional<Long> =
-                    Optional.empty()
-
-                override fun visitPageLocation(pageLocation: CitationPageLocation): Optional<Long> =
-                    Optional.empty()
-
-                override fun visitContentBlockLocation(
-                    contentBlockLocation: CitationContentBlockLocation
-                ): Optional<Long> = Optional.of(contentBlockLocation.endBlockIndex())
-
-                override fun visitWebSearchResultLocation(
-                    webSearchResultLocation: CitationsWebSearchResultLocation
-                ): Optional<Long> = Optional.empty()
-
-                override fun visitSearchResultLocation(
-                    searchResultLocation: CitationsSearchResultLocation
-                ): Optional<Long> = Optional.of(searchResultLocation.endBlockIndex())
-
-                override fun unknown(json: JsonValue?): Optional<Long> =
-                    json.getProperty<Long>("end_block_index").asKnown()
-            }
-        )
+        when {
+            charLocation != null -> Optional.empty()
+            pageLocation != null -> Optional.empty()
+            contentBlockLocation != null -> Optional.of(contentBlockLocation.endBlockIndex())
+            webSearchResultLocation != null -> Optional.empty()
+            searchResultLocation != null -> Optional.of(searchResultLocation.endBlockIndex())
+            else -> _json.getProperty<Long>("end_block_index").asKnown()
+        }
 
     fun startBlockIndex(): Optional<Long> =
-        accept(
-            object : Visitor<Optional<Long>> {
-                override fun visitCharLocation(charLocation: CitationCharLocation): Optional<Long> =
-                    Optional.empty()
-
-                override fun visitPageLocation(pageLocation: CitationPageLocation): Optional<Long> =
-                    Optional.empty()
-
-                override fun visitContentBlockLocation(
-                    contentBlockLocation: CitationContentBlockLocation
-                ): Optional<Long> = Optional.of(contentBlockLocation.startBlockIndex())
-
-                override fun visitWebSearchResultLocation(
-                    webSearchResultLocation: CitationsWebSearchResultLocation
-                ): Optional<Long> = Optional.empty()
-
-                override fun visitSearchResultLocation(
-                    searchResultLocation: CitationsSearchResultLocation
-                ): Optional<Long> = Optional.of(searchResultLocation.startBlockIndex())
-
-                override fun unknown(json: JsonValue?): Optional<Long> =
-                    json.getProperty<Long>("start_block_index").asKnown()
-            }
-        )
+        when {
+            charLocation != null -> Optional.empty()
+            pageLocation != null -> Optional.empty()
+            contentBlockLocation != null -> Optional.of(contentBlockLocation.startBlockIndex())
+            webSearchResultLocation != null -> Optional.empty()
+            searchResultLocation != null -> Optional.of(searchResultLocation.startBlockIndex())
+            else -> _json.getProperty<Long>("start_block_index").asKnown()
+        }
 
     fun title(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitCharLocation(
-                    charLocation: CitationCharLocation
-                ): Optional<String> = Optional.empty()
-
-                override fun visitPageLocation(
-                    pageLocation: CitationPageLocation
-                ): Optional<String> = Optional.empty()
-
-                override fun visitContentBlockLocation(
-                    contentBlockLocation: CitationContentBlockLocation
-                ): Optional<String> = Optional.empty()
-
-                override fun visitWebSearchResultLocation(
-                    webSearchResultLocation: CitationsWebSearchResultLocation
-                ): Optional<String> = webSearchResultLocation.title()
-
-                override fun visitSearchResultLocation(
-                    searchResultLocation: CitationsSearchResultLocation
-                ): Optional<String> = searchResultLocation.title()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("title").asKnown()
-            }
-        )
+        when {
+            charLocation != null -> Optional.empty()
+            pageLocation != null -> Optional.empty()
+            contentBlockLocation != null -> Optional.empty()
+            webSearchResultLocation != null -> webSearchResultLocation.title()
+            searchResultLocation != null -> searchResultLocation.title()
+            else -> _json.getProperty<String>("title").asKnown()
+        }
 
     fun charLocation(): Optional<CitationCharLocation> = Optional.ofNullable(charLocation)
 
@@ -340,35 +206,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitCharLocation(charLocation: CitationCharLocation) {
-                    charLocation.validate()
-                }
-
-                override fun visitPageLocation(pageLocation: CitationPageLocation) {
-                    pageLocation.validate()
-                }
-
-                override fun visitContentBlockLocation(
-                    contentBlockLocation: CitationContentBlockLocation
-                ) {
-                    contentBlockLocation.validate()
-                }
-
-                override fun visitWebSearchResultLocation(
-                    webSearchResultLocation: CitationsWebSearchResultLocation
-                ) {
-                    webSearchResultLocation.validate()
-                }
-
-                override fun visitSearchResultLocation(
-                    searchResultLocation: CitationsSearchResultLocation
-                ) {
-                    searchResultLocation.validate()
-                }
-            }
-        )
+        when {
+            charLocation != null -> charLocation.validate()
+            pageLocation != null -> pageLocation.validate()
+            contentBlockLocation != null -> contentBlockLocation.validate()
+            webSearchResultLocation != null -> webSearchResultLocation.validate()
+            searchResultLocation != null -> searchResultLocation.validate()
+            else -> throw AnthropicInvalidDataException("Unknown TextCitation: $_json")
+        }
         validated = true
     }
 
@@ -387,29 +232,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitCharLocation(charLocation: CitationCharLocation) =
-                    charLocation.validity()
-
-                override fun visitPageLocation(pageLocation: CitationPageLocation) =
-                    pageLocation.validity()
-
-                override fun visitContentBlockLocation(
-                    contentBlockLocation: CitationContentBlockLocation
-                ) = contentBlockLocation.validity()
-
-                override fun visitWebSearchResultLocation(
-                    webSearchResultLocation: CitationsWebSearchResultLocation
-                ) = webSearchResultLocation.validity()
-
-                override fun visitSearchResultLocation(
-                    searchResultLocation: CitationsSearchResultLocation
-                ) = searchResultLocation.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            charLocation != null -> charLocation.validity()
+            pageLocation != null -> pageLocation.validity()
+            contentBlockLocation != null -> contentBlockLocation.validity()
+            webSearchResultLocation != null -> webSearchResultLocation.validity()
+            searchResultLocation != null -> searchResultLocation.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

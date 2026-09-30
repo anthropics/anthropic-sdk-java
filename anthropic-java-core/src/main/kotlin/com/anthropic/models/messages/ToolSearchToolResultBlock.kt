@@ -48,28 +48,21 @@ private constructor(
         ToolSearchToolResultBlockParam.builder()
             .content(
                 _content().map {
-                    it.accept(
-                        object :
-                            ToolSearchToolResultBlock.Content.Visitor<
-                                ToolSearchToolResultBlockParam.Content
-                            > {
-                            override fun visitToolSearchToolResultError(
-                                toolSearchToolResultError: ToolSearchToolResultError
-                            ): ToolSearchToolResultBlockParam.Content =
-                                ToolSearchToolResultBlockParam.Content
-                                    .ofToolSearchToolResultErrorParam(
-                                        toolSearchToolResultError.toParam()
-                                    )
-
-                            override fun visitToolSearchToolSearchResultBlock(
-                                toolSearchToolSearchResultBlock: ToolSearchToolSearchResultBlock
-                            ): ToolSearchToolResultBlockParam.Content =
-                                ToolSearchToolResultBlockParam.Content
-                                    .ofToolSearchToolSearchResultBlockParam(
-                                        toolSearchToolSearchResultBlock.toParam()
-                                    )
-                        }
-                    )
+                    when {
+                        it.isToolSearchToolResultError() ->
+                            ToolSearchToolResultBlockParam.Content.ofToolSearchToolResultErrorParam(
+                                it.asToolSearchToolResultError().toParam()
+                            )
+                        it.isToolSearchToolSearchResultBlock() ->
+                            ToolSearchToolResultBlockParam.Content
+                                .ofToolSearchToolSearchResultBlockParam(
+                                    it.asToolSearchToolSearchResultBlock().toParam()
+                                )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown Content: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .toolUseId(_toolUseId())
@@ -369,21 +362,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitToolSearchToolResultError(
-                        toolSearchToolResultError: ToolSearchToolResultError
-                    ) {
-                        toolSearchToolResultError.validate()
-                    }
-
-                    override fun visitToolSearchToolSearchResultBlock(
-                        toolSearchToolSearchResultBlock: ToolSearchToolSearchResultBlock
-                    ) {
-                        toolSearchToolSearchResultBlock.validate()
-                    }
-                }
-            )
+            when {
+                toolSearchToolResultError != null -> toolSearchToolResultError.validate()
+                toolSearchToolSearchResultBlock != null ->
+                    toolSearchToolSearchResultBlock.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -403,19 +387,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitToolSearchToolResultError(
-                        toolSearchToolResultError: ToolSearchToolResultError
-                    ) = toolSearchToolResultError.validity()
-
-                    override fun visitToolSearchToolSearchResultBlock(
-                        toolSearchToolSearchResultBlock: ToolSearchToolSearchResultBlock
-                    ) = toolSearchToolSearchResultBlock.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                toolSearchToolResultError != null -> toolSearchToolResultError.validity()
+                toolSearchToolSearchResultBlock != null ->
+                    toolSearchToolSearchResultBlock.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

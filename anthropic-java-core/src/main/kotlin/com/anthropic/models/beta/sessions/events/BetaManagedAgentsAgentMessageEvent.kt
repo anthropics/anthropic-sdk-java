@@ -346,17 +346,11 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitText(text: BetaManagedAgentsTextBlock): Type = Type.TEXT
-
-                    override fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock): Type =
-                        Type.REDACTED
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                text != null -> Type.TEXT
+                redacted != null -> Type.REDACTED
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /** Regular text content. */
         fun text(): Optional<BetaManagedAgentsTextBlock> = Optional.ofNullable(text)
@@ -428,17 +422,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitText(text: BetaManagedAgentsTextBlock) {
-                        text.validate()
-                    }
-
-                    override fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock) {
-                        redacted.validate()
-                    }
-                }
-            )
+            when {
+                text != null -> text.validate()
+                redacted != null -> redacted.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -458,16 +446,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitText(text: BetaManagedAgentsTextBlock) = text.validity()
-
-                    override fun visitRedacted(redacted: BetaManagedAgentsRedactedBlock) =
-                        redacted.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                text != null -> text.validity()
+                redacted != null -> redacted.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

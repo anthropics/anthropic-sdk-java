@@ -450,44 +450,20 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitNone(
-                        none: BetaManagedAgentsTokenEndpointAuthNoneParam
-                    ): Type = Type.NONE
-
-                    override fun visitClientSecretBasic(
-                        clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicParam
-                    ): Type = Type.CLIENT_SECRET_BASIC
-
-                    override fun visitClientSecretPost(
-                        clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostParam
-                    ): Type = Type.CLIENT_SECRET_POST
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                none != null -> Type.NONE
+                clientSecretBasic != null -> Type.CLIENT_SECRET_BASIC
+                clientSecretPost != null -> Type.CLIENT_SECRET_POST
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun clientSecret(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitNone(
-                        none: BetaManagedAgentsTokenEndpointAuthNoneParam
-                    ): Optional<String> = Optional.empty()
-
-                    override fun visitClientSecretBasic(
-                        clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicParam
-                    ): Optional<String> = Optional.of(clientSecretBasic.clientSecret())
-
-                    override fun visitClientSecretPost(
-                        clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostParam
-                    ): Optional<String> = Optional.of(clientSecretPost.clientSecret())
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("client_secret").asKnown()
-                }
-            )
+            when {
+                none != null -> Optional.empty()
+                clientSecretBasic != null -> Optional.of(clientSecretBasic.clientSecret())
+                clientSecretPost != null -> Optional.of(clientSecretPost.clientSecret())
+                else -> _json.getProperty<String>("client_secret").asKnown()
+            }
 
         /** Token endpoint requires no client authentication. */
         fun none(): Optional<BetaManagedAgentsTokenEndpointAuthNoneParam> =
@@ -573,25 +549,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitNone(none: BetaManagedAgentsTokenEndpointAuthNoneParam) {
-                        none.validate()
-                    }
-
-                    override fun visitClientSecretBasic(
-                        clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicParam
-                    ) {
-                        clientSecretBasic.validate()
-                    }
-
-                    override fun visitClientSecretPost(
-                        clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostParam
-                    ) {
-                        clientSecretPost.validate()
-                    }
-                }
-            )
+            when {
+                none != null -> none.validate()
+                clientSecretBasic != null -> clientSecretBasic.validate()
+                clientSecretPost != null -> clientSecretPost.validate()
+                else -> throw AnthropicInvalidDataException("Unknown TokenEndpointAuth: $_json")
+            }
             validated = true
         }
 
@@ -611,22 +574,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitNone(none: BetaManagedAgentsTokenEndpointAuthNoneParam) =
-                        none.validity()
-
-                    override fun visitClientSecretBasic(
-                        clientSecretBasic: BetaManagedAgentsTokenEndpointAuthBasicParam
-                    ) = clientSecretBasic.validity()
-
-                    override fun visitClientSecretPost(
-                        clientSecretPost: BetaManagedAgentsTokenEndpointAuthPostParam
-                    ) = clientSecretPost.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                none != null -> none.validity()
+                clientSecretBasic != null -> clientSecretBasic.validity()
+                clientSecretPost != null -> clientSecretPost.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

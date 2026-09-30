@@ -48,48 +48,32 @@ private constructor(
         TextEditorCodeExecutionToolResultBlockParam.builder()
             .content(
                 _content().map {
-                    it.accept(
-                        object :
-                            TextEditorCodeExecutionToolResultBlock.Content.Visitor<
-                                TextEditorCodeExecutionToolResultBlockParam.Content
-                            > {
-                            override fun visitTextEditorCodeExecutionToolResultError(
-                                textEditorCodeExecutionToolResultError:
-                                    TextEditorCodeExecutionToolResultError
-                            ): TextEditorCodeExecutionToolResultBlockParam.Content =
-                                TextEditorCodeExecutionToolResultBlockParam.Content
-                                    .ofTextEditorCodeExecutionToolResultErrorParam(
-                                        textEditorCodeExecutionToolResultError.toParam()
-                                    )
-
-                            override fun visitTextEditorCodeExecutionViewResultBlock(
-                                textEditorCodeExecutionViewResultBlock:
-                                    TextEditorCodeExecutionViewResultBlock
-                            ): TextEditorCodeExecutionToolResultBlockParam.Content =
-                                TextEditorCodeExecutionToolResultBlockParam.Content
-                                    .ofTextEditorCodeExecutionViewResultBlockParam(
-                                        textEditorCodeExecutionViewResultBlock.toParam()
-                                    )
-
-                            override fun visitTextEditorCodeExecutionCreateResultBlock(
-                                textEditorCodeExecutionCreateResultBlock:
-                                    TextEditorCodeExecutionCreateResultBlock
-                            ): TextEditorCodeExecutionToolResultBlockParam.Content =
-                                TextEditorCodeExecutionToolResultBlockParam.Content
-                                    .ofTextEditorCodeExecutionCreateResultBlockParam(
-                                        textEditorCodeExecutionCreateResultBlock.toParam()
-                                    )
-
-                            override fun visitTextEditorCodeExecutionStrReplaceResultBlock(
-                                textEditorCodeExecutionStrReplaceResultBlock:
-                                    TextEditorCodeExecutionStrReplaceResultBlock
-                            ): TextEditorCodeExecutionToolResultBlockParam.Content =
-                                TextEditorCodeExecutionToolResultBlockParam.Content
-                                    .ofTextEditorCodeExecutionStrReplaceResultBlockParam(
-                                        textEditorCodeExecutionStrReplaceResultBlock.toParam()
-                                    )
-                        }
-                    )
+                    when {
+                        it.isTextEditorCodeExecutionToolResultError() ->
+                            TextEditorCodeExecutionToolResultBlockParam.Content
+                                .ofTextEditorCodeExecutionToolResultErrorParam(
+                                    it.asTextEditorCodeExecutionToolResultError().toParam()
+                                )
+                        it.isTextEditorCodeExecutionViewResultBlock() ->
+                            TextEditorCodeExecutionToolResultBlockParam.Content
+                                .ofTextEditorCodeExecutionViewResultBlockParam(
+                                    it.asTextEditorCodeExecutionViewResultBlock().toParam()
+                                )
+                        it.isTextEditorCodeExecutionCreateResultBlock() ->
+                            TextEditorCodeExecutionToolResultBlockParam.Content
+                                .ofTextEditorCodeExecutionCreateResultBlockParam(
+                                    it.asTextEditorCodeExecutionCreateResultBlock().toParam()
+                                )
+                        it.isTextEditorCodeExecutionStrReplaceResultBlock() ->
+                            TextEditorCodeExecutionToolResultBlockParam.Content
+                                .ofTextEditorCodeExecutionStrReplaceResultBlockParam(
+                                    it.asTextEditorCodeExecutionStrReplaceResultBlock().toParam()
+                                )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown Content: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .toolUseId(_toolUseId())
@@ -489,37 +473,17 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitTextEditorCodeExecutionToolResultError(
-                        textEditorCodeExecutionToolResultError:
-                            TextEditorCodeExecutionToolResultError
-                    ) {
-                        textEditorCodeExecutionToolResultError.validate()
-                    }
-
-                    override fun visitTextEditorCodeExecutionViewResultBlock(
-                        textEditorCodeExecutionViewResultBlock:
-                            TextEditorCodeExecutionViewResultBlock
-                    ) {
-                        textEditorCodeExecutionViewResultBlock.validate()
-                    }
-
-                    override fun visitTextEditorCodeExecutionCreateResultBlock(
-                        textEditorCodeExecutionCreateResultBlock:
-                            TextEditorCodeExecutionCreateResultBlock
-                    ) {
-                        textEditorCodeExecutionCreateResultBlock.validate()
-                    }
-
-                    override fun visitTextEditorCodeExecutionStrReplaceResultBlock(
-                        textEditorCodeExecutionStrReplaceResultBlock:
-                            TextEditorCodeExecutionStrReplaceResultBlock
-                    ) {
-                        textEditorCodeExecutionStrReplaceResultBlock.validate()
-                    }
-                }
-            )
+            when {
+                textEditorCodeExecutionToolResultError != null ->
+                    textEditorCodeExecutionToolResultError.validate()
+                textEditorCodeExecutionViewResultBlock != null ->
+                    textEditorCodeExecutionViewResultBlock.validate()
+                textEditorCodeExecutionCreateResultBlock != null ->
+                    textEditorCodeExecutionCreateResultBlock.validate()
+                textEditorCodeExecutionStrReplaceResultBlock != null ->
+                    textEditorCodeExecutionStrReplaceResultBlock.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -539,31 +503,17 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitTextEditorCodeExecutionToolResultError(
-                        textEditorCodeExecutionToolResultError:
-                            TextEditorCodeExecutionToolResultError
-                    ) = textEditorCodeExecutionToolResultError.validity()
-
-                    override fun visitTextEditorCodeExecutionViewResultBlock(
-                        textEditorCodeExecutionViewResultBlock:
-                            TextEditorCodeExecutionViewResultBlock
-                    ) = textEditorCodeExecutionViewResultBlock.validity()
-
-                    override fun visitTextEditorCodeExecutionCreateResultBlock(
-                        textEditorCodeExecutionCreateResultBlock:
-                            TextEditorCodeExecutionCreateResultBlock
-                    ) = textEditorCodeExecutionCreateResultBlock.validity()
-
-                    override fun visitTextEditorCodeExecutionStrReplaceResultBlock(
-                        textEditorCodeExecutionStrReplaceResultBlock:
-                            TextEditorCodeExecutionStrReplaceResultBlock
-                    ) = textEditorCodeExecutionStrReplaceResultBlock.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                textEditorCodeExecutionToolResultError != null ->
+                    textEditorCodeExecutionToolResultError.validity()
+                textEditorCodeExecutionViewResultBlock != null ->
+                    textEditorCodeExecutionViewResultBlock.validity()
+                textEditorCodeExecutionCreateResultBlock != null ->
+                    textEditorCodeExecutionCreateResultBlock.validity()
+                textEditorCodeExecutionStrReplaceResultBlock != null ->
+                    textEditorCodeExecutionStrReplaceResultBlock.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

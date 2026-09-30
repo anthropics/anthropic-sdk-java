@@ -38,68 +38,32 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitInvalidRequest(invalidRequest: BetaInvalidRequestError): Type =
-                    Type.INVALID_REQUEST_ERROR
-
-                override fun visitAuthentication(authentication: BetaAuthenticationError): Type =
-                    Type.AUTHENTICATION_ERROR
-
-                override fun visitBilling(billing: BetaBillingError): Type = Type.BILLING_ERROR
-
-                override fun visitPermission(permission: BetaPermissionError): Type =
-                    Type.PERMISSION_ERROR
-
-                override fun visitNotFound(notFound: BetaNotFoundError): Type = Type.NOT_FOUND_ERROR
-
-                override fun visitRateLimit(rateLimit: BetaRateLimitError): Type =
-                    Type.RATE_LIMIT_ERROR
-
-                override fun visitTimeout(timeout: BetaGatewayTimeoutError): Type =
-                    Type.TIMEOUT_ERROR
-
-                override fun visitApi(api: BetaApiError): Type = Type.API_ERROR
-
-                override fun visitOverloaded(overloaded: BetaOverloadedError): Type =
-                    Type.OVERLOADED_ERROR
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            invalidRequest != null -> Type.INVALID_REQUEST_ERROR
+            authentication != null -> Type.AUTHENTICATION_ERROR
+            billing != null -> Type.BILLING_ERROR
+            permission != null -> Type.PERMISSION_ERROR
+            notFound != null -> Type.NOT_FOUND_ERROR
+            rateLimit != null -> Type.RATE_LIMIT_ERROR
+            timeout != null -> Type.TIMEOUT_ERROR
+            api != null -> Type.API_ERROR
+            overloaded != null -> Type.OVERLOADED_ERROR
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun message(): String =
-        accept(
-            object : Visitor<String> {
-                override fun visitInvalidRequest(invalidRequest: BetaInvalidRequestError): String =
-                    invalidRequest.message()
-
-                override fun visitAuthentication(authentication: BetaAuthenticationError): String =
-                    authentication.message()
-
-                override fun visitBilling(billing: BetaBillingError): String = billing.message()
-
-                override fun visitPermission(permission: BetaPermissionError): String =
-                    permission.message()
-
-                override fun visitNotFound(notFound: BetaNotFoundError): String = notFound.message()
-
-                override fun visitRateLimit(rateLimit: BetaRateLimitError): String =
-                    rateLimit.message()
-
-                override fun visitTimeout(timeout: BetaGatewayTimeoutError): String =
-                    timeout.message()
-
-                override fun visitApi(api: BetaApiError): String = api.message()
-
-                override fun visitOverloaded(overloaded: BetaOverloadedError): String =
-                    overloaded.message()
-
-                override fun unknown(json: JsonValue?): String =
-                    json.getProperty<String>("message").getRequired("message")
-            }
-        )
+        when {
+            invalidRequest != null -> invalidRequest.message()
+            authentication != null -> authentication.message()
+            billing != null -> billing.message()
+            permission != null -> permission.message()
+            notFound != null -> notFound.message()
+            rateLimit != null -> rateLimit.message()
+            timeout != null -> timeout.message()
+            api != null -> api.message()
+            overloaded != null -> overloaded.message()
+            else -> _json.getProperty<String>("message").getRequired("message")
+        }
 
     fun invalidRequest(): Optional<BetaInvalidRequestError> = Optional.ofNullable(invalidRequest)
 
@@ -215,45 +179,18 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitInvalidRequest(invalidRequest: BetaInvalidRequestError) {
-                    invalidRequest.validate()
-                }
-
-                override fun visitAuthentication(authentication: BetaAuthenticationError) {
-                    authentication.validate()
-                }
-
-                override fun visitBilling(billing: BetaBillingError) {
-                    billing.validate()
-                }
-
-                override fun visitPermission(permission: BetaPermissionError) {
-                    permission.validate()
-                }
-
-                override fun visitNotFound(notFound: BetaNotFoundError) {
-                    notFound.validate()
-                }
-
-                override fun visitRateLimit(rateLimit: BetaRateLimitError) {
-                    rateLimit.validate()
-                }
-
-                override fun visitTimeout(timeout: BetaGatewayTimeoutError) {
-                    timeout.validate()
-                }
-
-                override fun visitApi(api: BetaApiError) {
-                    api.validate()
-                }
-
-                override fun visitOverloaded(overloaded: BetaOverloadedError) {
-                    overloaded.validate()
-                }
-            }
-        )
+        when {
+            invalidRequest != null -> invalidRequest.validate()
+            authentication != null -> authentication.validate()
+            billing != null -> billing.validate()
+            permission != null -> permission.validate()
+            notFound != null -> notFound.validate()
+            rateLimit != null -> rateLimit.validate()
+            timeout != null -> timeout.validate()
+            api != null -> api.validate()
+            overloaded != null -> overloaded.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaError: $_json")
+        }
         validated = true
     }
 
@@ -272,33 +209,18 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitInvalidRequest(invalidRequest: BetaInvalidRequestError) =
-                    invalidRequest.validity()
-
-                override fun visitAuthentication(authentication: BetaAuthenticationError) =
-                    authentication.validity()
-
-                override fun visitBilling(billing: BetaBillingError) = billing.validity()
-
-                override fun visitPermission(permission: BetaPermissionError) =
-                    permission.validity()
-
-                override fun visitNotFound(notFound: BetaNotFoundError) = notFound.validity()
-
-                override fun visitRateLimit(rateLimit: BetaRateLimitError) = rateLimit.validity()
-
-                override fun visitTimeout(timeout: BetaGatewayTimeoutError) = timeout.validity()
-
-                override fun visitApi(api: BetaApiError) = api.validity()
-
-                override fun visitOverloaded(overloaded: BetaOverloadedError) =
-                    overloaded.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            invalidRequest != null -> invalidRequest.validity()
+            authentication != null -> authentication.validity()
+            billing != null -> billing.validity()
+            permission != null -> permission.validity()
+            notFound != null -> notFound.validity()
+            rateLimit != null -> rateLimit.validity()
+            timeout != null -> timeout.validity()
+            api != null -> api.validity()
+            overloaded != null -> overloaded.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

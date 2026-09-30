@@ -5,13 +5,19 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.organization.BetaOrganization
 import com.anthropic.models.beta.organization.OrganizationRetrieveParams
+import com.anthropic.services.blocking.beta.organization.AnalyticsService
 import com.anthropic.services.blocking.beta.organization.ApiKeyService
 import com.anthropic.services.blocking.beta.organization.ComplianceSettingService
 import com.anthropic.services.blocking.beta.organization.ExternalKeyService
 import com.anthropic.services.blocking.beta.organization.FederationService
 import com.anthropic.services.blocking.beta.organization.InviteService
+import com.anthropic.services.blocking.beta.organization.PluginMarketplaceService
+import com.anthropic.services.blocking.beta.organization.PluginService
 import com.anthropic.services.blocking.beta.organization.RateLimitService
+import com.anthropic.services.blocking.beta.organization.RbacGroupService
+import com.anthropic.services.blocking.beta.organization.RbacRoleService
 import com.anthropic.services.blocking.beta.organization.ServiceAccountService
+import com.anthropic.services.blocking.beta.organization.SpendLimitService
 import com.anthropic.services.blocking.beta.organization.UserService
 import com.anthropic.services.blocking.beta.organization.WorkspaceService
 import com.google.errorprone.annotations.MustBeClosed
@@ -48,6 +54,18 @@ interface OrganizationService {
     fun rateLimits(): RateLimitService
 
     fun complianceSettings(): ComplianceSettingService
+
+    fun analytics(): AnalyticsService
+
+    fun spendLimits(): SpendLimitService
+
+    fun rbacGroups(): RbacGroupService
+
+    fun rbacRoles(): RbacRoleService
+
+    fun plugins(): PluginService
+
+    fun pluginMarketplaces(): PluginMarketplaceService
 
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): BetaOrganization = retrieve(OrganizationRetrieveParams.none())
@@ -98,6 +116,18 @@ interface OrganizationService {
         fun rateLimits(): RateLimitService.WithRawResponse
 
         fun complianceSettings(): ComplianceSettingService.WithRawResponse
+
+        fun analytics(): AnalyticsService.WithRawResponse
+
+        fun spendLimits(): SpendLimitService.WithRawResponse
+
+        fun rbacGroups(): RbacGroupService.WithRawResponse
+
+        fun rbacRoles(): RbacRoleService.WithRawResponse
+
+        fun plugins(): PluginService.WithRawResponse
+
+        fun pluginMarketplaces(): PluginMarketplaceService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/me?beta=true`, but is otherwise

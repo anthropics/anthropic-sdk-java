@@ -823,165 +823,73 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitMessage(message: BetaMessageIterationUsage): Type =
-                        Type.MESSAGE
-
-                    override fun visitCompaction(compaction: BetaCompactionIterationUsage): Type =
-                        Type.COMPACTION
-
-                    override fun visitAdvisorMessage(
-                        advisorMessage: BetaAdvisorMessageIterationUsage
-                    ): Type = Type.ADVISOR_MESSAGE
-
-                    override fun visitFallbackMessage(
-                        fallbackMessage: BetaFallbackMessageIterationUsage
-                    ): Type = Type.FALLBACK_MESSAGE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                message != null -> Type.MESSAGE
+                compaction != null -> Type.COMPACTION
+                advisorMessage != null -> Type.ADVISOR_MESSAGE
+                fallbackMessage != null -> Type.FALLBACK_MESSAGE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun cacheCreation(): Optional<BetaCacheCreation> =
-            accept(
-                object : Visitor<Optional<BetaCacheCreation>> {
-                    override fun visitMessage(
-                        message: BetaMessageIterationUsage
-                    ): Optional<BetaCacheCreation> = message.cacheCreation()
-
-                    override fun visitCompaction(
-                        compaction: BetaCompactionIterationUsage
-                    ): Optional<BetaCacheCreation> = compaction.cacheCreation()
-
-                    override fun visitAdvisorMessage(
-                        advisorMessage: BetaAdvisorMessageIterationUsage
-                    ): Optional<BetaCacheCreation> = advisorMessage.cacheCreation()
-
-                    override fun visitFallbackMessage(
-                        fallbackMessage: BetaFallbackMessageIterationUsage
-                    ): Optional<BetaCacheCreation> = fallbackMessage.cacheCreation()
-
-                    override fun unknown(json: JsonValue?): Optional<BetaCacheCreation> =
-                        json.getProperty<BetaCacheCreation>("cache_creation").asKnown()
-                }
-            )
+            when {
+                message != null -> message.cacheCreation()
+                compaction != null -> compaction.cacheCreation()
+                advisorMessage != null -> advisorMessage.cacheCreation()
+                fallbackMessage != null -> fallbackMessage.cacheCreation()
+                else -> _json.getProperty<BetaCacheCreation>("cache_creation").asKnown()
+            }
 
         fun cacheCreationInputTokens(): Long =
-            accept(
-                object : Visitor<Long> {
-                    override fun visitMessage(message: BetaMessageIterationUsage): Long =
-                        message.cacheCreationInputTokens()
-
-                    override fun visitCompaction(compaction: BetaCompactionIterationUsage): Long =
-                        compaction.cacheCreationInputTokens()
-
-                    override fun visitAdvisorMessage(
-                        advisorMessage: BetaAdvisorMessageIterationUsage
-                    ): Long = advisorMessage.cacheCreationInputTokens()
-
-                    override fun visitFallbackMessage(
-                        fallbackMessage: BetaFallbackMessageIterationUsage
-                    ): Long = fallbackMessage.cacheCreationInputTokens()
-
-                    override fun unknown(json: JsonValue?): Long =
-                        json
-                            .getProperty<Long>("cache_creation_input_tokens")
-                            .getRequired("cache_creation_input_tokens")
-                }
-            )
+            when {
+                message != null -> message.cacheCreationInputTokens()
+                compaction != null -> compaction.cacheCreationInputTokens()
+                advisorMessage != null -> advisorMessage.cacheCreationInputTokens()
+                fallbackMessage != null -> fallbackMessage.cacheCreationInputTokens()
+                else ->
+                    _json
+                        .getProperty<Long>("cache_creation_input_tokens")
+                        .getRequired("cache_creation_input_tokens")
+            }
 
         fun cacheReadInputTokens(): Long =
-            accept(
-                object : Visitor<Long> {
-                    override fun visitMessage(message: BetaMessageIterationUsage): Long =
-                        message.cacheReadInputTokens()
-
-                    override fun visitCompaction(compaction: BetaCompactionIterationUsage): Long =
-                        compaction.cacheReadInputTokens()
-
-                    override fun visitAdvisorMessage(
-                        advisorMessage: BetaAdvisorMessageIterationUsage
-                    ): Long = advisorMessage.cacheReadInputTokens()
-
-                    override fun visitFallbackMessage(
-                        fallbackMessage: BetaFallbackMessageIterationUsage
-                    ): Long = fallbackMessage.cacheReadInputTokens()
-
-                    override fun unknown(json: JsonValue?): Long =
-                        json
-                            .getProperty<Long>("cache_read_input_tokens")
-                            .getRequired("cache_read_input_tokens")
-                }
-            )
+            when {
+                message != null -> message.cacheReadInputTokens()
+                compaction != null -> compaction.cacheReadInputTokens()
+                advisorMessage != null -> advisorMessage.cacheReadInputTokens()
+                fallbackMessage != null -> fallbackMessage.cacheReadInputTokens()
+                else ->
+                    _json
+                        .getProperty<Long>("cache_read_input_tokens")
+                        .getRequired("cache_read_input_tokens")
+            }
 
         fun inputTokens(): Long =
-            accept(
-                object : Visitor<Long> {
-                    override fun visitMessage(message: BetaMessageIterationUsage): Long =
-                        message.inputTokens()
-
-                    override fun visitCompaction(compaction: BetaCompactionIterationUsage): Long =
-                        compaction.inputTokens()
-
-                    override fun visitAdvisorMessage(
-                        advisorMessage: BetaAdvisorMessageIterationUsage
-                    ): Long = advisorMessage.inputTokens()
-
-                    override fun visitFallbackMessage(
-                        fallbackMessage: BetaFallbackMessageIterationUsage
-                    ): Long = fallbackMessage.inputTokens()
-
-                    override fun unknown(json: JsonValue?): Long =
-                        json.getProperty<Long>("input_tokens").getRequired("input_tokens")
-                }
-            )
+            when {
+                message != null -> message.inputTokens()
+                compaction != null -> compaction.inputTokens()
+                advisorMessage != null -> advisorMessage.inputTokens()
+                fallbackMessage != null -> fallbackMessage.inputTokens()
+                else -> _json.getProperty<Long>("input_tokens").getRequired("input_tokens")
+            }
 
         fun model(): Optional<Model> =
-            accept(
-                object : Visitor<Optional<Model>> {
-                    override fun visitMessage(message: BetaMessageIterationUsage): Optional<Model> =
-                        message.model()
-
-                    override fun visitCompaction(
-                        compaction: BetaCompactionIterationUsage
-                    ): Optional<Model> = Optional.empty()
-
-                    override fun visitAdvisorMessage(
-                        advisorMessage: BetaAdvisorMessageIterationUsage
-                    ): Optional<Model> = Optional.of(advisorMessage.model())
-
-                    override fun visitFallbackMessage(
-                        fallbackMessage: BetaFallbackMessageIterationUsage
-                    ): Optional<Model> = Optional.of(fallbackMessage.model())
-
-                    override fun unknown(json: JsonValue?): Optional<Model> =
-                        json.getProperty<Model>("model").asKnown()
-                }
-            )
+            when {
+                message != null -> message.model()
+                compaction != null -> Optional.empty()
+                advisorMessage != null -> Optional.of(advisorMessage.model())
+                fallbackMessage != null -> Optional.of(fallbackMessage.model())
+                else -> _json.getProperty<Model>("model").asKnown()
+            }
 
         fun outputTokens(): Long =
-            accept(
-                object : Visitor<Long> {
-                    override fun visitMessage(message: BetaMessageIterationUsage): Long =
-                        message.outputTokens()
-
-                    override fun visitCompaction(compaction: BetaCompactionIterationUsage): Long =
-                        compaction.outputTokens()
-
-                    override fun visitAdvisorMessage(
-                        advisorMessage: BetaAdvisorMessageIterationUsage
-                    ): Long = advisorMessage.outputTokens()
-
-                    override fun visitFallbackMessage(
-                        fallbackMessage: BetaFallbackMessageIterationUsage
-                    ): Long = fallbackMessage.outputTokens()
-
-                    override fun unknown(json: JsonValue?): Long =
-                        json.getProperty<Long>("output_tokens").getRequired("output_tokens")
-                }
-            )
+            when {
+                message != null -> message.outputTokens()
+                compaction != null -> compaction.outputTokens()
+                advisorMessage != null -> advisorMessage.outputTokens()
+                fallbackMessage != null -> fallbackMessage.outputTokens()
+                else -> _json.getProperty<Long>("output_tokens").getRequired("output_tokens")
+            }
 
         /** Token usage for a sampling iteration. */
         fun message(): Optional<BetaMessageIterationUsage> = Optional.ofNullable(message)
@@ -1091,29 +999,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitMessage(message: BetaMessageIterationUsage) {
-                        message.validate()
-                    }
-
-                    override fun visitCompaction(compaction: BetaCompactionIterationUsage) {
-                        compaction.validate()
-                    }
-
-                    override fun visitAdvisorMessage(
-                        advisorMessage: BetaAdvisorMessageIterationUsage
-                    ) {
-                        advisorMessage.validate()
-                    }
-
-                    override fun visitFallbackMessage(
-                        fallbackMessage: BetaFallbackMessageIterationUsage
-                    ) {
-                        fallbackMessage.validate()
-                    }
-                }
-            )
+            when {
+                message != null -> message.validate()
+                compaction != null -> compaction.validate()
+                advisorMessage != null -> advisorMessage.validate()
+                fallbackMessage != null -> fallbackMessage.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Iteration: $_json")
+            }
             validated = true
         }
 
@@ -1133,25 +1025,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitMessage(message: BetaMessageIterationUsage) =
-                        message.validity()
-
-                    override fun visitCompaction(compaction: BetaCompactionIterationUsage) =
-                        compaction.validity()
-
-                    override fun visitAdvisorMessage(
-                        advisorMessage: BetaAdvisorMessageIterationUsage
-                    ) = advisorMessage.validity()
-
-                    override fun visitFallbackMessage(
-                        fallbackMessage: BetaFallbackMessageIterationUsage
-                    ) = fallbackMessage.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                message != null -> message.validity()
+                compaction != null -> compaction.validity()
+                advisorMessage != null -> advisorMessage.validity()
+                fallbackMessage != null -> fallbackMessage.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

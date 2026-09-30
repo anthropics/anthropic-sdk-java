@@ -38,35 +38,25 @@ private constructor(
         BetaCodeExecutionToolResultBlockParam.builder()
             .content(
                 _content().map {
-                    it.accept(
-                        object :
-                            BetaCodeExecutionToolResultBlockContent.Visitor<
-                                BetaCodeExecutionToolResultBlockParamContent
-                            > {
-                            override fun visitError(
-                                error: BetaCodeExecutionToolResultError
-                            ): BetaCodeExecutionToolResultBlockParamContent =
-                                BetaCodeExecutionToolResultBlockParamContent.ofErrorParam(
-                                    error.toParam()
+                    when {
+                        it.isError() ->
+                            BetaCodeExecutionToolResultBlockParamContent.ofErrorParam(
+                                it.asError().toParam()
+                            )
+                        it.isResultBlock() ->
+                            BetaCodeExecutionToolResultBlockParamContent.ofResultBlockParam(
+                                it.asResultBlock().toParam()
+                            )
+                        it.isEncryptedCodeExecutionResultBlock() ->
+                            BetaCodeExecutionToolResultBlockParamContent
+                                .ofEncryptedCodeExecutionResultBlockParam(
+                                    it.asEncryptedCodeExecutionResultBlock().toParam()
                                 )
-
-                            override fun visitResultBlock(
-                                resultBlock: BetaCodeExecutionResultBlock
-                            ): BetaCodeExecutionToolResultBlockParamContent =
-                                BetaCodeExecutionToolResultBlockParamContent.ofResultBlockParam(
-                                    resultBlock.toParam()
-                                )
-
-                            override fun visitEncryptedCodeExecutionResultBlock(
-                                encryptedCodeExecutionResultBlock:
-                                    BetaEncryptedCodeExecutionResultBlock
-                            ): BetaCodeExecutionToolResultBlockParamContent =
-                                BetaCodeExecutionToolResultBlockParamContent
-                                    .ofEncryptedCodeExecutionResultBlockParam(
-                                        encryptedCodeExecutionResultBlock.toParam()
-                                    )
-                        }
-                    )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown BetaCodeExecutionToolResultBlockContent: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .toolUseId(_toolUseId())

@@ -863,37 +863,20 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitDiscovery(discovery: BetaJwksDiscovery): Type = Type.DISCOVERY
-
-                    override fun visitExplicitUrl(explicitUrl: BetaJwksExplicitUrl): Type =
-                        Type.EXPLICIT_URL
-
-                    override fun visitInline(inline: BetaJwksInline): Type = Type.INLINE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                discovery != null -> Type.DISCOVERY
+                explicitUrl != null -> Type.EXPLICIT_URL
+                inline != null -> Type.INLINE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun caCertPem(): Optional<String> =
-            accept(
-                object : Visitor<Optional<String>> {
-                    override fun visitDiscovery(discovery: BetaJwksDiscovery): Optional<String> =
-                        discovery.caCertPem()
-
-                    override fun visitExplicitUrl(
-                        explicitUrl: BetaJwksExplicitUrl
-                    ): Optional<String> = explicitUrl.caCertPem()
-
-                    override fun visitInline(inline: BetaJwksInline): Optional<String> =
-                        Optional.empty()
-
-                    override fun unknown(json: JsonValue?): Optional<String> =
-                        json.getProperty<String>("ca_cert_pem").asKnown()
-                }
-            )
+            when {
+                discovery != null -> discovery.caCertPem()
+                explicitUrl != null -> explicitUrl.caCertPem()
+                inline != null -> Optional.empty()
+                else -> _json.getProperty<String>("ca_cert_pem").asKnown()
+            }
 
         /** JWKS via the issuer's OIDC discovery document. */
         fun discovery(): Optional<BetaJwksDiscovery> = Optional.ofNullable(discovery)
@@ -974,21 +957,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitDiscovery(discovery: BetaJwksDiscovery) {
-                        discovery.validate()
-                    }
-
-                    override fun visitExplicitUrl(explicitUrl: BetaJwksExplicitUrl) {
-                        explicitUrl.validate()
-                    }
-
-                    override fun visitInline(inline: BetaJwksInline) {
-                        inline.validate()
-                    }
-                }
-            )
+            when {
+                discovery != null -> discovery.validate()
+                explicitUrl != null -> explicitUrl.validate()
+                inline != null -> inline.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Jwks: $_json")
+            }
             validated = true
         }
 
@@ -1008,18 +982,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitDiscovery(discovery: BetaJwksDiscovery) = discovery.validity()
-
-                    override fun visitExplicitUrl(explicitUrl: BetaJwksExplicitUrl) =
-                        explicitUrl.validity()
-
-                    override fun visitInline(inline: BetaJwksInline) = inline.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                discovery != null -> discovery.validity()
+                explicitUrl != null -> explicitUrl.validity()
+                inline != null -> inline.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

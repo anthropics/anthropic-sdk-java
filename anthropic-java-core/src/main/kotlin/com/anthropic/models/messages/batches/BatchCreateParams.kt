@@ -2763,17 +2763,11 @@ private constructor(
                         return@apply
                     }
 
-                    accept(
-                        object : Visitor<Unit> {
-                            override fun visitString(string: String) {}
-
-                            override fun visitTextBlockParams(
-                                textBlockParams: List<TextBlockParam>
-                            ) {
-                                textBlockParams.forEach { it.validate() }
-                            }
-                        }
-                    )
+                    when {
+                        string != null -> {}
+                        textBlockParams != null -> textBlockParams.forEach { it.validate() }
+                        else -> throw AnthropicInvalidDataException("Unknown System: $_json")
+                    }
                     validated = true
                 }
 
@@ -2793,17 +2787,11 @@ private constructor(
                  */
                 @JvmSynthetic
                 internal fun validity(): Int =
-                    accept(
-                        object : Visitor<Int> {
-                            override fun visitString(string: String) = 1
-
-                            override fun visitTextBlockParams(
-                                textBlockParams: List<TextBlockParam>
-                            ) = textBlockParams.sumOf { it.validity().toInt() }
-
-                            override fun unknown(json: JsonValue?) = 0
-                        }
-                    )
+                    when {
+                        string != null -> 1
+                        textBlockParams != null -> textBlockParams.sumOf { it.validity().toInt() }
+                        else -> 0
+                    }
 
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {

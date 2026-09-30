@@ -34,7 +34,7 @@ private constructor(
 
     override fun items(): List<BetaServiceAccountWorkspaceMember> = data()
 
-    override fun hasNextPage(): Boolean = items().isNotEmpty() && nextPageRaw().isPresent
+    override fun hasNextPage(): Boolean = nextPageRaw().isPresent
 
     fun nextPageParams(): ServiceAccountListParams {
         val nextCursor =

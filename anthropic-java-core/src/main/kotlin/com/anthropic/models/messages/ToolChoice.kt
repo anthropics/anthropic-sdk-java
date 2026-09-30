@@ -37,39 +37,22 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitAuto(auto: ToolChoiceAuto): Type = Type.AUTO
-
-                override fun visitAny(any: ToolChoiceAny): Type = Type.ANY
-
-                override fun visitTool(tool: ToolChoiceTool): Type = Type.TOOL
-
-                override fun visitNone(none: ToolChoiceNone): Type = Type.NONE
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            auto != null -> Type.AUTO
+            any != null -> Type.ANY
+            tool != null -> Type.TOOL
+            none != null -> Type.NONE
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun disableParallelToolUse(): Optional<Boolean> =
-        accept(
-            object : Visitor<Optional<Boolean>> {
-                override fun visitAuto(auto: ToolChoiceAuto): Optional<Boolean> =
-                    auto.disableParallelToolUse()
-
-                override fun visitAny(any: ToolChoiceAny): Optional<Boolean> =
-                    any.disableParallelToolUse()
-
-                override fun visitTool(tool: ToolChoiceTool): Optional<Boolean> =
-                    tool.disableParallelToolUse()
-
-                override fun visitNone(none: ToolChoiceNone): Optional<Boolean> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<Boolean> =
-                    json.getProperty<Boolean>("disable_parallel_tool_use").asKnown()
-            }
-        )
+        when {
+            auto != null -> auto.disableParallelToolUse()
+            any != null -> any.disableParallelToolUse()
+            tool != null -> tool.disableParallelToolUse()
+            none != null -> Optional.empty()
+            else -> _json.getProperty<Boolean>("disable_parallel_tool_use").asKnown()
+        }
 
     /** The model will automatically decide whether to use tools. */
     fun auto(): Optional<ToolChoiceAuto> = Optional.ofNullable(auto)
@@ -158,25 +141,13 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitAuto(auto: ToolChoiceAuto) {
-                    auto.validate()
-                }
-
-                override fun visitAny(any: ToolChoiceAny) {
-                    any.validate()
-                }
-
-                override fun visitTool(tool: ToolChoiceTool) {
-                    tool.validate()
-                }
-
-                override fun visitNone(none: ToolChoiceNone) {
-                    none.validate()
-                }
-            }
-        )
+        when {
+            auto != null -> auto.validate()
+            any != null -> any.validate()
+            tool != null -> tool.validate()
+            none != null -> none.validate()
+            else -> throw AnthropicInvalidDataException("Unknown ToolChoice: $_json")
+        }
         validated = true
     }
 
@@ -195,19 +166,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitAuto(auto: ToolChoiceAuto) = auto.validity()
-
-                override fun visitAny(any: ToolChoiceAny) = any.validity()
-
-                override fun visitTool(tool: ToolChoiceTool) = tool.validity()
-
-                override fun visitNone(none: ToolChoiceNone) = none.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            auto != null -> auto.validity()
+            any != null -> any.validity()
+            tool != null -> tool.validity()
+            none != null -> none.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -35,31 +35,18 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitMemory(memory: BetaManagedAgentsMemory): Type = Type.MEMORY
-
-                override fun visitMemoryPrefix(memoryPrefix: BetaManagedAgentsMemoryPrefix): Type =
-                    Type.MEMORY_PREFIX
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            memory != null -> Type.MEMORY
+            memoryPrefix != null -> Type.MEMORY_PREFIX
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun path(): String =
-        accept(
-            object : Visitor<String> {
-                override fun visitMemory(memory: BetaManagedAgentsMemory): String = memory.path()
-
-                override fun visitMemoryPrefix(
-                    memoryPrefix: BetaManagedAgentsMemoryPrefix
-                ): String = memoryPrefix.path()
-
-                override fun unknown(json: JsonValue?): String =
-                    json.getProperty<String>("path").getRequired("path")
-            }
-        )
+        when {
+            memory != null -> memory.path()
+            memoryPrefix != null -> memoryPrefix.path()
+            else -> _json.getProperty<String>("path").getRequired("path")
+        }
 
     /**
      * A `memory` object: a single text document at a hierarchical path inside a memory store. The
@@ -154,17 +141,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitMemory(memory: BetaManagedAgentsMemory) {
-                    memory.validate()
-                }
-
-                override fun visitMemoryPrefix(memoryPrefix: BetaManagedAgentsMemoryPrefix) {
-                    memoryPrefix.validate()
-                }
-            }
-        )
+        when {
+            memory != null -> memory.validate()
+            memoryPrefix != null -> memoryPrefix.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsMemoryListItem: $_json"
+                )
+        }
         validated = true
     }
 
@@ -183,16 +167,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitMemory(memory: BetaManagedAgentsMemory) = memory.validity()
-
-                override fun visitMemoryPrefix(memoryPrefix: BetaManagedAgentsMemoryPrefix) =
-                    memoryPrefix.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            memory != null -> memory.validity()
+            memoryPrefix != null -> memoryPrefix.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

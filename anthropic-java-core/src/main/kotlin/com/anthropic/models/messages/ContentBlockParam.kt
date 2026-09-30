@@ -46,390 +46,133 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitText(text: TextBlockParam): Type = Type.TEXT
-
-                override fun visitImage(image: ImageBlockParam): Type = Type.IMAGE
-
-                override fun visitDocument(document: DocumentBlockParam): Type = Type.DOCUMENT
-
-                override fun visitSearchResult(searchResult: SearchResultBlockParam): Type =
-                    Type.SEARCH_RESULT
-
-                override fun visitThinking(thinking: ThinkingBlockParam): Type = Type.THINKING
-
-                override fun visitRedactedThinking(
-                    redactedThinking: RedactedThinkingBlockParam
-                ): Type = Type.REDACTED_THINKING
-
-                override fun visitToolUse(toolUse: ToolUseBlockParam): Type = Type.TOOL_USE
-
-                override fun visitToolResult(toolResult: ToolResultBlockParam): Type =
-                    Type.TOOL_RESULT
-
-                override fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam): Type =
-                    Type.SERVER_TOOL_USE
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlockParam
-                ): Type = Type.WEB_SEARCH_TOOL_RESULT
-
-                override fun visitWebFetchToolResult(
-                    webFetchToolResult: WebFetchToolResultBlockParam
-                ): Type = Type.WEB_FETCH_TOOL_RESULT
-
-                override fun visitCodeExecutionToolResult(
-                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
-                ): Type = Type.CODE_EXECUTION_TOOL_RESULT
-
-                override fun visitBashCodeExecutionToolResult(
-                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
-                ): Type = Type.BASH_CODE_EXECUTION_TOOL_RESULT
-
-                override fun visitTextEditorCodeExecutionToolResult(
-                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
-                ): Type = Type.TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
-
-                override fun visitToolSearchToolResult(
-                    toolSearchToolResult: ToolSearchToolResultBlockParam
-                ): Type = Type.TOOL_SEARCH_TOOL_RESULT
-
-                override fun visitContainerUpload(
-                    containerUpload: ContainerUploadBlockParam
-                ): Type = Type.CONTAINER_UPLOAD
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            text != null -> Type.TEXT
+            image != null -> Type.IMAGE
+            document != null -> Type.DOCUMENT
+            searchResult != null -> Type.SEARCH_RESULT
+            thinking != null -> Type.THINKING
+            redactedThinking != null -> Type.REDACTED_THINKING
+            toolUse != null -> Type.TOOL_USE
+            toolResult != null -> Type.TOOL_RESULT
+            serverToolUse != null -> Type.SERVER_TOOL_USE
+            webSearchToolResult != null -> Type.WEB_SEARCH_TOOL_RESULT
+            webFetchToolResult != null -> Type.WEB_FETCH_TOOL_RESULT
+            codeExecutionToolResult != null -> Type.CODE_EXECUTION_TOOL_RESULT
+            bashCodeExecutionToolResult != null -> Type.BASH_CODE_EXECUTION_TOOL_RESULT
+            textEditorCodeExecutionToolResult != null -> Type.TEXT_EDITOR_CODE_EXECUTION_TOOL_RESULT
+            toolSearchToolResult != null -> Type.TOOL_SEARCH_TOOL_RESULT
+            containerUpload != null -> Type.CONTAINER_UPLOAD
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun cacheControl(): Optional<CacheControlEphemeral> =
-        accept(
-            object : Visitor<Optional<CacheControlEphemeral>> {
-                override fun visitText(text: TextBlockParam): Optional<CacheControlEphemeral> =
-                    text.cacheControl()
-
-                override fun visitImage(image: ImageBlockParam): Optional<CacheControlEphemeral> =
-                    image.cacheControl()
-
-                override fun visitDocument(
-                    document: DocumentBlockParam
-                ): Optional<CacheControlEphemeral> = document.cacheControl()
-
-                override fun visitSearchResult(
-                    searchResult: SearchResultBlockParam
-                ): Optional<CacheControlEphemeral> = searchResult.cacheControl()
-
-                override fun visitThinking(
-                    thinking: ThinkingBlockParam
-                ): Optional<CacheControlEphemeral> = Optional.empty()
-
-                override fun visitRedactedThinking(
-                    redactedThinking: RedactedThinkingBlockParam
-                ): Optional<CacheControlEphemeral> = Optional.empty()
-
-                override fun visitToolUse(
-                    toolUse: ToolUseBlockParam
-                ): Optional<CacheControlEphemeral> = toolUse.cacheControl()
-
-                override fun visitToolResult(
-                    toolResult: ToolResultBlockParam
-                ): Optional<CacheControlEphemeral> = toolResult.cacheControl()
-
-                override fun visitServerToolUse(
-                    serverToolUse: ServerToolUseBlockParam
-                ): Optional<CacheControlEphemeral> = serverToolUse.cacheControl()
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlockParam
-                ): Optional<CacheControlEphemeral> = webSearchToolResult.cacheControl()
-
-                override fun visitWebFetchToolResult(
-                    webFetchToolResult: WebFetchToolResultBlockParam
-                ): Optional<CacheControlEphemeral> = webFetchToolResult.cacheControl()
-
-                override fun visitCodeExecutionToolResult(
-                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
-                ): Optional<CacheControlEphemeral> = codeExecutionToolResult.cacheControl()
-
-                override fun visitBashCodeExecutionToolResult(
-                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
-                ): Optional<CacheControlEphemeral> = bashCodeExecutionToolResult.cacheControl()
-
-                override fun visitTextEditorCodeExecutionToolResult(
-                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
-                ): Optional<CacheControlEphemeral> =
-                    textEditorCodeExecutionToolResult.cacheControl()
-
-                override fun visitToolSearchToolResult(
-                    toolSearchToolResult: ToolSearchToolResultBlockParam
-                ): Optional<CacheControlEphemeral> = toolSearchToolResult.cacheControl()
-
-                override fun visitContainerUpload(
-                    containerUpload: ContainerUploadBlockParam
-                ): Optional<CacheControlEphemeral> = containerUpload.cacheControl()
-
-                override fun unknown(json: JsonValue?): Optional<CacheControlEphemeral> =
-                    json.getProperty<CacheControlEphemeral>("cache_control").asKnown()
-            }
-        )
+        when {
+            text != null -> text.cacheControl()
+            image != null -> image.cacheControl()
+            document != null -> document.cacheControl()
+            searchResult != null -> searchResult.cacheControl()
+            thinking != null -> Optional.empty()
+            redactedThinking != null -> Optional.empty()
+            toolUse != null -> toolUse.cacheControl()
+            toolResult != null -> toolResult.cacheControl()
+            serverToolUse != null -> serverToolUse.cacheControl()
+            webSearchToolResult != null -> webSearchToolResult.cacheControl()
+            webFetchToolResult != null -> webFetchToolResult.cacheControl()
+            codeExecutionToolResult != null -> codeExecutionToolResult.cacheControl()
+            bashCodeExecutionToolResult != null -> bashCodeExecutionToolResult.cacheControl()
+            textEditorCodeExecutionToolResult != null ->
+                textEditorCodeExecutionToolResult.cacheControl()
+            toolSearchToolResult != null -> toolSearchToolResult.cacheControl()
+            containerUpload != null -> containerUpload.cacheControl()
+            else -> _json.getProperty<CacheControlEphemeral>("cache_control").asKnown()
+        }
 
     fun title(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitText(text: TextBlockParam): Optional<String> = Optional.empty()
-
-                override fun visitImage(image: ImageBlockParam): Optional<String> = Optional.empty()
-
-                override fun visitDocument(document: DocumentBlockParam): Optional<String> =
-                    document.title()
-
-                override fun visitSearchResult(
-                    searchResult: SearchResultBlockParam
-                ): Optional<String> = Optional.of(searchResult.title())
-
-                override fun visitThinking(thinking: ThinkingBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitRedactedThinking(
-                    redactedThinking: RedactedThinkingBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitToolUse(toolUse: ToolUseBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitToolResult(toolResult: ToolResultBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitServerToolUse(
-                    serverToolUse: ServerToolUseBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitWebFetchToolResult(
-                    webFetchToolResult: WebFetchToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitCodeExecutionToolResult(
-                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitBashCodeExecutionToolResult(
-                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitTextEditorCodeExecutionToolResult(
-                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitToolSearchToolResult(
-                    toolSearchToolResult: ToolSearchToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitContainerUpload(
-                    containerUpload: ContainerUploadBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("title").asKnown()
-            }
-        )
+        when {
+            text != null -> Optional.empty()
+            image != null -> Optional.empty()
+            document != null -> document.title()
+            searchResult != null -> Optional.of(searchResult.title())
+            thinking != null -> Optional.empty()
+            redactedThinking != null -> Optional.empty()
+            toolUse != null -> Optional.empty()
+            toolResult != null -> Optional.empty()
+            serverToolUse != null -> Optional.empty()
+            webSearchToolResult != null -> Optional.empty()
+            webFetchToolResult != null -> Optional.empty()
+            codeExecutionToolResult != null -> Optional.empty()
+            bashCodeExecutionToolResult != null -> Optional.empty()
+            textEditorCodeExecutionToolResult != null -> Optional.empty()
+            toolSearchToolResult != null -> Optional.empty()
+            containerUpload != null -> Optional.empty()
+            else -> _json.getProperty<String>("title").asKnown()
+        }
 
     fun id(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitText(text: TextBlockParam): Optional<String> = Optional.empty()
-
-                override fun visitImage(image: ImageBlockParam): Optional<String> = Optional.empty()
-
-                override fun visitDocument(document: DocumentBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitSearchResult(
-                    searchResult: SearchResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitThinking(thinking: ThinkingBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitRedactedThinking(
-                    redactedThinking: RedactedThinkingBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitToolUse(toolUse: ToolUseBlockParam): Optional<String> =
-                    Optional.of(toolUse.id())
-
-                override fun visitToolResult(toolResult: ToolResultBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitServerToolUse(
-                    serverToolUse: ServerToolUseBlockParam
-                ): Optional<String> = Optional.of(serverToolUse.id())
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitWebFetchToolResult(
-                    webFetchToolResult: WebFetchToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitCodeExecutionToolResult(
-                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitBashCodeExecutionToolResult(
-                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitTextEditorCodeExecutionToolResult(
-                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitToolSearchToolResult(
-                    toolSearchToolResult: ToolSearchToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitContainerUpload(
-                    containerUpload: ContainerUploadBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("id").asKnown()
-            }
-        )
+        when {
+            text != null -> Optional.empty()
+            image != null -> Optional.empty()
+            document != null -> Optional.empty()
+            searchResult != null -> Optional.empty()
+            thinking != null -> Optional.empty()
+            redactedThinking != null -> Optional.empty()
+            toolUse != null -> Optional.of(toolUse.id())
+            toolResult != null -> Optional.empty()
+            serverToolUse != null -> Optional.of(serverToolUse.id())
+            webSearchToolResult != null -> Optional.empty()
+            webFetchToolResult != null -> Optional.empty()
+            codeExecutionToolResult != null -> Optional.empty()
+            bashCodeExecutionToolResult != null -> Optional.empty()
+            textEditorCodeExecutionToolResult != null -> Optional.empty()
+            toolSearchToolResult != null -> Optional.empty()
+            containerUpload != null -> Optional.empty()
+            else -> _json.getProperty<String>("id").asKnown()
+        }
 
     fun toolsetName(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitText(text: TextBlockParam): Optional<String> = Optional.empty()
-
-                override fun visitImage(image: ImageBlockParam): Optional<String> = Optional.empty()
-
-                override fun visitDocument(document: DocumentBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitSearchResult(
-                    searchResult: SearchResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitThinking(thinking: ThinkingBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitRedactedThinking(
-                    redactedThinking: RedactedThinkingBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitToolUse(toolUse: ToolUseBlockParam): Optional<String> =
-                    toolUse.toolsetName()
-
-                override fun visitToolResult(toolResult: ToolResultBlockParam): Optional<String> =
-                    toolResult.toolsetName()
-
-                override fun visitServerToolUse(
-                    serverToolUse: ServerToolUseBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitWebFetchToolResult(
-                    webFetchToolResult: WebFetchToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitCodeExecutionToolResult(
-                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitBashCodeExecutionToolResult(
-                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitTextEditorCodeExecutionToolResult(
-                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitToolSearchToolResult(
-                    toolSearchToolResult: ToolSearchToolResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitContainerUpload(
-                    containerUpload: ContainerUploadBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("toolset_name").asKnown()
-            }
-        )
+        when {
+            text != null -> Optional.empty()
+            image != null -> Optional.empty()
+            document != null -> Optional.empty()
+            searchResult != null -> Optional.empty()
+            thinking != null -> Optional.empty()
+            redactedThinking != null -> Optional.empty()
+            toolUse != null -> toolUse.toolsetName()
+            toolResult != null -> toolResult.toolsetName()
+            serverToolUse != null -> Optional.empty()
+            webSearchToolResult != null -> Optional.empty()
+            webFetchToolResult != null -> Optional.empty()
+            codeExecutionToolResult != null -> Optional.empty()
+            bashCodeExecutionToolResult != null -> Optional.empty()
+            textEditorCodeExecutionToolResult != null -> Optional.empty()
+            toolSearchToolResult != null -> Optional.empty()
+            containerUpload != null -> Optional.empty()
+            else -> _json.getProperty<String>("toolset_name").asKnown()
+        }
 
     fun toolUseId(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitText(text: TextBlockParam): Optional<String> = Optional.empty()
-
-                override fun visitImage(image: ImageBlockParam): Optional<String> = Optional.empty()
-
-                override fun visitDocument(document: DocumentBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitSearchResult(
-                    searchResult: SearchResultBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitThinking(thinking: ThinkingBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitRedactedThinking(
-                    redactedThinking: RedactedThinkingBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitToolUse(toolUse: ToolUseBlockParam): Optional<String> =
-                    Optional.empty()
-
-                override fun visitToolResult(toolResult: ToolResultBlockParam): Optional<String> =
-                    Optional.of(toolResult.toolUseId())
-
-                override fun visitServerToolUse(
-                    serverToolUse: ServerToolUseBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlockParam
-                ): Optional<String> = Optional.of(webSearchToolResult.toolUseId())
-
-                override fun visitWebFetchToolResult(
-                    webFetchToolResult: WebFetchToolResultBlockParam
-                ): Optional<String> = Optional.of(webFetchToolResult.toolUseId())
-
-                override fun visitCodeExecutionToolResult(
-                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.of(codeExecutionToolResult.toolUseId())
-
-                override fun visitBashCodeExecutionToolResult(
-                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.of(bashCodeExecutionToolResult.toolUseId())
-
-                override fun visitTextEditorCodeExecutionToolResult(
-                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
-                ): Optional<String> = Optional.of(textEditorCodeExecutionToolResult.toolUseId())
-
-                override fun visitToolSearchToolResult(
-                    toolSearchToolResult: ToolSearchToolResultBlockParam
-                ): Optional<String> = Optional.of(toolSearchToolResult.toolUseId())
-
-                override fun visitContainerUpload(
-                    containerUpload: ContainerUploadBlockParam
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("tool_use_id").asKnown()
-            }
-        )
+        when {
+            text != null -> Optional.empty()
+            image != null -> Optional.empty()
+            document != null -> Optional.empty()
+            searchResult != null -> Optional.empty()
+            thinking != null -> Optional.empty()
+            redactedThinking != null -> Optional.empty()
+            toolUse != null -> Optional.empty()
+            toolResult != null -> Optional.of(toolResult.toolUseId())
+            serverToolUse != null -> Optional.empty()
+            webSearchToolResult != null -> Optional.of(webSearchToolResult.toolUseId())
+            webFetchToolResult != null -> Optional.of(webFetchToolResult.toolUseId())
+            codeExecutionToolResult != null -> Optional.of(codeExecutionToolResult.toolUseId())
+            bashCodeExecutionToolResult != null ->
+                Optional.of(bashCodeExecutionToolResult.toolUseId())
+            textEditorCodeExecutionToolResult != null ->
+                Optional.of(textEditorCodeExecutionToolResult.toolUseId())
+            toolSearchToolResult != null -> Optional.of(toolSearchToolResult.toolUseId())
+            containerUpload != null -> Optional.empty()
+            else -> _json.getProperty<String>("tool_use_id").asKnown()
+        }
 
     /** Regular text content. */
     fun text(): Optional<TextBlockParam> = Optional.ofNullable(text)
@@ -643,85 +386,26 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitText(text: TextBlockParam) {
-                    text.validate()
-                }
-
-                override fun visitImage(image: ImageBlockParam) {
-                    image.validate()
-                }
-
-                override fun visitDocument(document: DocumentBlockParam) {
-                    document.validate()
-                }
-
-                override fun visitSearchResult(searchResult: SearchResultBlockParam) {
-                    searchResult.validate()
-                }
-
-                override fun visitThinking(thinking: ThinkingBlockParam) {
-                    thinking.validate()
-                }
-
-                override fun visitRedactedThinking(redactedThinking: RedactedThinkingBlockParam) {
-                    redactedThinking.validate()
-                }
-
-                override fun visitToolUse(toolUse: ToolUseBlockParam) {
-                    toolUse.validate()
-                }
-
-                override fun visitToolResult(toolResult: ToolResultBlockParam) {
-                    toolResult.validate()
-                }
-
-                override fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam) {
-                    serverToolUse.validate()
-                }
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlockParam
-                ) {
-                    webSearchToolResult.validate()
-                }
-
-                override fun visitWebFetchToolResult(
-                    webFetchToolResult: WebFetchToolResultBlockParam
-                ) {
-                    webFetchToolResult.validate()
-                }
-
-                override fun visitCodeExecutionToolResult(
-                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
-                ) {
-                    codeExecutionToolResult.validate()
-                }
-
-                override fun visitBashCodeExecutionToolResult(
-                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
-                ) {
-                    bashCodeExecutionToolResult.validate()
-                }
-
-                override fun visitTextEditorCodeExecutionToolResult(
-                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
-                ) {
-                    textEditorCodeExecutionToolResult.validate()
-                }
-
-                override fun visitToolSearchToolResult(
-                    toolSearchToolResult: ToolSearchToolResultBlockParam
-                ) {
-                    toolSearchToolResult.validate()
-                }
-
-                override fun visitContainerUpload(containerUpload: ContainerUploadBlockParam) {
-                    containerUpload.validate()
-                }
-            }
-        )
+        when {
+            text != null -> text.validate()
+            image != null -> image.validate()
+            document != null -> document.validate()
+            searchResult != null -> searchResult.validate()
+            thinking != null -> thinking.validate()
+            redactedThinking != null -> redactedThinking.validate()
+            toolUse != null -> toolUse.validate()
+            toolResult != null -> toolResult.validate()
+            serverToolUse != null -> serverToolUse.validate()
+            webSearchToolResult != null -> webSearchToolResult.validate()
+            webFetchToolResult != null -> webFetchToolResult.validate()
+            codeExecutionToolResult != null -> codeExecutionToolResult.validate()
+            bashCodeExecutionToolResult != null -> bashCodeExecutionToolResult.validate()
+            textEditorCodeExecutionToolResult != null ->
+                textEditorCodeExecutionToolResult.validate()
+            toolSearchToolResult != null -> toolSearchToolResult.validate()
+            containerUpload != null -> containerUpload.validate()
+            else -> throw AnthropicInvalidDataException("Unknown ContentBlockParam: $_json")
+        }
         validated = true
     }
 
@@ -740,60 +424,26 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitText(text: TextBlockParam) = text.validity()
-
-                override fun visitImage(image: ImageBlockParam) = image.validity()
-
-                override fun visitDocument(document: DocumentBlockParam) = document.validity()
-
-                override fun visitSearchResult(searchResult: SearchResultBlockParam) =
-                    searchResult.validity()
-
-                override fun visitThinking(thinking: ThinkingBlockParam) = thinking.validity()
-
-                override fun visitRedactedThinking(redactedThinking: RedactedThinkingBlockParam) =
-                    redactedThinking.validity()
-
-                override fun visitToolUse(toolUse: ToolUseBlockParam) = toolUse.validity()
-
-                override fun visitToolResult(toolResult: ToolResultBlockParam) =
-                    toolResult.validity()
-
-                override fun visitServerToolUse(serverToolUse: ServerToolUseBlockParam) =
-                    serverToolUse.validity()
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlockParam
-                ) = webSearchToolResult.validity()
-
-                override fun visitWebFetchToolResult(
-                    webFetchToolResult: WebFetchToolResultBlockParam
-                ) = webFetchToolResult.validity()
-
-                override fun visitCodeExecutionToolResult(
-                    codeExecutionToolResult: CodeExecutionToolResultBlockParam
-                ) = codeExecutionToolResult.validity()
-
-                override fun visitBashCodeExecutionToolResult(
-                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlockParam
-                ) = bashCodeExecutionToolResult.validity()
-
-                override fun visitTextEditorCodeExecutionToolResult(
-                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlockParam
-                ) = textEditorCodeExecutionToolResult.validity()
-
-                override fun visitToolSearchToolResult(
-                    toolSearchToolResult: ToolSearchToolResultBlockParam
-                ) = toolSearchToolResult.validity()
-
-                override fun visitContainerUpload(containerUpload: ContainerUploadBlockParam) =
-                    containerUpload.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            text != null -> text.validity()
+            image != null -> image.validity()
+            document != null -> document.validity()
+            searchResult != null -> searchResult.validity()
+            thinking != null -> thinking.validity()
+            redactedThinking != null -> redactedThinking.validity()
+            toolUse != null -> toolUse.validity()
+            toolResult != null -> toolResult.validity()
+            serverToolUse != null -> serverToolUse.validity()
+            webSearchToolResult != null -> webSearchToolResult.validity()
+            webFetchToolResult != null -> webFetchToolResult.validity()
+            codeExecutionToolResult != null -> codeExecutionToolResult.validity()
+            bashCodeExecutionToolResult != null -> bashCodeExecutionToolResult.validity()
+            textEditorCodeExecutionToolResult != null ->
+                textEditorCodeExecutionToolResult.validity()
+            toolSearchToolResult != null -> toolSearchToolResult.validity()
+            containerUpload != null -> containerUpload.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

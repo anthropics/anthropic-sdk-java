@@ -30,20 +30,11 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitUnrestricted(
-                    unrestricted: BetaManagedAgentsUnrestrictedCredentialNetworkingParams
-                ): Type = Type.UNRESTRICTED
-
-                override fun visitLimited(
-                    limited: BetaManagedAgentsLimitedCredentialNetworkingParams
-                ): Type = Type.LIMITED
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            unrestricted != null -> Type.UNRESTRICTED
+            limited != null -> Type.LIMITED
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     /**
      * Substitute the secret on any host the session's Environment network policy permits egress to.
@@ -124,21 +115,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitUnrestricted(
-                    unrestricted: BetaManagedAgentsUnrestrictedCredentialNetworkingParams
-                ) {
-                    unrestricted.validate()
-                }
-
-                override fun visitLimited(
-                    limited: BetaManagedAgentsLimitedCredentialNetworkingParams
-                ) {
-                    limited.validate()
-                }
-            }
-        )
+        when {
+            unrestricted != null -> unrestricted.validate()
+            limited != null -> limited.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsCredentialNetworkingParams: $_json"
+                )
+        }
         validated = true
     }
 
@@ -157,19 +141,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitUnrestricted(
-                    unrestricted: BetaManagedAgentsUnrestrictedCredentialNetworkingParams
-                ) = unrestricted.validity()
-
-                override fun visitLimited(
-                    limited: BetaManagedAgentsLimitedCredentialNetworkingParams
-                ) = limited.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            unrestricted != null -> unrestricted.validity()
+            limited != null -> limited.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

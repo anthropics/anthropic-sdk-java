@@ -105,11 +105,9 @@ public final class SessionsStreamingDeltasExample {
                                     .agentMessageText(event.asAgentMessage().id())
                                     .orElseThrow());
                 } else if (event.isSessionStatusIdle()) {
-                    // The session is no longer doing work and the stream stays open, so stop
-                    // reading once the turn ends
-                    if (event.asSessionStatusIdle().stopReason().isEndTurn()) {
-                        break;
-                    }
+                    // The session is no longer doing work (whatever the stop reason) and the stream
+                    // stays open, so stop reading
+                    break;
                 } else if (event.isSessionError()) {
                     System.err.println("[error] " + event.asSessionError().error());
                     break;

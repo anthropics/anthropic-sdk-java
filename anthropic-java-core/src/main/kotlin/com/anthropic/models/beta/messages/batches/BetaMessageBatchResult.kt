@@ -40,24 +40,13 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitSucceeded(succeeded: BetaMessageBatchSucceededResult): Type =
-                    Type.SUCCEEDED
-
-                override fun visitErrored(errored: BetaMessageBatchErroredResult): Type =
-                    Type.ERRORED
-
-                override fun visitCanceled(canceled: BetaMessageBatchCanceledResult): Type =
-                    Type.CANCELED
-
-                override fun visitExpired(expired: BetaMessageBatchExpiredResult): Type =
-                    Type.EXPIRED
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            succeeded != null -> Type.SUCCEEDED
+            errored != null -> Type.ERRORED
+            canceled != null -> Type.CANCELED
+            expired != null -> Type.EXPIRED
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun succeeded(): Optional<BetaMessageBatchSucceededResult> = Optional.ofNullable(succeeded)
 
@@ -138,25 +127,13 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitSucceeded(succeeded: BetaMessageBatchSucceededResult) {
-                    succeeded.validate()
-                }
-
-                override fun visitErrored(errored: BetaMessageBatchErroredResult) {
-                    errored.validate()
-                }
-
-                override fun visitCanceled(canceled: BetaMessageBatchCanceledResult) {
-                    canceled.validate()
-                }
-
-                override fun visitExpired(expired: BetaMessageBatchExpiredResult) {
-                    expired.validate()
-                }
-            }
-        )
+        when {
+            succeeded != null -> succeeded.validate()
+            errored != null -> errored.validate()
+            canceled != null -> canceled.validate()
+            expired != null -> expired.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaMessageBatchResult: $_json")
+        }
         validated = true
     }
 
@@ -175,23 +152,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitSucceeded(succeeded: BetaMessageBatchSucceededResult) =
-                    succeeded.validity()
-
-                override fun visitErrored(errored: BetaMessageBatchErroredResult) =
-                    errored.validity()
-
-                override fun visitCanceled(canceled: BetaMessageBatchCanceledResult) =
-                    canceled.validity()
-
-                override fun visitExpired(expired: BetaMessageBatchExpiredResult) =
-                    expired.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            succeeded != null -> succeeded.validity()
+            errored != null -> errored.validity()
+            canceled != null -> canceled.validity()
+            expired != null -> expired.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

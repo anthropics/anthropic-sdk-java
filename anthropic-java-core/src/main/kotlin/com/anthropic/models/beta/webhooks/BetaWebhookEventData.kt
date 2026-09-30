@@ -75,1108 +75,300 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitSessionCreated(
-                    sessionCreated: BetaWebhookSessionCreatedEventData
-                ): Type = Type.SESSION_CREATED
-
-                override fun visitSessionPending(
-                    sessionPending: BetaWebhookSessionPendingEventData
-                ): Type = Type.SESSION_PENDING
-
-                override fun visitSessionRunning(
-                    sessionRunning: BetaWebhookSessionRunningEventData
-                ): Type = Type.SESSION_RUNNING
-
-                override fun visitSessionIdled(
-                    sessionIdled: BetaWebhookSessionIdledEventData
-                ): Type = Type.SESSION_IDLED
-
-                override fun visitSessionRequiresAction(
-                    sessionRequiresAction: BetaWebhookSessionRequiresActionEventData
-                ): Type = Type.SESSION_REQUIRES_ACTION
-
-                override fun visitSessionArchived(
-                    sessionArchived: BetaWebhookSessionArchivedEventData
-                ): Type = Type.SESSION_ARCHIVED
-
-                override fun visitSessionDeleted(
-                    sessionDeleted: BetaWebhookSessionDeletedEventData
-                ): Type = Type.SESSION_DELETED
-
-                override fun visitSessionStatusRescheduled(
-                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
-                ): Type = Type.SESSION_STATUS_RESCHEDULED
-
-                override fun visitSessionStatusRunStarted(
-                    sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData
-                ): Type = Type.SESSION_STATUS_RUN_STARTED
-
-                override fun visitSessionStatusIdled(
-                    sessionStatusIdled: BetaWebhookSessionStatusIdledEventData
-                ): Type = Type.SESSION_STATUS_IDLED
-
-                override fun visitSessionStatusTerminated(
-                    sessionStatusTerminated: BetaWebhookSessionStatusTerminatedEventData
-                ): Type = Type.SESSION_STATUS_TERMINATED
-
-                override fun visitSessionThreadCreated(
-                    sessionThreadCreated: BetaWebhookSessionThreadCreatedEventData
-                ): Type = Type.SESSION_THREAD_CREATED
-
-                override fun visitSessionThreadIdled(
-                    sessionThreadIdled: BetaWebhookSessionThreadIdledEventData
-                ): Type = Type.SESSION_THREAD_IDLED
-
-                override fun visitSessionThreadTerminated(
-                    sessionThreadTerminated: BetaWebhookSessionThreadTerminatedEventData
-                ): Type = Type.SESSION_THREAD_TERMINATED
-
-                override fun visitSessionOutcomeEvaluationEnded(
-                    sessionOutcomeEvaluationEnded: BetaWebhookSessionOutcomeEvaluationEndedEventData
-                ): Type = Type.SESSION_OUTCOME_EVALUATION_ENDED
-
-                override fun visitVaultCreated(
-                    vaultCreated: BetaWebhookVaultCreatedEventData
-                ): Type = Type.VAULT_CREATED
-
-                override fun visitVaultArchived(
-                    vaultArchived: BetaWebhookVaultArchivedEventData
-                ): Type = Type.VAULT_ARCHIVED
-
-                override fun visitVaultDeleted(
-                    vaultDeleted: BetaWebhookVaultDeletedEventData
-                ): Type = Type.VAULT_DELETED
-
-                override fun visitVaultCredentialCreated(
-                    vaultCredentialCreated: BetaWebhookVaultCredentialCreatedEventData
-                ): Type = Type.VAULT_CREDENTIAL_CREATED
-
-                override fun visitVaultCredentialArchived(
-                    vaultCredentialArchived: BetaWebhookVaultCredentialArchivedEventData
-                ): Type = Type.VAULT_CREDENTIAL_ARCHIVED
-
-                override fun visitVaultCredentialDeleted(
-                    vaultCredentialDeleted: BetaWebhookVaultCredentialDeletedEventData
-                ): Type = Type.VAULT_CREDENTIAL_DELETED
-
-                override fun visitVaultCredentialRefreshFailed(
-                    vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
-                ): Type = Type.VAULT_CREDENTIAL_REFRESH_FAILED
-
-                override fun visitSessionUpdated(
-                    sessionUpdated: BetaWebhookSessionUpdatedEventData
-                ): Type = Type.SESSION_UPDATED
-
-                override fun visitAgentCreated(
-                    agentCreated: BetaWebhookAgentCreatedEventData
-                ): Type = Type.AGENT_CREATED
-
-                override fun visitAgentArchived(
-                    agentArchived: BetaWebhookAgentArchivedEventData
-                ): Type = Type.AGENT_ARCHIVED
-
-                override fun visitAgentDeleted(
-                    agentDeleted: BetaWebhookAgentDeletedEventData
-                ): Type = Type.AGENT_DELETED
-
-                override fun visitDeploymentPaused(
-                    deploymentPaused: BetaWebhookDeploymentPausedEventData
-                ): Type = Type.DEPLOYMENT_PAUSED
-
-                override fun visitDeploymentRunFailed(
-                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
-                ): Type = Type.DEPLOYMENT_RUN_FAILED
-
-                override fun visitDeploymentCreated(
-                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
-                ): Type = Type.DEPLOYMENT_CREATED
-
-                override fun visitDeploymentUpdated(
-                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
-                ): Type = Type.DEPLOYMENT_UPDATED
-
-                override fun visitDeploymentUnpaused(
-                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
-                ): Type = Type.DEPLOYMENT_UNPAUSED
-
-                override fun visitAgentUpdated(
-                    agentUpdated: BetaWebhookAgentUpdatedEventData
-                ): Type = Type.AGENT_UPDATED
-
-                override fun visitDeploymentArchived(
-                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
-                ): Type = Type.DEPLOYMENT_ARCHIVED
-
-                override fun visitDeploymentRunStarted(
-                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
-                ): Type = Type.DEPLOYMENT_RUN_STARTED
-
-                override fun visitDeploymentDeleted(
-                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
-                ): Type = Type.DEPLOYMENT_DELETED
-
-                override fun visitDeploymentRunSucceeded(
-                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
-                ): Type = Type.DEPLOYMENT_RUN_SUCCEEDED
-
-                override fun visitEnvironmentCreated(
-                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
-                ): Type = Type.ENVIRONMENT_CREATED
-
-                override fun visitEnvironmentUpdated(
-                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
-                ): Type = Type.ENVIRONMENT_UPDATED
-
-                override fun visitEnvironmentArchived(
-                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
-                ): Type = Type.ENVIRONMENT_ARCHIVED
-
-                override fun visitEnvironmentDeleted(
-                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
-                ): Type = Type.ENVIRONMENT_DELETED
-
-                override fun visitMemoryStoreCreated(
-                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
-                ): Type = Type.MEMORY_STORE_CREATED
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-                ): Type = Type.MEMORY_STORE_ARCHIVED
-
-                override fun visitMemoryStoreDeleted(
-                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
-                ): Type = Type.MEMORY_STORE_DELETED
-
-                override fun visitSessionBudgetReached(
-                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
-                ): Type = Type.SESSION_BUDGET_REACHED
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            sessionCreated != null -> Type.SESSION_CREATED
+            sessionPending != null -> Type.SESSION_PENDING
+            sessionRunning != null -> Type.SESSION_RUNNING
+            sessionIdled != null -> Type.SESSION_IDLED
+            sessionRequiresAction != null -> Type.SESSION_REQUIRES_ACTION
+            sessionArchived != null -> Type.SESSION_ARCHIVED
+            sessionDeleted != null -> Type.SESSION_DELETED
+            sessionStatusRescheduled != null -> Type.SESSION_STATUS_RESCHEDULED
+            sessionStatusRunStarted != null -> Type.SESSION_STATUS_RUN_STARTED
+            sessionStatusIdled != null -> Type.SESSION_STATUS_IDLED
+            sessionStatusTerminated != null -> Type.SESSION_STATUS_TERMINATED
+            sessionThreadCreated != null -> Type.SESSION_THREAD_CREATED
+            sessionThreadIdled != null -> Type.SESSION_THREAD_IDLED
+            sessionThreadTerminated != null -> Type.SESSION_THREAD_TERMINATED
+            sessionOutcomeEvaluationEnded != null -> Type.SESSION_OUTCOME_EVALUATION_ENDED
+            vaultCreated != null -> Type.VAULT_CREATED
+            vaultArchived != null -> Type.VAULT_ARCHIVED
+            vaultDeleted != null -> Type.VAULT_DELETED
+            vaultCredentialCreated != null -> Type.VAULT_CREDENTIAL_CREATED
+            vaultCredentialArchived != null -> Type.VAULT_CREDENTIAL_ARCHIVED
+            vaultCredentialDeleted != null -> Type.VAULT_CREDENTIAL_DELETED
+            vaultCredentialRefreshFailed != null -> Type.VAULT_CREDENTIAL_REFRESH_FAILED
+            sessionUpdated != null -> Type.SESSION_UPDATED
+            agentCreated != null -> Type.AGENT_CREATED
+            agentArchived != null -> Type.AGENT_ARCHIVED
+            agentDeleted != null -> Type.AGENT_DELETED
+            deploymentPaused != null -> Type.DEPLOYMENT_PAUSED
+            deploymentRunFailed != null -> Type.DEPLOYMENT_RUN_FAILED
+            deploymentCreated != null -> Type.DEPLOYMENT_CREATED
+            deploymentUpdated != null -> Type.DEPLOYMENT_UPDATED
+            deploymentUnpaused != null -> Type.DEPLOYMENT_UNPAUSED
+            agentUpdated != null -> Type.AGENT_UPDATED
+            deploymentArchived != null -> Type.DEPLOYMENT_ARCHIVED
+            deploymentRunStarted != null -> Type.DEPLOYMENT_RUN_STARTED
+            deploymentDeleted != null -> Type.DEPLOYMENT_DELETED
+            deploymentRunSucceeded != null -> Type.DEPLOYMENT_RUN_SUCCEEDED
+            environmentCreated != null -> Type.ENVIRONMENT_CREATED
+            environmentUpdated != null -> Type.ENVIRONMENT_UPDATED
+            environmentArchived != null -> Type.ENVIRONMENT_ARCHIVED
+            environmentDeleted != null -> Type.ENVIRONMENT_DELETED
+            memoryStoreCreated != null -> Type.MEMORY_STORE_CREATED
+            memoryStoreArchived != null -> Type.MEMORY_STORE_ARCHIVED
+            memoryStoreDeleted != null -> Type.MEMORY_STORE_DELETED
+            sessionBudgetReached != null -> Type.SESSION_BUDGET_REACHED
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun id(): String =
-        accept(
-            object : Visitor<String> {
-                override fun visitSessionCreated(
-                    sessionCreated: BetaWebhookSessionCreatedEventData
-                ): String = sessionCreated.id()
-
-                override fun visitSessionPending(
-                    sessionPending: BetaWebhookSessionPendingEventData
-                ): String = sessionPending.id()
-
-                override fun visitSessionRunning(
-                    sessionRunning: BetaWebhookSessionRunningEventData
-                ): String = sessionRunning.id()
-
-                override fun visitSessionIdled(
-                    sessionIdled: BetaWebhookSessionIdledEventData
-                ): String = sessionIdled.id()
-
-                override fun visitSessionRequiresAction(
-                    sessionRequiresAction: BetaWebhookSessionRequiresActionEventData
-                ): String = sessionRequiresAction.id()
-
-                override fun visitSessionArchived(
-                    sessionArchived: BetaWebhookSessionArchivedEventData
-                ): String = sessionArchived.id()
-
-                override fun visitSessionDeleted(
-                    sessionDeleted: BetaWebhookSessionDeletedEventData
-                ): String = sessionDeleted.id()
-
-                override fun visitSessionStatusRescheduled(
-                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
-                ): String = sessionStatusRescheduled.id()
-
-                override fun visitSessionStatusRunStarted(
-                    sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData
-                ): String = sessionStatusRunStarted.id()
-
-                override fun visitSessionStatusIdled(
-                    sessionStatusIdled: BetaWebhookSessionStatusIdledEventData
-                ): String = sessionStatusIdled.id()
-
-                override fun visitSessionStatusTerminated(
-                    sessionStatusTerminated: BetaWebhookSessionStatusTerminatedEventData
-                ): String = sessionStatusTerminated.id()
-
-                override fun visitSessionThreadCreated(
-                    sessionThreadCreated: BetaWebhookSessionThreadCreatedEventData
-                ): String = sessionThreadCreated.id()
-
-                override fun visitSessionThreadIdled(
-                    sessionThreadIdled: BetaWebhookSessionThreadIdledEventData
-                ): String = sessionThreadIdled.id()
-
-                override fun visitSessionThreadTerminated(
-                    sessionThreadTerminated: BetaWebhookSessionThreadTerminatedEventData
-                ): String = sessionThreadTerminated.id()
-
-                override fun visitSessionOutcomeEvaluationEnded(
-                    sessionOutcomeEvaluationEnded: BetaWebhookSessionOutcomeEvaluationEndedEventData
-                ): String = sessionOutcomeEvaluationEnded.id()
-
-                override fun visitVaultCreated(
-                    vaultCreated: BetaWebhookVaultCreatedEventData
-                ): String = vaultCreated.id()
-
-                override fun visitVaultArchived(
-                    vaultArchived: BetaWebhookVaultArchivedEventData
-                ): String = vaultArchived.id()
-
-                override fun visitVaultDeleted(
-                    vaultDeleted: BetaWebhookVaultDeletedEventData
-                ): String = vaultDeleted.id()
-
-                override fun visitVaultCredentialCreated(
-                    vaultCredentialCreated: BetaWebhookVaultCredentialCreatedEventData
-                ): String = vaultCredentialCreated.id()
-
-                override fun visitVaultCredentialArchived(
-                    vaultCredentialArchived: BetaWebhookVaultCredentialArchivedEventData
-                ): String = vaultCredentialArchived.id()
-
-                override fun visitVaultCredentialDeleted(
-                    vaultCredentialDeleted: BetaWebhookVaultCredentialDeletedEventData
-                ): String = vaultCredentialDeleted.id()
-
-                override fun visitVaultCredentialRefreshFailed(
-                    vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
-                ): String = vaultCredentialRefreshFailed.id()
-
-                override fun visitSessionUpdated(
-                    sessionUpdated: BetaWebhookSessionUpdatedEventData
-                ): String = sessionUpdated.id()
-
-                override fun visitAgentCreated(
-                    agentCreated: BetaWebhookAgentCreatedEventData
-                ): String = agentCreated.id()
-
-                override fun visitAgentArchived(
-                    agentArchived: BetaWebhookAgentArchivedEventData
-                ): String = agentArchived.id()
-
-                override fun visitAgentDeleted(
-                    agentDeleted: BetaWebhookAgentDeletedEventData
-                ): String = agentDeleted.id()
-
-                override fun visitDeploymentPaused(
-                    deploymentPaused: BetaWebhookDeploymentPausedEventData
-                ): String = deploymentPaused.id()
-
-                override fun visitDeploymentRunFailed(
-                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
-                ): String = deploymentRunFailed.id()
-
-                override fun visitDeploymentCreated(
-                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
-                ): String = deploymentCreated.id()
-
-                override fun visitDeploymentUpdated(
-                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
-                ): String = deploymentUpdated.id()
-
-                override fun visitDeploymentUnpaused(
-                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
-                ): String = deploymentUnpaused.id()
-
-                override fun visitAgentUpdated(
-                    agentUpdated: BetaWebhookAgentUpdatedEventData
-                ): String = agentUpdated.id()
-
-                override fun visitDeploymentArchived(
-                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
-                ): String = deploymentArchived.id()
-
-                override fun visitDeploymentRunStarted(
-                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
-                ): String = deploymentRunStarted.id()
-
-                override fun visitDeploymentDeleted(
-                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
-                ): String = deploymentDeleted.id()
-
-                override fun visitDeploymentRunSucceeded(
-                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
-                ): String = deploymentRunSucceeded.id()
-
-                override fun visitEnvironmentCreated(
-                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
-                ): String = environmentCreated.id()
-
-                override fun visitEnvironmentUpdated(
-                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
-                ): String = environmentUpdated.id()
-
-                override fun visitEnvironmentArchived(
-                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
-                ): String = environmentArchived.id()
-
-                override fun visitEnvironmentDeleted(
-                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
-                ): String = environmentDeleted.id()
-
-                override fun visitMemoryStoreCreated(
-                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
-                ): String = memoryStoreCreated.id()
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-                ): String = memoryStoreArchived.id()
-
-                override fun visitMemoryStoreDeleted(
-                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
-                ): String = memoryStoreDeleted.id()
-
-                override fun visitSessionBudgetReached(
-                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
-                ): String = sessionBudgetReached.id()
-
-                override fun unknown(json: JsonValue?): String =
-                    json.getProperty<String>("id").getRequired("id")
-            }
-        )
+        when {
+            sessionCreated != null -> sessionCreated.id()
+            sessionPending != null -> sessionPending.id()
+            sessionRunning != null -> sessionRunning.id()
+            sessionIdled != null -> sessionIdled.id()
+            sessionRequiresAction != null -> sessionRequiresAction.id()
+            sessionArchived != null -> sessionArchived.id()
+            sessionDeleted != null -> sessionDeleted.id()
+            sessionStatusRescheduled != null -> sessionStatusRescheduled.id()
+            sessionStatusRunStarted != null -> sessionStatusRunStarted.id()
+            sessionStatusIdled != null -> sessionStatusIdled.id()
+            sessionStatusTerminated != null -> sessionStatusTerminated.id()
+            sessionThreadCreated != null -> sessionThreadCreated.id()
+            sessionThreadIdled != null -> sessionThreadIdled.id()
+            sessionThreadTerminated != null -> sessionThreadTerminated.id()
+            sessionOutcomeEvaluationEnded != null -> sessionOutcomeEvaluationEnded.id()
+            vaultCreated != null -> vaultCreated.id()
+            vaultArchived != null -> vaultArchived.id()
+            vaultDeleted != null -> vaultDeleted.id()
+            vaultCredentialCreated != null -> vaultCredentialCreated.id()
+            vaultCredentialArchived != null -> vaultCredentialArchived.id()
+            vaultCredentialDeleted != null -> vaultCredentialDeleted.id()
+            vaultCredentialRefreshFailed != null -> vaultCredentialRefreshFailed.id()
+            sessionUpdated != null -> sessionUpdated.id()
+            agentCreated != null -> agentCreated.id()
+            agentArchived != null -> agentArchived.id()
+            agentDeleted != null -> agentDeleted.id()
+            deploymentPaused != null -> deploymentPaused.id()
+            deploymentRunFailed != null -> deploymentRunFailed.id()
+            deploymentCreated != null -> deploymentCreated.id()
+            deploymentUpdated != null -> deploymentUpdated.id()
+            deploymentUnpaused != null -> deploymentUnpaused.id()
+            agentUpdated != null -> agentUpdated.id()
+            deploymentArchived != null -> deploymentArchived.id()
+            deploymentRunStarted != null -> deploymentRunStarted.id()
+            deploymentDeleted != null -> deploymentDeleted.id()
+            deploymentRunSucceeded != null -> deploymentRunSucceeded.id()
+            environmentCreated != null -> environmentCreated.id()
+            environmentUpdated != null -> environmentUpdated.id()
+            environmentArchived != null -> environmentArchived.id()
+            environmentDeleted != null -> environmentDeleted.id()
+            memoryStoreCreated != null -> memoryStoreCreated.id()
+            memoryStoreArchived != null -> memoryStoreArchived.id()
+            memoryStoreDeleted != null -> memoryStoreDeleted.id()
+            sessionBudgetReached != null -> sessionBudgetReached.id()
+            else -> _json.getProperty<String>("id").getRequired("id")
+        }
 
     fun organizationId(): String =
-        accept(
-            object : Visitor<String> {
-                override fun visitSessionCreated(
-                    sessionCreated: BetaWebhookSessionCreatedEventData
-                ): String = sessionCreated.organizationId()
-
-                override fun visitSessionPending(
-                    sessionPending: BetaWebhookSessionPendingEventData
-                ): String = sessionPending.organizationId()
-
-                override fun visitSessionRunning(
-                    sessionRunning: BetaWebhookSessionRunningEventData
-                ): String = sessionRunning.organizationId()
-
-                override fun visitSessionIdled(
-                    sessionIdled: BetaWebhookSessionIdledEventData
-                ): String = sessionIdled.organizationId()
-
-                override fun visitSessionRequiresAction(
-                    sessionRequiresAction: BetaWebhookSessionRequiresActionEventData
-                ): String = sessionRequiresAction.organizationId()
-
-                override fun visitSessionArchived(
-                    sessionArchived: BetaWebhookSessionArchivedEventData
-                ): String = sessionArchived.organizationId()
-
-                override fun visitSessionDeleted(
-                    sessionDeleted: BetaWebhookSessionDeletedEventData
-                ): String = sessionDeleted.organizationId()
-
-                override fun visitSessionStatusRescheduled(
-                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
-                ): String = sessionStatusRescheduled.organizationId()
-
-                override fun visitSessionStatusRunStarted(
-                    sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData
-                ): String = sessionStatusRunStarted.organizationId()
-
-                override fun visitSessionStatusIdled(
-                    sessionStatusIdled: BetaWebhookSessionStatusIdledEventData
-                ): String = sessionStatusIdled.organizationId()
-
-                override fun visitSessionStatusTerminated(
-                    sessionStatusTerminated: BetaWebhookSessionStatusTerminatedEventData
-                ): String = sessionStatusTerminated.organizationId()
-
-                override fun visitSessionThreadCreated(
-                    sessionThreadCreated: BetaWebhookSessionThreadCreatedEventData
-                ): String = sessionThreadCreated.organizationId()
-
-                override fun visitSessionThreadIdled(
-                    sessionThreadIdled: BetaWebhookSessionThreadIdledEventData
-                ): String = sessionThreadIdled.organizationId()
-
-                override fun visitSessionThreadTerminated(
-                    sessionThreadTerminated: BetaWebhookSessionThreadTerminatedEventData
-                ): String = sessionThreadTerminated.organizationId()
-
-                override fun visitSessionOutcomeEvaluationEnded(
-                    sessionOutcomeEvaluationEnded: BetaWebhookSessionOutcomeEvaluationEndedEventData
-                ): String = sessionOutcomeEvaluationEnded.organizationId()
-
-                override fun visitVaultCreated(
-                    vaultCreated: BetaWebhookVaultCreatedEventData
-                ): String = vaultCreated.organizationId()
-
-                override fun visitVaultArchived(
-                    vaultArchived: BetaWebhookVaultArchivedEventData
-                ): String = vaultArchived.organizationId()
-
-                override fun visitVaultDeleted(
-                    vaultDeleted: BetaWebhookVaultDeletedEventData
-                ): String = vaultDeleted.organizationId()
-
-                override fun visitVaultCredentialCreated(
-                    vaultCredentialCreated: BetaWebhookVaultCredentialCreatedEventData
-                ): String = vaultCredentialCreated.organizationId()
-
-                override fun visitVaultCredentialArchived(
-                    vaultCredentialArchived: BetaWebhookVaultCredentialArchivedEventData
-                ): String = vaultCredentialArchived.organizationId()
-
-                override fun visitVaultCredentialDeleted(
-                    vaultCredentialDeleted: BetaWebhookVaultCredentialDeletedEventData
-                ): String = vaultCredentialDeleted.organizationId()
-
-                override fun visitVaultCredentialRefreshFailed(
-                    vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
-                ): String = vaultCredentialRefreshFailed.organizationId()
-
-                override fun visitSessionUpdated(
-                    sessionUpdated: BetaWebhookSessionUpdatedEventData
-                ): String = sessionUpdated.organizationId()
-
-                override fun visitAgentCreated(
-                    agentCreated: BetaWebhookAgentCreatedEventData
-                ): String = agentCreated.organizationId()
-
-                override fun visitAgentArchived(
-                    agentArchived: BetaWebhookAgentArchivedEventData
-                ): String = agentArchived.organizationId()
-
-                override fun visitAgentDeleted(
-                    agentDeleted: BetaWebhookAgentDeletedEventData
-                ): String = agentDeleted.organizationId()
-
-                override fun visitDeploymentPaused(
-                    deploymentPaused: BetaWebhookDeploymentPausedEventData
-                ): String = deploymentPaused.organizationId()
-
-                override fun visitDeploymentRunFailed(
-                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
-                ): String = deploymentRunFailed.organizationId()
-
-                override fun visitDeploymentCreated(
-                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
-                ): String = deploymentCreated.organizationId()
-
-                override fun visitDeploymentUpdated(
-                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
-                ): String = deploymentUpdated.organizationId()
-
-                override fun visitDeploymentUnpaused(
-                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
-                ): String = deploymentUnpaused.organizationId()
-
-                override fun visitAgentUpdated(
-                    agentUpdated: BetaWebhookAgentUpdatedEventData
-                ): String = agentUpdated.organizationId()
-
-                override fun visitDeploymentArchived(
-                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
-                ): String = deploymentArchived.organizationId()
-
-                override fun visitDeploymentRunStarted(
-                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
-                ): String = deploymentRunStarted.organizationId()
-
-                override fun visitDeploymentDeleted(
-                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
-                ): String = deploymentDeleted.organizationId()
-
-                override fun visitDeploymentRunSucceeded(
-                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
-                ): String = deploymentRunSucceeded.organizationId()
-
-                override fun visitEnvironmentCreated(
-                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
-                ): String = environmentCreated.organizationId()
-
-                override fun visitEnvironmentUpdated(
-                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
-                ): String = environmentUpdated.organizationId()
-
-                override fun visitEnvironmentArchived(
-                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
-                ): String = environmentArchived.organizationId()
-
-                override fun visitEnvironmentDeleted(
-                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
-                ): String = environmentDeleted.organizationId()
-
-                override fun visitMemoryStoreCreated(
-                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
-                ): String = memoryStoreCreated.organizationId()
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-                ): String = memoryStoreArchived.organizationId()
-
-                override fun visitMemoryStoreDeleted(
-                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
-                ): String = memoryStoreDeleted.organizationId()
-
-                override fun visitSessionBudgetReached(
-                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
-                ): String = sessionBudgetReached.organizationId()
-
-                override fun unknown(json: JsonValue?): String =
-                    json.getProperty<String>("organization_id").getRequired("organization_id")
-            }
-        )
+        when {
+            sessionCreated != null -> sessionCreated.organizationId()
+            sessionPending != null -> sessionPending.organizationId()
+            sessionRunning != null -> sessionRunning.organizationId()
+            sessionIdled != null -> sessionIdled.organizationId()
+            sessionRequiresAction != null -> sessionRequiresAction.organizationId()
+            sessionArchived != null -> sessionArchived.organizationId()
+            sessionDeleted != null -> sessionDeleted.organizationId()
+            sessionStatusRescheduled != null -> sessionStatusRescheduled.organizationId()
+            sessionStatusRunStarted != null -> sessionStatusRunStarted.organizationId()
+            sessionStatusIdled != null -> sessionStatusIdled.organizationId()
+            sessionStatusTerminated != null -> sessionStatusTerminated.organizationId()
+            sessionThreadCreated != null -> sessionThreadCreated.organizationId()
+            sessionThreadIdled != null -> sessionThreadIdled.organizationId()
+            sessionThreadTerminated != null -> sessionThreadTerminated.organizationId()
+            sessionOutcomeEvaluationEnded != null -> sessionOutcomeEvaluationEnded.organizationId()
+            vaultCreated != null -> vaultCreated.organizationId()
+            vaultArchived != null -> vaultArchived.organizationId()
+            vaultDeleted != null -> vaultDeleted.organizationId()
+            vaultCredentialCreated != null -> vaultCredentialCreated.organizationId()
+            vaultCredentialArchived != null -> vaultCredentialArchived.organizationId()
+            vaultCredentialDeleted != null -> vaultCredentialDeleted.organizationId()
+            vaultCredentialRefreshFailed != null -> vaultCredentialRefreshFailed.organizationId()
+            sessionUpdated != null -> sessionUpdated.organizationId()
+            agentCreated != null -> agentCreated.organizationId()
+            agentArchived != null -> agentArchived.organizationId()
+            agentDeleted != null -> agentDeleted.organizationId()
+            deploymentPaused != null -> deploymentPaused.organizationId()
+            deploymentRunFailed != null -> deploymentRunFailed.organizationId()
+            deploymentCreated != null -> deploymentCreated.organizationId()
+            deploymentUpdated != null -> deploymentUpdated.organizationId()
+            deploymentUnpaused != null -> deploymentUnpaused.organizationId()
+            agentUpdated != null -> agentUpdated.organizationId()
+            deploymentArchived != null -> deploymentArchived.organizationId()
+            deploymentRunStarted != null -> deploymentRunStarted.organizationId()
+            deploymentDeleted != null -> deploymentDeleted.organizationId()
+            deploymentRunSucceeded != null -> deploymentRunSucceeded.organizationId()
+            environmentCreated != null -> environmentCreated.organizationId()
+            environmentUpdated != null -> environmentUpdated.organizationId()
+            environmentArchived != null -> environmentArchived.organizationId()
+            environmentDeleted != null -> environmentDeleted.organizationId()
+            memoryStoreCreated != null -> memoryStoreCreated.organizationId()
+            memoryStoreArchived != null -> memoryStoreArchived.organizationId()
+            memoryStoreDeleted != null -> memoryStoreDeleted.organizationId()
+            sessionBudgetReached != null -> sessionBudgetReached.organizationId()
+            else -> _json.getProperty<String>("organization_id").getRequired("organization_id")
+        }
 
     fun workspaceId(): String =
-        accept(
-            object : Visitor<String> {
-                override fun visitSessionCreated(
-                    sessionCreated: BetaWebhookSessionCreatedEventData
-                ): String = sessionCreated.workspaceId()
-
-                override fun visitSessionPending(
-                    sessionPending: BetaWebhookSessionPendingEventData
-                ): String = sessionPending.workspaceId()
-
-                override fun visitSessionRunning(
-                    sessionRunning: BetaWebhookSessionRunningEventData
-                ): String = sessionRunning.workspaceId()
-
-                override fun visitSessionIdled(
-                    sessionIdled: BetaWebhookSessionIdledEventData
-                ): String = sessionIdled.workspaceId()
-
-                override fun visitSessionRequiresAction(
-                    sessionRequiresAction: BetaWebhookSessionRequiresActionEventData
-                ): String = sessionRequiresAction.workspaceId()
-
-                override fun visitSessionArchived(
-                    sessionArchived: BetaWebhookSessionArchivedEventData
-                ): String = sessionArchived.workspaceId()
-
-                override fun visitSessionDeleted(
-                    sessionDeleted: BetaWebhookSessionDeletedEventData
-                ): String = sessionDeleted.workspaceId()
-
-                override fun visitSessionStatusRescheduled(
-                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
-                ): String = sessionStatusRescheduled.workspaceId()
-
-                override fun visitSessionStatusRunStarted(
-                    sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData
-                ): String = sessionStatusRunStarted.workspaceId()
-
-                override fun visitSessionStatusIdled(
-                    sessionStatusIdled: BetaWebhookSessionStatusIdledEventData
-                ): String = sessionStatusIdled.workspaceId()
-
-                override fun visitSessionStatusTerminated(
-                    sessionStatusTerminated: BetaWebhookSessionStatusTerminatedEventData
-                ): String = sessionStatusTerminated.workspaceId()
-
-                override fun visitSessionThreadCreated(
-                    sessionThreadCreated: BetaWebhookSessionThreadCreatedEventData
-                ): String = sessionThreadCreated.workspaceId()
-
-                override fun visitSessionThreadIdled(
-                    sessionThreadIdled: BetaWebhookSessionThreadIdledEventData
-                ): String = sessionThreadIdled.workspaceId()
-
-                override fun visitSessionThreadTerminated(
-                    sessionThreadTerminated: BetaWebhookSessionThreadTerminatedEventData
-                ): String = sessionThreadTerminated.workspaceId()
-
-                override fun visitSessionOutcomeEvaluationEnded(
-                    sessionOutcomeEvaluationEnded: BetaWebhookSessionOutcomeEvaluationEndedEventData
-                ): String = sessionOutcomeEvaluationEnded.workspaceId()
-
-                override fun visitVaultCreated(
-                    vaultCreated: BetaWebhookVaultCreatedEventData
-                ): String = vaultCreated.workspaceId()
-
-                override fun visitVaultArchived(
-                    vaultArchived: BetaWebhookVaultArchivedEventData
-                ): String = vaultArchived.workspaceId()
-
-                override fun visitVaultDeleted(
-                    vaultDeleted: BetaWebhookVaultDeletedEventData
-                ): String = vaultDeleted.workspaceId()
-
-                override fun visitVaultCredentialCreated(
-                    vaultCredentialCreated: BetaWebhookVaultCredentialCreatedEventData
-                ): String = vaultCredentialCreated.workspaceId()
-
-                override fun visitVaultCredentialArchived(
-                    vaultCredentialArchived: BetaWebhookVaultCredentialArchivedEventData
-                ): String = vaultCredentialArchived.workspaceId()
-
-                override fun visitVaultCredentialDeleted(
-                    vaultCredentialDeleted: BetaWebhookVaultCredentialDeletedEventData
-                ): String = vaultCredentialDeleted.workspaceId()
-
-                override fun visitVaultCredentialRefreshFailed(
-                    vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
-                ): String = vaultCredentialRefreshFailed.workspaceId()
-
-                override fun visitSessionUpdated(
-                    sessionUpdated: BetaWebhookSessionUpdatedEventData
-                ): String = sessionUpdated.workspaceId()
-
-                override fun visitAgentCreated(
-                    agentCreated: BetaWebhookAgentCreatedEventData
-                ): String = agentCreated.workspaceId()
-
-                override fun visitAgentArchived(
-                    agentArchived: BetaWebhookAgentArchivedEventData
-                ): String = agentArchived.workspaceId()
-
-                override fun visitAgentDeleted(
-                    agentDeleted: BetaWebhookAgentDeletedEventData
-                ): String = agentDeleted.workspaceId()
-
-                override fun visitDeploymentPaused(
-                    deploymentPaused: BetaWebhookDeploymentPausedEventData
-                ): String = deploymentPaused.workspaceId()
-
-                override fun visitDeploymentRunFailed(
-                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
-                ): String = deploymentRunFailed.workspaceId()
-
-                override fun visitDeploymentCreated(
-                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
-                ): String = deploymentCreated.workspaceId()
-
-                override fun visitDeploymentUpdated(
-                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
-                ): String = deploymentUpdated.workspaceId()
-
-                override fun visitDeploymentUnpaused(
-                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
-                ): String = deploymentUnpaused.workspaceId()
-
-                override fun visitAgentUpdated(
-                    agentUpdated: BetaWebhookAgentUpdatedEventData
-                ): String = agentUpdated.workspaceId()
-
-                override fun visitDeploymentArchived(
-                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
-                ): String = deploymentArchived.workspaceId()
-
-                override fun visitDeploymentRunStarted(
-                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
-                ): String = deploymentRunStarted.workspaceId()
-
-                override fun visitDeploymentDeleted(
-                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
-                ): String = deploymentDeleted.workspaceId()
-
-                override fun visitDeploymentRunSucceeded(
-                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
-                ): String = deploymentRunSucceeded.workspaceId()
-
-                override fun visitEnvironmentCreated(
-                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
-                ): String = environmentCreated.workspaceId()
-
-                override fun visitEnvironmentUpdated(
-                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
-                ): String = environmentUpdated.workspaceId()
-
-                override fun visitEnvironmentArchived(
-                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
-                ): String = environmentArchived.workspaceId()
-
-                override fun visitEnvironmentDeleted(
-                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
-                ): String = environmentDeleted.workspaceId()
-
-                override fun visitMemoryStoreCreated(
-                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
-                ): String = memoryStoreCreated.workspaceId()
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-                ): String = memoryStoreArchived.workspaceId()
-
-                override fun visitMemoryStoreDeleted(
-                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
-                ): String = memoryStoreDeleted.workspaceId()
-
-                override fun visitSessionBudgetReached(
-                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
-                ): String = sessionBudgetReached.workspaceId()
-
-                override fun unknown(json: JsonValue?): String =
-                    json.getProperty<String>("workspace_id").getRequired("workspace_id")
-            }
-        )
+        when {
+            sessionCreated != null -> sessionCreated.workspaceId()
+            sessionPending != null -> sessionPending.workspaceId()
+            sessionRunning != null -> sessionRunning.workspaceId()
+            sessionIdled != null -> sessionIdled.workspaceId()
+            sessionRequiresAction != null -> sessionRequiresAction.workspaceId()
+            sessionArchived != null -> sessionArchived.workspaceId()
+            sessionDeleted != null -> sessionDeleted.workspaceId()
+            sessionStatusRescheduled != null -> sessionStatusRescheduled.workspaceId()
+            sessionStatusRunStarted != null -> sessionStatusRunStarted.workspaceId()
+            sessionStatusIdled != null -> sessionStatusIdled.workspaceId()
+            sessionStatusTerminated != null -> sessionStatusTerminated.workspaceId()
+            sessionThreadCreated != null -> sessionThreadCreated.workspaceId()
+            sessionThreadIdled != null -> sessionThreadIdled.workspaceId()
+            sessionThreadTerminated != null -> sessionThreadTerminated.workspaceId()
+            sessionOutcomeEvaluationEnded != null -> sessionOutcomeEvaluationEnded.workspaceId()
+            vaultCreated != null -> vaultCreated.workspaceId()
+            vaultArchived != null -> vaultArchived.workspaceId()
+            vaultDeleted != null -> vaultDeleted.workspaceId()
+            vaultCredentialCreated != null -> vaultCredentialCreated.workspaceId()
+            vaultCredentialArchived != null -> vaultCredentialArchived.workspaceId()
+            vaultCredentialDeleted != null -> vaultCredentialDeleted.workspaceId()
+            vaultCredentialRefreshFailed != null -> vaultCredentialRefreshFailed.workspaceId()
+            sessionUpdated != null -> sessionUpdated.workspaceId()
+            agentCreated != null -> agentCreated.workspaceId()
+            agentArchived != null -> agentArchived.workspaceId()
+            agentDeleted != null -> agentDeleted.workspaceId()
+            deploymentPaused != null -> deploymentPaused.workspaceId()
+            deploymentRunFailed != null -> deploymentRunFailed.workspaceId()
+            deploymentCreated != null -> deploymentCreated.workspaceId()
+            deploymentUpdated != null -> deploymentUpdated.workspaceId()
+            deploymentUnpaused != null -> deploymentUnpaused.workspaceId()
+            agentUpdated != null -> agentUpdated.workspaceId()
+            deploymentArchived != null -> deploymentArchived.workspaceId()
+            deploymentRunStarted != null -> deploymentRunStarted.workspaceId()
+            deploymentDeleted != null -> deploymentDeleted.workspaceId()
+            deploymentRunSucceeded != null -> deploymentRunSucceeded.workspaceId()
+            environmentCreated != null -> environmentCreated.workspaceId()
+            environmentUpdated != null -> environmentUpdated.workspaceId()
+            environmentArchived != null -> environmentArchived.workspaceId()
+            environmentDeleted != null -> environmentDeleted.workspaceId()
+            memoryStoreCreated != null -> memoryStoreCreated.workspaceId()
+            memoryStoreArchived != null -> memoryStoreArchived.workspaceId()
+            memoryStoreDeleted != null -> memoryStoreDeleted.workspaceId()
+            sessionBudgetReached != null -> sessionBudgetReached.workspaceId()
+            else -> _json.getProperty<String>("workspace_id").getRequired("workspace_id")
+        }
 
     fun sessionThreadId(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitSessionCreated(
-                    sessionCreated: BetaWebhookSessionCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionPending(
-                    sessionPending: BetaWebhookSessionPendingEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionRunning(
-                    sessionRunning: BetaWebhookSessionRunningEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionIdled(
-                    sessionIdled: BetaWebhookSessionIdledEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionRequiresAction(
-                    sessionRequiresAction: BetaWebhookSessionRequiresActionEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionArchived(
-                    sessionArchived: BetaWebhookSessionArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionDeleted(
-                    sessionDeleted: BetaWebhookSessionDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionStatusRescheduled(
-                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionStatusRunStarted(
-                    sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionStatusIdled(
-                    sessionStatusIdled: BetaWebhookSessionStatusIdledEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionStatusTerminated(
-                    sessionStatusTerminated: BetaWebhookSessionStatusTerminatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionThreadCreated(
-                    sessionThreadCreated: BetaWebhookSessionThreadCreatedEventData
-                ): Optional<String> = Optional.of(sessionThreadCreated.sessionThreadId())
-
-                override fun visitSessionThreadIdled(
-                    sessionThreadIdled: BetaWebhookSessionThreadIdledEventData
-                ): Optional<String> = Optional.of(sessionThreadIdled.sessionThreadId())
-
-                override fun visitSessionThreadTerminated(
-                    sessionThreadTerminated: BetaWebhookSessionThreadTerminatedEventData
-                ): Optional<String> = Optional.of(sessionThreadTerminated.sessionThreadId())
-
-                override fun visitSessionOutcomeEvaluationEnded(
-                    sessionOutcomeEvaluationEnded: BetaWebhookSessionOutcomeEvaluationEndedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultCreated(
-                    vaultCreated: BetaWebhookVaultCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultArchived(
-                    vaultArchived: BetaWebhookVaultArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultDeleted(
-                    vaultDeleted: BetaWebhookVaultDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultCredentialCreated(
-                    vaultCredentialCreated: BetaWebhookVaultCredentialCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultCredentialArchived(
-                    vaultCredentialArchived: BetaWebhookVaultCredentialArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultCredentialDeleted(
-                    vaultCredentialDeleted: BetaWebhookVaultCredentialDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultCredentialRefreshFailed(
-                    vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionUpdated(
-                    sessionUpdated: BetaWebhookSessionUpdatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitAgentCreated(
-                    agentCreated: BetaWebhookAgentCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitAgentArchived(
-                    agentArchived: BetaWebhookAgentArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitAgentDeleted(
-                    agentDeleted: BetaWebhookAgentDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentPaused(
-                    deploymentPaused: BetaWebhookDeploymentPausedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentRunFailed(
-                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentCreated(
-                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentUpdated(
-                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentUnpaused(
-                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitAgentUpdated(
-                    agentUpdated: BetaWebhookAgentUpdatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentArchived(
-                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentRunStarted(
-                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentDeleted(
-                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentRunSucceeded(
-                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitEnvironmentCreated(
-                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitEnvironmentUpdated(
-                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitEnvironmentArchived(
-                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitEnvironmentDeleted(
-                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitMemoryStoreCreated(
-                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitMemoryStoreDeleted(
-                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionBudgetReached(
-                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("session_thread_id").asKnown()
-            }
-        )
+        when {
+            sessionCreated != null -> Optional.empty()
+            sessionPending != null -> Optional.empty()
+            sessionRunning != null -> Optional.empty()
+            sessionIdled != null -> Optional.empty()
+            sessionRequiresAction != null -> Optional.empty()
+            sessionArchived != null -> Optional.empty()
+            sessionDeleted != null -> Optional.empty()
+            sessionStatusRescheduled != null -> Optional.empty()
+            sessionStatusRunStarted != null -> Optional.empty()
+            sessionStatusIdled != null -> Optional.empty()
+            sessionStatusTerminated != null -> Optional.empty()
+            sessionThreadCreated != null -> Optional.of(sessionThreadCreated.sessionThreadId())
+            sessionThreadIdled != null -> Optional.of(sessionThreadIdled.sessionThreadId())
+            sessionThreadTerminated != null ->
+                Optional.of(sessionThreadTerminated.sessionThreadId())
+            sessionOutcomeEvaluationEnded != null -> Optional.empty()
+            vaultCreated != null -> Optional.empty()
+            vaultArchived != null -> Optional.empty()
+            vaultDeleted != null -> Optional.empty()
+            vaultCredentialCreated != null -> Optional.empty()
+            vaultCredentialArchived != null -> Optional.empty()
+            vaultCredentialDeleted != null -> Optional.empty()
+            vaultCredentialRefreshFailed != null -> Optional.empty()
+            sessionUpdated != null -> Optional.empty()
+            agentCreated != null -> Optional.empty()
+            agentArchived != null -> Optional.empty()
+            agentDeleted != null -> Optional.empty()
+            deploymentPaused != null -> Optional.empty()
+            deploymentRunFailed != null -> Optional.empty()
+            deploymentCreated != null -> Optional.empty()
+            deploymentUpdated != null -> Optional.empty()
+            deploymentUnpaused != null -> Optional.empty()
+            agentUpdated != null -> Optional.empty()
+            deploymentArchived != null -> Optional.empty()
+            deploymentRunStarted != null -> Optional.empty()
+            deploymentDeleted != null -> Optional.empty()
+            deploymentRunSucceeded != null -> Optional.empty()
+            environmentCreated != null -> Optional.empty()
+            environmentUpdated != null -> Optional.empty()
+            environmentArchived != null -> Optional.empty()
+            environmentDeleted != null -> Optional.empty()
+            memoryStoreCreated != null -> Optional.empty()
+            memoryStoreArchived != null -> Optional.empty()
+            memoryStoreDeleted != null -> Optional.empty()
+            sessionBudgetReached != null -> Optional.empty()
+            else -> _json.getProperty<String>("session_thread_id").asKnown()
+        }
 
     fun vaultId(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitSessionCreated(
-                    sessionCreated: BetaWebhookSessionCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionPending(
-                    sessionPending: BetaWebhookSessionPendingEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionRunning(
-                    sessionRunning: BetaWebhookSessionRunningEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionIdled(
-                    sessionIdled: BetaWebhookSessionIdledEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionRequiresAction(
-                    sessionRequiresAction: BetaWebhookSessionRequiresActionEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionArchived(
-                    sessionArchived: BetaWebhookSessionArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionDeleted(
-                    sessionDeleted: BetaWebhookSessionDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionStatusRescheduled(
-                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionStatusRunStarted(
-                    sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionStatusIdled(
-                    sessionStatusIdled: BetaWebhookSessionStatusIdledEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionStatusTerminated(
-                    sessionStatusTerminated: BetaWebhookSessionStatusTerminatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionThreadCreated(
-                    sessionThreadCreated: BetaWebhookSessionThreadCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionThreadIdled(
-                    sessionThreadIdled: BetaWebhookSessionThreadIdledEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionThreadTerminated(
-                    sessionThreadTerminated: BetaWebhookSessionThreadTerminatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionOutcomeEvaluationEnded(
-                    sessionOutcomeEvaluationEnded: BetaWebhookSessionOutcomeEvaluationEndedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultCreated(
-                    vaultCreated: BetaWebhookVaultCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultArchived(
-                    vaultArchived: BetaWebhookVaultArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultDeleted(
-                    vaultDeleted: BetaWebhookVaultDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitVaultCredentialCreated(
-                    vaultCredentialCreated: BetaWebhookVaultCredentialCreatedEventData
-                ): Optional<String> = Optional.of(vaultCredentialCreated.vaultId())
-
-                override fun visitVaultCredentialArchived(
-                    vaultCredentialArchived: BetaWebhookVaultCredentialArchivedEventData
-                ): Optional<String> = Optional.of(vaultCredentialArchived.vaultId())
-
-                override fun visitVaultCredentialDeleted(
-                    vaultCredentialDeleted: BetaWebhookVaultCredentialDeletedEventData
-                ): Optional<String> = Optional.of(vaultCredentialDeleted.vaultId())
-
-                override fun visitVaultCredentialRefreshFailed(
-                    vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
-                ): Optional<String> = Optional.of(vaultCredentialRefreshFailed.vaultId())
-
-                override fun visitSessionUpdated(
-                    sessionUpdated: BetaWebhookSessionUpdatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitAgentCreated(
-                    agentCreated: BetaWebhookAgentCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitAgentArchived(
-                    agentArchived: BetaWebhookAgentArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitAgentDeleted(
-                    agentDeleted: BetaWebhookAgentDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentPaused(
-                    deploymentPaused: BetaWebhookDeploymentPausedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentRunFailed(
-                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentCreated(
-                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentUpdated(
-                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentUnpaused(
-                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitAgentUpdated(
-                    agentUpdated: BetaWebhookAgentUpdatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentArchived(
-                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentRunStarted(
-                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentDeleted(
-                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitDeploymentRunSucceeded(
-                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitEnvironmentCreated(
-                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitEnvironmentUpdated(
-                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitEnvironmentArchived(
-                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitEnvironmentDeleted(
-                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitMemoryStoreCreated(
-                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitMemoryStoreDeleted(
-                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun visitSessionBudgetReached(
-                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("vault_id").asKnown()
-            }
-        )
+        when {
+            sessionCreated != null -> Optional.empty()
+            sessionPending != null -> Optional.empty()
+            sessionRunning != null -> Optional.empty()
+            sessionIdled != null -> Optional.empty()
+            sessionRequiresAction != null -> Optional.empty()
+            sessionArchived != null -> Optional.empty()
+            sessionDeleted != null -> Optional.empty()
+            sessionStatusRescheduled != null -> Optional.empty()
+            sessionStatusRunStarted != null -> Optional.empty()
+            sessionStatusIdled != null -> Optional.empty()
+            sessionStatusTerminated != null -> Optional.empty()
+            sessionThreadCreated != null -> Optional.empty()
+            sessionThreadIdled != null -> Optional.empty()
+            sessionThreadTerminated != null -> Optional.empty()
+            sessionOutcomeEvaluationEnded != null -> Optional.empty()
+            vaultCreated != null -> Optional.empty()
+            vaultArchived != null -> Optional.empty()
+            vaultDeleted != null -> Optional.empty()
+            vaultCredentialCreated != null -> Optional.of(vaultCredentialCreated.vaultId())
+            vaultCredentialArchived != null -> Optional.of(vaultCredentialArchived.vaultId())
+            vaultCredentialDeleted != null -> Optional.of(vaultCredentialDeleted.vaultId())
+            vaultCredentialRefreshFailed != null ->
+                Optional.of(vaultCredentialRefreshFailed.vaultId())
+            sessionUpdated != null -> Optional.empty()
+            agentCreated != null -> Optional.empty()
+            agentArchived != null -> Optional.empty()
+            agentDeleted != null -> Optional.empty()
+            deploymentPaused != null -> Optional.empty()
+            deploymentRunFailed != null -> Optional.empty()
+            deploymentCreated != null -> Optional.empty()
+            deploymentUpdated != null -> Optional.empty()
+            deploymentUnpaused != null -> Optional.empty()
+            agentUpdated != null -> Optional.empty()
+            deploymentArchived != null -> Optional.empty()
+            deploymentRunStarted != null -> Optional.empty()
+            deploymentDeleted != null -> Optional.empty()
+            deploymentRunSucceeded != null -> Optional.empty()
+            environmentCreated != null -> Optional.empty()
+            environmentUpdated != null -> Optional.empty()
+            environmentArchived != null -> Optional.empty()
+            environmentDeleted != null -> Optional.empty()
+            memoryStoreCreated != null -> Optional.empty()
+            memoryStoreArchived != null -> Optional.empty()
+            memoryStoreDeleted != null -> Optional.empty()
+            sessionBudgetReached != null -> Optional.empty()
+            else -> _json.getProperty<String>("vault_id").asKnown()
+        }
 
     fun sessionCreated(): Optional<BetaWebhookSessionCreatedEventData> =
         Optional.ofNullable(sessionCreated)
@@ -1631,257 +823,53 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitSessionCreated(
-                    sessionCreated: BetaWebhookSessionCreatedEventData
-                ) {
-                    sessionCreated.validate()
-                }
-
-                override fun visitSessionPending(
-                    sessionPending: BetaWebhookSessionPendingEventData
-                ) {
-                    sessionPending.validate()
-                }
-
-                override fun visitSessionRunning(
-                    sessionRunning: BetaWebhookSessionRunningEventData
-                ) {
-                    sessionRunning.validate()
-                }
-
-                override fun visitSessionIdled(sessionIdled: BetaWebhookSessionIdledEventData) {
-                    sessionIdled.validate()
-                }
-
-                override fun visitSessionRequiresAction(
-                    sessionRequiresAction: BetaWebhookSessionRequiresActionEventData
-                ) {
-                    sessionRequiresAction.validate()
-                }
-
-                override fun visitSessionArchived(
-                    sessionArchived: BetaWebhookSessionArchivedEventData
-                ) {
-                    sessionArchived.validate()
-                }
-
-                override fun visitSessionDeleted(
-                    sessionDeleted: BetaWebhookSessionDeletedEventData
-                ) {
-                    sessionDeleted.validate()
-                }
-
-                override fun visitSessionStatusRescheduled(
-                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
-                ) {
-                    sessionStatusRescheduled.validate()
-                }
-
-                override fun visitSessionStatusRunStarted(
-                    sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData
-                ) {
-                    sessionStatusRunStarted.validate()
-                }
-
-                override fun visitSessionStatusIdled(
-                    sessionStatusIdled: BetaWebhookSessionStatusIdledEventData
-                ) {
-                    sessionStatusIdled.validate()
-                }
-
-                override fun visitSessionStatusTerminated(
-                    sessionStatusTerminated: BetaWebhookSessionStatusTerminatedEventData
-                ) {
-                    sessionStatusTerminated.validate()
-                }
-
-                override fun visitSessionThreadCreated(
-                    sessionThreadCreated: BetaWebhookSessionThreadCreatedEventData
-                ) {
-                    sessionThreadCreated.validate()
-                }
-
-                override fun visitSessionThreadIdled(
-                    sessionThreadIdled: BetaWebhookSessionThreadIdledEventData
-                ) {
-                    sessionThreadIdled.validate()
-                }
-
-                override fun visitSessionThreadTerminated(
-                    sessionThreadTerminated: BetaWebhookSessionThreadTerminatedEventData
-                ) {
-                    sessionThreadTerminated.validate()
-                }
-
-                override fun visitSessionOutcomeEvaluationEnded(
-                    sessionOutcomeEvaluationEnded: BetaWebhookSessionOutcomeEvaluationEndedEventData
-                ) {
-                    sessionOutcomeEvaluationEnded.validate()
-                }
-
-                override fun visitVaultCreated(vaultCreated: BetaWebhookVaultCreatedEventData) {
-                    vaultCreated.validate()
-                }
-
-                override fun visitVaultArchived(vaultArchived: BetaWebhookVaultArchivedEventData) {
-                    vaultArchived.validate()
-                }
-
-                override fun visitVaultDeleted(vaultDeleted: BetaWebhookVaultDeletedEventData) {
-                    vaultDeleted.validate()
-                }
-
-                override fun visitVaultCredentialCreated(
-                    vaultCredentialCreated: BetaWebhookVaultCredentialCreatedEventData
-                ) {
-                    vaultCredentialCreated.validate()
-                }
-
-                override fun visitVaultCredentialArchived(
-                    vaultCredentialArchived: BetaWebhookVaultCredentialArchivedEventData
-                ) {
-                    vaultCredentialArchived.validate()
-                }
-
-                override fun visitVaultCredentialDeleted(
-                    vaultCredentialDeleted: BetaWebhookVaultCredentialDeletedEventData
-                ) {
-                    vaultCredentialDeleted.validate()
-                }
-
-                override fun visitVaultCredentialRefreshFailed(
-                    vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
-                ) {
-                    vaultCredentialRefreshFailed.validate()
-                }
-
-                override fun visitSessionUpdated(
-                    sessionUpdated: BetaWebhookSessionUpdatedEventData
-                ) {
-                    sessionUpdated.validate()
-                }
-
-                override fun visitAgentCreated(agentCreated: BetaWebhookAgentCreatedEventData) {
-                    agentCreated.validate()
-                }
-
-                override fun visitAgentArchived(agentArchived: BetaWebhookAgentArchivedEventData) {
-                    agentArchived.validate()
-                }
-
-                override fun visitAgentDeleted(agentDeleted: BetaWebhookAgentDeletedEventData) {
-                    agentDeleted.validate()
-                }
-
-                override fun visitDeploymentPaused(
-                    deploymentPaused: BetaWebhookDeploymentPausedEventData
-                ) {
-                    deploymentPaused.validate()
-                }
-
-                override fun visitDeploymentRunFailed(
-                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
-                ) {
-                    deploymentRunFailed.validate()
-                }
-
-                override fun visitDeploymentCreated(
-                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
-                ) {
-                    deploymentCreated.validate()
-                }
-
-                override fun visitDeploymentUpdated(
-                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
-                ) {
-                    deploymentUpdated.validate()
-                }
-
-                override fun visitDeploymentUnpaused(
-                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
-                ) {
-                    deploymentUnpaused.validate()
-                }
-
-                override fun visitAgentUpdated(agentUpdated: BetaWebhookAgentUpdatedEventData) {
-                    agentUpdated.validate()
-                }
-
-                override fun visitDeploymentArchived(
-                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
-                ) {
-                    deploymentArchived.validate()
-                }
-
-                override fun visitDeploymentRunStarted(
-                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
-                ) {
-                    deploymentRunStarted.validate()
-                }
-
-                override fun visitDeploymentDeleted(
-                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
-                ) {
-                    deploymentDeleted.validate()
-                }
-
-                override fun visitDeploymentRunSucceeded(
-                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
-                ) {
-                    deploymentRunSucceeded.validate()
-                }
-
-                override fun visitEnvironmentCreated(
-                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
-                ) {
-                    environmentCreated.validate()
-                }
-
-                override fun visitEnvironmentUpdated(
-                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
-                ) {
-                    environmentUpdated.validate()
-                }
-
-                override fun visitEnvironmentArchived(
-                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
-                ) {
-                    environmentArchived.validate()
-                }
-
-                override fun visitEnvironmentDeleted(
-                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
-                ) {
-                    environmentDeleted.validate()
-                }
-
-                override fun visitMemoryStoreCreated(
-                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
-                ) {
-                    memoryStoreCreated.validate()
-                }
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-                ) {
-                    memoryStoreArchived.validate()
-                }
-
-                override fun visitMemoryStoreDeleted(
-                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
-                ) {
-                    memoryStoreDeleted.validate()
-                }
-
-                override fun visitSessionBudgetReached(
-                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
-                ) {
-                    sessionBudgetReached.validate()
-                }
-            }
-        )
+        when {
+            sessionCreated != null -> sessionCreated.validate()
+            sessionPending != null -> sessionPending.validate()
+            sessionRunning != null -> sessionRunning.validate()
+            sessionIdled != null -> sessionIdled.validate()
+            sessionRequiresAction != null -> sessionRequiresAction.validate()
+            sessionArchived != null -> sessionArchived.validate()
+            sessionDeleted != null -> sessionDeleted.validate()
+            sessionStatusRescheduled != null -> sessionStatusRescheduled.validate()
+            sessionStatusRunStarted != null -> sessionStatusRunStarted.validate()
+            sessionStatusIdled != null -> sessionStatusIdled.validate()
+            sessionStatusTerminated != null -> sessionStatusTerminated.validate()
+            sessionThreadCreated != null -> sessionThreadCreated.validate()
+            sessionThreadIdled != null -> sessionThreadIdled.validate()
+            sessionThreadTerminated != null -> sessionThreadTerminated.validate()
+            sessionOutcomeEvaluationEnded != null -> sessionOutcomeEvaluationEnded.validate()
+            vaultCreated != null -> vaultCreated.validate()
+            vaultArchived != null -> vaultArchived.validate()
+            vaultDeleted != null -> vaultDeleted.validate()
+            vaultCredentialCreated != null -> vaultCredentialCreated.validate()
+            vaultCredentialArchived != null -> vaultCredentialArchived.validate()
+            vaultCredentialDeleted != null -> vaultCredentialDeleted.validate()
+            vaultCredentialRefreshFailed != null -> vaultCredentialRefreshFailed.validate()
+            sessionUpdated != null -> sessionUpdated.validate()
+            agentCreated != null -> agentCreated.validate()
+            agentArchived != null -> agentArchived.validate()
+            agentDeleted != null -> agentDeleted.validate()
+            deploymentPaused != null -> deploymentPaused.validate()
+            deploymentRunFailed != null -> deploymentRunFailed.validate()
+            deploymentCreated != null -> deploymentCreated.validate()
+            deploymentUpdated != null -> deploymentUpdated.validate()
+            deploymentUnpaused != null -> deploymentUnpaused.validate()
+            agentUpdated != null -> agentUpdated.validate()
+            deploymentArchived != null -> deploymentArchived.validate()
+            deploymentRunStarted != null -> deploymentRunStarted.validate()
+            deploymentDeleted != null -> deploymentDeleted.validate()
+            deploymentRunSucceeded != null -> deploymentRunSucceeded.validate()
+            environmentCreated != null -> environmentCreated.validate()
+            environmentUpdated != null -> environmentUpdated.validate()
+            environmentArchived != null -> environmentArchived.validate()
+            environmentDeleted != null -> environmentDeleted.validate()
+            memoryStoreCreated != null -> memoryStoreCreated.validate()
+            memoryStoreArchived != null -> memoryStoreArchived.validate()
+            memoryStoreDeleted != null -> memoryStoreDeleted.validate()
+            sessionBudgetReached != null -> sessionBudgetReached.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaWebhookEventData: $_json")
+        }
         validated = true
     }
 
@@ -1900,179 +888,53 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitSessionCreated(
-                    sessionCreated: BetaWebhookSessionCreatedEventData
-                ) = sessionCreated.validity()
-
-                override fun visitSessionPending(
-                    sessionPending: BetaWebhookSessionPendingEventData
-                ) = sessionPending.validity()
-
-                override fun visitSessionRunning(
-                    sessionRunning: BetaWebhookSessionRunningEventData
-                ) = sessionRunning.validity()
-
-                override fun visitSessionIdled(sessionIdled: BetaWebhookSessionIdledEventData) =
-                    sessionIdled.validity()
-
-                override fun visitSessionRequiresAction(
-                    sessionRequiresAction: BetaWebhookSessionRequiresActionEventData
-                ) = sessionRequiresAction.validity()
-
-                override fun visitSessionArchived(
-                    sessionArchived: BetaWebhookSessionArchivedEventData
-                ) = sessionArchived.validity()
-
-                override fun visitSessionDeleted(
-                    sessionDeleted: BetaWebhookSessionDeletedEventData
-                ) = sessionDeleted.validity()
-
-                override fun visitSessionStatusRescheduled(
-                    sessionStatusRescheduled: BetaWebhookSessionStatusRescheduledEventData
-                ) = sessionStatusRescheduled.validity()
-
-                override fun visitSessionStatusRunStarted(
-                    sessionStatusRunStarted: BetaWebhookSessionStatusRunStartedEventData
-                ) = sessionStatusRunStarted.validity()
-
-                override fun visitSessionStatusIdled(
-                    sessionStatusIdled: BetaWebhookSessionStatusIdledEventData
-                ) = sessionStatusIdled.validity()
-
-                override fun visitSessionStatusTerminated(
-                    sessionStatusTerminated: BetaWebhookSessionStatusTerminatedEventData
-                ) = sessionStatusTerminated.validity()
-
-                override fun visitSessionThreadCreated(
-                    sessionThreadCreated: BetaWebhookSessionThreadCreatedEventData
-                ) = sessionThreadCreated.validity()
-
-                override fun visitSessionThreadIdled(
-                    sessionThreadIdled: BetaWebhookSessionThreadIdledEventData
-                ) = sessionThreadIdled.validity()
-
-                override fun visitSessionThreadTerminated(
-                    sessionThreadTerminated: BetaWebhookSessionThreadTerminatedEventData
-                ) = sessionThreadTerminated.validity()
-
-                override fun visitSessionOutcomeEvaluationEnded(
-                    sessionOutcomeEvaluationEnded: BetaWebhookSessionOutcomeEvaluationEndedEventData
-                ) = sessionOutcomeEvaluationEnded.validity()
-
-                override fun visitVaultCreated(vaultCreated: BetaWebhookVaultCreatedEventData) =
-                    vaultCreated.validity()
-
-                override fun visitVaultArchived(vaultArchived: BetaWebhookVaultArchivedEventData) =
-                    vaultArchived.validity()
-
-                override fun visitVaultDeleted(vaultDeleted: BetaWebhookVaultDeletedEventData) =
-                    vaultDeleted.validity()
-
-                override fun visitVaultCredentialCreated(
-                    vaultCredentialCreated: BetaWebhookVaultCredentialCreatedEventData
-                ) = vaultCredentialCreated.validity()
-
-                override fun visitVaultCredentialArchived(
-                    vaultCredentialArchived: BetaWebhookVaultCredentialArchivedEventData
-                ) = vaultCredentialArchived.validity()
-
-                override fun visitVaultCredentialDeleted(
-                    vaultCredentialDeleted: BetaWebhookVaultCredentialDeletedEventData
-                ) = vaultCredentialDeleted.validity()
-
-                override fun visitVaultCredentialRefreshFailed(
-                    vaultCredentialRefreshFailed: BetaWebhookVaultCredentialRefreshFailedEventData
-                ) = vaultCredentialRefreshFailed.validity()
-
-                override fun visitSessionUpdated(
-                    sessionUpdated: BetaWebhookSessionUpdatedEventData
-                ) = sessionUpdated.validity()
-
-                override fun visitAgentCreated(agentCreated: BetaWebhookAgentCreatedEventData) =
-                    agentCreated.validity()
-
-                override fun visitAgentArchived(agentArchived: BetaWebhookAgentArchivedEventData) =
-                    agentArchived.validity()
-
-                override fun visitAgentDeleted(agentDeleted: BetaWebhookAgentDeletedEventData) =
-                    agentDeleted.validity()
-
-                override fun visitDeploymentPaused(
-                    deploymentPaused: BetaWebhookDeploymentPausedEventData
-                ) = deploymentPaused.validity()
-
-                override fun visitDeploymentRunFailed(
-                    deploymentRunFailed: BetaWebhookDeploymentRunFailedEventData
-                ) = deploymentRunFailed.validity()
-
-                override fun visitDeploymentCreated(
-                    deploymentCreated: BetaWebhookDeploymentCreatedEventData
-                ) = deploymentCreated.validity()
-
-                override fun visitDeploymentUpdated(
-                    deploymentUpdated: BetaWebhookDeploymentUpdatedEventData
-                ) = deploymentUpdated.validity()
-
-                override fun visitDeploymentUnpaused(
-                    deploymentUnpaused: BetaWebhookDeploymentUnpausedEventData
-                ) = deploymentUnpaused.validity()
-
-                override fun visitAgentUpdated(agentUpdated: BetaWebhookAgentUpdatedEventData) =
-                    agentUpdated.validity()
-
-                override fun visitDeploymentArchived(
-                    deploymentArchived: BetaWebhookDeploymentArchivedEventData
-                ) = deploymentArchived.validity()
-
-                override fun visitDeploymentRunStarted(
-                    deploymentRunStarted: BetaWebhookDeploymentRunStartedEventData
-                ) = deploymentRunStarted.validity()
-
-                override fun visitDeploymentDeleted(
-                    deploymentDeleted: BetaWebhookDeploymentDeletedEventData
-                ) = deploymentDeleted.validity()
-
-                override fun visitDeploymentRunSucceeded(
-                    deploymentRunSucceeded: BetaWebhookDeploymentRunSucceededEventData
-                ) = deploymentRunSucceeded.validity()
-
-                override fun visitEnvironmentCreated(
-                    environmentCreated: BetaWebhookEnvironmentCreatedEventData
-                ) = environmentCreated.validity()
-
-                override fun visitEnvironmentUpdated(
-                    environmentUpdated: BetaWebhookEnvironmentUpdatedEventData
-                ) = environmentUpdated.validity()
-
-                override fun visitEnvironmentArchived(
-                    environmentArchived: BetaWebhookEnvironmentArchivedEventData
-                ) = environmentArchived.validity()
-
-                override fun visitEnvironmentDeleted(
-                    environmentDeleted: BetaWebhookEnvironmentDeletedEventData
-                ) = environmentDeleted.validity()
-
-                override fun visitMemoryStoreCreated(
-                    memoryStoreCreated: BetaWebhookMemoryStoreCreatedEventData
-                ) = memoryStoreCreated.validity()
-
-                override fun visitMemoryStoreArchived(
-                    memoryStoreArchived: BetaWebhookMemoryStoreArchivedEventData
-                ) = memoryStoreArchived.validity()
-
-                override fun visitMemoryStoreDeleted(
-                    memoryStoreDeleted: BetaWebhookMemoryStoreDeletedEventData
-                ) = memoryStoreDeleted.validity()
-
-                override fun visitSessionBudgetReached(
-                    sessionBudgetReached: BetaWebhookSessionBudgetReachedEventData
-                ) = sessionBudgetReached.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            sessionCreated != null -> sessionCreated.validity()
+            sessionPending != null -> sessionPending.validity()
+            sessionRunning != null -> sessionRunning.validity()
+            sessionIdled != null -> sessionIdled.validity()
+            sessionRequiresAction != null -> sessionRequiresAction.validity()
+            sessionArchived != null -> sessionArchived.validity()
+            sessionDeleted != null -> sessionDeleted.validity()
+            sessionStatusRescheduled != null -> sessionStatusRescheduled.validity()
+            sessionStatusRunStarted != null -> sessionStatusRunStarted.validity()
+            sessionStatusIdled != null -> sessionStatusIdled.validity()
+            sessionStatusTerminated != null -> sessionStatusTerminated.validity()
+            sessionThreadCreated != null -> sessionThreadCreated.validity()
+            sessionThreadIdled != null -> sessionThreadIdled.validity()
+            sessionThreadTerminated != null -> sessionThreadTerminated.validity()
+            sessionOutcomeEvaluationEnded != null -> sessionOutcomeEvaluationEnded.validity()
+            vaultCreated != null -> vaultCreated.validity()
+            vaultArchived != null -> vaultArchived.validity()
+            vaultDeleted != null -> vaultDeleted.validity()
+            vaultCredentialCreated != null -> vaultCredentialCreated.validity()
+            vaultCredentialArchived != null -> vaultCredentialArchived.validity()
+            vaultCredentialDeleted != null -> vaultCredentialDeleted.validity()
+            vaultCredentialRefreshFailed != null -> vaultCredentialRefreshFailed.validity()
+            sessionUpdated != null -> sessionUpdated.validity()
+            agentCreated != null -> agentCreated.validity()
+            agentArchived != null -> agentArchived.validity()
+            agentDeleted != null -> agentDeleted.validity()
+            deploymentPaused != null -> deploymentPaused.validity()
+            deploymentRunFailed != null -> deploymentRunFailed.validity()
+            deploymentCreated != null -> deploymentCreated.validity()
+            deploymentUpdated != null -> deploymentUpdated.validity()
+            deploymentUnpaused != null -> deploymentUnpaused.validity()
+            agentUpdated != null -> agentUpdated.validity()
+            deploymentArchived != null -> deploymentArchived.validity()
+            deploymentRunStarted != null -> deploymentRunStarted.validity()
+            deploymentDeleted != null -> deploymentDeleted.validity()
+            deploymentRunSucceeded != null -> deploymentRunSucceeded.validity()
+            environmentCreated != null -> environmentCreated.validity()
+            environmentUpdated != null -> environmentUpdated.validity()
+            environmentArchived != null -> environmentArchived.validity()
+            environmentDeleted != null -> environmentDeleted.validity()
+            memoryStoreCreated != null -> memoryStoreCreated.validity()
+            memoryStoreArchived != null -> memoryStoreArchived.validity()
+            memoryStoreDeleted != null -> memoryStoreDeleted.validity()
+            sessionBudgetReached != null -> sessionBudgetReached.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

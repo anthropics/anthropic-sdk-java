@@ -34,19 +34,11 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitCreateNew(createNew: BetaOutputBehaviorCreateNew): Type =
-                    Type.CREATE_NEW
-
-                override fun visitUpdateExisting(
-                    updateExisting: BetaOutputBehaviorUpdateExisting
-                ): Type = Type.UPDATE_EXISTING
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            createNew != null -> Type.CREATE_NEW
+            updateExisting != null -> Type.UPDATE_EXISTING
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     /**
      * Write the result to a new memory store that starts as a copy of the input memory store. This
@@ -143,17 +135,11 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitCreateNew(createNew: BetaOutputBehaviorCreateNew) {
-                    createNew.validate()
-                }
-
-                override fun visitUpdateExisting(updateExisting: BetaOutputBehaviorUpdateExisting) {
-                    updateExisting.validate()
-                }
-            }
-        )
+        when {
+            createNew != null -> createNew.validate()
+            updateExisting != null -> updateExisting.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaOutputBehavior: $_json")
+        }
         validated = true
     }
 
@@ -172,17 +158,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitCreateNew(createNew: BetaOutputBehaviorCreateNew) =
-                    createNew.validity()
-
-                override fun visitUpdateExisting(updateExisting: BetaOutputBehaviorUpdateExisting) =
-                    updateExisting.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            createNew != null -> createNew.validity()
+            updateExisting != null -> updateExisting.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

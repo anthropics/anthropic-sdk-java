@@ -31,36 +31,18 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitAgentMessage(
-                    agentMessage: BetaManagedAgentsAgentMessagePreview
-                ): Type = Type.AGENT_MESSAGE
-
-                override fun visitAgentThinking(
-                    agentThinking: BetaManagedAgentsAgentThinkingPreview
-                ): Type = Type.AGENT_THINKING
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            agentMessage != null -> Type.AGENT_MESSAGE
+            agentThinking != null -> Type.AGENT_THINKING
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun id(): String =
-        accept(
-            object : Visitor<String> {
-                override fun visitAgentMessage(
-                    agentMessage: BetaManagedAgentsAgentMessagePreview
-                ): String = agentMessage.id()
-
-                override fun visitAgentThinking(
-                    agentThinking: BetaManagedAgentsAgentThinkingPreview
-                ): String = agentThinking.id()
-
-                override fun unknown(json: JsonValue?): String =
-                    json.getProperty<String>("id").getRequired("id")
-            }
-        )
+        when {
+            agentMessage != null -> agentMessage.id()
+            agentThinking != null -> agentThinking.id()
+            else -> _json.getProperty<String>("id").getRequired("id")
+        }
 
     fun agentMessage(): Optional<BetaManagedAgentsAgentMessagePreview> =
         Optional.ofNullable(agentMessage)
@@ -131,19 +113,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitAgentMessage(agentMessage: BetaManagedAgentsAgentMessagePreview) {
-                    agentMessage.validate()
-                }
-
-                override fun visitAgentThinking(
-                    agentThinking: BetaManagedAgentsAgentThinkingPreview
-                ) {
-                    agentThinking.validate()
-                }
-            }
-        )
+        when {
+            agentMessage != null -> agentMessage.validate()
+            agentThinking != null -> agentThinking.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsStartEventPreview: $_json"
+                )
+        }
         validated = true
     }
 
@@ -162,18 +139,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitAgentMessage(agentMessage: BetaManagedAgentsAgentMessagePreview) =
-                    agentMessage.validity()
-
-                override fun visitAgentThinking(
-                    agentThinking: BetaManagedAgentsAgentThinkingPreview
-                ) = agentThinking.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            agentMessage != null -> agentMessage.validity()
+            agentThinking != null -> agentThinking.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

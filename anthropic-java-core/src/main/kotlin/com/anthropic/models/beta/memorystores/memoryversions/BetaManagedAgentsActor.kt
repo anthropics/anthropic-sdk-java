@@ -37,23 +37,13 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitSession(session: BetaManagedAgentsSessionActor): Type =
-                    Type.SESSION_ACTOR
-
-                override fun visitApi(api: BetaManagedAgentsApiActor): Type = Type.API_ACTOR
-
-                override fun visitUser(user: BetaManagedAgentsUserActor): Type = Type.USER_ACTOR
-
-                override fun visitServiceAccount(
-                    serviceAccount: BetaManagedAgentsServiceAccountActor
-                ): Type = Type.SERVICE_ACCOUNT_ACTOR
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            session != null -> Type.SESSION_ACTOR
+            api != null -> Type.API_ACTOR
+            user != null -> Type.USER_ACTOR
+            serviceAccount != null -> Type.SERVICE_ACCOUNT_ACTOR
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     /**
      * An agent acting during a session, for example through the session's mounted filesystem. It
@@ -158,27 +148,13 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitSession(session: BetaManagedAgentsSessionActor) {
-                    session.validate()
-                }
-
-                override fun visitApi(api: BetaManagedAgentsApiActor) {
-                    api.validate()
-                }
-
-                override fun visitUser(user: BetaManagedAgentsUserActor) {
-                    user.validate()
-                }
-
-                override fun visitServiceAccount(
-                    serviceAccount: BetaManagedAgentsServiceAccountActor
-                ) {
-                    serviceAccount.validate()
-                }
-            }
-        )
+        when {
+            session != null -> session.validate()
+            api != null -> api.validate()
+            user != null -> user.validate()
+            serviceAccount != null -> serviceAccount.validate()
+            else -> throw AnthropicInvalidDataException("Unknown BetaManagedAgentsActor: $_json")
+        }
         validated = true
     }
 
@@ -197,22 +173,13 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitSession(session: BetaManagedAgentsSessionActor) =
-                    session.validity()
-
-                override fun visitApi(api: BetaManagedAgentsApiActor) = api.validity()
-
-                override fun visitUser(user: BetaManagedAgentsUserActor) = user.validity()
-
-                override fun visitServiceAccount(
-                    serviceAccount: BetaManagedAgentsServiceAccountActor
-                ) = serviceAccount.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            session != null -> session.validity()
+            api != null -> api.validity()
+            user != null -> user.validity()
+            serviceAccount != null -> serviceAccount.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

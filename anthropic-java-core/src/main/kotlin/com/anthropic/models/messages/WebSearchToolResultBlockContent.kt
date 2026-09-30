@@ -27,21 +27,18 @@ private constructor(
 ) {
 
     fun toParam(): WebSearchToolResultBlockParamContent =
-        accept(
-            object : Visitor<WebSearchToolResultBlockParamContent> {
-                override fun visitError(
-                    error: WebSearchToolResultError
-                ): WebSearchToolResultBlockParamContent =
-                    WebSearchToolResultBlockParamContent.ofRequestError(
-                        WebSearchToolRequestError.builder().errorCode(error._errorCode()).build()
-                    )
-
-                override fun visitResultBlocks(
-                    resultBlocks: List<WebSearchResultBlock>
-                ): WebSearchToolResultBlockParamContent =
-                    WebSearchToolResultBlockParamContent.ofItem(resultBlocks.map { it.toParam() })
-            }
-        )
+        when {
+            error != null ->
+                WebSearchToolResultBlockParamContent.ofRequestError(
+                    WebSearchToolRequestError.builder().errorCode(error._errorCode()).build()
+                )
+            resultBlocks != null ->
+                WebSearchToolResultBlockParamContent.ofItem(resultBlocks.map { it.toParam() })
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown WebSearchToolResultBlockContent: $_json"
+                )
+        }
 
     fun error(): Optional<WebSearchToolResultError> = Optional.ofNullable(error)
 
@@ -108,17 +105,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitError(error: WebSearchToolResultError) {
-                    error.validate()
-                }
-
-                override fun visitResultBlocks(resultBlocks: List<WebSearchResultBlock>) {
-                    resultBlocks.forEach { it.validate() }
-                }
-            }
-        )
+        when {
+            error != null -> error.validate()
+            resultBlocks != null -> resultBlocks.forEach { it.validate() }
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown WebSearchToolResultBlockContent: $_json"
+                )
+        }
         validated = true
     }
 
@@ -137,16 +131,11 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitError(error: WebSearchToolResultError) = error.validity()
-
-                override fun visitResultBlocks(resultBlocks: List<WebSearchResultBlock>) =
-                    resultBlocks.sumOf { it.validity().toInt() }
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            error != null -> error.validity()
+            resultBlocks != null -> resultBlocks.sumOf { it.validity().toInt() }
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

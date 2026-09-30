@@ -910,148 +910,47 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitEnvironmentArchived(
-                        environmentArchived: BetaManagedAgentsEnvironmentArchivedRunError
-                    ): Type = Type.ENVIRONMENT_ARCHIVED_ERROR
-
-                    override fun visitAgentArchived(
-                        agentArchived: BetaManagedAgentsAgentArchivedRunError
-                    ): Type = Type.AGENT_ARCHIVED_ERROR
-
-                    override fun visitEnvironmentNotFound(
-                        environmentNotFound: BetaManagedAgentsEnvironmentNotFoundRunError
-                    ): Type = Type.ENVIRONMENT_NOT_FOUND_ERROR
-
-                    override fun visitVaultNotFound(
-                        vaultNotFound: BetaManagedAgentsVaultNotFoundRunError
-                    ): Type = Type.VAULT_NOT_FOUND_ERROR
-
-                    override fun visitVaultArchived(
-                        vaultArchived: BetaManagedAgentsVaultArchivedRunError
-                    ): Type = Type.VAULT_ARCHIVED_ERROR
-
-                    override fun visitFileNotFound(
-                        fileNotFound: BetaManagedAgentsFileNotFoundRunError
-                    ): Type = Type.FILE_NOT_FOUND_ERROR
-
-                    override fun visitMemoryStoreArchived(
-                        memoryStoreArchived: BetaManagedAgentsMemoryStoreArchivedRunError
-                    ): Type = Type.MEMORY_STORE_ARCHIVED_ERROR
-
-                    override fun visitSkillNotFound(
-                        skillNotFound: BetaManagedAgentsSkillNotFoundRunError
-                    ): Type = Type.SKILL_NOT_FOUND_ERROR
-
-                    override fun visitSessionResourceNotFound(
-                        sessionResourceNotFound: BetaManagedAgentsSessionResourceNotFoundRunError
-                    ): Type = Type.SESSION_RESOURCE_NOT_FOUND_ERROR
-
-                    override fun visitWorkspaceArchived(
-                        workspaceArchived: BetaManagedAgentsWorkspaceArchivedRunError
-                    ): Type = Type.WORKSPACE_ARCHIVED_ERROR
-
-                    override fun visitOrganizationDisabled(
-                        organizationDisabled: BetaManagedAgentsOrganizationDisabledRunError
-                    ): Type = Type.ORGANIZATION_DISABLED_ERROR
-
-                    override fun visitSessionRateLimited(
-                        sessionRateLimited: BetaManagedAgentsSessionRateLimitedRunError
-                    ): Type = Type.SESSION_RATE_LIMITED_ERROR
-
-                    override fun visitSessionCreationRejected(
-                        sessionCreationRejected: BetaManagedAgentsSessionCreationRejectedRunError
-                    ): Type = Type.SESSION_CREATION_REJECTED_ERROR
-
-                    override fun visitUnknown(unknown: BetaManagedAgentsUnknownRunError): Type =
-                        Type.UNKNOWN_ERROR
-
-                    override fun visitSelfHostedResourcesUnsupported(
-                        selfHostedResourcesUnsupported:
-                            BetaManagedAgentsSelfHostedResourcesUnsupportedRunError
-                    ): Type = Type.SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
-
-                    override fun visitMcpEgressBlocked(
-                        mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedRunError
-                    ): Type = Type.MCP_EGRESS_BLOCKED_ERROR
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                environmentArchived != null -> Type.ENVIRONMENT_ARCHIVED_ERROR
+                agentArchived != null -> Type.AGENT_ARCHIVED_ERROR
+                environmentNotFound != null -> Type.ENVIRONMENT_NOT_FOUND_ERROR
+                vaultNotFound != null -> Type.VAULT_NOT_FOUND_ERROR
+                vaultArchived != null -> Type.VAULT_ARCHIVED_ERROR
+                fileNotFound != null -> Type.FILE_NOT_FOUND_ERROR
+                memoryStoreArchived != null -> Type.MEMORY_STORE_ARCHIVED_ERROR
+                skillNotFound != null -> Type.SKILL_NOT_FOUND_ERROR
+                sessionResourceNotFound != null -> Type.SESSION_RESOURCE_NOT_FOUND_ERROR
+                workspaceArchived != null -> Type.WORKSPACE_ARCHIVED_ERROR
+                organizationDisabled != null -> Type.ORGANIZATION_DISABLED_ERROR
+                sessionRateLimited != null -> Type.SESSION_RATE_LIMITED_ERROR
+                sessionCreationRejected != null -> Type.SESSION_CREATION_REJECTED_ERROR
+                unknown != null -> Type.UNKNOWN_ERROR
+                selfHostedResourcesUnsupported != null ->
+                    Type.SELF_HOSTED_RESOURCES_UNSUPPORTED_ERROR
+                mcpEgressBlocked != null -> Type.MCP_EGRESS_BLOCKED_ERROR
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun message(): String =
-            accept(
-                object : Visitor<String> {
-                    override fun visitEnvironmentArchived(
-                        environmentArchived: BetaManagedAgentsEnvironmentArchivedRunError
-                    ): String = environmentArchived.message()
-
-                    override fun visitAgentArchived(
-                        agentArchived: BetaManagedAgentsAgentArchivedRunError
-                    ): String = agentArchived.message()
-
-                    override fun visitEnvironmentNotFound(
-                        environmentNotFound: BetaManagedAgentsEnvironmentNotFoundRunError
-                    ): String = environmentNotFound.message()
-
-                    override fun visitVaultNotFound(
-                        vaultNotFound: BetaManagedAgentsVaultNotFoundRunError
-                    ): String = vaultNotFound.message()
-
-                    override fun visitVaultArchived(
-                        vaultArchived: BetaManagedAgentsVaultArchivedRunError
-                    ): String = vaultArchived.message()
-
-                    override fun visitFileNotFound(
-                        fileNotFound: BetaManagedAgentsFileNotFoundRunError
-                    ): String = fileNotFound.message()
-
-                    override fun visitMemoryStoreArchived(
-                        memoryStoreArchived: BetaManagedAgentsMemoryStoreArchivedRunError
-                    ): String = memoryStoreArchived.message()
-
-                    override fun visitSkillNotFound(
-                        skillNotFound: BetaManagedAgentsSkillNotFoundRunError
-                    ): String = skillNotFound.message()
-
-                    override fun visitSessionResourceNotFound(
-                        sessionResourceNotFound: BetaManagedAgentsSessionResourceNotFoundRunError
-                    ): String = sessionResourceNotFound.message()
-
-                    override fun visitWorkspaceArchived(
-                        workspaceArchived: BetaManagedAgentsWorkspaceArchivedRunError
-                    ): String = workspaceArchived.message()
-
-                    override fun visitOrganizationDisabled(
-                        organizationDisabled: BetaManagedAgentsOrganizationDisabledRunError
-                    ): String = organizationDisabled.message()
-
-                    override fun visitSessionRateLimited(
-                        sessionRateLimited: BetaManagedAgentsSessionRateLimitedRunError
-                    ): String = sessionRateLimited.message()
-
-                    override fun visitSessionCreationRejected(
-                        sessionCreationRejected: BetaManagedAgentsSessionCreationRejectedRunError
-                    ): String = sessionCreationRejected.message()
-
-                    override fun visitUnknown(unknown: BetaManagedAgentsUnknownRunError): String =
-                        unknown.message()
-
-                    override fun visitSelfHostedResourcesUnsupported(
-                        selfHostedResourcesUnsupported:
-                            BetaManagedAgentsSelfHostedResourcesUnsupportedRunError
-                    ): String = selfHostedResourcesUnsupported.message()
-
-                    override fun visitMcpEgressBlocked(
-                        mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedRunError
-                    ): String = mcpEgressBlocked.message()
-
-                    override fun unknown(json: JsonValue?): String =
-                        json.getProperty<String>("message").getRequired("message")
-                }
-            )
+            when {
+                environmentArchived != null -> environmentArchived.message()
+                agentArchived != null -> agentArchived.message()
+                environmentNotFound != null -> environmentNotFound.message()
+                vaultNotFound != null -> vaultNotFound.message()
+                vaultArchived != null -> vaultArchived.message()
+                fileNotFound != null -> fileNotFound.message()
+                memoryStoreArchived != null -> memoryStoreArchived.message()
+                skillNotFound != null -> skillNotFound.message()
+                sessionResourceNotFound != null -> sessionResourceNotFound.message()
+                workspaceArchived != null -> workspaceArchived.message()
+                organizationDisabled != null -> organizationDisabled.message()
+                sessionRateLimited != null -> sessionRateLimited.message()
+                sessionCreationRejected != null -> sessionCreationRejected.message()
+                unknown != null -> unknown.message()
+                selfHostedResourcesUnsupported != null -> selfHostedResourcesUnsupported.message()
+                mcpEgressBlocked != null -> mcpEgressBlocked.message()
+                else -> _json.getProperty<String>("message").getRequired("message")
+            }
 
         /** The deployment's environment was archived. */
         fun environmentArchived(): Optional<BetaManagedAgentsEnvironmentArchivedRunError> =
@@ -1309,104 +1208,25 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitEnvironmentArchived(
-                        environmentArchived: BetaManagedAgentsEnvironmentArchivedRunError
-                    ) {
-                        environmentArchived.validate()
-                    }
-
-                    override fun visitAgentArchived(
-                        agentArchived: BetaManagedAgentsAgentArchivedRunError
-                    ) {
-                        agentArchived.validate()
-                    }
-
-                    override fun visitEnvironmentNotFound(
-                        environmentNotFound: BetaManagedAgentsEnvironmentNotFoundRunError
-                    ) {
-                        environmentNotFound.validate()
-                    }
-
-                    override fun visitVaultNotFound(
-                        vaultNotFound: BetaManagedAgentsVaultNotFoundRunError
-                    ) {
-                        vaultNotFound.validate()
-                    }
-
-                    override fun visitVaultArchived(
-                        vaultArchived: BetaManagedAgentsVaultArchivedRunError
-                    ) {
-                        vaultArchived.validate()
-                    }
-
-                    override fun visitFileNotFound(
-                        fileNotFound: BetaManagedAgentsFileNotFoundRunError
-                    ) {
-                        fileNotFound.validate()
-                    }
-
-                    override fun visitMemoryStoreArchived(
-                        memoryStoreArchived: BetaManagedAgentsMemoryStoreArchivedRunError
-                    ) {
-                        memoryStoreArchived.validate()
-                    }
-
-                    override fun visitSkillNotFound(
-                        skillNotFound: BetaManagedAgentsSkillNotFoundRunError
-                    ) {
-                        skillNotFound.validate()
-                    }
-
-                    override fun visitSessionResourceNotFound(
-                        sessionResourceNotFound: BetaManagedAgentsSessionResourceNotFoundRunError
-                    ) {
-                        sessionResourceNotFound.validate()
-                    }
-
-                    override fun visitWorkspaceArchived(
-                        workspaceArchived: BetaManagedAgentsWorkspaceArchivedRunError
-                    ) {
-                        workspaceArchived.validate()
-                    }
-
-                    override fun visitOrganizationDisabled(
-                        organizationDisabled: BetaManagedAgentsOrganizationDisabledRunError
-                    ) {
-                        organizationDisabled.validate()
-                    }
-
-                    override fun visitSessionRateLimited(
-                        sessionRateLimited: BetaManagedAgentsSessionRateLimitedRunError
-                    ) {
-                        sessionRateLimited.validate()
-                    }
-
-                    override fun visitSessionCreationRejected(
-                        sessionCreationRejected: BetaManagedAgentsSessionCreationRejectedRunError
-                    ) {
-                        sessionCreationRejected.validate()
-                    }
-
-                    override fun visitUnknown(unknown: BetaManagedAgentsUnknownRunError) {
-                        unknown.validate()
-                    }
-
-                    override fun visitSelfHostedResourcesUnsupported(
-                        selfHostedResourcesUnsupported:
-                            BetaManagedAgentsSelfHostedResourcesUnsupportedRunError
-                    ) {
-                        selfHostedResourcesUnsupported.validate()
-                    }
-
-                    override fun visitMcpEgressBlocked(
-                        mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedRunError
-                    ) {
-                        mcpEgressBlocked.validate()
-                    }
-                }
-            )
+            when {
+                environmentArchived != null -> environmentArchived.validate()
+                agentArchived != null -> agentArchived.validate()
+                environmentNotFound != null -> environmentNotFound.validate()
+                vaultNotFound != null -> vaultNotFound.validate()
+                vaultArchived != null -> vaultArchived.validate()
+                fileNotFound != null -> fileNotFound.validate()
+                memoryStoreArchived != null -> memoryStoreArchived.validate()
+                skillNotFound != null -> skillNotFound.validate()
+                sessionResourceNotFound != null -> sessionResourceNotFound.validate()
+                workspaceArchived != null -> workspaceArchived.validate()
+                organizationDisabled != null -> organizationDisabled.validate()
+                sessionRateLimited != null -> sessionRateLimited.validate()
+                sessionCreationRejected != null -> sessionCreationRejected.validate()
+                unknown != null -> unknown.validate()
+                selfHostedResourcesUnsupported != null -> selfHostedResourcesUnsupported.validate()
+                mcpEgressBlocked != null -> mcpEgressBlocked.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Error: $_json")
+            }
             validated = true
         }
 
@@ -1426,75 +1246,25 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitEnvironmentArchived(
-                        environmentArchived: BetaManagedAgentsEnvironmentArchivedRunError
-                    ) = environmentArchived.validity()
-
-                    override fun visitAgentArchived(
-                        agentArchived: BetaManagedAgentsAgentArchivedRunError
-                    ) = agentArchived.validity()
-
-                    override fun visitEnvironmentNotFound(
-                        environmentNotFound: BetaManagedAgentsEnvironmentNotFoundRunError
-                    ) = environmentNotFound.validity()
-
-                    override fun visitVaultNotFound(
-                        vaultNotFound: BetaManagedAgentsVaultNotFoundRunError
-                    ) = vaultNotFound.validity()
-
-                    override fun visitVaultArchived(
-                        vaultArchived: BetaManagedAgentsVaultArchivedRunError
-                    ) = vaultArchived.validity()
-
-                    override fun visitFileNotFound(
-                        fileNotFound: BetaManagedAgentsFileNotFoundRunError
-                    ) = fileNotFound.validity()
-
-                    override fun visitMemoryStoreArchived(
-                        memoryStoreArchived: BetaManagedAgentsMemoryStoreArchivedRunError
-                    ) = memoryStoreArchived.validity()
-
-                    override fun visitSkillNotFound(
-                        skillNotFound: BetaManagedAgentsSkillNotFoundRunError
-                    ) = skillNotFound.validity()
-
-                    override fun visitSessionResourceNotFound(
-                        sessionResourceNotFound: BetaManagedAgentsSessionResourceNotFoundRunError
-                    ) = sessionResourceNotFound.validity()
-
-                    override fun visitWorkspaceArchived(
-                        workspaceArchived: BetaManagedAgentsWorkspaceArchivedRunError
-                    ) = workspaceArchived.validity()
-
-                    override fun visitOrganizationDisabled(
-                        organizationDisabled: BetaManagedAgentsOrganizationDisabledRunError
-                    ) = organizationDisabled.validity()
-
-                    override fun visitSessionRateLimited(
-                        sessionRateLimited: BetaManagedAgentsSessionRateLimitedRunError
-                    ) = sessionRateLimited.validity()
-
-                    override fun visitSessionCreationRejected(
-                        sessionCreationRejected: BetaManagedAgentsSessionCreationRejectedRunError
-                    ) = sessionCreationRejected.validity()
-
-                    override fun visitUnknown(unknown: BetaManagedAgentsUnknownRunError) =
-                        unknown.validity()
-
-                    override fun visitSelfHostedResourcesUnsupported(
-                        selfHostedResourcesUnsupported:
-                            BetaManagedAgentsSelfHostedResourcesUnsupportedRunError
-                    ) = selfHostedResourcesUnsupported.validity()
-
-                    override fun visitMcpEgressBlocked(
-                        mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedRunError
-                    ) = mcpEgressBlocked.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                environmentArchived != null -> environmentArchived.validity()
+                agentArchived != null -> agentArchived.validity()
+                environmentNotFound != null -> environmentNotFound.validity()
+                vaultNotFound != null -> vaultNotFound.validity()
+                vaultArchived != null -> vaultArchived.validity()
+                fileNotFound != null -> fileNotFound.validity()
+                memoryStoreArchived != null -> memoryStoreArchived.validity()
+                skillNotFound != null -> skillNotFound.validity()
+                sessionResourceNotFound != null -> sessionResourceNotFound.validity()
+                workspaceArchived != null -> workspaceArchived.validity()
+                organizationDisabled != null -> organizationDisabled.validity()
+                sessionRateLimited != null -> sessionRateLimited.validity()
+                sessionCreationRejected != null -> sessionCreationRejected.validity()
+                unknown != null -> unknown.validity()
+                selfHostedResourcesUnsupported != null -> selfHostedResourcesUnsupported.validity()
+                mcpEgressBlocked != null -> mcpEgressBlocked.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

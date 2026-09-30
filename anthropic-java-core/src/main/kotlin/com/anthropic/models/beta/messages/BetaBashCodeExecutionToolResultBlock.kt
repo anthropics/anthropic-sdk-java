@@ -48,29 +48,22 @@ private constructor(
         BetaBashCodeExecutionToolResultBlockParam.builder()
             .content(
                 _content().map {
-                    it.accept(
-                        object :
-                            BetaBashCodeExecutionToolResultBlock.Content.Visitor<
-                                BetaBashCodeExecutionToolResultBlockParam.Content
-                            > {
-                            override fun visitBetaBashCodeExecutionToolResultError(
-                                betaBashCodeExecutionToolResultError:
-                                    BetaBashCodeExecutionToolResultError
-                            ): BetaBashCodeExecutionToolResultBlockParam.Content =
-                                BetaBashCodeExecutionToolResultBlockParam.Content
-                                    .ofBetaBashCodeExecutionToolResultErrorParam(
-                                        betaBashCodeExecutionToolResultError.toParam()
-                                    )
-
-                            override fun visitBetaBashCodeExecutionResultBlock(
-                                betaBashCodeExecutionResultBlock: BetaBashCodeExecutionResultBlock
-                            ): BetaBashCodeExecutionToolResultBlockParam.Content =
-                                BetaBashCodeExecutionToolResultBlockParam.Content
-                                    .ofBetaBashCodeExecutionResultBlockParam(
-                                        betaBashCodeExecutionResultBlock.toParam()
-                                    )
-                        }
-                    )
+                    when {
+                        it.isBetaBashCodeExecutionToolResultError() ->
+                            BetaBashCodeExecutionToolResultBlockParam.Content
+                                .ofBetaBashCodeExecutionToolResultErrorParam(
+                                    it.asBetaBashCodeExecutionToolResultError().toParam()
+                                )
+                        it.isBetaBashCodeExecutionResultBlock() ->
+                            BetaBashCodeExecutionToolResultBlockParam.Content
+                                .ofBetaBashCodeExecutionResultBlockParam(
+                                    it.asBetaBashCodeExecutionResultBlock().toParam()
+                                )
+                        else ->
+                            throw AnthropicInvalidDataException(
+                                "Unknown Content: ${it._json().getOrNull()}"
+                            )
+                    }
                 }
             )
             .toolUseId(_toolUseId())
@@ -380,21 +373,13 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitBetaBashCodeExecutionToolResultError(
-                        betaBashCodeExecutionToolResultError: BetaBashCodeExecutionToolResultError
-                    ) {
-                        betaBashCodeExecutionToolResultError.validate()
-                    }
-
-                    override fun visitBetaBashCodeExecutionResultBlock(
-                        betaBashCodeExecutionResultBlock: BetaBashCodeExecutionResultBlock
-                    ) {
-                        betaBashCodeExecutionResultBlock.validate()
-                    }
-                }
-            )
+            when {
+                betaBashCodeExecutionToolResultError != null ->
+                    betaBashCodeExecutionToolResultError.validate()
+                betaBashCodeExecutionResultBlock != null ->
+                    betaBashCodeExecutionResultBlock.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Content: $_json")
+            }
             validated = true
         }
 
@@ -414,19 +399,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitBetaBashCodeExecutionToolResultError(
-                        betaBashCodeExecutionToolResultError: BetaBashCodeExecutionToolResultError
-                    ) = betaBashCodeExecutionToolResultError.validity()
-
-                    override fun visitBetaBashCodeExecutionResultBlock(
-                        betaBashCodeExecutionResultBlock: BetaBashCodeExecutionResultBlock
-                    ) = betaBashCodeExecutionResultBlock.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                betaBashCodeExecutionToolResultError != null ->
+                    betaBashCodeExecutionToolResultError.validity()
+                betaBashCodeExecutionResultBlock != null ->
+                    betaBashCodeExecutionResultBlock.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

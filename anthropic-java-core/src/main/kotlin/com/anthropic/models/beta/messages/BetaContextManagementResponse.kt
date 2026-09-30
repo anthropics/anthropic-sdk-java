@@ -232,38 +232,21 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitClearToolUses20250919(
-                        clearToolUses20250919: BetaClearToolUses20250919EditResponse
-                    ): Type = Type.CLEAR_TOOL_USES_20250919
-
-                    override fun visitClearThinking20251015(
-                        clearThinking20251015: BetaClearThinking20251015EditResponse
-                    ): Type = Type.CLEAR_THINKING_20251015
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                clearToolUses20250919 != null -> Type.CLEAR_TOOL_USES_20250919
+                clearThinking20251015 != null -> Type.CLEAR_THINKING_20251015
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         fun clearedInputTokens(): Long =
-            accept(
-                object : Visitor<Long> {
-                    override fun visitClearToolUses20250919(
-                        clearToolUses20250919: BetaClearToolUses20250919EditResponse
-                    ): Long = clearToolUses20250919.clearedInputTokens()
-
-                    override fun visitClearThinking20251015(
-                        clearThinking20251015: BetaClearThinking20251015EditResponse
-                    ): Long = clearThinking20251015.clearedInputTokens()
-
-                    override fun unknown(json: JsonValue?): Long =
-                        json
-                            .getProperty<Long>("cleared_input_tokens")
-                            .getRequired("cleared_input_tokens")
-                }
-            )
+            when {
+                clearToolUses20250919 != null -> clearToolUses20250919.clearedInputTokens()
+                clearThinking20251015 != null -> clearThinking20251015.clearedInputTokens()
+                else ->
+                    _json
+                        .getProperty<Long>("cleared_input_tokens")
+                        .getRequired("cleared_input_tokens")
+            }
 
         fun clearToolUses20250919(): Optional<BetaClearToolUses20250919EditResponse> =
             Optional.ofNullable(clearToolUses20250919)
@@ -337,21 +320,11 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitClearToolUses20250919(
-                        clearToolUses20250919: BetaClearToolUses20250919EditResponse
-                    ) {
-                        clearToolUses20250919.validate()
-                    }
-
-                    override fun visitClearThinking20251015(
-                        clearThinking20251015: BetaClearThinking20251015EditResponse
-                    ) {
-                        clearThinking20251015.validate()
-                    }
-                }
-            )
+            when {
+                clearToolUses20250919 != null -> clearToolUses20250919.validate()
+                clearThinking20251015 != null -> clearThinking20251015.validate()
+                else -> throw AnthropicInvalidDataException("Unknown AppliedEdit: $_json")
+            }
             validated = true
         }
 
@@ -371,19 +344,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitClearToolUses20250919(
-                        clearToolUses20250919: BetaClearToolUses20250919EditResponse
-                    ) = clearToolUses20250919.validity()
-
-                    override fun visitClearThinking20251015(
-                        clearThinking20251015: BetaClearThinking20251015EditResponse
-                    ) = clearThinking20251015.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                clearToolUses20250919 != null -> clearToolUses20250919.validity()
+                clearThinking20251015 != null -> clearThinking20251015.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

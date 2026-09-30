@@ -1152,14 +1152,16 @@ internal class BetaManagedAgentsSessionEventTest {
             BetaManagedAgentsSessionErrorEvent.builder()
                 .id("id")
                 .error(
-                    BetaManagedAgentsUnknownError.builder()
-                        .message("message")
+                    BetaManagedAgentsRepositoryAuthenticationError.builder()
+                        .message(
+                            "The repository host rejected the credentials for the repository, or required credentials and received none."
+                        )
+                        .repositoryUrl("https://github.com/example-org/example-repo")
                         .retryStatus(
                             BetaManagedAgentsRetryStatusRetrying.of(
                                 BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                             )
                         )
-                        .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                         .build()
                 )
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1214,14 +1216,16 @@ internal class BetaManagedAgentsSessionEventTest {
                 BetaManagedAgentsSessionErrorEvent.builder()
                     .id("id")
                     .error(
-                        BetaManagedAgentsUnknownError.builder()
-                            .message("message")
+                        BetaManagedAgentsRepositoryAuthenticationError.builder()
+                            .message(
+                                "The repository host rejected the credentials for the repository, or required credentials and received none."
+                            )
+                            .repositoryUrl("https://github.com/example-org/example-repo")
                             .retryStatus(
                                 BetaManagedAgentsRetryStatusRetrying.of(
                                     BetaManagedAgentsRetryStatusRetrying.Type.RETRYING
                                 )
                             )
-                            .type(BetaManagedAgentsUnknownError.Type.UNKNOWN_ERROR)
                             .build()
                     )
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1394,6 +1398,12 @@ internal class BetaManagedAgentsSessionEventTest {
             BetaManagedAgentsSessionStatusIdleEvent.builder()
                 .id("id")
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .stopDetails(
+                    BetaManagedAgentsSessionRefusalStopDetails.builder()
+                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(
                     BetaManagedAgentsSessionEndTurn.of(
                         BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -1450,6 +1460,12 @@ internal class BetaManagedAgentsSessionEventTest {
                 BetaManagedAgentsSessionStatusIdleEvent.builder()
                     .id("id")
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .stopDetails(
+                        BetaManagedAgentsSessionRefusalStopDetails.builder()
+                            .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                            .explanation("explanation")
+                            .build()
+                    )
                     .stopReason(
                         BetaManagedAgentsSessionEndTurn.of(
                             BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -2296,6 +2312,12 @@ internal class BetaManagedAgentsSessionEventTest {
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .stopDetails(
+                    BetaManagedAgentsSessionRefusalStopDetails.builder()
+                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                        .explanation("explanation")
+                        .build()
+                )
                 .stopReason(
                     BetaManagedAgentsSessionEndTurn.of(
                         BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -2355,6 +2377,12 @@ internal class BetaManagedAgentsSessionEventTest {
                     .agentName("Researcher")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .stopDetails(
+                        BetaManagedAgentsSessionRefusalStopDetails.builder()
+                            .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                            .explanation("explanation")
+                            .build()
+                    )
                     .stopReason(
                         BetaManagedAgentsSessionEndTurn.of(
                             BetaManagedAgentsSessionEndTurn.Type.END_TURN
@@ -3284,6 +3312,12 @@ internal class BetaManagedAgentsSessionEventTest {
                             "name" to "name",
                             "evaluated_permission" to "allow",
                             "evaluation" to mapOf("type" to "always_allow"),
+                            "stop_details" to
+                                mapOf(
+                                    "category" to "cyber",
+                                    "explanation" to "explanation",
+                                    "type" to "refusal",
+                                ),
                             "agent_name" to "Researcher",
                             "iteration" to 0,
                             "outcome_id" to "outc_011CZkZRSw2kEfs6ncTVljxP",
@@ -3317,6 +3351,13 @@ internal class BetaManagedAgentsSessionEventTest {
                     BetaManagedAgentsAgentToolEvaluationAlwaysAllow.builder().build()
                 )
             )
+        assertThat(betaManagedAgentsSessionEvent.stopDetails())
+            .contains(
+                BetaManagedAgentsSessionRefusalStopDetails.builder()
+                    .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
+                    .explanation("explanation")
+                    .build()
+            )
         assertThat(betaManagedAgentsSessionEvent.agentName()).contains("Researcher")
         assertThat(betaManagedAgentsSessionEvent.iteration()).contains(0)
         assertThat(betaManagedAgentsSessionEvent.outcomeId())
@@ -3346,6 +3387,7 @@ internal class BetaManagedAgentsSessionEventTest {
                             "tool_use_id" to listOf("invalid"),
                             "is_error" to listOf("invalid"),
                             "name" to listOf("invalid"),
+                            "stop_details" to listOf("invalid"),
                             "agent_name" to listOf("invalid"),
                             "iteration" to listOf("invalid"),
                             "outcome_id" to listOf("invalid"),
@@ -3361,6 +3403,7 @@ internal class BetaManagedAgentsSessionEventTest {
         assertThat(mismatchedBetaManagedAgentsSessionEvent.toolUseId()).isEmpty
         assertThat(mismatchedBetaManagedAgentsSessionEvent.isError()).isEmpty
         assertThat(mismatchedBetaManagedAgentsSessionEvent.name()).isEmpty
+        assertThat(mismatchedBetaManagedAgentsSessionEvent.stopDetails()).isEmpty
         assertThat(mismatchedBetaManagedAgentsSessionEvent.agentName()).isEmpty
         assertThat(mismatchedBetaManagedAgentsSessionEvent.iteration()).isEmpty
         assertThat(mismatchedBetaManagedAgentsSessionEvent.outcomeId()).isEmpty
@@ -3394,6 +3437,7 @@ internal class BetaManagedAgentsSessionEventTest {
         assertThat(betaManagedAgentsSessionEvent.name()).isEmpty
         assertThat(betaManagedAgentsSessionEvent.evaluatedPermission()).isEmpty
         assertThat(betaManagedAgentsSessionEvent.evaluation()).isEmpty
+        assertThat(betaManagedAgentsSessionEvent.stopDetails()).isEmpty
         assertThat(betaManagedAgentsSessionEvent.agentName()).isEmpty
         assertThat(betaManagedAgentsSessionEvent.iteration()).isEmpty
         assertThat(betaManagedAgentsSessionEvent.outcomeId()).isEmpty

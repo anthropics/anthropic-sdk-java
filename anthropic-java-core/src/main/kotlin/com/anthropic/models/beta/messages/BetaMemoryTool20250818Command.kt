@@ -35,62 +35,26 @@ private constructor(
 ) {
 
     fun command(): Command =
-        accept(
-            object : Visitor<Command> {
-                override fun visitView(view: BetaMemoryTool20250818ViewCommand): Command =
-                    Command.VIEW
-
-                override fun visitCreate(create: BetaMemoryTool20250818CreateCommand): Command =
-                    Command.CREATE
-
-                override fun visitStrReplace(
-                    strReplace: BetaMemoryTool20250818StrReplaceCommand
-                ): Command = Command.STR_REPLACE
-
-                override fun visitInsert(insert: BetaMemoryTool20250818InsertCommand): Command =
-                    Command.INSERT
-
-                override fun visitDelete(delete: BetaMemoryTool20250818DeleteCommand): Command =
-                    Command.DELETE
-
-                override fun visitRename(rename: BetaMemoryTool20250818RenameCommand): Command =
-                    Command.RENAME
-
-                override fun unknown(json: JsonValue?): Command =
-                    Command.of(json?.asObject()?.getOrNull()?.get("command") ?: JsonMissing.of())
-            }
-        )
+        when {
+            view != null -> Command.VIEW
+            create != null -> Command.CREATE
+            strReplace != null -> Command.STR_REPLACE
+            insert != null -> Command.INSERT
+            delete != null -> Command.DELETE
+            rename != null -> Command.RENAME
+            else -> Command.of(_json?.asObject()?.getOrNull()?.get("command") ?: JsonMissing.of())
+        }
 
     fun path(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitView(view: BetaMemoryTool20250818ViewCommand): Optional<String> =
-                    Optional.of(view.path())
-
-                override fun visitCreate(
-                    create: BetaMemoryTool20250818CreateCommand
-                ): Optional<String> = Optional.of(create.path())
-
-                override fun visitStrReplace(
-                    strReplace: BetaMemoryTool20250818StrReplaceCommand
-                ): Optional<String> = Optional.of(strReplace.path())
-
-                override fun visitInsert(
-                    insert: BetaMemoryTool20250818InsertCommand
-                ): Optional<String> = Optional.of(insert.path())
-
-                override fun visitDelete(
-                    delete: BetaMemoryTool20250818DeleteCommand
-                ): Optional<String> = Optional.of(delete.path())
-
-                override fun visitRename(
-                    rename: BetaMemoryTool20250818RenameCommand
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("path").asKnown()
-            }
-        )
+        when {
+            view != null -> Optional.of(view.path())
+            create != null -> Optional.of(create.path())
+            strReplace != null -> Optional.of(strReplace.path())
+            insert != null -> Optional.of(insert.path())
+            delete != null -> Optional.of(delete.path())
+            rename != null -> Optional.empty()
+            else -> _json.getProperty<String>("path").asKnown()
+        }
 
     fun view(): Optional<BetaMemoryTool20250818ViewCommand> = Optional.ofNullable(view)
 
@@ -187,33 +151,16 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitView(view: BetaMemoryTool20250818ViewCommand) {
-                    view.validate()
-                }
-
-                override fun visitCreate(create: BetaMemoryTool20250818CreateCommand) {
-                    create.validate()
-                }
-
-                override fun visitStrReplace(strReplace: BetaMemoryTool20250818StrReplaceCommand) {
-                    strReplace.validate()
-                }
-
-                override fun visitInsert(insert: BetaMemoryTool20250818InsertCommand) {
-                    insert.validate()
-                }
-
-                override fun visitDelete(delete: BetaMemoryTool20250818DeleteCommand) {
-                    delete.validate()
-                }
-
-                override fun visitRename(rename: BetaMemoryTool20250818RenameCommand) {
-                    rename.validate()
-                }
-            }
-        )
+        when {
+            view != null -> view.validate()
+            create != null -> create.validate()
+            strReplace != null -> strReplace.validate()
+            insert != null -> insert.validate()
+            delete != null -> delete.validate()
+            rename != null -> rename.validate()
+            else ->
+                throw AnthropicInvalidDataException("Unknown BetaMemoryTool20250818Command: $_json")
+        }
         validated = true
     }
 
@@ -232,28 +179,15 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitView(view: BetaMemoryTool20250818ViewCommand) = view.validity()
-
-                override fun visitCreate(create: BetaMemoryTool20250818CreateCommand) =
-                    create.validity()
-
-                override fun visitStrReplace(strReplace: BetaMemoryTool20250818StrReplaceCommand) =
-                    strReplace.validity()
-
-                override fun visitInsert(insert: BetaMemoryTool20250818InsertCommand) =
-                    insert.validity()
-
-                override fun visitDelete(delete: BetaMemoryTool20250818DeleteCommand) =
-                    delete.validity()
-
-                override fun visitRename(rename: BetaMemoryTool20250818RenameCommand) =
-                    rename.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            view != null -> view.validity()
+            create != null -> create.validity()
+            strReplace != null -> strReplace.validity()
+            insert != null -> insert.validity()
+            delete != null -> delete.validity()
+            rename != null -> rename.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

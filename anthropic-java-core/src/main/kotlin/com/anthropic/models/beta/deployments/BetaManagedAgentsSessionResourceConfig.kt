@@ -33,42 +33,20 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResourceConfig
-                ): Type = Type.GITHUB_REPOSITORY
-
-                override fun visitFile(file: BetaManagedAgentsFileResourceConfig): Type = Type.FILE
-
-                override fun visitMemoryStore(
-                    memoryStore: BetaManagedAgentsMemoryStoreResourceConfig
-                ): Type = Type.MEMORY_STORE
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            githubRepository != null -> Type.GITHUB_REPOSITORY
+            file != null -> Type.FILE
+            memoryStore != null -> Type.MEMORY_STORE
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun mountPath(): Optional<String> =
-        accept(
-            object : Visitor<Optional<String>> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResourceConfig
-                ): Optional<String> = githubRepository.mountPath()
-
-                override fun visitFile(
-                    file: BetaManagedAgentsFileResourceConfig
-                ): Optional<String> = file.mountPath()
-
-                override fun visitMemoryStore(
-                    memoryStore: BetaManagedAgentsMemoryStoreResourceConfig
-                ): Optional<String> = Optional.empty()
-
-                override fun unknown(json: JsonValue?): Optional<String> =
-                    json.getProperty<String>("mount_path").asKnown()
-            }
-        )
+        when {
+            githubRepository != null -> githubRepository.mountPath()
+            file != null -> file.mountPath()
+            memoryStore != null -> Optional.empty()
+            else -> _json.getProperty<String>("mount_path").asKnown()
+        }
 
     /**
      * A GitHub repository mounted into each session's container. The authorization token is
@@ -158,25 +136,15 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResourceConfig
-                ) {
-                    githubRepository.validate()
-                }
-
-                override fun visitFile(file: BetaManagedAgentsFileResourceConfig) {
-                    file.validate()
-                }
-
-                override fun visitMemoryStore(
-                    memoryStore: BetaManagedAgentsMemoryStoreResourceConfig
-                ) {
-                    memoryStore.validate()
-                }
-            }
-        )
+        when {
+            githubRepository != null -> githubRepository.validate()
+            file != null -> file.validate()
+            memoryStore != null -> memoryStore.validate()
+            else ->
+                throw AnthropicInvalidDataException(
+                    "Unknown BetaManagedAgentsSessionResourceConfig: $_json"
+                )
+        }
         validated = true
     }
 
@@ -195,21 +163,12 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitGitHubRepository(
-                    githubRepository: BetaManagedAgentsGitHubRepositoryResourceConfig
-                ) = githubRepository.validity()
-
-                override fun visitFile(file: BetaManagedAgentsFileResourceConfig) = file.validity()
-
-                override fun visitMemoryStore(
-                    memoryStore: BetaManagedAgentsMemoryStoreResourceConfig
-                ) = memoryStore.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            githubRepository != null -> githubRepository.validity()
+            file != null -> file.validity()
+            memoryStore != null -> memoryStore.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -702,24 +702,12 @@ private constructor(
     ) {
 
         fun type(): Type =
-            accept(
-                object : Visitor<Type> {
-                    override fun visitMcpOAuth(
-                        mcpOAuth: BetaManagedAgentsMcpOAuthUpdateParams
-                    ): Type = Type.MCP_OAUTH
-
-                    override fun visitStaticBearer(
-                        staticBearer: BetaManagedAgentsStaticBearerUpdateParams
-                    ): Type = Type.STATIC_BEARER
-
-                    override fun visitEnvironmentVariable(
-                        environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams
-                    ): Type = Type.ENVIRONMENT_VARIABLE
-
-                    override fun unknown(json: JsonValue?): Type =
-                        Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-                }
-            )
+            when {
+                mcpOAuth != null -> Type.MCP_OAUTH
+                staticBearer != null -> Type.STATIC_BEARER
+                environmentVariable != null -> Type.ENVIRONMENT_VARIABLE
+                else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
 
         /** Parameters for updating an MCP OAuth credential. The `mcp_server_url` is immutable. */
         fun mcpOAuth(): Optional<BetaManagedAgentsMcpOAuthUpdateParams> =
@@ -815,25 +803,12 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitMcpOAuth(mcpOAuth: BetaManagedAgentsMcpOAuthUpdateParams) {
-                        mcpOAuth.validate()
-                    }
-
-                    override fun visitStaticBearer(
-                        staticBearer: BetaManagedAgentsStaticBearerUpdateParams
-                    ) {
-                        staticBearer.validate()
-                    }
-
-                    override fun visitEnvironmentVariable(
-                        environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams
-                    ) {
-                        environmentVariable.validate()
-                    }
-                }
-            )
+            when {
+                mcpOAuth != null -> mcpOAuth.validate()
+                staticBearer != null -> staticBearer.validate()
+                environmentVariable != null -> environmentVariable.validate()
+                else -> throw AnthropicInvalidDataException("Unknown Auth: $_json")
+            }
             validated = true
         }
 
@@ -853,22 +828,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitMcpOAuth(mcpOAuth: BetaManagedAgentsMcpOAuthUpdateParams) =
-                        mcpOAuth.validity()
-
-                    override fun visitStaticBearer(
-                        staticBearer: BetaManagedAgentsStaticBearerUpdateParams
-                    ) = staticBearer.validity()
-
-                    override fun visitEnvironmentVariable(
-                        environmentVariable: BetaManagedAgentsEnvironmentVariableUpdateParams
-                    ) = environmentVariable.validity()
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                mcpOAuth != null -> mcpOAuth.validity()
+                staticBearer != null -> staticBearer.validity()
+                environmentVariable != null -> environmentVariable.validity()
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

@@ -360,23 +360,18 @@ private constructor(
                 return@apply
             }
 
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitGeos(geos: List<BetaAllowedInferenceGeo>) {
-                        geos.forEach { it.validate() }
-                    }
-
-                    override fun visitUnrestricted(unrestricted: JsonValue) {
-                        unrestricted.let {
-                            if (it != JsonValue.from("unrestricted")) {
-                                throw AnthropicInvalidDataException(
-                                    "'unrestricted' is invalid, received $it"
-                                )
-                            }
+            when {
+                geos != null -> geos.forEach { it.validate() }
+                unrestricted != null ->
+                    unrestricted.let {
+                        if (it != JsonValue.from("unrestricted")) {
+                            throw AnthropicInvalidDataException(
+                                "'unrestricted' is invalid, received $it"
+                            )
                         }
                     }
-                }
-            )
+                else -> throw AnthropicInvalidDataException("Unknown AllowedInferenceGeos: $_json")
+            }
             validated = true
         }
 
@@ -396,17 +391,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitGeos(geos: List<BetaAllowedInferenceGeo>) =
-                        geos.sumOf { it.validity().toInt() }
-
-                    override fun visitUnrestricted(unrestricted: JsonValue) =
-                        unrestricted.let { if (it == JsonValue.from("unrestricted")) 1 else 0 }
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
+            when {
+                geos != null -> geos.sumOf { it.validity().toInt() }
+                unrestricted != null ->
+                    unrestricted.let { if (it == JsonValue.from("unrestricted")) 1 else 0 }
+                else -> 0
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

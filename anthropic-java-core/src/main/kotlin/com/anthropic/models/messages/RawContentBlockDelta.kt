@@ -33,22 +33,14 @@ private constructor(
 ) {
 
     fun type(): Type =
-        accept(
-            object : Visitor<Type> {
-                override fun visitText(text: TextDelta): Type = Type.TEXT_DELTA
-
-                override fun visitInputJson(inputJson: InputJsonDelta): Type = Type.INPUT_JSON_DELTA
-
-                override fun visitCitations(citations: CitationsDelta): Type = Type.CITATIONS_DELTA
-
-                override fun visitThinking(thinking: ThinkingDelta): Type = Type.THINKING_DELTA
-
-                override fun visitSignature(signature: SignatureDelta): Type = Type.SIGNATURE_DELTA
-
-                override fun unknown(json: JsonValue?): Type =
-                    Type.of(json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
-            }
-        )
+        when {
+            text != null -> Type.TEXT_DELTA
+            inputJson != null -> Type.INPUT_JSON_DELTA
+            citations != null -> Type.CITATIONS_DELTA
+            thinking != null -> Type.THINKING_DELTA
+            signature != null -> Type.SIGNATURE_DELTA
+            else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+        }
 
     fun text(): Optional<TextDelta> = Optional.ofNullable(text)
 
@@ -136,29 +128,14 @@ private constructor(
             return@apply
         }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitText(text: TextDelta) {
-                    text.validate()
-                }
-
-                override fun visitInputJson(inputJson: InputJsonDelta) {
-                    inputJson.validate()
-                }
-
-                override fun visitCitations(citations: CitationsDelta) {
-                    citations.validate()
-                }
-
-                override fun visitThinking(thinking: ThinkingDelta) {
-                    thinking.validate()
-                }
-
-                override fun visitSignature(signature: SignatureDelta) {
-                    signature.validate()
-                }
-            }
-        )
+        when {
+            text != null -> text.validate()
+            inputJson != null -> inputJson.validate()
+            citations != null -> citations.validate()
+            thinking != null -> thinking.validate()
+            signature != null -> signature.validate()
+            else -> throw AnthropicInvalidDataException("Unknown RawContentBlockDelta: $_json")
+        }
         validated = true
     }
 
@@ -177,21 +154,14 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitText(text: TextDelta) = text.validity()
-
-                override fun visitInputJson(inputJson: InputJsonDelta) = inputJson.validity()
-
-                override fun visitCitations(citations: CitationsDelta) = citations.validity()
-
-                override fun visitThinking(thinking: ThinkingDelta) = thinking.validity()
-
-                override fun visitSignature(signature: SignatureDelta) = signature.validity()
-
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+        when {
+            text != null -> text.validity()
+            inputJson != null -> inputJson.validity()
+            citations != null -> citations.validity()
+            thinking != null -> thinking.validity()
+            signature != null -> signature.validity()
+            else -> 0
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
