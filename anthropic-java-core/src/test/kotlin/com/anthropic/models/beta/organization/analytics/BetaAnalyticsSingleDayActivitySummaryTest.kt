@@ -1,0 +1,137 @@
+package com.anthropic.models.beta.organization.analytics
+
+import com.anthropic.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+internal class BetaAnalyticsSingleDayActivitySummaryTest {
+
+    @Test
+    fun create() {
+        val betaAnalyticsSingleDayActivitySummary =
+            BetaAnalyticsSingleDayActivitySummary.builder()
+                .assignedSeatCount(0L)
+                .coworkDailyActiveUserCount(0L)
+                .coworkMonthlyActiveUserCount(0L)
+                .coworkWeeklyActiveUserCount(0L)
+                .dailyActiveUserCount(0L)
+                .dailyAdoptionRate(0.0)
+                .endingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .monthlyActiveUserCount(0L)
+                .monthlyAdoptionRate(0.0)
+                .pendingInviteCount(0L)
+                .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .weeklyActiveUserCount(0L)
+                .weeklyAdoptionRate(0.0)
+                .chatDailyActiveUserCount(0L)
+                .chatMonthlyActiveUserCount(0L)
+                .chatWeeklyActiveUserCount(0L)
+                .claudeCodeDailyActiveUserCount(0L)
+                .claudeCodeMonthlyActiveUserCount(0L)
+                .claudeCodeWeeklyActiveUserCount(0L)
+                .claudeDesignDailyActiveUserCount(0L)
+                .claudeDesignMonthlyActiveUserCount(0L)
+                .claudeDesignWeeklyActiveUserCount(0L)
+                .officeAgentDailyActiveUserCount(0L)
+                .officeAgentMonthlyActiveUserCount(0L)
+                .officeAgentWeeklyActiveUserCount(0L)
+                .scienceDailyActiveUserCount(0L)
+                .scienceEntitledUserCount(0L)
+                .scienceMonthlyActiveUserCount(0L)
+                .scienceWeeklyActiveUserCount(0L)
+                .build()
+
+        assertThat(betaAnalyticsSingleDayActivitySummary.assignedSeatCount()).contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.coworkDailyActiveUserCount()).isEqualTo(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.coworkMonthlyActiveUserCount())
+            .isEqualTo(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.coworkWeeklyActiveUserCount())
+            .isEqualTo(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.dailyActiveUserCount()).isEqualTo(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.dailyAdoptionRate()).contains(0.0)
+        assertThat(betaAnalyticsSingleDayActivitySummary.endingAt())
+            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(betaAnalyticsSingleDayActivitySummary.monthlyActiveUserCount()).isEqualTo(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.monthlyAdoptionRate()).contains(0.0)
+        assertThat(betaAnalyticsSingleDayActivitySummary.pendingInviteCount()).contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.startingAt())
+            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(betaAnalyticsSingleDayActivitySummary.weeklyActiveUserCount()).isEqualTo(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.weeklyAdoptionRate()).contains(0.0)
+        assertThat(betaAnalyticsSingleDayActivitySummary.chatDailyActiveUserCount()).contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.chatMonthlyActiveUserCount()).contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.chatWeeklyActiveUserCount()).contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.claudeCodeDailyActiveUserCount())
+            .contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.claudeCodeMonthlyActiveUserCount())
+            .contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.claudeCodeWeeklyActiveUserCount())
+            .contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.claudeDesignDailyActiveUserCount())
+            .contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.claudeDesignMonthlyActiveUserCount())
+            .contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.claudeDesignWeeklyActiveUserCount())
+            .contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.officeAgentDailyActiveUserCount())
+            .contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.officeAgentMonthlyActiveUserCount())
+            .contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.officeAgentWeeklyActiveUserCount())
+            .contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.scienceDailyActiveUserCount()).contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.scienceEntitledUserCount()).contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.scienceMonthlyActiveUserCount())
+            .contains(0L)
+        assertThat(betaAnalyticsSingleDayActivitySummary.scienceWeeklyActiveUserCount())
+            .contains(0L)
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val betaAnalyticsSingleDayActivitySummary =
+            BetaAnalyticsSingleDayActivitySummary.builder()
+                .assignedSeatCount(0L)
+                .coworkDailyActiveUserCount(0L)
+                .coworkMonthlyActiveUserCount(0L)
+                .coworkWeeklyActiveUserCount(0L)
+                .dailyActiveUserCount(0L)
+                .dailyAdoptionRate(0.0)
+                .endingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .monthlyActiveUserCount(0L)
+                .monthlyAdoptionRate(0.0)
+                .pendingInviteCount(0L)
+                .startingAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .weeklyActiveUserCount(0L)
+                .weeklyAdoptionRate(0.0)
+                .chatDailyActiveUserCount(0L)
+                .chatMonthlyActiveUserCount(0L)
+                .chatWeeklyActiveUserCount(0L)
+                .claudeCodeDailyActiveUserCount(0L)
+                .claudeCodeMonthlyActiveUserCount(0L)
+                .claudeCodeWeeklyActiveUserCount(0L)
+                .claudeDesignDailyActiveUserCount(0L)
+                .claudeDesignMonthlyActiveUserCount(0L)
+                .claudeDesignWeeklyActiveUserCount(0L)
+                .officeAgentDailyActiveUserCount(0L)
+                .officeAgentMonthlyActiveUserCount(0L)
+                .officeAgentWeeklyActiveUserCount(0L)
+                .scienceDailyActiveUserCount(0L)
+                .scienceEntitledUserCount(0L)
+                .scienceMonthlyActiveUserCount(0L)
+                .scienceWeeklyActiveUserCount(0L)
+                .build()
+
+        val roundtrippedBetaAnalyticsSingleDayActivitySummary =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(betaAnalyticsSingleDayActivitySummary),
+                jacksonTypeRef<BetaAnalyticsSingleDayActivitySummary>(),
+            )
+
+        assertThat(roundtrippedBetaAnalyticsSingleDayActivitySummary)
+            .isEqualTo(betaAnalyticsSingleDayActivitySummary)
+    }
+}

@@ -5,6 +5,7 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.organization.BetaOrganization
 import com.anthropic.models.beta.organization.OrganizationRetrieveParams
+import com.anthropic.services.async.beta.organization.AnalyticsServiceAsync
 import com.anthropic.services.async.beta.organization.ApiKeyServiceAsync
 import com.anthropic.services.async.beta.organization.ComplianceSettingServiceAsync
 import com.anthropic.services.async.beta.organization.ExternalKeyServiceAsync
@@ -13,7 +14,10 @@ import com.anthropic.services.async.beta.organization.InviteServiceAsync
 import com.anthropic.services.async.beta.organization.PluginMarketplaceServiceAsync
 import com.anthropic.services.async.beta.organization.PluginServiceAsync
 import com.anthropic.services.async.beta.organization.RateLimitServiceAsync
+import com.anthropic.services.async.beta.organization.RbacGroupServiceAsync
+import com.anthropic.services.async.beta.organization.RbacRoleServiceAsync
 import com.anthropic.services.async.beta.organization.ServiceAccountServiceAsync
+import com.anthropic.services.async.beta.organization.SpendLimitServiceAsync
 import com.anthropic.services.async.beta.organization.UserServiceAsync
 import com.anthropic.services.async.beta.organization.WorkspaceServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -50,6 +54,14 @@ interface OrganizationServiceAsync {
     fun rateLimits(): RateLimitServiceAsync
 
     fun complianceSettings(): ComplianceSettingServiceAsync
+
+    fun analytics(): AnalyticsServiceAsync
+
+    fun spendLimits(): SpendLimitServiceAsync
+
+    fun rbacGroups(): RbacGroupServiceAsync
+
+    fun rbacRoles(): RbacRoleServiceAsync
 
     fun plugins(): PluginServiceAsync
 
@@ -106,6 +118,14 @@ interface OrganizationServiceAsync {
         fun rateLimits(): RateLimitServiceAsync.WithRawResponse
 
         fun complianceSettings(): ComplianceSettingServiceAsync.WithRawResponse
+
+        fun analytics(): AnalyticsServiceAsync.WithRawResponse
+
+        fun spendLimits(): SpendLimitServiceAsync.WithRawResponse
+
+        fun rbacGroups(): RbacGroupServiceAsync.WithRawResponse
+
+        fun rbacRoles(): RbacRoleServiceAsync.WithRawResponse
 
         fun plugins(): PluginServiceAsync.WithRawResponse
 
