@@ -9,7 +9,9 @@ import com.anthropic.services.blocking.beta.organization.analytics.PluginService
 import com.anthropic.services.blocking.beta.organization.analytics.SkillService
 import com.anthropic.services.blocking.beta.organization.analytics.SummaryService
 import com.anthropic.services.blocking.beta.organization.analytics.UsageReportService
+import com.anthropic.services.blocking.beta.organization.analytics.UserCostReportService
 import com.anthropic.services.blocking.beta.organization.analytics.UserService
+import com.anthropic.services.blocking.beta.organization.analytics.UserUsageReportService
 import java.util.function.Consumer
 
 interface AnalyticsService {
@@ -42,7 +44,11 @@ interface AnalyticsService {
 
     fun usageReport(): UsageReportService
 
+    fun userUsageReport(): UserUsageReportService
+
     fun costReport(): CostReportService
+
+    fun userCostReport(): UserCostReportService
 
     /** A view of [AnalyticsService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -70,6 +76,10 @@ interface AnalyticsService {
 
         fun usageReport(): UsageReportService.WithRawResponse
 
+        fun userUsageReport(): UserUsageReportService.WithRawResponse
+
         fun costReport(): CostReportService.WithRawResponse
+
+        fun userCostReport(): UserCostReportService.WithRawResponse
     }
 }

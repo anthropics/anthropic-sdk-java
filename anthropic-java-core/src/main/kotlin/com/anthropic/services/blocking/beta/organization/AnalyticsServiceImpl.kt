@@ -17,8 +17,12 @@ import com.anthropic.services.blocking.beta.organization.analytics.SummaryServic
 import com.anthropic.services.blocking.beta.organization.analytics.SummaryServiceImpl
 import com.anthropic.services.blocking.beta.organization.analytics.UsageReportService
 import com.anthropic.services.blocking.beta.organization.analytics.UsageReportServiceImpl
+import com.anthropic.services.blocking.beta.organization.analytics.UserCostReportService
+import com.anthropic.services.blocking.beta.organization.analytics.UserCostReportServiceImpl
 import com.anthropic.services.blocking.beta.organization.analytics.UserService
 import com.anthropic.services.blocking.beta.organization.analytics.UserServiceImpl
+import com.anthropic.services.blocking.beta.organization.analytics.UserUsageReportService
+import com.anthropic.services.blocking.beta.organization.analytics.UserUsageReportServiceImpl
 import java.util.function.Consumer
 
 class AnalyticsServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -44,7 +48,15 @@ class AnalyticsServiceImpl internal constructor(private val clientOptions: Clien
 
     private val usageReport: UsageReportService by lazy { UsageReportServiceImpl(clientOptions) }
 
+    private val userUsageReport: UserUsageReportService by lazy {
+        UserUsageReportServiceImpl(clientOptions)
+    }
+
     private val costReport: CostReportService by lazy { CostReportServiceImpl(clientOptions) }
+
+    private val userCostReport: UserCostReportService by lazy {
+        UserCostReportServiceImpl(clientOptions)
+    }
 
     override fun withRawResponse(): AnalyticsService.WithRawResponse = withRawResponse
 
@@ -67,7 +79,11 @@ class AnalyticsServiceImpl internal constructor(private val clientOptions: Clien
 
     override fun usageReport(): UsageReportService = usageReport
 
+    override fun userUsageReport(): UserUsageReportService = userUsageReport
+
     override fun costReport(): CostReportService = costReport
+
+    override fun userCostReport(): UserCostReportService = userCostReport
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AnalyticsService.WithRawResponse {
@@ -104,8 +120,16 @@ class AnalyticsServiceImpl internal constructor(private val clientOptions: Clien
             UsageReportServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val userUsageReport: UserUsageReportService.WithRawResponse by lazy {
+            UserUsageReportServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val costReport: CostReportService.WithRawResponse by lazy {
             CostReportServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val userCostReport: UserCostReportService.WithRawResponse by lazy {
+            UserCostReportServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         override fun withOptions(
@@ -131,6 +155,10 @@ class AnalyticsServiceImpl internal constructor(private val clientOptions: Clien
 
         override fun usageReport(): UsageReportService.WithRawResponse = usageReport
 
+        override fun userUsageReport(): UserUsageReportService.WithRawResponse = userUsageReport
+
         override fun costReport(): CostReportService.WithRawResponse = costReport
+
+        override fun userCostReport(): UserCostReportService.WithRawResponse = userCostReport
     }
 }

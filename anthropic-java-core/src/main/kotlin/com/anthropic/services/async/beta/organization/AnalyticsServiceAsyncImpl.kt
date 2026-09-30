@@ -17,8 +17,12 @@ import com.anthropic.services.async.beta.organization.analytics.SummaryServiceAs
 import com.anthropic.services.async.beta.organization.analytics.SummaryServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.analytics.UsageReportServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.UsageReportServiceAsyncImpl
+import com.anthropic.services.async.beta.organization.analytics.UserCostReportServiceAsync
+import com.anthropic.services.async.beta.organization.analytics.UserCostReportServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.analytics.UserServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.UserServiceAsyncImpl
+import com.anthropic.services.async.beta.organization.analytics.UserUsageReportServiceAsync
+import com.anthropic.services.async.beta.organization.analytics.UserUsageReportServiceAsyncImpl
 import java.util.function.Consumer
 
 class AnalyticsServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -48,8 +52,16 @@ class AnalyticsServiceAsyncImpl internal constructor(private val clientOptions: 
         UsageReportServiceAsyncImpl(clientOptions)
     }
 
+    private val userUsageReport: UserUsageReportServiceAsync by lazy {
+        UserUsageReportServiceAsyncImpl(clientOptions)
+    }
+
     private val costReport: CostReportServiceAsync by lazy {
         CostReportServiceAsyncImpl(clientOptions)
+    }
+
+    private val userCostReport: UserCostReportServiceAsync by lazy {
+        UserCostReportServiceAsyncImpl(clientOptions)
     }
 
     override fun withRawResponse(): AnalyticsServiceAsync.WithRawResponse = withRawResponse
@@ -73,7 +85,11 @@ class AnalyticsServiceAsyncImpl internal constructor(private val clientOptions: 
 
     override fun usageReport(): UsageReportServiceAsync = usageReport
 
+    override fun userUsageReport(): UserUsageReportServiceAsync = userUsageReport
+
     override fun costReport(): CostReportServiceAsync = costReport
+
+    override fun userCostReport(): UserCostReportServiceAsync = userCostReport
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AnalyticsServiceAsync.WithRawResponse {
@@ -110,8 +126,16 @@ class AnalyticsServiceAsyncImpl internal constructor(private val clientOptions: 
             UsageReportServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val userUsageReport: UserUsageReportServiceAsync.WithRawResponse by lazy {
+            UserUsageReportServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val costReport: CostReportServiceAsync.WithRawResponse by lazy {
             CostReportServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val userCostReport: UserCostReportServiceAsync.WithRawResponse by lazy {
+            UserCostReportServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         override fun withOptions(
@@ -137,6 +161,11 @@ class AnalyticsServiceAsyncImpl internal constructor(private val clientOptions: 
 
         override fun usageReport(): UsageReportServiceAsync.WithRawResponse = usageReport
 
+        override fun userUsageReport(): UserUsageReportServiceAsync.WithRawResponse =
+            userUsageReport
+
         override fun costReport(): CostReportServiceAsync.WithRawResponse = costReport
+
+        override fun userCostReport(): UserCostReportServiceAsync.WithRawResponse = userCostReport
     }
 }

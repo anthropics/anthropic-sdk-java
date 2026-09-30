@@ -9,7 +9,9 @@ import com.anthropic.services.async.beta.organization.analytics.PluginServiceAsy
 import com.anthropic.services.async.beta.organization.analytics.SkillServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.SummaryServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.UsageReportServiceAsync
+import com.anthropic.services.async.beta.organization.analytics.UserCostReportServiceAsync
 import com.anthropic.services.async.beta.organization.analytics.UserServiceAsync
+import com.anthropic.services.async.beta.organization.analytics.UserUsageReportServiceAsync
 import java.util.function.Consumer
 
 interface AnalyticsServiceAsync {
@@ -42,7 +44,11 @@ interface AnalyticsServiceAsync {
 
     fun usageReport(): UsageReportServiceAsync
 
+    fun userUsageReport(): UserUsageReportServiceAsync
+
     fun costReport(): CostReportServiceAsync
+
+    fun userCostReport(): UserCostReportServiceAsync
 
     /**
      * A view of [AnalyticsServiceAsync] that provides access to raw HTTP responses for each method.
@@ -74,6 +80,10 @@ interface AnalyticsServiceAsync {
 
         fun usageReport(): UsageReportServiceAsync.WithRawResponse
 
+        fun userUsageReport(): UserUsageReportServiceAsync.WithRawResponse
+
         fun costReport(): CostReportServiceAsync.WithRawResponse
+
+        fun userCostReport(): UserCostReportServiceAsync.WithRawResponse
     }
 }
