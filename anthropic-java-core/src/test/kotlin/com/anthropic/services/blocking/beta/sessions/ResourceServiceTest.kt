@@ -8,14 +8,12 @@ import com.anthropic.models.beta.sessions.resources.ResourceAddParams
 import com.anthropic.models.beta.sessions.resources.ResourceDeleteParams
 import com.anthropic.models.beta.sessions.resources.ResourceRetrieveParams
 import com.anthropic.models.beta.sessions.resources.ResourceUpdateParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class ResourceServiceTest {
 
-    @Disabled("prism can't find endpoint with beta only tag")
     @Test
     fun retrieve() {
         val client =
@@ -38,7 +36,6 @@ internal class ResourceServiceTest {
         resource.validate()
     }
 
-    @Disabled("prism can't find endpoint with beta only tag")
     @Test
     fun update() {
         val client =
@@ -62,7 +59,6 @@ internal class ResourceServiceTest {
         resource.validate()
     }
 
-    @Disabled("prism can't find endpoint with beta only tag")
     @Test
     fun list() {
         val client =
@@ -77,7 +73,6 @@ internal class ResourceServiceTest {
         page.response().validate()
     }
 
-    @Disabled("prism can't find endpoint with beta only tag")
     @Test
     fun delete() {
         val client =
@@ -100,7 +95,6 @@ internal class ResourceServiceTest {
         betaManagedAgentsDeleteSessionResource.validate()
     }
 
-    @Disabled("prism can't find endpoint with beta only tag")
     @Test
     fun add() {
         val client =

@@ -15,7 +15,6 @@ import com.anthropic.models.beta.vaults.credentials.CredentialMcpOAuthValidatePa
 import com.anthropic.models.beta.vaults.credentials.CredentialRetrieveParams
 import com.anthropic.models.beta.vaults.credentials.CredentialUpdateParams
 import java.time.OffsetDateTime
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -193,7 +192,6 @@ internal class CredentialServiceAsyncTest {
         betaManagedAgentsCredential.validate()
     }
 
-    @Disabled("prism can't find endpoint with beta only tag")
     @Test
     fun mcpOAuthValidate() {
         val client =
