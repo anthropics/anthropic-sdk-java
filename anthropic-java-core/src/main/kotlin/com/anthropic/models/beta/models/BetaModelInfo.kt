@@ -26,6 +26,7 @@ private constructor(
     private val capabilities: JsonField<BetaModelCapabilities>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val displayName: JsonField<String>,
+    private val line: JsonField<BetaModelLine>,
     private val maxInputTokens: JsonField<Long>,
     private val maxTokens: JsonField<Long>,
     private val type: JsonValue,
@@ -47,6 +48,7 @@ private constructor(
         @JsonProperty("display_name")
         @ExcludeMissing
         displayName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("line") @ExcludeMissing line: JsonField<BetaModelLine> = JsonMissing.of(),
         @JsonProperty("max_input_tokens")
         @ExcludeMissing
         maxInputTokens: JsonField<Long> = JsonMissing.of(),
@@ -58,6 +60,7 @@ private constructor(
         capabilities,
         createdAt,
         displayName,
+        line,
         maxInputTokens,
         maxTokens,
         type,
@@ -107,6 +110,16 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun displayName(): String = displayName.getRequired("display_name")
+
+    /**
+     * The model line this model belongs to, such as `opus` for both Claude Opus 4.5 and Claude Opus
+     * 4.6. More lines may be added. `null` when the model belongs to no line, as a fine-tuned model
+     * does; do not infer a line from the `id`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun line(): Optional<BetaModelLine> = line.getOptional("line")
 
     /**
      * Maximum input context window size in tokens for this model.
@@ -184,6 +197,13 @@ private constructor(
     fun _displayName(): JsonField<String> = displayName
 
     /**
+     * Returns the raw JSON value of [line].
+     *
+     * Unlike [line], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("line") @ExcludeMissing fun _line(): JsonField<BetaModelLine> = line
+
+    /**
      * Returns the raw JSON value of [maxInputTokens].
      *
      * Unlike [maxInputTokens], this method doesn't throw if the JSON field has an unexpected type.
@@ -223,6 +243,7 @@ private constructor(
          * .capabilities()
          * .createdAt()
          * .displayName()
+         * .line()
          * .maxInputTokens()
          * .maxTokens()
          * ```
@@ -238,6 +259,7 @@ private constructor(
         private var capabilities: JsonField<BetaModelCapabilities>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var displayName: JsonField<String>? = null
+        private var line: JsonField<BetaModelLine>? = null
         private var maxInputTokens: JsonField<Long>? = null
         private var maxTokens: JsonField<Long>? = null
         private var type: JsonValue = JsonValue.from("model")
@@ -253,6 +275,7 @@ private constructor(
             capabilities = betaModelInfo.capabilities
             createdAt = betaModelInfo.createdAt
             displayName = betaModelInfo.displayName
+            line = betaModelInfo.line
             maxInputTokens = betaModelInfo.maxInputTokens
             maxTokens = betaModelInfo.maxTokens
             type = betaModelInfo.type
@@ -356,6 +379,25 @@ private constructor(
          */
         fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
 
+        /**
+         * The model line this model belongs to, such as `opus` for both Claude Opus 4.5 and Claude
+         * Opus 4.6. More lines may be added. `null` when the model belongs to no line, as a
+         * fine-tuned model does; do not infer a line from the `id`.
+         */
+        fun line(line: BetaModelLine?) = line(JsonField.ofNullable(line))
+
+        /** Alias for calling [Builder.line] with `line.orElse(null)`. */
+        fun line(line: Optional<BetaModelLine>) = line(line.getOrNull())
+
+        /**
+         * Sets [Builder.line] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.line] with a well-typed [BetaModelLine] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun line(line: JsonField<BetaModelLine>) = apply { this.line = line }
+
         /** Maximum input context window size in tokens for this model. */
         fun maxInputTokens(maxInputTokens: Long?) =
             maxInputTokens(JsonField.ofNullable(maxInputTokens))
@@ -448,6 +490,7 @@ private constructor(
          * .capabilities()
          * .createdAt()
          * .displayName()
+         * .line()
          * .maxInputTokens()
          * .maxTokens()
          * ```
@@ -463,6 +506,7 @@ private constructor(
                 checkRequired("capabilities", capabilities),
                 checkRequired("createdAt", createdAt),
                 checkRequired("displayName", displayName),
+                checkRequired("line", line),
                 checkRequired("maxInputTokens", maxInputTokens),
                 checkRequired("maxTokens", maxTokens),
                 type,
@@ -490,6 +534,7 @@ private constructor(
         capabilities().ifPresent { it.validate() }
         createdAt()
         displayName()
+        line().ifPresent { it.validate() }
         maxInputTokens()
         maxTokens()
         _type().let {
@@ -520,6 +565,7 @@ private constructor(
             (capabilities.asKnown().getOrNull()?.validity() ?: 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (displayName.asKnown().isPresent) 1 else 0) +
+            (line.asKnown().getOrNull()?.validity() ?: 0) +
             (if (maxInputTokens.asKnown().isPresent) 1 else 0) +
             (if (maxTokens.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("model")) 1 else 0 }
@@ -535,6 +581,7 @@ private constructor(
             capabilities == other.capabilities &&
             createdAt == other.createdAt &&
             displayName == other.displayName &&
+            line == other.line &&
             maxInputTokens == other.maxInputTokens &&
             maxTokens == other.maxTokens &&
             type == other.type &&
@@ -548,6 +595,7 @@ private constructor(
             capabilities,
             createdAt,
             displayName,
+            line,
             maxInputTokens,
             maxTokens,
             type,
@@ -558,5 +606,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaModelInfo{id=$id, allowedFallbackModels=$allowedFallbackModels, capabilities=$capabilities, createdAt=$createdAt, displayName=$displayName, maxInputTokens=$maxInputTokens, maxTokens=$maxTokens, type=$type, additionalProperties=$additionalProperties}"
+        "BetaModelInfo{id=$id, allowedFallbackModels=$allowedFallbackModels, capabilities=$capabilities, createdAt=$createdAt, displayName=$displayName, line=$line, maxInputTokens=$maxInputTokens, maxTokens=$maxTokens, type=$type, additionalProperties=$additionalProperties}"
 }

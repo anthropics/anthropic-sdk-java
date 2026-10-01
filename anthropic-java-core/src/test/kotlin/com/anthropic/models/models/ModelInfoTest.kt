@@ -54,6 +54,7 @@ internal class ModelInfoTest {
                 )
                 .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
                 .displayName("Claude Opus 5")
+                .line(ModelLine.HAIKU)
                 .maxInputTokens(0L)
                 .maxTokens(0L)
                 .build()
@@ -101,6 +102,7 @@ internal class ModelInfoTest {
             )
         assertThat(modelInfo.createdAt()).isEqualTo(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
         assertThat(modelInfo.displayName()).isEqualTo("Claude Opus 5")
+        assertThat(modelInfo.line()).contains(ModelLine.HAIKU)
         assertThat(modelInfo.maxInputTokens()).contains(0L)
         assertThat(modelInfo.maxTokens()).contains(0L)
     }
@@ -152,6 +154,7 @@ internal class ModelInfoTest {
                 )
                 .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
                 .displayName("Claude Opus 5")
+                .line(ModelLine.HAIKU)
                 .maxInputTokens(0L)
                 .maxTokens(0L)
                 .build()

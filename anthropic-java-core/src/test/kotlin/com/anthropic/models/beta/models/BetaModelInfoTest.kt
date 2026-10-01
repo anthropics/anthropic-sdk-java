@@ -62,6 +62,7 @@ internal class BetaModelInfoTest {
                 )
                 .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
                 .displayName("Claude Opus 5")
+                .line(BetaModelLine.HAIKU)
                 .maxInputTokens(0L)
                 .maxTokens(0L)
                 .build()
@@ -117,6 +118,7 @@ internal class BetaModelInfoTest {
         assertThat(betaModelInfo.createdAt())
             .isEqualTo(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
         assertThat(betaModelInfo.displayName()).isEqualTo("Claude Opus 5")
+        assertThat(betaModelInfo.line()).contains(BetaModelLine.HAIKU)
         assertThat(betaModelInfo.maxInputTokens()).contains(0L)
         assertThat(betaModelInfo.maxTokens()).contains(0L)
     }
@@ -175,6 +177,7 @@ internal class BetaModelInfoTest {
                 )
                 .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
                 .displayName("Claude Opus 5")
+                .line(BetaModelLine.HAIKU)
                 .maxInputTokens(0L)
                 .maxTokens(0L)
                 .build()
