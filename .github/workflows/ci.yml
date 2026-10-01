@@ -74,7 +74,9 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Build SDK
-        run: ./scripts/build
+        # Where the "Build local Maven repo" step runs it needs the Javadoc, and generating it in
+        # the same Gradle run as the compile is faster.
+        run: ./scripts/build ${{ github.repository != 'anthropics/anthropic-sdk-java' && !startsWith(github.ref, 'refs/heads/stl/') && 'dokkaGeneratePublicationJavadoc' || '' }}
 
       - name: Build local Maven repo
         if: |-
