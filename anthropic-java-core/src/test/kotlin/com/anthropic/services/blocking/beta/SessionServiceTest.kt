@@ -21,7 +21,6 @@ import com.anthropic.models.beta.sessions.SessionRetrieveParams
 import com.anthropic.models.beta.sessions.SessionUpdateParams
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -187,7 +186,6 @@ internal class SessionServiceTest {
         betaManagedAgentsSession.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

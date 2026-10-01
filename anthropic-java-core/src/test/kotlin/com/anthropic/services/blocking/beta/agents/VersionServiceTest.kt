@@ -2,14 +2,12 @@ package com.anthropic.services.blocking.beta.agents
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClient
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class VersionServiceTest {
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

@@ -9,7 +9,6 @@ import com.anthropic.models.beta.vaults.VaultCreateParams
 import com.anthropic.models.beta.vaults.VaultDeleteParams
 import com.anthropic.models.beta.vaults.VaultRetrieveParams
 import com.anthropic.models.beta.vaults.VaultUpdateParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -90,7 +89,6 @@ internal class VaultServiceTest {
         betaManagedAgentsVault.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

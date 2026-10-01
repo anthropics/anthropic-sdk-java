@@ -8,14 +8,12 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEventParams
 import com.anthropic.models.beta.sessions.events.EventSendParams
 import com.anthropic.models.beta.sessions.events.EventStreamParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class EventServiceTest {
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

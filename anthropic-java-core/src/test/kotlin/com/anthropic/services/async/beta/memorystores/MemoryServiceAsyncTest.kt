@@ -9,7 +9,6 @@ import com.anthropic.models.beta.memorystores.memories.MemoryCreateParams
 import com.anthropic.models.beta.memorystores.memories.MemoryDeleteParams
 import com.anthropic.models.beta.memorystores.memories.MemoryRetrieveParams
 import com.anthropic.models.beta.memorystores.memories.MemoryUpdateParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -97,7 +96,6 @@ internal class MemoryServiceAsyncTest {
         betaManagedAgentsMemory.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

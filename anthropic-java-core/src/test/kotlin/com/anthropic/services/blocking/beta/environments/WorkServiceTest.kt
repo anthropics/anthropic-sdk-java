@@ -14,7 +14,6 @@ import com.anthropic.models.beta.environments.work.WorkStatsParams
 import com.anthropic.models.beta.environments.work.WorkStopParams
 import com.anthropic.models.beta.environments.work.WorkUpdateParams
 import kotlin.jvm.optionals.getOrNull
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -72,7 +71,6 @@ internal class WorkServiceTest {
         betaSelfHostedWork.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -155,7 +153,6 @@ internal class WorkServiceTest {
         unwrappedBetaSelfHostedWork?.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun stats() {
         val client =

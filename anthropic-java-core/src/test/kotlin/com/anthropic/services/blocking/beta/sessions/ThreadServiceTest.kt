@@ -5,7 +5,6 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.sessions.threads.ThreadArchiveParams
 import com.anthropic.models.beta.sessions.threads.ThreadRetrieveParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -34,7 +33,6 @@ internal class ThreadServiceTest {
         betaManagedAgentsSessionThread.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

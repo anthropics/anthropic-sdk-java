@@ -6,7 +6,6 @@ import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.tunnels.certificates.CertificateArchiveParams
 import com.anthropic.models.beta.tunnels.certificates.CertificateCreateParams
 import com.anthropic.models.beta.tunnels.certificates.CertificateRetrieveParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -35,7 +34,6 @@ internal class CertificateServiceTest {
         betaTunnelCertificate.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun retrieve() {
         val client =
@@ -58,7 +56,6 @@ internal class CertificateServiceTest {
         betaTunnelCertificate.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
