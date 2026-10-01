@@ -12,6 +12,7 @@ internal class WorkspaceListParamsTest {
             .afterId("after_id")
             .beforeId("before_id")
             .includeArchived(true)
+            .includeDefault(true)
             .limit(1L)
             .build()
     }
@@ -23,6 +24,7 @@ internal class WorkspaceListParamsTest {
                 .afterId("after_id")
                 .beforeId("before_id")
                 .includeArchived(true)
+                .includeDefault(true)
                 .limit(1L)
                 .build()
 
@@ -34,6 +36,7 @@ internal class WorkspaceListParamsTest {
                     .put("after_id", "after_id")
                     .put("before_id", "before_id")
                     .put("include_archived", "true")
+                    .put("include_default", "true")
                     .put("limit", "1")
                     .build()
             )

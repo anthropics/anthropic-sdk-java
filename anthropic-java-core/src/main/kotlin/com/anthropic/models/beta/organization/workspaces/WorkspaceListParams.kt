@@ -13,6 +13,7 @@ private constructor(
     private val afterId: String?,
     private val beforeId: String?,
     private val includeArchived: Boolean?,
+    private val includeDefault: Boolean?,
     private val limit: Long?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -32,6 +33,9 @@ private constructor(
 
     /** Whether to include Workspaces that have been archived in the response */
     fun includeArchived(): Optional<Boolean> = Optional.ofNullable(includeArchived)
+
+    /** Whether to include the organization's default Workspace in the response */
+    fun includeDefault(): Optional<Boolean> = Optional.ofNullable(includeDefault)
 
     /**
      * Number of items to return per page.
@@ -62,6 +66,7 @@ private constructor(
         private var afterId: String? = null
         private var beforeId: String? = null
         private var includeArchived: Boolean? = null
+        private var includeDefault: Boolean? = null
         private var limit: Long? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -71,6 +76,7 @@ private constructor(
             afterId = workspaceListParams.afterId
             beforeId = workspaceListParams.beforeId
             includeArchived = workspaceListParams.includeArchived
+            includeDefault = workspaceListParams.includeDefault
             limit = workspaceListParams.limit
             additionalHeaders = workspaceListParams.additionalHeaders.toBuilder()
             additionalQueryParams = workspaceListParams.additionalQueryParams.toBuilder()
@@ -109,6 +115,22 @@ private constructor(
         /** Alias for calling [Builder.includeArchived] with `includeArchived.orElse(null)`. */
         fun includeArchived(includeArchived: Optional<Boolean>) =
             includeArchived(includeArchived.getOrNull())
+
+        /** Whether to include the organization's default Workspace in the response */
+        fun includeDefault(includeDefault: Boolean?) = apply {
+            this.includeDefault = includeDefault
+        }
+
+        /**
+         * Alias for [Builder.includeDefault].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun includeDefault(includeDefault: Boolean) = includeDefault(includeDefault as Boolean?)
+
+        /** Alias for calling [Builder.includeDefault] with `includeDefault.orElse(null)`. */
+        fun includeDefault(includeDefault: Optional<Boolean>) =
+            includeDefault(includeDefault.getOrNull())
 
         /**
          * Number of items to return per page.
@@ -235,6 +257,7 @@ private constructor(
                 afterId,
                 beforeId,
                 includeArchived,
+                includeDefault,
                 limit,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -249,6 +272,7 @@ private constructor(
                 afterId?.let { put("after_id", it) }
                 beforeId?.let { put("before_id", it) }
                 includeArchived?.let { put("include_archived", it.toString()) }
+                includeDefault?.let { put("include_default", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
                 putAll(additionalQueryParams)
             }
@@ -263,6 +287,7 @@ private constructor(
             afterId == other.afterId &&
             beforeId == other.beforeId &&
             includeArchived == other.includeArchived &&
+            includeDefault == other.includeDefault &&
             limit == other.limit &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -273,11 +298,12 @@ private constructor(
             afterId,
             beforeId,
             includeArchived,
+            includeDefault,
             limit,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "WorkspaceListParams{afterId=$afterId, beforeId=$beforeId, includeArchived=$includeArchived, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "WorkspaceListParams{afterId=$afterId, beforeId=$beforeId, includeArchived=$includeArchived, includeDefault=$includeDefault, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
