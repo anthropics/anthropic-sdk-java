@@ -145,6 +145,7 @@ class SpendLimitServiceImpl internal constructor(private val clientOptions: Clie
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limits")
                     .putQueryParam("beta", "true")
+                    .replaceHeaders("anthropic-beta", "spend-limit-reads-2026-09-26")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

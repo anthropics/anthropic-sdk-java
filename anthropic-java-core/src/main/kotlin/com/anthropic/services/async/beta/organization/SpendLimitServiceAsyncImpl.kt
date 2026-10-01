@@ -155,6 +155,7 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "organizations", "spend_limits")
                     .putQueryParam("beta", "true")
+                    .replaceHeaders("anthropic-beta", "spend-limit-reads-2026-09-26")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
