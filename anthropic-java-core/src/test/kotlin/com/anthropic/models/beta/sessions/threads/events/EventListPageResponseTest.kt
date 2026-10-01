@@ -1,6 +1,7 @@
 package com.anthropic.models.beta.sessions.threads.events
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentMessageEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEvent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
@@ -23,7 +24,15 @@ internal class EventListPageResponseTest {
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .build()
                 )
-                .nextPage("next_page")
+                .addData(
+                    BetaManagedAgentsAgentMessageEvent.builder()
+                        .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                        .addTextContent("Let me look up order #1234 for you.")
+                        .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
+                        .build()
+                )
+                .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
                 .build()
 
         assertThat(eventListPageResponse.data().getOrNull())
@@ -35,9 +44,17 @@ internal class EventListPageResponseTest {
                         .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .build()
-                )
+                ),
+                BetaManagedAgentsSessionEvent.ofAgentMessage(
+                    BetaManagedAgentsAgentMessageEvent.builder()
+                        .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                        .addTextContent("Let me look up order #1234 for you.")
+                        .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
+                        .build()
+                ),
             )
-        assertThat(eventListPageResponse.nextPage()).contains("next_page")
+        assertThat(eventListPageResponse.nextPage()).contains("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
     }
 
     @Test
@@ -57,6 +74,16 @@ internal class EventListPageResponseTest {
                             .build()
                     )
                 )
+                .addData(
+                    BetaManagedAgentsSessionEvent.ofAgentMessage(
+                        BetaManagedAgentsAgentMessageEvent.builder()
+                            .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                            .addTextContent("Let me look up order #1234 for you.")
+                            .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                            .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
+                            .build()
+                    )
+                )
                 .build()
 
         assertThat(eventListPageResponse.data().getOrNull())
@@ -68,7 +95,15 @@ internal class EventListPageResponseTest {
                         .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .build()
-                )
+                ),
+                BetaManagedAgentsSessionEvent.ofAgentMessage(
+                    BetaManagedAgentsAgentMessageEvent.builder()
+                        .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                        .addTextContent("Let me look up order #1234 for you.")
+                        .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
+                        .build()
+                ),
             )
     }
 
@@ -85,7 +120,15 @@ internal class EventListPageResponseTest {
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .build()
                 )
-                .nextPage("next_page")
+                .addData(
+                    BetaManagedAgentsAgentMessageEvent.builder()
+                        .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                        .addTextContent("Let me look up order #1234 for you.")
+                        .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
+                        .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
+                        .build()
+                )
+                .nextPage("page_MjAyNS0wNS0xNFQwMDowMDowMFo=")
                 .build()
 
         val roundtrippedEventListPageResponse =
