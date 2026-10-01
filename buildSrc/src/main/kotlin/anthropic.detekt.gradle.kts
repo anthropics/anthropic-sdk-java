@@ -74,7 +74,6 @@ private val toolchainJdkHome =
 
 listOf("main", "test").forEach { sourceSetName ->
     val sourceSet = the<SourceSetContainer>()[sourceSetName]
-    // The files that `detektMain` and `detektTest` check.
     val kotlinFiles =
         the<KotlinJvmProjectExtension>().sourceSets[sourceSetName].kotlin.matching {
             include("**/*.kt", "**/*.kts")
@@ -84,6 +83,24 @@ listOf("main", "test").forEach { sourceSetName ->
     val configFiles = the<DetektExtension>().config
     val baselineFile = baselineFileFor("detekt$taskSuffix")
     val passedFile = layout.buildDirectory.file("detekt-changed/$sourceSetName-passed")
+
+    // The plugin sets these only on tasks it registers. Keep them as on `detekt$taskSuffix`.
+    fun Detekt.configureLikeSourceSetTask() {
+        val extension = project.the<DetektExtension>()
+        classpath.setFrom(typeResolutionClasspath)
+        jdkHome.set(toolchainJdkHome)
+        config.setFrom(configFiles)
+        baseline.fileProvider(provider { baselineFile.takeIf(File::exists) })
+        debug = extension.debug
+        parallel = extension.parallel
+        allRules = extension.allRules
+        buildUponDefaultConfig = extension.buildUponDefaultConfig
+        disableDefaultRuleSets = extension.disableDefaultRuleSets
+        autoCorrect = extension.autoCorrect
+        ignoreFailures = extension.ignoreFailures
+        extension.basePath?.let { basePath = it }
+    }
+
     val changedFiles =
         tasks.register<DetektChangedFiles>("detektChangedFiles$taskSuffix") {
             source.from(kotlinFiles)
@@ -106,16 +123,38 @@ listOf("main", "test").forEach { sourceSetName ->
         // `source` is compared by file name and content. With the list as an input too, a result
         // is taken from the build cache only for the same paths.
         inputs.files(fileList).withPropertyName("fileList")
-        // The plugin sets these only on tasks it registers. Keep them as on `detekt$taskSuffix`.
-        classpath.setFrom(typeResolutionClasspath)
-        jdkHome.set(toolchainJdkHome)
-        config.setFrom(configFiles)
-        parallel = project.the<DetektExtension>().parallel
-        baseline.fileProvider(provider { baselineFile.takeIf(File::exists) })
+        configureLikeSourceSetTask()
         // `detektChangedMain` and `detektChangedTest` would write the same report files.
         reports { listOf(xml, html, txt, sarif, md).forEach { it.required.set(false) } }
         // See `DetektChangedFiles.passed`.
         outputs.file(passedFile).withPropertyName("passed")
         doLast { passedFile.get().asFile.writeText("") }
+    }
+
+    // Type resolution, most of detekt's time in a big source set, uses one thread. So several tasks
+    // each check part of the files. Gradle runs them at once only with the configuration cache on.
+    // A task sees the other parts as compiled classes, where smart casts on public properties fail.
+    if (project.name == "anthropic-java-core") {
+        val sliceCount = 8
+        val slices =
+            (0 until sliceCount).map { slice ->
+                tasks.register<Detekt>("detekt${taskSuffix}Slice$slice") {
+                    description =
+                        "Runs detekt on one of $sliceCount parts of the $sourceSetName Kotlin " +
+                            "files; detekt$taskSuffix runs all parts."
+                    setSource(kotlinFiles)
+                    // Directories must pass, or Gradle does not look inside them.
+                    include {
+                        it.isDirectory || Math.floorMod(it.name.hashCode(), sliceCount) == slice
+                    }
+                    configureLikeSourceSetTask()
+                    val dir = layout.buildDirectory.dir("reports/detekt/$sourceSetName-$slice")
+                    reportsDir.set(dir.map { it.asFile })
+                }
+            }
+        tasks.named<Detekt>("detekt$taskSuffix") {
+            setSource(files())
+            dependsOn(slices)
+        }
     }
 }
