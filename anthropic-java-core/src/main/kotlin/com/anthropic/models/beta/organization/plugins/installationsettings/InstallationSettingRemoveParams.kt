@@ -304,7 +304,10 @@ private constructor(
             .apply {
                 betas?.let {
                     if (it.isNotEmpty()) {
-                        put("anthropic-beta", it.joinToString(","))
+                        put(
+                            "anthropic-beta",
+                            it.joinToString(",", postfix = ",ce-plugins-2026-09-01"),
+                        )
                     }
                 }
                 putAll(additionalHeaders)

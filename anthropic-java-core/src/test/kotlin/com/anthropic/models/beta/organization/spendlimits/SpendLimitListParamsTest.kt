@@ -33,7 +33,11 @@ internal class SpendLimitListParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
+                    .put(
+                        "anthropic-beta",
+                        listOf("message-batches-2024-09-24", "spend-limit-reads-2026-09-26")
+                            .joinToString(","),
+                    )
                     .build()
             )
     }

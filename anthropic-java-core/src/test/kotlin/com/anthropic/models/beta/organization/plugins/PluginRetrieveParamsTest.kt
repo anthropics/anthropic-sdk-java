@@ -40,7 +40,11 @@ internal class PluginRetrieveParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
+                    .put(
+                        "anthropic-beta",
+                        listOf("message-batches-2024-09-24", "ce-plugins-2026-09-01")
+                            .joinToString(","),
+                    )
                     .build()
             )
     }

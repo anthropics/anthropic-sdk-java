@@ -279,7 +279,10 @@ private constructor(
             .apply {
                 betas?.let {
                     if (it.isNotEmpty()) {
-                        put("anthropic-beta", it.joinToString(","))
+                        put(
+                            "anthropic-beta",
+                            it.joinToString(",", postfix = ",message-batches-2024-09-24"),
+                        )
                     }
                 }
                 workspaceId?.let { put("anthropic-workspace-id", it) }
