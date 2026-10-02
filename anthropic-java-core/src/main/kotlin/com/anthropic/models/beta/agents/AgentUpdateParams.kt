@@ -135,7 +135,7 @@ private constructor(
 
     /**
      * Tool configurations available to the agent. Full replacement. Omit to preserve; send empty
-     * array or null to clear. Maximum of 128 tools across all toolsets allowed.
+     * array or null to clear. Maximum of 256 tools across all toolsets allowed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -535,7 +535,7 @@ private constructor(
 
         /**
          * Tool configurations available to the agent. Full replacement. Omit to preserve; send
-         * empty array or null to clear. Maximum of 128 tools across all toolsets allowed.
+         * empty array or null to clear. Maximum of 256 tools across all toolsets allowed.
          */
         fun tools(tools: List<Tool>?) = apply { body.tools(tools) }
 
@@ -891,7 +891,7 @@ private constructor(
 
         /**
          * Tool configurations available to the agent. Full replacement. Omit to preserve; send
-         * empty array or null to clear. Maximum of 128 tools across all toolsets allowed.
+         * empty array or null to clear. Maximum of 256 tools across all toolsets allowed.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1286,7 +1286,7 @@ private constructor(
 
             /**
              * Tool configurations available to the agent. Full replacement. Omit to preserve; send
-             * empty array or null to clear. Maximum of 128 tools across all toolsets allowed.
+             * empty array or null to clear. Maximum of 256 tools across all toolsets allowed.
              */
             fun tools(tools: List<Tool>?) = tools(JsonField.ofNullable(tools))
 

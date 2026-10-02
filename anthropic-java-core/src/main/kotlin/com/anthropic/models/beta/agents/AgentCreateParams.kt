@@ -128,7 +128,7 @@ private constructor(
     fun system(): Optional<String> = body.system()
 
     /**
-     * Tool configurations available to the agent. Maximum of 128 tools across all toolsets allowed.
+     * Tool configurations available to the agent. Maximum of 256 tools across all toolsets allowed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -494,7 +494,7 @@ private constructor(
         fun system(system: JsonField<String>) = apply { body.system(system) }
 
         /**
-         * Tool configurations available to the agent. Maximum of 128 tools across all toolsets
+         * Tool configurations available to the agent. Maximum of 256 tools across all toolsets
          * allowed.
          */
         fun tools(tools: List<Tool>) = apply { body.tools(tools) }
@@ -827,7 +827,7 @@ private constructor(
         fun system(): Optional<String> = system.getOptional("system")
 
         /**
-         * Tool configurations available to the agent. Maximum of 128 tools across all toolsets
+         * Tool configurations available to the agent. Maximum of 256 tools across all toolsets
          * allowed.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1196,7 +1196,7 @@ private constructor(
             fun system(system: JsonField<String>) = apply { this.system = system }
 
             /**
-             * Tool configurations available to the agent. Maximum of 128 tools across all toolsets
+             * Tool configurations available to the agent. Maximum of 256 tools across all toolsets
              * allowed.
              */
             fun tools(tools: List<Tool>) = tools(JsonField.of(tools))
