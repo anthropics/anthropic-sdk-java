@@ -113,8 +113,8 @@ private constructor(
 
     /**
      * The model line this model belongs to, such as `opus` for both Claude Opus 4.5 and Claude Opus
-     * 4.6. More lines may be added. `null` when the model belongs to no line, as a fine-tuned model
-     * does; do not infer a line from the `id`.
+     * 4.6. More lines may be added. `null` when the model belongs to no line; do not infer a line
+     * from the `id`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -381,8 +381,8 @@ private constructor(
 
         /**
          * The model line this model belongs to, such as `opus` for both Claude Opus 4.5 and Claude
-         * Opus 4.6. More lines may be added. `null` when the model belongs to no line, as a
-         * fine-tuned model does; do not infer a line from the `id`.
+         * Opus 4.6. More lines may be added. `null` when the model belongs to no line; do not infer
+         * a line from the `id`.
          */
         fun line(line: BetaModelLine?) = line(JsonField.ofNullable(line))
 
