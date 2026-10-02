@@ -1,5 +1,6 @@
 package com.anthropic.config
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.json.JsonMapper
@@ -14,6 +15,7 @@ enum class AuthenticationType {
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class IdentityTokenConfig
+@JsonCreator
 private constructor(
     @JsonProperty("source") private val source: String?,
     @JsonProperty("path") private val path: String?,
@@ -52,6 +54,7 @@ private constructor(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class AuthenticationConfig
+@JsonCreator
 private constructor(
     @JsonProperty("type") private val type: AuthenticationType?,
     @JsonProperty("federation_rule_id") private val federationRuleId: String?,
@@ -156,6 +159,7 @@ private constructor(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class ProfileConfig
+@JsonCreator
 private constructor(
     @JsonProperty("authentication") private val authentication: AuthenticationConfig?,
     @JsonProperty("base_url") private val baseUrl: String?,
