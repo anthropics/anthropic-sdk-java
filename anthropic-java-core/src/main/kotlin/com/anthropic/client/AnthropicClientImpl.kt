@@ -25,7 +25,7 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
         else
             clientOptions
                 .toBuilder()
-                .putHeader("User-Agent", "${javaClass.simpleName}/Java ${getPackageVersion()}")
+                .putHeader("User-Agent", "AnthropicClientImpl/Java ${getPackageVersion()}")
                 .build()
 
     // Pass the original clientOptions so that this client sets its own User-Agent.
