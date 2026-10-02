@@ -49,7 +49,7 @@ internal class MemoryRetrieveParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

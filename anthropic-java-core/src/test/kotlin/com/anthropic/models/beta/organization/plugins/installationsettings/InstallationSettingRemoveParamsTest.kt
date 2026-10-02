@@ -40,7 +40,9 @@ internal class InstallationSettingRemoveParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
+                    .build()
             )
     }
 

@@ -292,7 +292,11 @@ private constructor(
     override fun _headers(): Headers =
         Headers.builder()
             .apply {
-                betas?.forEach { put("anthropic-beta", it.toString()) }
+                betas?.let {
+                    if (it.isNotEmpty()) {
+                        put("anthropic-beta", it.joinToString(","))
+                    }
+                }
                 anthropicWorkerId?.let { put("Anthropic-Worker-ID", it) }
                 putAll(additionalHeaders)
             }

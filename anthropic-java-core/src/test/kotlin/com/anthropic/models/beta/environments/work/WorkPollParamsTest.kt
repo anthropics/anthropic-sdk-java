@@ -44,7 +44,7 @@ internal class WorkPollParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
                     .put("Anthropic-Worker-ID", "Anthropic-Worker-ID")
                     .build()
             )
