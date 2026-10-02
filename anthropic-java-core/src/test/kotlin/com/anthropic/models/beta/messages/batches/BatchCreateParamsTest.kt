@@ -441,11 +441,7 @@ internal class BatchCreateParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put(
-                        "anthropic-beta",
-                        listOf("message-batches-2024-09-24", "message-batches-2024-09-24")
-                            .joinToString(","),
-                    )
+                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
                     .put("anthropic-user-profile-id", "anthropic-user-profile-id")
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()

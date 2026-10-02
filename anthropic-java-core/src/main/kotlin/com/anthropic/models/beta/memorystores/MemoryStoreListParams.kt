@@ -333,7 +333,9 @@ private constructor(
                     if (it.isNotEmpty()) {
                         put(
                             "anthropic-beta",
-                            it.joinToString(",", postfix = ",agent-memory-2026-07-22"),
+                            it.map { it.toString() }
+                                .let { it + (listOf("agent-memory-2026-07-22") - it) }
+                                .joinToString(","),
                         )
                     }
                 }

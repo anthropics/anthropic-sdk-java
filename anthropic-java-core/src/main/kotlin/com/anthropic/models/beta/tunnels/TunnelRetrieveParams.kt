@@ -242,7 +242,9 @@ private constructor(
                     if (it.isNotEmpty()) {
                         put(
                             "anthropic-beta",
-                            it.joinToString(",", postfix = ",mcp-tunnels-2026-06-22"),
+                            it.map { it.toString() }
+                                .let { it + (listOf("mcp-tunnels-2026-06-22") - it) }
+                                .joinToString(","),
                         )
                     }
                 }

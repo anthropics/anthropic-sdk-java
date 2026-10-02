@@ -263,7 +263,9 @@ private constructor(
                     if (it.isNotEmpty()) {
                         put(
                             "anthropic-beta",
-                            it.joinToString(",", postfix = ",ce-plugins-2026-09-01"),
+                            it.map { it.toString() }
+                                .let { it + (listOf("ce-plugins-2026-09-01") - it) }
+                                .joinToString(","),
                         )
                     }
                 }
