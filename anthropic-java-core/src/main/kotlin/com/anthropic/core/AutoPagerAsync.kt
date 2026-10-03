@@ -39,9 +39,15 @@ private constructor(private val firstPage: PageAsync<T>, private val defaultExec
                 return CompletableFuture.completedFuture(null)
             }
 
-            items().forEach { handler.onNext(it) }
-            return if (hasNextPage()) nextPage().thenComposeAsync({ it.handle() }, executor)
-            else CompletableFuture.completedFuture(null)
+            for (item in items()) {
+                if (state.get() == State.CLOSED) {
+                    return CompletableFuture.completedFuture(null)
+                }
+                handler.onNext(item)
+            }
+            return if (state.get() != State.CLOSED && hasNextPage()) {
+                nextPage().thenComposeAsync({ it.handle() }, executor)
+            } else CompletableFuture.completedFuture(null)
         }
 
         // Every handler callback runs on `executor`, never on the thread that completed a page
