@@ -3,8 +3,11 @@ package com.anthropic.core
 import com.anthropic.core.http.AsyncStreamResponse
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.TimeUnit
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
@@ -192,5 +195,98 @@ internal class AutoPagerAsyncTest {
         val onCompletableFuture = autoPagerAsync.onCompleteFuture()
 
         assertThat(onCompletableFuture).isCompleted
+    }
+
+    @Test
+    fun closeFromOnNext_stopsTheCurrentPageAndDoesNotFetchAnother() {
+        for (closeAt in listOf("first", "second", "third")) {
+            val page = spy(PageAsyncImpl(listOf("first", "second", "third")))
+            val pager = AutoPagerAsync.from(page, executor)
+            val received = mutableListOf<String>()
+            val completed = mutableListOf<Optional<Throwable>>()
+            pager.subscribe(
+                object : AsyncStreamResponse.Handler<String> {
+                    override fun onNext(value: String) {
+                        received.add(value)
+                        if (value == closeAt) pager.close()
+                    }
+
+                    override fun onComplete(error: Optional<Throwable>) {
+                        completed.add(error)
+                    }
+                }
+            )
+            assertThat(received)
+                .containsExactlyElementsOf(
+                    listOf("first", "second", "third").takeWhile { it != closeAt } + closeAt
+                )
+            verify(page, never()).nextPage()
+            assertThat(completed).containsExactly(Optional.empty())
+            assertThat(pager.onCompleteFuture()).isCompleted
+            pager.close()
+            assertThat(completed).hasSize(1)
+        }
+    }
+
+    @Test
+    fun closeDuringFollowingPage_stopsDeliveryWithoutFetchingThirdPage() {
+        val first = PageAsyncImpl(listOf("page-one"))
+        val second = spy(PageAsyncImpl(listOf("stop", "unwanted")))
+        val pager = AutoPagerAsync.from(first, executor)
+        val received = mutableListOf<String>()
+        val completed = mutableListOf<Optional<Throwable>>()
+        pager.subscribe(
+            object : AsyncStreamResponse.Handler<String> {
+                override fun onNext(value: String) {
+                    received.add(value)
+                    if (value == "stop") pager.close()
+                }
+
+                override fun onComplete(error: Optional<Throwable>) {
+                    completed.add(error)
+                }
+            }
+        )
+        first.nextPageFuture.complete(second)
+        assertThat(received).containsExactly("page-one", "stop")
+        verify(second, never()).nextPage()
+        assertThat(completed).containsExactly(Optional.empty())
+    }
+
+    @Test
+    fun closeFromAnotherThread_doesNotDeliverRemainingBufferedItems() {
+        val pool = Executors.newSingleThreadExecutor()
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val completed = CountDownLatch(1)
+        val received = mutableListOf<String>()
+        val page = spy(PageAsyncImpl(listOf("first", "unwanted")))
+        val pager = AutoPagerAsync.from(page, pool)
+        try {
+            pager.subscribe(
+                object : AsyncStreamResponse.Handler<String> {
+                    override fun onNext(value: String) {
+                        received.add(value)
+                        entered.countDown()
+                        check(release.await(5, TimeUnit.SECONDS))
+                    }
+
+                    override fun onComplete(error: Optional<Throwable>) {
+                        completed.countDown()
+                    }
+                }
+            )
+            assertThat(entered.await(5, TimeUnit.SECONDS)).isTrue()
+            pager.close()
+            release.countDown()
+            assertThat(completed.await(5, TimeUnit.SECONDS)).isTrue()
+            assertThat(received).containsExactly("first")
+            verify(page, never()).nextPage()
+        } finally {
+            release.countDown()
+            pager.close()
+            pool.shutdownNow()
+            pool.awaitTermination(5, TimeUnit.SECONDS)
+        }
     }
 }
