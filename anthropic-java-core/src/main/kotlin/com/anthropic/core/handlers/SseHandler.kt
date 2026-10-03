@@ -112,14 +112,20 @@ private class SseState(
     var retry: Int? = null,
     val rawLines: MutableList<String> = mutableListOf(),
 ) {
+    private var firstLine: Boolean = true
+
     // https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation
-    fun decode(line: String): SseMessage? {
+    fun decode(rawLine: String): SseMessage? {
+        // UTF-8 event streams may start with one BOM. Keep it in the raw wire
+        // representation, but do not treat it as part of the first field name.
+        val line = if (firstLine) rawLine.removePrefix("\uFEFF") else rawLine
+        firstLine = false
         if (line.isEmpty()) {
             return flush()
         }
 
         if (collectRawLines) {
-            rawLines.add(line)
+            rawLines.add(rawLine)
         }
 
         if (line.startsWith(':')) {
