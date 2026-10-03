@@ -6,6 +6,7 @@ import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.SseMessage
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.SseException
+import java.io.FilterInputStream
 import java.io.InputStream
 import java.util.stream.Collectors.toList
 import org.assertj.core.api.Assertions.assertThat
@@ -13,6 +14,7 @@ import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class SseHandlerTest {
 
@@ -150,6 +152,88 @@ internal class SseHandlerTest {
             assertThat(exception).hasMessage(testCase.expectedException.message)
         }
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["\n", "\r\n", "\r"])
+    fun leadingBom_doesNotDropTheFirstNamedEvent(newline: String) {
+        val wire =
+            "\uFEFFevent: message_start${newline}data: {\"id\":\"msg_1\"}${newline}${newline}" +
+                "event: message_stop${newline}data: {}${newline}${newline}"
+        val decoded =
+            sseHandler(jsonMapper()).handle(fragmentedResponse(wire)).use {
+                it.stream().collect(toList())
+            }
+        assertThat(decoded.map { it.event }).containsExactly("message_start", "message_stop")
+        assertThat(decoded[0].data).isEqualTo("{\"id\":\"msg_1\"}")
+    }
+
+    @Test
+    fun leadingBom_onDataLineAndInsidePayload_areDistinguished() {
+        val wire = "\uFEFFdata: {\"text\":\"x\uFEFFy\"}\nevent: completion\n\n"
+        val decoded =
+            sseHandler(jsonMapper()).handle(fragmentedResponse(wire)).use {
+                it.stream().collect(toList())
+            }
+        assertThat(decoded).hasSize(1)
+        assertThat(decoded[0].data).isEqualTo("{\"text\":\"x\uFEFFy\"}")
+    }
+
+    @Test
+    fun leadingBom_doesNotHideServerError() {
+        val wire =
+            "\uFEFFevent: error\ndata: {\"error\":{\"type\":\"overloaded_error\",\"message\":\"retry\"}}\n\n"
+        val error = catchThrowable {
+            sseHandler(jsonMapper()).handle(fragmentedResponse(wire)).use {
+                it.stream().collect(toList())
+            }
+        }
+        assertThat(error).isInstanceOf(SseException::class.java)
+    }
+
+    @Test
+    fun rawParser_recognizesBomButKeepsOriginalWireLines() {
+        val firstLine = "\uFEFFevent: future_event"
+        val wire = "$firstLine\ndata: {\"future\":true}\n\n"
+        val messages =
+            rawSseHandler(jsonMapper()).handle(fragmentedResponse(wire)).use {
+                it.stream().collect(toList())
+            }
+        assertThat(messages).hasSize(1)
+        assertThat(messages[0].event).isEqualTo("future_event")
+        assertThat(messages[0].data).isEqualTo("{\"future\":true}")
+        assertThat(messages[0].rawLines).containsExactly(firstLine, "data: {\"future\":true}")
+    }
+
+    @Test
+    fun bomIsStrippedOnlyAtTheStartOfAStream() {
+        for (prefix in listOf("\n", "\uFEFF", ": comment\n")) {
+            val wire =
+                "${prefix}\uFEFFevent: completion\ndata: {}\n\n" +
+                    "event: message_stop\ndata: {}\n\n"
+            val messages =
+                sseHandler(jsonMapper()).handle(fragmentedResponse(wire)).use {
+                    it.stream().collect(toList())
+                }
+            assertThat(messages.map { it.event }).containsExactly("message_stop")
+        }
+    }
+
+    private fun fragmentedResponse(wire: String): HttpResponse =
+        object : HttpResponse {
+            private val input =
+                object : FilterInputStream(wire.toByteArray(Charsets.UTF_8).inputStream()) {
+                    override fun read(bytes: ByteArray, offset: Int, length: Int): Int =
+                        super.read(bytes, offset, minOf(length, 1))
+                }
+
+            override fun statusCode(): Int = 200
+
+            override fun headers(): Headers = Headers.builder().build()
+
+            override fun body(): InputStream = input
+
+            override fun close() = input.close()
+        }
 
     @Test
     fun cannotReuseStream() {
