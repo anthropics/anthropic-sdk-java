@@ -94,46 +94,64 @@ internal fun <T> CompletableFuture<StreamResponse<T>>.toAsync(streamHandlerExecu
                     else "Cannot subscribe after the response is closed"
                 }
 
-                this@toAsync.whenCompleteAsync(
-                    { streamResponse, futureError ->
-                        if (state.get() == State.CLOSED) {
-                            // Avoid doing any work if `close` was called before the future
-                            // completed.
-                            return@whenCompleteAsync
-                        }
-
-                        if (futureError != null) {
-                            // An error occurred before we started passing chunks to the handler.
-                            handler.onComplete(Optional.of(futureError))
-                            return@whenCompleteAsync
-                        }
-
-                        var streamError: Throwable? = null
-                        try {
-                            streamResponse.stream().forEach(handler::onNext)
-                        } catch (e: Throwable) {
-                            streamError = e
-                        }
-
-                        try {
-                            handler.onComplete(Optional.ofNullable(streamError))
-                        } finally {
-                            try {
-                                // Notify completion via the `onCompleteFuture` as well. This is in
-                                // a separate `try-finally` block so that we still complete the
-                                // future if `handler.onComplete` throws.
-                                if (streamError == null) {
-                                    onCompleteFuture.complete(null)
-                                } else {
-                                    onCompleteFuture.completeExceptionally(streamError)
-                                }
-                            } finally {
-                                close()
+                val completion =
+                    this@toAsync.whenCompleteAsync(
+                        { streamResponse, futureError ->
+                            if (state.get() == State.CLOSED) {
+                                // Avoid doing any work if `close` was called before the future
+                                // completed.
+                                return@whenCompleteAsync
                             }
+
+                            if (futureError != null) {
+                                // An error occurred before we started passing chunks to the
+                                // handler.
+                                handler.onComplete(Optional.of(futureError))
+                                return@whenCompleteAsync
+                            }
+
+                            var streamError: Throwable? = null
+                            try {
+                                streamResponse.stream().forEach(handler::onNext)
+                            } catch (e: Throwable) {
+                                streamError = e
+                            }
+
+                            try {
+                                handler.onComplete(Optional.ofNullable(streamError))
+                            } finally {
+                                try {
+                                    // Notify completion via the `onCompleteFuture` as well. This is
+                                    // in
+                                    // a separate `try-finally` block so that we still complete the
+                                    // future if `handler.onComplete` throws.
+                                    if (streamError == null) {
+                                        onCompleteFuture.complete(null)
+                                    } else {
+                                        onCompleteFuture.completeExceptionally(streamError)
+                                    }
+                                } finally {
+                                    close()
+                                }
+                            }
+                        },
+                        executor,
+                    )
+
+                // Bookkeeping must still run if the callback executor rejects work.
+                // As with AutoPagerAsync, never move user callbacks to another thread.
+                @Suppress("ForbiddenMethodCall")
+                completion.whenComplete { _, error ->
+                    if (state.get() != State.CLOSED && error != null) {
+                        // The response future is already complete here. Preserve its
+                        // original failure even if rejection raced its bookkeeping.
+                        @Suppress("ForbiddenMethodCall")
+                        this@toAsync.whenComplete { _, responseError ->
+                            onCompleteFuture.completeExceptionally(responseError ?: error)
+                            close()
                         }
-                    },
-                    executor,
-                )
+                    }
+                }
             }
 
             override fun onCompleteFuture(): CompletableFuture<Void?> = onCompleteFuture

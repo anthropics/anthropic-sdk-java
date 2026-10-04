@@ -2,7 +2,11 @@ package com.anthropic.core.http
 
 import java.util.*
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CompletionException
 import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.TimeUnit
 import java.util.stream.Stream
 import kotlin.streams.asStream
 import org.assertj.core.api.Assertions.assertThat
@@ -264,5 +268,130 @@ internal class AsyncStreamResponseTest {
         asyncStreamResponse.close()
 
         assertDoesNotThrow { future.completeExceptionally(ERROR) }
+    }
+
+    @Test
+    fun rejectedDefaultExecutor_finishesExceptionallyAndClosesUnreadResponse() {
+        for (alreadyCompleted in listOf(false, true)) {
+            val pool = Executors.newSingleThreadExecutor()
+            pool.shutdown()
+            val response = TrackingResponse()
+            val responseFuture = CompletableFuture<StreamResponse<String>>()
+            if (alreadyCompleted) responseFuture.complete(response)
+            val asyncResponse = responseFuture.toAsync(pool)
+            val callback = mock<AsyncStreamResponse.Handler<String>>()
+            try {
+                assertDoesNotThrow { asyncResponse.subscribe(callback) }
+                responseFuture.complete(response)
+                assertThat(asyncResponse.onCompleteFuture()).isCompletedExceptionally
+                val failure = catchThrowable { asyncResponse.onCompleteFuture().join() }
+                assertThat(failure)
+                    .isInstanceOf(CompletionException::class.java)
+                    .hasCauseInstanceOf(RejectedExecutionException::class.java)
+                assertThat(response.closes).isEqualTo(1)
+                assertThat(response.streamCalls).isZero()
+                verifyNoInteractions(callback)
+                asyncResponse.close()
+                assertThat(response.closes).isEqualTo(1)
+            } finally {
+                asyncResponse.close()
+                pool.shutdownNow()
+            }
+        }
+    }
+
+    @Test
+    fun rejectedSubscriptionExecutor_overridesAcceptingDefaultAndReleasesResponse() {
+        val rejected = RejectedExecutionException("handler executor shut down")
+        val response = TrackingResponse()
+        val responseFuture = CompletableFuture<StreamResponse<String>>()
+        val asyncResponse = responseFuture.toAsync(executor)
+        val callback = mock<AsyncStreamResponse.Handler<String>>()
+        try {
+            asyncResponse.subscribe(callback, Executor { throw rejected })
+            responseFuture.complete(response)
+            assertThat(asyncResponse.onCompleteFuture()).isCompletedExceptionally
+            val failure = catchThrowable { asyncResponse.onCompleteFuture().join() }
+            assertThat(failure).hasCause(rejected)
+            assertThat(response.closes).isEqualTo(1)
+            assertThat(response.streamCalls).isZero()
+            verifyNoInteractions(callback)
+            verify(executor, never()).execute(any())
+        } finally {
+            asyncResponse.close()
+        }
+    }
+
+    @Test
+    fun rejectedExecutor_doesNotReplaceAnEarlierTransportFailureOrExplicitClose() {
+        val rejected = Executor { throw RejectedExecutionException("not accepting work") }
+        val failedFuture = CompletableFuture<StreamResponse<String>>()
+        val failed = failedFuture.toAsync(rejected)
+        failed.subscribe(handler)
+        failedFuture.completeExceptionally(ERROR)
+        assertThat(catchThrowable { failed.onCompleteFuture().join() }).hasCause(ERROR)
+        failed.close()
+
+        val response = TrackingResponse()
+        val pending = CompletableFuture<StreamResponse<String>>()
+        val closed = pending.toAsync(rejected)
+        closed.subscribe(handler)
+        closed.close()
+        pending.complete(response)
+        assertThat(closed.onCompleteFuture()).isCompleted
+        assertThat(closed.onCompleteFuture()).isNotCompletedExceptionally
+        assertThat(response.closes).isEqualTo(1)
+        assertThat(response.streamCalls).isZero()
+        verifyNoInteractions(handler)
+    }
+
+    @Test
+    fun acceptedExecutor_stillDeliversAndClosesOnItsOwnThread() {
+        val pool =
+            Executors.newSingleThreadExecutor { runnable -> Thread(runnable, "stream-worker") }
+        val response = TrackingResponse()
+        val pending = CompletableFuture<StreamResponse<String>>()
+        val asyncResponse = pending.toAsync(pool)
+        val threads = mutableListOf<String>()
+        val values = mutableListOf<String>()
+        try {
+            asyncResponse.subscribe(
+                object : AsyncStreamResponse.Handler<String> {
+                    override fun onNext(value: String) {
+                        threads.add(Thread.currentThread().name)
+                        values.add(value)
+                    }
+
+                    override fun onComplete(error: Optional<Throwable>) {
+                        assertThat(error).isEmpty
+                        threads.add(Thread.currentThread().name)
+                    }
+                }
+            )
+            pending.complete(response)
+            asyncResponse.onCompleteFuture().get(5, TimeUnit.SECONDS)
+            pool.shutdown()
+            assertThat(pool.awaitTermination(5, TimeUnit.SECONDS)).isTrue()
+            assertThat(values).containsExactly("one", "two")
+            assertThat(threads).containsExactly("stream-worker", "stream-worker", "stream-worker")
+            assertThat(response.closes).isEqualTo(1)
+        } finally {
+            asyncResponse.close()
+            pool.shutdownNow()
+        }
+    }
+
+    private class TrackingResponse : StreamResponse<String> {
+        var closes = 0
+        var streamCalls = 0
+
+        override fun stream(): Stream<String> {
+            streamCalls++
+            return Stream.of("one", "two")
+        }
+
+        override fun close() {
+            closes++
+        }
     }
 }
