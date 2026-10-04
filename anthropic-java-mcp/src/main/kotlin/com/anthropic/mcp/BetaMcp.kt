@@ -37,6 +37,7 @@ import com.anthropic.models.beta.messages.BetaWebFetchToolResultBlockParam
 import com.anthropic.models.beta.messages.BetaWebSearchToolResultBlockParam
 import com.anthropic.models.beta.messages.MessageCreateParams
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.modelcontextprotocol.client.McpSyncClient
 import io.modelcontextprotocol.spec.McpSchema
@@ -50,7 +51,8 @@ object BetaMcp {
     private val SUPPORTED_IMAGE_MIME_TYPES =
         setOf("image/jpeg", "image/png", "image/gif", "image/webp")
 
-    private val OBJECT_MAPPER = ObjectMapper()
+    private val OBJECT_MAPPER =
+        ObjectMapper().enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
 
     private val MAP_TYPE_REF = object : TypeReference<Map<String, Any?>>() {}
 
