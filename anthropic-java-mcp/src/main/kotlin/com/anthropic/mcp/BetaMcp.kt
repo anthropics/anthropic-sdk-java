@@ -394,6 +394,9 @@ object BetaMcp {
     private fun betaInputSchema(schema: McpSchema.JsonSchema): BetaTool.InputSchema {
         val builder = BetaTool.InputSchema.builder()
         schema.required()?.let { builder.required(it) }
+        schema.additionalProperties()?.let {
+            builder.putAdditionalProperty("additionalProperties", JsonValue.from(it))
+        }
         schema.properties()?.let { builder.putAdditionalProperty("properties", JsonValue.from(it)) }
         schema.defs()?.let { builder.putAdditionalProperty("\$defs", JsonValue.from(it)) }
         schema.definitions()?.let {
