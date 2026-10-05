@@ -268,24 +268,27 @@ object BetaMcp {
     private fun convertCallToolResult(
         result: McpSchema.CallToolResult
     ): BetaToolResultBlockParam.Content {
+        val structuredText =
+            if (result.content().isEmpty() && result.structuredContent() != null) {
+                try {
+                    OBJECT_MAPPER.writeValueAsString(result.structuredContent())
+                } catch (e: Exception) {
+                    throw AnthropicInvalidDataException("Failed to serialize structuredContent", e)
+                }
+            } else null
         if (result.isError() == true) {
             val errorText =
-                result.content().joinToString("\n") {
-                    when (it) {
-                        is McpSchema.TextContent -> it.text()
-                        else -> it.toString()
+                structuredText
+                    ?: result.content().joinToString("\n") {
+                        when (it) {
+                            is McpSchema.TextContent -> it.text()
+                            else -> it.toString()
+                        }
                     }
-                }
             throw AnthropicException(errorText)
         }
-        if (result.content().isEmpty() && result.structuredContent() != null) {
-            return try {
-                BetaToolResultBlockParam.Content.ofString(
-                    OBJECT_MAPPER.writeValueAsString(result.structuredContent())
-                )
-            } catch (e: Exception) {
-                throw AnthropicInvalidDataException("Failed to serialize structuredContent", e)
-            }
+        if (structuredText != null) {
+            return BetaToolResultBlockParam.Content.ofString(structuredText)
         }
         return BetaToolResultBlockParam.Content.ofBlocks(
             result.content().map { contentParamToBlock(mcpContent(it)) }
