@@ -3,6 +3,7 @@ package com.anthropic.core.auth
 import java.time.Duration
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -191,11 +192,10 @@ internal class CachingAccessTokenProvider(
         // arriving during `prior` will join us.
         asyncInFlight = future
         asyncInFlightForce = true
-        prior.whenComplete { _, _ ->
-            provider.getAsync(baseUrl, true).whenComplete { token, err ->
-                completeAsync(future, baseUrl, token, err, advisory = false)
-            }
-        }
+        prior.whenCompleteAsync(
+            { _, _ -> launchAsyncRefresh(baseUrl, future, force = true, advisory = false) },
+            ForkJoinPool.commonPool(),
+        )
         return future
     }
 
@@ -205,9 +205,16 @@ internal class CachingAccessTokenProvider(
         force: Boolean,
         advisory: Boolean,
     ) {
-        provider.getAsync(baseUrl, force).whenComplete { token, err ->
-            completeAsync(future, baseUrl, token, err, advisory)
-        }
+        val refresh =
+            try {
+                provider.getAsync(baseUrl, force)
+            } catch (e: Exception) {
+                // A provider can fail before returning its future. Release the same slot
+                // and settle the same waiters as an exceptionally completed future.
+                completeAsync(future, baseUrl, null, e, advisory)
+                return
+            }
+        refresh.whenComplete { token, err -> completeAsync(future, baseUrl, token, err, advisory) }
     }
 
     private fun completeAsync(
