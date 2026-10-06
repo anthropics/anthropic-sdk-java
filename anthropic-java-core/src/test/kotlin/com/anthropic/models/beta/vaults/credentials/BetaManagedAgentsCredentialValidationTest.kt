@@ -12,7 +12,7 @@ internal class BetaManagedAgentsCredentialValidationTest {
     fun create() {
         val betaManagedAgentsCredentialValidation =
             BetaManagedAgentsCredentialValidation.builder()
-                .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .hasRefreshToken(true)
                 .mcpProbe(
                     BetaManagedAgentsMcpProbe.builder()
@@ -47,7 +47,7 @@ internal class BetaManagedAgentsCredentialValidationTest {
                 .build()
 
         assertThat(betaManagedAgentsCredentialValidation.credentialId())
-            .isEqualTo("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+            .isEqualTo("vcrd_011CZkZEMt8gZan2iYPQfSkw")
         assertThat(betaManagedAgentsCredentialValidation.hasRefreshToken()).isEqualTo(true)
         assertThat(betaManagedAgentsCredentialValidation.mcpProbe())
             .contains(
@@ -92,7 +92,7 @@ internal class BetaManagedAgentsCredentialValidationTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsCredentialValidation =
             BetaManagedAgentsCredentialValidation.builder()
-                .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .hasRefreshToken(true)
                 .mcpProbe(
                     BetaManagedAgentsMcpProbe.builder()

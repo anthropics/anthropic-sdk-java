@@ -40,6 +40,13 @@ internal class BetaModelCapabilitiesTest {
                 )
                 .imageInput(BetaCapabilitySupport.of(true))
                 .pdfInput(BetaCapabilitySupport.of(true))
+                .serverTools(
+                    BetaServerToolsCapability.builder()
+                        .codeExecution(BetaCapabilitySupport.of(true))
+                        .supported(true)
+                        .webSearch(BetaCapabilitySupport.of(true))
+                        .build()
+                )
                 .structuredOutputs(BetaCapabilitySupport.of(true))
                 .thinking(
                     BetaThinkingCapability.builder()
@@ -47,6 +54,7 @@ internal class BetaModelCapabilitiesTest {
                         .types(
                             BetaThinkingTypes.builder()
                                 .adaptive(BetaCapabilitySupport.of(true))
+                                .disabled(BetaCapabilitySupport.of(true))
                                 .enabled(BetaCapabilitySupport.of(true))
                                 .build()
                         )
@@ -86,6 +94,14 @@ internal class BetaModelCapabilitiesTest {
             )
         assertThat(betaModelCapabilities.imageInput()).isEqualTo(BetaCapabilitySupport.of(true))
         assertThat(betaModelCapabilities.pdfInput()).isEqualTo(BetaCapabilitySupport.of(true))
+        assertThat(betaModelCapabilities.serverTools())
+            .isEqualTo(
+                BetaServerToolsCapability.builder()
+                    .codeExecution(BetaCapabilitySupport.of(true))
+                    .supported(true)
+                    .webSearch(BetaCapabilitySupport.of(true))
+                    .build()
+            )
         assertThat(betaModelCapabilities.structuredOutputs())
             .isEqualTo(BetaCapabilitySupport.of(true))
         assertThat(betaModelCapabilities.thinking())
@@ -95,6 +111,7 @@ internal class BetaModelCapabilitiesTest {
                     .types(
                         BetaThinkingTypes.builder()
                             .adaptive(BetaCapabilitySupport.of(true))
+                            .disabled(BetaCapabilitySupport.of(true))
                             .enabled(BetaCapabilitySupport.of(true))
                             .build()
                     )
@@ -136,6 +153,13 @@ internal class BetaModelCapabilitiesTest {
                 )
                 .imageInput(BetaCapabilitySupport.of(true))
                 .pdfInput(BetaCapabilitySupport.of(true))
+                .serverTools(
+                    BetaServerToolsCapability.builder()
+                        .codeExecution(BetaCapabilitySupport.of(true))
+                        .supported(true)
+                        .webSearch(BetaCapabilitySupport.of(true))
+                        .build()
+                )
                 .structuredOutputs(BetaCapabilitySupport.of(true))
                 .thinking(
                     BetaThinkingCapability.builder()
@@ -143,6 +167,7 @@ internal class BetaModelCapabilitiesTest {
                         .types(
                             BetaThinkingTypes.builder()
                                 .adaptive(BetaCapabilitySupport.of(true))
+                                .disabled(BetaCapabilitySupport.of(true))
                                 .enabled(BetaCapabilitySupport.of(true))
                                 .build()
                         )

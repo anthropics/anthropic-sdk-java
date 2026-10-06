@@ -12,9 +12,9 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationStartEventTest {
     fun create() {
         val betaManagedAgentsSpanOutcomeEvaluationStartEvent =
             BetaManagedAgentsSpanOutcomeEvaluationStartEvent.builder()
-                .id("sevt_011CZkZTUy4mGhu8peVXnlzr")
+                .id("sevt_011CZkZTUy4mGhu8peVXnmzr")
                 .iteration(0)
-                .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                 .type(
                     BetaManagedAgentsSpanOutcomeEvaluationStartEvent.Type
@@ -23,10 +23,10 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationStartEventTest {
                 .build()
 
         assertThat(betaManagedAgentsSpanOutcomeEvaluationStartEvent.id())
-            .isEqualTo("sevt_011CZkZTUy4mGhu8peVXnlzr")
+            .isEqualTo("sevt_011CZkZTUy4mGhu8peVXnmzr")
         assertThat(betaManagedAgentsSpanOutcomeEvaluationStartEvent.iteration()).isEqualTo(0)
         assertThat(betaManagedAgentsSpanOutcomeEvaluationStartEvent.outcomeId())
-            .isEqualTo("outc_011CZkZRSw2kEfs6ncTVljxP")
+            .isEqualTo("outc_011CZkZRSw2kEfs6ncTVmjxP")
         assertThat(betaManagedAgentsSpanOutcomeEvaluationStartEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
         assertThat(betaManagedAgentsSpanOutcomeEvaluationStartEvent.type())
@@ -40,9 +40,9 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationStartEventTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSpanOutcomeEvaluationStartEvent =
             BetaManagedAgentsSpanOutcomeEvaluationStartEvent.builder()
-                .id("sevt_011CZkZTUy4mGhu8peVXnlzr")
+                .id("sevt_011CZkZTUy4mGhu8peVXnmzr")
                 .iteration(0)
-                .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                 .type(
                     BetaManagedAgentsSpanOutcomeEvaluationStartEvent.Type

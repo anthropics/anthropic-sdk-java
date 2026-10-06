@@ -24,7 +24,7 @@ internal class ThreadServiceTest {
             threadService.retrieve(
                 ThreadRetrieveParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -60,7 +60,7 @@ internal class ThreadServiceTest {
             threadService.archive(
                 ThreadArchiveParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()

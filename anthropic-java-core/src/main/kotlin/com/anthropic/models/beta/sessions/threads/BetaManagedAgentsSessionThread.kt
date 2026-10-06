@@ -31,7 +31,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /**
  * An execution thread within a `session`. Each session has one primary thread plus zero or more
- * child threads spawned by the coordinator.
+ * child threads.
  */
 class BetaManagedAgentsSessionThread
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)

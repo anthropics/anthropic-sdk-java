@@ -339,6 +339,13 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
                     )
                 )
                 .type(BetaManagedAgentsWebFetchToolConfigParams.Type.WEB_FETCH)
+                .urlSources(
+                    BetaManagedAgentsWebFetchUrlSourcesParams.builder()
+                        .clientToolResults(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                        .serverToolResults(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                        .userInput(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                        .build()
+                )
                 .build()
 
         val betaManagedAgentsAgentToolConfigParams =
@@ -370,6 +377,13 @@ internal class BetaManagedAgentsAgentToolConfigParamsTest {
                         )
                     )
                     .type(BetaManagedAgentsWebFetchToolConfigParams.Type.WEB_FETCH)
+                    .urlSources(
+                        BetaManagedAgentsWebFetchUrlSourcesParams.builder()
+                            .clientToolResults(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                            .serverToolResults(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                            .userInput(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                            .build()
+                    )
                     .build()
             )
 

@@ -240,6 +240,7 @@ internal constructor(
             isContainerUpload() -> visitor.visitContainerUpload(asContainerUpload())
             isCompaction() -> visitor.visitCompaction(asCompaction())
             isFallback() -> visitor.visitFallback(asFallback())
+            isMcpToolListing() -> visitor.visitMcpToolListing(asMcpToolListing())
             else -> visitor.unknown(_json().getOrNull())
         }
 
@@ -332,6 +333,10 @@ internal constructor(
                 override fun visitFallback(fallback: BetaFallbackBlock) {
                     fallback.validate()
                 }
+
+                override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlock) {
+                    mcpToolListing.validate()
+                }
             }
         )
         validated = true
@@ -422,6 +427,9 @@ internal constructor(
 
         /** @see BetaContentBlock.Visitor.visitFallback */
         fun visitFallback(fallback: BetaFallbackBlock): T
+
+        /** @see BetaContentBlock.Visitor.visitMcpToolListing */
+        fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlock): T
 
         /** @see BetaContentBlock.Visitor.unknown */
         fun unknown(json: JsonValue?): T {

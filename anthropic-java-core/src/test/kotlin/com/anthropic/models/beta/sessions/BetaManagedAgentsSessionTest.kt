@@ -147,7 +147,7 @@ internal class BetaManagedAgentsSessionTest {
                         )
                         .addSkill(
                             BetaManagedAgentsCustomSkill.builder()
-                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                                 .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                 .version("2")
                                 .build()
@@ -208,7 +208,7 @@ internal class BetaManagedAgentsSessionTest {
                         .description("Produce a 2-page summary as summary.md")
                         .explanation("All five sections present with inline citations.")
                         .iteration(0)
-                        .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                        .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                         .result("satisfied")
                         .type(BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION)
                         .build()
@@ -225,7 +225,7 @@ internal class BetaManagedAgentsSessionTest {
                 )
                 .addResource(
                     BetaManagedAgentsGitHubRepositoryResource.builder()
-                        .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                        .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .mountPath("/workspace/example-repo")
                         .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
@@ -382,7 +382,7 @@ internal class BetaManagedAgentsSessionTest {
                     )
                     .addSkill(
                         BetaManagedAgentsCustomSkill.builder()
-                            .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                            .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                             .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                             .version("2")
                             .build()
@@ -445,7 +445,7 @@ internal class BetaManagedAgentsSessionTest {
                     .description("Produce a 2-page summary as summary.md")
                     .explanation("All five sections present with inline citations.")
                     .iteration(0)
-                    .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                    .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                     .result("satisfied")
                     .type(BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION)
                     .build()
@@ -464,7 +464,7 @@ internal class BetaManagedAgentsSessionTest {
                 ),
                 BetaManagedAgentsSessionResource.ofGitHubRepository(
                     BetaManagedAgentsGitHubRepositoryResource.builder()
-                        .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                        .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .mountPath("/workspace/example-repo")
                         .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
@@ -642,7 +642,7 @@ internal class BetaManagedAgentsSessionTest {
                         )
                         .addSkill(
                             BetaManagedAgentsCustomSkill.builder()
-                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                                 .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                 .version("2")
                                 .build()
@@ -703,7 +703,7 @@ internal class BetaManagedAgentsSessionTest {
                         .description("Produce a 2-page summary as summary.md")
                         .explanation("All five sections present with inline citations.")
                         .iteration(0)
-                        .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                        .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                         .result("satisfied")
                         .type(BetaManagedAgentsOutcomeEvaluationResource.Type.OUTCOME_EVALUATION)
                         .build()
@@ -720,7 +720,7 @@ internal class BetaManagedAgentsSessionTest {
                 )
                 .addResource(
                     BetaManagedAgentsGitHubRepositoryResource.builder()
-                        .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                        .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .mountPath("/workspace/example-repo")
                         .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)

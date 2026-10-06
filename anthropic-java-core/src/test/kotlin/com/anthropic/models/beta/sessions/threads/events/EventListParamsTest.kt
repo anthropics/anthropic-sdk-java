@@ -12,7 +12,7 @@ internal class EventListParamsTest {
     fun create() {
         EventListParams.builder()
             .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-            .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+            .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
             .limit(0)
             .page("page")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
@@ -25,11 +25,11 @@ internal class EventListParamsTest {
         val params =
             EventListParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("sesn_011CZkZAtmR3yMPDzynEDxu7")
-        assertThat(params._pathParam(1)).isEqualTo("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+        assertThat(params._pathParam(1)).isEqualTo("sthr_011CZkZVWa6oJjw1rgXZpnBt")
         // out-of-bound path param
         assertThat(params._pathParam(2)).isEqualTo("")
     }
@@ -39,7 +39,7 @@ internal class EventListParamsTest {
         val params =
             EventListParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .limit(0)
                 .page("page")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
@@ -66,7 +66,7 @@ internal class EventListParamsTest {
         val params =
             EventListParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .build()
 
         val headers = params._headers()
@@ -79,7 +79,7 @@ internal class EventListParamsTest {
         val params =
             EventListParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .limit(0)
                 .page("page")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
@@ -97,7 +97,7 @@ internal class EventListParamsTest {
         val params =
             EventListParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .build()
 
         val queryParams = params._queryParams()

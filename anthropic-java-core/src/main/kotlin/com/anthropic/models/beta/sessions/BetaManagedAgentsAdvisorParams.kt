@@ -34,8 +34,7 @@ private constructor(
     ) : this(model, type, mutableMapOf())
 
     /**
-     * A Claude model id. The model must be permitted as an advisor for this agent's model — see the
-     * sessions/threads/advisor spec.
+     * A Claude model id. The model must be permitted as an advisor for this agent's model.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -104,10 +103,7 @@ private constructor(
                 betaManagedAgentsAdvisorParams.additionalProperties.toMutableMap()
         }
 
-        /**
-         * A Claude model id. The model must be permitted as an advisor for this agent's model — see
-         * the sessions/threads/advisor spec.
-         */
+        /** A Claude model id. The model must be permitted as an advisor for this agent's model. */
         fun model(model: String) = model(JsonField.of(model))
 
         /**

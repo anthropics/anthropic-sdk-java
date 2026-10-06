@@ -60,8 +60,9 @@ private constructor(
      * RFC 3339 timestamp of the export this response was served from. Null when no export yet
      * covers any part of the requested range, in which case `data` is empty. Data beyond this
      * watermark is incomplete; for stable results, set `ending_at` to this value or earlier. Data
-     * is typically refreshed every 4 hours but not final until about 30 days after the usage date
-     * (late-arriving events, reconciliation adjustments).
+     * is typically refreshed every 4 hours. Values can be revised as late events arrive and
+     * reconciliation runs, until about 7 days after the end of the calendar month the usage falls
+     * in; for example, values for October 1 can change until about November 7.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -227,8 +228,9 @@ private constructor(
          * RFC 3339 timestamp of the export this response was served from. Null when no export yet
          * covers any part of the requested range, in which case `data` is empty. Data beyond this
          * watermark is incomplete; for stable results, set `ending_at` to this value or earlier.
-         * Data is typically refreshed every 4 hours but not final until about 30 days after the
-         * usage date (late-arriving events, reconciliation adjustments).
+         * Data is typically refreshed every 4 hours. Values can be revised as late events arrive
+         * and reconciliation runs, until about 7 days after the end of the calendar month the usage
+         * falls in; for example, values for October 1 can change until about November 7.
          */
         fun dataRefreshedAt(dataRefreshedAt: OffsetDateTime?) =
             dataRefreshedAt(JsonField.ofNullable(dataRefreshedAt))

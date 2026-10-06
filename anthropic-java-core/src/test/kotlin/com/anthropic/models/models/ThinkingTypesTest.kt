@@ -12,10 +12,12 @@ internal class ThinkingTypesTest {
         val thinkingTypes =
             ThinkingTypes.builder()
                 .adaptive(CapabilitySupport.of(true))
+                .disabled(CapabilitySupport.of(true))
                 .enabled(CapabilitySupport.of(true))
                 .build()
 
         assertThat(thinkingTypes.adaptive()).isEqualTo(CapabilitySupport.of(true))
+        assertThat(thinkingTypes.disabled()).isEqualTo(CapabilitySupport.of(true))
         assertThat(thinkingTypes.enabled()).isEqualTo(CapabilitySupport.of(true))
     }
 
@@ -25,6 +27,7 @@ internal class ThinkingTypesTest {
         val thinkingTypes =
             ThinkingTypes.builder()
                 .adaptive(CapabilitySupport.of(true))
+                .disabled(CapabilitySupport.of(true))
                 .enabled(CapabilitySupport.of(true))
                 .build()
 

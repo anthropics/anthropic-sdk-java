@@ -33,6 +33,9 @@ import kotlin.jvm.optionals.getOrNull
  * [migration guide](https://platform.claude.com/docs/en/build-with-claude/working-with-messages)
  * for guidance in migrating from Text Completions to Messages.
  */
+@Deprecated(
+    "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+)
 class CompletionCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,

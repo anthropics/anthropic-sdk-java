@@ -15,7 +15,7 @@ internal class BetaManagedAgentsSendSessionEventsTest {
             BetaManagedAgentsSendSessionEvents.builder()
                 .addData(
                     BetaManagedAgentsUserMessageEvent.builder()
-                        .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                        .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                         .addTextContent("Where is my order #1234?")
                         .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -27,7 +27,7 @@ internal class BetaManagedAgentsSendSessionEventsTest {
             .containsExactly(
                 BetaManagedAgentsSendSessionEvents.Data.ofUserMessage(
                     BetaManagedAgentsUserMessageEvent.builder()
-                        .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                        .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                         .addTextContent("Where is my order #1234?")
                         .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -47,7 +47,7 @@ internal class BetaManagedAgentsSendSessionEventsTest {
                 .addData(
                     BetaManagedAgentsSendSessionEvents.Data.ofUserMessage(
                         BetaManagedAgentsUserMessageEvent.builder()
-                            .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                            .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                             .addTextContent("Where is my order #1234?")
                             .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                             .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -60,7 +60,7 @@ internal class BetaManagedAgentsSendSessionEventsTest {
             .containsExactly(
                 BetaManagedAgentsSendSessionEvents.Data.ofUserMessage(
                     BetaManagedAgentsUserMessageEvent.builder()
-                        .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                        .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                         .addTextContent("Where is my order #1234?")
                         .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -76,7 +76,7 @@ internal class BetaManagedAgentsSendSessionEventsTest {
             BetaManagedAgentsSendSessionEvents.builder()
                 .addData(
                     BetaManagedAgentsUserMessageEvent.builder()
-                        .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                        .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                         .addTextContent("Where is my order #1234?")
                         .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))

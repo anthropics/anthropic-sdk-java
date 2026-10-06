@@ -13,7 +13,7 @@ internal class BetaManagedAgentsGitHubRepositoryResourceTest {
     fun create() {
         val betaManagedAgentsGitHubRepositoryResource =
             BetaManagedAgentsGitHubRepositoryResource.builder()
-                .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .mountPath("/workspace/example-repo")
                 .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
@@ -23,7 +23,7 @@ internal class BetaManagedAgentsGitHubRepositoryResourceTest {
                 .build()
 
         assertThat(betaManagedAgentsGitHubRepositoryResource.id())
-            .isEqualTo("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+            .isEqualTo("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
         assertThat(betaManagedAgentsGitHubRepositoryResource.createdAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaManagedAgentsGitHubRepositoryResource.mountPath())
@@ -50,7 +50,7 @@ internal class BetaManagedAgentsGitHubRepositoryResourceTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsGitHubRepositoryResource =
             BetaManagedAgentsGitHubRepositoryResource.builder()
-                .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .mountPath("/workspace/example-repo")
                 .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)

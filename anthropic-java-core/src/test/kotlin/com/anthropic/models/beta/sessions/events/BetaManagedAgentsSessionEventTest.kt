@@ -40,7 +40,7 @@ internal class BetaManagedAgentsSessionEventTest {
     fun ofUserMessage() {
         val userMessage =
             BetaManagedAgentsUserMessageEvent.builder()
-                .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                 .addTextContent("Where is my order #1234?")
                 .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -91,7 +91,7 @@ internal class BetaManagedAgentsSessionEventTest {
         val betaManagedAgentsSessionEvent =
             BetaManagedAgentsSessionEvent.ofUserMessage(
                 BetaManagedAgentsUserMessageEvent.builder()
-                    .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                    .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                     .addTextContent("Where is my order #1234?")
                     .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -430,7 +430,7 @@ internal class BetaManagedAgentsSessionEventTest {
     fun ofAgentMessage() {
         val agentMessage =
             BetaManagedAgentsAgentMessageEvent.builder()
-                .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                 .addTextContent("Let me look up order #1234 for you.")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
@@ -482,7 +482,7 @@ internal class BetaManagedAgentsSessionEventTest {
         val betaManagedAgentsSessionEvent =
             BetaManagedAgentsSessionEvent.ofAgentMessage(
                 BetaManagedAgentsAgentMessageEvent.builder()
-                    .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                    .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                     .addTextContent("Let me look up order #1234 for you.")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
@@ -1566,7 +1566,7 @@ internal class BetaManagedAgentsSessionEventTest {
                 .id("sevt_011CZkZWXb7pJkx1shYaqoCu")
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .type(BetaManagedAgentsSessionThreadCreatedEvent.Type.SESSION_THREAD_CREATED)
                 .build()
 
@@ -1620,7 +1620,7 @@ internal class BetaManagedAgentsSessionEventTest {
                     .id("sevt_011CZkZWXb7pJkx1shYaqoCu")
                     .agentName("Researcher")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                    .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .type(BetaManagedAgentsSessionThreadCreatedEvent.Type.SESSION_THREAD_CREATED)
                     .build()
             )
@@ -1639,9 +1639,9 @@ internal class BetaManagedAgentsSessionEventTest {
     fun ofSpanOutcomeEvaluationStart() {
         val spanOutcomeEvaluationStart =
             BetaManagedAgentsSpanOutcomeEvaluationStartEvent.builder()
-                .id("sevt_011CZkZTUy4mGhu8peVXnlzr")
+                .id("sevt_011CZkZTUy4mGhu8peVXnmzr")
                 .iteration(0)
-                .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                 .type(
                     BetaManagedAgentsSpanOutcomeEvaluationStartEvent.Type
@@ -1696,9 +1696,9 @@ internal class BetaManagedAgentsSessionEventTest {
         val betaManagedAgentsSessionEvent =
             BetaManagedAgentsSessionEvent.ofSpanOutcomeEvaluationStart(
                 BetaManagedAgentsSpanOutcomeEvaluationStartEvent.builder()
-                    .id("sevt_011CZkZTUy4mGhu8peVXnlzr")
+                    .id("sevt_011CZkZTUy4mGhu8peVXnmzr")
                     .iteration(0)
-                    .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                    .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                     .type(
                         BetaManagedAgentsSpanOutcomeEvaluationStartEvent.Type
@@ -1724,8 +1724,8 @@ internal class BetaManagedAgentsSessionEventTest {
                 .id("sevt_011CZkZUVz5nHiv9qfWYomas")
                 .explanation("All five sections present with inline citations.")
                 .iteration(0)
-                .outcomeEvaluationStartId("sevt_011CZkZTUy4mGhu8peVXnlzr")
-                .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                .outcomeEvaluationStartId("sevt_011CZkZTUy4mGhu8peVXnmzr")
+                .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:31Z"))
                 .result("satisfied")
                 .type(
@@ -1792,8 +1792,8 @@ internal class BetaManagedAgentsSessionEventTest {
                     .id("sevt_011CZkZUVz5nHiv9qfWYomas")
                     .explanation("All five sections present with inline citations.")
                     .iteration(0)
-                    .outcomeEvaluationStartId("sevt_011CZkZTUy4mGhu8peVXnlzr")
-                    .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                    .outcomeEvaluationStartId("sevt_011CZkZTUy4mGhu8peVXnmzr")
+                    .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:02:31Z"))
                     .result("satisfied")
                     .type(
@@ -1992,9 +1992,9 @@ internal class BetaManagedAgentsSessionEventTest {
     fun ofSpanOutcomeEvaluationOngoing() {
         val spanOutcomeEvaluationOngoing =
             BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent.builder()
-                .id("sevt_011CZkZbCG2uOpc6xmDfvTzh")
+                .id("sevt_011CZkZbCG2uPpc6xmDfvTzh")
                 .iteration(0)
-                .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                 .type(
                     BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent.Type
@@ -2051,9 +2051,9 @@ internal class BetaManagedAgentsSessionEventTest {
         val betaManagedAgentsSessionEvent =
             BetaManagedAgentsSessionEvent.ofSpanOutcomeEvaluationOngoing(
                 BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent.builder()
-                    .id("sevt_011CZkZbCG2uOpc6xmDfvTzh")
+                    .id("sevt_011CZkZbCG2uPpc6xmDfvTzh")
                     .iteration(0)
-                    .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                    .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                     .type(
                         BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent.Type
@@ -2076,10 +2076,10 @@ internal class BetaManagedAgentsSessionEventTest {
     fun ofUserDefineOutcome() {
         val userDefineOutcome =
             BetaManagedAgentsUserDefineOutcomeEvent.builder()
-                .id("sevt_011CZkZSTx3lFgt7odUWmkyq")
+                .id("sevt_011CZkZSTx3mFgt7odUWmkyq")
                 .description("Produce a 2-page summary as summary.md")
                 .maxIterations(3)
-                .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                 .textRubric("Must cover all five sections; cite sources inline.")
                 .type(BetaManagedAgentsUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
@@ -2131,10 +2131,10 @@ internal class BetaManagedAgentsSessionEventTest {
         val betaManagedAgentsSessionEvent =
             BetaManagedAgentsSessionEvent.ofUserDefineOutcome(
                 BetaManagedAgentsUserDefineOutcomeEvent.builder()
-                    .id("sevt_011CZkZSTx3lFgt7odUWmkyq")
+                    .id("sevt_011CZkZSTx3mFgt7odUWmkyq")
                     .description("Produce a 2-page summary as summary.md")
                     .maxIterations(3)
-                    .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                    .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                     .textRubric("Must cover all five sections; cite sources inline.")
                     .type(BetaManagedAgentsUserDefineOutcomeEvent.Type.USER_DEFINE_OUTCOME)
@@ -2308,10 +2308,10 @@ internal class BetaManagedAgentsSessionEventTest {
     fun ofSessionThreadStatusIdle() {
         val sessionThreadStatusIdle =
             BetaManagedAgentsSessionThreadStatusIdleEvent.builder()
-                .id("sevt_011CZkZXYc8qKly2tiZbrpDv")
+                .id("sevt_011CZkZXYc8qKmy2tiZbrpDv")
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .stopDetails(
                     BetaManagedAgentsSessionRefusalStopDetails.builder()
                         .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
@@ -2373,10 +2373,10 @@ internal class BetaManagedAgentsSessionEventTest {
         val betaManagedAgentsSessionEvent =
             BetaManagedAgentsSessionEvent.ofSessionThreadStatusIdle(
                 BetaManagedAgentsSessionThreadStatusIdleEvent.builder()
-                    .id("sevt_011CZkZXYc8qKly2tiZbrpDv")
+                    .id("sevt_011CZkZXYc8qKmy2tiZbrpDv")
                     .agentName("Researcher")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                    .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .stopDetails(
                         BetaManagedAgentsSessionRefusalStopDetails.builder()
                             .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
@@ -2776,7 +2776,7 @@ internal class BetaManagedAgentsSessionEventTest {
                         )
                         .addSkill(
                             BetaManagedAgentsCustomSkill.builder()
-                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                                 .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                 .version("2")
                                 .build()
@@ -3007,7 +3007,7 @@ internal class BetaManagedAgentsSessionEventTest {
                             )
                             .addSkill(
                                 BetaManagedAgentsCustomSkill.builder()
-                                    .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                                    .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                                     .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                     .version("2")
                                     .build()
@@ -3304,7 +3304,7 @@ internal class BetaManagedAgentsSessionEventTest {
                     JsonValue.from(
                         mapOf(
                             "type" to "unknown_variant",
-                            "id" to "sevt_011CZkZGOp0iBcp4kaQSihUmy",
+                            "id" to "sevt_011CZkZGPp1iBcp4kaQSihUm",
                             "processed_at" to "2026-03-15T10:00:00Z",
                             "session_thread_id" to "session_thread_id",
                             "tool_use_id" to "tool_use_id",
@@ -3320,7 +3320,7 @@ internal class BetaManagedAgentsSessionEventTest {
                                 ),
                             "agent_name" to "Researcher",
                             "iteration" to 0,
-                            "outcome_id" to "outc_011CZkZRSw2kEfs6ncTVljxP",
+                            "outcome_id" to "outc_011CZkZRSw2kEfs6ncTVmjxP",
                             "budget" to
                                 mapOf(
                                     "max_list_cost" to
@@ -3336,7 +3336,7 @@ internal class BetaManagedAgentsSessionEventTest {
             assertThrows<AnthropicInvalidDataException> { betaManagedAgentsSessionEvent.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
 
-        assertThat(betaManagedAgentsSessionEvent.id()).isEqualTo("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+        assertThat(betaManagedAgentsSessionEvent.id()).isEqualTo("sevt_011CZkZGPp1iBcp4kaQSihUm")
         assertThat(betaManagedAgentsSessionEvent.processedAt())
             .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaManagedAgentsSessionEvent.sessionThreadId()).contains("session_thread_id")
@@ -3361,7 +3361,7 @@ internal class BetaManagedAgentsSessionEventTest {
         assertThat(betaManagedAgentsSessionEvent.agentName()).contains("Researcher")
         assertThat(betaManagedAgentsSessionEvent.iteration()).contains(0)
         assertThat(betaManagedAgentsSessionEvent.outcomeId())
-            .contains("outc_011CZkZRSw2kEfs6ncTVljxP")
+            .contains("outc_011CZkZRSw2kEfs6ncTVmjxP")
         assertThat(betaManagedAgentsSessionEvent.budget())
             .contains(
                 BetaManagedAgentsBudgetLimit.builder()

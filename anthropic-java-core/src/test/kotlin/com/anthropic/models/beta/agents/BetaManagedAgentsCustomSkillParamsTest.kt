@@ -11,13 +11,13 @@ internal class BetaManagedAgentsCustomSkillParamsTest {
     fun create() {
         val betaManagedAgentsCustomSkillParams =
             BetaManagedAgentsCustomSkillParams.builder()
-                .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                 .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
                 .version("2")
                 .build()
 
         assertThat(betaManagedAgentsCustomSkillParams.skillId())
-            .isEqualTo("skill_011CZkZFNu9hAbo3jZPRgTlx")
+            .isEqualTo("skill_011CZkZFNu9hAbo3jZPRgTmx")
         assertThat(betaManagedAgentsCustomSkillParams.type())
             .isEqualTo(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
         assertThat(betaManagedAgentsCustomSkillParams.version()).contains("2")
@@ -28,7 +28,7 @@ internal class BetaManagedAgentsCustomSkillParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsCustomSkillParams =
             BetaManagedAgentsCustomSkillParams.builder()
-                .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                 .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
                 .version("2")
                 .build()

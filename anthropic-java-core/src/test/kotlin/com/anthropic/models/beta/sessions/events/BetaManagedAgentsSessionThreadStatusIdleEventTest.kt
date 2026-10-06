@@ -12,10 +12,10 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
     fun create() {
         val betaManagedAgentsSessionThreadStatusIdleEvent =
             BetaManagedAgentsSessionThreadStatusIdleEvent.builder()
-                .id("sevt_011CZkZXYc8qKly2tiZbrpDv")
+                .id("sevt_011CZkZXYc8qKmy2tiZbrpDv")
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .stopDetails(
                     BetaManagedAgentsSessionRefusalStopDetails.builder()
                         .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
@@ -31,13 +31,13 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
                 .build()
 
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.id())
-            .isEqualTo("sevt_011CZkZXYc8qKly2tiZbrpDv")
+            .isEqualTo("sevt_011CZkZXYc8qKmy2tiZbrpDv")
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.agentName())
             .isEqualTo("Researcher")
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.sessionThreadId())
-            .isEqualTo("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+            .isEqualTo("sthr_011CZkZVWa6oJjw1rgXZpnBt")
         assertThat(betaManagedAgentsSessionThreadStatusIdleEvent.stopDetails())
             .contains(
                 BetaManagedAgentsSessionRefusalStopDetails.builder()
@@ -62,10 +62,10 @@ internal class BetaManagedAgentsSessionThreadStatusIdleEventTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionThreadStatusIdleEvent =
             BetaManagedAgentsSessionThreadStatusIdleEvent.builder()
-                .id("sevt_011CZkZXYc8qKly2tiZbrpDv")
+                .id("sevt_011CZkZXYc8qKmy2tiZbrpDv")
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .stopDetails(
                     BetaManagedAgentsSessionRefusalStopDetails.builder()
                         .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)

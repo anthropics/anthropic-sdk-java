@@ -47,6 +47,13 @@ internal class ModelListPageResponseTest {
                                 )
                                 .imageInput(BetaCapabilitySupport.of(true))
                                 .pdfInput(BetaCapabilitySupport.of(true))
+                                .serverTools(
+                                    BetaServerToolsCapability.builder()
+                                        .codeExecution(BetaCapabilitySupport.of(true))
+                                        .supported(true)
+                                        .webSearch(BetaCapabilitySupport.of(true))
+                                        .build()
+                                )
                                 .structuredOutputs(BetaCapabilitySupport.of(true))
                                 .thinking(
                                     BetaThinkingCapability.builder()
@@ -54,6 +61,7 @@ internal class ModelListPageResponseTest {
                                         .types(
                                             BetaThinkingTypes.builder()
                                                 .adaptive(BetaCapabilitySupport.of(true))
+                                                .disabled(BetaCapabilitySupport.of(true))
                                                 .enabled(BetaCapabilitySupport.of(true))
                                                 .build()
                                         )
@@ -109,6 +117,13 @@ internal class ModelListPageResponseTest {
                             )
                             .imageInput(BetaCapabilitySupport.of(true))
                             .pdfInput(BetaCapabilitySupport.of(true))
+                            .serverTools(
+                                BetaServerToolsCapability.builder()
+                                    .codeExecution(BetaCapabilitySupport.of(true))
+                                    .supported(true)
+                                    .webSearch(BetaCapabilitySupport.of(true))
+                                    .build()
+                            )
                             .structuredOutputs(BetaCapabilitySupport.of(true))
                             .thinking(
                                 BetaThinkingCapability.builder()
@@ -116,6 +131,7 @@ internal class ModelListPageResponseTest {
                                     .types(
                                         BetaThinkingTypes.builder()
                                             .adaptive(BetaCapabilitySupport.of(true))
+                                            .disabled(BetaCapabilitySupport.of(true))
                                             .enabled(BetaCapabilitySupport.of(true))
                                             .build()
                                     )
@@ -175,6 +191,13 @@ internal class ModelListPageResponseTest {
                                 )
                                 .imageInput(BetaCapabilitySupport.of(true))
                                 .pdfInput(BetaCapabilitySupport.of(true))
+                                .serverTools(
+                                    BetaServerToolsCapability.builder()
+                                        .codeExecution(BetaCapabilitySupport.of(true))
+                                        .supported(true)
+                                        .webSearch(BetaCapabilitySupport.of(true))
+                                        .build()
+                                )
                                 .structuredOutputs(BetaCapabilitySupport.of(true))
                                 .thinking(
                                     BetaThinkingCapability.builder()
@@ -182,6 +205,7 @@ internal class ModelListPageResponseTest {
                                         .types(
                                             BetaThinkingTypes.builder()
                                                 .adaptive(BetaCapabilitySupport.of(true))
+                                                .disabled(BetaCapabilitySupport.of(true))
                                                 .enabled(BetaCapabilitySupport.of(true))
                                                 .build()
                                         )

@@ -11,12 +11,12 @@ internal class BetaManagedAgentsDeletedCredentialTest {
     fun create() {
         val betaManagedAgentsDeletedCredential =
             BetaManagedAgentsDeletedCredential.builder()
-                .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .type(BetaManagedAgentsDeletedCredential.Type.VAULT_CREDENTIAL_DELETED)
                 .build()
 
         assertThat(betaManagedAgentsDeletedCredential.id())
-            .isEqualTo("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+            .isEqualTo("vcrd_011CZkZEMt8gZan2iYPQfSkw")
         assertThat(betaManagedAgentsDeletedCredential.type())
             .isEqualTo(BetaManagedAgentsDeletedCredential.Type.VAULT_CREDENTIAL_DELETED)
     }
@@ -26,7 +26,7 @@ internal class BetaManagedAgentsDeletedCredentialTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsDeletedCredential =
             BetaManagedAgentsDeletedCredential.builder()
-                .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .type(BetaManagedAgentsDeletedCredential.Type.VAULT_CREDENTIAL_DELETED)
                 .build()
 

@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class HttpRequestTest {
 
@@ -205,5 +206,18 @@ internal class HttpRequestTest {
         val actualUrl = testCase.request.url()
 
         assertThat(actualUrl).isEqualTo(testCase.expectedUrl)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = [".", ".."])
+    fun addPathSegment_dotSegment_throws(segment: String) {
+        val builder = HttpRequest.builder()
+
+        assertThat(runCatching { builder.addPathSegment(segment) }.exceptionOrNull())
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("dot-segment")
+        assertThat(runCatching { builder.addPathSegments("cards", segment) }.exceptionOrNull())
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("dot-segment")
     }
 }

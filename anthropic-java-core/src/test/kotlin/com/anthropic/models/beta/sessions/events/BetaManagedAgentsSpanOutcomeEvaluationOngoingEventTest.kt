@@ -12,9 +12,9 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationOngoingEventTest {
     fun create() {
         val betaManagedAgentsSpanOutcomeEvaluationOngoingEvent =
             BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent.builder()
-                .id("sevt_011CZkZbCG2uOpc6xmDfvTzh")
+                .id("sevt_011CZkZbCG2uPpc6xmDfvTzh")
                 .iteration(0)
-                .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                 .type(
                     BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent.Type
@@ -23,10 +23,10 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationOngoingEventTest {
                 .build()
 
         assertThat(betaManagedAgentsSpanOutcomeEvaluationOngoingEvent.id())
-            .isEqualTo("sevt_011CZkZbCG2uOpc6xmDfvTzh")
+            .isEqualTo("sevt_011CZkZbCG2uPpc6xmDfvTzh")
         assertThat(betaManagedAgentsSpanOutcomeEvaluationOngoingEvent.iteration()).isEqualTo(0)
         assertThat(betaManagedAgentsSpanOutcomeEvaluationOngoingEvent.outcomeId())
-            .isEqualTo("outc_011CZkZRSw2kEfs6ncTVljxP")
+            .isEqualTo("outc_011CZkZRSw2kEfs6ncTVmjxP")
         assertThat(betaManagedAgentsSpanOutcomeEvaluationOngoingEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
         assertThat(betaManagedAgentsSpanOutcomeEvaluationOngoingEvent.type())
@@ -41,9 +41,9 @@ internal class BetaManagedAgentsSpanOutcomeEvaluationOngoingEventTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSpanOutcomeEvaluationOngoingEvent =
             BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent.builder()
-                .id("sevt_011CZkZbCG2uOpc6xmDfvTzh")
+                .id("sevt_011CZkZbCG2uPpc6xmDfvTzh")
                 .iteration(0)
-                .outcomeId("outc_011CZkZRSw2kEfs6ncTVljxP")
+                .outcomeId("outc_011CZkZRSw2kEfs6ncTVmjxP")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:02:14Z"))
                 .type(
                     BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent.Type

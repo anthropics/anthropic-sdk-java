@@ -18,7 +18,7 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Multiagent orchestration configuration. Currently supports the `coordinator` topology. */
+/** Multiagent orchestration configuration. */
 class BetaManagedAgentsMultiagentParams
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

@@ -261,6 +261,7 @@ internal class StructuredContentBlockTest {
                 BetaContentBlock.ofContainerUpload(CONTAINER_UPLOAD),
                 BetaContentBlock.ofCompaction(COMPACTION),
                 BetaContentBlock.ofFallback(FALLBACK),
+                BetaContentBlock.ofMcpToolListing(MCP_TOOL_LISTING),
             )
     }
 
@@ -279,6 +280,17 @@ internal class StructuredContentBlockTest {
     fun allDelegatorFunctionsExistInDelegate() {
         // `accept()` has a different signature.
         checkAllDelegation(delegator::class, mockDelegate::class, "accept")
+    }
+
+    @Test
+    fun allDelegateVisitorFunctionsExistInDelegatorVisitor() {
+        // When this fails, add the variant to `Visitor`, `accept()`, `validate()` and
+        // `contentBlocks()`. `visitText()` has a different signature.
+        checkAllDelegation(
+            BetaContentBlock.Visitor::class,
+            StructuredContentBlock.Visitor::class,
+            "visitText",
+        )
     }
 
     @Test
@@ -408,6 +420,21 @@ internal class StructuredContentBlockTest {
         block.accept(visitor)
 
         verify(visitor, times(1)).visitFallback(FALLBACK)
+        verifyNoMoreInteractions(visitor)
+    }
+
+    @Test
+    fun `accept dispatches mcpToolListing`() {
+        val visitor = mock<StructuredContentBlock.Visitor<X, Any?>>()
+        val block =
+            StructuredContentBlock<X>(
+                X::class.java,
+                BetaContentBlock.ofMcpToolListing(MCP_TOOL_LISTING),
+            )
+
+        block.accept(visitor)
+
+        verify(visitor, times(1)).visitMcpToolListing(MCP_TOOL_LISTING)
         verifyNoMoreInteractions(visitor)
     }
 }

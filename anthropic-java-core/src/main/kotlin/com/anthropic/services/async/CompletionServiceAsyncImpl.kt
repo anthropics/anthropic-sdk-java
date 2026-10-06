@@ -37,6 +37,9 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CompletionServiceAsync =
         CompletionServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
+    @Deprecated(
+        "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+    )
     override fun create(
         params: CompletionCreateParams,
         requestOptions: RequestOptions,
@@ -44,6 +47,9 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
         // post /v1/complete
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
+    @Deprecated(
+        "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+    )
     override fun createStreaming(
         params: CompletionCreateParams,
         requestOptions: RequestOptions,
@@ -70,6 +76,9 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
         private val createHandler: Handler<Completion> =
             jsonHandler<Completion>(clientOptions.jsonMapper)
 
+        @Deprecated(
+            "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+        )
         override fun create(
             params: CompletionCreateParams,
             requestOptions: RequestOptions,
@@ -108,6 +117,9 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
         private val createStreamingHandler: Handler<StreamResponse<Completion>> =
             sseHandler(clientOptions.jsonMapper).mapJson<Completion>()
 
+        @Deprecated(
+            "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+        )
         override fun createStreaming(
             params: CompletionCreateParams,
             requestOptions: RequestOptions,

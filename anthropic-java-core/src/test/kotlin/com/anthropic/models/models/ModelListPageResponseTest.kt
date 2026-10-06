@@ -40,6 +40,13 @@ internal class ModelListPageResponseTest {
                                 )
                                 .imageInput(CapabilitySupport.of(true))
                                 .pdfInput(CapabilitySupport.of(true))
+                                .serverTools(
+                                    ServerToolsCapability.builder()
+                                        .codeExecution(CapabilitySupport.of(true))
+                                        .supported(true)
+                                        .webSearch(CapabilitySupport.of(true))
+                                        .build()
+                                )
                                 .structuredOutputs(CapabilitySupport.of(true))
                                 .thinking(
                                     ThinkingCapability.builder()
@@ -47,6 +54,7 @@ internal class ModelListPageResponseTest {
                                         .types(
                                             ThinkingTypes.builder()
                                                 .adaptive(CapabilitySupport.of(true))
+                                                .disabled(CapabilitySupport.of(true))
                                                 .enabled(CapabilitySupport.of(true))
                                                 .build()
                                         )
@@ -95,6 +103,13 @@ internal class ModelListPageResponseTest {
                             )
                             .imageInput(CapabilitySupport.of(true))
                             .pdfInput(CapabilitySupport.of(true))
+                            .serverTools(
+                                ServerToolsCapability.builder()
+                                    .codeExecution(CapabilitySupport.of(true))
+                                    .supported(true)
+                                    .webSearch(CapabilitySupport.of(true))
+                                    .build()
+                            )
                             .structuredOutputs(CapabilitySupport.of(true))
                             .thinking(
                                 ThinkingCapability.builder()
@@ -102,6 +117,7 @@ internal class ModelListPageResponseTest {
                                     .types(
                                         ThinkingTypes.builder()
                                             .adaptive(CapabilitySupport.of(true))
+                                            .disabled(CapabilitySupport.of(true))
                                             .enabled(CapabilitySupport.of(true))
                                             .build()
                                     )
@@ -154,6 +170,13 @@ internal class ModelListPageResponseTest {
                                 )
                                 .imageInput(CapabilitySupport.of(true))
                                 .pdfInput(CapabilitySupport.of(true))
+                                .serverTools(
+                                    ServerToolsCapability.builder()
+                                        .codeExecution(CapabilitySupport.of(true))
+                                        .supported(true)
+                                        .webSearch(CapabilitySupport.of(true))
+                                        .build()
+                                )
                                 .structuredOutputs(CapabilitySupport.of(true))
                                 .thinking(
                                     ThinkingCapability.builder()
@@ -161,6 +184,7 @@ internal class ModelListPageResponseTest {
                                         .types(
                                             ThinkingTypes.builder()
                                                 .adaptive(CapabilitySupport.of(true))
+                                                .disabled(CapabilitySupport.of(true))
                                                 .enabled(CapabilitySupport.of(true))
                                                 .build()
                                         )

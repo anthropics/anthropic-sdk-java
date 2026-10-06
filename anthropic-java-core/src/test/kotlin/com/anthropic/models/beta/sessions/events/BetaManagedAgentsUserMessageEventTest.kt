@@ -12,14 +12,14 @@ internal class BetaManagedAgentsUserMessageEventTest {
     fun create() {
         val betaManagedAgentsUserMessageEvent =
             BetaManagedAgentsUserMessageEvent.builder()
-                .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                 .addTextContent("Where is my order #1234?")
                 .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .build()
 
         assertThat(betaManagedAgentsUserMessageEvent.id())
-            .isEqualTo("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+            .isEqualTo("sevt_011CZkZGPp1iBcp4kaQSihUm")
         assertThat(betaManagedAgentsUserMessageEvent.content())
             .containsExactly(
                 BetaManagedAgentsUserMessageEvent.Content.ofText(
@@ -40,7 +40,7 @@ internal class BetaManagedAgentsUserMessageEventTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsUserMessageEvent =
             BetaManagedAgentsUserMessageEvent.builder()
-                .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                 .addTextContent("Where is my order #1234?")
                 .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))

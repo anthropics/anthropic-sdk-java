@@ -24,7 +24,7 @@ internal class ResourceListPageResponseTest {
                 )
                 .addData(
                     BetaManagedAgentsGitHubRepositoryResource.builder()
-                        .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                        .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .mountPath("/workspace/example-repo")
                         .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
@@ -50,7 +50,7 @@ internal class ResourceListPageResponseTest {
                 ),
                 BetaManagedAgentsSessionResource.ofGitHubRepository(
                     BetaManagedAgentsGitHubRepositoryResource.builder()
-                        .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                        .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .mountPath("/workspace/example-repo")
                         .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
@@ -81,7 +81,7 @@ internal class ResourceListPageResponseTest {
                 )
                 .addData(
                     BetaManagedAgentsGitHubRepositoryResource.builder()
-                        .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                        .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .mountPath("/workspace/example-repo")
                         .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)

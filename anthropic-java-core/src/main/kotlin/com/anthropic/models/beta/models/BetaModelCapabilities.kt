@@ -27,6 +27,7 @@ private constructor(
     private val effort: JsonField<BetaEffortCapability>,
     private val imageInput: JsonField<BetaCapabilitySupport>,
     private val pdfInput: JsonField<BetaCapabilitySupport>,
+    private val serverTools: JsonField<BetaServerToolsCapability>,
     private val structuredOutputs: JsonField<BetaCapabilitySupport>,
     private val thinking: JsonField<BetaThinkingCapability>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -58,6 +59,9 @@ private constructor(
         @JsonProperty("pdf_input")
         @ExcludeMissing
         pdfInput: JsonField<BetaCapabilitySupport> = JsonMissing.of(),
+        @JsonProperty("server_tools")
+        @ExcludeMissing
+        serverTools: JsonField<BetaServerToolsCapability> = JsonMissing.of(),
         @JsonProperty("structured_outputs")
         @ExcludeMissing
         structuredOutputs: JsonField<BetaCapabilitySupport> = JsonMissing.of(),
@@ -73,6 +77,7 @@ private constructor(
         effort,
         imageInput,
         pdfInput,
+        serverTools,
         structuredOutputs,
         thinking,
         mutableMapOf(),
@@ -95,7 +100,9 @@ private constructor(
     fun citations(): BetaCapabilitySupport = citations.getRequired("citations")
 
     /**
-     * Whether the model supports code execution tools.
+     * Whether code that the model runs in the code execution tool can call the request's other
+     * tools, as in programmatic tool calling and dynamic filtering for web search and web fetch.
+     * Support for the code execution tool itself is in `server_tools.code_execution`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -143,6 +150,16 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun pdfInput(): BetaCapabilitySupport = pdfInput.getRequired("pdf_input")
+
+    /**
+     * Whether this model supports the web search and code execution server tools. `supported` is
+     * true when the model supports at least one of the tools. A supported tool can still be
+     * rejected for your organization, for example when an admin has turned web search off.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun serverTools(): BetaServerToolsCapability = serverTools.getRequired("server_tools")
 
     /**
      * Whether the model supports structured output / JSON mode / strict tool schemas.
@@ -231,6 +248,15 @@ private constructor(
     fun _pdfInput(): JsonField<BetaCapabilitySupport> = pdfInput
 
     /**
+     * Returns the raw JSON value of [serverTools].
+     *
+     * Unlike [serverTools], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("server_tools")
+    @ExcludeMissing
+    fun _serverTools(): JsonField<BetaServerToolsCapability> = serverTools
+
+    /**
      * Returns the raw JSON value of [structuredOutputs].
      *
      * Unlike [structuredOutputs], this method doesn't throw if the JSON field has an unexpected
@@ -276,6 +302,7 @@ private constructor(
          * .effort()
          * .imageInput()
          * .pdfInput()
+         * .serverTools()
          * .structuredOutputs()
          * .thinking()
          * ```
@@ -294,6 +321,7 @@ private constructor(
         private var effort: JsonField<BetaEffortCapability>? = null
         private var imageInput: JsonField<BetaCapabilitySupport>? = null
         private var pdfInput: JsonField<BetaCapabilitySupport>? = null
+        private var serverTools: JsonField<BetaServerToolsCapability>? = null
         private var structuredOutputs: JsonField<BetaCapabilitySupport>? = null
         private var thinking: JsonField<BetaThinkingCapability>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -308,6 +336,7 @@ private constructor(
             effort = betaModelCapabilities.effort
             imageInput = betaModelCapabilities.imageInput
             pdfInput = betaModelCapabilities.pdfInput
+            serverTools = betaModelCapabilities.serverTools
             structuredOutputs = betaModelCapabilities.structuredOutputs
             thinking = betaModelCapabilities.thinking
             additionalProperties = betaModelCapabilities.additionalProperties.toMutableMap()
@@ -339,7 +368,11 @@ private constructor(
             this.citations = citations
         }
 
-        /** Whether the model supports code execution tools. */
+        /**
+         * Whether code that the model runs in the code execution tool can call the request's other
+         * tools, as in programmatic tool calling and dynamic filtering for web search and web
+         * fetch. Support for the code execution tool itself is in `server_tools.code_execution`.
+         */
         fun codeExecution(codeExecution: BetaCapabilitySupport) =
             codeExecution(JsonField.of(codeExecution))
 
@@ -432,6 +465,25 @@ private constructor(
             this.pdfInput = pdfInput
         }
 
+        /**
+         * Whether this model supports the web search and code execution server tools. `supported`
+         * is true when the model supports at least one of the tools. A supported tool can still be
+         * rejected for your organization, for example when an admin has turned web search off.
+         */
+        fun serverTools(serverTools: BetaServerToolsCapability) =
+            serverTools(JsonField.of(serverTools))
+
+        /**
+         * Sets [Builder.serverTools] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.serverTools] with a well-typed
+         * [BetaServerToolsCapability] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun serverTools(serverTools: JsonField<BetaServerToolsCapability>) = apply {
+            this.serverTools = serverTools
+        }
+
         /** Whether the model supports structured output / JSON mode / strict tool schemas. */
         fun structuredOutputs(structuredOutputs: BetaCapabilitySupport) =
             structuredOutputs(JsonField.of(structuredOutputs))
@@ -495,6 +547,7 @@ private constructor(
          * .effort()
          * .imageInput()
          * .pdfInput()
+         * .serverTools()
          * .structuredOutputs()
          * .thinking()
          * ```
@@ -511,6 +564,7 @@ private constructor(
                 checkRequired("effort", effort),
                 checkRequired("imageInput", imageInput),
                 checkRequired("pdfInput", pdfInput),
+                checkRequired("serverTools", serverTools),
                 checkRequired("structuredOutputs", structuredOutputs),
                 checkRequired("thinking", thinking),
                 additionalProperties.toMutableMap(),
@@ -540,6 +594,7 @@ private constructor(
         effort().validate()
         imageInput().validate()
         pdfInput().validate()
+        serverTools().validate()
         structuredOutputs().validate()
         thinking().validate()
         validated = true
@@ -568,6 +623,7 @@ private constructor(
             (effort.asKnown().getOrNull()?.validity() ?: 0) +
             (imageInput.asKnown().getOrNull()?.validity() ?: 0) +
             (pdfInput.asKnown().getOrNull()?.validity() ?: 0) +
+            (serverTools.asKnown().getOrNull()?.validity() ?: 0) +
             (structuredOutputs.asKnown().getOrNull()?.validity() ?: 0) +
             (thinking.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -585,6 +641,7 @@ private constructor(
             effort == other.effort &&
             imageInput == other.imageInput &&
             pdfInput == other.pdfInput &&
+            serverTools == other.serverTools &&
             structuredOutputs == other.structuredOutputs &&
             thinking == other.thinking &&
             additionalProperties == other.additionalProperties
@@ -600,6 +657,7 @@ private constructor(
             effort,
             imageInput,
             pdfInput,
+            serverTools,
             structuredOutputs,
             thinking,
             additionalProperties,
@@ -609,5 +667,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaModelCapabilities{batch=$batch, citations=$citations, codeExecution=$codeExecution, compaction=$compaction, contextManagement=$contextManagement, effort=$effort, imageInput=$imageInput, pdfInput=$pdfInput, structuredOutputs=$structuredOutputs, thinking=$thinking, additionalProperties=$additionalProperties}"
+        "BetaModelCapabilities{batch=$batch, citations=$citations, codeExecution=$codeExecution, compaction=$compaction, contextManagement=$contextManagement, effort=$effort, imageInput=$imageInput, pdfInput=$pdfInput, serverTools=$serverTools, structuredOutputs=$structuredOutputs, thinking=$thinking, additionalProperties=$additionalProperties}"
 }

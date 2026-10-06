@@ -69,7 +69,7 @@ internal class CredentialServiceAsyncTest {
             credentialServiceAsync.retrieve(
                 CredentialRetrieveParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -92,7 +92,7 @@ internal class CredentialServiceAsyncTest {
             credentialServiceAsync.update(
                 CredentialUpdateParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .auth(
@@ -159,7 +159,7 @@ internal class CredentialServiceAsyncTest {
             credentialServiceAsync.delete(
                 CredentialDeleteParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -182,7 +182,7 @@ internal class CredentialServiceAsyncTest {
             credentialServiceAsync.archive(
                 CredentialArchiveParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -205,7 +205,7 @@ internal class CredentialServiceAsyncTest {
             credentialServiceAsync.mcpOAuthValidate(
                 CredentialMcpOAuthValidateParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()

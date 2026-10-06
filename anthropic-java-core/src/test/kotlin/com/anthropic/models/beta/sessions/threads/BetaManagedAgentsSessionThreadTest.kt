@@ -27,7 +27,7 @@ internal class BetaManagedAgentsSessionThreadTest {
     fun create() {
         val betaManagedAgentsSessionThread =
             BetaManagedAgentsSessionThread.builder()
-                .id("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .id("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .agent(
                     BetaManagedAgentsSessionThreadAgent.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
@@ -136,7 +136,7 @@ internal class BetaManagedAgentsSessionThreadTest {
                 )
                 .build()
 
-        assertThat(betaManagedAgentsSessionThread.id()).isEqualTo("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+        assertThat(betaManagedAgentsSessionThread.id()).isEqualTo("sthr_011CZkZVWa6oJjw1rgXZpnBt")
         assertThat(betaManagedAgentsSessionThread.agent())
             .isEqualTo(
                 BetaManagedAgentsSessionThread.Agent.ofAgent(
@@ -260,7 +260,7 @@ internal class BetaManagedAgentsSessionThreadTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionThread =
             BetaManagedAgentsSessionThread.builder()
-                .id("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .id("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .agent(
                     BetaManagedAgentsSessionThreadAgent.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")

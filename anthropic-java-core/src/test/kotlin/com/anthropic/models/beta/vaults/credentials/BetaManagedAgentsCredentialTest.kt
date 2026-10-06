@@ -13,7 +13,7 @@ internal class BetaManagedAgentsCredentialTest {
     fun create() {
         val betaManagedAgentsCredential =
             BetaManagedAgentsCredential.builder()
-                .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .archivedAt(null)
                 .staticBearerAuth("https://example-server.modelcontextprotocol.io/sse")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -28,7 +28,7 @@ internal class BetaManagedAgentsCredentialTest {
                 .displayName("Example credential")
                 .build()
 
-        assertThat(betaManagedAgentsCredential.id()).isEqualTo("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+        assertThat(betaManagedAgentsCredential.id()).isEqualTo("vcrd_011CZkZEMt8gZan2iYPQfSkw")
         assertThat(betaManagedAgentsCredential.archivedAt()).isEmpty
         assertThat(betaManagedAgentsCredential.auth())
             .isEqualTo(
@@ -60,7 +60,7 @@ internal class BetaManagedAgentsCredentialTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsCredential =
             BetaManagedAgentsCredential.builder()
-                .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .archivedAt(null)
                 .staticBearerAuth("https://example-server.modelcontextprotocol.io/sse")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))

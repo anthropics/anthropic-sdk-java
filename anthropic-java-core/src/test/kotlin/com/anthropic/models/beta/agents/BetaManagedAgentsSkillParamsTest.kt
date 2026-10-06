@@ -52,7 +52,7 @@ internal class BetaManagedAgentsSkillParamsTest {
     fun ofCustom() {
         val custom =
             BetaManagedAgentsCustomSkillParams.builder()
-                .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                 .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
                 .version("2")
                 .build()
@@ -69,7 +69,7 @@ internal class BetaManagedAgentsSkillParamsTest {
         val betaManagedAgentsSkillParams =
             BetaManagedAgentsSkillParams.ofCustom(
                 BetaManagedAgentsCustomSkillParams.builder()
-                    .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                    .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                     .type(BetaManagedAgentsCustomSkillParams.Type.CUSTOM)
                     .version("2")
                     .build()

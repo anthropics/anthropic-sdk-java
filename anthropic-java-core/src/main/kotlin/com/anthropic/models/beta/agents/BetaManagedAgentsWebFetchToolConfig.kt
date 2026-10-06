@@ -36,6 +36,7 @@ private constructor(
     private val name: JsonValue,
     private val permissionPolicy: JsonField<PermissionPolicy>,
     private val type: JsonValue,
+    private val urlSources: JsonField<BetaManagedAgentsWebFetchUrlSources>,
     private val allowedDomains: JsonField<List<String>>,
     private val blockedDomains: JsonField<List<String>>,
     private val maxContentTokens: JsonField<Int>,
@@ -50,6 +51,9 @@ private constructor(
         @ExcludeMissing
         permissionPolicy: JsonField<PermissionPolicy> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+        @JsonProperty("url_sources")
+        @ExcludeMissing
+        urlSources: JsonField<BetaManagedAgentsWebFetchUrlSources> = JsonMissing.of(),
         @JsonProperty("allowed_domains")
         @ExcludeMissing
         allowedDomains: JsonField<List<String>> = JsonMissing.of(),
@@ -64,6 +68,7 @@ private constructor(
         name,
         permissionPolicy,
         type,
+        urlSources,
         allowedDomains,
         blockedDomains,
         maxContentTokens,
@@ -107,6 +112,16 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
+     * Which sources contribute URLs the tool may fetch, always in the object form. Null when not
+     * set, which allows every source.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun urlSources(): Optional<BetaManagedAgentsWebFetchUrlSources> =
+        urlSources.getOptional("url_sources")
+
+    /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -140,6 +155,15 @@ private constructor(
     @JsonProperty("permission_policy")
     @ExcludeMissing
     fun _permissionPolicy(): JsonField<PermissionPolicy> = permissionPolicy
+
+    /**
+     * Returns the raw JSON value of [urlSources].
+     *
+     * Unlike [urlSources], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("url_sources")
+    @ExcludeMissing
+    fun _urlSources(): JsonField<BetaManagedAgentsWebFetchUrlSources> = urlSources
 
     /**
      * Returns the raw JSON value of [allowedDomains].
@@ -191,6 +215,7 @@ private constructor(
          * ```java
          * .enabled()
          * .permissionPolicy()
+         * .urlSources()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -203,6 +228,7 @@ private constructor(
         private var name: JsonValue = JsonValue.from("web_fetch")
         private var permissionPolicy: JsonField<PermissionPolicy>? = null
         private var type: JsonValue = JsonValue.from("web_fetch")
+        private var urlSources: JsonField<BetaManagedAgentsWebFetchUrlSources>? = null
         private var allowedDomains: JsonField<MutableList<String>>? = null
         private var blockedDomains: JsonField<MutableList<String>>? = null
         private var maxContentTokens: JsonField<Int> = JsonMissing.of()
@@ -216,6 +242,7 @@ private constructor(
             name = betaManagedAgentsWebFetchToolConfig.name
             permissionPolicy = betaManagedAgentsWebFetchToolConfig.permissionPolicy
             type = betaManagedAgentsWebFetchToolConfig.type
+            urlSources = betaManagedAgentsWebFetchToolConfig.urlSources
             allowedDomains =
                 betaManagedAgentsWebFetchToolConfig.allowedDomains
                     .map { it.toMutableList() }
@@ -295,6 +322,28 @@ private constructor(
          * value.
          */
         fun type(type: JsonValue) = apply { this.type = type }
+
+        /**
+         * Which sources contribute URLs the tool may fetch, always in the object form. Null when
+         * not set, which allows every source.
+         */
+        fun urlSources(urlSources: BetaManagedAgentsWebFetchUrlSources?) =
+            urlSources(JsonField.ofNullable(urlSources))
+
+        /** Alias for calling [Builder.urlSources] with `urlSources.orElse(null)`. */
+        fun urlSources(urlSources: Optional<BetaManagedAgentsWebFetchUrlSources>) =
+            urlSources(urlSources.getOrNull())
+
+        /**
+         * Sets [Builder.urlSources] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.urlSources] with a well-typed
+         * [BetaManagedAgentsWebFetchUrlSources] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun urlSources(urlSources: JsonField<BetaManagedAgentsWebFetchUrlSources>) = apply {
+            this.urlSources = urlSources
+        }
 
         fun allowedDomains(allowedDomains: List<String>) =
             allowedDomains(JsonField.of(allowedDomains))
@@ -401,6 +450,7 @@ private constructor(
          * ```java
          * .enabled()
          * .permissionPolicy()
+         * .urlSources()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -411,6 +461,7 @@ private constructor(
                 name,
                 checkRequired("permissionPolicy", permissionPolicy),
                 type,
+                checkRequired("urlSources", urlSources),
                 (allowedDomains ?: JsonMissing.of()).map { it.toImmutable() },
                 (blockedDomains ?: JsonMissing.of()).map { it.toImmutable() },
                 maxContentTokens,
@@ -445,6 +496,7 @@ private constructor(
                 throw AnthropicInvalidDataException("'type' is invalid, received $it")
             }
         }
+        urlSources().ifPresent { it.validate() }
         allowedDomains()
         blockedDomains()
         maxContentTokens()
@@ -470,6 +522,7 @@ private constructor(
             name.let { if (it == JsonValue.from("web_fetch")) 1 else 0 } +
             (permissionPolicy.asKnown().getOrNull()?.validity() ?: 0) +
             type.let { if (it == JsonValue.from("web_fetch")) 1 else 0 } +
+            (urlSources.asKnown().getOrNull()?.validity() ?: 0) +
             (allowedDomains.asKnown().getOrNull()?.size ?: 0) +
             (blockedDomains.asKnown().getOrNull()?.size ?: 0) +
             (if (maxContentTokens.asKnown().isPresent) 1 else 0)
@@ -928,6 +981,7 @@ private constructor(
             name == other.name &&
             permissionPolicy == other.permissionPolicy &&
             type == other.type &&
+            urlSources == other.urlSources &&
             allowedDomains == other.allowedDomains &&
             blockedDomains == other.blockedDomains &&
             maxContentTokens == other.maxContentTokens &&
@@ -940,6 +994,7 @@ private constructor(
             name,
             permissionPolicy,
             type,
+            urlSources,
             allowedDomains,
             blockedDomains,
             maxContentTokens,
@@ -950,5 +1005,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsWebFetchToolConfig{enabled=$enabled, name=$name, permissionPolicy=$permissionPolicy, type=$type, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, maxContentTokens=$maxContentTokens, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsWebFetchToolConfig{enabled=$enabled, name=$name, permissionPolicy=$permissionPolicy, type=$type, urlSources=$urlSources, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, maxContentTokens=$maxContentTokens, additionalProperties=$additionalProperties}"
 }

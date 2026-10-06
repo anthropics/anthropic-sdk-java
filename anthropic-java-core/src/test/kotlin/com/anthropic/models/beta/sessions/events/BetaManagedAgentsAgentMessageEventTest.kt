@@ -12,14 +12,14 @@ internal class BetaManagedAgentsAgentMessageEventTest {
     fun create() {
         val betaManagedAgentsAgentMessageEvent =
             BetaManagedAgentsAgentMessageEvent.builder()
-                .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                 .addTextContent("Let me look up order #1234 for you.")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
                 .build()
 
         assertThat(betaManagedAgentsAgentMessageEvent.id())
-            .isEqualTo("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+            .isEqualTo("sevt_011CZkZHPq1jCdq5mbRTjiVn")
         assertThat(betaManagedAgentsAgentMessageEvent.content())
             .containsExactly(
                 BetaManagedAgentsAgentMessageEvent.Content.ofText(
@@ -40,7 +40,7 @@ internal class BetaManagedAgentsAgentMessageEventTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsAgentMessageEvent =
             BetaManagedAgentsAgentMessageEvent.builder()
-                .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                 .addTextContent("Let me look up order #1234 for you.")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)

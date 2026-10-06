@@ -241,8 +241,8 @@ private constructor(
     fun oauthScope(): String = oauthScope.getRequired("oauth_scope")
 
     /**
-     * Identity that tokens minted via this rule act as. Currently always a `service_account`
-     * target.
+     * What this rule targets. Check `type` before reading the other fields. Tokens minted via a
+     * rule whose target `type` is `service_account` act as that service account.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -754,8 +754,8 @@ private constructor(
         fun oauthScope(oauthScope: JsonField<String>) = apply { this.oauthScope = oauthScope }
 
         /**
-         * Identity that tokens minted via this rule act as. Currently always a `service_account`
-         * target.
+         * What this rule targets. Check `type` before reading the other fields. Tokens minted via a
+         * rule whose target `type` is `service_account` act as that service account.
          */
         fun target(target: BetaServiceAccountTarget) = target(JsonField.of(target))
 

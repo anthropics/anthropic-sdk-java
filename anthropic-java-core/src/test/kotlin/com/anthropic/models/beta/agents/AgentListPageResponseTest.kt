@@ -66,7 +66,7 @@ internal class AgentListPageResponseTest {
                         )
                         .addSkill(
                             BetaManagedAgentsCustomSkill.builder()
-                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                                 .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                 .version("2")
                                 .build()
@@ -161,7 +161,7 @@ internal class AgentListPageResponseTest {
                     )
                     .addSkill(
                         BetaManagedAgentsCustomSkill.builder()
-                            .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                            .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                             .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                             .version("2")
                             .build()
@@ -259,7 +259,7 @@ internal class AgentListPageResponseTest {
                         )
                         .addSkill(
                             BetaManagedAgentsCustomSkill.builder()
-                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTlx")
+                                .skillId("skill_011CZkZFNu9hAbo3jZPRgTmx")
                                 .type(BetaManagedAgentsCustomSkill.Type.CUSTOM)
                                 .version("2")
                                 .build()

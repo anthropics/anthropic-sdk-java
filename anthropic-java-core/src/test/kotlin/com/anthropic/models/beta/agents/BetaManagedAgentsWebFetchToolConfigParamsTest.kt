@@ -22,6 +22,13 @@ internal class BetaManagedAgentsWebFetchToolConfigParamsTest {
                     )
                 )
                 .type(BetaManagedAgentsWebFetchToolConfigParams.Type.WEB_FETCH)
+                .urlSources(
+                    BetaManagedAgentsWebFetchUrlSourcesParams.builder()
+                        .clientToolResults(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                        .serverToolResults(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                        .userInput(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                        .build()
+                )
                 .build()
 
         assertThat(betaManagedAgentsWebFetchToolConfigParams.allowedDomains().getOrNull())
@@ -38,6 +45,14 @@ internal class BetaManagedAgentsWebFetchToolConfigParamsTest {
             )
         assertThat(betaManagedAgentsWebFetchToolConfigParams.type())
             .contains(BetaManagedAgentsWebFetchToolConfigParams.Type.WEB_FETCH)
+        assertThat(betaManagedAgentsWebFetchToolConfigParams.urlSources())
+            .contains(
+                BetaManagedAgentsWebFetchUrlSourcesParams.builder()
+                    .clientToolResults(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                    .serverToolResults(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                    .userInput(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                    .build()
+            )
     }
 
     @Test
@@ -73,6 +88,13 @@ internal class BetaManagedAgentsWebFetchToolConfigParamsTest {
                     )
                 )
                 .type(BetaManagedAgentsWebFetchToolConfigParams.Type.WEB_FETCH)
+                .urlSources(
+                    BetaManagedAgentsWebFetchUrlSourcesParams.builder()
+                        .clientToolResults(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                        .serverToolResults(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                        .userInput(BetaManagedAgentsWebFetchUrlSourceShorthand.ALL)
+                        .build()
+                )
                 .build()
 
         val roundtrippedBetaManagedAgentsWebFetchToolConfigParams =
