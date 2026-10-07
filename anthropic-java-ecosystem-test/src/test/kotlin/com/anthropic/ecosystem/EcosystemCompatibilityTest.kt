@@ -6,7 +6,7 @@ import com.anthropic.core.jsonMapper
 import com.anthropic.errors.BadRequestException
 import com.anthropic.models.messages.BashCodeExecutionToolResultBlockParam
 import com.anthropic.models.messages.BashCodeExecutionToolResultErrorCode
-import com.anthropic.models.messages.BrowserStateChange
+import com.anthropic.models.messages.BrowserClickTarget
 import com.anthropic.models.messages.MessageCreateParams
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
@@ -188,22 +188,22 @@ internal class EcosystemCompatibilityTest {
     }
 
     @Test
-    fun browserStateChangeRoundtrip() {
+    fun browserClickTargetRoundtrip() {
         val jsonMapper = jsonMapper()
-        val browserStateChange =
+        val browserClickTarget =
             jsonMapper.readValue(
-                "{\"tab_id\":\"tab_id\",\"type\":\"tab_opened\"}",
-                jacksonTypeRef<BrowserStateChange>(),
+                "{\"type\":\"coordinate\",\"x\":0,\"y\":0}",
+                jacksonTypeRef<BrowserClickTarget>(),
             )
 
-        val roundtrippedBrowserStateChange =
+        val roundtrippedBrowserClickTarget =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(browserStateChange),
-                jacksonTypeRef<BrowserStateChange>(),
+                jsonMapper.writeValueAsString(browserClickTarget),
+                jacksonTypeRef<BrowserClickTarget>(),
             )
 
-        browserStateChange.validate()
-        assertThat(roundtrippedBrowserStateChange).isEqualTo(browserStateChange)
+        browserClickTarget.validate()
+        assertThat(roundtrippedBrowserClickTarget).isEqualTo(browserClickTarget)
     }
 
     @Test

@@ -14,13 +14,13 @@ internal class CompletionTest {
             Completion.builder()
                 .id("compl_018CKm6gsux7P8yMcwZbeCPw")
                 .completion(" Hello! My name is Claude.")
-                .model(Model.CLAUDE_SONNET_5_5)
+                .model(Model.CLAUDE_HAIKU_5_5)
                 .stopReason("stop_sequence")
                 .build()
 
         assertThat(completion.id()).isEqualTo("compl_018CKm6gsux7P8yMcwZbeCPw")
         assertThat(completion.completion()).isEqualTo(" Hello! My name is Claude.")
-        assertThat(completion.model()).isEqualTo(Model.CLAUDE_SONNET_5_5)
+        assertThat(completion.model()).isEqualTo(Model.CLAUDE_HAIKU_5_5)
         assertThat(completion.stopReason()).contains("stop_sequence")
     }
 
@@ -31,7 +31,7 @@ internal class CompletionTest {
             Completion.builder()
                 .id("compl_018CKm6gsux7P8yMcwZbeCPw")
                 .completion(" Hello! My name is Claude.")
-                .model(Model.CLAUDE_SONNET_5_5)
+                .model(Model.CLAUDE_HAIKU_5_5)
                 .stopReason("stop_sequence")
                 .build()
 

@@ -13,7 +13,7 @@ internal class BetaFallbackParamTest {
     fun create() {
         val betaFallbackParam =
             BetaFallbackParam.builder()
-                .model(Model.CLAUDE_SONNET_5_5)
+                .model(Model.CLAUDE_HAIKU_5_5)
                 .maxTokens(0L)
                 .outputConfig(
                     BetaOutputConfig.builder()
@@ -44,7 +44,7 @@ internal class BetaFallbackParamTest {
                 )
                 .build()
 
-        assertThat(betaFallbackParam.model()).isEqualTo(Model.CLAUDE_SONNET_5_5)
+        assertThat(betaFallbackParam.model()).isEqualTo(Model.CLAUDE_HAIKU_5_5)
         assertThat(betaFallbackParam.maxTokens()).contains(0L)
         assertThat(betaFallbackParam.outputConfig())
             .contains(
@@ -82,7 +82,7 @@ internal class BetaFallbackParamTest {
         val jsonMapper = jsonMapper()
         val betaFallbackParam =
             BetaFallbackParam.builder()
-                .model(Model.CLAUDE_SONNET_5_5)
+                .model(Model.CLAUDE_HAIKU_5_5)
                 .maxTokens(0L)
                 .outputConfig(
                     BetaOutputConfig.builder()

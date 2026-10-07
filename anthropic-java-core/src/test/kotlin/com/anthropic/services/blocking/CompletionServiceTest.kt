@@ -27,7 +27,7 @@ internal class CompletionServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .maxTokensToSample(256L)
-                    .model(Model.CLAUDE_SONNET_5_5)
+                    .model(Model.CLAUDE_HAIKU_5_5)
                     .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
@@ -57,7 +57,7 @@ internal class CompletionServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .maxTokensToSample(256L)
-                    .model(Model.CLAUDE_SONNET_5_5)
+                    .model(Model.CLAUDE_HAIKU_5_5)
                     .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                     .metadata(
                         Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build()
