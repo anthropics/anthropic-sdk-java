@@ -25,6 +25,9 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
 
     companion object {
 
+        /** Fastest model for high-volume, real-time tasks */
+        @JvmField val CLAUDE_HAIKU_5_5 = Model(JsonField.of("claude-haiku-5-5"))
+
         /** Efficient model for coding and agents */
         @JvmField val CLAUDE_SONNET_5_5 = Model(JsonField.of("claude-sonnet-5-5"))
 
@@ -104,6 +107,7 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
         fun of(value: String): Model =
             // Intern known values so `==` works
             when (value) {
+                "claude-haiku-5-5" -> CLAUDE_HAIKU_5_5
                 "claude-sonnet-5-5" -> CLAUDE_SONNET_5_5
                 "claude-fable-5-1" -> CLAUDE_FABLE_5_1
                 "claude-opus-5-5" -> CLAUDE_OPUS_5_5
@@ -134,6 +138,8 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
 
     /** An enum containing [Model]'s known values. */
     enum class Known {
+        /** Fastest model for high-volume, real-time tasks */
+        CLAUDE_HAIKU_5_5,
         /** Efficient model for coding and agents */
         CLAUDE_SONNET_5_5,
         /**
@@ -199,6 +205,8 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
+        /** Fastest model for high-volume, real-time tasks */
+        CLAUDE_HAIKU_5_5,
         /** Efficient model for coding and agents */
         CLAUDE_SONNET_5_5,
         /**
@@ -265,6 +273,7 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
      */
     fun value(): Value =
         when (this) {
+            CLAUDE_HAIKU_5_5 -> Value.CLAUDE_HAIKU_5_5
             CLAUDE_SONNET_5_5 -> Value.CLAUDE_SONNET_5_5
             CLAUDE_FABLE_5_1 -> Value.CLAUDE_FABLE_5_1
             CLAUDE_OPUS_5_5 -> Value.CLAUDE_OPUS_5_5
@@ -297,6 +306,7 @@ class Model private constructor(private val value: JsonField<String>) : Enum {
      */
     fun known(): Known =
         when (this) {
+            CLAUDE_HAIKU_5_5 -> Known.CLAUDE_HAIKU_5_5
             CLAUDE_SONNET_5_5 -> Known.CLAUDE_SONNET_5_5
             CLAUDE_FABLE_5_1 -> Known.CLAUDE_FABLE_5_1
             CLAUDE_OPUS_5_5 -> Known.CLAUDE_OPUS_5_5

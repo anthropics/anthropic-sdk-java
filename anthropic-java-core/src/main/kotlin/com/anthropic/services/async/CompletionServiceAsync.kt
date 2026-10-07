@@ -35,10 +35,16 @@ interface CompletionServiceAsync {
      * [migration guide](https://platform.claude.com/docs/en/build-with-claude/working-with-messages)
      * for guidance in migrating from Text Completions to Messages.
      */
+    @Deprecated(
+        "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+    )
     fun create(params: CompletionCreateParams): CompletableFuture<Completion> =
         create(params, RequestOptions.none())
 
     /** @see create */
+    @Deprecated(
+        "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+    )
     fun create(
         params: CompletionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -54,10 +60,16 @@ interface CompletionServiceAsync {
      * [migration guide](https://platform.claude.com/docs/en/build-with-claude/working-with-messages)
      * for guidance in migrating from Text Completions to Messages.
      */
+    @Deprecated(
+        "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+    )
     fun createStreaming(params: CompletionCreateParams): AsyncStreamResponse<Completion> =
         createStreaming(params, RequestOptions.none())
 
     /** @see createStreaming */
+    @Deprecated(
+        "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+    )
     fun createStreaming(
         params: CompletionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -82,10 +94,16 @@ interface CompletionServiceAsync {
          * Returns a raw HTTP response for `post /v1/complete`, but is otherwise the same as
          * [CompletionServiceAsync.create].
          */
+        @Deprecated(
+            "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+        )
         fun create(params: CompletionCreateParams): CompletableFuture<HttpResponseFor<Completion>> =
             create(params, RequestOptions.none())
 
         /** @see create */
+        @Deprecated(
+            "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+        )
         fun create(
             params: CompletionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -95,6 +113,9 @@ interface CompletionServiceAsync {
          * Returns a raw HTTP response for `post /v1/complete`, but is otherwise the same as
          * [CompletionServiceAsync.createStreaming].
          */
+        @Deprecated(
+            "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+        )
         @MustBeClosed
         fun createStreaming(
             params: CompletionCreateParams
@@ -102,6 +123,9 @@ interface CompletionServiceAsync {
             createStreaming(params, RequestOptions.none())
 
         /** @see createStreaming */
+        @Deprecated(
+            "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+        )
         @MustBeClosed
         fun createStreaming(
             params: CompletionCreateParams,

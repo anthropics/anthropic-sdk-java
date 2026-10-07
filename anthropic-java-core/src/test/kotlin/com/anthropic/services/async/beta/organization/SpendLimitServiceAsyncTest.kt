@@ -2,6 +2,7 @@ package com.anthropic.services.async.beta.organization
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
+import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimitPeriod
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitSetParams
 import org.junit.jupiter.api.Test
@@ -67,6 +68,7 @@ internal class SpendLimitServiceAsyncTest {
         val betaSpendLimitFuture =
             spendLimitServiceAsync.set(
                 SpendLimitSetParams.builder()
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .amount("50000")
                     .userScope("user_01WCz1FkmYMm4gnmykNKUu3Q")
                     .period(BetaSpendLimitPeriod.DAILY)

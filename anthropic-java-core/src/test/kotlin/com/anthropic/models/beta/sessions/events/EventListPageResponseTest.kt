@@ -15,7 +15,7 @@ internal class EventListPageResponseTest {
             EventListPageResponse.builder()
                 .addData(
                     BetaManagedAgentsUserMessageEvent.builder()
-                        .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                        .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                         .addTextContent("Where is my order #1234?")
                         .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -23,7 +23,7 @@ internal class EventListPageResponseTest {
                 )
                 .addData(
                     BetaManagedAgentsAgentMessageEvent.builder()
-                        .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                        .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                         .addTextContent("Let me look up order #1234 for you.")
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
@@ -36,7 +36,7 @@ internal class EventListPageResponseTest {
             .containsExactly(
                 BetaManagedAgentsSessionEvent.ofUserMessage(
                     BetaManagedAgentsUserMessageEvent.builder()
-                        .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                        .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                         .addTextContent("Where is my order #1234?")
                         .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -44,7 +44,7 @@ internal class EventListPageResponseTest {
                 ),
                 BetaManagedAgentsSessionEvent.ofAgentMessage(
                     BetaManagedAgentsAgentMessageEvent.builder()
-                        .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                        .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                         .addTextContent("Let me look up order #1234 for you.")
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
@@ -64,7 +64,7 @@ internal class EventListPageResponseTest {
                 .addData(
                     BetaManagedAgentsSessionEvent.ofUserMessage(
                         BetaManagedAgentsUserMessageEvent.builder()
-                            .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                            .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                             .addTextContent("Where is my order #1234?")
                             .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                             .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -74,7 +74,7 @@ internal class EventListPageResponseTest {
                 .addData(
                     BetaManagedAgentsSessionEvent.ofAgentMessage(
                         BetaManagedAgentsAgentMessageEvent.builder()
-                            .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                            .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                             .addTextContent("Let me look up order #1234 for you.")
                             .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                             .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
@@ -87,7 +87,7 @@ internal class EventListPageResponseTest {
             .containsExactly(
                 BetaManagedAgentsSessionEvent.ofUserMessage(
                     BetaManagedAgentsUserMessageEvent.builder()
-                        .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                        .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                         .addTextContent("Where is my order #1234?")
                         .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -95,7 +95,7 @@ internal class EventListPageResponseTest {
                 ),
                 BetaManagedAgentsSessionEvent.ofAgentMessage(
                     BetaManagedAgentsAgentMessageEvent.builder()
-                        .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                        .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                         .addTextContent("Let me look up order #1234 for you.")
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)
@@ -111,7 +111,7 @@ internal class EventListPageResponseTest {
             EventListPageResponse.builder()
                 .addData(
                     BetaManagedAgentsUserMessageEvent.builder()
-                        .id("sevt_011CZkZGOp0iBcp4kaQSihUmy")
+                        .id("sevt_011CZkZGPp1iBcp4kaQSihUm")
                         .addTextContent("Where is my order #1234?")
                         .type(BetaManagedAgentsUserMessageEvent.Type.USER_MESSAGE)
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -119,7 +119,7 @@ internal class EventListPageResponseTest {
                 )
                 .addData(
                     BetaManagedAgentsAgentMessageEvent.builder()
-                        .id("sevt_011CZkZHPq1jCdq5lbRTjiVnz")
+                        .id("sevt_011CZkZHPq1jCdq5mbRTjiVn")
                         .addTextContent("Let me look up order #1234 for you.")
                         .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .type(BetaManagedAgentsAgentMessageEvent.Type.AGENT_MESSAGE)

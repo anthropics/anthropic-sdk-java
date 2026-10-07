@@ -30,7 +30,7 @@ internal class ThreadListPageResponseTest {
             ThreadListPageResponse.builder()
                 .addData(
                     BetaManagedAgentsSessionThread.builder()
-                        .id("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                        .id("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                         .agent(
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
@@ -147,7 +147,7 @@ internal class ThreadListPageResponseTest {
         assertThat(threadListPageResponse.data().getOrNull())
             .containsExactly(
                 BetaManagedAgentsSessionThread.builder()
-                    .id("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .id("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .agent(
                         BetaManagedAgentsSessionThreadAgent.builder()
                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
@@ -269,7 +269,7 @@ internal class ThreadListPageResponseTest {
                 .toBuilder()
                 .addData(
                     BetaManagedAgentsSessionThread.builder()
-                        .id("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                        .id("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                         .agent(
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
@@ -385,7 +385,7 @@ internal class ThreadListPageResponseTest {
         assertThat(threadListPageResponse.data().getOrNull())
             .containsExactly(
                 BetaManagedAgentsSessionThread.builder()
-                    .id("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .id("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .agent(
                         BetaManagedAgentsSessionThreadAgent.builder()
                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
@@ -504,7 +504,7 @@ internal class ThreadListPageResponseTest {
             ThreadListPageResponse.builder()
                 .addData(
                     BetaManagedAgentsSessionThread.builder()
-                        .id("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                        .id("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                         .agent(
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")

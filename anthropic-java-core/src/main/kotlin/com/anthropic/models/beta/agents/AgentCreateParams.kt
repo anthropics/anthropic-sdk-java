@@ -103,8 +103,7 @@ private constructor(
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
-     * Multiagent orchestration configuration. Currently supports the `coordinator` topology with a
-     * roster of 1-20 agents.
+     * Multiagent orchestration configuration.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -128,7 +127,7 @@ private constructor(
     fun system(): Optional<String> = body.system()
 
     /**
-     * Tool configurations available to the agent. Maximum of 128 tools across all toolsets allowed.
+     * Tool configurations available to the agent. Maximum of 256 tools across all toolsets allowed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -389,10 +388,7 @@ private constructor(
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
 
-        /**
-         * Multiagent orchestration configuration. Currently supports the `coordinator` topology
-         * with a roster of 1-20 agents.
-         */
+        /** Multiagent orchestration configuration. */
         fun multiagent(multiagent: BetaManagedAgentsMultiagentParams?) = apply {
             body.multiagent(multiagent)
         }
@@ -494,7 +490,7 @@ private constructor(
         fun system(system: JsonField<String>) = apply { body.system(system) }
 
         /**
-         * Tool configurations available to the agent. Maximum of 128 tools across all toolsets
+         * Tool configurations available to the agent. Maximum of 256 tools across all toolsets
          * allowed.
          */
         fun tools(tools: List<Tool>) = apply { body.tools(tools) }
@@ -686,7 +682,16 @@ private constructor(
     override fun _headers(): Headers =
         Headers.builder()
             .apply {
-                betas?.forEach { put("anthropic-beta", it.toString()) }
+                betas?.let {
+                    if (it.isNotEmpty()) {
+                        put(
+                            "anthropic-beta",
+                            it.map { it.toString() }
+                                .let { it + (listOf("managed-agents-2026-04-01") - it) }
+                                .joinToString(","),
+                        )
+                    }
+                }
                 workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
@@ -792,8 +797,7 @@ private constructor(
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
         /**
-         * Multiagent orchestration configuration. Currently supports the `coordinator` topology
-         * with a roster of 1-20 agents.
+         * Multiagent orchestration configuration.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -818,7 +822,7 @@ private constructor(
         fun system(): Optional<String> = system.getOptional("system")
 
         /**
-         * Tool configurations available to the agent. Maximum of 128 tools across all toolsets
+         * Tool configurations available to the agent. Maximum of 256 tools across all toolsets
          * allowed.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1059,10 +1063,7 @@ private constructor(
              */
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
-            /**
-             * Multiagent orchestration configuration. Currently supports the `coordinator` topology
-             * with a roster of 1-20 agents.
-             */
+            /** Multiagent orchestration configuration. */
             fun multiagent(multiagent: BetaManagedAgentsMultiagentParams?) =
                 multiagent(JsonField.ofNullable(multiagent))
 
@@ -1187,7 +1188,7 @@ private constructor(
             fun system(system: JsonField<String>) = apply { this.system = system }
 
             /**
-             * Tool configurations available to the agent. Maximum of 128 tools across all toolsets
+             * Tool configurations available to the agent. Maximum of 256 tools across all toolsets
              * allowed.
              */
             fun tools(tools: List<Tool>) = tools(JsonField.of(tools))

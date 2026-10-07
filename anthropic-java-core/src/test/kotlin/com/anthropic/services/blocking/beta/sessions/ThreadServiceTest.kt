@@ -5,7 +5,6 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.sessions.threads.ThreadArchiveParams
 import com.anthropic.models.beta.sessions.threads.ThreadRetrieveParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -25,7 +24,7 @@ internal class ThreadServiceTest {
             threadService.retrieve(
                 ThreadRetrieveParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -34,7 +33,6 @@ internal class ThreadServiceTest {
         betaManagedAgentsSessionThread.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -62,7 +60,7 @@ internal class ThreadServiceTest {
             threadService.archive(
                 ThreadArchiveParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()

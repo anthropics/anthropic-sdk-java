@@ -3,7 +3,10 @@ package com.anthropic.ecosystem;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.ObjectMappers;
-import com.anthropic.models.messages.Base64ImageSource;
+import com.anthropic.models.messages.BashCodeExecutionToolResultBlockParam;
+import com.anthropic.models.messages.BashCodeExecutionToolResultErrorCode;
+import com.anthropic.models.messages.BashCodeExecutionToolResultErrorParam;
+import com.anthropic.models.messages.CacheControlEphemeral;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 // Exercises basic SDK usage from Java and is executed on a real JDK 8 runtime to catch
@@ -24,11 +27,16 @@ public final class Java8UsageMain {
         require(client.beta() != null, "beta");
 
         JsonMapper mapper = ObjectMappers.jsonMapper();
-        Base64ImageSource src = Base64ImageSource.builder()
-                .data("U3RhaW5sZXNzIHJvY2tz")
-                .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
+        BashCodeExecutionToolResultBlockParam src = BashCodeExecutionToolResultBlockParam.builder()
+                .content(BashCodeExecutionToolResultErrorParam.of(
+                        BashCodeExecutionToolResultErrorCode.INVALID_TOOL_INPUT))
+                .toolUseId("srvtoolu_SQfNkl1n_JR_")
+                .cacheControl(CacheControlEphemeral.builder()
+                        .ttl(CacheControlEphemeral.Ttl.TTL_5M)
+                        .build())
                 .build();
-        Base64ImageSource roundTripped = mapper.readValue(mapper.writeValueAsString(src), Base64ImageSource.class);
+        BashCodeExecutionToolResultBlockParam roundTripped =
+                mapper.readValue(mapper.writeValueAsString(src), BashCodeExecutionToolResultBlockParam.class);
         require(roundTripped.equals(src), "Jackson round-trip equality");
 
         System.out.println("Java 8 usage check passed.");

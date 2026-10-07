@@ -38,6 +38,7 @@ private constructor(
     private val maxContentTokens: JsonField<Int>,
     private val permissionPolicy: JsonField<PermissionPolicy>,
     private val type: JsonField<Type>,
+    private val urlSources: JsonField<BetaManagedAgentsWebFetchUrlSourcesParams>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -58,6 +59,9 @@ private constructor(
         @ExcludeMissing
         permissionPolicy: JsonField<PermissionPolicy> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("url_sources")
+        @ExcludeMissing
+        urlSources: JsonField<BetaManagedAgentsWebFetchUrlSourcesParams> = JsonMissing.of(),
     ) : this(
         name,
         allowedDomains,
@@ -66,6 +70,7 @@ private constructor(
         maxContentTokens,
         permissionPolicy,
         type,
+        urlSources,
         mutableMapOf(),
     )
 
@@ -136,6 +141,15 @@ private constructor(
     fun type(): Optional<Type> = type.getOptional("type")
 
     /**
+     * Which sources contribute URLs the tool may fetch. Omit to allow every source.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun urlSources(): Optional<BetaManagedAgentsWebFetchUrlSourcesParams> =
+        urlSources.getOptional("url_sources")
+
+    /**
      * Returns the raw JSON value of [allowedDomains].
      *
      * Unlike [allowedDomains], this method doesn't throw if the JSON field has an unexpected type.
@@ -187,6 +201,15 @@ private constructor(
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
+    /**
+     * Returns the raw JSON value of [urlSources].
+     *
+     * Unlike [urlSources], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("url_sources")
+    @ExcludeMissing
+    fun _urlSources(): JsonField<BetaManagedAgentsWebFetchUrlSourcesParams> = urlSources
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -218,6 +241,8 @@ private constructor(
         private var maxContentTokens: JsonField<Int> = JsonMissing.of()
         private var permissionPolicy: JsonField<PermissionPolicy> = JsonMissing.of()
         private var type: JsonField<Type> = JsonMissing.of()
+        private var urlSources: JsonField<BetaManagedAgentsWebFetchUrlSourcesParams> =
+            JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -237,6 +262,7 @@ private constructor(
             maxContentTokens = betaManagedAgentsWebFetchToolConfigParams.maxContentTokens
             permissionPolicy = betaManagedAgentsWebFetchToolConfigParams.permissionPolicy
             type = betaManagedAgentsWebFetchToolConfigParams.type
+            urlSources = betaManagedAgentsWebFetchToolConfigParams.urlSources
             additionalProperties =
                 betaManagedAgentsWebFetchToolConfigParams.additionalProperties.toMutableMap()
         }
@@ -417,6 +443,25 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
+        /** Which sources contribute URLs the tool may fetch. Omit to allow every source. */
+        fun urlSources(urlSources: BetaManagedAgentsWebFetchUrlSourcesParams?) =
+            urlSources(JsonField.ofNullable(urlSources))
+
+        /** Alias for calling [Builder.urlSources] with `urlSources.orElse(null)`. */
+        fun urlSources(urlSources: Optional<BetaManagedAgentsWebFetchUrlSourcesParams>) =
+            urlSources(urlSources.getOrNull())
+
+        /**
+         * Sets [Builder.urlSources] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.urlSources] with a well-typed
+         * [BetaManagedAgentsWebFetchUrlSourcesParams] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
+         */
+        fun urlSources(urlSources: JsonField<BetaManagedAgentsWebFetchUrlSourcesParams>) = apply {
+            this.urlSources = urlSources
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -450,6 +495,7 @@ private constructor(
                 maxContentTokens,
                 permissionPolicy,
                 type,
+                urlSources,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -480,6 +526,7 @@ private constructor(
         maxContentTokens()
         permissionPolicy().ifPresent { it.validate() }
         type().ifPresent { it.validate() }
+        urlSources().ifPresent { it.validate() }
         validated = true
     }
 
@@ -504,7 +551,8 @@ private constructor(
             (if (enabled.asKnown().isPresent) 1 else 0) +
             (if (maxContentTokens.asKnown().isPresent) 1 else 0) +
             (permissionPolicy.asKnown().getOrNull()?.validity() ?: 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0)
+            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            (urlSources.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
      * Permission policy for this tool. Controls whether tool calls are auto-approved or require
@@ -1107,6 +1155,7 @@ private constructor(
             maxContentTokens == other.maxContentTokens &&
             permissionPolicy == other.permissionPolicy &&
             type == other.type &&
+            urlSources == other.urlSources &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1119,6 +1168,7 @@ private constructor(
             maxContentTokens,
             permissionPolicy,
             type,
+            urlSources,
             additionalProperties,
         )
     }
@@ -1126,5 +1176,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsWebFetchToolConfigParams{name=$name, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, enabled=$enabled, maxContentTokens=$maxContentTokens, permissionPolicy=$permissionPolicy, type=$type, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsWebFetchToolConfigParams{name=$name, allowedDomains=$allowedDomains, blockedDomains=$blockedDomains, enabled=$enabled, maxContentTokens=$maxContentTokens, permissionPolicy=$permissionPolicy, type=$type, urlSources=$urlSources, additionalProperties=$additionalProperties}"
 }

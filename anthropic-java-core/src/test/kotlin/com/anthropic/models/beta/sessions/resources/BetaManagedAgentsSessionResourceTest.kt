@@ -17,7 +17,7 @@ internal class BetaManagedAgentsSessionResourceTest {
     fun ofGitHubRepository() {
         val githubRepository =
             BetaManagedAgentsGitHubRepositoryResource.builder()
-                .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .mountPath("/workspace/example-repo")
                 .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
@@ -40,7 +40,7 @@ internal class BetaManagedAgentsSessionResourceTest {
         val betaManagedAgentsSessionResource =
             BetaManagedAgentsSessionResource.ofGitHubRepository(
                 BetaManagedAgentsGitHubRepositoryResource.builder()
-                    .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                    .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .mountPath("/workspace/example-repo")
                     .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
@@ -159,7 +159,7 @@ internal class BetaManagedAgentsSessionResourceTest {
                     JsonValue.from(
                         mapOf(
                             "type" to "unknown_variant",
-                            "id" to "sesrsc_011CZkZCKr6eXyl0gWMOdQiu",
+                            "id" to "sesrsc_011CZkZCKr6eXym1gWMPdQiu",
                             "created_at" to "2026-03-15T10:00:00Z",
                             "mount_path" to "/workspace/example-repo",
                             "updated_at" to "2026-03-15T10:00:00Z",
@@ -175,7 +175,7 @@ internal class BetaManagedAgentsSessionResourceTest {
         assertThat(e).hasMessageStartingWith("Unknown ")
 
         assertThat(betaManagedAgentsSessionResource.id())
-            .contains("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+            .contains("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
         assertThat(betaManagedAgentsSessionResource.createdAt())
             .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaManagedAgentsSessionResource.mountPath()).contains("/workspace/example-repo")

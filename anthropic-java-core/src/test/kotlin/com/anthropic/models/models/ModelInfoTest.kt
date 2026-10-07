@@ -38,6 +38,13 @@ internal class ModelInfoTest {
                         )
                         .imageInput(CapabilitySupport.of(true))
                         .pdfInput(CapabilitySupport.of(true))
+                        .serverTools(
+                            ServerToolsCapability.builder()
+                                .codeExecution(CapabilitySupport.of(true))
+                                .supported(true)
+                                .webSearch(CapabilitySupport.of(true))
+                                .build()
+                        )
                         .structuredOutputs(CapabilitySupport.of(true))
                         .thinking(
                             ThinkingCapability.builder()
@@ -45,6 +52,7 @@ internal class ModelInfoTest {
                                 .types(
                                     ThinkingTypes.builder()
                                         .adaptive(CapabilitySupport.of(true))
+                                        .disabled(CapabilitySupport.of(true))
                                         .enabled(CapabilitySupport.of(true))
                                         .build()
                                 )
@@ -53,9 +61,13 @@ internal class ModelInfoTest {
                         .build()
                 )
                 .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .deprecatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("Claude Opus 5")
+                .lifecycle(ModelInfo.Lifecycle.ACTIVE)
+                .line(ModelLine.HAIKU)
                 .maxInputTokens(0L)
                 .maxTokens(0L)
+                .retiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
         assertThat(modelInfo.id()).isEqualTo("claude-opus-5")
@@ -85,6 +97,13 @@ internal class ModelInfoTest {
                     )
                     .imageInput(CapabilitySupport.of(true))
                     .pdfInput(CapabilitySupport.of(true))
+                    .serverTools(
+                        ServerToolsCapability.builder()
+                            .codeExecution(CapabilitySupport.of(true))
+                            .supported(true)
+                            .webSearch(CapabilitySupport.of(true))
+                            .build()
+                    )
                     .structuredOutputs(CapabilitySupport.of(true))
                     .thinking(
                         ThinkingCapability.builder()
@@ -92,6 +111,7 @@ internal class ModelInfoTest {
                             .types(
                                 ThinkingTypes.builder()
                                     .adaptive(CapabilitySupport.of(true))
+                                    .disabled(CapabilitySupport.of(true))
                                     .enabled(CapabilitySupport.of(true))
                                     .build()
                             )
@@ -100,9 +120,14 @@ internal class ModelInfoTest {
                     .build()
             )
         assertThat(modelInfo.createdAt()).isEqualTo(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+        assertThat(modelInfo.deprecatedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(modelInfo.displayName()).isEqualTo("Claude Opus 5")
+        assertThat(modelInfo.lifecycle()).isEqualTo(ModelInfo.Lifecycle.ACTIVE)
+        assertThat(modelInfo.line()).contains(ModelLine.HAIKU)
         assertThat(modelInfo.maxInputTokens()).contains(0L)
         assertThat(modelInfo.maxTokens()).contains(0L)
+        assertThat(modelInfo.retiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
 
     @Test
@@ -136,6 +161,13 @@ internal class ModelInfoTest {
                         )
                         .imageInput(CapabilitySupport.of(true))
                         .pdfInput(CapabilitySupport.of(true))
+                        .serverTools(
+                            ServerToolsCapability.builder()
+                                .codeExecution(CapabilitySupport.of(true))
+                                .supported(true)
+                                .webSearch(CapabilitySupport.of(true))
+                                .build()
+                        )
                         .structuredOutputs(CapabilitySupport.of(true))
                         .thinking(
                             ThinkingCapability.builder()
@@ -143,6 +175,7 @@ internal class ModelInfoTest {
                                 .types(
                                     ThinkingTypes.builder()
                                         .adaptive(CapabilitySupport.of(true))
+                                        .disabled(CapabilitySupport.of(true))
                                         .enabled(CapabilitySupport.of(true))
                                         .build()
                                 )
@@ -151,9 +184,13 @@ internal class ModelInfoTest {
                         .build()
                 )
                 .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .deprecatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("Claude Opus 5")
+                .lifecycle(ModelInfo.Lifecycle.ACTIVE)
+                .line(ModelLine.HAIKU)
                 .maxInputTokens(0L)
                 .maxTokens(0L)
+                .retiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
         val roundtrippedModelInfo =

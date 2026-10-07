@@ -34,6 +34,13 @@ internal class ModelCapabilitiesTest {
                 )
                 .imageInput(CapabilitySupport.of(true))
                 .pdfInput(CapabilitySupport.of(true))
+                .serverTools(
+                    ServerToolsCapability.builder()
+                        .codeExecution(CapabilitySupport.of(true))
+                        .supported(true)
+                        .webSearch(CapabilitySupport.of(true))
+                        .build()
+                )
                 .structuredOutputs(CapabilitySupport.of(true))
                 .thinking(
                     ThinkingCapability.builder()
@@ -41,6 +48,7 @@ internal class ModelCapabilitiesTest {
                         .types(
                             ThinkingTypes.builder()
                                 .adaptive(CapabilitySupport.of(true))
+                                .disabled(CapabilitySupport.of(true))
                                 .enabled(CapabilitySupport.of(true))
                                 .build()
                         )
@@ -73,6 +81,14 @@ internal class ModelCapabilitiesTest {
             )
         assertThat(modelCapabilities.imageInput()).isEqualTo(CapabilitySupport.of(true))
         assertThat(modelCapabilities.pdfInput()).isEqualTo(CapabilitySupport.of(true))
+        assertThat(modelCapabilities.serverTools())
+            .isEqualTo(
+                ServerToolsCapability.builder()
+                    .codeExecution(CapabilitySupport.of(true))
+                    .supported(true)
+                    .webSearch(CapabilitySupport.of(true))
+                    .build()
+            )
         assertThat(modelCapabilities.structuredOutputs()).isEqualTo(CapabilitySupport.of(true))
         assertThat(modelCapabilities.thinking())
             .isEqualTo(
@@ -81,6 +97,7 @@ internal class ModelCapabilitiesTest {
                     .types(
                         ThinkingTypes.builder()
                             .adaptive(CapabilitySupport.of(true))
+                            .disabled(CapabilitySupport.of(true))
                             .enabled(CapabilitySupport.of(true))
                             .build()
                     )
@@ -116,6 +133,13 @@ internal class ModelCapabilitiesTest {
                 )
                 .imageInput(CapabilitySupport.of(true))
                 .pdfInput(CapabilitySupport.of(true))
+                .serverTools(
+                    ServerToolsCapability.builder()
+                        .codeExecution(CapabilitySupport.of(true))
+                        .supported(true)
+                        .webSearch(CapabilitySupport.of(true))
+                        .build()
+                )
                 .structuredOutputs(CapabilitySupport.of(true))
                 .thinking(
                     ThinkingCapability.builder()
@@ -123,6 +147,7 @@ internal class ModelCapabilitiesTest {
                         .types(
                             ThinkingTypes.builder()
                                 .adaptive(CapabilitySupport.of(true))
+                                .disabled(CapabilitySupport.of(true))
                                 .enabled(CapabilitySupport.of(true))
                                 .build()
                         )

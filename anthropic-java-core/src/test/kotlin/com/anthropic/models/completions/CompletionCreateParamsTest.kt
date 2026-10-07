@@ -16,7 +16,7 @@ internal class CompletionCreateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .maxTokensToSample(256L)
-            .model(Model.CLAUDE_SONNET_5_5)
+            .model(Model.CLAUDE_HAIKU_5_5)
             .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
             .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
             .addStopSequence("string")
@@ -33,7 +33,7 @@ internal class CompletionCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .maxTokensToSample(256L)
-                .model(Model.CLAUDE_SONNET_5_5)
+                .model(Model.CLAUDE_HAIKU_5_5)
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -47,7 +47,7 @@ internal class CompletionCreateParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put("anthropic-beta", listOf("message-batches-2024-09-24").joinToString(","))
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -58,7 +58,7 @@ internal class CompletionCreateParamsTest {
         val params =
             CompletionCreateParams.builder()
                 .maxTokensToSample(256L)
-                .model(Model.CLAUDE_SONNET_5_5)
+                .model(Model.CLAUDE_HAIKU_5_5)
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .build()
 
@@ -74,7 +74,7 @@ internal class CompletionCreateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .maxTokensToSample(256L)
-                .model(Model.CLAUDE_SONNET_5_5)
+                .model(Model.CLAUDE_HAIKU_5_5)
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .metadata(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
                 .addStopSequence("string")
@@ -86,7 +86,7 @@ internal class CompletionCreateParamsTest {
         val body = params._body()
 
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_5_5)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_HAIKU_5_5)
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
         assertThat(body.metadata())
             .contains(Metadata.builder().userId("13803d75-b4b5-4c3e-b2a2-6f21399b021b").build())
@@ -101,14 +101,14 @@ internal class CompletionCreateParamsTest {
         val params =
             CompletionCreateParams.builder()
                 .maxTokensToSample(256L)
-                .model(Model.CLAUDE_SONNET_5_5)
+                .model(Model.CLAUDE_HAIKU_5_5)
                 .prompt("\n\nHuman: Hello, world!\n\nAssistant:")
                 .build()
 
         val body = params._body()
 
         assertThat(body.maxTokensToSample()).isEqualTo(256L)
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_SONNET_5_5)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_HAIKU_5_5)
         assertThat(body.prompt()).isEqualTo("\n\nHuman: Hello, world!\n\nAssistant:")
     }
 }

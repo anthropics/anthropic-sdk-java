@@ -42,7 +42,11 @@ internal class DreamListParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put(
+                        "anthropic-beta",
+                        listOf("message-batches-2024-09-24", "dreaming-2026-04-21")
+                            .joinToString(","),
+                    )
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )

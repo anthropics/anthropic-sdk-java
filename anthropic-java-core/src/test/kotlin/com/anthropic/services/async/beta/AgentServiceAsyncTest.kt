@@ -18,7 +18,6 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSelfParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsUrlMcpServerParams
 import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -111,7 +110,6 @@ internal class AgentServiceAsyncTest {
         betaManagedAgentsAgent.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun retrieve() {
         val client =
@@ -234,7 +232,6 @@ internal class AgentServiceAsyncTest {
         betaManagedAgentsAgent.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

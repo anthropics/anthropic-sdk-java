@@ -130,6 +130,7 @@ val proguardJar by tasks.registering(proguard.gradle.ProGuardTask::class) {
 
     configuration("./test.pro")
     configuration("../anthropic-java-core/src/main/resources/META-INF/proguard/anthropic-java-core.pro")
+    configuration("../anthropic-java-client-okhttp/src/main/resources/META-INF/proguard/anthropic-java-client-okhttp.pro")
 }
 
 val testProGuard by tasks.registering(JavaExec::class) {
@@ -155,6 +156,7 @@ val r8Jar by tasks.registering(JavaExec::class) {
     val proguardConfigs = listOf(
         "./test.pro",
         "../anthropic-java-core/src/main/resources/META-INF/proguard/anthropic-java-core.pro",
+        "../anthropic-java-client-okhttp/src/main/resources/META-INF/proguard/anthropic-java-client-okhttp.pro",
     )
 
     args = listOf(
@@ -162,11 +164,8 @@ val r8Jar by tasks.registering(JavaExec::class) {
         "--classfile",
         "--output", r8JarFile.get().asFile.absolutePath,
         "--lib", System.getProperty("java.home"),
-        "--pg-conf", proguardConfigs[0],
-        "--pg-conf", proguardConfigs[1],
         "--pg-map-output", layout.buildDirectory.file("r8-mapping.txt").get().asFile.absolutePath,
-        shadowJarFile.get().asFile.absolutePath,
-    )
+    ) + proguardConfigs.flatMap { listOf("--pg-conf", it) } + shadowJarFile.get().asFile.absolutePath
 
     // `args` is an `@Input` on `JavaExec` (so the paths above already affect
     // the cache key), but the file *contents* behind those paths are not

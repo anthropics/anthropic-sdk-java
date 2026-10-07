@@ -6,14 +6,12 @@ import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaType
 import com.anthropic.models.beta.sessions.threads.events.EventListParams
 import com.anthropic.models.beta.sessions.threads.events.EventStreamParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class EventServiceAsyncTest {
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -27,7 +25,7 @@ internal class EventServiceAsyncTest {
             eventServiceAsync.list(
                 EventListParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .build()
             )
 
@@ -48,7 +46,7 @@ internal class EventServiceAsyncTest {
             eventServiceAsync.streamStreaming(
                 EventStreamParams.builder()
                     .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                    .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                    .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                     .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")

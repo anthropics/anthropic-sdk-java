@@ -92,10 +92,12 @@ private constructor(
         /** Alias for calling [Builder.baseUrl] with `baseUrl.orElse(null)`. */
         fun baseUrl(baseUrl: Optional<String>) = baseUrl(baseUrl.getOrNull())
 
-        fun addPathSegment(pathSegment: String) = apply { pathSegments.add(pathSegment) }
+        fun addPathSegment(pathSegment: String) = apply {
+            pathSegments.add(checkPathSegment(pathSegment))
+        }
 
         fun addPathSegments(vararg pathSegments: String) = apply {
-            this.pathSegments.addAll(pathSegments)
+            this.pathSegments.addAll(pathSegments.onEach { checkPathSegment(it) })
         }
 
         fun replaceAllPathSegments(vararg pathSegments: String) = apply {
@@ -195,3 +197,12 @@ private constructor(
             )
     }
 }
+
+// Throws on a "." or ".." segment: HTTP clients collapse them ("/cards/.." becomes "/"), so the
+// request would go to a different path.
+private fun checkPathSegment(segment: String): String =
+    segment.also {
+        check(it != "." && it != "..") {
+            "Path segment \"$it\" is a dot-segment and can't be safely passed as a path parameter"
+        }
+    }

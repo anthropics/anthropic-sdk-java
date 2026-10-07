@@ -4,14 +4,12 @@ import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.deploymentruns.DeploymentRunRetrieveParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class DeploymentRunServiceAsyncTest {
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun retrieve() {
         val client =
@@ -34,7 +32,6 @@ internal class DeploymentRunServiceAsyncTest {
         betaManagedAgentsDeploymentRun.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

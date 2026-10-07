@@ -786,8 +786,8 @@ private constructor(
         Optional.ofNullable(sessionStatusTerminated)
 
     /**
-     * Emitted when a subagent is spawned as a new thread. Written to the parent thread's output
-     * stream so clients observing the session see child creation.
+     * Emitted when a child thread is created. Written to the parent thread's output stream so
+     * clients observing the session see child creation.
      */
     fun sessionThreadCreated(): Optional<BetaManagedAgentsSessionThreadCreatedEvent> =
         Optional.ofNullable(sessionThreadCreated)
@@ -1073,8 +1073,8 @@ private constructor(
         sessionStatusTerminated.getOrThrow("sessionStatusTerminated")
 
     /**
-     * Emitted when a subagent is spawned as a new thread. Written to the parent thread's output
-     * stream so clients observing the session see child creation.
+     * Emitted when a child thread is created. Written to the parent thread's output stream so
+     * clients observing the session see child creation.
      */
     fun asSessionThreadCreated(): BetaManagedAgentsSessionThreadCreatedEvent =
         sessionThreadCreated.getOrThrow("sessionThreadCreated")
@@ -1703,8 +1703,8 @@ private constructor(
         ) = BetaManagedAgentsStreamSessionEvents(sessionStatusTerminated = sessionStatusTerminated)
 
         /**
-         * Emitted when a subagent is spawned as a new thread. Written to the parent thread's output
-         * stream so clients observing the session see child creation.
+         * Emitted when a child thread is created. Written to the parent thread's output stream so
+         * clients observing the session see child creation.
          */
         @JvmStatic
         fun ofSessionThreadCreated(
@@ -1981,8 +1981,8 @@ private constructor(
         ): T
 
         /**
-         * Emitted when a subagent is spawned as a new thread. Written to the parent thread's output
-         * stream so clients observing the session see child creation.
+         * Emitted when a child thread is created. Written to the parent thread's output stream so
+         * clients observing the session see child creation.
          */
         fun visitSessionThreadCreated(
             sessionThreadCreated: BetaManagedAgentsSessionThreadCreatedEvent

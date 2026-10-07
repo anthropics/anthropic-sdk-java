@@ -16,7 +16,7 @@ internal class CredentialListPageResponseTest {
             CredentialListPageResponse.builder()
                 .addData(
                     BetaManagedAgentsCredential.builder()
-                        .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                        .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                         .archivedAt(null)
                         .staticBearerAuth("https://example-server.modelcontextprotocol.io/sse")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -37,7 +37,7 @@ internal class CredentialListPageResponseTest {
         assertThat(credentialListPageResponse.data().getOrNull())
             .containsExactly(
                 BetaManagedAgentsCredential.builder()
-                    .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .archivedAt(null)
                     .staticBearerAuth("https://example-server.modelcontextprotocol.io/sse")
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -65,7 +65,7 @@ internal class CredentialListPageResponseTest {
                 .toBuilder()
                 .addData(
                     BetaManagedAgentsCredential.builder()
-                        .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                        .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                         .archivedAt(null)
                         .staticBearerAuth("https://example-server.modelcontextprotocol.io/sse")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -85,7 +85,7 @@ internal class CredentialListPageResponseTest {
         assertThat(credentialListPageResponse.data().getOrNull())
             .containsExactly(
                 BetaManagedAgentsCredential.builder()
-                    .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .archivedAt(null)
                     .staticBearerAuth("https://example-server.modelcontextprotocol.io/sse")
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
@@ -109,7 +109,7 @@ internal class CredentialListPageResponseTest {
             CredentialListPageResponse.builder()
                 .addData(
                     BetaManagedAgentsCredential.builder()
-                        .id("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                        .id("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                         .archivedAt(null)
                         .staticBearerAuth("https://example-server.modelcontextprotocol.io/sse")
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))

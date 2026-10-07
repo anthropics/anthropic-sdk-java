@@ -15,7 +15,7 @@ internal class BetaManagedAgentsSessionThreadCreatedEventTest {
                 .id("sevt_011CZkZWXb7pJkx1shYaqoCu")
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .type(BetaManagedAgentsSessionThreadCreatedEvent.Type.SESSION_THREAD_CREATED)
                 .build()
 
@@ -25,7 +25,7 @@ internal class BetaManagedAgentsSessionThreadCreatedEventTest {
         assertThat(betaManagedAgentsSessionThreadCreatedEvent.processedAt())
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaManagedAgentsSessionThreadCreatedEvent.sessionThreadId())
-            .isEqualTo("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+            .isEqualTo("sthr_011CZkZVWa6oJjw1rgXZpnBt")
         assertThat(betaManagedAgentsSessionThreadCreatedEvent.type())
             .isEqualTo(BetaManagedAgentsSessionThreadCreatedEvent.Type.SESSION_THREAD_CREATED)
     }
@@ -38,7 +38,7 @@ internal class BetaManagedAgentsSessionThreadCreatedEventTest {
                 .id("sevt_011CZkZWXb7pJkx1shYaqoCu")
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
-                .sessionThreadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .type(BetaManagedAgentsSessionThreadCreatedEvent.Type.SESSION_THREAD_CREATED)
                 .build()
 

@@ -13,7 +13,7 @@ internal class CredentialUpdateParamsTest {
     fun create() {
         CredentialUpdateParams.builder()
             .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-            .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+            .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .auth(
@@ -52,11 +52,11 @@ internal class CredentialUpdateParamsTest {
         val params =
             CredentialUpdateParams.builder()
                 .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-        assertThat(params._pathParam(1)).isEqualTo("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+        assertThat(params._pathParam(1)).isEqualTo("vcrd_011CZkZEMt8gZan2iYPQfSkw")
         // out-of-bound path param
         assertThat(params._pathParam(2)).isEqualTo("")
     }
@@ -66,7 +66,7 @@ internal class CredentialUpdateParamsTest {
         val params =
             CredentialUpdateParams.builder()
                 .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .auth(
@@ -104,7 +104,11 @@ internal class CredentialUpdateParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put(
+                        "anthropic-beta",
+                        listOf("message-batches-2024-09-24", "managed-agents-2026-04-01")
+                            .joinToString(","),
+                    )
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -115,7 +119,7 @@ internal class CredentialUpdateParamsTest {
         val params =
             CredentialUpdateParams.builder()
                 .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .build()
 
         val headers = params._headers()
@@ -128,7 +132,7 @@ internal class CredentialUpdateParamsTest {
         val params =
             CredentialUpdateParams.builder()
                 .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .auth(
@@ -202,7 +206,7 @@ internal class CredentialUpdateParamsTest {
         val params =
             CredentialUpdateParams.builder()
                 .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                 .build()
 
         val body = params._body()

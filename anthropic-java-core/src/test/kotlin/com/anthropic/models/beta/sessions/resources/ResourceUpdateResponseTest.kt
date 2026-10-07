@@ -17,7 +17,7 @@ internal class ResourceUpdateResponseTest {
     fun ofGitHubRepository() {
         val githubRepository =
             BetaManagedAgentsGitHubRepositoryResource.builder()
-                .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .mountPath("/workspace/example-repo")
                 .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
@@ -39,7 +39,7 @@ internal class ResourceUpdateResponseTest {
         val resourceUpdateResponse =
             ResourceUpdateResponse.ofGitHubRepository(
                 BetaManagedAgentsGitHubRepositoryResource.builder()
-                    .id("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+                    .id("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .mountPath("/workspace/example-repo")
                     .type(BetaManagedAgentsGitHubRepositoryResource.Type.GITHUB_REPOSITORY)
@@ -154,7 +154,7 @@ internal class ResourceUpdateResponseTest {
                     JsonValue.from(
                         mapOf(
                             "type" to "unknown_variant",
-                            "id" to "sesrsc_011CZkZCKr6eXyl0gWMOdQiu",
+                            "id" to "sesrsc_011CZkZCKr6eXym1gWMPdQiu",
                             "created_at" to "2026-03-15T10:00:00Z",
                             "mount_path" to "/workspace/example-repo",
                             "updated_at" to "2026-03-15T10:00:00Z",
@@ -166,7 +166,7 @@ internal class ResourceUpdateResponseTest {
         val e = assertThrows<AnthropicInvalidDataException> { resourceUpdateResponse.validate() }
         assertThat(e).hasMessageStartingWith("Unknown ")
 
-        assertThat(resourceUpdateResponse.id()).contains("sesrsc_011CZkZCKr6eXyl0gWMOdQiu")
+        assertThat(resourceUpdateResponse.id()).contains("sesrsc_011CZkZCKr6eXym1gWMPdQiu")
         assertThat(resourceUpdateResponse.createdAt())
             .contains(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(resourceUpdateResponse.mountPath()).contains("/workspace/example-repo")

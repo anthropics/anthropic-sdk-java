@@ -43,7 +43,28 @@ private constructor(
                 is JsonBoolean -> put(name, value.value.toString())
                 is JsonNumber -> put(name, value.value.toString())
                 is JsonString -> put(name, value.value)
-                is JsonArray -> value.values.forEach { put(name, it) }
+                is JsonArray ->
+                    if (value.values.isNotEmpty())
+                        put(
+                            name,
+                            value.values
+                                .asSequence()
+                                .mapNotNull {
+                                    when (it) {
+                                        is JsonMissing,
+                                        is JsonNull -> null
+                                        is JsonBoolean -> it.value.toString()
+                                        is JsonNumber -> it.value.toString()
+                                        is JsonString -> it.value
+                                        is JsonArray,
+                                        is JsonObject ->
+                                            throw IllegalArgumentException(
+                                                "Cannot comma separate non-primitives in headers"
+                                            )
+                                    }
+                                }
+                                .joinToString(","),
+                        )
                 is JsonObject ->
                     value.values.forEach { (nestedName, value) -> put("$name.$nestedName", value) }
             }

@@ -33,6 +33,9 @@ import kotlin.jvm.optionals.getOrNull
  * [migration guide](https://platform.claude.com/docs/en/build-with-claude/working-with-messages)
  * for guidance in migrating from Text Completions to Messages.
  */
+@Deprecated(
+    "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
+)
 class CompletionCreateParams
 private constructor(
     private val betas: List<AnthropicBeta>?,
@@ -668,7 +671,11 @@ private constructor(
     override fun _headers(): Headers =
         Headers.builder()
             .apply {
-                betas?.forEach { put("anthropic-beta", it.toString()) }
+                betas?.let {
+                    if (it.isNotEmpty()) {
+                        put("anthropic-beta", it.joinToString(","))
+                    }
+                }
                 workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }

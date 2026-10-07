@@ -19,6 +19,7 @@ class BetaRbacRole
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
+    private val displayName: JsonField<String>,
     private val name: JsonField<String>,
     private val type: JsonValue,
     private val updatedAt: JsonField<OffsetDateTime>,
@@ -31,12 +32,15 @@ private constructor(
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("display_name")
+        @ExcludeMissing
+        displayName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(id, createdAt, name, type, updatedAt, mutableMapOf())
+    ) : this(id, createdAt, displayName, name, type, updatedAt, mutableMapOf())
 
     /**
      * ID of the RBAC Role.
@@ -55,11 +59,23 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
-     * Name of the RBAC Role.
+     * Name of the RBAC Role. For a role created by Anthropic, this name can differ from the label
+     * claude.ai shows, and Anthropic may change the name. To keep a lasting reference to a role,
+     * store its `id`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
+    fun displayName(): String = displayName.getRequired("display_name")
+
+    /**
+     * Deprecated: use `display_name` instead. Name of the RBAC Role; always the same value as
+     * `display_name`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    @Deprecated("Use `display_name` instead; `name` always has the same value.")
     fun name(): String = name.getRequired("name")
 
     /**
@@ -102,11 +118,23 @@ private constructor(
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
     /**
+     * Returns the raw JSON value of [displayName].
+     *
+     * Unlike [displayName], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("display_name")
+    @ExcludeMissing
+    fun _displayName(): JsonField<String> = displayName
+
+    /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+    @Deprecated("Use `display_name` instead; `name` always has the same value.")
+    @JsonProperty("name")
+    @ExcludeMissing
+    fun _name(): JsonField<String> = name
 
     /**
      * Returns the raw JSON value of [updatedAt].
@@ -138,6 +166,7 @@ private constructor(
          * ```java
          * .id()
          * .createdAt()
+         * .displayName()
          * .name()
          * .updatedAt()
          * ```
@@ -150,6 +179,7 @@ private constructor(
 
         private var id: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
+        private var displayName: JsonField<String>? = null
         private var name: JsonField<String>? = null
         private var type: JsonValue = JsonValue.from("rbac_role")
         private var updatedAt: JsonField<OffsetDateTime>? = null
@@ -159,6 +189,7 @@ private constructor(
         internal fun from(betaRbacRole: BetaRbacRole) = apply {
             id = betaRbacRole.id
             createdAt = betaRbacRole.createdAt
+            displayName = betaRbacRole.displayName
             name = betaRbacRole.name
             type = betaRbacRole.type
             updatedAt = betaRbacRole.updatedAt
@@ -188,7 +219,27 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
-        /** Name of the RBAC Role. */
+        /**
+         * Name of the RBAC Role. For a role created by Anthropic, this name can differ from the
+         * label claude.ai shows, and Anthropic may change the name. To keep a lasting reference to
+         * a role, store its `id`.
+         */
+        fun displayName(displayName: String) = displayName(JsonField.of(displayName))
+
+        /**
+         * Sets [Builder.displayName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.displayName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
+
+        /**
+         * Deprecated: use `display_name` instead. Name of the RBAC Role; always the same value as
+         * `display_name`.
+         */
+        @Deprecated("Use `display_name` instead; `name` always has the same value.")
         fun name(name: String) = name(JsonField.of(name))
 
         /**
@@ -197,6 +248,7 @@ private constructor(
          * You should usually call [Builder.name] with a well-typed [String] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
+        @Deprecated("Use `display_name` instead; `name` always has the same value.")
         fun name(name: JsonField<String>) = apply { this.name = name }
 
         /**
@@ -253,6 +305,7 @@ private constructor(
          * ```java
          * .id()
          * .createdAt()
+         * .displayName()
          * .name()
          * .updatedAt()
          * ```
@@ -263,6 +316,7 @@ private constructor(
             BetaRbacRole(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
+                checkRequired("displayName", displayName),
                 checkRequired("name", name),
                 type,
                 checkRequired("updatedAt", updatedAt),
@@ -287,6 +341,7 @@ private constructor(
 
         id()
         createdAt()
+        displayName()
         name()
         _type().let {
             if (it != JsonValue.from("rbac_role")) {
@@ -314,6 +369,7 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (if (displayName.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("rbac_role")) 1 else 0 } +
             (if (updatedAt.asKnown().isPresent) 1 else 0)
@@ -326,6 +382,7 @@ private constructor(
         return other is BetaRbacRole &&
             id == other.id &&
             createdAt == other.createdAt &&
+            displayName == other.displayName &&
             name == other.name &&
             type == other.type &&
             updatedAt == other.updatedAt &&
@@ -333,11 +390,11 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, name, type, updatedAt, additionalProperties)
+        Objects.hash(id, createdAt, displayName, name, type, updatedAt, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaRbacRole{id=$id, createdAt=$createdAt, name=$name, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "BetaRbacRole{id=$id, createdAt=$createdAt, displayName=$displayName, name=$name, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

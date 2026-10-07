@@ -1,10 +1,14 @@
 package com.anthropic.models.models
 
+import com.anthropic.core.Enum
+import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.toImmutable
+import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
+import com.fasterxml.jackson.annotation.JsonCreator
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -19,6 +23,7 @@ class ModelListParams
 private constructor(
     private val afterId: String?,
     private val beforeId: String?,
+    private val lifecycle: List<Lifecycle>?,
     private val limit: Long?,
     private val betas: List<AnthropicBeta>?,
     private val workspaceId: String?,
@@ -37,6 +42,13 @@ private constructor(
      * results immediately before this object.
      */
     fun beforeId(): Optional<String> = Optional.ofNullable(beforeId)
+
+    /**
+     * Filter the list to models in any of the given lifecycle stages (`active`, `deprecated`, or
+     * `retired`). Up to 3 values. When omitted, the list contains the `active` and `deprecated`
+     * models; `retired` models appear only when `retired` is requested explicitly.
+     */
+    fun lifecycle(): Optional<List<Lifecycle>> = Optional.ofNullable(lifecycle)
 
     /**
      * Number of items to return per page.
@@ -81,6 +93,7 @@ private constructor(
 
         private var afterId: String? = null
         private var beforeId: String? = null
+        private var lifecycle: MutableList<Lifecycle>? = null
         private var limit: Long? = null
         private var betas: MutableList<AnthropicBeta>? = null
         private var workspaceId: String? = null
@@ -91,6 +104,7 @@ private constructor(
         internal fun from(modelListParams: ModelListParams) = apply {
             afterId = modelListParams.afterId
             beforeId = modelListParams.beforeId
+            lifecycle = modelListParams.lifecycle?.toMutableList()
             limit = modelListParams.limit
             betas = modelListParams.betas?.toMutableList()
             workspaceId = modelListParams.workspaceId
@@ -115,6 +129,27 @@ private constructor(
 
         /** Alias for calling [Builder.beforeId] with `beforeId.orElse(null)`. */
         fun beforeId(beforeId: Optional<String>) = beforeId(beforeId.getOrNull())
+
+        /**
+         * Filter the list to models in any of the given lifecycle stages (`active`, `deprecated`,
+         * or `retired`). Up to 3 values. When omitted, the list contains the `active` and
+         * `deprecated` models; `retired` models appear only when `retired` is requested explicitly.
+         */
+        fun lifecycle(lifecycle: List<Lifecycle>?) = apply {
+            this.lifecycle = lifecycle?.toMutableList()
+        }
+
+        /** Alias for calling [Builder.lifecycle] with `lifecycle.orElse(null)`. */
+        fun lifecycle(lifecycle: Optional<List<Lifecycle>>) = lifecycle(lifecycle.getOrNull())
+
+        /**
+         * Adds a single [Lifecycle] to [Builder.lifecycle].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addLifecycle(lifecycle: Lifecycle) = apply {
+            this.lifecycle = (this.lifecycle ?: mutableListOf()).apply { add(lifecycle) }
+        }
 
         /**
          * Number of items to return per page.
@@ -288,6 +323,7 @@ private constructor(
             ModelListParams(
                 afterId,
                 beforeId,
+                lifecycle?.toImmutable(),
                 limit,
                 betas?.toImmutable(),
                 workspaceId,
@@ -299,7 +335,11 @@ private constructor(
     override fun _headers(): Headers =
         Headers.builder()
             .apply {
-                betas?.forEach { put("anthropic-beta", it.toString()) }
+                betas?.let {
+                    if (it.isNotEmpty()) {
+                        put("anthropic-beta", it.joinToString(","))
+                    }
+                }
                 workspaceId?.let { put("anthropic-workspace-id", it) }
                 putAll(additionalHeaders)
             }
@@ -310,10 +350,168 @@ private constructor(
             .apply {
                 afterId?.let { put("after_id", it) }
                 beforeId?.let { put("before_id", it) }
+                lifecycle?.forEach { put("lifecycle[]", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
+
+    class Lifecycle private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val ACTIVE = Lifecycle(JsonField.of("active"))
+
+            @JvmField val DEPRECATED = Lifecycle(JsonField.of("deprecated"))
+
+            @JvmField val RETIRED = Lifecycle(JsonField.of("retired"))
+
+            @JvmStatic
+            fun of(value: String): Lifecycle =
+                // Intern known values so `==` works
+                when (value) {
+                    "active" -> ACTIVE
+                    "deprecated" -> DEPRECATED
+                    "retired" -> RETIRED
+                    else -> Lifecycle(JsonField.of(value))
+                }
+
+            @JsonCreator
+            @JvmStatic
+            fun of(value: JsonField<String>): Lifecycle =
+                value.asString().getOrNull()?.let { of(it) } ?: Lifecycle(value)
+        }
+
+        /** An enum containing [Lifecycle]'s known values. */
+        enum class Known {
+            ACTIVE,
+            DEPRECATED,
+            RETIRED,
+        }
+
+        /**
+         * An enum containing [Lifecycle]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Lifecycle] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            ACTIVE,
+            DEPRECATED,
+            RETIRED,
+            /**
+             * An enum member indicating that [Lifecycle] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                ACTIVE -> Value.ACTIVE
+                DEPRECATED -> Value.DEPRECATED
+                RETIRED -> Value.RETIRED
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                ACTIVE -> Known.ACTIVE
+                DEPRECATED -> Known.DEPRECATED
+                RETIRED -> Known.RETIRED
+                else -> throw AnthropicInvalidDataException("Unknown Lifecycle: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws AnthropicInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                AnthropicInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Lifecycle = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Lifecycle && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -323,6 +521,7 @@ private constructor(
         return other is ModelListParams &&
             afterId == other.afterId &&
             beforeId == other.beforeId &&
+            lifecycle == other.lifecycle &&
             limit == other.limit &&
             betas == other.betas &&
             workspaceId == other.workspaceId &&
@@ -334,6 +533,7 @@ private constructor(
         Objects.hash(
             afterId,
             beforeId,
+            lifecycle,
             limit,
             betas,
             workspaceId,
@@ -342,5 +542,5 @@ private constructor(
         )
 
     override fun toString() =
-        "ModelListParams{afterId=$afterId, beforeId=$beforeId, limit=$limit, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ModelListParams{afterId=$afterId, beforeId=$beforeId, lifecycle=$lifecycle, limit=$limit, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

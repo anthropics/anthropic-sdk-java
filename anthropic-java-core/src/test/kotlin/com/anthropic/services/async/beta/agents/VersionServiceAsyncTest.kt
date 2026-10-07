@@ -2,14 +2,12 @@ package com.anthropic.services.async.beta.agents
 
 import com.anthropic.TestServerExtension
 import com.anthropic.client.okhttp.AnthropicOkHttpClientAsync
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestServerExtension::class)
 internal class VersionServiceAsyncTest {
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

@@ -8,7 +8,6 @@ import com.anthropic.models.beta.tunnels.TunnelCreateParams
 import com.anthropic.models.beta.tunnels.TunnelRetrieveParams
 import com.anthropic.models.beta.tunnels.TunnelRevealTokenParams
 import com.anthropic.models.beta.tunnels.TunnelRotateTokenParams
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -37,7 +36,6 @@ internal class TunnelServiceAsyncTest {
         betaTunnel.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun retrieve() {
         val client =
@@ -60,7 +58,6 @@ internal class TunnelServiceAsyncTest {
         betaTunnel.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =

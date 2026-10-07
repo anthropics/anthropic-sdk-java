@@ -15,7 +15,6 @@ import com.anthropic.models.beta.vaults.credentials.CredentialMcpOAuthValidatePa
 import com.anthropic.models.beta.vaults.credentials.CredentialRetrieveParams
 import com.anthropic.models.beta.vaults.credentials.CredentialUpdateParams
 import java.time.OffsetDateTime
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -70,7 +69,7 @@ internal class CredentialServiceAsyncTest {
             credentialServiceAsync.retrieve(
                 CredentialRetrieveParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -93,7 +92,7 @@ internal class CredentialServiceAsyncTest {
             credentialServiceAsync.update(
                 CredentialUpdateParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .auth(
@@ -132,7 +131,6 @@ internal class CredentialServiceAsyncTest {
         betaManagedAgentsCredential.validate()
     }
 
-    @Disabled("buildURL drops path-level query params")
     @Test
     fun list() {
         val client =
@@ -161,7 +159,7 @@ internal class CredentialServiceAsyncTest {
             credentialServiceAsync.delete(
                 CredentialDeleteParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -184,7 +182,7 @@ internal class CredentialServiceAsyncTest {
             credentialServiceAsync.archive(
                 CredentialArchiveParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
@@ -194,7 +192,6 @@ internal class CredentialServiceAsyncTest {
         betaManagedAgentsCredential.validate()
     }
 
-    @Disabled("prism can't find endpoint with beta only tag")
     @Test
     fun mcpOAuthValidate() {
         val client =
@@ -208,7 +205,7 @@ internal class CredentialServiceAsyncTest {
             credentialServiceAsync.mcpOAuthValidate(
                 CredentialMcpOAuthValidateParams.builder()
                     .vaultId("vlt_011CZkZDLs7fYzm1hXNPeRjv")
-                    .credentialId("vcrd_011CZkZEMt8gZan2iYOQfSkw")
+                    .credentialId("vcrd_011CZkZEMt8gZan2iYPQfSkw")
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()

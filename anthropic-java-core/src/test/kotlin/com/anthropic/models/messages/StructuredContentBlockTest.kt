@@ -209,6 +209,17 @@ internal class StructuredContentBlockTest {
     }
 
     @Test
+    fun allDelegateVisitorFunctionsExistInDelegatorVisitor() {
+        // When this fails, add the variant to `Visitor`, `accept()` and `validate()`.
+        // `visitText()` has a different signature.
+        checkAllDelegation(
+            ContentBlock.Visitor::class,
+            StructuredContentBlock.Visitor::class,
+            "visitText",
+        )
+    }
+
+    @Test
     fun allDelegatorFunctionsAreTested() {
         // There are exceptional test cases for some functions. Most other functions are part of the
         // list of those using the parameterized test. A few delegator functions do not delegate, so

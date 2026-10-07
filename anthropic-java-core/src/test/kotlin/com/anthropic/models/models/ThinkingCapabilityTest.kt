@@ -15,6 +15,7 @@ internal class ThinkingCapabilityTest {
                 .types(
                     ThinkingTypes.builder()
                         .adaptive(CapabilitySupport.of(true))
+                        .disabled(CapabilitySupport.of(true))
                         .enabled(CapabilitySupport.of(true))
                         .build()
                 )
@@ -25,6 +26,7 @@ internal class ThinkingCapabilityTest {
             .isEqualTo(
                 ThinkingTypes.builder()
                     .adaptive(CapabilitySupport.of(true))
+                    .disabled(CapabilitySupport.of(true))
                     .enabled(CapabilitySupport.of(true))
                     .build()
             )
@@ -39,6 +41,7 @@ internal class ThinkingCapabilityTest {
                 .types(
                     ThinkingTypes.builder()
                         .adaptive(CapabilitySupport.of(true))
+                        .disabled(CapabilitySupport.of(true))
                         .enabled(CapabilitySupport.of(true))
                         .build()
                 )

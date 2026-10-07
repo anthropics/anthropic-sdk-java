@@ -48,7 +48,13 @@ internal class WorkHeartbeatParamsTest {
 
         assertThat(headers)
             .isEqualTo(
-                Headers.builder().put("anthropic-beta", "message-batches-2024-09-24").build()
+                Headers.builder()
+                    .put(
+                        "anthropic-beta",
+                        listOf("message-batches-2024-09-24", "managed-agents-2026-04-01")
+                            .joinToString(","),
+                    )
+                    .build()
             )
     }
 

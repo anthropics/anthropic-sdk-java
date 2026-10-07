@@ -18,6 +18,13 @@ internal class BetaManagedAgentsWebFetchToolConfigTest {
                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                     )
                 )
+                .urlSources(
+                    BetaManagedAgentsWebFetchUrlSources.builder()
+                        .clientToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                        .build()
+                )
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")
                 .maxContentTokens(0)
@@ -29,6 +36,14 @@ internal class BetaManagedAgentsWebFetchToolConfigTest {
                 BetaManagedAgentsWebFetchToolConfig.PermissionPolicy.ofAlwaysAllow(
                     BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                 )
+            )
+        assertThat(betaManagedAgentsWebFetchToolConfig.urlSources())
+            .contains(
+                BetaManagedAgentsWebFetchUrlSources.builder()
+                    .clientToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                    .serverToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                    .userInput(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                    .build()
             )
         assertThat(betaManagedAgentsWebFetchToolConfig.allowedDomains().getOrNull())
             .containsExactly("string")
@@ -46,6 +61,13 @@ internal class BetaManagedAgentsWebFetchToolConfigTest {
                     BetaManagedAgentsAlwaysAllowPolicy.of(
                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                     )
+                )
+                .urlSources(
+                    BetaManagedAgentsWebFetchUrlSources.builder()
+                        .clientToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                        .build()
                 )
                 .build()
 
@@ -72,6 +94,13 @@ internal class BetaManagedAgentsWebFetchToolConfigTest {
                     BetaManagedAgentsAlwaysAllowPolicy.of(
                         BetaManagedAgentsAlwaysAllowPolicy.Type.ALWAYS_ALLOW
                     )
+                )
+                .urlSources(
+                    BetaManagedAgentsWebFetchUrlSources.builder()
+                        .clientToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                        .serverToolResults(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                        .userInput(BetaManagedAgentsWebFetchUrlSourceAll.builder().build())
+                        .build()
                 )
                 .addAllowedDomain("string")
                 .addBlockedDomain("string")

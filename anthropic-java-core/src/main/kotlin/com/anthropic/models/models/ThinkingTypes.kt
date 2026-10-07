@@ -14,11 +14,15 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Supported thinking type configurations. */
+/**
+ * Which `thinking.type` values the model accepts on requests. Read each key on its own: for
+ * example, `enabled` can be false while `disabled` is true.
+ */
 class ThinkingTypes
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val adaptive: JsonField<CapabilitySupport>,
+    private val disabled: JsonField<CapabilitySupport>,
     private val enabled: JsonField<CapabilitySupport>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -28,13 +32,17 @@ private constructor(
         @JsonProperty("adaptive")
         @ExcludeMissing
         adaptive: JsonField<CapabilitySupport> = JsonMissing.of(),
+        @JsonProperty("disabled")
+        @ExcludeMissing
+        disabled: JsonField<CapabilitySupport> = JsonMissing.of(),
         @JsonProperty("enabled")
         @ExcludeMissing
         enabled: JsonField<CapabilitySupport> = JsonMissing.of(),
-    ) : this(adaptive, enabled, mutableMapOf())
+    ) : this(adaptive, disabled, enabled, mutableMapOf())
 
     /**
-     * Whether the model supports thinking with type 'adaptive' (auto).
+     * Whether the model accepts thinking with type 'adaptive' (the model decides whether and how
+     * much to think).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -42,7 +50,18 @@ private constructor(
     fun adaptive(): CapabilitySupport = adaptive.getRequired("adaptive")
 
     /**
-     * Whether the model supports thinking with type 'enabled'.
+     * Whether the model accepts thinking with type 'disabled' (thinking turned off). False exactly
+     * when a request that sends it gets a 400 from this model. True on a model that does not
+     * support thinking.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun disabled(): CapabilitySupport = disabled.getRequired("disabled")
+
+    /**
+     * Whether the model accepts thinking with type 'enabled' (extended thinking with a caller-set
+     * `budget_tokens`).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -57,6 +76,15 @@ private constructor(
     @JsonProperty("adaptive")
     @ExcludeMissing
     fun _adaptive(): JsonField<CapabilitySupport> = adaptive
+
+    /**
+     * Returns the raw JSON value of [disabled].
+     *
+     * Unlike [disabled], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("disabled")
+    @ExcludeMissing
+    fun _disabled(): JsonField<CapabilitySupport> = disabled
 
     /**
      * Returns the raw JSON value of [enabled].
@@ -85,6 +113,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .adaptive()
+         * .disabled()
          * .enabled()
          * ```
          */
@@ -95,17 +124,22 @@ private constructor(
     class Builder internal constructor() {
 
         private var adaptive: JsonField<CapabilitySupport>? = null
+        private var disabled: JsonField<CapabilitySupport>? = null
         private var enabled: JsonField<CapabilitySupport>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(thinkingTypes: ThinkingTypes) = apply {
             adaptive = thinkingTypes.adaptive
+            disabled = thinkingTypes.disabled
             enabled = thinkingTypes.enabled
             additionalProperties = thinkingTypes.additionalProperties.toMutableMap()
         }
 
-        /** Whether the model supports thinking with type 'adaptive' (auto). */
+        /**
+         * Whether the model accepts thinking with type 'adaptive' (the model decides whether and
+         * how much to think).
+         */
         fun adaptive(adaptive: CapabilitySupport) = adaptive(JsonField.of(adaptive))
 
         /**
@@ -117,7 +151,26 @@ private constructor(
          */
         fun adaptive(adaptive: JsonField<CapabilitySupport>) = apply { this.adaptive = adaptive }
 
-        /** Whether the model supports thinking with type 'enabled'. */
+        /**
+         * Whether the model accepts thinking with type 'disabled' (thinking turned off). False
+         * exactly when a request that sends it gets a 400 from this model. True on a model that
+         * does not support thinking.
+         */
+        fun disabled(disabled: CapabilitySupport) = disabled(JsonField.of(disabled))
+
+        /**
+         * Sets [Builder.disabled] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.disabled] with a well-typed [CapabilitySupport] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun disabled(disabled: JsonField<CapabilitySupport>) = apply { this.disabled = disabled }
+
+        /**
+         * Whether the model accepts thinking with type 'enabled' (extended thinking with a
+         * caller-set `budget_tokens`).
+         */
         fun enabled(enabled: CapabilitySupport) = enabled(JsonField.of(enabled))
 
         /**
@@ -156,6 +209,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .adaptive()
+         * .disabled()
          * .enabled()
          * ```
          *
@@ -164,6 +218,7 @@ private constructor(
         fun build(): ThinkingTypes =
             ThinkingTypes(
                 checkRequired("adaptive", adaptive),
+                checkRequired("disabled", disabled),
                 checkRequired("enabled", enabled),
                 additionalProperties.toMutableMap(),
             )
@@ -185,6 +240,7 @@ private constructor(
         }
 
         adaptive().validate()
+        disabled().validate()
         enabled().validate()
         validated = true
     }
@@ -205,6 +261,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (adaptive.asKnown().getOrNull()?.validity() ?: 0) +
+            (disabled.asKnown().getOrNull()?.validity() ?: 0) +
             (enabled.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
@@ -214,14 +271,17 @@ private constructor(
 
         return other is ThinkingTypes &&
             adaptive == other.adaptive &&
+            disabled == other.disabled &&
             enabled == other.enabled &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(adaptive, enabled, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(adaptive, disabled, enabled, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ThinkingTypes{adaptive=$adaptive, enabled=$enabled, additionalProperties=$additionalProperties}"
+        "ThinkingTypes{adaptive=$adaptive, disabled=$disabled, enabled=$enabled, additionalProperties=$additionalProperties}"
 }

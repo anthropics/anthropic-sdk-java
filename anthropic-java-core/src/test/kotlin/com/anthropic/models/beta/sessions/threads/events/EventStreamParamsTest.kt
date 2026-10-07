@@ -13,7 +13,7 @@ internal class EventStreamParamsTest {
     fun create() {
         EventStreamParams.builder()
             .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-            .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+            .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
             .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
@@ -25,11 +25,11 @@ internal class EventStreamParamsTest {
         val params =
             EventStreamParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("sesn_011CZkZAtmR3yMPDzynEDxu7")
-        assertThat(params._pathParam(1)).isEqualTo("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+        assertThat(params._pathParam(1)).isEqualTo("sthr_011CZkZVWa6oJjw1rgXZpnBt")
         // out-of-bound path param
         assertThat(params._pathParam(2)).isEqualTo("")
     }
@@ -39,7 +39,7 @@ internal class EventStreamParamsTest {
         val params =
             EventStreamParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
@@ -50,7 +50,11 @@ internal class EventStreamParamsTest {
         assertThat(headers)
             .isEqualTo(
                 Headers.builder()
-                    .put("anthropic-beta", "message-batches-2024-09-24")
+                    .put(
+                        "anthropic-beta",
+                        listOf("message-batches-2024-09-24", "managed-agents-2026-04-01")
+                            .joinToString(","),
+                    )
                     .put("anthropic-workspace-id", "wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .build()
             )
@@ -61,7 +65,7 @@ internal class EventStreamParamsTest {
         val params =
             EventStreamParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .build()
 
         val headers = params._headers()
@@ -74,7 +78,7 @@ internal class EventStreamParamsTest {
         val params =
             EventStreamParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .addEventDelta(BetaManagedAgentsDeltaType.AGENT_MESSAGE)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
@@ -91,7 +95,7 @@ internal class EventStreamParamsTest {
         val params =
             EventStreamParams.builder()
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
-                .threadId("sthr_011CZkZVWa6oIjw0rgXZpnBt")
+                .threadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .build()
 
         val queryParams = params._queryParams()

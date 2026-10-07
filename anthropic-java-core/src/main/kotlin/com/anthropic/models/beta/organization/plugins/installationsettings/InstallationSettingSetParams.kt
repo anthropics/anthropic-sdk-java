@@ -348,7 +348,16 @@ private constructor(
     override fun _headers(): Headers =
         Headers.builder()
             .apply {
-                betas?.forEach { put("anthropic-beta", it.toString()) }
+                betas?.let {
+                    if (it.isNotEmpty()) {
+                        put(
+                            "anthropic-beta",
+                            it.map { it.toString() }
+                                .let { it + (listOf("ce-plugins-2026-09-01") - it) }
+                                .joinToString(","),
+                        )
+                    }
+                }
                 putAll(additionalHeaders)
             }
             .build()
