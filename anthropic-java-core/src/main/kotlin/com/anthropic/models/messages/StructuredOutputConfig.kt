@@ -5,8 +5,10 @@ import com.anthropic.core.JsonSchemaLocalValidation
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.outputFormatFromClass
+import com.anthropic.errors.AnthropicInvalidDataException
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * A wrapper for [OutputConfig] that provides a type-safe [Builder] that can record the [outputType]
@@ -21,9 +23,56 @@ import java.util.Optional
 class StructuredOutputConfig<T : Any>
 private constructor(
     @get:JvmName("outputType") val outputType: Class<T>,
-    /** The raw, underlying output configuration wrapped by this structured instance. */
-    @get:JvmName("rawOutputConfig") val rawOutputConfig: OutputConfig,
+    private val delegate: OutputConfig,
 ) {
+
+    /** The raw, underlying output configuration wrapped by this structured instance. */
+    @get:JvmName("rawOutputConfig")
+    val rawOutputConfig: OutputConfig
+        get() = delegate
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     * @see OutputConfig.effort
+     */
+    fun effort(): Optional<OutputConfig.Effort> = delegate.effort()
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     * @see OutputConfig.format
+     */
+    fun format(): Optional<JsonOutputFormat> = delegate.format()
+
+    /**
+     * Returns the raw JSON value of [effort].
+     *
+     * Unlike [effort], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _effort(): JsonField<OutputConfig.Effort> = delegate._effort()
+
+    /**
+     * Returns the raw JSON value of [format].
+     *
+     * Unlike [format], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _format(): JsonField<JsonOutputFormat> = delegate._format()
+
+    /** @see OutputConfig._additionalProperties */
+    fun _additionalProperties(): Map<String, JsonValue> = delegate._additionalProperties()
+
+    /** @see OutputConfig.validate */
+    fun validate(): StructuredOutputConfig<T> = apply { delegate.validate() }
+
+    /** @see OutputConfig.isValid */
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
 
     fun toBuilder() = Builder<T>().from(this)
 
@@ -44,32 +93,32 @@ private constructor(
     class Builder<T : Any> internal constructor() {
 
         private var outputType: Class<T>? = null
-        private var outputConfigBuilder = OutputConfig.builder()
+        private var delegate: OutputConfig.Builder = OutputConfig.builder()
 
         /** Injects a given `OutputConfig.Builder`. For use only when testing. */
         @JvmSynthetic
-        internal fun inject(outputConfigBuilder: OutputConfig.Builder) = apply {
-            this.outputConfigBuilder = outputConfigBuilder
-        }
+        internal fun inject(delegate: OutputConfig.Builder) = apply { this.delegate = delegate }
 
         @JvmSynthetic
         internal fun from(structuredOutputConfig: StructuredOutputConfig<T>) = apply {
             outputType = structuredOutputConfig.outputType
-            outputConfigBuilder = structuredOutputConfig.rawOutputConfig.toBuilder()
+            delegate = structuredOutputConfig.delegate.toBuilder()
         }
 
         /** @see OutputConfig.Builder.effort */
-        fun effort(effort: OutputConfig.Effort?) = apply { outputConfigBuilder.effort(effort) }
+        fun effort(effort: OutputConfig.Effort?) = apply { delegate.effort(effort) }
 
-        /** @see OutputConfig.Builder.effort */
-        fun effort(effort: Optional<OutputConfig.Effort>) = apply {
-            outputConfigBuilder.effort(effort)
-        }
+        /** Alias for calling [Builder.effort] with `effort.orElse(null)`. */
+        fun effort(effort: Optional<OutputConfig.Effort>) = effort(effort.getOrNull())
 
-        /** @see OutputConfig.Builder.effort */
-        fun effort(effort: JsonField<OutputConfig.Effort>) = apply {
-            outputConfigBuilder.effort(effort)
-        }
+        /**
+         * Sets [Builder.effort] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.effort] with a well-typed [OutputConfig.Effort] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun effort(effort: JsonField<OutputConfig.Effort>) = apply { delegate.effort(effort) }
 
         /**
          * Sets the output format to a JSON schema derived from the structure of the given class.
@@ -92,32 +141,25 @@ private constructor(
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
         ) = apply {
             this.outputType = outputType
-            outputConfigBuilder.format(outputFormatFromClass(outputType, localValidation))
+            delegate.format(outputFormatFromClass(outputType, localValidation))
         }
 
-        /** @see OutputConfig.Builder.additionalProperties */
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            outputConfigBuilder.additionalProperties(additionalProperties)
+            delegate.additionalProperties(additionalProperties)
         }
 
-        /** @see OutputConfig.Builder.putAdditionalProperty */
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            outputConfigBuilder.putAdditionalProperty(key, value)
+            delegate.putAdditionalProperty(key, value)
         }
 
-        /** @see OutputConfig.Builder.putAllAdditionalProperties */
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            outputConfigBuilder.putAllAdditionalProperties(additionalProperties)
+            delegate.putAllAdditionalProperties(additionalProperties)
         }
 
-        /** @see OutputConfig.Builder.removeAdditionalProperty */
-        fun removeAdditionalProperty(key: String) = apply {
-            outputConfigBuilder.removeAdditionalProperty(key)
-        }
+        fun removeAdditionalProperty(key: String) = apply { delegate.removeAdditionalProperty(key) }
 
-        /** @see OutputConfig.Builder.removeAllAdditionalProperties */
         fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            outputConfigBuilder.removeAllAdditionalProperties(keys)
+            delegate.removeAllAdditionalProperties(keys)
         }
 
         /**
@@ -133,7 +175,7 @@ private constructor(
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): StructuredOutputConfig<T> =
-            StructuredOutputConfig(checkRequired("format", outputType), outputConfigBuilder.build())
+            StructuredOutputConfig(checkRequired("format", outputType), delegate.build())
     }
 
     override fun equals(other: Any?): Boolean {
@@ -143,11 +185,11 @@ private constructor(
 
         return other is StructuredOutputConfig<*> &&
             outputType == other.outputType &&
-            rawOutputConfig == other.rawOutputConfig
+            delegate == other.delegate
     }
 
-    override fun hashCode(): Int = Objects.hash(outputType, rawOutputConfig)
+    override fun hashCode(): Int = Objects.hash(outputType, delegate)
 
     override fun toString() =
-        "${javaClass.simpleName}{outputType=$outputType, rawOutputConfig=$rawOutputConfig}"
+        "StructuredOutputConfig{outputType=$outputType, rawOutputConfig=$delegate}"
 }

@@ -1,10 +1,10 @@
 package com.anthropic.models.beta.messages
 
 import com.anthropic.core.JsonValue
+import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
 import java.util.Objects
 import java.util.Optional
-import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -18,204 +18,202 @@ import kotlin.jvm.optionals.getOrNull
 class StructuredContentBlock<T : Any>
 internal constructor(
     @get:JvmName("outputType") val outputType: Class<T>,
-    @get:JvmName("rawContentBlock") val rawContentBlock: BetaContentBlock,
+    private val delegate: BetaContentBlock,
 ) {
-    private val text by lazy { rawContentBlock.text().map { StructuredTextBlock(outputType, it) } }
+
+    @get:JvmName("rawContentBlock")
+    val rawContentBlock: BetaContentBlock
+        get() = delegate
+
+    /** @see BetaContentBlock.type */
+    fun type(): BetaContentBlock.Type = delegate.type()
+
+    /** @see BetaContentBlock.signature */
+    fun signature(): Optional<String> = delegate.signature()
+
+    /** @see BetaContentBlock.id */
+    fun id(): Optional<String> = delegate.id()
+
+    /** @see BetaContentBlock.toolUseId */
+    fun toolUseId(): Optional<String> = delegate.toolUseId()
 
     /** @see BetaContentBlock.text */
     fun text(): Optional<StructuredTextBlock<T>> = text
 
+    private val text by lazy { delegate.text().map { StructuredTextBlock(outputType, it) } }
+
     /** @see BetaContentBlock.thinking */
-    fun thinking(): Optional<BetaThinkingBlock> = rawContentBlock.thinking()
+    fun thinking(): Optional<BetaThinkingBlock> = delegate.thinking()
 
     /** @see BetaContentBlock.redactedThinking */
-    fun redactedThinking(): Optional<BetaRedactedThinkingBlock> = rawContentBlock.redactedThinking()
+    fun redactedThinking(): Optional<BetaRedactedThinkingBlock> = delegate.redactedThinking()
 
     /** @see BetaContentBlock.toolUse */
-    fun toolUse(): Optional<BetaToolUseBlock> = rawContentBlock.toolUse()
+    fun toolUse(): Optional<BetaToolUseBlock> = delegate.toolUse()
 
     /** @see BetaContentBlock.serverToolUse */
-    fun serverToolUse(): Optional<BetaServerToolUseBlock> = rawContentBlock.serverToolUse()
+    fun serverToolUse(): Optional<BetaServerToolUseBlock> = delegate.serverToolUse()
 
     /** @see BetaContentBlock.webSearchToolResult */
     fun webSearchToolResult(): Optional<BetaWebSearchToolResultBlock> =
-        rawContentBlock.webSearchToolResult()
+        delegate.webSearchToolResult()
 
     /** @see BetaContentBlock.webFetchToolResult */
-    fun webFetchToolResult(): Optional<BetaWebFetchToolResultBlock> =
-        rawContentBlock.webFetchToolResult()
+    fun webFetchToolResult(): Optional<BetaWebFetchToolResultBlock> = delegate.webFetchToolResult()
 
     /** @see BetaContentBlock.advisorToolResult */
-    fun advisorToolResult(): Optional<BetaAdvisorToolResultBlock> =
-        rawContentBlock.advisorToolResult()
+    fun advisorToolResult(): Optional<BetaAdvisorToolResultBlock> = delegate.advisorToolResult()
 
     /** @see BetaContentBlock.codeExecutionToolResult */
     fun codeExecutionToolResult(): Optional<BetaCodeExecutionToolResultBlock> =
-        rawContentBlock.codeExecutionToolResult()
+        delegate.codeExecutionToolResult()
 
     /** @see BetaContentBlock.bashCodeExecutionToolResult */
     fun bashCodeExecutionToolResult(): Optional<BetaBashCodeExecutionToolResultBlock> =
-        rawContentBlock.bashCodeExecutionToolResult()
+        delegate.bashCodeExecutionToolResult()
 
     /** @see BetaContentBlock.textEditorCodeExecutionToolResult */
     fun textEditorCodeExecutionToolResult(): Optional<BetaTextEditorCodeExecutionToolResultBlock> =
-        rawContentBlock.textEditorCodeExecutionToolResult()
+        delegate.textEditorCodeExecutionToolResult()
 
     /** @see BetaContentBlock.toolSearchToolResult */
     fun toolSearchToolResult(): Optional<BetaToolSearchToolResultBlock> =
-        rawContentBlock.toolSearchToolResult()
+        delegate.toolSearchToolResult()
 
     /** @see BetaContentBlock.mcpToolUse */
-    fun mcpToolUse(): Optional<BetaMcpToolUseBlock> = rawContentBlock.mcpToolUse()
+    fun mcpToolUse(): Optional<BetaMcpToolUseBlock> = delegate.mcpToolUse()
 
     /** @see BetaContentBlock.mcpToolResult */
-    fun mcpToolResult(): Optional<BetaMcpToolResultBlock> = rawContentBlock.mcpToolResult()
+    fun mcpToolResult(): Optional<BetaMcpToolResultBlock> = delegate.mcpToolResult()
 
     /** @see BetaContentBlock.containerUpload */
-    fun containerUpload(): Optional<BetaContainerUploadBlock> = rawContentBlock.containerUpload()
+    fun containerUpload(): Optional<BetaContainerUploadBlock> = delegate.containerUpload()
 
     /** @see BetaContentBlock.compaction */
-    fun compaction(): Optional<BetaCompactionBlock> = rawContentBlock.compaction()
-
-    /** @see BetaContentBlock.type */
-    fun type(): BetaContentBlock.Type = rawContentBlock.type()
-
-    /** @see BetaContentBlock.id */
-    fun id(): Optional<String> = rawContentBlock.id()
-
-    /** @see BetaContentBlock.toolUseId */
-    fun toolUseId(): Optional<String> = rawContentBlock.toolUseId()
-
-    /** @see BetaContentBlock.signature */
-    fun signature(): Optional<String> = rawContentBlock.signature()
+    fun compaction(): Optional<BetaCompactionBlock> = delegate.compaction()
 
     /** @see BetaContentBlock.fallback */
-    fun fallback(): Optional<BetaFallbackBlock> = rawContentBlock.fallback()
+    fun fallback(): Optional<BetaFallbackBlock> = delegate.fallback()
 
     /** @see BetaContentBlock.mcpToolListing */
-    fun mcpToolListing(): Optional<BetaMcpToolListingBlock> = rawContentBlock.mcpToolListing()
+    fun mcpToolListing(): Optional<BetaMcpToolListingBlock> = delegate.mcpToolListing()
 
     /** @see BetaContentBlock.isText */
-    fun isText(): Boolean = text().isPresent
+    fun isText(): Boolean = text.isPresent
 
     /** @see BetaContentBlock.isThinking */
-    fun isThinking(): Boolean = rawContentBlock.isThinking()
+    fun isThinking(): Boolean = delegate.isThinking()
 
     /** @see BetaContentBlock.isRedactedThinking */
-    fun isRedactedThinking(): Boolean = rawContentBlock.isRedactedThinking()
+    fun isRedactedThinking(): Boolean = delegate.isRedactedThinking()
 
     /** @see BetaContentBlock.isToolUse */
-    fun isToolUse(): Boolean = rawContentBlock.isToolUse()
+    fun isToolUse(): Boolean = delegate.isToolUse()
 
     /** @see BetaContentBlock.isServerToolUse */
-    fun isServerToolUse(): Boolean = rawContentBlock.isServerToolUse()
+    fun isServerToolUse(): Boolean = delegate.isServerToolUse()
 
     /** @see BetaContentBlock.isWebSearchToolResult */
-    fun isWebSearchToolResult(): Boolean = rawContentBlock.isWebSearchToolResult()
+    fun isWebSearchToolResult(): Boolean = delegate.isWebSearchToolResult()
 
     /** @see BetaContentBlock.isWebFetchToolResult */
-    fun isWebFetchToolResult(): Boolean = rawContentBlock.isWebFetchToolResult()
+    fun isWebFetchToolResult(): Boolean = delegate.isWebFetchToolResult()
 
     /** @see BetaContentBlock.isAdvisorToolResult */
-    fun isAdvisorToolResult(): Boolean = rawContentBlock.isAdvisorToolResult()
+    fun isAdvisorToolResult(): Boolean = delegate.isAdvisorToolResult()
 
     /** @see BetaContentBlock.isCodeExecutionToolResult */
-    fun isCodeExecutionToolResult(): Boolean = rawContentBlock.isCodeExecutionToolResult()
+    fun isCodeExecutionToolResult(): Boolean = delegate.isCodeExecutionToolResult()
 
     /** @see BetaContentBlock.isBashCodeExecutionToolResult */
-    fun isBashCodeExecutionToolResult(): Boolean = rawContentBlock.isBashCodeExecutionToolResult()
+    fun isBashCodeExecutionToolResult(): Boolean = delegate.isBashCodeExecutionToolResult()
 
     /** @see BetaContentBlock.isTextEditorCodeExecutionToolResult */
     fun isTextEditorCodeExecutionToolResult(): Boolean =
-        rawContentBlock.isTextEditorCodeExecutionToolResult()
+        delegate.isTextEditorCodeExecutionToolResult()
 
     /** @see BetaContentBlock.isToolSearchToolResult */
-    fun isToolSearchToolResult(): Boolean = rawContentBlock.isToolSearchToolResult()
+    fun isToolSearchToolResult(): Boolean = delegate.isToolSearchToolResult()
 
     /** @see BetaContentBlock.isMcpToolUse */
-    fun isMcpToolUse(): Boolean = rawContentBlock.isMcpToolUse()
+    fun isMcpToolUse(): Boolean = delegate.isMcpToolUse()
 
     /** @see BetaContentBlock.isMcpToolResult */
-    fun isMcpToolResult(): Boolean = rawContentBlock.isMcpToolResult()
+    fun isMcpToolResult(): Boolean = delegate.isMcpToolResult()
 
     /** @see BetaContentBlock.isContainerUpload */
-    fun isContainerUpload(): Boolean = rawContentBlock.isContainerUpload()
+    fun isContainerUpload(): Boolean = delegate.isContainerUpload()
 
     /** @see BetaContentBlock.isCompaction */
-    fun isCompaction(): Boolean = rawContentBlock.isCompaction()
+    fun isCompaction(): Boolean = delegate.isCompaction()
 
     /** @see BetaContentBlock.isFallback */
-    fun isFallback(): Boolean = rawContentBlock.isFallback()
+    fun isFallback(): Boolean = delegate.isFallback()
 
     /** @see BetaContentBlock.isMcpToolListing */
-    fun isMcpToolListing(): Boolean = rawContentBlock.isMcpToolListing()
+    fun isMcpToolListing(): Boolean = delegate.isMcpToolListing()
 
     /** @see BetaContentBlock.asText */
-    fun asText(): StructuredTextBlock<T> =
-        text.getOrElse {
-            // Same behavior as `com.anthropic.core.getOrThrow` used by the delegate class.
-            throw AnthropicInvalidDataException("`text` is not present")
-        }
+    fun asText(): StructuredTextBlock<T> = text.getOrNull().getOrThrow("text")
 
     /** @see BetaContentBlock.asThinking */
-    fun asThinking(): BetaThinkingBlock = rawContentBlock.asThinking()
+    fun asThinking(): BetaThinkingBlock = delegate.asThinking()
 
     /** @see BetaContentBlock.asRedactedThinking */
-    fun asRedactedThinking(): BetaRedactedThinkingBlock = rawContentBlock.asRedactedThinking()
+    fun asRedactedThinking(): BetaRedactedThinkingBlock = delegate.asRedactedThinking()
 
     /** @see BetaContentBlock.asToolUse */
-    fun asToolUse(): BetaToolUseBlock = rawContentBlock.asToolUse()
+    fun asToolUse(): BetaToolUseBlock = delegate.asToolUse()
 
     /** @see BetaContentBlock.asServerToolUse */
-    fun asServerToolUse(): BetaServerToolUseBlock = rawContentBlock.asServerToolUse()
+    fun asServerToolUse(): BetaServerToolUseBlock = delegate.asServerToolUse()
 
     /** @see BetaContentBlock.asWebSearchToolResult */
-    fun asWebSearchToolResult(): BetaWebSearchToolResultBlock =
-        rawContentBlock.asWebSearchToolResult()
+    fun asWebSearchToolResult(): BetaWebSearchToolResultBlock = delegate.asWebSearchToolResult()
 
     /** @see BetaContentBlock.asWebFetchToolResult */
-    fun asWebFetchToolResult(): BetaWebFetchToolResultBlock = rawContentBlock.asWebFetchToolResult()
+    fun asWebFetchToolResult(): BetaWebFetchToolResultBlock = delegate.asWebFetchToolResult()
 
     /** @see BetaContentBlock.asAdvisorToolResult */
-    fun asAdvisorToolResult(): BetaAdvisorToolResultBlock = rawContentBlock.asAdvisorToolResult()
+    fun asAdvisorToolResult(): BetaAdvisorToolResultBlock = delegate.asAdvisorToolResult()
 
     /** @see BetaContentBlock.asCodeExecutionToolResult */
     fun asCodeExecutionToolResult(): BetaCodeExecutionToolResultBlock =
-        rawContentBlock.asCodeExecutionToolResult()
+        delegate.asCodeExecutionToolResult()
 
     /** @see BetaContentBlock.asBashCodeExecutionToolResult */
     fun asBashCodeExecutionToolResult(): BetaBashCodeExecutionToolResultBlock =
-        rawContentBlock.asBashCodeExecutionToolResult()
+        delegate.asBashCodeExecutionToolResult()
 
     /** @see BetaContentBlock.asTextEditorCodeExecutionToolResult */
     fun asTextEditorCodeExecutionToolResult(): BetaTextEditorCodeExecutionToolResultBlock =
-        rawContentBlock.asTextEditorCodeExecutionToolResult()
+        delegate.asTextEditorCodeExecutionToolResult()
 
     /** @see BetaContentBlock.asToolSearchToolResult */
-    fun asToolSearchToolResult(): BetaToolSearchToolResultBlock =
-        rawContentBlock.asToolSearchToolResult()
+    fun asToolSearchToolResult(): BetaToolSearchToolResultBlock = delegate.asToolSearchToolResult()
 
     /** @see BetaContentBlock.asMcpToolUse */
-    fun asMcpToolUse(): BetaMcpToolUseBlock = rawContentBlock.asMcpToolUse()
+    fun asMcpToolUse(): BetaMcpToolUseBlock = delegate.asMcpToolUse()
 
     /** @see BetaContentBlock.asMcpToolResult */
-    fun asMcpToolResult(): BetaMcpToolResultBlock = rawContentBlock.asMcpToolResult()
+    fun asMcpToolResult(): BetaMcpToolResultBlock = delegate.asMcpToolResult()
 
     /** @see BetaContentBlock.asContainerUpload */
-    fun asContainerUpload(): BetaContainerUploadBlock = rawContentBlock.asContainerUpload()
+    fun asContainerUpload(): BetaContainerUploadBlock = delegate.asContainerUpload()
 
     /** @see BetaContentBlock.asCompaction */
-    fun asCompaction(): BetaCompactionBlock = rawContentBlock.asCompaction()
+    fun asCompaction(): BetaCompactionBlock = delegate.asCompaction()
 
     /** @see BetaContentBlock.asFallback */
-    fun asFallback(): BetaFallbackBlock = rawContentBlock.asFallback()
+    fun asFallback(): BetaFallbackBlock = delegate.asFallback()
 
     /** @see BetaContentBlock.asMcpToolListing */
-    fun asMcpToolListing(): BetaMcpToolListingBlock = rawContentBlock.asMcpToolListing()
+    fun asMcpToolListing(): BetaMcpToolListingBlock = delegate.asMcpToolListing()
 
     /** @see BetaContentBlock._json */
-    fun _json(): Optional<JsonValue> = rawContentBlock._json()
+    fun _json(): Optional<JsonValue> = delegate._json()
 
+    /** @see BetaContentBlock.accept */
     fun <R> accept(visitor: Visitor<T, R>): R =
         when {
             isText() -> visitor.visitText(asText())
@@ -244,109 +242,17 @@ internal constructor(
             else -> visitor.unknown(_json().getOrNull())
         }
 
-    private var validated: Boolean = false
-
     /** @see BetaContentBlock.validate */
     fun validate(): StructuredContentBlock<T> = apply {
-        if (validated) {
-            return@apply
-        }
-
-        accept(
-            object : Visitor<T, Unit> {
-                override fun visitText(text: StructuredTextBlock<T>) {
-                    text.validate()
-                }
-
-                override fun visitThinking(thinking: BetaThinkingBlock) {
-                    thinking.validate()
-                }
-
-                override fun visitRedactedThinking(redactedThinking: BetaRedactedThinkingBlock) {
-                    redactedThinking.validate()
-                }
-
-                override fun visitToolUse(toolUse: BetaToolUseBlock) {
-                    toolUse.validate()
-                }
-
-                override fun visitServerToolUse(serverToolUse: BetaServerToolUseBlock) {
-                    serverToolUse.validate()
-                }
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: BetaWebSearchToolResultBlock
-                ) {
-                    webSearchToolResult.validate()
-                }
-
-                override fun visitWebFetchToolResult(
-                    webFetchToolResult: BetaWebFetchToolResultBlock
-                ) {
-                    webFetchToolResult.validate()
-                }
-
-                override fun visitAdvisorToolResult(advisorToolResult: BetaAdvisorToolResultBlock) {
-                    advisorToolResult.validate()
-                }
-
-                override fun visitCodeExecutionToolResult(
-                    codeExecutionToolResult: BetaCodeExecutionToolResultBlock
-                ) {
-                    codeExecutionToolResult.validate()
-                }
-
-                override fun visitBashCodeExecutionToolResult(
-                    bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
-                ) {
-                    bashCodeExecutionToolResult.validate()
-                }
-
-                override fun visitToolSearchToolResult(
-                    toolSearchToolResult: BetaToolSearchToolResultBlock
-                ) {
-                    toolSearchToolResult.validate()
-                }
-
-                override fun visitTextEditorCodeExecutionToolResult(
-                    textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock
-                ) {
-                    textEditorCodeExecutionToolResult.validate()
-                }
-
-                override fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock) {
-                    mcpToolUse.validate()
-                }
-
-                override fun visitMcpToolResult(mcpToolResult: BetaMcpToolResultBlock) {
-                    mcpToolResult.validate()
-                }
-
-                override fun visitContainerUpload(containerUpload: BetaContainerUploadBlock) {
-                    containerUpload.validate()
-                }
-
-                override fun visitCompaction(compaction: BetaCompactionBlock) {
-                    compaction.validate()
-                }
-
-                override fun visitFallback(fallback: BetaFallbackBlock) {
-                    fallback.validate()
-                }
-
-                override fun visitMcpToolListing(mcpToolListing: BetaMcpToolListingBlock) {
-                    mcpToolListing.validate()
-                }
-            }
-        )
-        validated = true
+        if (isText()) asText().validate() else delegate.validate()
     }
 
+    /** @see BetaContentBlock.isValid */
     fun isValid(): Boolean =
         try {
             validate()
             true
-        } catch (_: AnthropicInvalidDataException) {
+        } catch (e: AnthropicInvalidDataException) {
             false
         }
 
@@ -357,13 +263,21 @@ internal constructor(
 
         return other is StructuredContentBlock<*> &&
             outputType == other.outputType &&
-            rawContentBlock == other.rawContentBlock
+            delegate == other.delegate
     }
 
-    override fun hashCode(): Int = Objects.hash(outputType, rawContentBlock)
+    override fun hashCode(): Int = Objects.hash(outputType, delegate)
 
-    override fun toString(): String =
-        "${javaClass.simpleName}{outputType=$outputType, rawContentBlock=$rawContentBlock}"
+    override fun toString() =
+        "StructuredContentBlock{outputType=$outputType, rawContentBlock=$delegate}"
+
+    companion object {
+
+        /** Returns an instance of [StructuredContentBlock] that forwards to [betaContentBlock]. */
+        @JvmSynthetic
+        internal fun <T : Any> of(outputType: Class<T>, betaContentBlock: BetaContentBlock) =
+            StructuredContentBlock(outputType, betaContentBlock)
+    }
 
     /** @see BetaContentBlock.Visitor */
     // In keeping with the delegate's `Visitor<T>`, `T` is used to refer to the return type of each
@@ -371,6 +285,7 @@ internal constructor(
     // otherwise named `T` in the outer class, but confusion here is probably preferable to
     // confusion there.
     interface Visitor<R : Any, out T> {
+
         /** @see BetaContentBlock.Visitor.visitText */
         fun visitText(text: StructuredTextBlock<R>): T
 
@@ -405,13 +320,13 @@ internal constructor(
             bashCodeExecutionToolResult: BetaBashCodeExecutionToolResultBlock
         ): T
 
-        /** @see BetaContentBlock.Visitor.visitToolSearchToolResult */
-        fun visitToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlock): T
-
         /** @see BetaContentBlock.Visitor.visitTextEditorCodeExecutionToolResult */
         fun visitTextEditorCodeExecutionToolResult(
             textEditorCodeExecutionToolResult: BetaTextEditorCodeExecutionToolResultBlock
         ): T
+
+        /** @see BetaContentBlock.Visitor.visitToolSearchToolResult */
+        fun visitToolSearchToolResult(toolSearchToolResult: BetaToolSearchToolResultBlock): T
 
         /** @see BetaContentBlock.Visitor.visitMcpToolUse */
         fun visitMcpToolUse(mcpToolUse: BetaMcpToolUseBlock): T

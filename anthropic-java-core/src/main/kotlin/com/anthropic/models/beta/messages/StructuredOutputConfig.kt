@@ -5,8 +5,10 @@ import com.anthropic.core.JsonSchemaLocalValidation
 import com.anthropic.core.JsonValue
 import com.anthropic.core.betaOutputFormatFromClass
 import com.anthropic.core.checkRequired
+import com.anthropic.errors.AnthropicInvalidDataException
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * A wrapper for [BetaOutputConfig] that provides a type-safe [Builder] that can record the
@@ -22,9 +24,70 @@ import java.util.Optional
 class StructuredOutputConfig<T : Any>
 private constructor(
     @get:JvmName("outputType") val outputType: Class<T>,
-    /** The raw, underlying output configuration wrapped by this structured instance. */
-    @get:JvmName("rawOutputConfig") val rawOutputConfig: BetaOutputConfig,
+    private val delegate: BetaOutputConfig,
 ) {
+
+    /** The raw, underlying output configuration wrapped by this structured instance. */
+    @get:JvmName("rawOutputConfig")
+    val rawOutputConfig: BetaOutputConfig
+        get() = delegate
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     * @see BetaOutputConfig.effort
+     */
+    fun effort(): Optional<BetaOutputConfig.Effort> = delegate.effort()
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     * @see BetaOutputConfig.format
+     */
+    fun format(): Optional<BetaJsonOutputFormat> = delegate.format()
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     * @see BetaOutputConfig.taskBudget
+     */
+    fun taskBudget(): Optional<BetaTokenTaskBudget> = delegate.taskBudget()
+
+    /**
+     * Returns the raw JSON value of [effort].
+     *
+     * Unlike [effort], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _effort(): JsonField<BetaOutputConfig.Effort> = delegate._effort()
+
+    /**
+     * Returns the raw JSON value of [format].
+     *
+     * Unlike [format], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _format(): JsonField<BetaJsonOutputFormat> = delegate._format()
+
+    /**
+     * Returns the raw JSON value of [taskBudget].
+     *
+     * Unlike [taskBudget], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _taskBudget(): JsonField<BetaTokenTaskBudget> = delegate._taskBudget()
+
+    /** @see BetaOutputConfig._additionalProperties */
+    fun _additionalProperties(): Map<String, JsonValue> = delegate._additionalProperties()
+
+    /** @see BetaOutputConfig.validate */
+    fun validate(): StructuredOutputConfig<T> = apply { delegate.validate() }
+
+    /** @see BetaOutputConfig.isValid */
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: AnthropicInvalidDataException) {
+            false
+        }
 
     fun toBuilder() = Builder<T>().from(this)
 
@@ -45,32 +108,32 @@ private constructor(
     class Builder<T : Any> internal constructor() {
 
         private var outputType: Class<T>? = null
-        private var outputConfigBuilder = BetaOutputConfig.builder()
+        private var delegate: BetaOutputConfig.Builder = BetaOutputConfig.builder()
 
         /** Injects a given `BetaOutputConfig.Builder`. For use only when testing. */
         @JvmSynthetic
-        internal fun inject(outputConfigBuilder: BetaOutputConfig.Builder) = apply {
-            this.outputConfigBuilder = outputConfigBuilder
-        }
+        internal fun inject(delegate: BetaOutputConfig.Builder) = apply { this.delegate = delegate }
 
         @JvmSynthetic
         internal fun from(structuredOutputConfig: StructuredOutputConfig<T>) = apply {
             outputType = structuredOutputConfig.outputType
-            outputConfigBuilder = structuredOutputConfig.rawOutputConfig.toBuilder()
+            delegate = structuredOutputConfig.delegate.toBuilder()
         }
 
         /** @see BetaOutputConfig.Builder.effort */
-        fun effort(effort: BetaOutputConfig.Effort?) = apply { outputConfigBuilder.effort(effort) }
+        fun effort(effort: BetaOutputConfig.Effort?) = apply { delegate.effort(effort) }
 
-        /** @see BetaOutputConfig.Builder.effort */
-        fun effort(effort: Optional<BetaOutputConfig.Effort>) = apply {
-            outputConfigBuilder.effort(effort)
-        }
+        /** Alias for calling [Builder.effort] with `effort.orElse(null)`. */
+        fun effort(effort: Optional<BetaOutputConfig.Effort>) = effort(effort.getOrNull())
 
-        /** @see BetaOutputConfig.Builder.effort */
-        fun effort(effort: JsonField<BetaOutputConfig.Effort>) = apply {
-            outputConfigBuilder.effort(effort)
-        }
+        /**
+         * Sets [Builder.effort] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.effort] with a well-typed [BetaOutputConfig.Effort]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun effort(effort: JsonField<BetaOutputConfig.Effort>) = apply { delegate.effort(effort) }
 
         /**
          * Sets the output format to a JSON schema derived from the structure of the given class.
@@ -93,47 +156,43 @@ private constructor(
             localValidation: JsonSchemaLocalValidation = JsonSchemaLocalValidation.YES,
         ) = apply {
             this.outputType = outputType
-            outputConfigBuilder.format(betaOutputFormatFromClass(outputType, localValidation))
+            delegate.format(betaOutputFormatFromClass(outputType, localValidation))
         }
 
         /** @see BetaOutputConfig.Builder.taskBudget */
-        fun taskBudget(taskBudget: BetaTokenTaskBudget?) = apply {
-            outputConfigBuilder.taskBudget(taskBudget)
-        }
+        fun taskBudget(taskBudget: BetaTokenTaskBudget?) = apply { delegate.taskBudget(taskBudget) }
 
-        /** @see BetaOutputConfig.Builder.taskBudget */
-        fun taskBudget(taskBudget: Optional<BetaTokenTaskBudget>) = apply {
-            outputConfigBuilder.taskBudget(taskBudget)
-        }
+        /** Alias for calling [Builder.taskBudget] with `taskBudget.orElse(null)`. */
+        fun taskBudget(taskBudget: Optional<BetaTokenTaskBudget>) =
+            taskBudget(taskBudget.getOrNull())
 
-        /** @see BetaOutputConfig.Builder.taskBudget */
+        /**
+         * Sets [Builder.taskBudget] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.taskBudget] with a well-typed [BetaTokenTaskBudget]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
         fun taskBudget(taskBudget: JsonField<BetaTokenTaskBudget>) = apply {
-            outputConfigBuilder.taskBudget(taskBudget)
+            delegate.taskBudget(taskBudget)
         }
 
-        /** @see BetaOutputConfig.Builder.additionalProperties */
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            outputConfigBuilder.additionalProperties(additionalProperties)
+            delegate.additionalProperties(additionalProperties)
         }
 
-        /** @see BetaOutputConfig.Builder.putAdditionalProperty */
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            outputConfigBuilder.putAdditionalProperty(key, value)
+            delegate.putAdditionalProperty(key, value)
         }
 
-        /** @see BetaOutputConfig.Builder.putAllAdditionalProperties */
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            outputConfigBuilder.putAllAdditionalProperties(additionalProperties)
+            delegate.putAllAdditionalProperties(additionalProperties)
         }
 
-        /** @see BetaOutputConfig.Builder.removeAdditionalProperty */
-        fun removeAdditionalProperty(key: String) = apply {
-            outputConfigBuilder.removeAdditionalProperty(key)
-        }
+        fun removeAdditionalProperty(key: String) = apply { delegate.removeAdditionalProperty(key) }
 
-        /** @see BetaOutputConfig.Builder.removeAllAdditionalProperties */
         fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            outputConfigBuilder.removeAllAdditionalProperties(keys)
+            delegate.removeAllAdditionalProperties(keys)
         }
 
         /**
@@ -149,7 +208,7 @@ private constructor(
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): StructuredOutputConfig<T> =
-            StructuredOutputConfig(checkRequired("format", outputType), outputConfigBuilder.build())
+            StructuredOutputConfig(checkRequired("format", outputType), delegate.build())
     }
 
     override fun equals(other: Any?): Boolean {
@@ -159,11 +218,11 @@ private constructor(
 
         return other is StructuredOutputConfig<*> &&
             outputType == other.outputType &&
-            rawOutputConfig == other.rawOutputConfig
+            delegate == other.delegate
     }
 
-    override fun hashCode(): Int = Objects.hash(outputType, rawOutputConfig)
+    override fun hashCode(): Int = Objects.hash(outputType, delegate)
 
     override fun toString() =
-        "${javaClass.simpleName}{outputType=$outputType, rawOutputConfig=$rawOutputConfig}"
+        "StructuredOutputConfig{outputType=$outputType, rawOutputConfig=$delegate}"
 }
