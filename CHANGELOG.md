@@ -1,5 +1,56 @@
 # Changelog
 
+## 2.69.0 (2026-10-07)
+
+Full Changelog: [v2.68.0...v2.69.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.68.0...v2.69.0)
+
+### Features
+
+* **api:** add claude-haiku-5-5 and typed computer and browser toolset tool calls ([8c207f2](https://github.com/anthropics/anthropic-sdk-java/commit/8c207f2e239dedd88f7d3bb5c15d49ed44446892))
+* **api:** add disabled to thinking types in model capabilities ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+* **api:** add display_name to RBAC roles and deprecate name ([20b61fc](https://github.com/anthropics/anthropic-sdk-java/commit/20b61fc8fadb5ad4f75c0fe162e865bec3e7edcc))
+* **api:** add include_default parameter to list workspaces ([c1450d5](https://github.com/anthropics/anthropic-sdk-java/commit/c1450d5e7eee91d777365f300677f3a1f84100e7))
+* **api:** add lifecycle stage fields and filter to /v1/models ([476c9df](https://github.com/anthropics/anthropic-sdk-java/commit/476c9df6b02d2c1d5d41e118b739a8c73c19ae9c))
+* **api:** add line to model objects ([df57dee](https://github.com/anthropics/anthropic-sdk-java/commit/df57deef84fb1f68e7761adba5024bd7ad1a41c9))
+* **api:** add url_sources to the Managed Agents web_fetch tool config ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+* **api:** add web search and code execution support to model capabilities ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+
+
+### Bug Fixes
+
+* **api:** send the beta header by default when listing spend limits ([bbd9598](https://github.com/anthropics/anthropic-sdk-java/commit/bbd95986796f7b02dbbff9840f2b11bb843265f5))
+* **client:** don't send a default header value again when the caller passes it too ([6560b24](https://github.com/anthropics/anthropic-sdk-java/commit/6560b247049c02f2e79d5a7cda12244c8cf5602d))
+* **client:** fix profile config parsing under ProGuard with older Jackson versions ([#338](https://github.com/anthropics/anthropic-sdk-java/issues/338)) ([a5c7977](https://github.com/anthropics/anthropic-sdk-java/commit/a5c7977fcd7190b8bd3ed39838d11be0bdd9981a))
+* **client:** fix requests failing under ProGuard and R8, and keep much less code ([8dd88f3](https://github.com/anthropics/anthropic-sdk-java/commit/8dd88f3e7ff7fd6fee74e2f7a526ffc3d4adc9c1))
+* **client:** handle mcp tool listing blocks in structured content blocks ([#340](https://github.com/anthropics/anthropic-sdk-java/issues/340)) ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+* **client:** send array header params as a single comma-separated header ([a012009](https://github.com/anthropics/anthropic-sdk-java/commit/a012009076aa31993bedbf591d61f846e20c2e00))
+* **client:** send default and caller-provided array header values in a single header ([83c1432](https://github.com/anthropics/anthropic-sdk-java/commit/83c1432eac855a114ca7b8e797cc78a623f2b899))
+* **client:** throw an error when a path parameter is "." or ".." ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+* **docs:** omit empty doc comments for blank descriptions ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+
+
+### Chores
+
+* **api:** mark the Text Completions API as deprecated ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+* **ci:** generate the Javadoc in the same Gradle run as the compile ([d1f3a63](https://github.com/anthropics/anthropic-sdk-java/commit/d1f3a6329c42ae06d486291c2194f3b0cbb09a59))
+* **docs:** correct example groups in rate limit list description ([ddb499a](https://github.com/anthropics/anthropic-sdk-java/commit/ddb499a6fa826ea874114243b990d77ad47889a2))
+* **docs:** correct when usage and cost report data becomes final ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+* **docs:** describe a federation rule's target by its type ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+* **docs:** fix example IDs in sessions, agents and vault credentials ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+* **docs:** update Managed Agents multiagent and thread descriptions ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+* **docs:** update the activity summaries endpoint description ([00de508](https://github.com/anthropics/anthropic-sdk-java/commit/00de508f05be834859c73b646c4c7e697206352c))
+* **docs:** update the description of the Model line field ([1c424bf](https://github.com/anthropics/anthropic-sdk-java/commit/1c424bff639f9ed48adf4294e8b204217e62bd49))
+* **internal:** add REVIEW.md with review instructions ([9de8343](https://github.com/anthropics/anthropic-sdk-java/commit/9de83439a4f684c5231f3596f4d0cdb8606550aa))
+* **internal:** run detekt on the core module in eight parallel tasks ([c355f1a](https://github.com/anthropics/anthropic-sdk-java/commit/c355f1ad3c3d66b0fc55e46507f317a605938f06))
+* **tests:** run tests skipped for a query param bug that is now fixed ([9231cff](https://github.com/anthropics/anthropic-sdk-java/commit/9231cffafe40bdae1b7d42759d2ee632656c417a))
+* **tests:** run tests that an older mock server could not serve ([d50ce89](https://github.com/anthropics/anthropic-sdk-java/commit/d50ce890160b0289b4cd572dfb83f7a2bbf15684))
+* **tests:** run the tests skipped for incomplete example responses ([d21d76f](https://github.com/anthropics/anthropic-sdk-java/commit/d21d76f11274bbeb3b23949eadc9cf922d2143a1))
+
+
+### Documentation
+
+* **api:** state the agent tools limit as 256 ([537fae7](https://github.com/anthropics/anthropic-sdk-java/commit/537fae7f7e37537a5bf8ba0599544c8d5aff8bae))
+
 ## 2.68.0 (2026-09-30)
 
 Full Changelog: [v2.67.0...v2.68.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.67.0...v2.68.0)
