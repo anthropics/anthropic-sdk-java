@@ -61,10 +61,13 @@ internal class ModelInfoTest {
                         .build()
                 )
                 .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .deprecatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("Claude Opus 5")
+                .lifecycle(ModelInfo.Lifecycle.ACTIVE)
                 .line(ModelLine.HAIKU)
                 .maxInputTokens(0L)
                 .maxTokens(0L)
+                .retiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
         assertThat(modelInfo.id()).isEqualTo("claude-opus-5")
@@ -117,10 +120,14 @@ internal class ModelInfoTest {
                     .build()
             )
         assertThat(modelInfo.createdAt()).isEqualTo(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+        assertThat(modelInfo.deprecatedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(modelInfo.displayName()).isEqualTo("Claude Opus 5")
+        assertThat(modelInfo.lifecycle()).isEqualTo(ModelInfo.Lifecycle.ACTIVE)
         assertThat(modelInfo.line()).contains(ModelLine.HAIKU)
         assertThat(modelInfo.maxInputTokens()).contains(0L)
         assertThat(modelInfo.maxTokens()).contains(0L)
+        assertThat(modelInfo.retiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
 
     @Test
@@ -177,10 +184,13 @@ internal class ModelInfoTest {
                         .build()
                 )
                 .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .deprecatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("Claude Opus 5")
+                .lifecycle(ModelInfo.Lifecycle.ACTIVE)
                 .line(ModelLine.HAIKU)
                 .maxInputTokens(0L)
                 .maxTokens(0L)
+                .retiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
         val roundtrippedModelInfo =

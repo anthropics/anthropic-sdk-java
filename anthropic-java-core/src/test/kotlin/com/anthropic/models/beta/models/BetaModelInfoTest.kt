@@ -69,10 +69,13 @@ internal class BetaModelInfoTest {
                         .build()
                 )
                 .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .deprecatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("Claude Opus 5")
+                .lifecycle(BetaModelInfo.Lifecycle.ACTIVE)
                 .line(BetaModelLine.HAIKU)
                 .maxInputTokens(0L)
                 .maxTokens(0L)
+                .retiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
         assertThat(betaModelInfo.id()).isEqualTo("claude-opus-5")
@@ -133,10 +136,15 @@ internal class BetaModelInfoTest {
             )
         assertThat(betaModelInfo.createdAt())
             .isEqualTo(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+        assertThat(betaModelInfo.deprecatedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(betaModelInfo.displayName()).isEqualTo("Claude Opus 5")
+        assertThat(betaModelInfo.lifecycle()).isEqualTo(BetaModelInfo.Lifecycle.ACTIVE)
         assertThat(betaModelInfo.line()).contains(BetaModelLine.HAIKU)
         assertThat(betaModelInfo.maxInputTokens()).contains(0L)
         assertThat(betaModelInfo.maxTokens()).contains(0L)
+        assertThat(betaModelInfo.retiresAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
 
     @Test
@@ -200,10 +208,13 @@ internal class BetaModelInfoTest {
                         .build()
                 )
                 .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .deprecatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("Claude Opus 5")
+                .lifecycle(BetaModelInfo.Lifecycle.ACTIVE)
                 .line(BetaModelLine.HAIKU)
                 .maxInputTokens(0L)
                 .maxTokens(0L)
+                .retiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
         val roundtrippedBetaModelInfo =
