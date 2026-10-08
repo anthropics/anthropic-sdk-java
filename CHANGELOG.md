@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.69.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.69.0...v2.69.1) (2026-10-08)
+
+### Chores
+
+* **ci:** check that pull requests update the changelog
+
 ## 2.69.0 (2026-10-07)
 
 Full Changelog: [v2.68.0...v2.69.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.68.0...v2.69.0)
