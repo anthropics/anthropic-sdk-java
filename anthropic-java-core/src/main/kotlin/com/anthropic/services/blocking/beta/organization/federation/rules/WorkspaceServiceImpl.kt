@@ -85,13 +85,9 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "federation_rules",
-                        params._pathParam(0),
-                        "workspaces",
-                    )
+                    .addPathSegments("v1", "organizations", "federation_rules")
+                    .addPathParam("federationRuleId", params._pathParam(0))
+                    .addPathSegments("workspaces")
                     .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
@@ -129,13 +125,9 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "federation_rules",
-                        params._pathParam(0),
-                        "workspaces",
-                    )
+                    .addPathSegments("v1", "organizations", "federation_rules")
+                    .addPathParam("federationRuleId", params._pathParam(0))
+                    .addPathSegments("workspaces")
                     .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -167,14 +159,10 @@ class WorkspaceServiceImpl internal constructor(private val clientOptions: Clien
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "federation_rules",
-                        params._pathParam(0),
-                        "workspaces",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "organizations", "federation_rules")
+                    .addPathParam("federationRuleId", params._pathParam(0))
+                    .addPathSegments("workspaces")
+                    .addPathParam("workspaceId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

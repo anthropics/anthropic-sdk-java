@@ -92,13 +92,10 @@ class MemoryVersionServiceAsyncImpl internal constructor(private val clientOptio
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "memory_stores",
-                        params._pathParam(0),
-                        "memory_versions",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "memory_stores")
+                    .addPathParam("memoryStoreId", params._pathParam(0))
+                    .addPathSegments("memory_versions")
+                    .addPathParam("memoryVersionId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -133,7 +130,9 @@ class MemoryVersionServiceAsyncImpl internal constructor(private val clientOptio
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "memory_stores", params._pathParam(0), "memory_versions")
+                    .addPathSegments("v1", "memory_stores")
+                    .addPathParam("memoryStoreId", params._pathParam(0))
+                    .addPathSegments("memory_versions")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -176,14 +175,11 @@ class MemoryVersionServiceAsyncImpl internal constructor(private val clientOptio
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "memory_stores",
-                        params._pathParam(0),
-                        "memory_versions",
-                        params._pathParam(1),
-                        "redact",
-                    )
+                    .addPathSegments("v1", "memory_stores")
+                    .addPathParam("memoryStoreId", params._pathParam(0))
+                    .addPathSegments("memory_versions")
+                    .addPathParam("memoryVersionId", params._pathParam(1))
+                    .addPathSegments("redact")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }

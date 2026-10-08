@@ -98,7 +98,9 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "skills", params._pathParam(0), "versions")
+                    .addPathSegments("v1", "skills")
+                    .addPathParam("skillId", params._pathParam(0))
+                    .addPathSegments("versions")
                     .putQueryParam("beta", "true")
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -130,13 +132,10 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "skills",
-                        params._pathParam(0),
-                        "versions",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "skills")
+                    .addPathParam("skillId", params._pathParam(0))
+                    .addPathSegments("versions")
+                    .addPathParam("version", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
@@ -167,7 +166,9 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "skills", params._pathParam(0), "versions")
+                    .addPathSegments("v1", "skills")
+                    .addPathParam("skillId", params._pathParam(0))
+                    .addPathSegments("versions")
                     .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
@@ -205,13 +206,10 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "skills",
-                        params._pathParam(0),
-                        "versions",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "skills")
+                    .addPathParam("skillId", params._pathParam(0))
+                    .addPathSegments("versions")
+                    .addPathParam("version", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -240,14 +238,11 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "skills",
-                        params._pathParam(0),
-                        "versions",
-                        params._pathParam(1),
-                        "content",
-                    )
+                    .addPathSegments("v1", "skills")
+                    .addPathParam("skillId", params._pathParam(0))
+                    .addPathSegments("versions")
+                    .addPathParam("version", params._pathParam(1))
+                    .addPathSegments("content")
                     .putQueryParam("beta", "true")
                     .putHeader("Accept", "application/binary")
                     .build()

@@ -101,12 +101,8 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "spend_limit_increase_requests",
-                        params._pathParam(0),
-                    )
+                    .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
+                    .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
                     .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -182,13 +178,9 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "spend_limit_increase_requests",
-                        params._pathParam(0),
-                        "approve",
-                    )
+                    .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
+                    .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
+                    .addPathSegments("approve")
                     .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -226,13 +218,9 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "spend_limit_increase_requests",
-                        params._pathParam(0),
-                        "deny",
-                    )
+                    .addPathSegments("v1", "organizations", "spend_limit_increase_requests")
+                    .addPathParam("spendLimitIncreaseRequestId", params._pathParam(0))
+                    .addPathSegments("deny")
                     .putQueryParam("beta", "true")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()

@@ -99,13 +99,9 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "plugins",
-                        params._pathParam(0),
-                        "versions",
-                    )
+                    .addPathSegments("v1", "organizations", "plugins")
+                    .addPathParam("pluginId", params._pathParam(0))
+                    .addPathSegments("versions")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
@@ -141,14 +137,10 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "plugins",
-                        params._pathParam(0),
-                        "versions",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "organizations", "plugins")
+                    .addPathParam("pluginId", params._pathParam(0))
+                    .addPathSegments("versions")
+                    .addPathParam("version", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -183,13 +175,9 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "plugins",
-                        params._pathParam(0),
-                        "versions",
-                    )
+                    .addPathSegments("v1", "organizations", "plugins")
+                    .addPathParam("pluginId", params._pathParam(0))
+                    .addPathSegments("versions")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -229,15 +217,11 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "plugins",
-                        params._pathParam(0),
-                        "versions",
-                        params._pathParam(1),
-                        "content",
-                    )
+                    .addPathSegments("v1", "organizations", "plugins")
+                    .addPathParam("pluginId", params._pathParam(0))
+                    .addPathSegments("versions")
+                    .addPathParam("version", params._pathParam(1))
+                    .addPathSegments("content")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "application/binary")

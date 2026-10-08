@@ -109,13 +109,10 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "sessions",
-                        params._pathParam(0),
-                        "resources",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "sessions")
+                    .addPathParam("sessionId", params._pathParam(0))
+                    .addPathSegments("resources")
+                    .addPathParam("resourceId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -147,13 +144,10 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "sessions",
-                        params._pathParam(0),
-                        "resources",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "sessions")
+                    .addPathParam("sessionId", params._pathParam(0))
+                    .addPathSegments("resources")
+                    .addPathParam("resourceId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
@@ -186,7 +180,9 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "sessions", params._pathParam(0), "resources")
+                    .addPathSegments("v1", "sessions")
+                    .addPathParam("sessionId", params._pathParam(0))
+                    .addPathSegments("resources")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -225,13 +221,10 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "sessions",
-                        params._pathParam(0),
-                        "resources",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "sessions")
+                    .addPathParam("sessionId", params._pathParam(0))
+                    .addPathSegments("resources")
+                    .addPathParam("resourceId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
@@ -264,7 +257,9 @@ class ResourceServiceImpl internal constructor(private val clientOptions: Client
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "sessions", params._pathParam(0), "resources")
+                    .addPathSegments("v1", "sessions")
+                    .addPathParam("sessionId", params._pathParam(0))
+                    .addPathSegments("resources")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))

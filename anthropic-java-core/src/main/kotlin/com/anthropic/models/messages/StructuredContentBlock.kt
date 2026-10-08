@@ -1,10 +1,10 @@
 package com.anthropic.models.messages
 
 import com.anthropic.core.JsonValue
+import com.anthropic.core.getOrThrow
 import com.anthropic.errors.AnthropicInvalidDataException
 import java.util.Objects
 import java.util.Optional
-import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -18,145 +18,144 @@ import kotlin.jvm.optionals.getOrNull
 class StructuredContentBlock<T : Any>
 internal constructor(
     @get:JvmName("outputType") val outputType: Class<T>,
-    @get:JvmName("rawContentBlock") val rawContentBlock: ContentBlock,
+    private val delegate: ContentBlock,
 ) {
-    private val text by lazy { rawContentBlock.text().map { StructuredTextBlock(outputType, it) } }
+
+    @get:JvmName("rawContentBlock")
+    val rawContentBlock: ContentBlock
+        get() = delegate
+
+    /** @see ContentBlock.type */
+    fun type(): ContentBlock.Type = delegate.type()
+
+    /** @see ContentBlock.id */
+    fun id(): Optional<String> = delegate.id()
+
+    /** @see ContentBlock.toolUseId */
+    fun toolUseId(): Optional<String> = delegate.toolUseId()
 
     /** @see ContentBlock.text */
     fun text(): Optional<StructuredTextBlock<T>> = text
 
+    private val text by lazy { delegate.text().map { StructuredTextBlock(outputType, it) } }
+
     /** @see ContentBlock.thinking */
-    fun thinking(): Optional<ThinkingBlock> = rawContentBlock.thinking()
+    fun thinking(): Optional<ThinkingBlock> = delegate.thinking()
 
     /** @see ContentBlock.redactedThinking */
-    fun redactedThinking(): Optional<RedactedThinkingBlock> = rawContentBlock.redactedThinking()
+    fun redactedThinking(): Optional<RedactedThinkingBlock> = delegate.redactedThinking()
 
     /** @see ContentBlock.toolUse */
-    fun toolUse(): Optional<ToolUseBlock> = rawContentBlock.toolUse()
+    fun toolUse(): Optional<ToolUseBlock> = delegate.toolUse()
 
     /** @see ContentBlock.serverToolUse */
-    fun serverToolUse(): Optional<ServerToolUseBlock> = rawContentBlock.serverToolUse()
+    fun serverToolUse(): Optional<ServerToolUseBlock> = delegate.serverToolUse()
 
     /** @see ContentBlock.webSearchToolResult */
-    fun webSearchToolResult(): Optional<WebSearchToolResultBlock> =
-        rawContentBlock.webSearchToolResult()
+    fun webSearchToolResult(): Optional<WebSearchToolResultBlock> = delegate.webSearchToolResult()
 
     /** @see ContentBlock.webFetchToolResult */
-    fun webFetchToolResult(): Optional<WebFetchToolResultBlock> =
-        rawContentBlock.webFetchToolResult()
+    fun webFetchToolResult(): Optional<WebFetchToolResultBlock> = delegate.webFetchToolResult()
 
     /** @see ContentBlock.codeExecutionToolResult */
     fun codeExecutionToolResult(): Optional<CodeExecutionToolResultBlock> =
-        rawContentBlock.codeExecutionToolResult()
+        delegate.codeExecutionToolResult()
 
     /** @see ContentBlock.bashCodeExecutionToolResult */
     fun bashCodeExecutionToolResult(): Optional<BashCodeExecutionToolResultBlock> =
-        rawContentBlock.bashCodeExecutionToolResult()
+        delegate.bashCodeExecutionToolResult()
 
     /** @see ContentBlock.textEditorCodeExecutionToolResult */
     fun textEditorCodeExecutionToolResult(): Optional<TextEditorCodeExecutionToolResultBlock> =
-        rawContentBlock.textEditorCodeExecutionToolResult()
+        delegate.textEditorCodeExecutionToolResult()
 
     /** @see ContentBlock.toolSearchToolResult */
     fun toolSearchToolResult(): Optional<ToolSearchToolResultBlock> =
-        rawContentBlock.toolSearchToolResult()
+        delegate.toolSearchToolResult()
 
     /** @see ContentBlock.containerUpload */
-    fun containerUpload(): Optional<ContainerUploadBlock> = rawContentBlock.containerUpload()
-
-    /** @see ContentBlock.type */
-    fun type(): ContentBlock.Type = rawContentBlock.type()
-
-    /** @see ContentBlock.id */
-    fun id(): Optional<String> = rawContentBlock.id()
-
-    /** @see ContentBlock.toolUseId */
-    fun toolUseId(): Optional<String> = rawContentBlock.toolUseId()
+    fun containerUpload(): Optional<ContainerUploadBlock> = delegate.containerUpload()
 
     /** @see ContentBlock.isText */
-    fun isText(): Boolean = text().isPresent
+    fun isText(): Boolean = text.isPresent
 
     /** @see ContentBlock.isThinking */
-    fun isThinking(): Boolean = rawContentBlock.isThinking()
+    fun isThinking(): Boolean = delegate.isThinking()
 
     /** @see ContentBlock.isRedactedThinking */
-    fun isRedactedThinking(): Boolean = rawContentBlock.isRedactedThinking()
+    fun isRedactedThinking(): Boolean = delegate.isRedactedThinking()
 
     /** @see ContentBlock.isToolUse */
-    fun isToolUse(): Boolean = rawContentBlock.isToolUse()
+    fun isToolUse(): Boolean = delegate.isToolUse()
 
     /** @see ContentBlock.isServerToolUse */
-    fun isServerToolUse(): Boolean = rawContentBlock.isServerToolUse()
+    fun isServerToolUse(): Boolean = delegate.isServerToolUse()
 
     /** @see ContentBlock.isWebSearchToolResult */
-    fun isWebSearchToolResult(): Boolean = rawContentBlock.isWebSearchToolResult()
+    fun isWebSearchToolResult(): Boolean = delegate.isWebSearchToolResult()
 
     /** @see ContentBlock.isWebFetchToolResult */
-    fun isWebFetchToolResult(): Boolean = rawContentBlock.isWebFetchToolResult()
+    fun isWebFetchToolResult(): Boolean = delegate.isWebFetchToolResult()
 
     /** @see ContentBlock.isCodeExecutionToolResult */
-    fun isCodeExecutionToolResult(): Boolean = rawContentBlock.isCodeExecutionToolResult()
+    fun isCodeExecutionToolResult(): Boolean = delegate.isCodeExecutionToolResult()
 
     /** @see ContentBlock.isBashCodeExecutionToolResult */
-    fun isBashCodeExecutionToolResult(): Boolean = rawContentBlock.isBashCodeExecutionToolResult()
+    fun isBashCodeExecutionToolResult(): Boolean = delegate.isBashCodeExecutionToolResult()
 
     /** @see ContentBlock.isTextEditorCodeExecutionToolResult */
     fun isTextEditorCodeExecutionToolResult(): Boolean =
-        rawContentBlock.isTextEditorCodeExecutionToolResult()
+        delegate.isTextEditorCodeExecutionToolResult()
 
     /** @see ContentBlock.isToolSearchToolResult */
-    fun isToolSearchToolResult(): Boolean = rawContentBlock.isToolSearchToolResult()
+    fun isToolSearchToolResult(): Boolean = delegate.isToolSearchToolResult()
 
     /** @see ContentBlock.isContainerUpload */
-    fun isContainerUpload(): Boolean = rawContentBlock.isContainerUpload()
+    fun isContainerUpload(): Boolean = delegate.isContainerUpload()
 
     /** @see ContentBlock.asText */
-    fun asText(): StructuredTextBlock<T> =
-        text.getOrElse {
-            // Same behavior as `com.anthropic.core.getOrThrow` used by the delegate class.
-            throw AnthropicInvalidDataException("`text` is not present")
-        }
+    fun asText(): StructuredTextBlock<T> = text.getOrNull().getOrThrow("text")
 
     /** @see ContentBlock.asThinking */
-    fun asThinking(): ThinkingBlock = rawContentBlock.asThinking()
+    fun asThinking(): ThinkingBlock = delegate.asThinking()
 
     /** @see ContentBlock.asRedactedThinking */
-    fun asRedactedThinking(): RedactedThinkingBlock = rawContentBlock.asRedactedThinking()
+    fun asRedactedThinking(): RedactedThinkingBlock = delegate.asRedactedThinking()
 
     /** @see ContentBlock.asToolUse */
-    fun asToolUse(): ToolUseBlock = rawContentBlock.asToolUse()
+    fun asToolUse(): ToolUseBlock = delegate.asToolUse()
 
     /** @see ContentBlock.asServerToolUse */
-    fun asServerToolUse(): ServerToolUseBlock = rawContentBlock.asServerToolUse()
+    fun asServerToolUse(): ServerToolUseBlock = delegate.asServerToolUse()
 
     /** @see ContentBlock.asWebSearchToolResult */
-    fun asWebSearchToolResult(): WebSearchToolResultBlock = rawContentBlock.asWebSearchToolResult()
+    fun asWebSearchToolResult(): WebSearchToolResultBlock = delegate.asWebSearchToolResult()
 
     /** @see ContentBlock.asWebFetchToolResult */
-    fun asWebFetchToolResult(): WebFetchToolResultBlock = rawContentBlock.asWebFetchToolResult()
+    fun asWebFetchToolResult(): WebFetchToolResultBlock = delegate.asWebFetchToolResult()
 
     /** @see ContentBlock.asCodeExecutionToolResult */
     fun asCodeExecutionToolResult(): CodeExecutionToolResultBlock =
-        rawContentBlock.asCodeExecutionToolResult()
+        delegate.asCodeExecutionToolResult()
 
     /** @see ContentBlock.asBashCodeExecutionToolResult */
     fun asBashCodeExecutionToolResult(): BashCodeExecutionToolResultBlock =
-        rawContentBlock.asBashCodeExecutionToolResult()
+        delegate.asBashCodeExecutionToolResult()
 
     /** @see ContentBlock.asTextEditorCodeExecutionToolResult */
     fun asTextEditorCodeExecutionToolResult(): TextEditorCodeExecutionToolResultBlock =
-        rawContentBlock.asTextEditorCodeExecutionToolResult()
+        delegate.asTextEditorCodeExecutionToolResult()
 
     /** @see ContentBlock.asToolSearchToolResult */
-    fun asToolSearchToolResult(): ToolSearchToolResultBlock =
-        rawContentBlock.asToolSearchToolResult()
+    fun asToolSearchToolResult(): ToolSearchToolResultBlock = delegate.asToolSearchToolResult()
 
     /** @see ContentBlock.asContainerUpload */
-    fun asContainerUpload(): ContainerUploadBlock = rawContentBlock.asContainerUpload()
+    fun asContainerUpload(): ContainerUploadBlock = delegate.asContainerUpload()
 
     /** @see ContentBlock._json */
-    fun _json(): Optional<JsonValue> = rawContentBlock._json()
+    fun _json(): Optional<JsonValue> = delegate._json()
 
+    /** @see ContentBlock.accept */
     fun <R> accept(visitor: Visitor<T, R>): R =
         when {
             isText() -> visitor.visitText(asText())
@@ -179,83 +178,17 @@ internal constructor(
             else -> visitor.unknown(_json().getOrNull())
         }
 
-    private var validated: Boolean = false
-
     /** @see ContentBlock.validate */
     fun validate(): StructuredContentBlock<T> = apply {
-        if (validated) {
-            return@apply
-        }
-
-        accept(
-            object : Visitor<T, Unit> {
-                override fun visitText(text: StructuredTextBlock<T>) {
-                    text.validate()
-                }
-
-                override fun visitThinking(thinking: ThinkingBlock) {
-                    thinking.validate()
-                }
-
-                override fun visitRedactedThinking(redactedThinking: RedactedThinkingBlock) {
-                    redactedThinking.validate()
-                }
-
-                override fun visitToolUse(toolUse: ToolUseBlock) {
-                    toolUse.validate()
-                }
-
-                override fun visitServerToolUse(serverToolUse: ServerToolUseBlock) {
-                    serverToolUse.validate()
-                }
-
-                override fun visitWebSearchToolResult(
-                    webSearchToolResult: WebSearchToolResultBlock
-                ) {
-                    webSearchToolResult.validate()
-                }
-
-                override fun visitWebFetchToolResult(webFetchToolResult: WebFetchToolResultBlock) {
-                    webFetchToolResult.validate()
-                }
-
-                override fun visitCodeExecutionToolResult(
-                    codeExecutionToolResult: CodeExecutionToolResultBlock
-                ) {
-                    codeExecutionToolResult.validate()
-                }
-
-                override fun visitBashCodeExecutionToolResult(
-                    bashCodeExecutionToolResult: BashCodeExecutionToolResultBlock
-                ) {
-                    bashCodeExecutionToolResult.validate()
-                }
-
-                override fun visitTextEditorCodeExecutionToolResult(
-                    textEditorCodeExecutionToolResult: TextEditorCodeExecutionToolResultBlock
-                ) {
-                    textEditorCodeExecutionToolResult.validate()
-                }
-
-                override fun visitToolSearchToolResult(
-                    toolSearchToolResult: ToolSearchToolResultBlock
-                ) {
-                    toolSearchToolResult.validate()
-                }
-
-                override fun visitContainerUpload(containerUpload: ContainerUploadBlock) {
-                    containerUpload.validate()
-                }
-            }
-        )
-        validated = true
+        if (isText()) asText().validate() else delegate.validate()
     }
 
+    /** @see ContentBlock.isValid */
     fun isValid(): Boolean =
         try {
             validate()
             true
-        } catch (_: AnthropicInvalidDataException) {
+        } catch (e: AnthropicInvalidDataException) {
             false
         }
 
@@ -266,13 +199,21 @@ internal constructor(
 
         return other is StructuredContentBlock<*> &&
             outputType == other.outputType &&
-            rawContentBlock == other.rawContentBlock
+            delegate == other.delegate
     }
 
-    override fun hashCode(): Int = Objects.hash(outputType, rawContentBlock)
+    override fun hashCode(): Int = Objects.hash(outputType, delegate)
 
-    override fun toString(): String =
-        "${javaClass.simpleName}{outputType=$outputType, rawContentBlock=$rawContentBlock}"
+    override fun toString() =
+        "StructuredContentBlock{outputType=$outputType, rawContentBlock=$delegate}"
+
+    companion object {
+
+        /** Returns an instance of [StructuredContentBlock] that forwards to [contentBlock]. */
+        @JvmSynthetic
+        internal fun <T : Any> of(outputType: Class<T>, contentBlock: ContentBlock) =
+            StructuredContentBlock(outputType, contentBlock)
+    }
 
     /** @see ContentBlock.Visitor */
     // In keeping with the delegate's `Visitor<T>`, `T` is used to refer to the return type of each
@@ -280,6 +221,7 @@ internal constructor(
     // otherwise named `T` in the outer class, but confusion here is probably preferable to
     // confusion there.
     interface Visitor<R : Any, out T> {
+
         /** @see ContentBlock.Visitor.visitText */
         fun visitText(text: StructuredTextBlock<R>): T
 

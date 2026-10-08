@@ -123,13 +123,10 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "environments",
-                        params._pathParam(0),
-                        "work",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "environments")
+                    .addPathParam("environmentId", params._pathParam(0))
+                    .addPathSegments("work")
+                    .addPathParam("workId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -161,13 +158,10 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "environments",
-                        params._pathParam(0),
-                        "work",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "environments")
+                    .addPathParam("environmentId", params._pathParam(0))
+                    .addPathSegments("work")
+                    .addPathParam("workId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
@@ -200,7 +194,9 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "environments", params._pathParam(0), "work")
+                    .addPathSegments("v1", "environments")
+                    .addPathParam("environmentId", params._pathParam(0))
+                    .addPathSegments("work")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -239,14 +235,11 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "environments",
-                        params._pathParam(0),
-                        "work",
-                        params._pathParam(1),
-                        "ack",
-                    )
+                    .addPathSegments("v1", "environments")
+                    .addPathParam("environmentId", params._pathParam(0))
+                    .addPathSegments("work")
+                    .addPathParam("workId", params._pathParam(1))
+                    .addPathSegments("ack")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
@@ -279,14 +272,11 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "environments",
-                        params._pathParam(0),
-                        "work",
-                        params._pathParam(1),
-                        "heartbeat",
-                    )
+                    .addPathSegments("v1", "environments")
+                    .addPathParam("environmentId", params._pathParam(0))
+                    .addPathSegments("work")
+                    .addPathParam("workId", params._pathParam(1))
+                    .addPathSegments("heartbeat")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
@@ -319,7 +309,9 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "environments", params._pathParam(0), "work", "poll")
+                    .addPathSegments("v1", "environments")
+                    .addPathParam("environmentId", params._pathParam(0))
+                    .addPathSegments("work", "poll")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -351,7 +343,9 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "environments", params._pathParam(0), "work", "stats")
+                    .addPathSegments("v1", "environments")
+                    .addPathParam("environmentId", params._pathParam(0))
+                    .addPathSegments("work", "stats")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -383,14 +377,11 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "environments",
-                        params._pathParam(0),
-                        "work",
-                        params._pathParam(1),
-                        "stop",
-                    )
+                    .addPathSegments("v1", "environments")
+                    .addPathParam("environmentId", params._pathParam(0))
+                    .addPathSegments("work")
+                    .addPathParam("workId", params._pathParam(1))
+                    .addPathSegments("stop")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))

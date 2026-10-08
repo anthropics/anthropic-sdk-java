@@ -171,7 +171,8 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "organizations", "workspaces", params._pathParam(0))
+                    .addPathSegments("v1", "organizations", "workspaces")
+                    .addPathParam("workspaceId", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -204,7 +205,8 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "organizations", "workspaces", params._pathParam(0))
+                    .addPathSegments("v1", "organizations", "workspaces")
+                    .addPathParam("workspaceId", params._pathParam(0))
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -276,13 +278,9 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "workspaces",
-                        params._pathParam(0),
-                        "archive",
-                    )
+                    .addPathSegments("v1", "organizations", "workspaces")
+                    .addPathParam("workspaceId", params._pathParam(0))
+                    .addPathSegments("archive")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

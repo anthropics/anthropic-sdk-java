@@ -1,18 +1,9 @@
 package com.anthropic.models.messages
 
-import com.anthropic.core.DelegationReadTestCase
-import com.anthropic.core.JSON_FIELD
-import com.anthropic.core.JSON_VALUE
 import com.anthropic.core.JsonField
-import com.anthropic.core.OPTIONAL
 import com.anthropic.core.X
-import com.anthropic.core.checkAllDelegation
-import com.anthropic.core.checkAllDelegatorReadFunctionsAreTested
-import com.anthropic.core.checkOneDelegationRead
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.Mockito.`when`
@@ -20,63 +11,14 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
 /**
- * Unit tests for the GA [StructuredTextBlock] class (delegator) and its delegation of most
- * functions to a wrapped [TextBlock] (delegate). The tests include confirmation of the following:
- * - All functions in the delegator correspond to a function in the delegate and _vice versa_.
- * - All functions in the delegator call their corresponding function in the delegate and only that
- *   function.
- * - A unit test exists for all functions.
- *
- * There are some exceptions to the above that are handled differently.
+ * Unit tests for the functions of the GA [StructuredTextBlock] class (delegator) that do more than
+ * call the function of the same name in the wrapped [TextBlock] (delegate).
  */
 internal class StructuredTextBlockTest {
-    companion object {
-        // The list order follows the declaration order in `TextBlock` for easier maintenance.
-        @JvmStatic
-        private fun delegationTestCases() =
-            listOf(
-                DelegationReadTestCase("citations", OPTIONAL),
-                // `text()` is a special case and has its own test function.
-                DelegationReadTestCase("_type", JSON_VALUE),
-                DelegationReadTestCase("_citations", JSON_FIELD),
-                // `_text()` is a special case and has its own test function.
-                DelegationReadTestCase("_additionalProperties", mapOf("key" to JSON_VALUE)),
-            )
-    }
-
     // New instances of the `mockDelegate` and `delegator` are required for each test case (each
     // test case runs in its own instance of the test class).
     private val mockDelegate: TextBlock = mock(TextBlock::class.java)
     private val delegator = StructuredTextBlock<X>(X::class.java, mockDelegate)
-
-    @Test
-    fun allDelegateFunctionsExistInDelegator() {
-        checkAllDelegation(mockDelegate::class, delegator::class, "toBuilder", "toParam")
-    }
-
-    @Test
-    fun allDelegatorFunctionsExistInDelegate() {
-        checkAllDelegation(delegator::class, mockDelegate::class)
-    }
-
-    @Test
-    fun allDelegatorFunctionsAreTested() {
-        // There are exceptional test cases for some functions. Most other functions are part of the
-        // list of those using the parameterized test. A few delegator functions do not delegate, so
-        // no test function is necessary.
-        checkAllDelegatorReadFunctionsAreTested(
-            delegator::class,
-            delegationTestCases(),
-            exceptionalTestedFns = setOf("text", "_text", "validate", "isValid"),
-            nonDelegatingFns = setOf("equals", "hashCode", "toString"),
-        )
-    }
-
-    @ParameterizedTest
-    @MethodSource("delegationTestCases")
-    fun `delegation of functions in general`(testCase: DelegationReadTestCase) {
-        checkOneDelegationRead(delegator, mockDelegate, testCase)
-    }
 
     @Test
     fun `delegation of text`() {

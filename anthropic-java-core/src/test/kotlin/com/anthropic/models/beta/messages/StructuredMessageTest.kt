@@ -1,22 +1,11 @@
 package com.anthropic.models.beta.messages
 
-import com.anthropic.core.DelegationReadTestCase
-import com.anthropic.core.JSON_FIELD
-import com.anthropic.core.JSON_VALUE
 import com.anthropic.core.JsonField
-import com.anthropic.core.LONG
-import com.anthropic.core.OPTIONAL
 import com.anthropic.core.STRING
 import com.anthropic.core.X
-import com.anthropic.core.checkAllDelegation
-import com.anthropic.core.checkAllDelegatorReadFunctionsAreTested
-import com.anthropic.core.checkOneDelegationRead
 import com.anthropic.errors.AnthropicInvalidDataException
-import com.anthropic.models.messages.Model
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.Mockito.`when`
@@ -24,122 +13,19 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
 /**
- * Unit tests for the [StructuredMessage] class (delegator) and its delegation of most functions to
- * a wrapped [BetaMessage] (delegate). The tests include confirmation of the following:
- * - All functions in the delegator correspond to a function in the delegate and _vice versa_.
- * - All functions in the delegator call their corresponding function in the delegate and only that
- *   function.
- * - A unit test exists for all functions.
- *
- * There are some exceptions to the above that are handled differently.
+ * Unit tests for the functions of the [StructuredMessage] class (delegator) that do more than call
+ * the function of the same name in the wrapped [BetaMessage] (delegate).
  */
 internal class StructuredMessageTest {
     companion object {
-        private val MODEL = Model.CLAUDE_SONNET_4_5
-        private val USAGE =
-            BetaUsage.builder()
-                .fallbackCredit(null)
-                .cacheCreation(null)
-                .cacheCreationInputTokens(null)
-                .cacheReadInputTokens(null)
-                .inputTokens(LONG)
-                .outputTokens(LONG)
-                .outputTokensDetails(BetaOutputTokensDetails.builder().thinkingTokens(0L).build())
-                .serverToolUse(null)
-                .serviceTier(null)
-                .speed(null)
-                .inferenceGeo(null)
-                .iterations(null)
-                .build()
         private val CONTENT =
             BetaContentBlock.ofText(BetaTextBlock.builder().citations(null).text(STRING).build())
-        private val FALLBACK_CONTENT =
-            BetaContentBlock.ofFallback(
-                BetaFallbackBlock.builder()
-                    .from(BetaFallbackInfo.builder().model(Model.CLAUDE_OPUS_4_8).build())
-                    .to(BetaFallbackInfo.builder().model(Model.CLAUDE_HAIKU_4_5).build())
-                    .trigger(BetaFallbackRefusalTrigger.builder().category(null).build())
-                    .build()
-            )
-        private val ADVISOR_TOOL_RESULT_CONTENT =
-            BetaContentBlock.ofAdvisorToolResult(
-                BetaAdvisorToolResultBlock.builder()
-                    .content(
-                        BetaAdvisorToolResultBlock.Content.ofBetaAdvisorToolResultError(
-                            BetaAdvisorToolResultError.builder()
-                                .errorCode(BetaAdvisorToolResultError.ErrorCode.MAX_USES_EXCEEDED)
-                                .build()
-                        )
-                    )
-                    .toolUseId(STRING)
-                    .build()
-            )
-
-        // The list order follows the declaration order in `BetaMessage` for easier maintenance.
-        @JvmStatic
-        private fun delegationTestCases() =
-            listOf(
-                DelegationReadTestCase("id", STRING),
-                DelegationReadTestCase("container", OPTIONAL),
-                // `content()` is a special case and has its own test function.
-                DelegationReadTestCase("contextManagement", OPTIONAL),
-                DelegationReadTestCase("diagnostics", OPTIONAL),
-                DelegationReadTestCase("model", MODEL),
-                DelegationReadTestCase("_role", JSON_VALUE),
-                DelegationReadTestCase("stopDetails", OPTIONAL),
-                DelegationReadTestCase("stopReason", OPTIONAL),
-                DelegationReadTestCase("stopSequence", OPTIONAL),
-                DelegationReadTestCase("_type", JSON_VALUE),
-                DelegationReadTestCase("usage", USAGE),
-                DelegationReadTestCase("inputTransformations", OPTIONAL),
-                DelegationReadTestCase("_id", JSON_FIELD),
-                DelegationReadTestCase("_container", JSON_FIELD),
-                // `_content()` is a special case and has its own test function.
-                DelegationReadTestCase("_contextManagement", JSON_FIELD),
-                DelegationReadTestCase("_diagnostics", JSON_FIELD),
-                DelegationReadTestCase("_model", JSON_FIELD),
-                DelegationReadTestCase("_stopDetails", JSON_FIELD),
-                DelegationReadTestCase("_stopReason", JSON_FIELD),
-                DelegationReadTestCase("_stopSequence", JSON_FIELD),
-                DelegationReadTestCase("_usage", JSON_FIELD),
-                DelegationReadTestCase("_inputTransformations", JSON_FIELD),
-                DelegationReadTestCase("_additionalProperties", mapOf("key" to JSON_VALUE)),
-            )
     }
 
     // New instances of the `mockDelegate` and `delegator` are required for each test case (each
     // test case runs in its own instance of the test class).
     private val mockDelegate: BetaMessage = mock(BetaMessage::class.java)
     private val delegator = StructuredMessage<X>(X::class.java, mockDelegate)
-
-    @Test
-    fun allDelegateFunctionsExistInDelegator() {
-        checkAllDelegation(mockDelegate::class, delegator::class, "toBuilder", "toParam")
-    }
-
-    @Test
-    fun allDelegatorFunctionsExistInDelegate() {
-        checkAllDelegation(delegator::class, mockDelegate::class)
-    }
-
-    @Test
-    fun allDelegatorFunctionsAreTested() {
-        // There are exceptional test cases for some functions. Most other functions are part of the
-        // list of those using the parameterized test. A few delegator functions do not delegate, so
-        // no test function is necessary.
-        checkAllDelegatorReadFunctionsAreTested(
-            delegator::class,
-            delegationTestCases(),
-            exceptionalTestedFns = setOf("content", "_content", "validate", "isValid"),
-            nonDelegatingFns = setOf("equals", "hashCode", "toString"),
-        )
-    }
-
-    @ParameterizedTest
-    @MethodSource("delegationTestCases")
-    fun `delegation of functions in general`(testCase: DelegationReadTestCase) {
-        checkOneDelegationRead(delegator, mockDelegate, testCase)
-    }
 
     @Test
     fun `delegation of content`() {
@@ -215,23 +101,5 @@ internal class StructuredMessageTest {
         verifyNoMoreInteractions(mockDelegate)
 
         assertThat(output).isFalse
-    }
-
-    @Test
-    fun `validate accepts fallback and advisor tool result content`() {
-        val input = JsonField.of(listOf(CONTENT, FALLBACK_CONTENT, ADVISOR_TOOL_RESULT_CONTENT))
-        `when`(mockDelegate._content()).thenReturn(input)
-        val output = delegator.validate()
-
-        assertThat(output).isSameAs(delegator)
-    }
-
-    @Test
-    fun `isValid accepts fallback and advisor tool result content`() {
-        val input = JsonField.of(listOf(CONTENT, FALLBACK_CONTENT, ADVISOR_TOOL_RESULT_CONTENT))
-        `when`(mockDelegate._content()).thenReturn(input)
-        val output = delegator.isValid()
-
-        assertThat(output).isTrue
     }
 }

@@ -134,6 +134,16 @@ internal class HttpRequestTest {
                 .build(),
             expectedUrl = "https://api.example.com/users/123/profile",
         ),
+        PATH_PARAM(
+            HttpRequest.builder()
+                .method(HttpMethod.GET)
+                .baseUrl("https://api.example.com")
+                .addPathSegments("v1", "cards")
+                .addPathParam("cardId", "card_1")
+                .addPathSegment("transactions")
+                .build(),
+            expectedUrl = "https://api.example.com/v1/cards/card_1/transactions",
+        ),
         PATH_SEGMENT_WITH_SPECIAL_CHARS(
             HttpRequest.builder()
                 .method(HttpMethod.GET)
@@ -219,5 +229,17 @@ internal class HttpRequestTest {
         assertThat(runCatching { builder.addPathSegments("cards", segment) }.exceptionOrNull())
             .isInstanceOf(IllegalStateException::class.java)
             .hasMessageContaining("dot-segment")
+        assertThat(runCatching { builder.addPathParam("cardId", segment) }.exceptionOrNull())
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("dot-segment")
+    }
+
+    @Test
+    fun addPathParam_empty_throws() {
+        assertThat(
+                runCatching { HttpRequest.builder().addPathParam("cardId", "") }.exceptionOrNull()
+            )
+            .isInstanceOf(IllegalStateException::class.java)
+            .hasMessageContaining("`cardId` must be non-empty")
     }
 }

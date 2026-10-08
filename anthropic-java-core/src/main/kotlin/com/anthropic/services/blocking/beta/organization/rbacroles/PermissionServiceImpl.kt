@@ -65,13 +65,9 @@ class PermissionServiceImpl internal constructor(private val clientOptions: Clie
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "rbac_roles",
-                        params._pathParam(0),
-                        "permissions",
-                    )
+                    .addPathSegments("v1", "organizations", "rbac_roles")
+                    .addPathParam("rbacRoleId", params._pathParam(0))
+                    .addPathSegments("permissions")
                     .putQueryParam("beta", "true")
                     .build()
                     .prepare(clientOptions, params)
