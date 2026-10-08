@@ -89,3 +89,14 @@ dependencies {
     testImplementation(libs.mockito.junit.jupiter)
     testImplementation(libs.mockito.kotlin)
 }
+
+// GraalVM Native Image needs to be told what Jackson and Kotlin reflection call reflectively. The
+// metadata is generated from the compiled classes so it stays complete as the API grows.
+val nativeImageMetadata by tasks.registering(NativeImageMetadata::class) {
+    classesDirs.from(sourceSets.main.map { it.output.classesDirs })
+    runtimeClasspath.from(configurations.runtimeClasspath)
+    groupId = project.group.toString()
+    artifactId = project.name
+    outputDirectory = layout.buildDirectory.dir("generated/native-image")
+}
+sourceSets.main { resources.srcDir(nativeImageMetadata) }
