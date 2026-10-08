@@ -60,23 +60,25 @@ private constructor(
      * Filters as `dimension:value`, e.g. `filter[]=rbac_group_id:{id}`. Repeat the param for OR
      * within a dimension and across dimensions for AND. Supported dimensions on this endpoint:
      * `plugin_name`, `product`, `rbac_group_id`, `user_id`. Value forms: `plugin_name` matches
-     * case-insensitively; `product` is `claude_code` or `cowork` (the only surfaces with plugin
-     * attribution); `rbac_group_id` takes the tagged id (`rbac_group_...`, as emitted in responses
-     * and by the spend-limits API) or a bare group UUID, and matches users who held the group at
-     * any point during each covered UTC day (time-of-usage attribution); `user_id` takes a tagged
-     * user id (`user_...`), as emitted in responses. An unsupported dimension returns 400. At most
-     * 100 entries.
+     * case-insensitively; `product` is `chat_cowork_unified`, `claude_code`, or `cowork` (the only
+     * surfaces with plugin attribution); `rbac_group_id` takes the tagged id (`rbac_group_...`, as
+     * emitted in responses and by the spend-limits API) or a bare group UUID, and matches users who
+     * held the group at any point during each covered UTC day (time-of-usage attribution);
+     * `user_id` takes a tagged user id (`user_...`), as emitted in responses. An unsupported
+     * dimension returns 400. At most 100 entries. `chat_cowork_unified` is accepted as a `product`
+     * value only on deployments that offer Chat and Cowork unified.
      */
     fun filter(): Optional<List<String>> = Optional.ofNullable(filter)
 
     /**
      * Dimensions to break results out by (e.g. `group_by[]=user_id`). Supported on this endpoint:
      * `product`, `rbac_group_id`, `user_id`. On this endpoint `product` takes the values
-     * `claude_code` or `cowork` only (the surfaces with plugin attribution). Grouped rows carry the
-     * requested dimension values as additional fields and paginate like ungrouped responses via
-     * `next_page`; an unsupported dimension returns 400. `rbac_group_id` attributes a user to every
-     * group they held at any point during each covered UTC day, so grouped rows are not an
-     * exclusive partition and can sum above org-level totals. At most 100 entries.
+     * `chat_cowork_unified`, `claude_code`, or `cowork` only (the surfaces with plugin
+     * attribution). Grouped rows carry the requested dimension values as additional fields and
+     * paginate like ungrouped responses via `next_page`; an unsupported dimension returns 400.
+     * `rbac_group_id` attributes a user to every group they held at any point during each covered
+     * UTC day, so grouped rows are not an exclusive partition and can sum above org-level totals.
+     * At most 100 entries.
      */
     fun groupBy(): Optional<List<GroupBy>> = Optional.ofNullable(groupBy)
 
@@ -186,12 +188,14 @@ private constructor(
          * Filters as `dimension:value`, e.g. `filter[]=rbac_group_id:{id}`. Repeat the param for OR
          * within a dimension and across dimensions for AND. Supported dimensions on this endpoint:
          * `plugin_name`, `product`, `rbac_group_id`, `user_id`. Value forms: `plugin_name` matches
-         * case-insensitively; `product` is `claude_code` or `cowork` (the only surfaces with plugin
-         * attribution); `rbac_group_id` takes the tagged id (`rbac_group_...`, as emitted in
-         * responses and by the spend-limits API) or a bare group UUID, and matches users who held
-         * the group at any point during each covered UTC day (time-of-usage attribution); `user_id`
-         * takes a tagged user id (`user_...`), as emitted in responses. An unsupported dimension
-         * returns 400. At most 100 entries.
+         * case-insensitively; `product` is `chat_cowork_unified`, `claude_code`, or `cowork` (the
+         * only surfaces with plugin attribution); `rbac_group_id` takes the tagged id
+         * (`rbac_group_...`, as emitted in responses and by the spend-limits API) or a bare group
+         * UUID, and matches users who held the group at any point during each covered UTC day
+         * (time-of-usage attribution); `user_id` takes a tagged user id (`user_...`), as emitted in
+         * responses. An unsupported dimension returns 400. At most 100 entries.
+         * `chat_cowork_unified` is accepted as a `product` value only on deployments that offer
+         * Chat and Cowork unified.
          */
         fun filter(filter: List<String>?) = apply { this.filter = filter?.toMutableList() }
 
@@ -210,9 +214,9 @@ private constructor(
         /**
          * Dimensions to break results out by (e.g. `group_by[]=user_id`). Supported on this
          * endpoint: `product`, `rbac_group_id`, `user_id`. On this endpoint `product` takes the
-         * values `claude_code` or `cowork` only (the surfaces with plugin attribution). Grouped
-         * rows carry the requested dimension values as additional fields and paginate like
-         * ungrouped responses via `next_page`; an unsupported dimension returns 400.
+         * values `chat_cowork_unified`, `claude_code`, or `cowork` only (the surfaces with plugin
+         * attribution). Grouped rows carry the requested dimension values as additional fields and
+         * paginate like ungrouped responses via `next_page`; an unsupported dimension returns 400.
          * `rbac_group_id` attributes a user to every group they held at any point during each
          * covered UTC day, so grouped rows are not an exclusive partition and can sum above
          * org-level totals. At most 100 entries.

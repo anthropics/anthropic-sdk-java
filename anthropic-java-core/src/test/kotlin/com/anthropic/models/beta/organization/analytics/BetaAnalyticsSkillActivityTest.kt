@@ -25,6 +25,14 @@ internal class BetaAnalyticsSkillActivityTest {
                 )
                 .skillName("skill_name")
                 .attributedListPrice("attributed_list_price")
+                .chatCoworkUnifiedMetrics(
+                    BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                        .chat(BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Chat.of(0L))
+                        .sessions(
+                            BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Sessions.of(0L)
+                        )
+                        .build()
+                )
                 .currency("currency")
                 .enableCount(0L)
                 .estimatedOverageSpend("estimated_overage_spend")
@@ -56,6 +64,13 @@ internal class BetaAnalyticsSkillActivityTest {
         assertThat(betaAnalyticsSkillActivity.skillName()).isEqualTo("skill_name")
         assertThat(betaAnalyticsSkillActivity.attributedListPrice())
             .contains("attributed_list_price")
+        assertThat(betaAnalyticsSkillActivity.chatCoworkUnifiedMetrics())
+            .contains(
+                BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                    .chat(BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Chat.of(0L))
+                    .sessions(BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Sessions.of(0L))
+                    .build()
+            )
         assertThat(betaAnalyticsSkillActivity.currency()).contains("currency")
         assertThat(betaAnalyticsSkillActivity.enableCount()).contains(0L)
         assertThat(betaAnalyticsSkillActivity.estimatedOverageSpend())
@@ -89,6 +104,14 @@ internal class BetaAnalyticsSkillActivityTest {
                 )
                 .skillName("skill_name")
                 .attributedListPrice("attributed_list_price")
+                .chatCoworkUnifiedMetrics(
+                    BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                        .chat(BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Chat.of(0L))
+                        .sessions(
+                            BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Sessions.of(0L)
+                        )
+                        .build()
+                )
                 .currency("currency")
                 .enableCount(0L)
                 .estimatedOverageSpend("estimated_overage_spend")

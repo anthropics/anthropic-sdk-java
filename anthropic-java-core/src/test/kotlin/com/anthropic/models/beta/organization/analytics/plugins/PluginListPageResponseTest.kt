@@ -22,6 +22,9 @@ internal class PluginListPageResponseTest {
                         .installCount(0L)
                         .invocationCount(0L)
                         .pluginName("plugin_name")
+                        .chatCoworkUnifiedMetrics(
+                            BetaAnalyticsPluginActivity.ChatCoworkUnifiedMetrics.of(0L)
+                        )
                         .pluginId("plugin_id")
                         .product("product")
                         .rbacGroupId("rbac_group_id")
@@ -41,6 +44,9 @@ internal class PluginListPageResponseTest {
                     .installCount(0L)
                     .invocationCount(0L)
                     .pluginName("plugin_name")
+                    .chatCoworkUnifiedMetrics(
+                        BetaAnalyticsPluginActivity.ChatCoworkUnifiedMetrics.of(0L)
+                    )
                     .pluginId("plugin_id")
                     .product("product")
                     .rbacGroupId("rbac_group_id")
@@ -64,6 +70,9 @@ internal class PluginListPageResponseTest {
                         .installCount(0L)
                         .invocationCount(0L)
                         .pluginName("plugin_name")
+                        .chatCoworkUnifiedMetrics(
+                            BetaAnalyticsPluginActivity.ChatCoworkUnifiedMetrics.of(0L)
+                        )
                         .pluginId("plugin_id")
                         .product("product")
                         .rbacGroupId("rbac_group_id")

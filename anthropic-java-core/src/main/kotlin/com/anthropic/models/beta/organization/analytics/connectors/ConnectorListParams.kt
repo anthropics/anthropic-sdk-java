@@ -61,12 +61,14 @@ private constructor(
      * `connector_name`, `product`, `rbac_group_id`, `user_id`. Value forms: `connector_name`
      * matches case-insensitively, a display name such as 'GitHub MCP' also matches its normalized
      * stored form ('github'), and for rows whose `connector_name` is an opaque connector id the
-     * connector's display name (`connector_display_name`) also matches; `product` is one of `chat`,
-     * `claude_code`, `cowork`, or `office_agent`; `rbac_group_id` takes the tagged id
-     * (`rbac_group_...`, as emitted in responses and by the spend-limits API) or a bare group UUID,
-     * and matches users who held the group at any point during each covered UTC day (time-of-usage
-     * attribution); `user_id` takes a tagged user id (`user_...`), as emitted in responses. An
-     * unsupported dimension returns 400. At most 100 entries.
+     * connector's display name (`connector_display_name`) also matches; `product` is one of
+     * `chat_cowork_unified`, `chat`, `claude_code`, `cowork`, or `office_agent`; `rbac_group_id`
+     * takes the tagged id (`rbac_group_...`, as emitted in responses and by the spend-limits API)
+     * or a bare group UUID, and matches users who held the group at any point during each covered
+     * UTC day (time-of-usage attribution); `user_id` takes a tagged user id (`user_...`), as
+     * emitted in responses. An unsupported dimension returns 400. At most 100 entries.
+     * `chat_cowork_unified` is accepted as a `product` value only on deployments that offer Chat
+     * and Cowork unified.
      */
     fun filter(): Optional<List<String>> = Optional.ofNullable(filter)
 
@@ -189,12 +191,13 @@ private constructor(
          * matches case-insensitively, a display name such as 'GitHub MCP' also matches its
          * normalized stored form ('github'), and for rows whose `connector_name` is an opaque
          * connector id the connector's display name (`connector_display_name`) also matches;
-         * `product` is one of `chat`, `claude_code`, `cowork`, or `office_agent`; `rbac_group_id`
-         * takes the tagged id (`rbac_group_...`, as emitted in responses and by the spend-limits
-         * API) or a bare group UUID, and matches users who held the group at any point during each
-         * covered UTC day (time-of-usage attribution); `user_id` takes a tagged user id
-         * (`user_...`), as emitted in responses. An unsupported dimension returns 400. At most 100
-         * entries.
+         * `product` is one of `chat_cowork_unified`, `chat`, `claude_code`, `cowork`, or
+         * `office_agent`; `rbac_group_id` takes the tagged id (`rbac_group_...`, as emitted in
+         * responses and by the spend-limits API) or a bare group UUID, and matches users who held
+         * the group at any point during each covered UTC day (time-of-usage attribution); `user_id`
+         * takes a tagged user id (`user_...`), as emitted in responses. An unsupported dimension
+         * returns 400. At most 100 entries. `chat_cowork_unified` is accepted as a `product` value
+         * only on deployments that offer Chat and Cowork unified.
          */
         fun filter(filter: List<String>?) = apply { this.filter = filter?.toMutableList() }
 

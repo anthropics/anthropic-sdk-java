@@ -33,6 +33,18 @@ internal class SkillListPageResponseTest {
                         )
                         .skillName("skill_name")
                         .attributedListPrice("attributed_list_price")
+                        .chatCoworkUnifiedMetrics(
+                            BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                                .chat(
+                                    BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Chat.of(0L)
+                                )
+                                .sessions(
+                                    BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Sessions.of(
+                                        0L
+                                    )
+                                )
+                                .build()
+                        )
                         .currency("currency")
                         .enableCount(0L)
                         .estimatedOverageSpend("estimated_overage_spend")
@@ -65,6 +77,14 @@ internal class SkillListPageResponseTest {
                     )
                     .skillName("skill_name")
                     .attributedListPrice("attributed_list_price")
+                    .chatCoworkUnifiedMetrics(
+                        BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                            .chat(BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Chat.of(0L))
+                            .sessions(
+                                BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Sessions.of(0L)
+                            )
+                            .build()
+                    )
                     .currency("currency")
                     .enableCount(0L)
                     .estimatedOverageSpend("estimated_overage_spend")
@@ -101,6 +121,18 @@ internal class SkillListPageResponseTest {
                         )
                         .skillName("skill_name")
                         .attributedListPrice("attributed_list_price")
+                        .chatCoworkUnifiedMetrics(
+                            BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                                .chat(
+                                    BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Chat.of(0L)
+                                )
+                                .sessions(
+                                    BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Sessions.of(
+                                        0L
+                                    )
+                                )
+                                .build()
+                        )
                         .currency("currency")
                         .enableCount(0L)
                         .estimatedOverageSpend("estimated_overage_spend")

@@ -8,6 +8,9 @@ import kotlin.jvm.optionals.getOrNull
 
 /**
  * Publicly documented product surfaces. `claude-tag` is Claude Tag, the Claude product in Slack.
+ * `chat_cowork_unified` is Chat and Cowork unified, Cowork's features inside claude.ai chat: chat
+ * and Cowork usage by a member who has it turned on is reported under this value instead of `chat`
+ * or `cowork`. It is accepted as a filter only on deployments that offer Chat and Cowork unified.
  */
 class BetaAnalyticsProductFilter private constructor(private val value: JsonField<String>) : Enum {
 
@@ -23,6 +26,9 @@ class BetaAnalyticsProductFilter private constructor(private val value: JsonFiel
     companion object {
 
         @JvmField val CHAT = BetaAnalyticsProductFilter(JsonField.of("chat"))
+
+        @JvmField
+        val CHAT_COWORK_UNIFIED = BetaAnalyticsProductFilter(JsonField.of("chat_cowork_unified"))
 
         @JvmField val CLAUDE_TAG = BetaAnalyticsProductFilter(JsonField.of("claude-tag"))
 
@@ -42,6 +48,7 @@ class BetaAnalyticsProductFilter private constructor(private val value: JsonFiel
             // Intern known values so `==` works
             when (value) {
                 "chat" -> CHAT
+                "chat_cowork_unified" -> CHAT_COWORK_UNIFIED
                 "claude-tag" -> CLAUDE_TAG
                 "claude_code" -> CLAUDE_CODE
                 "claude_design" -> CLAUDE_DESIGN
@@ -60,6 +67,7 @@ class BetaAnalyticsProductFilter private constructor(private val value: JsonFiel
     /** An enum containing [BetaAnalyticsProductFilter]'s known values. */
     enum class Known {
         CHAT,
+        CHAT_COWORK_UNIFIED,
         CLAUDE_TAG,
         CLAUDE_CODE,
         CLAUDE_DESIGN,
@@ -81,6 +89,7 @@ class BetaAnalyticsProductFilter private constructor(private val value: JsonFiel
      */
     enum class Value {
         CHAT,
+        CHAT_COWORK_UNIFIED,
         CLAUDE_TAG,
         CLAUDE_CODE,
         CLAUDE_DESIGN,
@@ -104,6 +113,7 @@ class BetaAnalyticsProductFilter private constructor(private val value: JsonFiel
     fun value(): Value =
         when (this) {
             CHAT -> Value.CHAT
+            CHAT_COWORK_UNIFIED -> Value.CHAT_COWORK_UNIFIED
             CLAUDE_TAG -> Value.CLAUDE_TAG
             CLAUDE_CODE -> Value.CLAUDE_CODE
             CLAUDE_DESIGN -> Value.CLAUDE_DESIGN
@@ -124,6 +134,7 @@ class BetaAnalyticsProductFilter private constructor(private val value: JsonFiel
     fun known(): Known =
         when (this) {
             CHAT -> Known.CHAT
+            CHAT_COWORK_UNIFIED -> Known.CHAT_COWORK_UNIFIED
             CLAUDE_TAG -> Known.CLAUDE_TAG
             CLAUDE_CODE -> Known.CLAUDE_CODE
             CLAUDE_DESIGN -> Known.CLAUDE_DESIGN

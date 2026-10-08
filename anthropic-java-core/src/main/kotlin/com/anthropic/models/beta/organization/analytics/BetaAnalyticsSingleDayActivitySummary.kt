@@ -33,6 +33,9 @@ private constructor(
     private val startingAt: JsonField<OffsetDateTime>,
     private val weeklyActiveUserCount: JsonField<Long>,
     private val weeklyAdoptionRate: JsonField<Double>,
+    private val chatCoworkUnifiedDailyActiveUserCount: JsonField<Long>,
+    private val chatCoworkUnifiedMonthlyActiveUserCount: JsonField<Long>,
+    private val chatCoworkUnifiedWeeklyActiveUserCount: JsonField<Long>,
     private val chatDailyActiveUserCount: JsonField<Long>,
     private val chatMonthlyActiveUserCount: JsonField<Long>,
     private val chatWeeklyActiveUserCount: JsonField<Long>,
@@ -93,6 +96,15 @@ private constructor(
         @JsonProperty("weekly_adoption_rate")
         @ExcludeMissing
         weeklyAdoptionRate: JsonField<Double> = JsonMissing.of(),
+        @JsonProperty("chat_cowork_unified_daily_active_user_count")
+        @ExcludeMissing
+        chatCoworkUnifiedDailyActiveUserCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("chat_cowork_unified_monthly_active_user_count")
+        @ExcludeMissing
+        chatCoworkUnifiedMonthlyActiveUserCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("chat_cowork_unified_weekly_active_user_count")
+        @ExcludeMissing
+        chatCoworkUnifiedWeeklyActiveUserCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("chat_daily_active_user_count")
         @ExcludeMissing
         chatDailyActiveUserCount: JsonField<Long> = JsonMissing.of(),
@@ -155,6 +167,9 @@ private constructor(
         startingAt,
         weeklyActiveUserCount,
         weeklyAdoptionRate,
+        chatCoworkUnifiedDailyActiveUserCount,
+        chatCoworkUnifiedMonthlyActiveUserCount,
+        chatCoworkUnifiedWeeklyActiveUserCount,
         chatDailyActiveUserCount,
         chatMonthlyActiveUserCount,
         chatWeeklyActiveUserCount,
@@ -292,6 +307,42 @@ private constructor(
      */
     fun weeklyAdoptionRate(): Optional<Double> =
         weeklyAdoptionRate.getOptional("weekly_adoption_rate")
+
+    /**
+     * Number of users with activity in Chat and Cowork unified on the requested day. Omitted from
+     * the response on deployments that do not offer Chat and Cowork unified.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun chatCoworkUnifiedDailyActiveUserCount(): Optional<Long> =
+        chatCoworkUnifiedDailyActiveUserCount.getOptional(
+            "chat_cowork_unified_daily_active_user_count"
+        )
+
+    /**
+     * Number of users with activity in Chat and Cowork unified in the 30-day rolling window.
+     * Omitted from the response on deployments that do not offer Chat and Cowork unified.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun chatCoworkUnifiedMonthlyActiveUserCount(): Optional<Long> =
+        chatCoworkUnifiedMonthlyActiveUserCount.getOptional(
+            "chat_cowork_unified_monthly_active_user_count"
+        )
+
+    /**
+     * Number of users with activity in Chat and Cowork unified in the 7-day rolling window. Omitted
+     * from the response on deployments that do not offer Chat and Cowork unified.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun chatCoworkUnifiedWeeklyActiveUserCount(): Optional<Long> =
+        chatCoworkUnifiedWeeklyActiveUserCount.getOptional(
+            "chat_cowork_unified_weekly_active_user_count"
+        )
 
     /**
      * Number of users with claude.ai (chat) activity on the requested day. Omitted from the
@@ -583,6 +634,39 @@ private constructor(
     fun _weeklyAdoptionRate(): JsonField<Double> = weeklyAdoptionRate
 
     /**
+     * Returns the raw JSON value of [chatCoworkUnifiedDailyActiveUserCount].
+     *
+     * Unlike [chatCoworkUnifiedDailyActiveUserCount], this method doesn't throw if the JSON field
+     * has an unexpected type.
+     */
+    @JsonProperty("chat_cowork_unified_daily_active_user_count")
+    @ExcludeMissing
+    fun _chatCoworkUnifiedDailyActiveUserCount(): JsonField<Long> =
+        chatCoworkUnifiedDailyActiveUserCount
+
+    /**
+     * Returns the raw JSON value of [chatCoworkUnifiedMonthlyActiveUserCount].
+     *
+     * Unlike [chatCoworkUnifiedMonthlyActiveUserCount], this method doesn't throw if the JSON field
+     * has an unexpected type.
+     */
+    @JsonProperty("chat_cowork_unified_monthly_active_user_count")
+    @ExcludeMissing
+    fun _chatCoworkUnifiedMonthlyActiveUserCount(): JsonField<Long> =
+        chatCoworkUnifiedMonthlyActiveUserCount
+
+    /**
+     * Returns the raw JSON value of [chatCoworkUnifiedWeeklyActiveUserCount].
+     *
+     * Unlike [chatCoworkUnifiedWeeklyActiveUserCount], this method doesn't throw if the JSON field
+     * has an unexpected type.
+     */
+    @JsonProperty("chat_cowork_unified_weekly_active_user_count")
+    @ExcludeMissing
+    fun _chatCoworkUnifiedWeeklyActiveUserCount(): JsonField<Long> =
+        chatCoworkUnifiedWeeklyActiveUserCount
+
+    /**
      * Returns the raw JSON value of [chatDailyActiveUserCount].
      *
      * Unlike [chatDailyActiveUserCount], this method doesn't throw if the JSON field has an
@@ -796,6 +880,9 @@ private constructor(
         private var startingAt: JsonField<OffsetDateTime>? = null
         private var weeklyActiveUserCount: JsonField<Long>? = null
         private var weeklyAdoptionRate: JsonField<Double>? = null
+        private var chatCoworkUnifiedDailyActiveUserCount: JsonField<Long> = JsonMissing.of()
+        private var chatCoworkUnifiedMonthlyActiveUserCount: JsonField<Long> = JsonMissing.of()
+        private var chatCoworkUnifiedWeeklyActiveUserCount: JsonField<Long> = JsonMissing.of()
         private var chatDailyActiveUserCount: JsonField<Long> = JsonMissing.of()
         private var chatMonthlyActiveUserCount: JsonField<Long> = JsonMissing.of()
         private var chatWeeklyActiveUserCount: JsonField<Long> = JsonMissing.of()
@@ -834,6 +921,12 @@ private constructor(
             startingAt = betaAnalyticsSingleDayActivitySummary.startingAt
             weeklyActiveUserCount = betaAnalyticsSingleDayActivitySummary.weeklyActiveUserCount
             weeklyAdoptionRate = betaAnalyticsSingleDayActivitySummary.weeklyAdoptionRate
+            chatCoworkUnifiedDailyActiveUserCount =
+                betaAnalyticsSingleDayActivitySummary.chatCoworkUnifiedDailyActiveUserCount
+            chatCoworkUnifiedMonthlyActiveUserCount =
+                betaAnalyticsSingleDayActivitySummary.chatCoworkUnifiedMonthlyActiveUserCount
+            chatCoworkUnifiedWeeklyActiveUserCount =
+                betaAnalyticsSingleDayActivitySummary.chatCoworkUnifiedWeeklyActiveUserCount
             chatDailyActiveUserCount =
                 betaAnalyticsSingleDayActivitySummary.chatDailyActiveUserCount
             chatMonthlyActiveUserCount =
@@ -1146,6 +1239,130 @@ private constructor(
          */
         fun weeklyAdoptionRate(weeklyAdoptionRate: JsonField<Double>) = apply {
             this.weeklyAdoptionRate = weeklyAdoptionRate
+        }
+
+        /**
+         * Number of users with activity in Chat and Cowork unified on the requested day. Omitted
+         * from the response on deployments that do not offer Chat and Cowork unified.
+         */
+        fun chatCoworkUnifiedDailyActiveUserCount(chatCoworkUnifiedDailyActiveUserCount: Long?) =
+            chatCoworkUnifiedDailyActiveUserCount(
+                JsonField.ofNullable(chatCoworkUnifiedDailyActiveUserCount)
+            )
+
+        /**
+         * Alias for [Builder.chatCoworkUnifiedDailyActiveUserCount].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun chatCoworkUnifiedDailyActiveUserCount(chatCoworkUnifiedDailyActiveUserCount: Long) =
+            chatCoworkUnifiedDailyActiveUserCount(chatCoworkUnifiedDailyActiveUserCount as Long?)
+
+        /**
+         * Alias for calling [Builder.chatCoworkUnifiedDailyActiveUserCount] with
+         * `chatCoworkUnifiedDailyActiveUserCount.orElse(null)`.
+         */
+        fun chatCoworkUnifiedDailyActiveUserCount(
+            chatCoworkUnifiedDailyActiveUserCount: Optional<Long>
+        ) = chatCoworkUnifiedDailyActiveUserCount(chatCoworkUnifiedDailyActiveUserCount.getOrNull())
+
+        /**
+         * Sets [Builder.chatCoworkUnifiedDailyActiveUserCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.chatCoworkUnifiedDailyActiveUserCount] with a well-typed
+         * [Long] value instead. This method is primarily for setting the field to an undocumented
+         * or not yet supported value.
+         */
+        fun chatCoworkUnifiedDailyActiveUserCount(
+            chatCoworkUnifiedDailyActiveUserCount: JsonField<Long>
+        ) = apply {
+            this.chatCoworkUnifiedDailyActiveUserCount = chatCoworkUnifiedDailyActiveUserCount
+        }
+
+        /**
+         * Number of users with activity in Chat and Cowork unified in the 30-day rolling window.
+         * Omitted from the response on deployments that do not offer Chat and Cowork unified.
+         */
+        fun chatCoworkUnifiedMonthlyActiveUserCount(
+            chatCoworkUnifiedMonthlyActiveUserCount: Long?
+        ) =
+            chatCoworkUnifiedMonthlyActiveUserCount(
+                JsonField.ofNullable(chatCoworkUnifiedMonthlyActiveUserCount)
+            )
+
+        /**
+         * Alias for [Builder.chatCoworkUnifiedMonthlyActiveUserCount].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun chatCoworkUnifiedMonthlyActiveUserCount(chatCoworkUnifiedMonthlyActiveUserCount: Long) =
+            chatCoworkUnifiedMonthlyActiveUserCount(
+                chatCoworkUnifiedMonthlyActiveUserCount as Long?
+            )
+
+        /**
+         * Alias for calling [Builder.chatCoworkUnifiedMonthlyActiveUserCount] with
+         * `chatCoworkUnifiedMonthlyActiveUserCount.orElse(null)`.
+         */
+        fun chatCoworkUnifiedMonthlyActiveUserCount(
+            chatCoworkUnifiedMonthlyActiveUserCount: Optional<Long>
+        ) =
+            chatCoworkUnifiedMonthlyActiveUserCount(
+                chatCoworkUnifiedMonthlyActiveUserCount.getOrNull()
+            )
+
+        /**
+         * Sets [Builder.chatCoworkUnifiedMonthlyActiveUserCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.chatCoworkUnifiedMonthlyActiveUserCount] with a
+         * well-typed [Long] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun chatCoworkUnifiedMonthlyActiveUserCount(
+            chatCoworkUnifiedMonthlyActiveUserCount: JsonField<Long>
+        ) = apply {
+            this.chatCoworkUnifiedMonthlyActiveUserCount = chatCoworkUnifiedMonthlyActiveUserCount
+        }
+
+        /**
+         * Number of users with activity in Chat and Cowork unified in the 7-day rolling window.
+         * Omitted from the response on deployments that do not offer Chat and Cowork unified.
+         */
+        fun chatCoworkUnifiedWeeklyActiveUserCount(chatCoworkUnifiedWeeklyActiveUserCount: Long?) =
+            chatCoworkUnifiedWeeklyActiveUserCount(
+                JsonField.ofNullable(chatCoworkUnifiedWeeklyActiveUserCount)
+            )
+
+        /**
+         * Alias for [Builder.chatCoworkUnifiedWeeklyActiveUserCount].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun chatCoworkUnifiedWeeklyActiveUserCount(chatCoworkUnifiedWeeklyActiveUserCount: Long) =
+            chatCoworkUnifiedWeeklyActiveUserCount(chatCoworkUnifiedWeeklyActiveUserCount as Long?)
+
+        /**
+         * Alias for calling [Builder.chatCoworkUnifiedWeeklyActiveUserCount] with
+         * `chatCoworkUnifiedWeeklyActiveUserCount.orElse(null)`.
+         */
+        fun chatCoworkUnifiedWeeklyActiveUserCount(
+            chatCoworkUnifiedWeeklyActiveUserCount: Optional<Long>
+        ) =
+            chatCoworkUnifiedWeeklyActiveUserCount(
+                chatCoworkUnifiedWeeklyActiveUserCount.getOrNull()
+            )
+
+        /**
+         * Sets [Builder.chatCoworkUnifiedWeeklyActiveUserCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.chatCoworkUnifiedWeeklyActiveUserCount] with a
+         * well-typed [Long] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun chatCoworkUnifiedWeeklyActiveUserCount(
+            chatCoworkUnifiedWeeklyActiveUserCount: JsonField<Long>
+        ) = apply {
+            this.chatCoworkUnifiedWeeklyActiveUserCount = chatCoworkUnifiedWeeklyActiveUserCount
         }
 
         /**
@@ -1751,6 +1968,9 @@ private constructor(
                 checkRequired("startingAt", startingAt),
                 checkRequired("weeklyActiveUserCount", weeklyActiveUserCount),
                 checkRequired("weeklyAdoptionRate", weeklyAdoptionRate),
+                chatCoworkUnifiedDailyActiveUserCount,
+                chatCoworkUnifiedMonthlyActiveUserCount,
+                chatCoworkUnifiedWeeklyActiveUserCount,
                 chatDailyActiveUserCount,
                 chatMonthlyActiveUserCount,
                 chatWeeklyActiveUserCount,
@@ -1799,6 +2019,9 @@ private constructor(
         startingAt()
         weeklyActiveUserCount()
         weeklyAdoptionRate()
+        chatCoworkUnifiedDailyActiveUserCount()
+        chatCoworkUnifiedMonthlyActiveUserCount()
+        chatCoworkUnifiedWeeklyActiveUserCount()
         chatDailyActiveUserCount()
         chatMonthlyActiveUserCount()
         chatWeeklyActiveUserCount()
@@ -1846,6 +2069,9 @@ private constructor(
             (if (startingAt.asKnown().isPresent) 1 else 0) +
             (if (weeklyActiveUserCount.asKnown().isPresent) 1 else 0) +
             (if (weeklyAdoptionRate.asKnown().isPresent) 1 else 0) +
+            (if (chatCoworkUnifiedDailyActiveUserCount.asKnown().isPresent) 1 else 0) +
+            (if (chatCoworkUnifiedMonthlyActiveUserCount.asKnown().isPresent) 1 else 0) +
+            (if (chatCoworkUnifiedWeeklyActiveUserCount.asKnown().isPresent) 1 else 0) +
             (if (chatDailyActiveUserCount.asKnown().isPresent) 1 else 0) +
             (if (chatMonthlyActiveUserCount.asKnown().isPresent) 1 else 0) +
             (if (chatWeeklyActiveUserCount.asKnown().isPresent) 1 else 0) +
@@ -1882,6 +2108,11 @@ private constructor(
             startingAt == other.startingAt &&
             weeklyActiveUserCount == other.weeklyActiveUserCount &&
             weeklyAdoptionRate == other.weeklyAdoptionRate &&
+            chatCoworkUnifiedDailyActiveUserCount == other.chatCoworkUnifiedDailyActiveUserCount &&
+            chatCoworkUnifiedMonthlyActiveUserCount ==
+                other.chatCoworkUnifiedMonthlyActiveUserCount &&
+            chatCoworkUnifiedWeeklyActiveUserCount ==
+                other.chatCoworkUnifiedWeeklyActiveUserCount &&
             chatDailyActiveUserCount == other.chatDailyActiveUserCount &&
             chatMonthlyActiveUserCount == other.chatMonthlyActiveUserCount &&
             chatWeeklyActiveUserCount == other.chatWeeklyActiveUserCount &&
@@ -1916,6 +2147,9 @@ private constructor(
             startingAt,
             weeklyActiveUserCount,
             weeklyAdoptionRate,
+            chatCoworkUnifiedDailyActiveUserCount,
+            chatCoworkUnifiedMonthlyActiveUserCount,
+            chatCoworkUnifiedWeeklyActiveUserCount,
             chatDailyActiveUserCount,
             chatMonthlyActiveUserCount,
             chatWeeklyActiveUserCount,
@@ -1939,5 +2173,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsSingleDayActivitySummary{assignedSeatCount=$assignedSeatCount, coworkDailyActiveUserCount=$coworkDailyActiveUserCount, coworkMonthlyActiveUserCount=$coworkMonthlyActiveUserCount, coworkWeeklyActiveUserCount=$coworkWeeklyActiveUserCount, dailyActiveUserCount=$dailyActiveUserCount, dailyAdoptionRate=$dailyAdoptionRate, endingAt=$endingAt, monthlyActiveUserCount=$monthlyActiveUserCount, monthlyAdoptionRate=$monthlyAdoptionRate, pendingInviteCount=$pendingInviteCount, startingAt=$startingAt, weeklyActiveUserCount=$weeklyActiveUserCount, weeklyAdoptionRate=$weeklyAdoptionRate, chatDailyActiveUserCount=$chatDailyActiveUserCount, chatMonthlyActiveUserCount=$chatMonthlyActiveUserCount, chatWeeklyActiveUserCount=$chatWeeklyActiveUserCount, claudeCodeDailyActiveUserCount=$claudeCodeDailyActiveUserCount, claudeCodeMonthlyActiveUserCount=$claudeCodeMonthlyActiveUserCount, claudeCodeWeeklyActiveUserCount=$claudeCodeWeeklyActiveUserCount, claudeDesignDailyActiveUserCount=$claudeDesignDailyActiveUserCount, claudeDesignMonthlyActiveUserCount=$claudeDesignMonthlyActiveUserCount, claudeDesignWeeklyActiveUserCount=$claudeDesignWeeklyActiveUserCount, officeAgentDailyActiveUserCount=$officeAgentDailyActiveUserCount, officeAgentMonthlyActiveUserCount=$officeAgentMonthlyActiveUserCount, officeAgentWeeklyActiveUserCount=$officeAgentWeeklyActiveUserCount, scienceDailyActiveUserCount=$scienceDailyActiveUserCount, scienceEntitledUserCount=$scienceEntitledUserCount, scienceMonthlyActiveUserCount=$scienceMonthlyActiveUserCount, scienceWeeklyActiveUserCount=$scienceWeeklyActiveUserCount, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsSingleDayActivitySummary{assignedSeatCount=$assignedSeatCount, coworkDailyActiveUserCount=$coworkDailyActiveUserCount, coworkMonthlyActiveUserCount=$coworkMonthlyActiveUserCount, coworkWeeklyActiveUserCount=$coworkWeeklyActiveUserCount, dailyActiveUserCount=$dailyActiveUserCount, dailyAdoptionRate=$dailyAdoptionRate, endingAt=$endingAt, monthlyActiveUserCount=$monthlyActiveUserCount, monthlyAdoptionRate=$monthlyAdoptionRate, pendingInviteCount=$pendingInviteCount, startingAt=$startingAt, weeklyActiveUserCount=$weeklyActiveUserCount, weeklyAdoptionRate=$weeklyAdoptionRate, chatCoworkUnifiedDailyActiveUserCount=$chatCoworkUnifiedDailyActiveUserCount, chatCoworkUnifiedMonthlyActiveUserCount=$chatCoworkUnifiedMonthlyActiveUserCount, chatCoworkUnifiedWeeklyActiveUserCount=$chatCoworkUnifiedWeeklyActiveUserCount, chatDailyActiveUserCount=$chatDailyActiveUserCount, chatMonthlyActiveUserCount=$chatMonthlyActiveUserCount, chatWeeklyActiveUserCount=$chatWeeklyActiveUserCount, claudeCodeDailyActiveUserCount=$claudeCodeDailyActiveUserCount, claudeCodeMonthlyActiveUserCount=$claudeCodeMonthlyActiveUserCount, claudeCodeWeeklyActiveUserCount=$claudeCodeWeeklyActiveUserCount, claudeDesignDailyActiveUserCount=$claudeDesignDailyActiveUserCount, claudeDesignMonthlyActiveUserCount=$claudeDesignMonthlyActiveUserCount, claudeDesignWeeklyActiveUserCount=$claudeDesignWeeklyActiveUserCount, officeAgentDailyActiveUserCount=$officeAgentDailyActiveUserCount, officeAgentMonthlyActiveUserCount=$officeAgentMonthlyActiveUserCount, officeAgentWeeklyActiveUserCount=$officeAgentWeeklyActiveUserCount, scienceDailyActiveUserCount=$scienceDailyActiveUserCount, scienceEntitledUserCount=$scienceEntitledUserCount, scienceMonthlyActiveUserCount=$scienceMonthlyActiveUserCount, scienceWeeklyActiveUserCount=$scienceWeeklyActiveUserCount, additionalProperties=$additionalProperties}"
 }

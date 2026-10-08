@@ -24,6 +24,14 @@ internal class BetaAnalyticsConnectorActivityTest {
                         .word(BetaAnalyticsConnectorOfficeProductMetrics.of(0L))
                         .build()
                 )
+                .chatCoworkUnifiedMetrics(
+                    BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
+                        .chat(BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Chat.of(0L))
+                        .sessions(
+                            BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Sessions.of(0L)
+                        )
+                        .build()
+                )
                 .connectorDisplayName("connector_display_name")
                 .individualAuthDistinctUserCount(0L)
                 .managedAuthDistinctUserCount(0L)
@@ -51,6 +59,15 @@ internal class BetaAnalyticsConnectorActivityTest {
                     .outlook(BetaAnalyticsConnectorOfficeProductMetrics.of(0L))
                     .powerpoint(BetaAnalyticsConnectorOfficeProductMetrics.of(0L))
                     .word(BetaAnalyticsConnectorOfficeProductMetrics.of(0L))
+                    .build()
+            )
+        assertThat(betaAnalyticsConnectorActivity.chatCoworkUnifiedMetrics())
+            .contains(
+                BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
+                    .chat(BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Chat.of(0L))
+                    .sessions(
+                        BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Sessions.of(0L)
+                    )
                     .build()
             )
         assertThat(betaAnalyticsConnectorActivity.connectorDisplayName())
@@ -82,6 +99,14 @@ internal class BetaAnalyticsConnectorActivityTest {
                         .outlook(BetaAnalyticsConnectorOfficeProductMetrics.of(0L))
                         .powerpoint(BetaAnalyticsConnectorOfficeProductMetrics.of(0L))
                         .word(BetaAnalyticsConnectorOfficeProductMetrics.of(0L))
+                        .build()
+                )
+                .chatCoworkUnifiedMetrics(
+                    BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
+                        .chat(BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Chat.of(0L))
+                        .sessions(
+                            BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Sessions.of(0L)
+                        )
                         .build()
                 )
                 .connectorDisplayName("connector_display_name")

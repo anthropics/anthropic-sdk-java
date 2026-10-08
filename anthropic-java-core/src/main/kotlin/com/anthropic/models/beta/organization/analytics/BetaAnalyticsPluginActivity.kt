@@ -18,9 +18,10 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * Per-plugin install + invocation activity for a given day.
  *
- * With `group_by[]=user_id` / `rbac_group_id` / `product` (`cowork` / `claude_code` only on this
- * endpoint) each row is one (plugin, user), (plugin, group), or (plugin, product) cut: the flat
- * `user_id` / `rbac_group_id` / `product` keys carry the cut and the counts are scoped to it.
+ * With `group_by[]=user_id` / `rbac_group_id` / `product` (`cowork`, `claude_code` and
+ * `chat_cowork_unified` only on this endpoint) each row is one (plugin, user), (plugin, group), or
+ * (plugin, product) cut: the flat `user_id` / `rbac_group_id` / `product` keys carry the cut and
+ * the counts are scoped to it.
  */
 class BetaAnalyticsPluginActivity
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -31,6 +32,7 @@ private constructor(
     private val installCount: JsonField<Long>,
     private val invocationCount: JsonField<Long>,
     private val pluginName: JsonField<String>,
+    private val chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>,
     private val pluginId: JsonField<String>,
     private val product: JsonField<String>,
     private val rbacGroupId: JsonField<String>,
@@ -59,6 +61,9 @@ private constructor(
         @JsonProperty("plugin_name")
         @ExcludeMissing
         pluginName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("chat_cowork_unified_metrics")
+        @ExcludeMissing
+        chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of(),
         @JsonProperty("plugin_id") @ExcludeMissing pluginId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("product") @ExcludeMissing product: JsonField<String> = JsonMissing.of(),
         @JsonProperty("rbac_group_id")
@@ -75,6 +80,7 @@ private constructor(
         installCount,
         invocationCount,
         pluginName,
+        chatCoworkUnifiedMetrics,
         pluginId,
         product,
         rbacGroupId,
@@ -139,6 +145,17 @@ private constructor(
     fun pluginName(): String = pluginName.getRequired("plugin_name")
 
     /**
+     * Plugin use recorded while members had Chat and Cowork unified (Cowork's features inside
+     * claude.ai chat) turned on. A count is null in date-range mode where it cannot be computed.
+     * Omitted from the response on deployments that do not offer Chat and Cowork unified.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun chatCoworkUnifiedMetrics(): Optional<ChatCoworkUnifiedMetrics> =
+        chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
+
+    /**
      * Stable plugin identifier when available (e.g. `serena@claude-plugins-official`). Null for
      * third-party Claude Code plugins (redacted at the source) and Cowork slash commands that carry
      * only a hashed id.
@@ -149,13 +166,15 @@ private constructor(
     fun pluginId(): Optional<String> = pluginId.getOptional("plugin_id")
 
     /**
-     * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`, or
-     * `office_agent` (the canonical Cost & Usage product naming; an `office_agent` row's
-     * per-surface breakdown is in its `office_metrics`). On `/plugins` only `cowork` and
-     * `claude_code` occur (the only surfaces with plugin attribution); on `/artifacts` only `chat`,
-     * `claude_code`, and `cowork` occur (the surfaces that create artifacts); `/apps/chat/projects`
-     * does not support the product dimension (a `product` entry in `group_by[]` or `filter[]` there
-     * is rejected). Present only when the request grouped by `product`.
+     * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
+     * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the canonical
+     * Cost & Usage product names; an `office_agent` row's per-surface breakdown is in its
+     * `office_metrics`. On `/plugins` only `cowork`, `claude_code` and `chat_cowork_unified` occur
+     * (the only surfaces with plugin attribution); on `/artifacts` only `chat`, `claude_code`,
+     * `cowork` and `chat_cowork_unified` occur (the surfaces that create artifacts);
+     * `/apps/chat/projects` does not support the product dimension (a `product` entry in
+     * `group_by[]` or `filter[]` there is rejected). Present only when the request grouped by
+     * `product`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -244,6 +263,16 @@ private constructor(
     @JsonProperty("plugin_name") @ExcludeMissing fun _pluginName(): JsonField<String> = pluginName
 
     /**
+     * Returns the raw JSON value of [chatCoworkUnifiedMetrics].
+     *
+     * Unlike [chatCoworkUnifiedMetrics], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("chat_cowork_unified_metrics")
+    @ExcludeMissing
+    fun _chatCoworkUnifiedMetrics(): JsonField<ChatCoworkUnifiedMetrics> = chatCoworkUnifiedMetrics
+
+    /**
      * Returns the raw JSON value of [pluginId].
      *
      * Unlike [pluginId], this method doesn't throw if the JSON field has an unexpected type.
@@ -321,6 +350,7 @@ private constructor(
         private var installCount: JsonField<Long>? = null
         private var invocationCount: JsonField<Long>? = null
         private var pluginName: JsonField<String>? = null
+        private var chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of()
         private var pluginId: JsonField<String> = JsonMissing.of()
         private var product: JsonField<String> = JsonMissing.of()
         private var rbacGroupId: JsonField<String> = JsonMissing.of()
@@ -336,6 +366,7 @@ private constructor(
             installCount = betaAnalyticsPluginActivity.installCount
             invocationCount = betaAnalyticsPluginActivity.invocationCount
             pluginName = betaAnalyticsPluginActivity.pluginName
+            chatCoworkUnifiedMetrics = betaAnalyticsPluginActivity.chatCoworkUnifiedMetrics
             pluginId = betaAnalyticsPluginActivity.pluginId
             product = betaAnalyticsPluginActivity.product
             rbacGroupId = betaAnalyticsPluginActivity.rbacGroupId
@@ -448,6 +479,33 @@ private constructor(
         fun pluginName(pluginName: JsonField<String>) = apply { this.pluginName = pluginName }
 
         /**
+         * Plugin use recorded while members had Chat and Cowork unified (Cowork's features inside
+         * claude.ai chat) turned on. A count is null in date-range mode where it cannot be
+         * computed. Omitted from the response on deployments that do not offer Chat and Cowork
+         * unified.
+         */
+        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics?) =
+            chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
+
+        /**
+         * Alias for calling [Builder.chatCoworkUnifiedMetrics] with
+         * `chatCoworkUnifiedMetrics.orElse(null)`.
+         */
+        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: Optional<ChatCoworkUnifiedMetrics>) =
+            chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
+
+        /**
+         * Sets [Builder.chatCoworkUnifiedMetrics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.chatCoworkUnifiedMetrics] with a well-typed
+         * [ChatCoworkUnifiedMetrics] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>
+        ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
+
+        /**
          * Stable plugin identifier when available (e.g. `serena@claude-plugins-official`). Null for
          * third-party Claude Code plugins (redacted at the source) and Cowork slash commands that
          * carry only a hashed id.
@@ -466,14 +524,15 @@ private constructor(
         fun pluginId(pluginId: JsonField<String>) = apply { this.pluginId = pluginId }
 
         /**
-         * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`, or
-         * `office_agent` (the canonical Cost & Usage product naming; an `office_agent` row's
-         * per-surface breakdown is in its `office_metrics`). On `/plugins` only `cowork` and
-         * `claude_code` occur (the only surfaces with plugin attribution); on `/artifacts` only
-         * `chat`, `claude_code`, and `cowork` occur (the surfaces that create artifacts);
-         * `/apps/chat/projects` does not support the product dimension (a `product` entry in
-         * `group_by[]` or `filter[]` there is rejected). Present only when the request grouped by
-         * `product`.
+         * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
+         * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the
+         * canonical Cost & Usage product names; an `office_agent` row's per-surface breakdown is in
+         * its `office_metrics`. On `/plugins` only `cowork`, `claude_code` and
+         * `chat_cowork_unified` occur (the only surfaces with plugin attribution); on `/artifacts`
+         * only `chat`, `claude_code`, `cowork` and `chat_cowork_unified` occur (the surfaces that
+         * create artifacts); `/apps/chat/projects` does not support the product dimension (a
+         * `product` entry in `group_by[]` or `filter[]` there is rejected). Present only when the
+         * request grouped by `product`.
          */
         fun product(product: String?) = product(JsonField.ofNullable(product))
 
@@ -590,6 +649,7 @@ private constructor(
                 checkRequired("installCount", installCount),
                 checkRequired("invocationCount", invocationCount),
                 checkRequired("pluginName", pluginName),
+                chatCoworkUnifiedMetrics,
                 pluginId,
                 product,
                 rbacGroupId,
@@ -620,6 +680,7 @@ private constructor(
         installCount()
         invocationCount()
         pluginName()
+        chatCoworkUnifiedMetrics().ifPresent { it.validate() }
         pluginId()
         product()
         rbacGroupId()
@@ -649,11 +710,243 @@ private constructor(
             (if (installCount.asKnown().isPresent) 1 else 0) +
             (if (invocationCount.asKnown().isPresent) 1 else 0) +
             (if (pluginName.asKnown().isPresent) 1 else 0) +
+            (chatCoworkUnifiedMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (if (pluginId.asKnown().isPresent) 1 else 0) +
             (if (product.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupName.asKnown().isPresent) 1 else 0) +
             (if (userId.asKnown().isPresent) 1 else 0)
+
+    /**
+     * Plugin use recorded while members had Chat and Cowork unified (Cowork's features inside
+     * claude.ai chat) turned on. A count is null in date-range mode where it cannot be computed.
+     * Omitted from the response on deployments that do not offer Chat and Cowork unified.
+     */
+    class ChatCoworkUnifiedMetrics
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val distinctSessionPluginUsedCount: JsonField<Long>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("distinct_session_plugin_used_count")
+            @ExcludeMissing
+            distinctSessionPluginUsedCount: JsonField<Long> = JsonMissing.of()
+        ) : this(distinctSessionPluginUsedCount, mutableMapOf())
+
+        /**
+         * Same measure as `cowork_metrics.distinct_session_plugin_used_count`, for activity
+         * recorded while members had Chat and Cowork unified turned on. Null on aggregated rows
+         * where a distinct count cannot be computed.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun distinctSessionPluginUsedCount(): Optional<Long> =
+            distinctSessionPluginUsedCount.getOptional("distinct_session_plugin_used_count")
+
+        /**
+         * Returns the raw JSON value of [distinctSessionPluginUsedCount].
+         *
+         * Unlike [distinctSessionPluginUsedCount], this method doesn't throw if the JSON field has
+         * an unexpected type.
+         */
+        @JsonProperty("distinct_session_plugin_used_count")
+        @ExcludeMissing
+        fun _distinctSessionPluginUsedCount(): JsonField<Long> = distinctSessionPluginUsedCount
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [ChatCoworkUnifiedMetrics].
+             *
+             * The following fields are required:
+             * ```java
+             * .distinctSessionPluginUsedCount()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+
+            /**
+             * Returns an immutable instance of [ChatCoworkUnifiedMetrics] with the required
+             * [distinctSessionPluginUsedCount] set to the given value.
+             */
+            @JvmStatic
+            fun of(distinctSessionPluginUsedCount: Long?) =
+                builder().distinctSessionPluginUsedCount(distinctSessionPluginUsedCount).build()
+
+            /**
+             * Alias for [of].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            @JvmStatic
+            fun of(distinctSessionPluginUsedCount: Long) =
+                of(distinctSessionPluginUsedCount as Long?)
+
+            /** Alias for calling [of] with `distinctSessionPluginUsedCount.orElse(null)`. */
+            @JvmStatic
+            fun of(distinctSessionPluginUsedCount: Optional<Long>) =
+                of(distinctSessionPluginUsedCount.getOrNull())
+        }
+
+        /** A builder for [ChatCoworkUnifiedMetrics]. */
+        class Builder internal constructor() {
+
+            private var distinctSessionPluginUsedCount: JsonField<Long>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics) = apply {
+                distinctSessionPluginUsedCount =
+                    chatCoworkUnifiedMetrics.distinctSessionPluginUsedCount
+                additionalProperties = chatCoworkUnifiedMetrics.additionalProperties.toMutableMap()
+            }
+
+            /**
+             * Same measure as `cowork_metrics.distinct_session_plugin_used_count`, for activity
+             * recorded while members had Chat and Cowork unified turned on. Null on aggregated rows
+             * where a distinct count cannot be computed.
+             */
+            fun distinctSessionPluginUsedCount(distinctSessionPluginUsedCount: Long?) =
+                distinctSessionPluginUsedCount(JsonField.ofNullable(distinctSessionPluginUsedCount))
+
+            /**
+             * Alias for [Builder.distinctSessionPluginUsedCount].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun distinctSessionPluginUsedCount(distinctSessionPluginUsedCount: Long) =
+                distinctSessionPluginUsedCount(distinctSessionPluginUsedCount as Long?)
+
+            /**
+             * Alias for calling [Builder.distinctSessionPluginUsedCount] with
+             * `distinctSessionPluginUsedCount.orElse(null)`.
+             */
+            fun distinctSessionPluginUsedCount(distinctSessionPluginUsedCount: Optional<Long>) =
+                distinctSessionPluginUsedCount(distinctSessionPluginUsedCount.getOrNull())
+
+            /**
+             * Sets [Builder.distinctSessionPluginUsedCount] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.distinctSessionPluginUsedCount] with a well-typed
+             * [Long] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun distinctSessionPluginUsedCount(distinctSessionPluginUsedCount: JsonField<Long>) =
+                apply {
+                    this.distinctSessionPluginUsedCount = distinctSessionPluginUsedCount
+                }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [ChatCoworkUnifiedMetrics].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .distinctSessionPluginUsedCount()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): ChatCoworkUnifiedMetrics =
+                ChatCoworkUnifiedMetrics(
+                    checkRequired("distinctSessionPluginUsedCount", distinctSessionPluginUsedCount),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): ChatCoworkUnifiedMetrics = apply {
+            if (validated) {
+                return@apply
+            }
+
+            distinctSessionPluginUsedCount()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (distinctSessionPluginUsedCount.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is ChatCoworkUnifiedMetrics &&
+                distinctSessionPluginUsedCount == other.distinctSessionPluginUsedCount &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(distinctSessionPluginUsedCount, additionalProperties)
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "ChatCoworkUnifiedMetrics{distinctSessionPluginUsedCount=$distinctSessionPluginUsedCount, additionalProperties=$additionalProperties}"
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -667,6 +960,7 @@ private constructor(
             installCount == other.installCount &&
             invocationCount == other.invocationCount &&
             pluginName == other.pluginName &&
+            chatCoworkUnifiedMetrics == other.chatCoworkUnifiedMetrics &&
             pluginId == other.pluginId &&
             product == other.product &&
             rbacGroupId == other.rbacGroupId &&
@@ -683,6 +977,7 @@ private constructor(
             installCount,
             invocationCount,
             pluginName,
+            chatCoworkUnifiedMetrics,
             pluginId,
             product,
             rbacGroupId,
@@ -695,5 +990,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsPluginActivity{claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, distinctUserCount=$distinctUserCount, installCount=$installCount, invocationCount=$invocationCount, pluginName=$pluginName, pluginId=$pluginId, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, userId=$userId, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsPluginActivity{claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, distinctUserCount=$distinctUserCount, installCount=$installCount, invocationCount=$invocationCount, pluginName=$pluginName, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, pluginId=$pluginId, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, userId=$userId, additionalProperties=$additionalProperties}"
 }

@@ -27,6 +27,7 @@ private constructor(
     private val officeMetrics: JsonField<BetaAnalyticsSkillOfficeMetrics>,
     private val skillName: JsonField<String>,
     private val attributedListPrice: JsonField<String>,
+    private val chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>,
     private val currency: JsonField<String>,
     private val enableCount: JsonField<Long>,
     private val estimatedOverageSpend: JsonField<String>,
@@ -61,6 +62,9 @@ private constructor(
         @JsonProperty("attributed_list_price")
         @ExcludeMissing
         attributedListPrice: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("chat_cowork_unified_metrics")
+        @ExcludeMissing
+        chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of(),
         @JsonProperty("currency") @ExcludeMissing currency: JsonField<String> = JsonMissing.of(),
         @JsonProperty("enable_count")
         @ExcludeMissing
@@ -93,6 +97,7 @@ private constructor(
         officeMetrics,
         skillName,
         attributedListPrice,
+        chatCoworkUnifiedMetrics,
         currency,
         enableCount,
         estimatedOverageSpend,
@@ -189,6 +194,18 @@ private constructor(
         attributedListPrice.getOptional("attributed_list_price")
 
     /**
+     * Skill use recorded while members had Chat and Cowork unified (Cowork's features inside
+     * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is null
+     * in date-range mode where it cannot be computed. Omitted from the response on deployments that
+     * do not offer Chat and Cowork unified.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun chatCoworkUnifiedMetrics(): Optional<ChatCoworkUnifiedMetrics> =
+        chatCoworkUnifiedMetrics.getOptional("chat_cowork_unified_metrics")
+
+    /**
      * Currency for this row's monetary fields (`estimated_overage_spend` and
      * `attributed_list_price`), as an uppercase ISO-4217 code. Always "USD" when either amount is
      * populated; null whenever both amounts are null.
@@ -257,13 +274,15 @@ private constructor(
     fun invocationCount(): Optional<Long> = invocationCount.getOptional("invocation_count")
 
     /**
-     * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`, or
-     * `office_agent` (the canonical Cost & Usage product naming; an `office_agent` row's
-     * per-surface breakdown is in its `office_metrics`). On `/plugins` only `cowork` and
-     * `claude_code` occur (the only surfaces with plugin attribution); on `/artifacts` only `chat`,
-     * `claude_code`, and `cowork` occur (the surfaces that create artifacts); `/apps/chat/projects`
-     * does not support the product dimension (a `product` entry in `group_by[]` or `filter[]` there
-     * is rejected). Present only when the request grouped by `product`.
+     * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
+     * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the canonical
+     * Cost & Usage product names; an `office_agent` row's per-surface breakdown is in its
+     * `office_metrics`. On `/plugins` only `cowork`, `claude_code` and `chat_cowork_unified` occur
+     * (the only surfaces with plugin attribution); on `/artifacts` only `chat`, `claude_code`,
+     * `cowork` and `chat_cowork_unified` occur (the surfaces that create artifacts);
+     * `/apps/chat/projects` does not support the product dimension (a `product` entry in
+     * `group_by[]` or `filter[]` there is rejected). Present only when the request grouped by
+     * `product`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -392,6 +411,16 @@ private constructor(
     fun _attributedListPrice(): JsonField<String> = attributedListPrice
 
     /**
+     * Returns the raw JSON value of [chatCoworkUnifiedMetrics].
+     *
+     * Unlike [chatCoworkUnifiedMetrics], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("chat_cowork_unified_metrics")
+    @ExcludeMissing
+    fun _chatCoworkUnifiedMetrics(): JsonField<ChatCoworkUnifiedMetrics> = chatCoworkUnifiedMetrics
+
+    /**
      * Returns the raw JSON value of [currency].
      *
      * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
@@ -515,6 +544,7 @@ private constructor(
         private var officeMetrics: JsonField<BetaAnalyticsSkillOfficeMetrics>? = null
         private var skillName: JsonField<String>? = null
         private var attributedListPrice: JsonField<String> = JsonMissing.of()
+        private var chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics> = JsonMissing.of()
         private var currency: JsonField<String> = JsonMissing.of()
         private var enableCount: JsonField<Long> = JsonMissing.of()
         private var estimatedOverageSpend: JsonField<String> = JsonMissing.of()
@@ -536,6 +566,7 @@ private constructor(
             officeMetrics = betaAnalyticsSkillActivity.officeMetrics
             skillName = betaAnalyticsSkillActivity.skillName
             attributedListPrice = betaAnalyticsSkillActivity.attributedListPrice
+            chatCoworkUnifiedMetrics = betaAnalyticsSkillActivity.chatCoworkUnifiedMetrics
             currency = betaAnalyticsSkillActivity.currency
             enableCount = betaAnalyticsSkillActivity.enableCount
             estimatedOverageSpend = betaAnalyticsSkillActivity.estimatedOverageSpend
@@ -688,6 +719,33 @@ private constructor(
         }
 
         /**
+         * Skill use recorded while members had Chat and Cowork unified (Cowork's features inside
+         * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is
+         * null in date-range mode where it cannot be computed. Omitted from the response on
+         * deployments that do not offer Chat and Cowork unified.
+         */
+        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics?) =
+            chatCoworkUnifiedMetrics(JsonField.ofNullable(chatCoworkUnifiedMetrics))
+
+        /**
+         * Alias for calling [Builder.chatCoworkUnifiedMetrics] with
+         * `chatCoworkUnifiedMetrics.orElse(null)`.
+         */
+        fun chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics: Optional<ChatCoworkUnifiedMetrics>) =
+            chatCoworkUnifiedMetrics(chatCoworkUnifiedMetrics.getOrNull())
+
+        /**
+         * Sets [Builder.chatCoworkUnifiedMetrics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.chatCoworkUnifiedMetrics] with a well-typed
+         * [ChatCoworkUnifiedMetrics] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun chatCoworkUnifiedMetrics(
+            chatCoworkUnifiedMetrics: JsonField<ChatCoworkUnifiedMetrics>
+        ) = apply { this.chatCoworkUnifiedMetrics = chatCoworkUnifiedMetrics }
+
+        /**
          * Currency for this row's monetary fields (`estimated_overage_spend` and
          * `attributed_list_price`), as an uppercase ISO-4217 code. Always "USD" when either amount
          * is populated; null whenever both amounts are null.
@@ -817,14 +875,15 @@ private constructor(
         }
 
         /**
-         * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`, or
-         * `office_agent` (the canonical Cost & Usage product naming; an `office_agent` row's
-         * per-surface breakdown is in its `office_metrics`). On `/plugins` only `cowork` and
-         * `claude_code` occur (the only surfaces with plugin attribution); on `/artifacts` only
-         * `chat`, `claude_code`, and `cowork` occur (the surfaces that create artifacts);
-         * `/apps/chat/projects` does not support the product dimension (a `product` entry in
-         * `group_by[]` or `filter[]` there is rejected). Present only when the request grouped by
-         * `product`.
+         * Product that produced this row's activity: one of `chat`, `claude_code`, `cowork`,
+         * `office_agent`, or `chat_cowork_unified` (Chat and Cowork unified). These are the
+         * canonical Cost & Usage product names; an `office_agent` row's per-surface breakdown is in
+         * its `office_metrics`. On `/plugins` only `cowork`, `claude_code` and
+         * `chat_cowork_unified` occur (the only surfaces with plugin attribution); on `/artifacts`
+         * only `chat`, `claude_code`, `cowork` and `chat_cowork_unified` occur (the surfaces that
+         * create artifacts); `/apps/chat/projects` does not support the product dimension (a
+         * `product` entry in `group_by[]` or `filter[]` there is rejected). Present only when the
+         * request grouped by `product`.
          */
         fun product(product: String?) = product(JsonField.ofNullable(product))
 
@@ -997,6 +1056,7 @@ private constructor(
                 checkRequired("officeMetrics", officeMetrics),
                 checkRequired("skillName", skillName),
                 attributedListPrice,
+                chatCoworkUnifiedMetrics,
                 currency,
                 enableCount,
                 estimatedOverageSpend,
@@ -1033,6 +1093,7 @@ private constructor(
         officeMetrics().validate()
         skillName()
         attributedListPrice()
+        chatCoworkUnifiedMetrics().ifPresent { it.validate() }
         currency()
         enableCount()
         estimatedOverageSpend()
@@ -1068,6 +1129,7 @@ private constructor(
             (officeMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (if (skillName.asKnown().isPresent) 1 else 0) +
             (if (attributedListPrice.asKnown().isPresent) 1 else 0) +
+            (chatCoworkUnifiedMetrics.asKnown().getOrNull()?.validity() ?: 0) +
             (if (currency.asKnown().isPresent) 1 else 0) +
             (if (enableCount.asKnown().isPresent) 1 else 0) +
             (if (estimatedOverageSpend.asKnown().isPresent) 1 else 0) +
@@ -1078,6 +1140,722 @@ private constructor(
             (shareStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (if (skillDisplayName.asKnown().isPresent) 1 else 0) +
             (if (userId.asKnown().isPresent) 1 else 0)
+
+    /**
+     * Skill use recorded while members had Chat and Cowork unified (Cowork's features inside
+     * claude.ai chat) turned on, split into chat conversations and Cowork sessions. A count is null
+     * in date-range mode where it cannot be computed. Omitted from the response on deployments that
+     * do not offer Chat and Cowork unified.
+     */
+    class ChatCoworkUnifiedMetrics
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val chat: JsonField<Chat>,
+        private val sessions: JsonField<Sessions>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("chat") @ExcludeMissing chat: JsonField<Chat> = JsonMissing.of(),
+            @JsonProperty("sessions")
+            @ExcludeMissing
+            sessions: JsonField<Sessions> = JsonMissing.of(),
+        ) : this(chat, sessions, mutableMapOf())
+
+        /**
+         * A skill's use in chat conversations recorded while members had Chat and Cowork unified
+         * turned on.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun chat(): Chat = chat.getRequired("chat")
+
+        /**
+         * A skill's use in Cowork sessions recorded while members had Chat and Cowork unified
+         * turned on.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun sessions(): Sessions = sessions.getRequired("sessions")
+
+        /**
+         * Returns the raw JSON value of [chat].
+         *
+         * Unlike [chat], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("chat") @ExcludeMissing fun _chat(): JsonField<Chat> = chat
+
+        /**
+         * Returns the raw JSON value of [sessions].
+         *
+         * Unlike [sessions], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("sessions") @ExcludeMissing fun _sessions(): JsonField<Sessions> = sessions
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [ChatCoworkUnifiedMetrics].
+             *
+             * The following fields are required:
+             * ```java
+             * .chat()
+             * .sessions()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [ChatCoworkUnifiedMetrics]. */
+        class Builder internal constructor() {
+
+            private var chat: JsonField<Chat>? = null
+            private var sessions: JsonField<Sessions>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(chatCoworkUnifiedMetrics: ChatCoworkUnifiedMetrics) = apply {
+                chat = chatCoworkUnifiedMetrics.chat
+                sessions = chatCoworkUnifiedMetrics.sessions
+                additionalProperties = chatCoworkUnifiedMetrics.additionalProperties.toMutableMap()
+            }
+
+            /**
+             * A skill's use in chat conversations recorded while members had Chat and Cowork
+             * unified turned on.
+             */
+            fun chat(chat: Chat) = chat(JsonField.of(chat))
+
+            /**
+             * Sets [Builder.chat] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.chat] with a well-typed [Chat] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun chat(chat: JsonField<Chat>) = apply { this.chat = chat }
+
+            /**
+             * A skill's use in Cowork sessions recorded while members had Chat and Cowork unified
+             * turned on.
+             */
+            fun sessions(sessions: Sessions) = sessions(JsonField.of(sessions))
+
+            /**
+             * Sets [Builder.sessions] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.sessions] with a well-typed [Sessions] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun sessions(sessions: JsonField<Sessions>) = apply { this.sessions = sessions }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [ChatCoworkUnifiedMetrics].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .chat()
+             * .sessions()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): ChatCoworkUnifiedMetrics =
+                ChatCoworkUnifiedMetrics(
+                    checkRequired("chat", chat),
+                    checkRequired("sessions", sessions),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): ChatCoworkUnifiedMetrics = apply {
+            if (validated) {
+                return@apply
+            }
+
+            chat().validate()
+            sessions().validate()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: AnthropicInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (chat.asKnown().getOrNull()?.validity() ?: 0) +
+                (sessions.asKnown().getOrNull()?.validity() ?: 0)
+
+        /**
+         * A skill's use in chat conversations recorded while members had Chat and Cowork unified
+         * turned on.
+         */
+        class Chat
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val distinctConversationSkillUsedCount: JsonField<Long>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("distinct_conversation_skill_used_count")
+                @ExcludeMissing
+                distinctConversationSkillUsedCount: JsonField<Long> = JsonMissing.of()
+            ) : this(distinctConversationSkillUsedCount, mutableMapOf())
+
+            /**
+             * Same measure as `chat_metrics.distinct_conversation_skill_used_count`, for activity
+             * recorded while members had Chat and Cowork unified turned on. Approximate (HLL,
+             * typical error <2%) in date-range mode. Null on aggregated rows where a distinct count
+             * cannot be computed.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun distinctConversationSkillUsedCount(): Optional<Long> =
+                distinctConversationSkillUsedCount.getOptional(
+                    "distinct_conversation_skill_used_count"
+                )
+
+            /**
+             * Returns the raw JSON value of [distinctConversationSkillUsedCount].
+             *
+             * Unlike [distinctConversationSkillUsedCount], this method doesn't throw if the JSON
+             * field has an unexpected type.
+             */
+            @JsonProperty("distinct_conversation_skill_used_count")
+            @ExcludeMissing
+            fun _distinctConversationSkillUsedCount(): JsonField<Long> =
+                distinctConversationSkillUsedCount
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Chat].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .distinctConversationSkillUsedCount()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+
+                /**
+                 * Returns an immutable instance of [Chat] with the required
+                 * [distinctConversationSkillUsedCount] set to the given value.
+                 */
+                @JvmStatic
+                fun of(distinctConversationSkillUsedCount: Long?) =
+                    builder()
+                        .distinctConversationSkillUsedCount(distinctConversationSkillUsedCount)
+                        .build()
+
+                /**
+                 * Alias for [of].
+                 *
+                 * This unboxed primitive overload exists for backwards compatibility.
+                 */
+                @JvmStatic
+                fun of(distinctConversationSkillUsedCount: Long) =
+                    of(distinctConversationSkillUsedCount as Long?)
+
+                /**
+                 * Alias for calling [of] with `distinctConversationSkillUsedCount.orElse(null)`.
+                 */
+                @JvmStatic
+                fun of(distinctConversationSkillUsedCount: Optional<Long>) =
+                    of(distinctConversationSkillUsedCount.getOrNull())
+            }
+
+            /** A builder for [Chat]. */
+            class Builder internal constructor() {
+
+                private var distinctConversationSkillUsedCount: JsonField<Long>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(chat: Chat) = apply {
+                    distinctConversationSkillUsedCount = chat.distinctConversationSkillUsedCount
+                    additionalProperties = chat.additionalProperties.toMutableMap()
+                }
+
+                /**
+                 * Same measure as `chat_metrics.distinct_conversation_skill_used_count`, for
+                 * activity recorded while members had Chat and Cowork unified turned on.
+                 * Approximate (HLL, typical error <2%) in date-range mode. Null on aggregated rows
+                 * where a distinct count cannot be computed.
+                 */
+                fun distinctConversationSkillUsedCount(distinctConversationSkillUsedCount: Long?) =
+                    distinctConversationSkillUsedCount(
+                        JsonField.ofNullable(distinctConversationSkillUsedCount)
+                    )
+
+                /**
+                 * Alias for [Builder.distinctConversationSkillUsedCount].
+                 *
+                 * This unboxed primitive overload exists for backwards compatibility.
+                 */
+                fun distinctConversationSkillUsedCount(distinctConversationSkillUsedCount: Long) =
+                    distinctConversationSkillUsedCount(distinctConversationSkillUsedCount as Long?)
+
+                /**
+                 * Alias for calling [Builder.distinctConversationSkillUsedCount] with
+                 * `distinctConversationSkillUsedCount.orElse(null)`.
+                 */
+                fun distinctConversationSkillUsedCount(
+                    distinctConversationSkillUsedCount: Optional<Long>
+                ) =
+                    distinctConversationSkillUsedCount(
+                        distinctConversationSkillUsedCount.getOrNull()
+                    )
+
+                /**
+                 * Sets [Builder.distinctConversationSkillUsedCount] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.distinctConversationSkillUsedCount] with a
+                 * well-typed [Long] value instead. This method is primarily for setting the field
+                 * to an undocumented or not yet supported value.
+                 */
+                fun distinctConversationSkillUsedCount(
+                    distinctConversationSkillUsedCount: JsonField<Long>
+                ) = apply {
+                    this.distinctConversationSkillUsedCount = distinctConversationSkillUsedCount
+                }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Chat].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .distinctConversationSkillUsedCount()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Chat =
+                    Chat(
+                        checkRequired(
+                            "distinctConversationSkillUsedCount",
+                            distinctConversationSkillUsedCount,
+                        ),
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws AnthropicInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
+            fun validate(): Chat = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                distinctConversationSkillUsedCount()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: AnthropicInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (distinctConversationSkillUsedCount.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Chat &&
+                    distinctConversationSkillUsedCount ==
+                        other.distinctConversationSkillUsedCount &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(distinctConversationSkillUsedCount, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Chat{distinctConversationSkillUsedCount=$distinctConversationSkillUsedCount, additionalProperties=$additionalProperties}"
+        }
+
+        /**
+         * A skill's use in Cowork sessions recorded while members had Chat and Cowork unified
+         * turned on.
+         */
+        class Sessions
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val distinctSessionSkillUsedCount: JsonField<Long>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("distinct_session_skill_used_count")
+                @ExcludeMissing
+                distinctSessionSkillUsedCount: JsonField<Long> = JsonMissing.of()
+            ) : this(distinctSessionSkillUsedCount, mutableMapOf())
+
+            /**
+             * Same measure as `cowork_metrics.distinct_session_skill_used_count`, for activity
+             * recorded while members had Chat and Cowork unified turned on. Approximate (HLL,
+             * typical error <2%) in date-range mode. Null on aggregated rows where a distinct count
+             * cannot be computed.
+             *
+             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun distinctSessionSkillUsedCount(): Optional<Long> =
+                distinctSessionSkillUsedCount.getOptional("distinct_session_skill_used_count")
+
+            /**
+             * Returns the raw JSON value of [distinctSessionSkillUsedCount].
+             *
+             * Unlike [distinctSessionSkillUsedCount], this method doesn't throw if the JSON field
+             * has an unexpected type.
+             */
+            @JsonProperty("distinct_session_skill_used_count")
+            @ExcludeMissing
+            fun _distinctSessionSkillUsedCount(): JsonField<Long> = distinctSessionSkillUsedCount
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Sessions].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .distinctSessionSkillUsedCount()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+
+                /**
+                 * Returns an immutable instance of [Sessions] with the required
+                 * [distinctSessionSkillUsedCount] set to the given value.
+                 */
+                @JvmStatic
+                fun of(distinctSessionSkillUsedCount: Long?) =
+                    builder().distinctSessionSkillUsedCount(distinctSessionSkillUsedCount).build()
+
+                /**
+                 * Alias for [of].
+                 *
+                 * This unboxed primitive overload exists for backwards compatibility.
+                 */
+                @JvmStatic
+                fun of(distinctSessionSkillUsedCount: Long) =
+                    of(distinctSessionSkillUsedCount as Long?)
+
+                /** Alias for calling [of] with `distinctSessionSkillUsedCount.orElse(null)`. */
+                @JvmStatic
+                fun of(distinctSessionSkillUsedCount: Optional<Long>) =
+                    of(distinctSessionSkillUsedCount.getOrNull())
+            }
+
+            /** A builder for [Sessions]. */
+            class Builder internal constructor() {
+
+                private var distinctSessionSkillUsedCount: JsonField<Long>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(sessions: Sessions) = apply {
+                    distinctSessionSkillUsedCount = sessions.distinctSessionSkillUsedCount
+                    additionalProperties = sessions.additionalProperties.toMutableMap()
+                }
+
+                /**
+                 * Same measure as `cowork_metrics.distinct_session_skill_used_count`, for activity
+                 * recorded while members had Chat and Cowork unified turned on. Approximate (HLL,
+                 * typical error <2%) in date-range mode. Null on aggregated rows where a distinct
+                 * count cannot be computed.
+                 */
+                fun distinctSessionSkillUsedCount(distinctSessionSkillUsedCount: Long?) =
+                    distinctSessionSkillUsedCount(
+                        JsonField.ofNullable(distinctSessionSkillUsedCount)
+                    )
+
+                /**
+                 * Alias for [Builder.distinctSessionSkillUsedCount].
+                 *
+                 * This unboxed primitive overload exists for backwards compatibility.
+                 */
+                fun distinctSessionSkillUsedCount(distinctSessionSkillUsedCount: Long) =
+                    distinctSessionSkillUsedCount(distinctSessionSkillUsedCount as Long?)
+
+                /**
+                 * Alias for calling [Builder.distinctSessionSkillUsedCount] with
+                 * `distinctSessionSkillUsedCount.orElse(null)`.
+                 */
+                fun distinctSessionSkillUsedCount(distinctSessionSkillUsedCount: Optional<Long>) =
+                    distinctSessionSkillUsedCount(distinctSessionSkillUsedCount.getOrNull())
+
+                /**
+                 * Sets [Builder.distinctSessionSkillUsedCount] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.distinctSessionSkillUsedCount] with a well-typed
+                 * [Long] value instead. This method is primarily for setting the field to an
+                 * undocumented or not yet supported value.
+                 */
+                fun distinctSessionSkillUsedCount(distinctSessionSkillUsedCount: JsonField<Long>) =
+                    apply {
+                        this.distinctSessionSkillUsedCount = distinctSessionSkillUsedCount
+                    }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Sessions].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .distinctSessionSkillUsedCount()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Sessions =
+                    Sessions(
+                        checkRequired(
+                            "distinctSessionSkillUsedCount",
+                            distinctSessionSkillUsedCount,
+                        ),
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws AnthropicInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
+            fun validate(): Sessions = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                distinctSessionSkillUsedCount()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: AnthropicInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (distinctSessionSkillUsedCount.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Sessions &&
+                    distinctSessionSkillUsedCount == other.distinctSessionSkillUsedCount &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(distinctSessionSkillUsedCount, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Sessions{distinctSessionSkillUsedCount=$distinctSessionSkillUsedCount, additionalProperties=$additionalProperties}"
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is ChatCoworkUnifiedMetrics &&
+                chat == other.chat &&
+                sessions == other.sessions &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(chat, sessions, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "ChatCoworkUnifiedMetrics{chat=$chat, sessions=$sessions, additionalProperties=$additionalProperties}"
+    }
 
     /**
      * Skill share status (claude.ai only): one of `private`, `organization`, or `public`. Null for
@@ -1255,6 +2033,7 @@ private constructor(
             officeMetrics == other.officeMetrics &&
             skillName == other.skillName &&
             attributedListPrice == other.attributedListPrice &&
+            chatCoworkUnifiedMetrics == other.chatCoworkUnifiedMetrics &&
             currency == other.currency &&
             enableCount == other.enableCount &&
             estimatedOverageSpend == other.estimatedOverageSpend &&
@@ -1277,6 +2056,7 @@ private constructor(
             officeMetrics,
             skillName,
             attributedListPrice,
+            chatCoworkUnifiedMetrics,
             currency,
             enableCount,
             estimatedOverageSpend,
@@ -1294,5 +2074,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsSkillActivity{chatMetrics=$chatMetrics, claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, distinctUserCount=$distinctUserCount, officeMetrics=$officeMetrics, skillName=$skillName, attributedListPrice=$attributedListPrice, currency=$currency, enableCount=$enableCount, estimatedOverageSpend=$estimatedOverageSpend, invocationCount=$invocationCount, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, shareStatus=$shareStatus, skillDisplayName=$skillDisplayName, userId=$userId, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsSkillActivity{chatMetrics=$chatMetrics, claudeCodeMetrics=$claudeCodeMetrics, coworkMetrics=$coworkMetrics, distinctUserCount=$distinctUserCount, officeMetrics=$officeMetrics, skillName=$skillName, attributedListPrice=$attributedListPrice, chatCoworkUnifiedMetrics=$chatCoworkUnifiedMetrics, currency=$currency, enableCount=$enableCount, estimatedOverageSpend=$estimatedOverageSpend, invocationCount=$invocationCount, product=$product, rbacGroupId=$rbacGroupId, rbacGroupName=$rbacGroupName, shareStatus=$shareStatus, skillDisplayName=$skillDisplayName, userId=$userId, additionalProperties=$additionalProperties}"
 }
