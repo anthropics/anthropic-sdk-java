@@ -57,6 +57,8 @@ class AnthropicClientImpl(private val clientOptions: ClientOptions) : AnthropicC
 
     override fun withRawResponse(): AnthropicClient.WithRawResponse = withRawResponse
 
+    override fun options(): ClientOptions = clientOptions
+
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AnthropicClient =
         AnthropicClientImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
