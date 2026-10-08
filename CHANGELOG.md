@@ -1,10 +1,17 @@
 # Changelog
 
-## [2.69.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.69.0...v2.69.1) (2026-10-08)
+## [2.70.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.69.0...v2.70.0) (2026-10-08)
+
+### Features
+
+* **client:** add getters and builders to the structured output classes
+
 
 ### Chores
 
 * **ci:** check that pull requests update the changelog
+* **docs:** note that listing Claude Console spend limits is in early access
+* **tests:** remove the structured output delegation mirror tests (#350)
 
 ## 2.69.0 (2026-10-07)
 
