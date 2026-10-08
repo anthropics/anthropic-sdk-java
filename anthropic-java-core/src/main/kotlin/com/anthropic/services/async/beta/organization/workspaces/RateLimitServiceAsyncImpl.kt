@@ -66,13 +66,9 @@ class RateLimitServiceAsyncImpl internal constructor(private val clientOptions: 
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "workspaces",
-                        params._pathParam(0),
-                        "rate_limits",
-                    )
+                    .addPathSegments("v1", "organizations", "workspaces")
+                    .addPathParam("workspaceId", params._pathParam(0))
+                    .addPathSegments("rate_limits")
                     .putQueryParam("beta", "true")
                     .build()
                     .prepareAsync(clientOptions, params)

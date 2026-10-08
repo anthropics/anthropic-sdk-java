@@ -85,13 +85,9 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "service_accounts",
-                        params._pathParam(0),
-                        "workspaces",
-                    )
+                    .addPathSegments("v1", "organizations", "service_accounts")
+                    .addPathParam("serviceAccountId", params._pathParam(0))
+                    .addPathSegments("workspaces")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -132,13 +128,9 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "service_accounts",
-                        params._pathParam(0),
-                        "workspaces",
-                    )
+                    .addPathSegments("v1", "organizations", "service_accounts")
+                    .addPathParam("serviceAccountId", params._pathParam(0))
+                    .addPathSegments("workspaces")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -172,14 +164,10 @@ class WorkspaceServiceAsyncImpl internal constructor(private val clientOptions: 
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "service_accounts",
-                        params._pathParam(0),
-                        "workspaces",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "organizations", "service_accounts")
+                    .addPathParam("serviceAccountId", params._pathParam(0))
+                    .addPathSegments("workspaces")
+                    .addPathParam("workspaceId", params._pathParam(1))
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

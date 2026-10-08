@@ -124,7 +124,9 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "vaults", params._pathParam(0), "credentials")
+                    .addPathSegments("v1", "vaults")
+                    .addPathParam("vaultId", params._pathParam(0))
+                    .addPathSegments("credentials")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
@@ -157,13 +159,10 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "vaults",
-                        params._pathParam(0),
-                        "credentials",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "vaults")
+                    .addPathParam("vaultId", params._pathParam(0))
+                    .addPathSegments("credentials")
+                    .addPathParam("credentialId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -195,13 +194,10 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "vaults",
-                        params._pathParam(0),
-                        "credentials",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "vaults")
+                    .addPathParam("vaultId", params._pathParam(0))
+                    .addPathSegments("credentials")
+                    .addPathParam("credentialId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
@@ -234,7 +230,9 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "vaults", params._pathParam(0), "credentials")
+                    .addPathSegments("v1", "vaults")
+                    .addPathParam("vaultId", params._pathParam(0))
+                    .addPathSegments("credentials")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -273,13 +271,10 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "vaults",
-                        params._pathParam(0),
-                        "credentials",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "vaults")
+                    .addPathParam("vaultId", params._pathParam(0))
+                    .addPathSegments("credentials")
+                    .addPathParam("credentialId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
@@ -312,14 +307,11 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "vaults",
-                        params._pathParam(0),
-                        "credentials",
-                        params._pathParam(1),
-                        "archive",
-                    )
+                    .addPathSegments("v1", "vaults")
+                    .addPathParam("vaultId", params._pathParam(0))
+                    .addPathSegments("credentials")
+                    .addPathParam("credentialId", params._pathParam(1))
+                    .addPathSegments("archive")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
@@ -352,14 +344,11 @@ class CredentialServiceImpl internal constructor(private val clientOptions: Clie
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "vaults",
-                        params._pathParam(0),
-                        "credentials",
-                        params._pathParam(1),
-                        "mcp_oauth_validate",
-                    )
+                    .addPathSegments("v1", "vaults")
+                    .addPathParam("vaultId", params._pathParam(0))
+                    .addPathSegments("credentials")
+                    .addPathParam("credentialId", params._pathParam(1))
+                    .addPathSegments("mcp_oauth_validate")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }

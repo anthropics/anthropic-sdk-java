@@ -103,13 +103,10 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "sessions",
-                        params._pathParam(0),
-                        "threads",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "sessions")
+                    .addPathParam("sessionId", params._pathParam(0))
+                    .addPathSegments("threads")
+                    .addPathParam("threadId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -144,7 +141,9 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "sessions", params._pathParam(0), "threads")
+                    .addPathSegments("v1", "sessions")
+                    .addPathParam("sessionId", params._pathParam(0))
+                    .addPathSegments("threads")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -187,14 +186,11 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "sessions",
-                        params._pathParam(0),
-                        "threads",
-                        params._pathParam(1),
-                        "archive",
-                    )
+                    .addPathSegments("v1", "sessions")
+                    .addPathParam("sessionId", params._pathParam(0))
+                    .addPathSegments("threads")
+                    .addPathParam("threadId", params._pathParam(1))
+                    .addPathSegments("archive")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }

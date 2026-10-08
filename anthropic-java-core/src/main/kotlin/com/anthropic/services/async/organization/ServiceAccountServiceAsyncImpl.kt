@@ -147,12 +147,8 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "service_accounts",
-                        params._pathParam(0),
-                    )
+                    .addPathSegments("v1", "organizations", "service_accounts")
+                    .addPathParam("serviceAccountId", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -185,12 +181,8 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "service_accounts",
-                        params._pathParam(0),
-                    )
+                    .addPathSegments("v1", "organizations", "service_accounts")
+                    .addPathParam("serviceAccountId", params._pathParam(0))
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -262,13 +254,9 @@ internal constructor(private val clientOptions: ClientOptions) : ServiceAccountS
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "service_accounts",
-                        params._pathParam(0),
-                        "archive",
-                    )
+                    .addPathSegments("v1", "organizations", "service_accounts")
+                    .addPathParam("serviceAccountId", params._pathParam(0))
+                    .addPathSegments("archive")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)

@@ -97,13 +97,9 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "plugins",
-                        params._pathParam(0),
-                        "installation_settings",
-                    )
+                    .addPathSegments("v1", "organizations", "plugins")
+                    .addPathParam("pluginId", params._pathParam(0))
+                    .addPathSegments("installation_settings")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -146,14 +142,10 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "plugins",
-                        params._pathParam(0),
-                        "installation_settings",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "organizations", "plugins")
+                    .addPathParam("pluginId", params._pathParam(0))
+                    .addPathSegments("installation_settings")
+                    .addPathParam("target", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
@@ -189,14 +181,10 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "plugins",
-                        params._pathParam(0),
-                        "installation_settings",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "organizations", "plugins")
+                    .addPathParam("pluginId", params._pathParam(0))
+                    .addPathSegments("installation_settings")
+                    .addPathParam("target", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))

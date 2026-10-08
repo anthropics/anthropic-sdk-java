@@ -108,7 +108,9 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "memory_stores", params._pathParam(0), "memories")
+                    .addPathSegments("v1", "memory_stores")
+                    .addPathParam("memoryStoreId", params._pathParam(0))
+                    .addPathSegments("memories")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
@@ -144,13 +146,10 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "memory_stores",
-                        params._pathParam(0),
-                        "memories",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "memory_stores")
+                    .addPathParam("memoryStoreId", params._pathParam(0))
+                    .addPathSegments("memories")
+                    .addPathParam("memoryId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -185,13 +184,10 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "memory_stores",
-                        params._pathParam(0),
-                        "memories",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "memory_stores")
+                    .addPathParam("memoryStoreId", params._pathParam(0))
+                    .addPathSegments("memories")
+                    .addPathParam("memoryId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
@@ -227,7 +223,9 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "memory_stores", params._pathParam(0), "memories")
+                    .addPathSegments("v1", "memory_stores")
+                    .addPathParam("memoryStoreId", params._pathParam(0))
+                    .addPathSegments("memories")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -270,13 +268,10 @@ class MemoryServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "memory_stores",
-                        params._pathParam(0),
-                        "memories",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "memory_stores")
+                    .addPathParam("memoryStoreId", params._pathParam(0))
+                    .addPathSegments("memories")
+                    .addPathParam("memoryId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }

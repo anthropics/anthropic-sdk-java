@@ -111,12 +111,8 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "plugin_marketplaces",
-                        params._pathParam(0),
-                    )
+                    .addPathSegments("v1", "organizations", "plugin_marketplaces")
+                    .addPathParam("marketplaceId", params._pathParam(0))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -151,12 +147,8 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "plugin_marketplaces",
-                        params._pathParam(0),
-                    )
+                    .addPathSegments("v1", "organizations", "plugin_marketplaces")
+                    .addPathParam("marketplaceId", params._pathParam(0))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))

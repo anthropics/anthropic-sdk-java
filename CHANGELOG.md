@@ -7,6 +7,11 @@
 * **client:** add getters and builders to the structured output classes
 
 
+### Bug Fixes
+
+* **client:** throw before sending a request with an empty path parameter
+
+
 ### Chores
 
 * **ci:** check that pull requests update the changelog

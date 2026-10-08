@@ -91,14 +91,11 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "sessions",
-                        params._pathParam(0),
-                        "threads",
-                        params._pathParam(1),
-                        "events",
-                    )
+                    .addPathSegments("v1", "sessions")
+                    .addPathParam("sessionId", params._pathParam(0))
+                    .addPathSegments("threads")
+                    .addPathParam("threadId", params._pathParam(1))
+                    .addPathSegments("events")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -145,14 +142,11 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "sessions",
-                        params._pathParam(0),
-                        "threads",
-                        params._pathParam(1),
-                        "stream",
-                    )
+                    .addPathSegments("v1", "sessions")
+                    .addPathParam("sessionId", params._pathParam(0))
+                    .addPathSegments("threads")
+                    .addPathParam("threadId", params._pathParam(1))
+                    .addPathSegments("stream")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .putHeader("Accept", "text/event-stream")

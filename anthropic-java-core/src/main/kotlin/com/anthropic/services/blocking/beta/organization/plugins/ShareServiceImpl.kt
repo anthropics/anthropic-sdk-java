@@ -69,13 +69,9 @@ class ShareServiceImpl internal constructor(private val clientOptions: ClientOpt
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "organizations",
-                        "plugins",
-                        params._pathParam(0),
-                        "shares",
-                    )
+                    .addPathSegments("v1", "organizations", "plugins")
+                    .addPathParam("pluginId", params._pathParam(0))
+                    .addPathSegments("shares")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()

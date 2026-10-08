@@ -1,5 +1,6 @@
 package com.anthropic.core.http
 
+import com.anthropic.core.checkMinLength
 import com.anthropic.core.checkRequired
 import com.anthropic.core.contentToString
 import com.anthropic.core.toImmutable
@@ -94,6 +95,11 @@ private constructor(
 
         fun addPathSegment(pathSegment: String) = apply {
             pathSegments.add(checkPathSegment(pathSegment))
+        }
+
+        @JvmSynthetic
+        internal fun addPathParam(name: String, value: String) = apply {
+            pathSegments.add(checkPathSegment(checkMinLength(name, value, 1)))
         }
 
         fun addPathSegments(vararg pathSegments: String) = apply {

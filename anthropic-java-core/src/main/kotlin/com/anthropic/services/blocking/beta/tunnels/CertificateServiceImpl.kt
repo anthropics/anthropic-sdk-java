@@ -98,7 +98,9 @@ class CertificateServiceImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "tunnels", params._pathParam(0), "certificates")
+                    .addPathSegments("v1", "tunnels")
+                    .addPathParam("tunnelId", params._pathParam(0))
+                    .addPathSegments("certificates")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .body(json(clientOptions.jsonMapper, params._body()))
@@ -131,13 +133,10 @@ class CertificateServiceImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "tunnels",
-                        params._pathParam(0),
-                        "certificates",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "tunnels")
+                    .addPathParam("tunnelId", params._pathParam(0))
+                    .addPathSegments("certificates")
+                    .addPathParam("certificateId", params._pathParam(1))
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -169,7 +168,9 @@ class CertificateServiceImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "tunnels", params._pathParam(0), "certificates")
+                    .addPathSegments("v1", "tunnels")
+                    .addPathParam("tunnelId", params._pathParam(0))
+                    .addPathSegments("certificates")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .build()
@@ -208,14 +209,11 @@ class CertificateServiceImpl internal constructor(private val clientOptions: Cli
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "tunnels",
-                        params._pathParam(0),
-                        "certificates",
-                        params._pathParam(1),
-                        "archive",
-                    )
+                    .addPathSegments("v1", "tunnels")
+                    .addPathParam("tunnelId", params._pathParam(0))
+                    .addPathSegments("certificates")
+                    .addPathParam("certificateId", params._pathParam(1))
+                    .addPathSegments("archive")
                     .putQueryParam("beta", "true")
                     .putAllHeaders(DEFAULT_HEADERS)
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }

@@ -94,7 +94,9 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "skills", params._pathParam(0), "versions")
+                    .addPathSegments("v1", "skills")
+                    .addPathParam("skillId", params._pathParam(0))
+                    .addPathSegments("versions")
                     .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -128,13 +130,10 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "skills",
-                        params._pathParam(0),
-                        "versions",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "skills")
+                    .addPathParam("skillId", params._pathParam(0))
+                    .addPathSegments("versions")
+                    .addPathParam("version", params._pathParam(1))
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -167,7 +166,9 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "skills", params._pathParam(0), "versions")
+                    .addPathSegments("v1", "skills")
+                    .addPathParam("skillId", params._pathParam(0))
+                    .addPathSegments("versions")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -208,13 +209,10 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "skills",
-                        params._pathParam(0),
-                        "versions",
-                        params._pathParam(1),
-                    )
+                    .addPathSegments("v1", "skills")
+                    .addPathParam("skillId", params._pathParam(0))
+                    .addPathSegments("versions")
+                    .addPathParam("version", params._pathParam(1))
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
