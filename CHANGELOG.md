@@ -6,6 +6,11 @@
 
 * **api:** add types for the Chat and Cowork unified analytics metrics
 
+
+### Chores
+
+* **internal:** generate the combined javadoc alongside compilation
+
 ## [2.70.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.69.0...v2.70.0) (2026-10-08)
 
 ### Features
