@@ -2,6 +2,8 @@ package com.anthropic.models.beta.organization.analytics.connectors
 
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorActivity
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorChatMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorClaudeCodeMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsConnectorCoworkMetrics
@@ -34,14 +36,9 @@ internal class ConnectorListPageResponseTest {
                         )
                         .chatCoworkUnifiedMetrics(
                             BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
-                                .chat(
-                                    BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Chat.of(
-                                        0L
-                                    )
-                                )
+                                .chat(BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics.of(0L))
                                 .sessions(
-                                    BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Sessions
-                                        .of(0L)
+                                    BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics.of(0L)
                                 )
                                 .build()
                         )
@@ -78,14 +75,8 @@ internal class ConnectorListPageResponseTest {
                     )
                     .chatCoworkUnifiedMetrics(
                         BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
-                            .chat(
-                                BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Chat.of(0L)
-                            )
-                            .sessions(
-                                BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Sessions.of(
-                                    0L
-                                )
-                            )
+                            .chat(BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics.of(0L))
+                            .sessions(BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics.of(0L))
                             .build()
                     )
                     .connectorDisplayName("connector_display_name")
@@ -125,14 +116,9 @@ internal class ConnectorListPageResponseTest {
                         )
                         .chatCoworkUnifiedMetrics(
                             BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.builder()
-                                .chat(
-                                    BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Chat.of(
-                                        0L
-                                    )
-                                )
+                                .chat(BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics.of(0L))
                                 .sessions(
-                                    BetaAnalyticsConnectorActivity.ChatCoworkUnifiedMetrics.Sessions
-                                        .of(0L)
+                                    BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics.of(0L)
                                 )
                                 .build()
                         )

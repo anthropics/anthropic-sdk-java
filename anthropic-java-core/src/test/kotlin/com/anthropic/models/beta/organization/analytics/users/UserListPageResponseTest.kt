@@ -1,6 +1,8 @@
 package com.anthropic.models.beta.organization.analytics.users
 
 import com.anthropic.core.jsonMapper
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatCoworkUnifiedChatMetrics
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatCoworkUnifiedSessionsMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsChatMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsClaudeCodeMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsCoreCodeMetrics
@@ -175,8 +177,7 @@ internal class UserListPageResponseTest {
                         .chatCoworkUnifiedMetrics(
                             BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
                                 .chat(
-                                    BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.Chat
-                                        .builder()
+                                    BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                         .connectorsUsedCount(0L)
                                         .distinctArtifactsCreatedCount(0L)
                                         .distinctConnectorsUsedCount(0L)
@@ -192,24 +193,23 @@ internal class UserListPageResponseTest {
                                         .build()
                                 )
                                 .sessions(
-                                    BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.Sessions
-                                        .builder()
+                                    BetaAnalyticsChatCoworkUnifiedSessionsMetrics.builder()
                                         .actionCount(0L)
                                         .artifactsCreatedCount(0L)
                                         .connectorsUsedCount(0L)
                                         .dispatchTurnCount(0L)
                                         .distinctConnectorsUsedCount(0L)
+                                        .distinctPluginsUsedCount(0L)
                                         .distinctSessionCount(0L)
                                         .distinctSkillsUsedCount(0L)
-                                        .messageCount(0L)
-                                        .skillsUsedCount(0L)
-                                        .distinctPluginsUsedCount(0L)
                                         .editToolCount(0L)
                                         .fileEditCount(0L)
+                                        .messageCount(0L)
                                         .multiEditToolCount(0L)
                                         .notebookEditToolCount(0L)
                                         .pluginsUsedCount(0L)
                                         .sessionsWithFileEditsCount(0L)
+                                        .skillsUsedCount(0L)
                                         .writeToolCount(0L)
                                         .build()
                                 )
@@ -381,7 +381,7 @@ internal class UserListPageResponseTest {
                     .chatCoworkUnifiedMetrics(
                         BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
                             .chat(
-                                BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.Chat.builder()
+                                BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                     .connectorsUsedCount(0L)
                                     .distinctArtifactsCreatedCount(0L)
                                     .distinctConnectorsUsedCount(0L)
@@ -397,24 +397,23 @@ internal class UserListPageResponseTest {
                                     .build()
                             )
                             .sessions(
-                                BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.Sessions
-                                    .builder()
+                                BetaAnalyticsChatCoworkUnifiedSessionsMetrics.builder()
                                     .actionCount(0L)
                                     .artifactsCreatedCount(0L)
                                     .connectorsUsedCount(0L)
                                     .dispatchTurnCount(0L)
                                     .distinctConnectorsUsedCount(0L)
+                                    .distinctPluginsUsedCount(0L)
                                     .distinctSessionCount(0L)
                                     .distinctSkillsUsedCount(0L)
-                                    .messageCount(0L)
-                                    .skillsUsedCount(0L)
-                                    .distinctPluginsUsedCount(0L)
                                     .editToolCount(0L)
                                     .fileEditCount(0L)
+                                    .messageCount(0L)
                                     .multiEditToolCount(0L)
                                     .notebookEditToolCount(0L)
                                     .pluginsUsedCount(0L)
                                     .sessionsWithFileEditsCount(0L)
+                                    .skillsUsedCount(0L)
                                     .writeToolCount(0L)
                                     .build()
                             )
@@ -587,8 +586,7 @@ internal class UserListPageResponseTest {
                         .chatCoworkUnifiedMetrics(
                             BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.builder()
                                 .chat(
-                                    BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.Chat
-                                        .builder()
+                                    BetaAnalyticsChatCoworkUnifiedChatMetrics.builder()
                                         .connectorsUsedCount(0L)
                                         .distinctArtifactsCreatedCount(0L)
                                         .distinctConnectorsUsedCount(0L)
@@ -604,24 +602,23 @@ internal class UserListPageResponseTest {
                                         .build()
                                 )
                                 .sessions(
-                                    BetaAnalyticsUserActivity.ChatCoworkUnifiedMetrics.Sessions
-                                        .builder()
+                                    BetaAnalyticsChatCoworkUnifiedSessionsMetrics.builder()
                                         .actionCount(0L)
                                         .artifactsCreatedCount(0L)
                                         .connectorsUsedCount(0L)
                                         .dispatchTurnCount(0L)
                                         .distinctConnectorsUsedCount(0L)
+                                        .distinctPluginsUsedCount(0L)
                                         .distinctSessionCount(0L)
                                         .distinctSkillsUsedCount(0L)
-                                        .messageCount(0L)
-                                        .skillsUsedCount(0L)
-                                        .distinctPluginsUsedCount(0L)
                                         .editToolCount(0L)
                                         .fileEditCount(0L)
+                                        .messageCount(0L)
                                         .multiEditToolCount(0L)
                                         .notebookEditToolCount(0L)
                                         .pluginsUsedCount(0L)
                                         .sessionsWithFileEditsCount(0L)
+                                        .skillsUsedCount(0L)
                                         .writeToolCount(0L)
                                         .build()
                                 )

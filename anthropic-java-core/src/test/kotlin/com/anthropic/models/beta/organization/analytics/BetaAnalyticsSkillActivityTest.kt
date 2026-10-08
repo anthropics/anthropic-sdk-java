@@ -27,10 +27,8 @@ internal class BetaAnalyticsSkillActivityTest {
                 .attributedListPrice("attributed_list_price")
                 .chatCoworkUnifiedMetrics(
                     BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
-                        .chat(BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Chat.of(0L))
-                        .sessions(
-                            BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Sessions.of(0L)
-                        )
+                        .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
+                        .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
                         .build()
                 )
                 .currency("currency")
@@ -67,8 +65,8 @@ internal class BetaAnalyticsSkillActivityTest {
         assertThat(betaAnalyticsSkillActivity.chatCoworkUnifiedMetrics())
             .contains(
                 BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
-                    .chat(BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Chat.of(0L))
-                    .sessions(BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Sessions.of(0L))
+                    .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
+                    .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
                     .build()
             )
         assertThat(betaAnalyticsSkillActivity.currency()).contains("currency")
@@ -106,10 +104,8 @@ internal class BetaAnalyticsSkillActivityTest {
                 .attributedListPrice("attributed_list_price")
                 .chatCoworkUnifiedMetrics(
                     BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
-                        .chat(BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Chat.of(0L))
-                        .sessions(
-                            BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.Sessions.of(0L)
-                        )
+                        .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
+                        .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
                         .build()
                 )
                 .currency("currency")

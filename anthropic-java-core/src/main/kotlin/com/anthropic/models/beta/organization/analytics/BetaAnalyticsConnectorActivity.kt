@@ -1115,17 +1115,20 @@ private constructor(
     class ChatCoworkUnifiedMetrics
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val chat: JsonField<Chat>,
-        private val sessions: JsonField<Sessions>,
+        private val chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics>,
+        private val sessions: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("chat") @ExcludeMissing chat: JsonField<Chat> = JsonMissing.of(),
+            @JsonProperty("chat")
+            @ExcludeMissing
+            chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics> = JsonMissing.of(),
             @JsonProperty("sessions")
             @ExcludeMissing
-            sessions: JsonField<Sessions> = JsonMissing.of(),
+            sessions: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics> =
+                JsonMissing.of(),
         ) : this(chat, sessions, mutableMapOf())
 
         /**
@@ -1135,7 +1138,7 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun chat(): Chat = chat.getRequired("chat")
+        fun chat(): BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics = chat.getRequired("chat")
 
         /**
          * A connector's use in Cowork sessions recorded while members had Chat and Cowork unified
@@ -1144,21 +1147,27 @@ private constructor(
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun sessions(): Sessions = sessions.getRequired("sessions")
+        fun sessions(): BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics =
+            sessions.getRequired("sessions")
 
         /**
          * Returns the raw JSON value of [chat].
          *
          * Unlike [chat], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("chat") @ExcludeMissing fun _chat(): JsonField<Chat> = chat
+        @JsonProperty("chat")
+        @ExcludeMissing
+        fun _chat(): JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics> = chat
 
         /**
          * Returns the raw JSON value of [sessions].
          *
          * Unlike [sessions], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("sessions") @ExcludeMissing fun _sessions(): JsonField<Sessions> = sessions
+        @JsonProperty("sessions")
+        @ExcludeMissing
+        fun _sessions(): JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics> =
+            sessions
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1189,8 +1198,10 @@ private constructor(
         /** A builder for [ChatCoworkUnifiedMetrics]. */
         class Builder internal constructor() {
 
-            private var chat: JsonField<Chat>? = null
-            private var sessions: JsonField<Sessions>? = null
+            private var chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics>? = null
+            private var sessions:
+                JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics>? =
+                null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1204,31 +1215,37 @@ private constructor(
              * A connector's use in chat conversations recorded while members had Chat and Cowork
              * unified turned on.
              */
-            fun chat(chat: Chat) = chat(JsonField.of(chat))
+            fun chat(chat: BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics) =
+                chat(JsonField.of(chat))
 
             /**
              * Sets [Builder.chat] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.chat] with a well-typed [Chat] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.chat] with a well-typed
+             * [BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics] value instead. This method is
+             * primarily for setting the field to an undocumented or not yet supported value.
              */
-            fun chat(chat: JsonField<Chat>) = apply { this.chat = chat }
+            fun chat(chat: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedChatMetrics>) = apply {
+                this.chat = chat
+            }
 
             /**
              * A connector's use in Cowork sessions recorded while members had Chat and Cowork
              * unified turned on.
              */
-            fun sessions(sessions: Sessions) = sessions(JsonField.of(sessions))
+            fun sessions(sessions: BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics) =
+                sessions(JsonField.of(sessions))
 
             /**
              * Sets [Builder.sessions] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.sessions] with a well-typed [Sessions] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
+             * You should usually call [Builder.sessions] with a well-typed
+             * [BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics] value instead. This method
+             * is primarily for setting the field to an undocumented or not yet supported value.
              */
-            fun sessions(sessions: JsonField<Sessions>) = apply { this.sessions = sessions }
+            fun sessions(
+                sessions: JsonField<BetaAnalyticsConnectorChatCoworkUnifiedSessionsMetrics>
+            ) = apply { this.sessions = sessions }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -1309,517 +1326,6 @@ private constructor(
         internal fun validity(): Int =
             (chat.asKnown().getOrNull()?.validity() ?: 0) +
                 (sessions.asKnown().getOrNull()?.validity() ?: 0)
-
-        /**
-         * A connector's use in chat conversations recorded while members had Chat and Cowork
-         * unified turned on.
-         */
-        class Chat
-        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-        private constructor(
-            private val distinctConversationConnectorUsedCount: JsonField<Long>,
-            private val additionalProperties: MutableMap<String, JsonValue>,
-        ) {
-
-            @JsonCreator
-            private constructor(
-                @JsonProperty("distinct_conversation_connector_used_count")
-                @ExcludeMissing
-                distinctConversationConnectorUsedCount: JsonField<Long> = JsonMissing.of()
-            ) : this(distinctConversationConnectorUsedCount, mutableMapOf())
-
-            /**
-             * Same measure as `chat_metrics.distinct_conversation_connector_used_count`, for
-             * activity recorded while members had Chat and Cowork unified turned on. Approximate
-             * (HLL, typical error <2%) in date-range mode. Null on aggregated rows where a distinct
-             * count cannot be computed.
-             *
-             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
-             *   if the server responded with an unexpected value).
-             */
-            fun distinctConversationConnectorUsedCount(): Optional<Long> =
-                distinctConversationConnectorUsedCount.getOptional(
-                    "distinct_conversation_connector_used_count"
-                )
-
-            /**
-             * Returns the raw JSON value of [distinctConversationConnectorUsedCount].
-             *
-             * Unlike [distinctConversationConnectorUsedCount], this method doesn't throw if the
-             * JSON field has an unexpected type.
-             */
-            @JsonProperty("distinct_conversation_connector_used_count")
-            @ExcludeMissing
-            fun _distinctConversationConnectorUsedCount(): JsonField<Long> =
-                distinctConversationConnectorUsedCount
-
-            @JsonAnySetter
-            private fun putAdditionalProperty(key: String, value: JsonValue) {
-                additionalProperties.put(key, value)
-            }
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> =
-                Collections.unmodifiableMap(additionalProperties)
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /**
-                 * Returns a mutable builder for constructing an instance of [Chat].
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .distinctConversationConnectorUsedCount()
-                 * ```
-                 */
-                @JvmStatic fun builder() = Builder()
-
-                /**
-                 * Returns an immutable instance of [Chat] with the required
-                 * [distinctConversationConnectorUsedCount] set to the given value.
-                 */
-                @JvmStatic
-                fun of(distinctConversationConnectorUsedCount: Long?) =
-                    builder()
-                        .distinctConversationConnectorUsedCount(
-                            distinctConversationConnectorUsedCount
-                        )
-                        .build()
-
-                /**
-                 * Alias for [of].
-                 *
-                 * This unboxed primitive overload exists for backwards compatibility.
-                 */
-                @JvmStatic
-                fun of(distinctConversationConnectorUsedCount: Long) =
-                    of(distinctConversationConnectorUsedCount as Long?)
-
-                /**
-                 * Alias for calling [of] with
-                 * `distinctConversationConnectorUsedCount.orElse(null)`.
-                 */
-                @JvmStatic
-                fun of(distinctConversationConnectorUsedCount: Optional<Long>) =
-                    of(distinctConversationConnectorUsedCount.getOrNull())
-            }
-
-            /** A builder for [Chat]. */
-            class Builder internal constructor() {
-
-                private var distinctConversationConnectorUsedCount: JsonField<Long>? = null
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(chat: Chat) = apply {
-                    distinctConversationConnectorUsedCount =
-                        chat.distinctConversationConnectorUsedCount
-                    additionalProperties = chat.additionalProperties.toMutableMap()
-                }
-
-                /**
-                 * Same measure as `chat_metrics.distinct_conversation_connector_used_count`, for
-                 * activity recorded while members had Chat and Cowork unified turned on.
-                 * Approximate (HLL, typical error <2%) in date-range mode. Null on aggregated rows
-                 * where a distinct count cannot be computed.
-                 */
-                fun distinctConversationConnectorUsedCount(
-                    distinctConversationConnectorUsedCount: Long?
-                ) =
-                    distinctConversationConnectorUsedCount(
-                        JsonField.ofNullable(distinctConversationConnectorUsedCount)
-                    )
-
-                /**
-                 * Alias for [Builder.distinctConversationConnectorUsedCount].
-                 *
-                 * This unboxed primitive overload exists for backwards compatibility.
-                 */
-                fun distinctConversationConnectorUsedCount(
-                    distinctConversationConnectorUsedCount: Long
-                ) =
-                    distinctConversationConnectorUsedCount(
-                        distinctConversationConnectorUsedCount as Long?
-                    )
-
-                /**
-                 * Alias for calling [Builder.distinctConversationConnectorUsedCount] with
-                 * `distinctConversationConnectorUsedCount.orElse(null)`.
-                 */
-                fun distinctConversationConnectorUsedCount(
-                    distinctConversationConnectorUsedCount: Optional<Long>
-                ) =
-                    distinctConversationConnectorUsedCount(
-                        distinctConversationConnectorUsedCount.getOrNull()
-                    )
-
-                /**
-                 * Sets [Builder.distinctConversationConnectorUsedCount] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.distinctConversationConnectorUsedCount] with a
-                 * well-typed [Long] value instead. This method is primarily for setting the field
-                 * to an undocumented or not yet supported value.
-                 */
-                fun distinctConversationConnectorUsedCount(
-                    distinctConversationConnectorUsedCount: JsonField<Long>
-                ) = apply {
-                    this.distinctConversationConnectorUsedCount =
-                        distinctConversationConnectorUsedCount
-                }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [Chat].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .distinctConversationConnectorUsedCount()
-                 * ```
-                 *
-                 * @throws IllegalStateException if any required field is unset.
-                 */
-                fun build(): Chat =
-                    Chat(
-                        checkRequired(
-                            "distinctConversationConnectorUsedCount",
-                            distinctConversationConnectorUsedCount,
-                        ),
-                        additionalProperties.toMutableMap(),
-                    )
-            }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws AnthropicInvalidDataException if any value type in this object doesn't match
-             *   its expected type.
-             */
-            fun validate(): Chat = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                distinctConversationConnectorUsedCount()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: AnthropicInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                (if (distinctConversationConnectorUsedCount.asKnown().isPresent) 1 else 0)
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Chat &&
-                    distinctConversationConnectorUsedCount ==
-                        other.distinctConversationConnectorUsedCount &&
-                    additionalProperties == other.additionalProperties
-            }
-
-            private val hashCode: Int by lazy {
-                Objects.hash(distinctConversationConnectorUsedCount, additionalProperties)
-            }
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() =
-                "Chat{distinctConversationConnectorUsedCount=$distinctConversationConnectorUsedCount, additionalProperties=$additionalProperties}"
-        }
-
-        /**
-         * A connector's use in Cowork sessions recorded while members had Chat and Cowork unified
-         * turned on.
-         */
-        class Sessions
-        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-        private constructor(
-            private val distinctSessionConnectorUsedCount: JsonField<Long>,
-            private val additionalProperties: MutableMap<String, JsonValue>,
-        ) {
-
-            @JsonCreator
-            private constructor(
-                @JsonProperty("distinct_session_connector_used_count")
-                @ExcludeMissing
-                distinctSessionConnectorUsedCount: JsonField<Long> = JsonMissing.of()
-            ) : this(distinctSessionConnectorUsedCount, mutableMapOf())
-
-            /**
-             * Same measure as `cowork_metrics.distinct_session_connector_used_count`, for activity
-             * recorded while members had Chat and Cowork unified turned on. Approximate (HLL,
-             * typical error <2%) in date-range mode. Null on aggregated rows where a distinct count
-             * cannot be computed.
-             *
-             * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
-             *   if the server responded with an unexpected value).
-             */
-            fun distinctSessionConnectorUsedCount(): Optional<Long> =
-                distinctSessionConnectorUsedCount.getOptional(
-                    "distinct_session_connector_used_count"
-                )
-
-            /**
-             * Returns the raw JSON value of [distinctSessionConnectorUsedCount].
-             *
-             * Unlike [distinctSessionConnectorUsedCount], this method doesn't throw if the JSON
-             * field has an unexpected type.
-             */
-            @JsonProperty("distinct_session_connector_used_count")
-            @ExcludeMissing
-            fun _distinctSessionConnectorUsedCount(): JsonField<Long> =
-                distinctSessionConnectorUsedCount
-
-            @JsonAnySetter
-            private fun putAdditionalProperty(key: String, value: JsonValue) {
-                additionalProperties.put(key, value)
-            }
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> =
-                Collections.unmodifiableMap(additionalProperties)
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /**
-                 * Returns a mutable builder for constructing an instance of [Sessions].
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .distinctSessionConnectorUsedCount()
-                 * ```
-                 */
-                @JvmStatic fun builder() = Builder()
-
-                /**
-                 * Returns an immutable instance of [Sessions] with the required
-                 * [distinctSessionConnectorUsedCount] set to the given value.
-                 */
-                @JvmStatic
-                fun of(distinctSessionConnectorUsedCount: Long?) =
-                    builder()
-                        .distinctSessionConnectorUsedCount(distinctSessionConnectorUsedCount)
-                        .build()
-
-                /**
-                 * Alias for [of].
-                 *
-                 * This unboxed primitive overload exists for backwards compatibility.
-                 */
-                @JvmStatic
-                fun of(distinctSessionConnectorUsedCount: Long) =
-                    of(distinctSessionConnectorUsedCount as Long?)
-
-                /** Alias for calling [of] with `distinctSessionConnectorUsedCount.orElse(null)`. */
-                @JvmStatic
-                fun of(distinctSessionConnectorUsedCount: Optional<Long>) =
-                    of(distinctSessionConnectorUsedCount.getOrNull())
-            }
-
-            /** A builder for [Sessions]. */
-            class Builder internal constructor() {
-
-                private var distinctSessionConnectorUsedCount: JsonField<Long>? = null
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(sessions: Sessions) = apply {
-                    distinctSessionConnectorUsedCount = sessions.distinctSessionConnectorUsedCount
-                    additionalProperties = sessions.additionalProperties.toMutableMap()
-                }
-
-                /**
-                 * Same measure as `cowork_metrics.distinct_session_connector_used_count`, for
-                 * activity recorded while members had Chat and Cowork unified turned on.
-                 * Approximate (HLL, typical error <2%) in date-range mode. Null on aggregated rows
-                 * where a distinct count cannot be computed.
-                 */
-                fun distinctSessionConnectorUsedCount(distinctSessionConnectorUsedCount: Long?) =
-                    distinctSessionConnectorUsedCount(
-                        JsonField.ofNullable(distinctSessionConnectorUsedCount)
-                    )
-
-                /**
-                 * Alias for [Builder.distinctSessionConnectorUsedCount].
-                 *
-                 * This unboxed primitive overload exists for backwards compatibility.
-                 */
-                fun distinctSessionConnectorUsedCount(distinctSessionConnectorUsedCount: Long) =
-                    distinctSessionConnectorUsedCount(distinctSessionConnectorUsedCount as Long?)
-
-                /**
-                 * Alias for calling [Builder.distinctSessionConnectorUsedCount] with
-                 * `distinctSessionConnectorUsedCount.orElse(null)`.
-                 */
-                fun distinctSessionConnectorUsedCount(
-                    distinctSessionConnectorUsedCount: Optional<Long>
-                ) = distinctSessionConnectorUsedCount(distinctSessionConnectorUsedCount.getOrNull())
-
-                /**
-                 * Sets [Builder.distinctSessionConnectorUsedCount] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.distinctSessionConnectorUsedCount] with a
-                 * well-typed [Long] value instead. This method is primarily for setting the field
-                 * to an undocumented or not yet supported value.
-                 */
-                fun distinctSessionConnectorUsedCount(
-                    distinctSessionConnectorUsedCount: JsonField<Long>
-                ) = apply {
-                    this.distinctSessionConnectorUsedCount = distinctSessionConnectorUsedCount
-                }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [Sessions].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .distinctSessionConnectorUsedCount()
-                 * ```
-                 *
-                 * @throws IllegalStateException if any required field is unset.
-                 */
-                fun build(): Sessions =
-                    Sessions(
-                        checkRequired(
-                            "distinctSessionConnectorUsedCount",
-                            distinctSessionConnectorUsedCount,
-                        ),
-                        additionalProperties.toMutableMap(),
-                    )
-            }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws AnthropicInvalidDataException if any value type in this object doesn't match
-             *   its expected type.
-             */
-            fun validate(): Sessions = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                distinctSessionConnectorUsedCount()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: AnthropicInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                (if (distinctSessionConnectorUsedCount.asKnown().isPresent) 1 else 0)
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Sessions &&
-                    distinctSessionConnectorUsedCount == other.distinctSessionConnectorUsedCount &&
-                    additionalProperties == other.additionalProperties
-            }
-
-            private val hashCode: Int by lazy {
-                Objects.hash(distinctSessionConnectorUsedCount, additionalProperties)
-            }
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() =
-                "Sessions{distinctSessionConnectorUsedCount=$distinctSessionConnectorUsedCount, additionalProperties=$additionalProperties}"
-        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
