@@ -1230,6 +1230,15 @@ private constructor(
         fun ofAdvisorTool20260301(model: Model) =
             ofAdvisorTool20260301(BetaAdvisorTool20260301.of(model))
 
+        /**
+         * Alias for calling [ofAdvisorTool20260301] with `Model.of(value)`.
+         *
+         * You should usually call [ofAdvisorTool20260301] with a well-typed [Model] constant
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        @JvmStatic fun ofAdvisorTool20260301(value: String) = ofAdvisorTool20260301(Model.of(value))
+
         @JvmStatic
         fun ofSearchToolBm25_20251119(searchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
             BetaToolUnion(searchToolBm25_20251119 = searchToolBm25_20251119)

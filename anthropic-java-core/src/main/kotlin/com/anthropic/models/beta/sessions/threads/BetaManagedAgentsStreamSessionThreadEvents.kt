@@ -9,6 +9,8 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentMessagePreview
+import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentThinkingPreview
 import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
@@ -1911,6 +1913,22 @@ private constructor(
                     .event(event)
                     .build()
             )
+
+        /**
+         * Alias for calling [ofEventStart] with
+         * `BetaManagedAgentsStartEventPreview.ofAgentMessage(agentMessage)`.
+         */
+        @JvmStatic
+        fun ofEventStart(agentMessage: BetaManagedAgentsAgentMessagePreview) =
+            ofEventStart(BetaManagedAgentsStartEventPreview.ofAgentMessage(agentMessage))
+
+        /**
+         * Alias for calling [ofEventStart] with
+         * `BetaManagedAgentsStartEventPreview.ofAgentThinking(agentThinking)`.
+         */
+        @JvmStatic
+        fun ofEventStart(agentThinking: BetaManagedAgentsAgentThinkingPreview) =
+            ofEventStart(BetaManagedAgentsStartEventPreview.ofAgentThinking(agentThinking))
 
         /**
          * An incremental update to an event that is still being streamed. Deltas are best-effort

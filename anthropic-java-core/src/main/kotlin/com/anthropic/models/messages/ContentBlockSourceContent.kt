@@ -173,6 +173,16 @@ private constructor(
          * built from the given required [source].
          */
         @JvmStatic fun ofImage(source: ImageBlockParam.Source) = ofImage(ImageBlockParam.of(source))
+
+        /** Alias for calling [ofImage] with `ImageBlockParam.Source.ofBase64(base64)`. */
+        @JvmStatic
+        fun ofImage(base64: Base64ImageSource) = ofImage(ImageBlockParam.Source.ofBase64(base64))
+
+        /** Alias for calling [ofImage] with `ImageBlockParam.Source.ofUrl(url)`. */
+        @JvmStatic fun ofImage(url: UrlImageSource) = ofImage(ImageBlockParam.Source.ofUrl(url))
+
+        /** Alias for calling [ofImage] with `ImageBlockParam.Source.ofFile(file)`. */
+        @JvmStatic fun ofImage(file: FileImageSource) = ofImage(ImageBlockParam.Source.ofFile(file))
     }
 
     /**

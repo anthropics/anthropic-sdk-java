@@ -112,6 +112,14 @@ private constructor(
          * to the given value.
          */
         @JvmStatic fun of(target: BrowserClickTarget) = builder().target(target).build()
+
+        /** Alias for calling [of] with `BrowserClickTarget.ofCoordinate(coordinate)`. */
+        @JvmStatic
+        fun of(coordinate: BrowserCoordinateTarget) =
+            of(BrowserClickTarget.ofCoordinate(coordinate))
+
+        /** Alias for calling [of] with `BrowserClickTarget.ofRef(ref)`. */
+        @JvmStatic fun of(ref: BrowserRefTarget) = of(BrowserClickTarget.ofRef(ref))
     }
 
     /** A builder for [BrowserTripleClickInput]. */

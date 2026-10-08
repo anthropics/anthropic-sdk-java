@@ -88,6 +88,39 @@ private constructor(
         /** Alias for calling [of] with `cacheMissReason.orElse(null)`. */
         @JvmStatic
         fun of(cacheMissReason: Optional<BetaCacheMissReason>) = of(cacheMissReason.getOrNull())
+
+        /** Alias for calling [of] with `BetaCacheMissReason.ofModelChanged(modelChanged)`. */
+        @JvmStatic
+        fun of(modelChanged: BetaCacheMissModelChanged) =
+            of(BetaCacheMissReason.ofModelChanged(modelChanged))
+
+        /** Alias for calling [of] with `BetaCacheMissReason.ofSystemChanged(systemChanged)`. */
+        @JvmStatic
+        fun of(systemChanged: BetaCacheMissSystemChanged) =
+            of(BetaCacheMissReason.ofSystemChanged(systemChanged))
+
+        /** Alias for calling [of] with `BetaCacheMissReason.ofToolsChanged(toolsChanged)`. */
+        @JvmStatic
+        fun of(toolsChanged: BetaCacheMissToolsChanged) =
+            of(BetaCacheMissReason.ofToolsChanged(toolsChanged))
+
+        /** Alias for calling [of] with `BetaCacheMissReason.ofMessagesChanged(messagesChanged)`. */
+        @JvmStatic
+        fun of(messagesChanged: BetaCacheMissMessagesChanged) =
+            of(BetaCacheMissReason.ofMessagesChanged(messagesChanged))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaCacheMissReason.ofPreviousMessageNotFound(previousMessageNotFound)`.
+         */
+        @JvmStatic
+        fun of(previousMessageNotFound: BetaCacheMissPreviousMessageNotFound) =
+            of(BetaCacheMissReason.ofPreviousMessageNotFound(previousMessageNotFound))
+
+        /** Alias for calling [of] with `BetaCacheMissReason.ofUnavailable(unavailable)`. */
+        @JvmStatic
+        fun of(unavailable: BetaCacheMissUnavailable) =
+            of(BetaCacheMissReason.ofUnavailable(unavailable))
     }
 
     /** A builder for [BetaDiagnostics]. */

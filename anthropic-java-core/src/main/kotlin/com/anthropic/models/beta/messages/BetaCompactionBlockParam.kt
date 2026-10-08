@@ -1058,6 +1058,60 @@ private constructor(
                 ofAddition(BetaRequestToolAdditionBlock.of(tool))
 
             /**
+             * Alias for calling [ofAddition] with
+             * `BetaRequestToolAdditionBlock.Tool.ofReference(reference)`.
+             */
+            @JvmStatic
+            fun ofAddition(reference: BetaToolChangeToolReference) =
+                ofAddition(BetaRequestToolAdditionBlock.Tool.ofReference(reference))
+
+            /** Alias for calling [ofAddition] with `reference.toParam()`. */
+            @JvmStatic
+            fun ofAddition(reference: BetaResponseToolChangeToolReference) =
+                ofAddition(reference.toParam())
+
+            /**
+             * Alias for calling [ofAddition] with
+             * `BetaRequestToolAdditionBlock.Tool.ofMcpToolReference(mcpToolReference)`.
+             */
+            @JvmStatic
+            fun ofAddition(mcpToolReference: BetaToolChangeMcpToolReference) =
+                ofAddition(BetaRequestToolAdditionBlock.Tool.ofMcpToolReference(mcpToolReference))
+
+            /** Alias for calling [ofAddition] with `mcpToolReference.toParam()`. */
+            @JvmStatic
+            fun ofAddition(mcpToolReference: BetaResponseToolChangeMcpToolReference) =
+                ofAddition(mcpToolReference.toParam())
+
+            /**
+             * Alias for calling [ofAddition] with
+             * `BetaRequestToolAdditionBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)`.
+             */
+            @JvmStatic
+            fun ofAddition(mcpToolsetReference: BetaToolChangeMcpToolsetReference) =
+                ofAddition(
+                    BetaRequestToolAdditionBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)
+                )
+
+            /** Alias for calling [ofAddition] with `mcpToolsetReference.toParam()`. */
+            @JvmStatic
+            fun ofAddition(mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference) =
+                ofAddition(mcpToolsetReference.toParam())
+
+            /**
+             * Alias for calling [ofAddition] with
+             * `BetaRequestToolAdditionBlock.Tool.ofDefinition(definition)`.
+             */
+            @JvmStatic
+            fun ofAddition(definition: BetaToolChangeToolDefinitionParam) =
+                ofAddition(BetaRequestToolAdditionBlock.Tool.ofDefinition(definition))
+
+            /** Alias for calling [ofAddition] with `definition.toParam()`. */
+            @JvmStatic
+            fun ofAddition(definition: BetaToolChangeToolDefinition) =
+                ofAddition(definition.toParam())
+
+            /**
              * Mid-conversation directive to withdraw a tool.
              *
              * ``tool`` references a tool (or MCP toolset) by name: one declared in the request's
@@ -1074,6 +1128,47 @@ private constructor(
             @JvmStatic
             fun ofRemoval(tool: BetaRequestToolRemovalBlock.Tool) =
                 ofRemoval(BetaRequestToolRemovalBlock.of(tool))
+
+            /**
+             * Alias for calling [ofRemoval] with
+             * `BetaRequestToolRemovalBlock.Tool.ofReference(reference)`.
+             */
+            @JvmStatic
+            fun ofRemoval(reference: BetaToolChangeToolReference) =
+                ofRemoval(BetaRequestToolRemovalBlock.Tool.ofReference(reference))
+
+            /** Alias for calling [ofRemoval] with `reference.toParam()`. */
+            @JvmStatic
+            fun ofRemoval(reference: BetaResponseToolChangeToolReference) =
+                ofRemoval(reference.toParam())
+
+            /**
+             * Alias for calling [ofRemoval] with
+             * `BetaRequestToolRemovalBlock.Tool.ofMcpToolReference(mcpToolReference)`.
+             */
+            @JvmStatic
+            fun ofRemoval(mcpToolReference: BetaToolChangeMcpToolReference) =
+                ofRemoval(BetaRequestToolRemovalBlock.Tool.ofMcpToolReference(mcpToolReference))
+
+            /** Alias for calling [ofRemoval] with `mcpToolReference.toParam()`. */
+            @JvmStatic
+            fun ofRemoval(mcpToolReference: BetaResponseToolChangeMcpToolReference) =
+                ofRemoval(mcpToolReference.toParam())
+
+            /**
+             * Alias for calling [ofRemoval] with
+             * `BetaRequestToolRemovalBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)`.
+             */
+            @JvmStatic
+            fun ofRemoval(mcpToolsetReference: BetaToolChangeMcpToolsetReference) =
+                ofRemoval(
+                    BetaRequestToolRemovalBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)
+                )
+
+            /** Alias for calling [ofRemoval] with `mcpToolsetReference.toParam()`. */
+            @JvmStatic
+            fun ofRemoval(mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference) =
+                ofRemoval(mcpToolsetReference.toParam())
         }
 
         /**

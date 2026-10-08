@@ -519,6 +519,20 @@ private constructor(
              * value.
              */
             @JvmStatic fun of(auth: Auth) = builder().auth(auth).build()
+
+            /** Alias for calling [of] with `Auth.ofMcpOAuth(mcpOAuth)`. */
+            @JvmStatic
+            fun of(mcpOAuth: BetaManagedAgentsMcpOAuthCreateParams) = of(Auth.ofMcpOAuth(mcpOAuth))
+
+            /** Alias for calling [of] with `Auth.ofStaticBearer(staticBearer)`. */
+            @JvmStatic
+            fun of(staticBearer: BetaManagedAgentsStaticBearerCreateParams) =
+                of(Auth.ofStaticBearer(staticBearer))
+
+            /** Alias for calling [of] with `Auth.ofEnvironmentVariable(environmentVariable)`. */
+            @JvmStatic
+            fun of(environmentVariable: BetaManagedAgentsEnvironmentVariableCreateParams) =
+                of(Auth.ofEnvironmentVariable(environmentVariable))
         }
 
         /** A builder for [Body]. */

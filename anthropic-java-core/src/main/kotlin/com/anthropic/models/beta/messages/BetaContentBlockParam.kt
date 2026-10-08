@@ -847,6 +847,19 @@ private constructor(
         @JvmStatic
         fun ofImage(source: BetaImageBlockParam.Source) = ofImage(BetaImageBlockParam.of(source))
 
+        /** Alias for calling [ofImage] with `BetaImageBlockParam.Source.ofBase64(base64)`. */
+        @JvmStatic
+        fun ofImage(base64: BetaBase64ImageSource) =
+            ofImage(BetaImageBlockParam.Source.ofBase64(base64))
+
+        /** Alias for calling [ofImage] with `BetaImageBlockParam.Source.ofUrl(url)`. */
+        @JvmStatic
+        fun ofImage(url: BetaUrlImageSource) = ofImage(BetaImageBlockParam.Source.ofUrl(url))
+
+        /** Alias for calling [ofImage] with `BetaImageBlockParam.Source.ofFile(file)`. */
+        @JvmStatic
+        fun ofImage(file: BetaFileImageSource) = ofImage(BetaImageBlockParam.Source.ofFile(file))
+
         /**
          * Document content, either specified directly as base64 data, as text, or as a reference
          * via a URL.
@@ -862,6 +875,35 @@ private constructor(
         @JvmStatic
         fun ofDocument(source: BetaRequestDocumentBlock.Source) =
             ofDocument(BetaRequestDocumentBlock.of(source))
+
+        /**
+         * Alias for calling [ofDocument] with `BetaRequestDocumentBlock.Source.ofBase64(base64)`.
+         */
+        @JvmStatic
+        fun ofDocument(base64: BetaBase64PdfSource) =
+            ofDocument(BetaRequestDocumentBlock.Source.ofBase64(base64))
+
+        /** Alias for calling [ofDocument] with `BetaRequestDocumentBlock.Source.ofText(text)`. */
+        @JvmStatic
+        fun ofDocument(text: BetaPlainTextSource) =
+            ofDocument(BetaRequestDocumentBlock.Source.ofText(text))
+
+        /**
+         * Alias for calling [ofDocument] with `BetaRequestDocumentBlock.Source.ofContent(content)`.
+         */
+        @JvmStatic
+        fun ofDocument(content: BetaContentBlockSource) =
+            ofDocument(BetaRequestDocumentBlock.Source.ofContent(content))
+
+        /** Alias for calling [ofDocument] with `BetaRequestDocumentBlock.Source.ofUrl(url)`. */
+        @JvmStatic
+        fun ofDocument(url: BetaUrlPdfSource) =
+            ofDocument(BetaRequestDocumentBlock.Source.ofUrl(url))
+
+        /** Alias for calling [ofDocument] with `BetaRequestDocumentBlock.Source.ofFile(file)`. */
+        @JvmStatic
+        fun ofDocument(file: BetaFileDocumentSource) =
+            ofDocument(BetaRequestDocumentBlock.Source.ofFile(file))
 
         /** A search result block containing source, title, and content from search operations. */
         @JvmStatic
@@ -1008,6 +1050,60 @@ private constructor(
             ofToolAddition(BetaRequestToolAdditionBlock.of(tool))
 
         /**
+         * Alias for calling [ofToolAddition] with
+         * `BetaRequestToolAdditionBlock.Tool.ofReference(reference)`.
+         */
+        @JvmStatic
+        fun ofToolAddition(reference: BetaToolChangeToolReference) =
+            ofToolAddition(BetaRequestToolAdditionBlock.Tool.ofReference(reference))
+
+        /** Alias for calling [ofToolAddition] with `reference.toParam()`. */
+        @JvmStatic
+        fun ofToolAddition(reference: BetaResponseToolChangeToolReference) =
+            ofToolAddition(reference.toParam())
+
+        /**
+         * Alias for calling [ofToolAddition] with
+         * `BetaRequestToolAdditionBlock.Tool.ofMcpToolReference(mcpToolReference)`.
+         */
+        @JvmStatic
+        fun ofToolAddition(mcpToolReference: BetaToolChangeMcpToolReference) =
+            ofToolAddition(BetaRequestToolAdditionBlock.Tool.ofMcpToolReference(mcpToolReference))
+
+        /** Alias for calling [ofToolAddition] with `mcpToolReference.toParam()`. */
+        @JvmStatic
+        fun ofToolAddition(mcpToolReference: BetaResponseToolChangeMcpToolReference) =
+            ofToolAddition(mcpToolReference.toParam())
+
+        /**
+         * Alias for calling [ofToolAddition] with
+         * `BetaRequestToolAdditionBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)`.
+         */
+        @JvmStatic
+        fun ofToolAddition(mcpToolsetReference: BetaToolChangeMcpToolsetReference) =
+            ofToolAddition(
+                BetaRequestToolAdditionBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)
+            )
+
+        /** Alias for calling [ofToolAddition] with `mcpToolsetReference.toParam()`. */
+        @JvmStatic
+        fun ofToolAddition(mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference) =
+            ofToolAddition(mcpToolsetReference.toParam())
+
+        /**
+         * Alias for calling [ofToolAddition] with
+         * `BetaRequestToolAdditionBlock.Tool.ofDefinition(definition)`.
+         */
+        @JvmStatic
+        fun ofToolAddition(definition: BetaToolChangeToolDefinitionParam) =
+            ofToolAddition(BetaRequestToolAdditionBlock.Tool.ofDefinition(definition))
+
+        /** Alias for calling [ofToolAddition] with `definition.toParam()`. */
+        @JvmStatic
+        fun ofToolAddition(definition: BetaToolChangeToolDefinition) =
+            ofToolAddition(definition.toParam())
+
+        /**
          * Mid-conversation directive to withdraw a tool.
          *
          * ``tool`` references a tool (or MCP toolset) by name: one declared in the request's
@@ -1025,6 +1121,47 @@ private constructor(
         @JvmStatic
         fun ofToolRemoval(tool: BetaRequestToolRemovalBlock.Tool) =
             ofToolRemoval(BetaRequestToolRemovalBlock.of(tool))
+
+        /**
+         * Alias for calling [ofToolRemoval] with
+         * `BetaRequestToolRemovalBlock.Tool.ofReference(reference)`.
+         */
+        @JvmStatic
+        fun ofToolRemoval(reference: BetaToolChangeToolReference) =
+            ofToolRemoval(BetaRequestToolRemovalBlock.Tool.ofReference(reference))
+
+        /** Alias for calling [ofToolRemoval] with `reference.toParam()`. */
+        @JvmStatic
+        fun ofToolRemoval(reference: BetaResponseToolChangeToolReference) =
+            ofToolRemoval(reference.toParam())
+
+        /**
+         * Alias for calling [ofToolRemoval] with
+         * `BetaRequestToolRemovalBlock.Tool.ofMcpToolReference(mcpToolReference)`.
+         */
+        @JvmStatic
+        fun ofToolRemoval(mcpToolReference: BetaToolChangeMcpToolReference) =
+            ofToolRemoval(BetaRequestToolRemovalBlock.Tool.ofMcpToolReference(mcpToolReference))
+
+        /** Alias for calling [ofToolRemoval] with `mcpToolReference.toParam()`. */
+        @JvmStatic
+        fun ofToolRemoval(mcpToolReference: BetaResponseToolChangeMcpToolReference) =
+            ofToolRemoval(mcpToolReference.toParam())
+
+        /**
+         * Alias for calling [ofToolRemoval] with
+         * `BetaRequestToolRemovalBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)`.
+         */
+        @JvmStatic
+        fun ofToolRemoval(mcpToolsetReference: BetaToolChangeMcpToolsetReference) =
+            ofToolRemoval(
+                BetaRequestToolRemovalBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)
+            )
+
+        /** Alias for calling [ofToolRemoval] with `mcpToolsetReference.toParam()`. */
+        @JvmStatic
+        fun ofToolRemoval(mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference) =
+            ofToolRemoval(mcpToolsetReference.toParam())
 
         /**
          * The tool listing an MCP server returned while an earlier response was produced, as that

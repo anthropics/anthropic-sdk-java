@@ -94,6 +94,32 @@ private constructor(
          * the given value.
          */
         @JvmStatic fun of(citation: Citation) = builder().citation(citation).build()
+
+        /** Alias for calling [of] with `Citation.ofCharLocation(charLocation)`. */
+        @JvmStatic
+        fun of(charLocation: BetaCitationCharLocation) = of(Citation.ofCharLocation(charLocation))
+
+        /** Alias for calling [of] with `Citation.ofPageLocation(pageLocation)`. */
+        @JvmStatic
+        fun of(pageLocation: BetaCitationPageLocation) = of(Citation.ofPageLocation(pageLocation))
+
+        /** Alias for calling [of] with `Citation.ofContentBlockLocation(contentBlockLocation)`. */
+        @JvmStatic
+        fun of(contentBlockLocation: BetaCitationContentBlockLocation) =
+            of(Citation.ofContentBlockLocation(contentBlockLocation))
+
+        /**
+         * Alias for calling [of] with
+         * `Citation.ofWebSearchResultLocation(webSearchResultLocation)`.
+         */
+        @JvmStatic
+        fun of(webSearchResultLocation: BetaCitationsWebSearchResultLocation) =
+            of(Citation.ofWebSearchResultLocation(webSearchResultLocation))
+
+        /** Alias for calling [of] with `Citation.ofSearchResultLocation(searchResultLocation)`. */
+        @JvmStatic
+        fun of(searchResultLocation: BetaCitationSearchResultLocation) =
+            of(Citation.ofSearchResultLocation(searchResultLocation))
     }
 
     /** A builder for [BetaCitationsDelta]. */

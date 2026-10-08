@@ -96,6 +96,223 @@ private constructor(
          */
         @JvmStatic
         fun of(definition: BetaResponseToolUnion) = builder().definition(definition).build()
+
+        /**
+         * Alias for calling [of] with `BetaResponseToolUnion.ofBetaResponseTool(betaResponseTool)`.
+         */
+        @JvmStatic
+        fun of(betaResponseTool: BetaResponseTool) =
+            of(BetaResponseToolUnion.ofBetaResponseTool(betaResponseTool))
+
+        /**
+         * Alias for calling [of] with `BetaResponseToolUnion.ofToolBash20241022(toolBash20241022)`.
+         */
+        @JvmStatic
+        fun of(toolBash20241022: BetaToolBash20241022) =
+            of(BetaResponseToolUnion.ofToolBash20241022(toolBash20241022))
+
+        /**
+         * Alias for calling [of] with `BetaResponseToolUnion.ofToolBash20250124(toolBash20250124)`.
+         */
+        @JvmStatic
+        fun of(toolBash20250124: BetaToolBash20250124) =
+            of(BetaResponseToolUnion.ofToolBash20250124(toolBash20250124))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522)`.
+         */
+        @JvmStatic
+        fun of(codeExecutionTool20250522: BetaCodeExecutionTool20250522) =
+            of(BetaResponseToolUnion.ofCodeExecutionTool20250522(codeExecutionTool20250522))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825)`.
+         */
+        @JvmStatic
+        fun of(codeExecutionTool20250825: BetaCodeExecutionTool20250825) =
+            of(BetaResponseToolUnion.ofCodeExecutionTool20250825(codeExecutionTool20250825))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120)`.
+         */
+        @JvmStatic
+        fun of(codeExecutionTool20260120: BetaCodeExecutionTool20260120) =
+            of(BetaResponseToolUnion.ofCodeExecutionTool20260120(codeExecutionTool20260120))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521)`.
+         */
+        @JvmStatic
+        fun of(codeExecutionTool20260521: BetaCodeExecutionTool20260521) =
+            of(BetaResponseToolUnion.ofCodeExecutionTool20260521(codeExecutionTool20260521))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofBrowserToolset20260801(browserToolset20260801)`.
+         */
+        @JvmStatic
+        fun of(browserToolset20260801: BetaBrowserToolset20260801) =
+            of(BetaResponseToolUnion.ofBrowserToolset20260801(browserToolset20260801))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofToolComputerUse20241022(toolComputerUse20241022)`.
+         */
+        @JvmStatic
+        fun of(toolComputerUse20241022: BetaToolComputerUse20241022) =
+            of(BetaResponseToolUnion.ofToolComputerUse20241022(toolComputerUse20241022))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofMemoryTool20250818(memoryTool20250818)`.
+         */
+        @JvmStatic
+        fun of(memoryTool20250818: BetaMemoryTool20250818) =
+            of(BetaResponseToolUnion.ofMemoryTool20250818(memoryTool20250818))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofToolComputerUse20250124(toolComputerUse20250124)`.
+         */
+        @JvmStatic
+        fun of(toolComputerUse20250124: BetaToolComputerUse20250124) =
+            of(BetaResponseToolUnion.ofToolComputerUse20250124(toolComputerUse20250124))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofToolTextEditor20241022(toolTextEditor20241022)`.
+         */
+        @JvmStatic
+        fun of(toolTextEditor20241022: BetaToolTextEditor20241022) =
+            of(BetaResponseToolUnion.ofToolTextEditor20241022(toolTextEditor20241022))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofToolComputerUse20251124(toolComputerUse20251124)`.
+         */
+        @JvmStatic
+        fun of(toolComputerUse20251124: BetaToolComputerUse20251124) =
+            of(BetaResponseToolUnion.ofToolComputerUse20251124(toolComputerUse20251124))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofComputerToolset20260801(computerToolset20260801)`.
+         */
+        @JvmStatic
+        fun of(computerToolset20260801: BetaComputerToolset20260801) =
+            of(BetaResponseToolUnion.ofComputerToolset20260801(computerToolset20260801))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofToolTextEditor20250124(toolTextEditor20250124)`.
+         */
+        @JvmStatic
+        fun of(toolTextEditor20250124: BetaToolTextEditor20250124) =
+            of(BetaResponseToolUnion.ofToolTextEditor20250124(toolTextEditor20250124))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofToolTextEditor20250429(toolTextEditor20250429)`.
+         */
+        @JvmStatic
+        fun of(toolTextEditor20250429: BetaToolTextEditor20250429) =
+            of(BetaResponseToolUnion.ofToolTextEditor20250429(toolTextEditor20250429))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofToolTextEditor20250728(toolTextEditor20250728)`.
+         */
+        @JvmStatic
+        fun of(toolTextEditor20250728: BetaToolTextEditor20250728) =
+            of(BetaResponseToolUnion.ofToolTextEditor20250728(toolTextEditor20250728))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofWebSearchTool20250305(webSearchTool20250305)`.
+         */
+        @JvmStatic
+        fun of(webSearchTool20250305: BetaWebSearchTool20250305) =
+            of(BetaResponseToolUnion.ofWebSearchTool20250305(webSearchTool20250305))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofWebFetchTool20250910(webFetchTool20250910)`.
+         */
+        @JvmStatic
+        fun of(webFetchTool20250910: BetaWebFetchTool20250910) =
+            of(BetaResponseToolUnion.ofWebFetchTool20250910(webFetchTool20250910))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofWebSearchTool20260209(webSearchTool20260209)`.
+         */
+        @JvmStatic
+        fun of(webSearchTool20260209: BetaWebSearchTool20260209) =
+            of(BetaResponseToolUnion.ofWebSearchTool20260209(webSearchTool20260209))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofWebFetchTool20260209(webFetchTool20260209)`.
+         */
+        @JvmStatic
+        fun of(webFetchTool20260209: BetaWebFetchTool20260209) =
+            of(BetaResponseToolUnion.ofWebFetchTool20260209(webFetchTool20260209))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofWebFetchTool20260309(webFetchTool20260309)`.
+         */
+        @JvmStatic
+        fun of(webFetchTool20260309: BetaWebFetchTool20260309) =
+            of(BetaResponseToolUnion.ofWebFetchTool20260309(webFetchTool20260309))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofWebSearchTool20260318(webSearchTool20260318)`.
+         */
+        @JvmStatic
+        fun of(webSearchTool20260318: BetaWebSearchTool20260318) =
+            of(BetaResponseToolUnion.ofWebSearchTool20260318(webSearchTool20260318))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofWebFetchTool20260318(webFetchTool20260318)`.
+         */
+        @JvmStatic
+        fun of(webFetchTool20260318: BetaWebFetchTool20260318) =
+            of(BetaResponseToolUnion.ofWebFetchTool20260318(webFetchTool20260318))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofAdvisorTool20260301(advisorTool20260301)`.
+         */
+        @JvmStatic
+        fun of(advisorTool20260301: BetaAdvisorTool20260301) =
+            of(BetaResponseToolUnion.ofAdvisorTool20260301(advisorTool20260301))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofToolSearchToolBm25_20251119(toolSearchToolBm25_20251119)`.
+         */
+        @JvmStatic
+        fun of(toolSearchToolBm25_20251119: BetaToolSearchToolBm25_20251119) =
+            of(BetaResponseToolUnion.ofToolSearchToolBm25_20251119(toolSearchToolBm25_20251119))
+
+        /**
+         * Alias for calling [of] with
+         * `BetaResponseToolUnion.ofToolSearchToolRegex20251119(toolSearchToolRegex20251119)`.
+         */
+        @JvmStatic
+        fun of(toolSearchToolRegex20251119: BetaToolSearchToolRegex20251119) =
+            of(BetaResponseToolUnion.ofToolSearchToolRegex20251119(toolSearchToolRegex20251119))
+
+        /** Alias for calling [of] with `BetaResponseToolUnion.ofMcpToolset(mcpToolset)`. */
+        @JvmStatic
+        fun of(mcpToolset: BetaMcpToolset) = of(BetaResponseToolUnion.ofMcpToolset(mcpToolset))
     }
 
     /** A builder for [BetaToolChangeToolDefinition]. */

@@ -220,6 +220,46 @@ private constructor(
         fun ofCitations(citation: CitationsDelta.Citation) =
             ofCitations(CitationsDelta.of(citation))
 
+        /**
+         * Alias for calling [ofCitations] with
+         * `CitationsDelta.Citation.ofCharLocation(charLocation)`.
+         */
+        @JvmStatic
+        fun ofCitations(charLocation: CitationCharLocation) =
+            ofCitations(CitationsDelta.Citation.ofCharLocation(charLocation))
+
+        /**
+         * Alias for calling [ofCitations] with
+         * `CitationsDelta.Citation.ofPageLocation(pageLocation)`.
+         */
+        @JvmStatic
+        fun ofCitations(pageLocation: CitationPageLocation) =
+            ofCitations(CitationsDelta.Citation.ofPageLocation(pageLocation))
+
+        /**
+         * Alias for calling [ofCitations] with
+         * `CitationsDelta.Citation.ofContentBlockLocation(contentBlockLocation)`.
+         */
+        @JvmStatic
+        fun ofCitations(contentBlockLocation: CitationContentBlockLocation) =
+            ofCitations(CitationsDelta.Citation.ofContentBlockLocation(contentBlockLocation))
+
+        /**
+         * Alias for calling [ofCitations] with
+         * `CitationsDelta.Citation.ofWebSearchResultLocation(webSearchResultLocation)`.
+         */
+        @JvmStatic
+        fun ofCitations(webSearchResultLocation: CitationsWebSearchResultLocation) =
+            ofCitations(CitationsDelta.Citation.ofWebSearchResultLocation(webSearchResultLocation))
+
+        /**
+         * Alias for calling [ofCitations] with
+         * `CitationsDelta.Citation.ofSearchResultLocation(searchResultLocation)`.
+         */
+        @JvmStatic
+        fun ofCitations(searchResultLocation: CitationsSearchResultLocation) =
+            ofCitations(CitationsDelta.Citation.ofSearchResultLocation(searchResultLocation))
+
         @JvmStatic
         fun ofThinking(thinking: ThinkingDelta) = RawContentBlockDelta(thinking = thinking)
 

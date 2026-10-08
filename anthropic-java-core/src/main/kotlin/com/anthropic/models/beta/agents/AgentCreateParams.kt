@@ -1567,6 +1567,18 @@ private constructor(
             @JvmStatic
             fun ofBetaManagedAgentsModelConfigParams(id: BetaManagedAgentsModel) =
                 ofBetaManagedAgentsModelConfigParams(BetaManagedAgentsModelConfigParams.of(id))
+
+            /**
+             * Alias for calling [ofBetaManagedAgentsModelConfigParams] with
+             * `BetaManagedAgentsModel.of(value)`.
+             *
+             * You should usually call [ofBetaManagedAgentsModelConfigParams] with a well-typed
+             * [BetaManagedAgentsModel] constant instead. This method is primarily for setting the
+             * field to an undocumented or not yet supported value.
+             */
+            @JvmStatic
+            fun ofBetaManagedAgentsModelConfigParams(value: String) =
+                ofBetaManagedAgentsModelConfigParams(BetaManagedAgentsModel.of(value))
         }
 
         /** An interface that defines how to map each variant of [Model] to a value of type [T]. */

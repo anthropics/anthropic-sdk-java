@@ -5,6 +5,7 @@
 ### Features
 
 * **api:** add types for the Chat and Cowork unified analytics metrics
+* **client:** accept nested union values in single-argument factories
 
 
 ### Chores

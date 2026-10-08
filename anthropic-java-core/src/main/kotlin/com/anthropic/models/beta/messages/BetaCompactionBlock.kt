@@ -981,6 +981,40 @@ private constructor(
                 ofAddition(BetaResponseToolAdditionBlock.of(tool))
 
             /**
+             * Alias for calling [ofAddition] with
+             * `BetaResponseToolAdditionBlock.Tool.ofReference(reference)`.
+             */
+            @JvmStatic
+            fun ofAddition(reference: BetaResponseToolChangeToolReference) =
+                ofAddition(BetaResponseToolAdditionBlock.Tool.ofReference(reference))
+
+            /**
+             * Alias for calling [ofAddition] with
+             * `BetaResponseToolAdditionBlock.Tool.ofMcpToolReference(mcpToolReference)`.
+             */
+            @JvmStatic
+            fun ofAddition(mcpToolReference: BetaResponseToolChangeMcpToolReference) =
+                ofAddition(BetaResponseToolAdditionBlock.Tool.ofMcpToolReference(mcpToolReference))
+
+            /**
+             * Alias for calling [ofAddition] with
+             * `BetaResponseToolAdditionBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)`.
+             */
+            @JvmStatic
+            fun ofAddition(mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference) =
+                ofAddition(
+                    BetaResponseToolAdditionBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)
+                )
+
+            /**
+             * Alias for calling [ofAddition] with
+             * `BetaResponseToolAdditionBlock.Tool.ofDefinition(definition)`.
+             */
+            @JvmStatic
+            fun ofAddition(definition: BetaToolChangeToolDefinition) =
+                ofAddition(BetaResponseToolAdditionBlock.Tool.ofDefinition(definition))
+
+            /**
              * An entry of a `compaction` block's `tool_changes`: a tool of the request's `tools`
              * (or an MCP tool or toolset) that the compacted range withdrew. Send it back
              * unchanged.
@@ -995,6 +1029,32 @@ private constructor(
             @JvmStatic
             fun ofRemoval(tool: BetaResponseToolRemovalBlock.Tool) =
                 ofRemoval(BetaResponseToolRemovalBlock.of(tool))
+
+            /**
+             * Alias for calling [ofRemoval] with
+             * `BetaResponseToolRemovalBlock.Tool.ofReference(reference)`.
+             */
+            @JvmStatic
+            fun ofRemoval(reference: BetaResponseToolChangeToolReference) =
+                ofRemoval(BetaResponseToolRemovalBlock.Tool.ofReference(reference))
+
+            /**
+             * Alias for calling [ofRemoval] with
+             * `BetaResponseToolRemovalBlock.Tool.ofMcpToolReference(mcpToolReference)`.
+             */
+            @JvmStatic
+            fun ofRemoval(mcpToolReference: BetaResponseToolChangeMcpToolReference) =
+                ofRemoval(BetaResponseToolRemovalBlock.Tool.ofMcpToolReference(mcpToolReference))
+
+            /**
+             * Alias for calling [ofRemoval] with
+             * `BetaResponseToolRemovalBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)`.
+             */
+            @JvmStatic
+            fun ofRemoval(mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference) =
+                ofRemoval(
+                    BetaResponseToolRemovalBlock.Tool.ofMcpToolsetReference(mcpToolsetReference)
+                )
         }
 
         /**

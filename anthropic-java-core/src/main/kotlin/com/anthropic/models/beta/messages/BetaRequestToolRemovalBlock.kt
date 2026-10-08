@@ -123,6 +123,32 @@ private constructor(
          * set to the given value.
          */
         @JvmStatic fun of(tool: Tool) = builder().tool(tool).build()
+
+        /** Alias for calling [of] with `Tool.ofReference(reference)`. */
+        @JvmStatic fun of(reference: BetaToolChangeToolReference) = of(Tool.ofReference(reference))
+
+        /** Alias for calling [of] with `reference.toParam()`. */
+        @JvmStatic fun of(reference: BetaResponseToolChangeToolReference) = of(reference.toParam())
+
+        /** Alias for calling [of] with `Tool.ofMcpToolReference(mcpToolReference)`. */
+        @JvmStatic
+        fun of(mcpToolReference: BetaToolChangeMcpToolReference) =
+            of(Tool.ofMcpToolReference(mcpToolReference))
+
+        /** Alias for calling [of] with `mcpToolReference.toParam()`. */
+        @JvmStatic
+        fun of(mcpToolReference: BetaResponseToolChangeMcpToolReference) =
+            of(mcpToolReference.toParam())
+
+        /** Alias for calling [of] with `Tool.ofMcpToolsetReference(mcpToolsetReference)`. */
+        @JvmStatic
+        fun of(mcpToolsetReference: BetaToolChangeMcpToolsetReference) =
+            of(Tool.ofMcpToolsetReference(mcpToolsetReference))
+
+        /** Alias for calling [of] with `mcpToolsetReference.toParam()`. */
+        @JvmStatic
+        fun of(mcpToolsetReference: BetaResponseToolChangeMcpToolsetReference) =
+            of(mcpToolsetReference.toParam())
     }
 
     /** A builder for [BetaRequestToolRemovalBlock]. */

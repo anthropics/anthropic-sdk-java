@@ -94,6 +94,14 @@ private constructor(
          * the given value.
          */
         @JvmStatic fun of(content: Content) = builder().content(content).build()
+
+        /** Alias for calling [of] with `Content.ofString(string)`. */
+        @JvmStatic fun of(string: String) = of(Content.ofString(string))
+
+        /** Alias for calling [of] with `Content.ofBlockSource(blockSource)`. */
+        @JvmStatic
+        fun ofBlockSource(blockSource: List<ContentBlockSourceContent>) =
+            of(Content.ofBlockSource(blockSource))
     }
 
     /** A builder for [ContentBlockSource]. */

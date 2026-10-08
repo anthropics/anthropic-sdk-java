@@ -86,6 +86,16 @@ private constructor(
          * [state] set to the given value.
          */
         @JvmStatic fun of(state: ComplianceSettingsState) = builder().state(state).build()
+
+        /** Alias for calling [of] with `ComplianceSettingsState.ofEnabled(enabled)`. */
+        @JvmStatic
+        fun of(enabled: ComplianceSettingsStateEnabled) =
+            of(ComplianceSettingsState.ofEnabled(enabled))
+
+        /** Alias for calling [of] with `ComplianceSettingsState.ofDisabled(disabled)`. */
+        @JvmStatic
+        fun of(disabled: ComplianceSettingsStateDisabled) =
+            of(ComplianceSettingsState.ofDisabled(disabled))
     }
 
     /** A builder for [OrganizationComplianceSettings]. */

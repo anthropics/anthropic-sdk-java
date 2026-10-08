@@ -77,6 +77,14 @@ private constructor(
          * given value.
          */
         @JvmStatic fun of(model: Model) = builder().model(model).build()
+
+        /**
+         * Alias for calling [of] with `Model.of(value)`.
+         *
+         * You should usually call [of] with a well-typed [Model] constant instead. This method is
+         * primarily for setting the field to an undocumented or not yet supported value.
+         */
+        @JvmStatic fun of(value: String) = of(Model.of(value))
     }
 
     /** A builder for [BetaFallbackInfo]. */

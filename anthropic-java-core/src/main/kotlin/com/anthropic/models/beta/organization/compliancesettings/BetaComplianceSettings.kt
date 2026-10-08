@@ -87,6 +87,16 @@ private constructor(
          * to the given value.
          */
         @JvmStatic fun of(state: BetaComplianceSettingsState) = builder().state(state).build()
+
+        /** Alias for calling [of] with `BetaComplianceSettingsState.ofEnabled(enabled)`. */
+        @JvmStatic
+        fun of(enabled: BetaComplianceSettingsStateEnabled) =
+            of(BetaComplianceSettingsState.ofEnabled(enabled))
+
+        /** Alias for calling [of] with `BetaComplianceSettingsState.ofDisabled(disabled)`. */
+        @JvmStatic
+        fun of(disabled: BetaComplianceSettingsStateDisabled) =
+            of(BetaComplianceSettingsState.ofDisabled(disabled))
     }
 
     /** A builder for [BetaComplianceSettings]. */

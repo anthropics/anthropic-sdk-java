@@ -87,6 +87,13 @@ private constructor(
          * to the given value.
          */
         @JvmStatic fun of(status: Status) = builder().status(status).build()
+
+        /** Alias for calling [of] with `Status.ofRedeemed(redeemed)`. */
+        @JvmStatic fun of(redeemed: BetaFallbackCreditRedeemed) = of(Status.ofRedeemed(redeemed))
+
+        /** Alias for calling [of] with `Status.ofNotApplied(notApplied)`. */
+        @JvmStatic
+        fun of(notApplied: BetaFallbackCreditNotApplied) = of(Status.ofNotApplied(notApplied))
     }
 
     /** A builder for [BetaFallbackCreditUsage]. */

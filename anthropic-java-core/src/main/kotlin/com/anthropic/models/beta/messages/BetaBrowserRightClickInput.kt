@@ -111,6 +111,14 @@ private constructor(
          * set to the given value.
          */
         @JvmStatic fun of(target: BetaBrowserClickTarget) = builder().target(target).build()
+
+        /** Alias for calling [of] with `BetaBrowserClickTarget.ofCoordinate(coordinate)`. */
+        @JvmStatic
+        fun of(coordinate: BetaBrowserCoordinateTarget) =
+            of(BetaBrowserClickTarget.ofCoordinate(coordinate))
+
+        /** Alias for calling [of] with `BetaBrowserClickTarget.ofRef(ref)`. */
+        @JvmStatic fun of(ref: BetaBrowserRefTarget) = of(BetaBrowserClickTarget.ofRef(ref))
     }
 
     /** A builder for [BetaBrowserRightClickInput]. */
