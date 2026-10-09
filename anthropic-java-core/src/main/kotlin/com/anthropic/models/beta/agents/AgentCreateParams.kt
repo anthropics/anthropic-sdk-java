@@ -409,10 +409,18 @@ private constructor(
         }
 
         /**
+         * Alias for calling [multiagent] with
+         * `BetaManagedAgentsMultiagentParams.ofCoordinator(coordinator)`.
+         */
+        fun multiagent(coordinator: BetaManagedAgentsMultiagentCoordinatorParams) = apply {
+            body.multiagent(coordinator)
+        }
+
+        /**
          * Alias for calling [multiagent] with the following:
          * ```java
-         * BetaManagedAgentsMultiagentParams.builder()
-         *     .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
+         * BetaManagedAgentsMultiagentCoordinatorParams.builder()
+         *     .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
          *     .agents(agents)
          *     .build()
          * ```
@@ -421,6 +429,14 @@ private constructor(
             apply {
                 body.coordinatorMultiagent(agents)
             }
+
+        /**
+         * Alias for calling [multiagent] with
+         * `BetaManagedAgentsMultiagentParams.ofMultiagent20261001(multiagent20261001)`.
+         */
+        fun multiagent(multiagent20261001: BetaManagedAgentsMultiagent20261001Params) = apply {
+            body.multiagent(multiagent20261001)
+        }
 
         /** Skills available to the agent. */
         fun skills(skills: List<BetaManagedAgentsSkillParams>) = apply { body.skills(skills) }
@@ -1083,20 +1099,36 @@ private constructor(
             }
 
             /**
+             * Alias for calling [multiagent] with
+             * `BetaManagedAgentsMultiagentParams.ofCoordinator(coordinator)`.
+             */
+            fun multiagent(coordinator: BetaManagedAgentsMultiagentCoordinatorParams) =
+                multiagent(BetaManagedAgentsMultiagentParams.ofCoordinator(coordinator))
+
+            /**
              * Alias for calling [multiagent] with the following:
              * ```java
-             * BetaManagedAgentsMultiagentParams.builder()
-             *     .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
+             * BetaManagedAgentsMultiagentCoordinatorParams.builder()
+             *     .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
              *     .agents(agents)
              *     .build()
              * ```
              */
             fun coordinatorMultiagent(agents: List<BetaManagedAgentsMultiagentRosterEntryParams>) =
                 multiagent(
-                    BetaManagedAgentsMultiagentParams.builder()
-                        .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
+                    BetaManagedAgentsMultiagentCoordinatorParams.builder()
+                        .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
                         .agents(agents)
                         .build()
+                )
+
+            /**
+             * Alias for calling [multiagent] with
+             * `BetaManagedAgentsMultiagentParams.ofMultiagent20261001(multiagent20261001)`.
+             */
+            fun multiagent(multiagent20261001: BetaManagedAgentsMultiagent20261001Params) =
+                multiagent(
+                    BetaManagedAgentsMultiagentParams.ofMultiagent20261001(multiagent20261001)
                 )
 
             /** Skills available to the agent. */

@@ -145,6 +145,34 @@ class BetaManagedAgentsSessionEventType private constructor(private val value: J
         @JvmField
         val SESSION_USAGE = BetaManagedAgentsSessionEventType(JsonField.of("session.usage"))
 
+        @JvmField
+        val WORKFLOW_RUN_CREATED =
+            BetaManagedAgentsSessionEventType(JsonField.of("workflow_run.created"))
+
+        @JvmField
+        val WORKFLOW_RUN_STATUS_RUNNING =
+            BetaManagedAgentsSessionEventType(JsonField.of("workflow_run.status_running"))
+
+        @JvmField
+        val WORKFLOW_RUN_STATUS_IDLE =
+            BetaManagedAgentsSessionEventType(JsonField.of("workflow_run.status_idle"))
+
+        @JvmField
+        val WORKFLOW_RUN_STATUS_ENDED =
+            BetaManagedAgentsSessionEventType(JsonField.of("workflow_run.status_ended"))
+
+        @JvmField
+        val WORKFLOW_RUN_ERROR =
+            BetaManagedAgentsSessionEventType(JsonField.of("workflow_run.error"))
+
+        @JvmField
+        val WORKFLOW_RUN_PHASE_STARTED =
+            BetaManagedAgentsSessionEventType(JsonField.of("workflow_run.phase_started"))
+
+        @JvmField
+        val WORKFLOW_RUN_PHASE_ENDED =
+            BetaManagedAgentsSessionEventType(JsonField.of("workflow_run.phase_ended"))
+
         @JvmStatic
         fun of(value: String): BetaManagedAgentsSessionEventType =
             // Intern known values so `==` works
@@ -183,6 +211,13 @@ class BetaManagedAgentsSessionEventType private constructor(private val value: J
                 "session.updated" -> SESSION_UPDATED
                 "system.message" -> SYSTEM_MESSAGE
                 "session.usage" -> SESSION_USAGE
+                "workflow_run.created" -> WORKFLOW_RUN_CREATED
+                "workflow_run.status_running" -> WORKFLOW_RUN_STATUS_RUNNING
+                "workflow_run.status_idle" -> WORKFLOW_RUN_STATUS_IDLE
+                "workflow_run.status_ended" -> WORKFLOW_RUN_STATUS_ENDED
+                "workflow_run.error" -> WORKFLOW_RUN_ERROR
+                "workflow_run.phase_started" -> WORKFLOW_RUN_PHASE_STARTED
+                "workflow_run.phase_ended" -> WORKFLOW_RUN_PHASE_ENDED
                 else -> BetaManagedAgentsSessionEventType(JsonField.of(value))
             }
 
@@ -228,6 +263,13 @@ class BetaManagedAgentsSessionEventType private constructor(private val value: J
         SESSION_UPDATED,
         SYSTEM_MESSAGE,
         SESSION_USAGE,
+        WORKFLOW_RUN_CREATED,
+        WORKFLOW_RUN_STATUS_RUNNING,
+        WORKFLOW_RUN_STATUS_IDLE,
+        WORKFLOW_RUN_STATUS_ENDED,
+        WORKFLOW_RUN_ERROR,
+        WORKFLOW_RUN_PHASE_STARTED,
+        WORKFLOW_RUN_PHASE_ENDED,
     }
 
     /**
@@ -276,6 +318,13 @@ class BetaManagedAgentsSessionEventType private constructor(private val value: J
         SESSION_UPDATED,
         SYSTEM_MESSAGE,
         SESSION_USAGE,
+        WORKFLOW_RUN_CREATED,
+        WORKFLOW_RUN_STATUS_RUNNING,
+        WORKFLOW_RUN_STATUS_IDLE,
+        WORKFLOW_RUN_STATUS_ENDED,
+        WORKFLOW_RUN_ERROR,
+        WORKFLOW_RUN_PHASE_STARTED,
+        WORKFLOW_RUN_PHASE_ENDED,
         /**
          * An enum member indicating that [BetaManagedAgentsSessionEventType] was instantiated with
          * an unknown value.
@@ -326,6 +375,13 @@ class BetaManagedAgentsSessionEventType private constructor(private val value: J
             SESSION_UPDATED -> Value.SESSION_UPDATED
             SYSTEM_MESSAGE -> Value.SYSTEM_MESSAGE
             SESSION_USAGE -> Value.SESSION_USAGE
+            WORKFLOW_RUN_CREATED -> Value.WORKFLOW_RUN_CREATED
+            WORKFLOW_RUN_STATUS_RUNNING -> Value.WORKFLOW_RUN_STATUS_RUNNING
+            WORKFLOW_RUN_STATUS_IDLE -> Value.WORKFLOW_RUN_STATUS_IDLE
+            WORKFLOW_RUN_STATUS_ENDED -> Value.WORKFLOW_RUN_STATUS_ENDED
+            WORKFLOW_RUN_ERROR -> Value.WORKFLOW_RUN_ERROR
+            WORKFLOW_RUN_PHASE_STARTED -> Value.WORKFLOW_RUN_PHASE_STARTED
+            WORKFLOW_RUN_PHASE_ENDED -> Value.WORKFLOW_RUN_PHASE_ENDED
             else -> Value._UNKNOWN
         }
 
@@ -373,6 +429,13 @@ class BetaManagedAgentsSessionEventType private constructor(private val value: J
             SESSION_UPDATED -> Known.SESSION_UPDATED
             SYSTEM_MESSAGE -> Known.SYSTEM_MESSAGE
             SESSION_USAGE -> Known.SESSION_USAGE
+            WORKFLOW_RUN_CREATED -> Known.WORKFLOW_RUN_CREATED
+            WORKFLOW_RUN_STATUS_RUNNING -> Known.WORKFLOW_RUN_STATUS_RUNNING
+            WORKFLOW_RUN_STATUS_IDLE -> Known.WORKFLOW_RUN_STATUS_IDLE
+            WORKFLOW_RUN_STATUS_ENDED -> Known.WORKFLOW_RUN_STATUS_ENDED
+            WORKFLOW_RUN_ERROR -> Known.WORKFLOW_RUN_ERROR
+            WORKFLOW_RUN_PHASE_STARTED -> Known.WORKFLOW_RUN_PHASE_STARTED
+            WORKFLOW_RUN_PHASE_ENDED -> Known.WORKFLOW_RUN_PHASE_ENDED
             else ->
                 throw AnthropicInvalidDataException(
                     "Unknown BetaManagedAgentsSessionEventType: $value"

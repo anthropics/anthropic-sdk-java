@@ -535,21 +535,35 @@ private constructor(
         }
 
         /**
+         * Alias for calling [multiagent] with
+         * `BetaManagedAgentsMultiagent.ofCoordinator(coordinator)`.
+         */
+        fun multiagent(coordinator: BetaManagedAgentsMultiagentCoordinator) =
+            multiagent(BetaManagedAgentsMultiagent.ofCoordinator(coordinator))
+
+        /**
          * Alias for calling [multiagent] with the following:
          * ```java
-         * BetaManagedAgentsMultiagent.builder()
-         *     .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
+         * BetaManagedAgentsMultiagentCoordinator.builder()
+         *     .type(BetaManagedAgentsMultiagentCoordinator.Type.COORDINATOR)
          *     .agents(agents)
          *     .build()
          * ```
          */
-        fun coordinatorMultiagent(agents: List<BetaManagedAgentsMultiagent.Agent>) =
+        fun coordinatorMultiagent(agents: List<BetaManagedAgentsMultiagentCoordinator.Agent>) =
             multiagent(
-                BetaManagedAgentsMultiagent.builder()
-                    .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
+                BetaManagedAgentsMultiagentCoordinator.builder()
+                    .type(BetaManagedAgentsMultiagentCoordinator.Type.COORDINATOR)
                     .agents(agents)
                     .build()
             )
+
+        /**
+         * Alias for calling [multiagent] with
+         * `BetaManagedAgentsMultiagent.ofMultiagent20261001(multiagent20261001)`.
+         */
+        fun multiagent(multiagent20261001: BetaManagedAgentsMultiagent20261001) =
+            multiagent(BetaManagedAgentsMultiagent.ofMultiagent20261001(multiagent20261001))
 
         fun name(name: String) = name(JsonField.of(name))
 

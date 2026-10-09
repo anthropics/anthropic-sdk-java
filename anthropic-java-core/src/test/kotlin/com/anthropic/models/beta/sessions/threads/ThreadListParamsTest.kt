@@ -14,6 +14,7 @@ internal class ThreadListParamsTest {
             .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
             .limit(0)
             .page("page")
+            .addStatus(BetaManagedAgentsSessionThreadStatus.RUNNING)
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .build()
@@ -35,6 +36,7 @@ internal class ThreadListParamsTest {
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                 .limit(0)
                 .page("page")
+                .addStatus(BetaManagedAgentsSessionThreadStatus.RUNNING)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
@@ -70,6 +72,7 @@ internal class ThreadListParamsTest {
                 .sessionId("sesn_011CZkZAtmR3yMPDzynEDxu7")
                 .limit(0)
                 .page("page")
+                .addStatus(BetaManagedAgentsSessionThreadStatus.RUNNING)
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .build()
@@ -77,7 +80,13 @@ internal class ThreadListParamsTest {
         val queryParams = params._queryParams()
 
         assertThat(queryParams)
-            .isEqualTo(QueryParams.builder().put("limit", "0").put("page", "page").build())
+            .isEqualTo(
+                QueryParams.builder()
+                    .put("limit", "0")
+                    .put("page", "page")
+                    .put("statuses[]", "running")
+                    .build()
+            )
     }
 
     @Test

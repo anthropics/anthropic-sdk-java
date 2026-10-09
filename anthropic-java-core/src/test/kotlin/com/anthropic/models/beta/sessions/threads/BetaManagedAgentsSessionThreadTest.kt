@@ -134,6 +134,7 @@ internal class BetaManagedAgentsSessionThreadTest {
                         )
                         .build()
                 )
+                .workflowRunId(null)
                 .build()
 
         assertThat(betaManagedAgentsSessionThread.id()).isEqualTo("sthr_011CZkZVWa6oJjw1rgXZpnBt")
@@ -253,6 +254,7 @@ internal class BetaManagedAgentsSessionThreadTest {
                     )
                     .build()
             )
+        assertThat(betaManagedAgentsSessionThread.workflowRunId()).isEmpty
     }
 
     @Test
@@ -367,6 +369,7 @@ internal class BetaManagedAgentsSessionThreadTest {
                         )
                         .build()
                 )
+                .workflowRunId(null)
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionThread =

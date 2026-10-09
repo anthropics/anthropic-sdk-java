@@ -9,8 +9,10 @@ import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
 import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
+import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.agents.BetaManagedAgentsAdvisor
+import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -47,6 +49,7 @@ private constructor(
     private val type: JsonField<Type>,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val usage: JsonField<BetaManagedAgentsSessionThreadUsage>,
+    private val workflowRunId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -77,6 +80,9 @@ private constructor(
         @JsonProperty("usage")
         @ExcludeMissing
         usage: JsonField<BetaManagedAgentsSessionThreadUsage> = JsonMissing.of(),
+        @JsonProperty("workflow_run_id")
+        @ExcludeMissing
+        workflowRunId: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
         agent,
@@ -89,6 +95,7 @@ private constructor(
         type,
         updatedAt,
         usage,
+        workflowRunId,
         mutableMapOf(),
     )
 
@@ -177,6 +184,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun usage(): Optional<BetaManagedAgentsSessionThreadUsage> = usage.getOptional("usage")
+
+    /**
+     * Identifier of the workflow run that created the thread, or `null` for any other thread.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun workflowRunId(): Optional<String> = workflowRunId.getOptional("workflow_run_id")
 
     /**
      * Returns the raw JSON value of [id].
@@ -269,6 +284,15 @@ private constructor(
     @ExcludeMissing
     fun _usage(): JsonField<BetaManagedAgentsSessionThreadUsage> = usage
 
+    /**
+     * Returns the raw JSON value of [workflowRunId].
+     *
+     * Unlike [workflowRunId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("workflow_run_id")
+    @ExcludeMissing
+    fun _workflowRunId(): JsonField<String> = workflowRunId
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -300,6 +324,7 @@ private constructor(
          * .type()
          * .updatedAt()
          * .usage()
+         * .workflowRunId()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -319,6 +344,7 @@ private constructor(
         private var type: JsonField<Type>? = null
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var usage: JsonField<BetaManagedAgentsSessionThreadUsage>? = null
+        private var workflowRunId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -334,6 +360,7 @@ private constructor(
             type = betaManagedAgentsSessionThread.type
             updatedAt = betaManagedAgentsSessionThread.updatedAt
             usage = betaManagedAgentsSessionThread.usage
+            workflowRunId = betaManagedAgentsSessionThread.workflowRunId
             additionalProperties =
                 betaManagedAgentsSessionThread.additionalProperties.toMutableMap()
         }
@@ -384,6 +411,9 @@ private constructor(
                     .model(model)
                     .build()
             )
+
+        /** Alias for calling [agent] with `Agent.ofInline(inline)`. */
+        fun agent(inline: BetaManagedAgentsInlineAgent) = agent(Agent.ofInline(inline))
 
         /** When the thread was archived. Null if not archived. */
         fun archivedAt(archivedAt: OffsetDateTime?) = archivedAt(JsonField.ofNullable(archivedAt))
@@ -517,6 +547,27 @@ private constructor(
             this.usage = usage
         }
 
+        /**
+         * Identifier of the workflow run that created the thread, or `null` for any other thread.
+         */
+        fun workflowRunId(workflowRunId: String?) =
+            workflowRunId(JsonField.ofNullable(workflowRunId))
+
+        /** Alias for calling [Builder.workflowRunId] with `workflowRunId.orElse(null)`. */
+        fun workflowRunId(workflowRunId: Optional<String>) =
+            workflowRunId(workflowRunId.getOrNull())
+
+        /**
+         * Sets [Builder.workflowRunId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.workflowRunId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun workflowRunId(workflowRunId: JsonField<String>) = apply {
+            this.workflowRunId = workflowRunId
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -554,6 +605,7 @@ private constructor(
          * .type()
          * .updatedAt()
          * .usage()
+         * .workflowRunId()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -571,6 +623,7 @@ private constructor(
                 checkRequired("type", type),
                 checkRequired("updatedAt", updatedAt),
                 checkRequired("usage", usage),
+                checkRequired("workflowRunId", workflowRunId),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -601,6 +654,7 @@ private constructor(
         type().validate()
         updatedAt()
         usage().ifPresent { it.validate() }
+        workflowRunId()
         validated = true
     }
 
@@ -629,7 +683,8 @@ private constructor(
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
-            (usage.asKnown().getOrNull()?.validity() ?: 0)
+            (usage.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (workflowRunId.asKnown().isPresent) 1 else 0)
 
     /** Resolved agent definition for this thread. Snapshot of the agent at thread creation time. */
     @JsonDeserialize(using = Agent.Deserializer::class)
@@ -638,6 +693,7 @@ private constructor(
     private constructor(
         private val agent: BetaManagedAgentsSessionThreadAgent? = null,
         private val advisor: BetaManagedAgentsAdvisor? = null,
+        private val inline: BetaManagedAgentsInlineAgent? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -645,7 +701,43 @@ private constructor(
             when {
                 agent != null -> Type.AGENT
                 advisor != null -> Type.ADVISOR
+                inline != null -> Type.INLINE
                 else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
+            }
+
+        fun description(): Optional<String> =
+            when {
+                agent != null -> agent.description()
+                advisor != null -> Optional.empty()
+                inline != null -> inline.description()
+                else -> _json.getProperty<String>("description").asKnown()
+            }
+
+        fun mcpServers(): Optional<List<BetaManagedAgentsMcpServerUrlDefinition>> =
+            when {
+                agent != null -> Optional.of(agent.mcpServers())
+                advisor != null -> Optional.empty()
+                inline != null -> Optional.of(inline.mcpServers())
+                else ->
+                    _json
+                        .getProperty<List<BetaManagedAgentsMcpServerUrlDefinition>>("mcp_servers")
+                        .asKnown()
+            }
+
+        fun name(): Optional<String> =
+            when {
+                agent != null -> Optional.of(agent.name())
+                advisor != null -> Optional.empty()
+                inline != null -> Optional.of(inline.name())
+                else -> _json.getProperty<String>("name").asKnown()
+            }
+
+        fun system(): Optional<String> =
+            when {
+                agent != null -> agent.system()
+                advisor != null -> Optional.empty()
+                inline != null -> inline.system()
+                else -> _json.getProperty<String>("system").asKnown()
             }
 
         /**
@@ -660,9 +752,17 @@ private constructor(
          */
         fun advisor(): Optional<BetaManagedAgentsAdvisor> = Optional.ofNullable(advisor)
 
+        /**
+         * An agent that has no Agent resource, and so no `id` or `version`. It is defined inline,
+         * in a workflow run's plan or when a session thread is spawned, and is not saved.
+         */
+        fun inline(): Optional<BetaManagedAgentsInlineAgent> = Optional.ofNullable(inline)
+
         fun isAgent(): Boolean = agent != null
 
         fun isAdvisor(): Boolean = advisor != null
+
+        fun isInline(): Boolean = inline != null
 
         /**
          * Resolved `agent` definition for a single `session_thread`. Snapshot of the agent at
@@ -675,6 +775,12 @@ private constructor(
          * Platform advisor roster entry: a model the session's primary thread may consult mid-turn.
          */
         fun asAdvisor(): BetaManagedAgentsAdvisor = advisor.getOrThrow("advisor")
+
+        /**
+         * An agent that has no Agent resource, and so no `id` or `version`. It is defined inline,
+         * in a workflow run's plan or when a session thread is spawned, and is not saved.
+         */
+        fun asInline(): BetaManagedAgentsInlineAgent = inline.getOrThrow("inline")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -711,6 +817,7 @@ private constructor(
             when {
                 agent != null -> visitor.visitAgent(agent)
                 advisor != null -> visitor.visitAdvisor(advisor)
+                inline != null -> visitor.visitInline(inline)
                 else -> visitor.unknown(_json)
             }
 
@@ -733,6 +840,7 @@ private constructor(
             when {
                 agent != null -> agent.validate()
                 advisor != null -> advisor.validate()
+                inline != null -> inline.validate()
                 else -> throw AnthropicInvalidDataException("Unknown Agent: $_json")
             }
             validated = true
@@ -757,6 +865,7 @@ private constructor(
             when {
                 agent != null -> agent.validity()
                 advisor != null -> advisor.validity()
+                inline != null -> inline.validity()
                 else -> 0
             }
 
@@ -765,15 +874,19 @@ private constructor(
                 return true
             }
 
-            return other is Agent && agent == other.agent && advisor == other.advisor
+            return other is Agent &&
+                agent == other.agent &&
+                advisor == other.advisor &&
+                inline == other.inline
         }
 
-        override fun hashCode(): Int = Objects.hash(agent, advisor)
+        override fun hashCode(): Int = Objects.hash(agent, advisor, inline)
 
         override fun toString(): String =
             when {
                 agent != null -> "Agent{agent=$agent}"
                 advisor != null -> "Agent{advisor=$advisor}"
+                inline != null -> "Agent{inline=$inline}"
                 _json != null -> "Agent{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Agent")
             }
@@ -806,6 +919,13 @@ private constructor(
                         .model(model)
                         .build()
                 )
+
+            /**
+             * An agent that has no Agent resource, and so no `id` or `version`. It is defined
+             * inline, in a workflow run's plan or when a session thread is spawned, and is not
+             * saved.
+             */
+            @JvmStatic fun ofInline(inline: BetaManagedAgentsInlineAgent) = Agent(inline = inline)
         }
 
         /** An interface that defines how to map each variant of [Agent] to a value of type [T]. */
@@ -823,6 +943,13 @@ private constructor(
              * mid-turn.
              */
             fun visitAdvisor(advisor: BetaManagedAgentsAdvisor): T
+
+            /**
+             * An agent that has no Agent resource, and so no `id` or `version`. It is defined
+             * inline, in a workflow run's plan or when a session thread is spawned, and is not
+             * saved.
+             */
+            fun visitInline(inline: BetaManagedAgentsInlineAgent): T
 
             /**
              * Maps an unknown variant of [Agent] to a value of type [T].
@@ -857,6 +984,10 @@ private constructor(
                         return tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsAdvisor>())
                             ?.let { Agent(advisor = it, _json = json) } ?: Agent(_json = json)
                     }
+                    "inline" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaManagedAgentsInlineAgent>())
+                            ?.let { Agent(inline = it, _json = json) } ?: Agent(_json = json)
+                    }
                 }
 
                 return Agent(_json = json)
@@ -873,6 +1004,7 @@ private constructor(
                 when {
                     value.agent != null -> generator.writeObject(value.agent)
                     value.advisor != null -> generator.writeObject(value.advisor)
+                    value.inline != null -> generator.writeObject(value.inline)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Agent")
                 }
@@ -897,12 +1029,15 @@ private constructor(
 
                 @JvmField val ADVISOR = Type(JsonField.of("advisor"))
 
+                @JvmField val INLINE = Type(JsonField.of("inline"))
+
                 @JvmStatic
                 fun of(value: String): Type =
                     // Intern known values so `==` works
                     when (value) {
                         "agent" -> AGENT
                         "advisor" -> ADVISOR
+                        "inline" -> INLINE
                         else -> Type(JsonField.of(value))
                     }
 
@@ -916,6 +1051,7 @@ private constructor(
             enum class Known {
                 AGENT,
                 ADVISOR,
+                INLINE,
             }
 
             /**
@@ -930,6 +1066,7 @@ private constructor(
             enum class Value {
                 AGENT,
                 ADVISOR,
+                INLINE,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
@@ -945,6 +1082,7 @@ private constructor(
                 when (this) {
                     AGENT -> Value.AGENT
                     ADVISOR -> Value.ADVISOR
+                    INLINE -> Value.INLINE
                     else -> Value._UNKNOWN
                 }
 
@@ -961,6 +1099,7 @@ private constructor(
                 when (this) {
                     AGENT -> Known.AGENT
                     ADVISOR -> Known.ADVISOR
+                    INLINE -> Known.INLINE
                     else -> throw AnthropicInvalidDataException("Unknown Type: $value")
                 }
 
@@ -1187,6 +1326,7 @@ private constructor(
             type == other.type &&
             updatedAt == other.updatedAt &&
             usage == other.usage &&
+            workflowRunId == other.workflowRunId &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1203,6 +1343,7 @@ private constructor(
             type,
             updatedAt,
             usage,
+            workflowRunId,
             additionalProperties,
         )
     }
@@ -1210,5 +1351,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsSessionThread{id=$id, agent=$agent, archivedAt=$archivedAt, createdAt=$createdAt, parentThreadId=$parentThreadId, sessionId=$sessionId, stats=$stats, status=$status, type=$type, updatedAt=$updatedAt, usage=$usage, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsSessionThread{id=$id, agent=$agent, archivedAt=$archivedAt, createdAt=$createdAt, parentThreadId=$parentThreadId, sessionId=$sessionId, stats=$stats, status=$status, type=$type, updatedAt=$updatedAt, usage=$usage, workflowRunId=$workflowRunId, additionalProperties=$additionalProperties}"
 }

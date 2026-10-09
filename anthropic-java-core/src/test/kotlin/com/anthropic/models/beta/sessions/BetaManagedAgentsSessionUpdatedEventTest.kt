@@ -53,9 +53,9 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
-                        .multiagent(
-                            BetaManagedAgentsSessionMultiagentCoordinator.builder()
-                                .addAgent(
+                        .coordinatorMultiagent(
+                            listOf(
+                                BetaManagedAgentsSessionMultiagentCoordinator.Agent.ofAgent(
                                     BetaManagedAgentsSessionThreadAgent.builder()
                                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                         .description("A focused research subagent.")
@@ -132,10 +132,7 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                         .version(1)
                                         .build()
                                 )
-                                .type(
-                                    BetaManagedAgentsSessionMultiagentCoordinator.Type.COORDINATOR
-                                )
-                                .build()
+                            )
                         )
                         .name("My First Agent")
                         .addSkill(
@@ -233,9 +230,9 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                             .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                             .build()
                     )
-                    .multiagent(
-                        BetaManagedAgentsSessionMultiagentCoordinator.builder()
-                            .addAgent(
+                    .coordinatorMultiagent(
+                        listOf(
+                            BetaManagedAgentsSessionMultiagentCoordinator.Agent.ofAgent(
                                 BetaManagedAgentsSessionThreadAgent.builder()
                                     .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                     .description("A focused research subagent.")
@@ -305,8 +302,7 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                     .version(1)
                                     .build()
                             )
-                            .type(BetaManagedAgentsSessionMultiagentCoordinator.Type.COORDINATOR)
-                            .build()
+                        )
                     )
                     .name("My First Agent")
                     .addSkill(
@@ -407,9 +403,9 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
-                        .multiagent(
-                            BetaManagedAgentsSessionMultiagentCoordinator.builder()
-                                .addAgent(
+                        .coordinatorMultiagent(
+                            listOf(
+                                BetaManagedAgentsSessionMultiagentCoordinator.Agent.ofAgent(
                                     BetaManagedAgentsSessionThreadAgent.builder()
                                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                         .description("A focused research subagent.")
@@ -486,10 +482,7 @@ internal class BetaManagedAgentsSessionUpdatedEventTest {
                                         .version(1)
                                         .build()
                                 )
-                                .type(
-                                    BetaManagedAgentsSessionMultiagentCoordinator.Type.COORDINATOR
-                                )
-                                .build()
+                            )
                         )
                         .name("My First Agent")
                         .addSkill(

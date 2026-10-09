@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentParams
+import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentRosterEntryParams
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -39,16 +40,15 @@ internal class AgentUpdateParamsTest {
                     .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                     .build()
             )
-            .multiagent(
-                BetaManagedAgentsMultiagentParams.builder()
-                    .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                    .addAgent(
-                        BetaManagedAgentsMultiagentSelfParams.of(
-                            BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                        )
-                    )
-                    .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
-                    .build()
+            .coordinatorMultiagent(
+                listOf(
+                    BetaManagedAgentsMultiagentRosterEntryParams.ofString(
+                        "agent_011CZkYqphY8vELVzwCUpqiQ"
+                    ),
+                    BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
+                        BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                    ),
+                )
             )
             .name("name")
             .addSkill(
@@ -131,16 +131,15 @@ internal class AgentUpdateParamsTest {
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
-                .multiagent(
-                    BetaManagedAgentsMultiagentParams.builder()
-                        .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .addAgent(
-                            BetaManagedAgentsMultiagentSelfParams.of(
-                                BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                            )
-                        )
-                        .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
-                        .build()
+                .coordinatorMultiagent(
+                    listOf(
+                        BetaManagedAgentsMultiagentRosterEntryParams.ofString(
+                            "agent_011CZkYqphY8vELVzwCUpqiQ"
+                        ),
+                        BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
+                            BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                        ),
+                    )
                 )
                 .name("name")
                 .addSkill(
@@ -239,16 +238,15 @@ internal class AgentUpdateParamsTest {
                         .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                         .build()
                 )
-                .multiagent(
-                    BetaManagedAgentsMultiagentParams.builder()
-                        .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .addAgent(
-                            BetaManagedAgentsMultiagentSelfParams.of(
-                                BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                            )
-                        )
-                        .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
-                        .build()
+                .coordinatorMultiagent(
+                    listOf(
+                        BetaManagedAgentsMultiagentRosterEntryParams.ofString(
+                            "agent_011CZkYqphY8vELVzwCUpqiQ"
+                        ),
+                        BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
+                            BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                        ),
+                    )
                 )
                 .name("name")
                 .addSkill(
@@ -325,15 +323,17 @@ internal class AgentUpdateParamsTest {
             )
         assertThat(body.multiagent())
             .contains(
-                BetaManagedAgentsMultiagentParams.builder()
-                    .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                    .addAgent(
-                        BetaManagedAgentsMultiagentSelfParams.of(
-                            BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                BetaManagedAgentsMultiagentParams.ofCoordinator(
+                    BetaManagedAgentsMultiagentCoordinatorParams.builder()
+                        .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                        .addAgent(
+                            BetaManagedAgentsMultiagentSelfParams.of(
+                                BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                            )
                         )
-                    )
-                    .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
-                    .build()
+                        .type(BetaManagedAgentsMultiagentCoordinatorParams.Type.COORDINATOR)
+                        .build()
+                )
             )
         assertThat(body.name()).contains("name")
         assertThat(body.skills().getOrNull())
