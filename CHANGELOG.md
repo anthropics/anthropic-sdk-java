@@ -5,6 +5,7 @@
 ### Chores
 
 * **docs:** correct prefill, thinking, fallback and model descriptions
+* include the license files in the published packages
 * **internal:** keep the default request headers in one map
 
 
