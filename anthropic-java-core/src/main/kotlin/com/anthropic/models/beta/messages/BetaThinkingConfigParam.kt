@@ -22,14 +22,16 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Configuration for enabling Claude's extended thinking.
+ * Configuration for Claude's thinking.
  *
- * When enabled, responses include `thinking` content blocks showing Claude's thinking process
- * before the final answer. Requires a minimum budget of 1,024 tokens and counts towards your
- * `max_tokens` limit.
+ * With `{"type": "adaptive"}`, Claude decides when and how much to think. With `{"type":
+ * "enabled"}` (manual extended thinking), you set a `budget_tokens` of at least 1,024. Thinking
+ * tokens count toward your `max_tokens` limit.
  *
- * See [extended thinking](https://platform.claude.com/docs/en/build-with-claude/extended-thinking)
- * for details.
+ * Which `type` values are accepted, and what happens when you omit `thinking`, depend on the model.
+ * See
+ * [thinking](https://platform.claude.com/docs/en/build-with-claude/thinking#configuring-thinking)
+ * for each model's behavior.
  */
 @JsonDeserialize(using = BetaThinkingConfigParam.Deserializer::class)
 @JsonSerialize(using = BetaThinkingConfigParam.Serializer::class)

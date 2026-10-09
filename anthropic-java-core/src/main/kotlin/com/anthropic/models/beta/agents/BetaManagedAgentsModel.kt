@@ -61,10 +61,8 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
         /** Best combination of speed and intelligence */
         @JvmField val CLAUDE_SONNET_4_6 = BetaManagedAgentsModel(JsonField.of("claude-sonnet-4-6"))
 
-        /** Fastest model with near-frontier intelligence */
         @JvmField val CLAUDE_HAIKU_4_5 = BetaManagedAgentsModel(JsonField.of("claude-haiku-4-5"))
 
-        /** Fastest model with near-frontier intelligence */
         @JvmField
         val CLAUDE_HAIKU_4_5_20251001 =
             BetaManagedAgentsModel(JsonField.of("claude-haiku-4-5-20251001"))
@@ -149,9 +147,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
         CLAUDE_OPUS_4_6,
         /** Best combination of speed and intelligence */
         CLAUDE_SONNET_4_6,
-        /** Fastest model with near-frontier intelligence */
         CLAUDE_HAIKU_4_5,
-        /** Fastest model with near-frontier intelligence */
         CLAUDE_HAIKU_4_5_20251001,
         /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5,
@@ -204,9 +200,7 @@ class BetaManagedAgentsModel private constructor(private val value: JsonField<St
         CLAUDE_OPUS_4_6,
         /** Best combination of speed and intelligence */
         CLAUDE_SONNET_4_6,
-        /** Fastest model with near-frontier intelligence */
         CLAUDE_HAIKU_4_5,
-        /** Fastest model with near-frontier intelligence */
         CLAUDE_HAIKU_4_5_20251001,
         /** Powerful intelligence for long-running agents and coding */
         CLAUDE_OPUS_4_5,

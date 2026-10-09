@@ -4,6 +4,7 @@
 
 ### Chores
 
+* **docs:** correct prefill, thinking, fallback and model descriptions
 * **internal:** keep the default request headers in one map
 
 
