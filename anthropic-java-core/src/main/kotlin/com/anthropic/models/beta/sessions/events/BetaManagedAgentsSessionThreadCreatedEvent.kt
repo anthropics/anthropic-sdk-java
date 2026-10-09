@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -28,6 +29,7 @@ private constructor(
     private val processedAt: JsonField<OffsetDateTime>,
     private val sessionThreadId: JsonField<String>,
     private val type: JsonField<Type>,
+    private val workflowRunId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -42,7 +44,10 @@ private constructor(
         @ExcludeMissing
         sessionThreadId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-    ) : this(id, agentName, processedAt, sessionThreadId, type, mutableMapOf())
+        @JsonProperty("workflow_run_id")
+        @ExcludeMissing
+        workflowRunId: JsonField<String> = JsonMissing.of(),
+    ) : this(id, agentName, processedAt, sessionThreadId, type, workflowRunId, mutableMapOf())
 
     /**
      * Unique identifier for this event.
@@ -83,6 +88,14 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
+     * Identifier of the workflow run that created the thread, or `null` for any other thread.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun workflowRunId(): Optional<String> = workflowRunId.getOptional("workflow_run_id")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -121,6 +134,15 @@ private constructor(
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
+    /**
+     * Returns the raw JSON value of [workflowRunId].
+     *
+     * Unlike [workflowRunId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("workflow_run_id")
+    @ExcludeMissing
+    fun _workflowRunId(): JsonField<String> = workflowRunId
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -146,6 +168,7 @@ private constructor(
          * .processedAt()
          * .sessionThreadId()
          * .type()
+         * .workflowRunId()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -159,6 +182,7 @@ private constructor(
         private var processedAt: JsonField<OffsetDateTime>? = null
         private var sessionThreadId: JsonField<String>? = null
         private var type: JsonField<Type>? = null
+        private var workflowRunId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -170,6 +194,7 @@ private constructor(
             processedAt = betaManagedAgentsSessionThreadCreatedEvent.processedAt
             sessionThreadId = betaManagedAgentsSessionThreadCreatedEvent.sessionThreadId
             type = betaManagedAgentsSessionThreadCreatedEvent.type
+            workflowRunId = betaManagedAgentsSessionThreadCreatedEvent.workflowRunId
             additionalProperties =
                 betaManagedAgentsSessionThreadCreatedEvent.additionalProperties.toMutableMap()
         }
@@ -236,6 +261,27 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
+        /**
+         * Identifier of the workflow run that created the thread, or `null` for any other thread.
+         */
+        fun workflowRunId(workflowRunId: String?) =
+            workflowRunId(JsonField.ofNullable(workflowRunId))
+
+        /** Alias for calling [Builder.workflowRunId] with `workflowRunId.orElse(null)`. */
+        fun workflowRunId(workflowRunId: Optional<String>) =
+            workflowRunId(workflowRunId.getOrNull())
+
+        /**
+         * Sets [Builder.workflowRunId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.workflowRunId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun workflowRunId(workflowRunId: JsonField<String>) = apply {
+            this.workflowRunId = workflowRunId
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -267,6 +313,7 @@ private constructor(
          * .processedAt()
          * .sessionThreadId()
          * .type()
+         * .workflowRunId()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -278,6 +325,7 @@ private constructor(
                 checkRequired("processedAt", processedAt),
                 checkRequired("sessionThreadId", sessionThreadId),
                 checkRequired("type", type),
+                checkRequired("workflowRunId", workflowRunId),
                 additionalProperties.toMutableMap(),
             )
     }
@@ -302,6 +350,7 @@ private constructor(
         processedAt()
         sessionThreadId()
         type().validate()
+        workflowRunId()
         validated = true
     }
 
@@ -324,7 +373,8 @@ private constructor(
             (if (agentName.asKnown().isPresent) 1 else 0) +
             (if (processedAt.asKnown().isPresent) 1 else 0) +
             (if (sessionThreadId.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0)
+            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (workflowRunId.asKnown().isPresent) 1 else 0)
 
     class Type private constructor(private val value: JsonField<String>) : Enum {
 
@@ -478,15 +528,24 @@ private constructor(
             processedAt == other.processedAt &&
             sessionThreadId == other.sessionThreadId &&
             type == other.type &&
+            workflowRunId == other.workflowRunId &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, agentName, processedAt, sessionThreadId, type, additionalProperties)
+        Objects.hash(
+            id,
+            agentName,
+            processedAt,
+            sessionThreadId,
+            type,
+            workflowRunId,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsSessionThreadCreatedEvent{id=$id, agentName=$agentName, processedAt=$processedAt, sessionThreadId=$sessionThreadId, type=$type, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsSessionThreadCreatedEvent{id=$id, agentName=$agentName, processedAt=$processedAt, sessionThreadId=$sessionThreadId, type=$type, workflowRunId=$workflowRunId, additionalProperties=$additionalProperties}"
 }

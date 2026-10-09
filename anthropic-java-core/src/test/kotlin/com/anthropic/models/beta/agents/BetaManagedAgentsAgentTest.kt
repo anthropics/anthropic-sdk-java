@@ -39,15 +39,36 @@ internal class BetaManagedAgentsAgentTest {
                         .build()
                 )
                 .multiagent(
-                    BetaManagedAgentsMultiagent.builder()
-                        .addAgent(
-                            BetaManagedAgentsAgentReference.builder()
-                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
-                                .version(1)
+                    BetaManagedAgentsMultiagent20261001.builder()
+                        .advisor(BetaManagedAgentsMultiagentAdvisorDisabled.builder().build())
+                        .subagents(
+                            BetaManagedAgentsMultiagentSubagentsEnabled.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
+                                )
+                                .addPredefinedAgent(
+                                    BetaManagedAgentsAgentReference.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
                                 .build()
                         )
-                        .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
+                        .workflows(
+                            BetaManagedAgentsMultiagentWorkflowsEnabled.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
+                                )
+                                .addPredefinedAgent(
+                                    BetaManagedAgentsAgentReference.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .name("My First Agent")
@@ -129,16 +150,39 @@ internal class BetaManagedAgentsAgentTest {
             )
         assertThat(betaManagedAgentsAgent.multiagent())
             .contains(
-                BetaManagedAgentsMultiagent.builder()
-                    .addAgent(
-                        BetaManagedAgentsAgentReference.builder()
-                            .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                            .type(BetaManagedAgentsAgentReference.Type.AGENT)
-                            .version(1)
-                            .build()
-                    )
-                    .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
-                    .build()
+                BetaManagedAgentsMultiagent.ofMultiagent20261001(
+                    BetaManagedAgentsMultiagent20261001.builder()
+                        .advisor(BetaManagedAgentsMultiagentAdvisorDisabled.builder().build())
+                        .subagents(
+                            BetaManagedAgentsMultiagentSubagentsEnabled.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
+                                )
+                                .addPredefinedAgent(
+                                    BetaManagedAgentsAgentReference.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .workflows(
+                            BetaManagedAgentsMultiagentWorkflowsEnabled.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
+                                )
+                                .addPredefinedAgent(
+                                    BetaManagedAgentsAgentReference.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
+                )
             )
         assertThat(betaManagedAgentsAgent.name()).isEqualTo("My First Agent")
         assertThat(betaManagedAgentsAgent.skills())
@@ -226,15 +270,36 @@ internal class BetaManagedAgentsAgentTest {
                         .build()
                 )
                 .multiagent(
-                    BetaManagedAgentsMultiagent.builder()
-                        .addAgent(
-                            BetaManagedAgentsAgentReference.builder()
-                                .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                .type(BetaManagedAgentsAgentReference.Type.AGENT)
-                                .version(1)
+                    BetaManagedAgentsMultiagent20261001.builder()
+                        .advisor(BetaManagedAgentsMultiagentAdvisorDisabled.builder().build())
+                        .subagents(
+                            BetaManagedAgentsMultiagentSubagentsEnabled.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
+                                )
+                                .addPredefinedAgent(
+                                    BetaManagedAgentsAgentReference.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
                                 .build()
                         )
-                        .type(BetaManagedAgentsMultiagent.Type.COORDINATOR)
+                        .workflows(
+                            BetaManagedAgentsMultiagentWorkflowsEnabled.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsEnabled.builder().build()
+                                )
+                                .addPredefinedAgent(
+                                    BetaManagedAgentsAgentReference.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .type(BetaManagedAgentsAgentReference.Type.AGENT)
+                                        .version(1)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .name("My First Agent")

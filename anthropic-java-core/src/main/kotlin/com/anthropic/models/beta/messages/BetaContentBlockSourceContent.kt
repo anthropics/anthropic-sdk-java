@@ -176,6 +176,19 @@ private constructor(
          */
         @JvmStatic
         fun ofImage(source: BetaImageBlockParam.Source) = ofImage(BetaImageBlockParam.of(source))
+
+        /** Alias for calling [ofImage] with `BetaImageBlockParam.Source.ofBase64(base64)`. */
+        @JvmStatic
+        fun ofImage(base64: BetaBase64ImageSource) =
+            ofImage(BetaImageBlockParam.Source.ofBase64(base64))
+
+        /** Alias for calling [ofImage] with `BetaImageBlockParam.Source.ofUrl(url)`. */
+        @JvmStatic
+        fun ofImage(url: BetaUrlImageSource) = ofImage(BetaImageBlockParam.Source.ofUrl(url))
+
+        /** Alias for calling [ofImage] with `BetaImageBlockParam.Source.ofFile(file)`. */
+        @JvmStatic
+        fun ofImage(file: BetaFileImageSource) = ofImage(BetaImageBlockParam.Source.ofFile(file))
     }
 
     /**

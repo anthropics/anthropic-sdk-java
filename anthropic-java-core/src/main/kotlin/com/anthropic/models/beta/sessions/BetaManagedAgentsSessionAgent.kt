@@ -46,7 +46,7 @@ private constructor(
     private val description: JsonField<String>,
     private val mcpServers: JsonField<List<BetaManagedAgentsMcpServerUrlDefinition>>,
     private val model: JsonField<BetaManagedAgentsModelConfig>,
-    private val multiagent: JsonField<BetaManagedAgentsSessionMultiagentCoordinator>,
+    private val multiagent: JsonField<BetaManagedAgentsSessionMultiagent>,
     private val name: JsonField<String>,
     private val skills: JsonField<List<Skill>>,
     private val system: JsonField<String>,
@@ -70,7 +70,7 @@ private constructor(
         model: JsonField<BetaManagedAgentsModelConfig> = JsonMissing.of(),
         @JsonProperty("multiagent")
         @ExcludeMissing
-        multiagent: JsonField<BetaManagedAgentsSessionMultiagentCoordinator> = JsonMissing.of(),
+        multiagent: JsonField<BetaManagedAgentsSessionMultiagent> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("skills") @ExcludeMissing skills: JsonField<List<Skill>> = JsonMissing.of(),
         @JsonProperty("system") @ExcludeMissing system: JsonField<String> = JsonMissing.of(),
@@ -125,7 +125,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun multiagent(): Optional<BetaManagedAgentsSessionMultiagentCoordinator> =
+    fun multiagent(): Optional<BetaManagedAgentsSessionMultiagent> =
         multiagent.getOptional("multiagent")
 
     /**
@@ -203,7 +203,7 @@ private constructor(
      */
     @JsonProperty("multiagent")
     @ExcludeMissing
-    fun _multiagent(): JsonField<BetaManagedAgentsSessionMultiagentCoordinator> = multiagent
+    fun _multiagent(): JsonField<BetaManagedAgentsSessionMultiagent> = multiagent
 
     /**
      * Returns the raw JSON value of [name].
@@ -291,7 +291,7 @@ private constructor(
         private var mcpServers: JsonField<MutableList<BetaManagedAgentsMcpServerUrlDefinition>>? =
             null
         private var model: JsonField<BetaManagedAgentsModelConfig>? = null
-        private var multiagent: JsonField<BetaManagedAgentsSessionMultiagentCoordinator>? = null
+        private var multiagent: JsonField<BetaManagedAgentsSessionMultiagent>? = null
         private var name: JsonField<String>? = null
         private var skills: JsonField<MutableList<Skill>>? = null
         private var system: JsonField<String>? = null
@@ -391,24 +391,30 @@ private constructor(
         /**
          * Resolved multiagent orchestration configuration. Null when the agent is single-threaded.
          */
-        fun multiagent(multiagent: BetaManagedAgentsSessionMultiagentCoordinator?) =
+        fun multiagent(multiagent: BetaManagedAgentsSessionMultiagent?) =
             multiagent(JsonField.ofNullable(multiagent))
 
         /** Alias for calling [Builder.multiagent] with `multiagent.orElse(null)`. */
-        fun multiagent(multiagent: Optional<BetaManagedAgentsSessionMultiagentCoordinator>) =
+        fun multiagent(multiagent: Optional<BetaManagedAgentsSessionMultiagent>) =
             multiagent(multiagent.getOrNull())
 
         /**
          * Sets [Builder.multiagent] to an arbitrary JSON value.
          *
          * You should usually call [Builder.multiagent] with a well-typed
-         * [BetaManagedAgentsSessionMultiagentCoordinator] value instead. This method is primarily
-         * for setting the field to an undocumented or not yet supported value.
+         * [BetaManagedAgentsSessionMultiagent] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
          */
-        fun multiagent(multiagent: JsonField<BetaManagedAgentsSessionMultiagentCoordinator>) =
-            apply {
-                this.multiagent = multiagent
-            }
+        fun multiagent(multiagent: JsonField<BetaManagedAgentsSessionMultiagent>) = apply {
+            this.multiagent = multiagent
+        }
+
+        /**
+         * Alias for calling [multiagent] with
+         * `BetaManagedAgentsSessionMultiagent.ofCoordinator(coordinator)`.
+         */
+        fun multiagent(coordinator: BetaManagedAgentsSessionMultiagentCoordinator) =
+            multiagent(BetaManagedAgentsSessionMultiagent.ofCoordinator(coordinator))
 
         /**
          * Alias for calling [multiagent] with the following:
@@ -428,6 +434,13 @@ private constructor(
                     .agents(agents)
                     .build()
             )
+
+        /**
+         * Alias for calling [multiagent] with
+         * `BetaManagedAgentsSessionMultiagent.ofMultiagent20261001(multiagent20261001)`.
+         */
+        fun multiagent(multiagent20261001: BetaManagedAgentsSessionMultiagent20261001) =
+            multiagent(BetaManagedAgentsSessionMultiagent.ofMultiagent20261001(multiagent20261001))
 
         fun name(name: String) = name(JsonField.of(name))
 

@@ -140,6 +140,15 @@ private constructor(
          * the given value.
          */
         @JvmStatic fun of(source: Source) = builder().source(source).build()
+
+        /** Alias for calling [of] with `Source.ofBase64(base64)`. */
+        @JvmStatic fun of(base64: BetaBase64ImageSource) = of(Source.ofBase64(base64))
+
+        /** Alias for calling [of] with `Source.ofUrl(url)`. */
+        @JvmStatic fun of(url: BetaUrlImageSource) = of(Source.ofUrl(url))
+
+        /** Alias for calling [of] with `Source.ofFile(file)`. */
+        @JvmStatic fun of(file: BetaFileImageSource) = of(Source.ofFile(file))
     }
 
     /** A builder for [BetaImageBlockParam]. */

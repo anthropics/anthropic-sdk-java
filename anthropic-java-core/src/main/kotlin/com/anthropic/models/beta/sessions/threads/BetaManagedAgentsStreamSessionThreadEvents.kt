@@ -9,6 +9,8 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentMessagePreview
+import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentThinkingPreview
 import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
@@ -51,6 +53,13 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserDefineOutc
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserInterruptEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserMessageEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserToolConfirmationEvent
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsWorkflowRunCreatedEvent
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsWorkflowRunErrorEvent
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsWorkflowRunPhaseEndedEvent
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsWorkflowRunPhaseStartedEvent
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsWorkflowRunStatusEndedEvent
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsWorkflowRunStatusIdleEvent
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsWorkflowRunStatusRunningEvent
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.ObjectCodec
@@ -115,6 +124,13 @@ private constructor(
     private val eventDelta: BetaManagedAgentsDeltaEvent? = null,
     private val systemMessage: BetaManagedAgentsSystemMessageEvent? = null,
     private val sessionUsage: BetaManagedAgentsSessionUsageEvent? = null,
+    private val workflowRunCreated: BetaManagedAgentsWorkflowRunCreatedEvent? = null,
+    private val workflowRunStatusEnded: BetaManagedAgentsWorkflowRunStatusEndedEvent? = null,
+    private val workflowRunPhaseStarted: BetaManagedAgentsWorkflowRunPhaseStartedEvent? = null,
+    private val workflowRunPhaseEnded: BetaManagedAgentsWorkflowRunPhaseEndedEvent? = null,
+    private val workflowRunStatusRunning: BetaManagedAgentsWorkflowRunStatusRunningEvent? = null,
+    private val workflowRunStatusIdle: BetaManagedAgentsWorkflowRunStatusIdleEvent? = null,
+    private val workflowRunError: BetaManagedAgentsWorkflowRunErrorEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -157,6 +173,13 @@ private constructor(
             eventDelta != null -> Type.EVENT_DELTA
             systemMessage != null -> Type.SYSTEM_MESSAGE
             sessionUsage != null -> Type.SESSION_USAGE
+            workflowRunCreated != null -> Type.WORKFLOW_RUN_CREATED
+            workflowRunStatusEnded != null -> Type.WORKFLOW_RUN_STATUS_ENDED
+            workflowRunPhaseStarted != null -> Type.WORKFLOW_RUN_PHASE_STARTED
+            workflowRunPhaseEnded != null -> Type.WORKFLOW_RUN_PHASE_ENDED
+            workflowRunStatusRunning != null -> Type.WORKFLOW_RUN_STATUS_RUNNING
+            workflowRunStatusIdle != null -> Type.WORKFLOW_RUN_STATUS_IDLE
+            workflowRunError != null -> Type.WORKFLOW_RUN_ERROR
             else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
         }
 
@@ -200,6 +223,13 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.of(systemMessage.id())
             sessionUsage != null -> Optional.of(sessionUsage.id())
+            workflowRunCreated != null -> Optional.of(workflowRunCreated.id())
+            workflowRunStatusEnded != null -> Optional.of(workflowRunStatusEnded.id())
+            workflowRunPhaseStarted != null -> Optional.of(workflowRunPhaseStarted.id())
+            workflowRunPhaseEnded != null -> Optional.of(workflowRunPhaseEnded.id())
+            workflowRunStatusRunning != null -> Optional.of(workflowRunStatusRunning.id())
+            workflowRunStatusIdle != null -> Optional.of(workflowRunStatusIdle.id())
+            workflowRunError != null -> Optional.of(workflowRunError.id())
             else -> _json.getProperty<String>("id").asKnown()
         }
 
@@ -249,6 +279,13 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> systemMessage.processedAt()
             sessionUsage != null -> Optional.of(sessionUsage.processedAt())
+            workflowRunCreated != null -> Optional.of(workflowRunCreated.processedAt())
+            workflowRunStatusEnded != null -> Optional.of(workflowRunStatusEnded.processedAt())
+            workflowRunPhaseStarted != null -> Optional.of(workflowRunPhaseStarted.processedAt())
+            workflowRunPhaseEnded != null -> Optional.of(workflowRunPhaseEnded.processedAt())
+            workflowRunStatusRunning != null -> Optional.of(workflowRunStatusRunning.processedAt())
+            workflowRunStatusIdle != null -> Optional.of(workflowRunStatusIdle.processedAt())
+            workflowRunError != null -> Optional.of(workflowRunError.processedAt())
             else -> _json.getProperty<OffsetDateTime>("processed_at").asKnown()
         }
 
@@ -295,6 +332,13 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else -> _json.getProperty<String>("session_thread_id").asKnown()
         }
 
@@ -337,6 +381,13 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else -> _json.getProperty<String>("tool_use_id").asKnown()
         }
 
@@ -379,6 +430,13 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else -> _json.getProperty<Boolean>("is_error").asKnown()
         }
 
@@ -421,6 +479,13 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.of(workflowRunCreated.name())
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else -> _json.getProperty<String>("name").asKnown()
         }
 
@@ -463,6 +528,13 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else ->
                 _json
                     .getProperty<BetaManagedAgentsAgentEvaluatedPermission>("evaluated_permission")
@@ -508,6 +580,13 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else -> _json.getProperty<BetaManagedAgentsAgentToolEvaluation>("evaluation").asKnown()
         }
 
@@ -550,6 +629,13 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else ->
                 _json
                     .getProperty<BetaManagedAgentsSessionRefusalStopDetails>("stop_details")
@@ -598,7 +684,64 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else -> _json.getProperty<String>("agent_name").asKnown()
+        }
+
+    fun workflowRunId(): Optional<String> =
+        when {
+            userMessage != null -> Optional.empty()
+            userInterrupt != null -> Optional.empty()
+            userToolConfirmation != null -> Optional.empty()
+            userCustomToolResult != null -> Optional.empty()
+            agentCustomToolUse != null -> Optional.empty()
+            agentMessage != null -> Optional.empty()
+            agentThinking != null -> Optional.empty()
+            agentMcpToolUse != null -> Optional.empty()
+            agentMcpToolResult != null -> Optional.empty()
+            agentToolUse != null -> Optional.empty()
+            agentToolResult != null -> Optional.empty()
+            agentThreadMessageReceived != null -> Optional.empty()
+            agentThreadMessageSent != null -> Optional.empty()
+            agentThreadContextCompacted != null -> Optional.empty()
+            sessionError != null -> Optional.empty()
+            sessionStatusRescheduled != null -> Optional.empty()
+            sessionStatusRunning != null -> Optional.empty()
+            sessionStatusIdle != null -> Optional.empty()
+            sessionStatusTerminated != null -> Optional.empty()
+            sessionThreadCreated != null -> sessionThreadCreated.workflowRunId()
+            spanOutcomeEvaluationStart != null -> Optional.empty()
+            spanOutcomeEvaluationEnd != null -> Optional.empty()
+            spanModelRequestStart != null -> Optional.empty()
+            spanModelRequestEnd != null -> Optional.empty()
+            spanOutcomeEvaluationOngoing != null -> Optional.empty()
+            userDefineOutcome != null -> Optional.empty()
+            sessionDeleted != null -> Optional.empty()
+            sessionThreadStatusRunning != null -> Optional.empty()
+            sessionThreadStatusIdle != null -> Optional.empty()
+            sessionThreadStatusTerminated != null -> Optional.empty()
+            userToolResult != null -> Optional.empty()
+            sessionThreadStatusRescheduled != null -> Optional.empty()
+            sessionUpdated != null -> Optional.empty()
+            eventStart != null -> Optional.empty()
+            eventDelta != null -> Optional.empty()
+            systemMessage != null -> Optional.empty()
+            sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.of(workflowRunCreated.workflowRunId())
+            workflowRunStatusEnded != null -> Optional.of(workflowRunStatusEnded.workflowRunId())
+            workflowRunPhaseStarted != null -> Optional.of(workflowRunPhaseStarted.workflowRunId())
+            workflowRunPhaseEnded != null -> Optional.of(workflowRunPhaseEnded.workflowRunId())
+            workflowRunStatusRunning != null ->
+                Optional.of(workflowRunStatusRunning.workflowRunId())
+            workflowRunStatusIdle != null -> Optional.of(workflowRunStatusIdle.workflowRunId())
+            workflowRunError != null -> workflowRunError.workflowRunId()
+            else -> _json.getProperty<String>("workflow_run_id").asKnown()
         }
 
     fun iteration(): Optional<Int> =
@@ -642,6 +785,13 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else -> _json.getProperty<Int>("iteration").asKnown()
         }
 
@@ -686,7 +836,63 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else -> _json.getProperty<String>("outcome_id").asKnown()
+        }
+
+    fun description(): Optional<String> =
+        when {
+            userMessage != null -> Optional.empty()
+            userInterrupt != null -> Optional.empty()
+            userToolConfirmation != null -> Optional.empty()
+            userCustomToolResult != null -> Optional.empty()
+            agentCustomToolUse != null -> Optional.empty()
+            agentMessage != null -> Optional.empty()
+            agentThinking != null -> Optional.empty()
+            agentMcpToolUse != null -> Optional.empty()
+            agentMcpToolResult != null -> Optional.empty()
+            agentToolUse != null -> Optional.empty()
+            agentToolResult != null -> Optional.empty()
+            agentThreadMessageReceived != null -> Optional.empty()
+            agentThreadMessageSent != null -> Optional.empty()
+            agentThreadContextCompacted != null -> Optional.empty()
+            sessionError != null -> Optional.empty()
+            sessionStatusRescheduled != null -> Optional.empty()
+            sessionStatusRunning != null -> Optional.empty()
+            sessionStatusIdle != null -> Optional.empty()
+            sessionStatusTerminated != null -> Optional.empty()
+            sessionThreadCreated != null -> Optional.empty()
+            spanOutcomeEvaluationStart != null -> Optional.empty()
+            spanOutcomeEvaluationEnd != null -> Optional.empty()
+            spanModelRequestStart != null -> Optional.empty()
+            spanModelRequestEnd != null -> Optional.empty()
+            spanOutcomeEvaluationOngoing != null -> Optional.empty()
+            userDefineOutcome != null -> Optional.of(userDefineOutcome.description())
+            sessionDeleted != null -> Optional.empty()
+            sessionThreadStatusRunning != null -> Optional.empty()
+            sessionThreadStatusIdle != null -> Optional.empty()
+            sessionThreadStatusTerminated != null -> Optional.empty()
+            userToolResult != null -> Optional.empty()
+            sessionThreadStatusRescheduled != null -> Optional.empty()
+            sessionUpdated != null -> Optional.empty()
+            eventStart != null -> Optional.empty()
+            eventDelta != null -> Optional.empty()
+            systemMessage != null -> Optional.empty()
+            sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> workflowRunCreated.description()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
+            else -> _json.getProperty<String>("description").asKnown()
         }
 
     fun budget(): Optional<BetaManagedAgentsBudgetLimit> =
@@ -728,7 +934,64 @@ private constructor(
             eventDelta != null -> Optional.empty()
             systemMessage != null -> Optional.empty()
             sessionUsage != null -> sessionUsage.budget()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null -> Optional.empty()
+            workflowRunPhaseEnded != null -> Optional.empty()
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
             else -> _json.getProperty<BetaManagedAgentsBudgetLimit>("budget").asKnown()
+        }
+
+    fun workflowRunPhaseId(): Optional<String> =
+        when {
+            userMessage != null -> Optional.empty()
+            userInterrupt != null -> Optional.empty()
+            userToolConfirmation != null -> Optional.empty()
+            userCustomToolResult != null -> Optional.empty()
+            agentCustomToolUse != null -> Optional.empty()
+            agentMessage != null -> Optional.empty()
+            agentThinking != null -> Optional.empty()
+            agentMcpToolUse != null -> Optional.empty()
+            agentMcpToolResult != null -> Optional.empty()
+            agentToolUse != null -> Optional.empty()
+            agentToolResult != null -> Optional.empty()
+            agentThreadMessageReceived != null -> Optional.empty()
+            agentThreadMessageSent != null -> Optional.empty()
+            agentThreadContextCompacted != null -> Optional.empty()
+            sessionError != null -> Optional.empty()
+            sessionStatusRescheduled != null -> Optional.empty()
+            sessionStatusRunning != null -> Optional.empty()
+            sessionStatusIdle != null -> Optional.empty()
+            sessionStatusTerminated != null -> Optional.empty()
+            sessionThreadCreated != null -> Optional.empty()
+            spanOutcomeEvaluationStart != null -> Optional.empty()
+            spanOutcomeEvaluationEnd != null -> Optional.empty()
+            spanModelRequestStart != null -> Optional.empty()
+            spanModelRequestEnd != null -> Optional.empty()
+            spanOutcomeEvaluationOngoing != null -> Optional.empty()
+            userDefineOutcome != null -> Optional.empty()
+            sessionDeleted != null -> Optional.empty()
+            sessionThreadStatusRunning != null -> Optional.empty()
+            sessionThreadStatusIdle != null -> Optional.empty()
+            sessionThreadStatusTerminated != null -> Optional.empty()
+            userToolResult != null -> Optional.empty()
+            sessionThreadStatusRescheduled != null -> Optional.empty()
+            sessionUpdated != null -> Optional.empty()
+            eventStart != null -> Optional.empty()
+            eventDelta != null -> Optional.empty()
+            systemMessage != null -> Optional.empty()
+            sessionUsage != null -> Optional.empty()
+            workflowRunCreated != null -> Optional.empty()
+            workflowRunStatusEnded != null -> Optional.empty()
+            workflowRunPhaseStarted != null ->
+                Optional.of(workflowRunPhaseStarted.workflowRunPhaseId())
+            workflowRunPhaseEnded != null -> Optional.of(workflowRunPhaseEnded.workflowRunPhaseId())
+            workflowRunStatusRunning != null -> Optional.empty()
+            workflowRunStatusIdle != null -> Optional.empty()
+            workflowRunError != null -> Optional.empty()
+            else -> _json.getProperty<String>("workflow_run_phase_id").asKnown()
         }
 
     /** A user message event in the session conversation. */
@@ -945,6 +1208,54 @@ private constructor(
     fun sessionUsage(): Optional<BetaManagedAgentsSessionUsageEvent> =
         Optional.ofNullable(sessionUsage)
 
+    /**
+     * A workflow run was created. A workflow run is background work that the session's agent
+     * starts. Emitted once per run, before the run's other `workflow_run.*` events.
+     */
+    fun workflowRunCreated(): Optional<BetaManagedAgentsWorkflowRunCreatedEvent> =
+        Optional.ofNullable(workflowRunCreated)
+
+    /**
+     * A workflow run ended. Emitted once per run, as the last of the run's `workflow_run.*` events.
+     */
+    fun workflowRunStatusEnded(): Optional<BetaManagedAgentsWorkflowRunStatusEndedEvent> =
+        Optional.ofNullable(workflowRunStatusEnded)
+
+    /** A workflow run's plan entered a phase. */
+    fun workflowRunPhaseStarted(): Optional<BetaManagedAgentsWorkflowRunPhaseStartedEvent> =
+        Optional.ofNullable(workflowRunPhaseStarted)
+
+    /**
+     * A workflow run's plan left a phase, or the run's end closed it. Emitted once for every
+     * `workflow_run.phase_started` event, before the run's `workflow_run.status_ended` event. The
+     * event does not say whether the plan finished the phase's work, or why it left.
+     */
+    fun workflowRunPhaseEnded(): Optional<BetaManagedAgentsWorkflowRunPhaseEndedEvent> =
+        Optional.ofNullable(workflowRunPhaseEnded)
+
+    /**
+     * A workflow run is running. Emitted when the run starts to execute, and each time it resumes
+     * after being idle. A run that starts idle emits `workflow_run.status_idle` first.
+     */
+    fun workflowRunStatusRunning(): Optional<BetaManagedAgentsWorkflowRunStatusRunningEvent> =
+        Optional.ofNullable(workflowRunStatusRunning)
+
+    /**
+     * A workflow run is idle. Emitted each time the run goes idle, whatever the cause. If the run
+     * ends while idle, no `workflow_run.status_running` comes between this event and its
+     * `workflow_run.status_ended`.
+     */
+    fun workflowRunStatusIdle(): Optional<BetaManagedAgentsWorkflowRunStatusIdleEvent> =
+        Optional.ofNullable(workflowRunStatusIdle)
+
+    /**
+     * A workflow run met an error, or an error kept a run from being created. A run that ends with
+     * a `result.type` of `error` emits this event before its `workflow_run.status_ended`, with the
+     * same `error`.
+     */
+    fun workflowRunError(): Optional<BetaManagedAgentsWorkflowRunErrorEvent> =
+        Optional.ofNullable(workflowRunError)
+
     fun isUserMessage(): Boolean = userMessage != null
 
     fun isUserInterrupt(): Boolean = userInterrupt != null
@@ -1018,6 +1329,20 @@ private constructor(
     fun isSystemMessage(): Boolean = systemMessage != null
 
     fun isSessionUsage(): Boolean = sessionUsage != null
+
+    fun isWorkflowRunCreated(): Boolean = workflowRunCreated != null
+
+    fun isWorkflowRunStatusEnded(): Boolean = workflowRunStatusEnded != null
+
+    fun isWorkflowRunPhaseStarted(): Boolean = workflowRunPhaseStarted != null
+
+    fun isWorkflowRunPhaseEnded(): Boolean = workflowRunPhaseEnded != null
+
+    fun isWorkflowRunStatusRunning(): Boolean = workflowRunStatusRunning != null
+
+    fun isWorkflowRunStatusIdle(): Boolean = workflowRunStatusIdle != null
+
+    fun isWorkflowRunError(): Boolean = workflowRunError != null
 
     /** A user message event in the session conversation. */
     fun asUserMessage(): BetaManagedAgentsUserMessageEvent = userMessage.getOrThrow("userMessage")
@@ -1229,6 +1554,54 @@ private constructor(
     fun asSessionUsage(): BetaManagedAgentsSessionUsageEvent =
         sessionUsage.getOrThrow("sessionUsage")
 
+    /**
+     * A workflow run was created. A workflow run is background work that the session's agent
+     * starts. Emitted once per run, before the run's other `workflow_run.*` events.
+     */
+    fun asWorkflowRunCreated(): BetaManagedAgentsWorkflowRunCreatedEvent =
+        workflowRunCreated.getOrThrow("workflowRunCreated")
+
+    /**
+     * A workflow run ended. Emitted once per run, as the last of the run's `workflow_run.*` events.
+     */
+    fun asWorkflowRunStatusEnded(): BetaManagedAgentsWorkflowRunStatusEndedEvent =
+        workflowRunStatusEnded.getOrThrow("workflowRunStatusEnded")
+
+    /** A workflow run's plan entered a phase. */
+    fun asWorkflowRunPhaseStarted(): BetaManagedAgentsWorkflowRunPhaseStartedEvent =
+        workflowRunPhaseStarted.getOrThrow("workflowRunPhaseStarted")
+
+    /**
+     * A workflow run's plan left a phase, or the run's end closed it. Emitted once for every
+     * `workflow_run.phase_started` event, before the run's `workflow_run.status_ended` event. The
+     * event does not say whether the plan finished the phase's work, or why it left.
+     */
+    fun asWorkflowRunPhaseEnded(): BetaManagedAgentsWorkflowRunPhaseEndedEvent =
+        workflowRunPhaseEnded.getOrThrow("workflowRunPhaseEnded")
+
+    /**
+     * A workflow run is running. Emitted when the run starts to execute, and each time it resumes
+     * after being idle. A run that starts idle emits `workflow_run.status_idle` first.
+     */
+    fun asWorkflowRunStatusRunning(): BetaManagedAgentsWorkflowRunStatusRunningEvent =
+        workflowRunStatusRunning.getOrThrow("workflowRunStatusRunning")
+
+    /**
+     * A workflow run is idle. Emitted each time the run goes idle, whatever the cause. If the run
+     * ends while idle, no `workflow_run.status_running` comes between this event and its
+     * `workflow_run.status_ended`.
+     */
+    fun asWorkflowRunStatusIdle(): BetaManagedAgentsWorkflowRunStatusIdleEvent =
+        workflowRunStatusIdle.getOrThrow("workflowRunStatusIdle")
+
+    /**
+     * A workflow run met an error, or an error kept a run from being created. A run that ends with
+     * a `result.type` of `error` emits this event before its `workflow_run.status_ended`, with the
+     * same `error`.
+     */
+    fun asWorkflowRunError(): BetaManagedAgentsWorkflowRunErrorEvent =
+        workflowRunError.getOrThrow("workflowRunError")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -1312,6 +1685,18 @@ private constructor(
             eventDelta != null -> visitor.visitEventDelta(eventDelta)
             systemMessage != null -> visitor.visitSystemMessage(systemMessage)
             sessionUsage != null -> visitor.visitSessionUsage(sessionUsage)
+            workflowRunCreated != null -> visitor.visitWorkflowRunCreated(workflowRunCreated)
+            workflowRunStatusEnded != null ->
+                visitor.visitWorkflowRunStatusEnded(workflowRunStatusEnded)
+            workflowRunPhaseStarted != null ->
+                visitor.visitWorkflowRunPhaseStarted(workflowRunPhaseStarted)
+            workflowRunPhaseEnded != null ->
+                visitor.visitWorkflowRunPhaseEnded(workflowRunPhaseEnded)
+            workflowRunStatusRunning != null ->
+                visitor.visitWorkflowRunStatusRunning(workflowRunStatusRunning)
+            workflowRunStatusIdle != null ->
+                visitor.visitWorkflowRunStatusIdle(workflowRunStatusIdle)
+            workflowRunError != null -> visitor.visitWorkflowRunError(workflowRunError)
             else -> visitor.unknown(_json)
         }
 
@@ -1368,6 +1753,13 @@ private constructor(
             eventDelta != null -> eventDelta.validate()
             systemMessage != null -> systemMessage.validate()
             sessionUsage != null -> sessionUsage.validate()
+            workflowRunCreated != null -> workflowRunCreated.validate()
+            workflowRunStatusEnded != null -> workflowRunStatusEnded.validate()
+            workflowRunPhaseStarted != null -> workflowRunPhaseStarted.validate()
+            workflowRunPhaseEnded != null -> workflowRunPhaseEnded.validate()
+            workflowRunStatusRunning != null -> workflowRunStatusRunning.validate()
+            workflowRunStatusIdle != null -> workflowRunStatusIdle.validate()
+            workflowRunError != null -> workflowRunError.validate()
             else ->
                 throw AnthropicInvalidDataException(
                     "Unknown BetaManagedAgentsStreamSessionThreadEvents: $_json"
@@ -1429,6 +1821,13 @@ private constructor(
             eventDelta != null -> eventDelta.validity()
             systemMessage != null -> systemMessage.validity()
             sessionUsage != null -> sessionUsage.validity()
+            workflowRunCreated != null -> workflowRunCreated.validity()
+            workflowRunStatusEnded != null -> workflowRunStatusEnded.validity()
+            workflowRunPhaseStarted != null -> workflowRunPhaseStarted.validity()
+            workflowRunPhaseEnded != null -> workflowRunPhaseEnded.validity()
+            workflowRunStatusRunning != null -> workflowRunStatusRunning.validity()
+            workflowRunStatusIdle != null -> workflowRunStatusIdle.validity()
+            workflowRunError != null -> workflowRunError.validity()
             else -> 0
         }
 
@@ -1474,7 +1873,14 @@ private constructor(
             eventStart == other.eventStart &&
             eventDelta == other.eventDelta &&
             systemMessage == other.systemMessage &&
-            sessionUsage == other.sessionUsage
+            sessionUsage == other.sessionUsage &&
+            workflowRunCreated == other.workflowRunCreated &&
+            workflowRunStatusEnded == other.workflowRunStatusEnded &&
+            workflowRunPhaseStarted == other.workflowRunPhaseStarted &&
+            workflowRunPhaseEnded == other.workflowRunPhaseEnded &&
+            workflowRunStatusRunning == other.workflowRunStatusRunning &&
+            workflowRunStatusIdle == other.workflowRunStatusIdle &&
+            workflowRunError == other.workflowRunError
     }
 
     override fun hashCode(): Int =
@@ -1516,6 +1922,13 @@ private constructor(
             eventDelta,
             systemMessage,
             sessionUsage,
+            workflowRunCreated,
+            workflowRunStatusEnded,
+            workflowRunPhaseStarted,
+            workflowRunPhaseEnded,
+            workflowRunStatusRunning,
+            workflowRunStatusIdle,
+            workflowRunError,
         )
 
     override fun toString(): String =
@@ -1594,6 +2007,20 @@ private constructor(
                 "BetaManagedAgentsStreamSessionThreadEvents{systemMessage=$systemMessage}"
             sessionUsage != null ->
                 "BetaManagedAgentsStreamSessionThreadEvents{sessionUsage=$sessionUsage}"
+            workflowRunCreated != null ->
+                "BetaManagedAgentsStreamSessionThreadEvents{workflowRunCreated=$workflowRunCreated}"
+            workflowRunStatusEnded != null ->
+                "BetaManagedAgentsStreamSessionThreadEvents{workflowRunStatusEnded=$workflowRunStatusEnded}"
+            workflowRunPhaseStarted != null ->
+                "BetaManagedAgentsStreamSessionThreadEvents{workflowRunPhaseStarted=$workflowRunPhaseStarted}"
+            workflowRunPhaseEnded != null ->
+                "BetaManagedAgentsStreamSessionThreadEvents{workflowRunPhaseEnded=$workflowRunPhaseEnded}"
+            workflowRunStatusRunning != null ->
+                "BetaManagedAgentsStreamSessionThreadEvents{workflowRunStatusRunning=$workflowRunStatusRunning}"
+            workflowRunStatusIdle != null ->
+                "BetaManagedAgentsStreamSessionThreadEvents{workflowRunStatusIdle=$workflowRunStatusIdle}"
+            workflowRunError != null ->
+                "BetaManagedAgentsStreamSessionThreadEvents{workflowRunError=$workflowRunError}"
             _json != null -> "BetaManagedAgentsStreamSessionThreadEvents{_unknown=$_json}"
             else ->
                 throw IllegalStateException("Invalid BetaManagedAgentsStreamSessionThreadEvents")
@@ -1913,6 +2340,22 @@ private constructor(
             )
 
         /**
+         * Alias for calling [ofEventStart] with
+         * `BetaManagedAgentsStartEventPreview.ofAgentMessage(agentMessage)`.
+         */
+        @JvmStatic
+        fun ofEventStart(agentMessage: BetaManagedAgentsAgentMessagePreview) =
+            ofEventStart(BetaManagedAgentsStartEventPreview.ofAgentMessage(agentMessage))
+
+        /**
+         * Alias for calling [ofEventStart] with
+         * `BetaManagedAgentsStartEventPreview.ofAgentThinking(agentThinking)`.
+         */
+        @JvmStatic
+        fun ofEventStart(agentThinking: BetaManagedAgentsAgentThinkingPreview) =
+            ofEventStart(BetaManagedAgentsStartEventPreview.ofAgentThinking(agentThinking))
+
+        /**
          * An incremental update to an event that is still being streamed. Deltas are best-effort
          * and may stop early; when the buffered event with id == event_id is produced it carries
          * the complete content. A model request that ends early (an error or interrupt) produces no
@@ -1935,6 +2378,82 @@ private constructor(
         @JvmStatic
         fun ofSessionUsage(sessionUsage: BetaManagedAgentsSessionUsageEvent) =
             BetaManagedAgentsStreamSessionThreadEvents(sessionUsage = sessionUsage)
+
+        /**
+         * A workflow run was created. A workflow run is background work that the session's agent
+         * starts. Emitted once per run, before the run's other `workflow_run.*` events.
+         */
+        @JvmStatic
+        fun ofWorkflowRunCreated(workflowRunCreated: BetaManagedAgentsWorkflowRunCreatedEvent) =
+            BetaManagedAgentsStreamSessionThreadEvents(workflowRunCreated = workflowRunCreated)
+
+        /**
+         * A workflow run ended. Emitted once per run, as the last of the run's `workflow_run.*`
+         * events.
+         */
+        @JvmStatic
+        fun ofWorkflowRunStatusEnded(
+            workflowRunStatusEnded: BetaManagedAgentsWorkflowRunStatusEndedEvent
+        ) =
+            BetaManagedAgentsStreamSessionThreadEvents(
+                workflowRunStatusEnded = workflowRunStatusEnded
+            )
+
+        /** A workflow run's plan entered a phase. */
+        @JvmStatic
+        fun ofWorkflowRunPhaseStarted(
+            workflowRunPhaseStarted: BetaManagedAgentsWorkflowRunPhaseStartedEvent
+        ) =
+            BetaManagedAgentsStreamSessionThreadEvents(
+                workflowRunPhaseStarted = workflowRunPhaseStarted
+            )
+
+        /**
+         * A workflow run's plan left a phase, or the run's end closed it. Emitted once for every
+         * `workflow_run.phase_started` event, before the run's `workflow_run.status_ended` event.
+         * The event does not say whether the plan finished the phase's work, or why it left.
+         */
+        @JvmStatic
+        fun ofWorkflowRunPhaseEnded(
+            workflowRunPhaseEnded: BetaManagedAgentsWorkflowRunPhaseEndedEvent
+        ) =
+            BetaManagedAgentsStreamSessionThreadEvents(
+                workflowRunPhaseEnded = workflowRunPhaseEnded
+            )
+
+        /**
+         * A workflow run is running. Emitted when the run starts to execute, and each time it
+         * resumes after being idle. A run that starts idle emits `workflow_run.status_idle` first.
+         */
+        @JvmStatic
+        fun ofWorkflowRunStatusRunning(
+            workflowRunStatusRunning: BetaManagedAgentsWorkflowRunStatusRunningEvent
+        ) =
+            BetaManagedAgentsStreamSessionThreadEvents(
+                workflowRunStatusRunning = workflowRunStatusRunning
+            )
+
+        /**
+         * A workflow run is idle. Emitted each time the run goes idle, whatever the cause. If the
+         * run ends while idle, no `workflow_run.status_running` comes between this event and its
+         * `workflow_run.status_ended`.
+         */
+        @JvmStatic
+        fun ofWorkflowRunStatusIdle(
+            workflowRunStatusIdle: BetaManagedAgentsWorkflowRunStatusIdleEvent
+        ) =
+            BetaManagedAgentsStreamSessionThreadEvents(
+                workflowRunStatusIdle = workflowRunStatusIdle
+            )
+
+        /**
+         * A workflow run met an error, or an error kept a run from being created. A run that ends
+         * with a `result.type` of `error` emits this event before its `workflow_run.status_ended`,
+         * with the same `error`.
+         */
+        @JvmStatic
+        fun ofWorkflowRunError(workflowRunError: BetaManagedAgentsWorkflowRunErrorEvent) =
+            BetaManagedAgentsStreamSessionThreadEvents(workflowRunError = workflowRunError)
     }
 
     /**
@@ -2157,6 +2676,58 @@ private constructor(
 
         /** Periodic snapshot of the session's cumulative usage and tracked list cost. */
         fun visitSessionUsage(sessionUsage: BetaManagedAgentsSessionUsageEvent): T
+
+        /**
+         * A workflow run was created. A workflow run is background work that the session's agent
+         * starts. Emitted once per run, before the run's other `workflow_run.*` events.
+         */
+        fun visitWorkflowRunCreated(workflowRunCreated: BetaManagedAgentsWorkflowRunCreatedEvent): T
+
+        /**
+         * A workflow run ended. Emitted once per run, as the last of the run's `workflow_run.*`
+         * events.
+         */
+        fun visitWorkflowRunStatusEnded(
+            workflowRunStatusEnded: BetaManagedAgentsWorkflowRunStatusEndedEvent
+        ): T
+
+        /** A workflow run's plan entered a phase. */
+        fun visitWorkflowRunPhaseStarted(
+            workflowRunPhaseStarted: BetaManagedAgentsWorkflowRunPhaseStartedEvent
+        ): T
+
+        /**
+         * A workflow run's plan left a phase, or the run's end closed it. Emitted once for every
+         * `workflow_run.phase_started` event, before the run's `workflow_run.status_ended` event.
+         * The event does not say whether the plan finished the phase's work, or why it left.
+         */
+        fun visitWorkflowRunPhaseEnded(
+            workflowRunPhaseEnded: BetaManagedAgentsWorkflowRunPhaseEndedEvent
+        ): T
+
+        /**
+         * A workflow run is running. Emitted when the run starts to execute, and each time it
+         * resumes after being idle. A run that starts idle emits `workflow_run.status_idle` first.
+         */
+        fun visitWorkflowRunStatusRunning(
+            workflowRunStatusRunning: BetaManagedAgentsWorkflowRunStatusRunningEvent
+        ): T
+
+        /**
+         * A workflow run is idle. Emitted each time the run goes idle, whatever the cause. If the
+         * run ends while idle, no `workflow_run.status_running` comes between this event and its
+         * `workflow_run.status_ended`.
+         */
+        fun visitWorkflowRunStatusIdle(
+            workflowRunStatusIdle: BetaManagedAgentsWorkflowRunStatusIdleEvent
+        ): T
+
+        /**
+         * A workflow run met an error, or an error kept a run from being created. A run that ends
+         * with a `result.type` of `error` emits this event before its `workflow_run.status_ended`,
+         * with the same `error`.
+         */
+        fun visitWorkflowRunError(workflowRunError: BetaManagedAgentsWorkflowRunErrorEvent): T
 
         /**
          * Maps an unknown variant of [BetaManagedAgentsStreamSessionThreadEvents] to a value of
@@ -2623,6 +3194,90 @@ private constructor(
                             )
                         } ?: BetaManagedAgentsStreamSessionThreadEvents(_json = json)
                 }
+                "workflow_run.created" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsWorkflowRunCreatedEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsStreamSessionThreadEvents(
+                                workflowRunCreated = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsStreamSessionThreadEvents(_json = json)
+                }
+                "workflow_run.status_ended" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsWorkflowRunStatusEndedEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsStreamSessionThreadEvents(
+                                workflowRunStatusEnded = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsStreamSessionThreadEvents(_json = json)
+                }
+                "workflow_run.phase_started" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsWorkflowRunPhaseStartedEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsStreamSessionThreadEvents(
+                                workflowRunPhaseStarted = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsStreamSessionThreadEvents(_json = json)
+                }
+                "workflow_run.phase_ended" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsWorkflowRunPhaseEndedEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsStreamSessionThreadEvents(
+                                workflowRunPhaseEnded = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsStreamSessionThreadEvents(_json = json)
+                }
+                "workflow_run.status_running" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsWorkflowRunStatusRunningEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsStreamSessionThreadEvents(
+                                workflowRunStatusRunning = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsStreamSessionThreadEvents(_json = json)
+                }
+                "workflow_run.status_idle" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsWorkflowRunStatusIdleEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsStreamSessionThreadEvents(
+                                workflowRunStatusIdle = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsStreamSessionThreadEvents(_json = json)
+                }
+                "workflow_run.error" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<BetaManagedAgentsWorkflowRunErrorEvent>(),
+                        )
+                        ?.let {
+                            BetaManagedAgentsStreamSessionThreadEvents(
+                                workflowRunError = it,
+                                _json = json,
+                            )
+                        } ?: BetaManagedAgentsStreamSessionThreadEvents(_json = json)
+                }
             }
 
             return BetaManagedAgentsStreamSessionThreadEvents(_json = json)
@@ -2695,6 +3350,18 @@ private constructor(
                 value.eventDelta != null -> generator.writeObject(value.eventDelta)
                 value.systemMessage != null -> generator.writeObject(value.systemMessage)
                 value.sessionUsage != null -> generator.writeObject(value.sessionUsage)
+                value.workflowRunCreated != null -> generator.writeObject(value.workflowRunCreated)
+                value.workflowRunStatusEnded != null ->
+                    generator.writeObject(value.workflowRunStatusEnded)
+                value.workflowRunPhaseStarted != null ->
+                    generator.writeObject(value.workflowRunPhaseStarted)
+                value.workflowRunPhaseEnded != null ->
+                    generator.writeObject(value.workflowRunPhaseEnded)
+                value.workflowRunStatusRunning != null ->
+                    generator.writeObject(value.workflowRunStatusRunning)
+                value.workflowRunStatusIdle != null ->
+                    generator.writeObject(value.workflowRunStatusIdle)
+                value.workflowRunError != null -> generator.writeObject(value.workflowRunError)
                 value._json != null -> generator.writeObject(value._json)
                 else ->
                     throw IllegalStateException(
@@ -2808,6 +3475,23 @@ private constructor(
 
             @JvmField val SESSION_USAGE = Type(JsonField.of("session.usage"))
 
+            @JvmField val WORKFLOW_RUN_CREATED = Type(JsonField.of("workflow_run.created"))
+
+            @JvmField
+            val WORKFLOW_RUN_STATUS_ENDED = Type(JsonField.of("workflow_run.status_ended"))
+
+            @JvmField
+            val WORKFLOW_RUN_PHASE_STARTED = Type(JsonField.of("workflow_run.phase_started"))
+
+            @JvmField val WORKFLOW_RUN_PHASE_ENDED = Type(JsonField.of("workflow_run.phase_ended"))
+
+            @JvmField
+            val WORKFLOW_RUN_STATUS_RUNNING = Type(JsonField.of("workflow_run.status_running"))
+
+            @JvmField val WORKFLOW_RUN_STATUS_IDLE = Type(JsonField.of("workflow_run.status_idle"))
+
+            @JvmField val WORKFLOW_RUN_ERROR = Type(JsonField.of("workflow_run.error"))
+
             @JvmStatic
             fun of(value: String): Type =
                 // Intern known values so `==` works
@@ -2849,6 +3533,13 @@ private constructor(
                     "event_delta" -> EVENT_DELTA
                     "system.message" -> SYSTEM_MESSAGE
                     "session.usage" -> SESSION_USAGE
+                    "workflow_run.created" -> WORKFLOW_RUN_CREATED
+                    "workflow_run.status_ended" -> WORKFLOW_RUN_STATUS_ENDED
+                    "workflow_run.phase_started" -> WORKFLOW_RUN_PHASE_STARTED
+                    "workflow_run.phase_ended" -> WORKFLOW_RUN_PHASE_ENDED
+                    "workflow_run.status_running" -> WORKFLOW_RUN_STATUS_RUNNING
+                    "workflow_run.status_idle" -> WORKFLOW_RUN_STATUS_IDLE
+                    "workflow_run.error" -> WORKFLOW_RUN_ERROR
                     else -> Type(JsonField.of(value))
                 }
 
@@ -2897,6 +3588,13 @@ private constructor(
             EVENT_DELTA,
             SYSTEM_MESSAGE,
             SESSION_USAGE,
+            WORKFLOW_RUN_CREATED,
+            WORKFLOW_RUN_STATUS_ENDED,
+            WORKFLOW_RUN_PHASE_STARTED,
+            WORKFLOW_RUN_PHASE_ENDED,
+            WORKFLOW_RUN_STATUS_RUNNING,
+            WORKFLOW_RUN_STATUS_IDLE,
+            WORKFLOW_RUN_ERROR,
         }
 
         /**
@@ -2946,6 +3644,13 @@ private constructor(
             EVENT_DELTA,
             SYSTEM_MESSAGE,
             SESSION_USAGE,
+            WORKFLOW_RUN_CREATED,
+            WORKFLOW_RUN_STATUS_ENDED,
+            WORKFLOW_RUN_PHASE_STARTED,
+            WORKFLOW_RUN_PHASE_ENDED,
+            WORKFLOW_RUN_STATUS_RUNNING,
+            WORKFLOW_RUN_STATUS_IDLE,
+            WORKFLOW_RUN_ERROR,
             /** An enum member indicating that [Type] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -2996,6 +3701,13 @@ private constructor(
                 EVENT_DELTA -> Value.EVENT_DELTA
                 SYSTEM_MESSAGE -> Value.SYSTEM_MESSAGE
                 SESSION_USAGE -> Value.SESSION_USAGE
+                WORKFLOW_RUN_CREATED -> Value.WORKFLOW_RUN_CREATED
+                WORKFLOW_RUN_STATUS_ENDED -> Value.WORKFLOW_RUN_STATUS_ENDED
+                WORKFLOW_RUN_PHASE_STARTED -> Value.WORKFLOW_RUN_PHASE_STARTED
+                WORKFLOW_RUN_PHASE_ENDED -> Value.WORKFLOW_RUN_PHASE_ENDED
+                WORKFLOW_RUN_STATUS_RUNNING -> Value.WORKFLOW_RUN_STATUS_RUNNING
+                WORKFLOW_RUN_STATUS_IDLE -> Value.WORKFLOW_RUN_STATUS_IDLE
+                WORKFLOW_RUN_ERROR -> Value.WORKFLOW_RUN_ERROR
                 else -> Value._UNKNOWN
             }
 
@@ -3047,6 +3759,13 @@ private constructor(
                 EVENT_DELTA -> Known.EVENT_DELTA
                 SYSTEM_MESSAGE -> Known.SYSTEM_MESSAGE
                 SESSION_USAGE -> Known.SESSION_USAGE
+                WORKFLOW_RUN_CREATED -> Known.WORKFLOW_RUN_CREATED
+                WORKFLOW_RUN_STATUS_ENDED -> Known.WORKFLOW_RUN_STATUS_ENDED
+                WORKFLOW_RUN_PHASE_STARTED -> Known.WORKFLOW_RUN_PHASE_STARTED
+                WORKFLOW_RUN_PHASE_ENDED -> Known.WORKFLOW_RUN_PHASE_ENDED
+                WORKFLOW_RUN_STATUS_RUNNING -> Known.WORKFLOW_RUN_STATUS_RUNNING
+                WORKFLOW_RUN_STATUS_IDLE -> Known.WORKFLOW_RUN_STATUS_IDLE
+                WORKFLOW_RUN_ERROR -> Known.WORKFLOW_RUN_ERROR
                 else -> throw AnthropicInvalidDataException("Unknown Type: $value")
             }
 

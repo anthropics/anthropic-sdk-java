@@ -434,6 +434,59 @@ private constructor(
         fun addData(sessionUsage: BetaManagedAgentsSessionUsageEvent) =
             addData(BetaManagedAgentsSessionEvent.ofSessionUsage(sessionUsage))
 
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofWorkflowRunCreated(workflowRunCreated)`.
+         */
+        fun addData(workflowRunCreated: BetaManagedAgentsWorkflowRunCreatedEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofWorkflowRunCreated(workflowRunCreated))
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofWorkflowRunStatusEnded(workflowRunStatusEnded)`.
+         */
+        fun addData(workflowRunStatusEnded: BetaManagedAgentsWorkflowRunStatusEndedEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofWorkflowRunStatusEnded(workflowRunStatusEnded))
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofWorkflowRunPhaseStarted(workflowRunPhaseStarted)`.
+         */
+        fun addData(workflowRunPhaseStarted: BetaManagedAgentsWorkflowRunPhaseStartedEvent) =
+            addData(
+                BetaManagedAgentsSessionEvent.ofWorkflowRunPhaseStarted(workflowRunPhaseStarted)
+            )
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofWorkflowRunPhaseEnded(workflowRunPhaseEnded)`.
+         */
+        fun addData(workflowRunPhaseEnded: BetaManagedAgentsWorkflowRunPhaseEndedEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofWorkflowRunPhaseEnded(workflowRunPhaseEnded))
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofWorkflowRunStatusRunning(workflowRunStatusRunning)`.
+         */
+        fun addData(workflowRunStatusRunning: BetaManagedAgentsWorkflowRunStatusRunningEvent) =
+            addData(
+                BetaManagedAgentsSessionEvent.ofWorkflowRunStatusRunning(workflowRunStatusRunning)
+            )
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofWorkflowRunStatusIdle(workflowRunStatusIdle)`.
+         */
+        fun addData(workflowRunStatusIdle: BetaManagedAgentsWorkflowRunStatusIdleEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofWorkflowRunStatusIdle(workflowRunStatusIdle))
+
+        /**
+         * Alias for calling [addData] with
+         * `BetaManagedAgentsSessionEvent.ofWorkflowRunError(workflowRunError)`.
+         */
+        fun addData(workflowRunError: BetaManagedAgentsWorkflowRunErrorEvent) =
+            addData(BetaManagedAgentsSessionEvent.ofWorkflowRunError(workflowRunError))
+
         /** Opaque cursor for the next page. Null when no more results. */
         fun nextPage(nextPage: String?) = nextPage(JsonField.ofNullable(nextPage))
 

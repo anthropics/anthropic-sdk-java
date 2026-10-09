@@ -164,6 +164,21 @@ private constructor(
          * the given value.
          */
         @JvmStatic fun of(source: Source) = builder().source(source).build()
+
+        /** Alias for calling [of] with `Source.ofBase64(base64)`. */
+        @JvmStatic fun of(base64: Base64PdfSource) = of(Source.ofBase64(base64))
+
+        /** Alias for calling [of] with `Source.ofText(text)`. */
+        @JvmStatic fun of(text: PlainTextSource) = of(Source.ofText(text))
+
+        /** Alias for calling [of] with `Source.ofContent(content)`. */
+        @JvmStatic fun of(content: ContentBlockSource) = of(Source.ofContent(content))
+
+        /** Alias for calling [of] with `Source.ofUrl(url)`. */
+        @JvmStatic fun of(url: UrlPdfSource) = of(Source.ofUrl(url))
+
+        /** Alias for calling [of] with `Source.ofFile(file)`. */
+        @JvmStatic fun of(file: FileDocumentSource) = of(Source.ofFile(file))
     }
 
     /** A builder for [DocumentBlockParam]. */
@@ -651,6 +666,18 @@ private constructor(
             @JvmStatic
             fun ofContent(content: ContentBlockSource.Content) =
                 ofContent(ContentBlockSource.of(content))
+
+            /** Alias for calling [ofContent] with `ContentBlockSource.Content.ofString(string)`. */
+            @JvmStatic
+            fun ofContent(string: String) = ofContent(ContentBlockSource.Content.ofString(string))
+
+            /**
+             * Alias for calling [ofContent] with
+             * `ContentBlockSource.Content.ofBlockSource(blockSource)`.
+             */
+            @JvmStatic
+            fun ofContentOfBlockSource(blockSource: List<ContentBlockSourceContent>) =
+                ofContent(ContentBlockSource.Content.ofBlockSource(blockSource))
 
             @JvmStatic fun ofUrl(url: UrlPdfSource) = Source(url = url)
 

@@ -2,6 +2,8 @@ package com.anthropic.models.beta.organization.analytics.skills
 
 import com.anthropic.core.jsonMapper
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillActivity
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillChatCoworkUnifiedChatMetrics
+import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillChatMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillClaudeCodeMetrics
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsSkillCoworkMetrics
@@ -33,6 +35,12 @@ internal class SkillListPageResponseTest {
                         )
                         .skillName("skill_name")
                         .attributedListPrice("attributed_list_price")
+                        .chatCoworkUnifiedMetrics(
+                            BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                                .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
+                                .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
+                                .build()
+                        )
                         .currency("currency")
                         .enableCount(0L)
                         .estimatedOverageSpend("estimated_overage_spend")
@@ -65,6 +73,12 @@ internal class SkillListPageResponseTest {
                     )
                     .skillName("skill_name")
                     .attributedListPrice("attributed_list_price")
+                    .chatCoworkUnifiedMetrics(
+                        BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                            .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
+                            .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
+                            .build()
+                    )
                     .currency("currency")
                     .enableCount(0L)
                     .estimatedOverageSpend("estimated_overage_spend")
@@ -101,6 +115,12 @@ internal class SkillListPageResponseTest {
                         )
                         .skillName("skill_name")
                         .attributedListPrice("attributed_list_price")
+                        .chatCoworkUnifiedMetrics(
+                            BetaAnalyticsSkillActivity.ChatCoworkUnifiedMetrics.builder()
+                                .chat(BetaAnalyticsSkillChatCoworkUnifiedChatMetrics.of(0L))
+                                .sessions(BetaAnalyticsSkillChatCoworkUnifiedSessionsMetrics.of(0L))
+                                .build()
+                        )
                         .currency("currency")
                         .enableCount(0L)
                         .estimatedOverageSpend("estimated_overage_spend")

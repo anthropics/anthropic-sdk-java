@@ -17,6 +17,9 @@ internal class BetaAnalyticsPluginActivityTest {
                 .installCount(0L)
                 .invocationCount(0L)
                 .pluginName("plugin_name")
+                .chatCoworkUnifiedMetrics(
+                    BetaAnalyticsPluginActivity.ChatCoworkUnifiedMetrics.of(0L)
+                )
                 .pluginId("plugin_id")
                 .product("product")
                 .rbacGroupId("rbac_group_id")
@@ -32,6 +35,8 @@ internal class BetaAnalyticsPluginActivityTest {
         assertThat(betaAnalyticsPluginActivity.installCount()).contains(0L)
         assertThat(betaAnalyticsPluginActivity.invocationCount()).isEqualTo(0L)
         assertThat(betaAnalyticsPluginActivity.pluginName()).isEqualTo("plugin_name")
+        assertThat(betaAnalyticsPluginActivity.chatCoworkUnifiedMetrics())
+            .contains(BetaAnalyticsPluginActivity.ChatCoworkUnifiedMetrics.of(0L))
         assertThat(betaAnalyticsPluginActivity.pluginId()).contains("plugin_id")
         assertThat(betaAnalyticsPluginActivity.product()).contains("product")
         assertThat(betaAnalyticsPluginActivity.rbacGroupId()).contains("rbac_group_id")
@@ -50,6 +55,9 @@ internal class BetaAnalyticsPluginActivityTest {
                 .installCount(0L)
                 .invocationCount(0L)
                 .pluginName("plugin_name")
+                .chatCoworkUnifiedMetrics(
+                    BetaAnalyticsPluginActivity.ChatCoworkUnifiedMetrics.of(0L)
+                )
                 .pluginId("plugin_id")
                 .product("product")
                 .rbacGroupId("rbac_group_id")

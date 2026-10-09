@@ -63,6 +63,8 @@ class AnthropicClientAsyncImpl(private val clientOptions: ClientOptions) : Anthr
 
     override fun withRawResponse(): AnthropicClientAsync.WithRawResponse = withRawResponse
 
+    override fun options(): ClientOptions = clientOptions
+
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AnthropicClientAsync =
         AnthropicClientAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 

@@ -17,7 +17,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSelfParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsUrlMcpServerParams
-import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentParams
+import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentRosterEntryParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -53,16 +53,15 @@ internal class AgentServiceTest {
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
-                    .multiagent(
-                        BetaManagedAgentsMultiagentParams.builder()
-                            .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                            .addAgent(
-                                BetaManagedAgentsMultiagentSelfParams.of(
-                                    BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                                )
-                            )
-                            .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
-                            .build()
+                    .coordinatorMultiagent(
+                        listOf(
+                            BetaManagedAgentsMultiagentRosterEntryParams.ofString(
+                                "agent_011CZkYqphY8vELVzwCUpqiQ"
+                            ),
+                            BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
+                                BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                            ),
+                        )
                     )
                     .addSkill(
                         BetaManagedAgentsAnthropicSkillParams.builder()
@@ -171,16 +170,15 @@ internal class AgentServiceTest {
                             .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                             .build()
                     )
-                    .multiagent(
-                        BetaManagedAgentsMultiagentParams.builder()
-                            .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                            .addAgent(
-                                BetaManagedAgentsMultiagentSelfParams.of(
-                                    BetaManagedAgentsMultiagentSelfParams.Type.SELF
-                                )
-                            )
-                            .type(BetaManagedAgentsMultiagentParams.Type.COORDINATOR)
-                            .build()
+                    .coordinatorMultiagent(
+                        listOf(
+                            BetaManagedAgentsMultiagentRosterEntryParams.ofString(
+                                "agent_011CZkYqphY8vELVzwCUpqiQ"
+                            ),
+                            BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
+                                BetaManagedAgentsMultiagentSelfParams.Type.SELF
+                            ),
+                        )
                     )
                     .name("name")
                     .addSkill(

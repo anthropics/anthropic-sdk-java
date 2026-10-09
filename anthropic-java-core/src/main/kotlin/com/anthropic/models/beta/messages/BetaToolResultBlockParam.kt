@@ -837,6 +837,23 @@ private constructor(
                 fun ofImage(source: BetaImageBlockParam.Source) =
                     ofImage(BetaImageBlockParam.of(source))
 
+                /**
+                 * Alias for calling [ofImage] with `BetaImageBlockParam.Source.ofBase64(base64)`.
+                 */
+                @JvmStatic
+                fun ofImage(base64: BetaBase64ImageSource) =
+                    ofImage(BetaImageBlockParam.Source.ofBase64(base64))
+
+                /** Alias for calling [ofImage] with `BetaImageBlockParam.Source.ofUrl(url)`. */
+                @JvmStatic
+                fun ofImage(url: BetaUrlImageSource) =
+                    ofImage(BetaImageBlockParam.Source.ofUrl(url))
+
+                /** Alias for calling [ofImage] with `BetaImageBlockParam.Source.ofFile(file)`. */
+                @JvmStatic
+                fun ofImage(file: BetaFileImageSource) =
+                    ofImage(BetaImageBlockParam.Source.ofFile(file))
+
                 @JvmStatic
                 fun ofSearchResult(searchResult: BetaSearchResultBlockParam) =
                     Block(searchResult = searchResult)
@@ -851,6 +868,45 @@ private constructor(
                 @JvmStatic
                 fun ofDocument(source: BetaRequestDocumentBlock.Source) =
                     ofDocument(BetaRequestDocumentBlock.of(source))
+
+                /**
+                 * Alias for calling [ofDocument] with
+                 * `BetaRequestDocumentBlock.Source.ofBase64(base64)`.
+                 */
+                @JvmStatic
+                fun ofDocument(base64: BetaBase64PdfSource) =
+                    ofDocument(BetaRequestDocumentBlock.Source.ofBase64(base64))
+
+                /**
+                 * Alias for calling [ofDocument] with
+                 * `BetaRequestDocumentBlock.Source.ofText(text)`.
+                 */
+                @JvmStatic
+                fun ofDocument(text: BetaPlainTextSource) =
+                    ofDocument(BetaRequestDocumentBlock.Source.ofText(text))
+
+                /**
+                 * Alias for calling [ofDocument] with
+                 * `BetaRequestDocumentBlock.Source.ofContent(content)`.
+                 */
+                @JvmStatic
+                fun ofDocument(content: BetaContentBlockSource) =
+                    ofDocument(BetaRequestDocumentBlock.Source.ofContent(content))
+
+                /**
+                 * Alias for calling [ofDocument] with `BetaRequestDocumentBlock.Source.ofUrl(url)`.
+                 */
+                @JvmStatic
+                fun ofDocument(url: BetaUrlPdfSource) =
+                    ofDocument(BetaRequestDocumentBlock.Source.ofUrl(url))
+
+                /**
+                 * Alias for calling [ofDocument] with
+                 * `BetaRequestDocumentBlock.Source.ofFile(file)`.
+                 */
+                @JvmStatic
+                fun ofDocument(file: BetaFileDocumentSource) =
+                    ofDocument(BetaRequestDocumentBlock.Source.ofFile(file))
 
                 /** Tool reference block that can be included in tool_result content. */
                 @JvmStatic

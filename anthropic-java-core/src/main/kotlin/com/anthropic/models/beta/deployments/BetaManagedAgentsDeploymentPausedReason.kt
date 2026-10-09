@@ -191,6 +191,164 @@ private constructor(
                     .error(error)
                     .build()
             )
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentArchived(environmentArchived)`.
+         */
+        @JvmStatic
+        fun ofError(
+            environmentArchived: BetaManagedAgentsEnvironmentArchivedDeploymentPausedReasonError
+        ) =
+            ofError(
+                BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentArchived(
+                    environmentArchived
+                )
+            )
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofAgentArchived(agentArchived)`.
+         */
+        @JvmStatic
+        fun ofError(agentArchived: BetaManagedAgentsAgentArchivedDeploymentPausedReasonError) =
+            ofError(BetaManagedAgentsDeploymentPausedReasonError.ofAgentArchived(agentArchived))
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentNotFound(environmentNotFound)`.
+         */
+        @JvmStatic
+        fun ofError(
+            environmentNotFound: BetaManagedAgentsEnvironmentNotFoundDeploymentPausedReasonError
+        ) =
+            ofError(
+                BetaManagedAgentsDeploymentPausedReasonError.ofEnvironmentNotFound(
+                    environmentNotFound
+                )
+            )
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofVaultNotFound(vaultNotFound)`.
+         */
+        @JvmStatic
+        fun ofError(vaultNotFound: BetaManagedAgentsVaultNotFoundDeploymentPausedReasonError) =
+            ofError(BetaManagedAgentsDeploymentPausedReasonError.ofVaultNotFound(vaultNotFound))
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofFileNotFound(fileNotFound)`.
+         */
+        @JvmStatic
+        fun ofError(fileNotFound: BetaManagedAgentsFileNotFoundDeploymentPausedReasonError) =
+            ofError(BetaManagedAgentsDeploymentPausedReasonError.ofFileNotFound(fileNotFound))
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofSessionResourceNotFound(sessionResourceNotFound)`.
+         */
+        @JvmStatic
+        fun ofError(
+            sessionResourceNotFound:
+                BetaManagedAgentsSessionResourceNotFoundDeploymentPausedReasonError
+        ) =
+            ofError(
+                BetaManagedAgentsDeploymentPausedReasonError.ofSessionResourceNotFound(
+                    sessionResourceNotFound
+                )
+            )
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofWorkspaceArchived(workspaceArchived)`.
+         */
+        @JvmStatic
+        fun ofError(
+            workspaceArchived: BetaManagedAgentsWorkspaceArchivedDeploymentPausedReasonError
+        ) =
+            ofError(
+                BetaManagedAgentsDeploymentPausedReasonError.ofWorkspaceArchived(workspaceArchived)
+            )
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofOrganizationDisabled(organizationDisabled)`.
+         */
+        @JvmStatic
+        fun ofError(
+            organizationDisabled: BetaManagedAgentsOrganizationDisabledDeploymentPausedReasonError
+        ) =
+            ofError(
+                BetaManagedAgentsDeploymentPausedReasonError.ofOrganizationDisabled(
+                    organizationDisabled
+                )
+            )
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofMemoryStoreArchived(memoryStoreArchived)`.
+         */
+        @JvmStatic
+        fun ofError(
+            memoryStoreArchived: BetaManagedAgentsMemoryStoreArchivedDeploymentPausedReasonError
+        ) =
+            ofError(
+                BetaManagedAgentsDeploymentPausedReasonError.ofMemoryStoreArchived(
+                    memoryStoreArchived
+                )
+            )
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofSkillNotFound(skillNotFound)`.
+         */
+        @JvmStatic
+        fun ofError(skillNotFound: BetaManagedAgentsSkillNotFoundDeploymentPausedReasonError) =
+            ofError(BetaManagedAgentsDeploymentPausedReasonError.ofSkillNotFound(skillNotFound))
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofVaultArchived(vaultArchived)`.
+         */
+        @JvmStatic
+        fun ofError(vaultArchived: BetaManagedAgentsVaultArchivedDeploymentPausedReasonError) =
+            ofError(BetaManagedAgentsDeploymentPausedReasonError.ofVaultArchived(vaultArchived))
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofUnknown(unknown)`.
+         */
+        @JvmStatic
+        fun ofError(unknown: BetaManagedAgentsUnknownDeploymentPausedReasonError) =
+            ofError(BetaManagedAgentsDeploymentPausedReasonError.ofUnknown(unknown))
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofSelfHostedResourcesUnsupported(selfHostedResourcesUnsupported)`.
+         */
+        @JvmStatic
+        fun ofError(
+            selfHostedResourcesUnsupported:
+                BetaManagedAgentsSelfHostedResourcesUnsupportedDeploymentPausedReasonError
+        ) =
+            ofError(
+                BetaManagedAgentsDeploymentPausedReasonError.ofSelfHostedResourcesUnsupported(
+                    selfHostedResourcesUnsupported
+                )
+            )
+
+        /**
+         * Alias for calling [ofError] with
+         * `BetaManagedAgentsDeploymentPausedReasonError.ofMcpEgressBlocked(mcpEgressBlocked)`.
+         */
+        @JvmStatic
+        fun ofError(
+            mcpEgressBlocked: BetaManagedAgentsMcpEgressBlockedDeploymentPausedReasonError
+        ) =
+            ofError(
+                BetaManagedAgentsDeploymentPausedReasonError.ofMcpEgressBlocked(mcpEgressBlocked)
+            )
     }
 
     /**

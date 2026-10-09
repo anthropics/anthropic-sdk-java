@@ -933,6 +933,26 @@ private constructor(
                 )
 
             /**
+             * Alias for calling [ofImage] with
+             * `BetaManagedAgentsImageBlock.Source.ofBase64(base64)`.
+             */
+            @JvmStatic
+            fun ofImage(base64: BetaManagedAgentsBase64ImageSource) =
+                ofImage(BetaManagedAgentsImageBlock.Source.ofBase64(base64))
+
+            /** Alias for calling [ofImage] with `BetaManagedAgentsImageBlock.Source.ofUrl(url)`. */
+            @JvmStatic
+            fun ofImage(url: BetaManagedAgentsUrlImageSource) =
+                ofImage(BetaManagedAgentsImageBlock.Source.ofUrl(url))
+
+            /**
+             * Alias for calling [ofImage] with `BetaManagedAgentsImageBlock.Source.ofFile(file)`.
+             */
+            @JvmStatic
+            fun ofImage(file: BetaManagedAgentsFileImageSource) =
+                ofImage(BetaManagedAgentsImageBlock.Source.ofFile(file))
+
+            /**
              * Document content, either specified directly as base64 data, as text, or as a
              * reference via a URL.
              */
@@ -951,6 +971,38 @@ private constructor(
                         .source(source)
                         .build()
                 )
+
+            /**
+             * Alias for calling [ofDocument] with
+             * `BetaManagedAgentsDocumentBlock.Source.ofBase64(base64)`.
+             */
+            @JvmStatic
+            fun ofDocument(base64: BetaManagedAgentsBase64DocumentSource) =
+                ofDocument(BetaManagedAgentsDocumentBlock.Source.ofBase64(base64))
+
+            /**
+             * Alias for calling [ofDocument] with
+             * `BetaManagedAgentsDocumentBlock.Source.ofText(text)`.
+             */
+            @JvmStatic
+            fun ofDocument(text: BetaManagedAgentsPlainTextDocumentSource) =
+                ofDocument(BetaManagedAgentsDocumentBlock.Source.ofText(text))
+
+            /**
+             * Alias for calling [ofDocument] with
+             * `BetaManagedAgentsDocumentBlock.Source.ofUrl(url)`.
+             */
+            @JvmStatic
+            fun ofDocument(url: BetaManagedAgentsUrlDocumentSource) =
+                ofDocument(BetaManagedAgentsDocumentBlock.Source.ofUrl(url))
+
+            /**
+             * Alias for calling [ofDocument] with
+             * `BetaManagedAgentsDocumentBlock.Source.ofFile(file)`.
+             */
+            @JvmStatic
+            fun ofDocument(file: BetaManagedAgentsFileDocumentSource) =
+                ofDocument(BetaManagedAgentsDocumentBlock.Source.ofFile(file))
 
             /** A block containing a web search result. */
             @JvmStatic

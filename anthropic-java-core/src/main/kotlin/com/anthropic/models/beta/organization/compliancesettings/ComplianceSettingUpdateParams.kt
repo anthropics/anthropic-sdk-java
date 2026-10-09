@@ -331,6 +331,20 @@ private constructor(
              */
             @JvmStatic
             fun of(state: BetaComplianceSettingsStateParam) = builder().state(state).build()
+
+            /**
+             * Alias for calling [of] with `BetaComplianceSettingsStateParam.ofEnabled(enabled)`.
+             */
+            @JvmStatic
+            fun of(enabled: BetaComplianceSettingsStateEnabledParam) =
+                of(BetaComplianceSettingsStateParam.ofEnabled(enabled))
+
+            /**
+             * Alias for calling [of] with `BetaComplianceSettingsStateParam.ofDisabled(disabled)`.
+             */
+            @JvmStatic
+            fun of(disabled: BetaComplianceSettingsStateDisabledParam) =
+                of(BetaComplianceSettingsStateParam.ofDisabled(disabled))
         }
 
         /** A builder for [Body]. */

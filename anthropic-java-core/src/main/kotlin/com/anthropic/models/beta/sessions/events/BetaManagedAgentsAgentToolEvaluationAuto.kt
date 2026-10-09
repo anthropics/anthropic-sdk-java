@@ -95,6 +95,28 @@ private constructor(
         @JvmStatic
         fun of(evaluatedPermission: BetaManagedAgentsAgentAutoEvaluatedPermission) =
             builder().evaluatedPermission(evaluatedPermission).build()
+
+        /**
+         * Alias for calling [of] with
+         * `BetaManagedAgentsAgentAutoEvaluatedPermission.ofAllow(allow)`.
+         */
+        @JvmStatic
+        fun of(allow: BetaManagedAgentsAgentAutoEvaluatedPermissionAllow) =
+            of(BetaManagedAgentsAgentAutoEvaluatedPermission.ofAllow(allow))
+
+        /**
+         * Alias for calling [of] with `BetaManagedAgentsAgentAutoEvaluatedPermission.ofAsk(ask)`.
+         */
+        @JvmStatic
+        fun of(ask: BetaManagedAgentsAgentAutoEvaluatedPermissionAsk) =
+            of(BetaManagedAgentsAgentAutoEvaluatedPermission.ofAsk(ask))
+
+        /**
+         * Alias for calling [of] with `BetaManagedAgentsAgentAutoEvaluatedPermission.ofDeny(deny)`.
+         */
+        @JvmStatic
+        fun of(deny: BetaManagedAgentsAgentAutoEvaluatedPermissionDeny) =
+            of(BetaManagedAgentsAgentAutoEvaluatedPermission.ofDeny(deny))
     }
 
     /** A builder for [BetaManagedAgentsAgentToolEvaluationAuto]. */

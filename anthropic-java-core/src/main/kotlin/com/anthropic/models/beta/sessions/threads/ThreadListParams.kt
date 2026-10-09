@@ -15,6 +15,7 @@ private constructor(
     private val sessionId: String?,
     private val limit: Int?,
     private val page: String?,
+    private val statuses: List<BetaManagedAgentsSessionThreadStatus>?,
     private val betas: List<AnthropicBeta>?,
     private val workspaceId: String?,
     private val additionalHeaders: Headers,
@@ -28,6 +29,15 @@ private constructor(
 
     /** Opaque pagination cursor from a previous response's `next_page`. Forward-only. */
     fun page(): Optional<String> = Optional.ofNullable(page)
+
+    /**
+     * Return only threads that have one of these statuses.
+     *
+     * Repeat the parameter to give more than one status. Leave it out to return threads of every
+     * status.
+     */
+    fun statuses(): Optional<List<BetaManagedAgentsSessionThreadStatus>> =
+        Optional.ofNullable(statuses)
 
     /** Optional header to specify the beta version(s) you want to use. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
@@ -63,6 +73,7 @@ private constructor(
         private var sessionId: String? = null
         private var limit: Int? = null
         private var page: String? = null
+        private var statuses: MutableList<BetaManagedAgentsSessionThreadStatus>? = null
         private var betas: MutableList<AnthropicBeta>? = null
         private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -73,6 +84,7 @@ private constructor(
             sessionId = threadListParams.sessionId
             limit = threadListParams.limit
             page = threadListParams.page
+            statuses = threadListParams.statuses?.toMutableList()
             betas = threadListParams.betas?.toMutableList()
             workspaceId = threadListParams.workspaceId
             additionalHeaders = threadListParams.additionalHeaders.toBuilder()
@@ -102,6 +114,29 @@ private constructor(
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
+
+        /**
+         * Return only threads that have one of these statuses.
+         *
+         * Repeat the parameter to give more than one status. Leave it out to return threads of
+         * every status.
+         */
+        fun statuses(statuses: List<BetaManagedAgentsSessionThreadStatus>?) = apply {
+            this.statuses = statuses?.toMutableList()
+        }
+
+        /** Alias for calling [Builder.statuses] with `statuses.orElse(null)`. */
+        fun statuses(statuses: Optional<List<BetaManagedAgentsSessionThreadStatus>>) =
+            statuses(statuses.getOrNull())
+
+        /**
+         * Adds a single [BetaManagedAgentsSessionThreadStatus] to [statuses].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addStatus(status: BetaManagedAgentsSessionThreadStatus) = apply {
+            statuses = (statuses ?: mutableListOf()).apply { add(status) }
+        }
 
         /** Optional header to specify the beta version(s) you want to use. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
@@ -247,6 +282,7 @@ private constructor(
                 sessionId,
                 limit,
                 page,
+                statuses?.toImmutable(),
                 betas?.toImmutable(),
                 workspaceId,
                 additionalHeaders.build(),
@@ -283,6 +319,7 @@ private constructor(
             .apply {
                 limit?.let { put("limit", it.toString()) }
                 page?.let { put("page", it) }
+                statuses?.forEach { put("statuses[]", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -296,6 +333,7 @@ private constructor(
             sessionId == other.sessionId &&
             limit == other.limit &&
             page == other.page &&
+            statuses == other.statuses &&
             betas == other.betas &&
             workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
@@ -307,6 +345,7 @@ private constructor(
             sessionId,
             limit,
             page,
+            statuses,
             betas,
             workspaceId,
             additionalHeaders,
@@ -314,5 +353,5 @@ private constructor(
         )
 
     override fun toString() =
-        "ThreadListParams{sessionId=$sessionId, limit=$limit, page=$page, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ThreadListParams{sessionId=$sessionId, limit=$limit, page=$page, statuses=$statuses, betas=$betas, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

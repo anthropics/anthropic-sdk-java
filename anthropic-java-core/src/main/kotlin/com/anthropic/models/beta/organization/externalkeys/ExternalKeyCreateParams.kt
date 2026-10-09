@@ -448,6 +448,16 @@ private constructor(
             @JvmStatic
             fun of(providerConfig: ProviderConfig) =
                 builder().providerConfig(providerConfig).build()
+
+            /** Alias for calling [of] with `ProviderConfig.ofAws(aws)`. */
+            @JvmStatic fun of(aws: BetaAwsExternalKeyConfig) = of(ProviderConfig.ofAws(aws))
+
+            /** Alias for calling [of] with `ProviderConfig.ofGcp(gcp)`. */
+            @JvmStatic fun of(gcp: BetaGcpExternalKeyConfig) = of(ProviderConfig.ofGcp(gcp))
+
+            /** Alias for calling [of] with `ProviderConfig.ofAzure(azure)`. */
+            @JvmStatic
+            fun of(azure: BetaAzureExternalKeyConfigParam) = of(ProviderConfig.ofAzure(azure))
         }
 
         /** A builder for [Body]. */

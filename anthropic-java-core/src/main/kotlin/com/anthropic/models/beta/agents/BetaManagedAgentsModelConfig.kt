@@ -147,6 +147,15 @@ private constructor(
          * set to the given value.
          */
         @JvmStatic fun of(id: BetaManagedAgentsModel) = builder().id(id).build()
+
+        /**
+         * Alias for calling [of] with `BetaManagedAgentsModel.of(value)`.
+         *
+         * You should usually call [of] with a well-typed [BetaManagedAgentsModel] constant instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        @JvmStatic fun of(value: String) = of(BetaManagedAgentsModel.of(value))
     }
 
     /** A builder for [BetaManagedAgentsModelConfig]. */

@@ -236,6 +236,48 @@ private constructor(
         fun ofCitations(citation: BetaCitationsDelta.Citation) =
             ofCitations(BetaCitationsDelta.of(citation))
 
+        /**
+         * Alias for calling [ofCitations] with
+         * `BetaCitationsDelta.Citation.ofCharLocation(charLocation)`.
+         */
+        @JvmStatic
+        fun ofCitations(charLocation: BetaCitationCharLocation) =
+            ofCitations(BetaCitationsDelta.Citation.ofCharLocation(charLocation))
+
+        /**
+         * Alias for calling [ofCitations] with
+         * `BetaCitationsDelta.Citation.ofPageLocation(pageLocation)`.
+         */
+        @JvmStatic
+        fun ofCitations(pageLocation: BetaCitationPageLocation) =
+            ofCitations(BetaCitationsDelta.Citation.ofPageLocation(pageLocation))
+
+        /**
+         * Alias for calling [ofCitations] with
+         * `BetaCitationsDelta.Citation.ofContentBlockLocation(contentBlockLocation)`.
+         */
+        @JvmStatic
+        fun ofCitations(contentBlockLocation: BetaCitationContentBlockLocation) =
+            ofCitations(BetaCitationsDelta.Citation.ofContentBlockLocation(contentBlockLocation))
+
+        /**
+         * Alias for calling [ofCitations] with
+         * `BetaCitationsDelta.Citation.ofWebSearchResultLocation(webSearchResultLocation)`.
+         */
+        @JvmStatic
+        fun ofCitations(webSearchResultLocation: BetaCitationsWebSearchResultLocation) =
+            ofCitations(
+                BetaCitationsDelta.Citation.ofWebSearchResultLocation(webSearchResultLocation)
+            )
+
+        /**
+         * Alias for calling [ofCitations] with
+         * `BetaCitationsDelta.Citation.ofSearchResultLocation(searchResultLocation)`.
+         */
+        @JvmStatic
+        fun ofCitations(searchResultLocation: BetaCitationSearchResultLocation) =
+            ofCitations(BetaCitationsDelta.Citation.ofSearchResultLocation(searchResultLocation))
+
         @JvmStatic
         fun ofThinking(thinking: BetaThinkingDelta) = BetaRawContentBlockDelta(thinking = thinking)
 

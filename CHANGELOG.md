@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.71.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.70.0...v2.71.0) (2026-10-09)
+
+### Features
+
+* **api:** add types for the Chat and Cowork unified analytics metrics
+* **api:** add workflows, multiagent configuration and thread status filtering to Managed Agents
+* **client:** accept nested union values in single-argument factories
+* **client:** add options() to read a client's configured options
+
+
+### Chores
+
+* **internal:** generate the combined javadoc alongside compilation
+* **internal:** remove unused structured output test helpers
+
 ## [2.70.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.69.0...v2.70.0) (2026-10-08)
 
 ### Features

@@ -17,6 +17,7 @@ internal class BetaManagedAgentsSessionThreadCreatedEventTest {
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .type(BetaManagedAgentsSessionThreadCreatedEvent.Type.SESSION_THREAD_CREATED)
+                .workflowRunId(null)
                 .build()
 
         assertThat(betaManagedAgentsSessionThreadCreatedEvent.id())
@@ -28,6 +29,7 @@ internal class BetaManagedAgentsSessionThreadCreatedEventTest {
             .isEqualTo("sthr_011CZkZVWa6oJjw1rgXZpnBt")
         assertThat(betaManagedAgentsSessionThreadCreatedEvent.type())
             .isEqualTo(BetaManagedAgentsSessionThreadCreatedEvent.Type.SESSION_THREAD_CREATED)
+        assertThat(betaManagedAgentsSessionThreadCreatedEvent.workflowRunId()).isEmpty
     }
 
     @Test
@@ -40,6 +42,7 @@ internal class BetaManagedAgentsSessionThreadCreatedEventTest {
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
                 .type(BetaManagedAgentsSessionThreadCreatedEvent.Type.SESSION_THREAD_CREATED)
+                .workflowRunId(null)
                 .build()
 
         val roundtrippedBetaManagedAgentsSessionThreadCreatedEvent =

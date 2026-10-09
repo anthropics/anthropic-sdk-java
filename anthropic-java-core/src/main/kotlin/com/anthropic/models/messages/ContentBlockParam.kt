@@ -537,6 +537,16 @@ private constructor(
          */
         @JvmStatic fun ofImage(source: ImageBlockParam.Source) = ofImage(ImageBlockParam.of(source))
 
+        /** Alias for calling [ofImage] with `ImageBlockParam.Source.ofBase64(base64)`. */
+        @JvmStatic
+        fun ofImage(base64: Base64ImageSource) = ofImage(ImageBlockParam.Source.ofBase64(base64))
+
+        /** Alias for calling [ofImage] with `ImageBlockParam.Source.ofUrl(url)`. */
+        @JvmStatic fun ofImage(url: UrlImageSource) = ofImage(ImageBlockParam.Source.ofUrl(url))
+
+        /** Alias for calling [ofImage] with `ImageBlockParam.Source.ofFile(file)`. */
+        @JvmStatic fun ofImage(file: FileImageSource) = ofImage(ImageBlockParam.Source.ofFile(file))
+
         /**
          * Document content, either specified directly as base64 data, as text, or as a reference
          * via a URL.
@@ -551,6 +561,29 @@ private constructor(
         @JvmStatic
         fun ofDocument(source: DocumentBlockParam.Source) =
             ofDocument(DocumentBlockParam.of(source))
+
+        /** Alias for calling [ofDocument] with `DocumentBlockParam.Source.ofBase64(base64)`. */
+        @JvmStatic
+        fun ofDocument(base64: Base64PdfSource) =
+            ofDocument(DocumentBlockParam.Source.ofBase64(base64))
+
+        /** Alias for calling [ofDocument] with `DocumentBlockParam.Source.ofText(text)`. */
+        @JvmStatic
+        fun ofDocument(text: PlainTextSource) = ofDocument(DocumentBlockParam.Source.ofText(text))
+
+        /** Alias for calling [ofDocument] with `DocumentBlockParam.Source.ofContent(content)`. */
+        @JvmStatic
+        fun ofDocument(content: ContentBlockSource) =
+            ofDocument(DocumentBlockParam.Source.ofContent(content))
+
+        /** Alias for calling [ofDocument] with `DocumentBlockParam.Source.ofUrl(url)`. */
+        @JvmStatic
+        fun ofDocument(url: UrlPdfSource) = ofDocument(DocumentBlockParam.Source.ofUrl(url))
+
+        /** Alias for calling [ofDocument] with `DocumentBlockParam.Source.ofFile(file)`. */
+        @JvmStatic
+        fun ofDocument(file: FileDocumentSource) =
+            ofDocument(DocumentBlockParam.Source.ofFile(file))
 
         /** A search result block containing source, title, and content from search operations. */
         @JvmStatic

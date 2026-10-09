@@ -66,7 +66,14 @@ internal fun sseHandler(jsonMapper: JsonMapper): Handler<StreamResponse<SseMessa
                 "session.thread_status_terminated",
                 "event_start",
                 "event_delta",
-                "system.message" -> yield(message)
+                "system.message",
+                "workflow_run.created",
+                "workflow_run.status_running",
+                "workflow_run.status_idle",
+                "workflow_run.status_ended",
+                "workflow_run.error",
+                "workflow_run.phase_started",
+                "workflow_run.phase_ended" -> yield(message)
                 "ping" -> continue
                 "error" -> {
                     throw SseException.builder()

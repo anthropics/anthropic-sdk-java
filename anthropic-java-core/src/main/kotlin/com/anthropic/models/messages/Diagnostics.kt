@@ -88,6 +88,38 @@ private constructor(
         /** Alias for calling [of] with `cacheMissReason.orElse(null)`. */
         @JvmStatic
         fun of(cacheMissReason: Optional<CacheMissReason>) = of(cacheMissReason.getOrNull())
+
+        /** Alias for calling [of] with `CacheMissReason.ofModelChanged(modelChanged)`. */
+        @JvmStatic
+        fun of(modelChanged: CacheMissModelChanged) =
+            of(CacheMissReason.ofModelChanged(modelChanged))
+
+        /** Alias for calling [of] with `CacheMissReason.ofSystemChanged(systemChanged)`. */
+        @JvmStatic
+        fun of(systemChanged: CacheMissSystemChanged) =
+            of(CacheMissReason.ofSystemChanged(systemChanged))
+
+        /** Alias for calling [of] with `CacheMissReason.ofToolsChanged(toolsChanged)`. */
+        @JvmStatic
+        fun of(toolsChanged: CacheMissToolsChanged) =
+            of(CacheMissReason.ofToolsChanged(toolsChanged))
+
+        /** Alias for calling [of] with `CacheMissReason.ofMessagesChanged(messagesChanged)`. */
+        @JvmStatic
+        fun of(messagesChanged: CacheMissMessagesChanged) =
+            of(CacheMissReason.ofMessagesChanged(messagesChanged))
+
+        /**
+         * Alias for calling [of] with
+         * `CacheMissReason.ofPreviousMessageNotFound(previousMessageNotFound)`.
+         */
+        @JvmStatic
+        fun of(previousMessageNotFound: CacheMissPreviousMessageNotFound) =
+            of(CacheMissReason.ofPreviousMessageNotFound(previousMessageNotFound))
+
+        /** Alias for calling [of] with `CacheMissReason.ofUnavailable(unavailable)`. */
+        @JvmStatic
+        fun of(unavailable: CacheMissUnavailable) = of(CacheMissReason.ofUnavailable(unavailable))
     }
 
     /** A builder for [Diagnostics]. */

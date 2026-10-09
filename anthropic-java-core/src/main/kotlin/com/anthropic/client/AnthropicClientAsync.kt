@@ -39,6 +39,9 @@ interface AnthropicClientAsync {
      */
     fun withRawResponse(): WithRawResponse
 
+    /** Returns the options that this client is configured with. */
+    fun options(): ClientOptions
+
     /**
      * Returns a view of this service with the given option modifications applied.
      *
