@@ -3,6 +3,7 @@ package com.anthropic.core.auth
 import java.time.Duration
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -115,14 +116,14 @@ internal class CachingAccessTokenProvider(
         val action = lock.withLock { planAsyncUnsafe(baseUrl, forceRefresh) }
         return when (action) {
             is AsyncAction.ReturnCached -> CompletableFuture.completedFuture(action.token)
-            is AsyncAction.Join -> action.future
+            is AsyncAction.Join -> action.future.thenApplyAsync({ it }, ForkJoinPool.commonPool())
             is AsyncAction.Background -> {
                 launchAsyncRefresh(baseUrl, action.future, force = false, advisory = true)
                 CompletableFuture.completedFuture(action.fallback)
             }
             is AsyncAction.Foreground -> {
                 launchAsyncRefresh(baseUrl, action.future, force = action.force, advisory = false)
-                action.future
+                action.future.thenApplyAsync({ it }, ForkJoinPool.commonPool())
             }
         }
     }
