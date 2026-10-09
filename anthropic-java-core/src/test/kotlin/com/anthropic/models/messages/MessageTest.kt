@@ -42,7 +42,7 @@ internal class MessageTest {
                         .build()
                 )
                 .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .stopDetails(
                     RefusalStopDetails.builder()
                         .category(RefusalStopDetails.Category.CYBER)
@@ -113,7 +113,7 @@ internal class MessageTest {
             )
         assertThat(message.diagnostics())
             .contains(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
-        assertThat(message.model()).isEqualTo(Model.CLAUDE_OPUS_5)
+        assertThat(message.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
         assertThat(message.stopDetails())
             .contains(
                 RefusalStopDetails.builder()
@@ -183,7 +183,7 @@ internal class MessageTest {
                         .build()
                 )
                 .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .stopDetails(
                     RefusalStopDetails.builder()
                         .category(RefusalStopDetails.Category.CYBER)

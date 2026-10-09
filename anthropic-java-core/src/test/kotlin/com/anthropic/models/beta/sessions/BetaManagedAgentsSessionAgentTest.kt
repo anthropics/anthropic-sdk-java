@@ -34,7 +34,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfig.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                         .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                         .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -55,7 +55,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -173,7 +173,7 @@ internal class BetaManagedAgentsSessionAgentTest {
         assertThat(betaManagedAgentsSessionAgent.model())
             .isEqualTo(
                 BetaManagedAgentsModelConfig.builder()
-                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                     .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                     .inferenceGeo("inference_geo")
                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -196,7 +196,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -326,7 +326,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfig.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                         .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                         .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -347,7 +347,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW

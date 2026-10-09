@@ -122,7 +122,7 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
     fun ofAdvisor() {
         val advisor =
             BetaManagedAgentsAdvisorParams.builder()
-                .model("claude-fable-5")
+                .model("claude-opus-5-5")
                 .type(BetaManagedAgentsAdvisorParams.Type.ADVISOR)
                 .build()
 
@@ -141,7 +141,7 @@ internal class BetaManagedAgentsMultiagentRosterEntryParamsTest {
         val betaManagedAgentsMultiagentRosterEntryParams =
             BetaManagedAgentsMultiagentRosterEntryParams.ofAdvisor(
                 BetaManagedAgentsAdvisorParams.builder()
-                    .model("claude-fable-5")
+                    .model("claude-opus-5-5")
                     .type(BetaManagedAgentsAdvisorParams.Type.ADVISOR)
                     .build()
             )

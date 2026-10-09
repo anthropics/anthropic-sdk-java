@@ -29,7 +29,7 @@ internal class MessageCreateParamsTest {
                     )
                     .build()
             )
-            .model(Model.CLAUDE_OPUS_5)
+            .model(Model.CLAUDE_OPUS_5_5)
             .cacheControl(
                 BetaCacheControlEphemeral.builder()
                     .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -194,7 +194,7 @@ internal class MessageCreateParamsTest {
                         )
                         .build()
                 )
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -360,7 +360,7 @@ internal class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .build()
 
         val headers = params._headers()
@@ -388,7 +388,7 @@ internal class MessageCreateParamsTest {
                         )
                         .build()
                 )
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .cacheControl(
                     BetaCacheControlEphemeral.builder()
                         .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)
@@ -552,7 +552,7 @@ internal class MessageCreateParamsTest {
                     )
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
         assertThat(body.cacheControl())
             .contains(
                 BetaCacheControlEphemeral.builder()
@@ -728,7 +728,7 @@ internal class MessageCreateParamsTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .build()
 
         val body = params._body()
@@ -741,6 +741,6 @@ internal class MessageCreateParamsTest {
                     .role(BetaMessageParam.Role.USER)
                     .build()
             )
-        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5)
+        assertThat(body.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
     }
 }

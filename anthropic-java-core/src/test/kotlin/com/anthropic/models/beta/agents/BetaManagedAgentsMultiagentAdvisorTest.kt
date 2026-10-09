@@ -14,7 +14,7 @@ internal class BetaManagedAgentsMultiagentAdvisorTest {
 
     @Test
     fun ofEnabled() {
-        val enabled = BetaManagedAgentsMultiagentAdvisorEnabled.of("claude-fable-5")
+        val enabled = BetaManagedAgentsMultiagentAdvisorEnabled.of("claude-opus-5-5")
 
         val betaManagedAgentsMultiagentAdvisor =
             BetaManagedAgentsMultiagentAdvisor.ofEnabled(enabled)
@@ -28,7 +28,7 @@ internal class BetaManagedAgentsMultiagentAdvisorTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMultiagentAdvisor =
             BetaManagedAgentsMultiagentAdvisor.ofEnabled(
-                BetaManagedAgentsMultiagentAdvisorEnabled.of("claude-fable-5")
+                BetaManagedAgentsMultiagentAdvisorEnabled.of("claude-opus-5-5")
             )
 
         val roundtrippedBetaManagedAgentsMultiagentAdvisor =

@@ -92,7 +92,7 @@ private constructor(
     /**
      * Model identifier. Accepts the
      * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
-     * e.g. `claude-opus-5`, or a `model_config` object for additional configuration control. Omit
+     * e.g. `claude-opus-5-5`, or a `model_config` object for additional configuration control. Omit
      * to preserve. Cannot be cleared.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -388,7 +388,7 @@ private constructor(
         /**
          * Model identifier. Accepts the
          * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
-         * e.g. `claude-opus-5`, or a `model_config` object for additional configuration control.
+         * e.g. `claude-opus-5-5`, or a `model_config` object for additional configuration control.
          * Omit to preserve. Cannot be cleared.
          */
         fun model(model: Model) = apply { body.model(model) }
@@ -863,7 +863,7 @@ private constructor(
         /**
          * Model identifier. Accepts the
          * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
-         * e.g. `claude-opus-5`, or a `model_config` object for additional configuration control.
+         * e.g. `claude-opus-5-5`, or a `model_config` object for additional configuration control.
          * Omit to preserve. Cannot be cleared.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1129,7 +1129,7 @@ private constructor(
             /**
              * Model identifier. Accepts the
              * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
-             * e.g. `claude-opus-5`, or a `model_config` object for additional configuration
+             * e.g. `claude-opus-5-5`, or a `model_config` object for additional configuration
              * control. Omit to preserve. Cannot be cleared.
              */
             fun model(model: Model) = model(JsonField.of(model))
@@ -1648,7 +1648,7 @@ private constructor(
     /**
      * Model identifier. Accepts the
      * [model string](https://platform.claude.com/docs/en/about-claude/models/overview#latest-models-comparison),
-     * e.g. `claude-opus-5`, or a `model_config` object for additional configuration control. Omit
+     * e.g. `claude-opus-5-5`, or a `model_config` object for additional configuration control. Omit
      * to preserve. Cannot be cleared.
      */
     @JsonDeserialize(using = Model.Deserializer::class)

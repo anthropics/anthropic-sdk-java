@@ -43,7 +43,7 @@ internal class BetaManagedAgentsSessionMultiagentSubagentsTest {
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .effort(
                                     BetaManagedAgentsEffortLow.of(
                                         BetaManagedAgentsEffortLow.Type.LOW
@@ -125,7 +125,7 @@ internal class BetaManagedAgentsSessionMultiagentSubagentsTest {
                             )
                             .model(
                                 BetaManagedAgentsModelConfig.builder()
-                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                     .effort(
                                         BetaManagedAgentsEffortLow.of(
                                             BetaManagedAgentsEffortLow.Type.LOW

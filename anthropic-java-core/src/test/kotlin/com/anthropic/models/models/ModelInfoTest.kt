@@ -12,7 +12,7 @@ internal class ModelInfoTest {
     fun create() {
         val modelInfo =
             ModelInfo.builder()
-                .id("claude-opus-5")
+                .id("claude-opus-5-5")
                 .capabilities(
                     ModelCapabilities.builder()
                         .batch(CapabilitySupport.of(true))
@@ -60,9 +60,9 @@ internal class ModelInfoTest {
                         )
                         .build()
                 )
-                .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .createdAt(OffsetDateTime.parse("2026-09-21T00:00:00Z"))
                 .deprecatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .displayName("Claude Opus 5")
+                .displayName("Claude Opus 5.5")
                 .lifecycle(ModelInfo.Lifecycle.ACTIVE)
                 .line(ModelLine.HAIKU)
                 .maxInputTokens(0L)
@@ -70,7 +70,7 @@ internal class ModelInfoTest {
                 .retiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
-        assertThat(modelInfo.id()).isEqualTo("claude-opus-5")
+        assertThat(modelInfo.id()).isEqualTo("claude-opus-5-5")
         assertThat(modelInfo.capabilities())
             .contains(
                 ModelCapabilities.builder()
@@ -119,10 +119,10 @@ internal class ModelInfoTest {
                     )
                     .build()
             )
-        assertThat(modelInfo.createdAt()).isEqualTo(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+        assertThat(modelInfo.createdAt()).isEqualTo(OffsetDateTime.parse("2026-09-21T00:00:00Z"))
         assertThat(modelInfo.deprecatedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(modelInfo.displayName()).isEqualTo("Claude Opus 5")
+        assertThat(modelInfo.displayName()).isEqualTo("Claude Opus 5.5")
         assertThat(modelInfo.lifecycle()).isEqualTo(ModelInfo.Lifecycle.ACTIVE)
         assertThat(modelInfo.line()).contains(ModelLine.HAIKU)
         assertThat(modelInfo.maxInputTokens()).contains(0L)
@@ -135,7 +135,7 @@ internal class ModelInfoTest {
         val jsonMapper = jsonMapper()
         val modelInfo =
             ModelInfo.builder()
-                .id("claude-opus-5")
+                .id("claude-opus-5-5")
                 .capabilities(
                     ModelCapabilities.builder()
                         .batch(CapabilitySupport.of(true))
@@ -183,9 +183,9 @@ internal class ModelInfoTest {
                         )
                         .build()
                 )
-                .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .createdAt(OffsetDateTime.parse("2026-09-21T00:00:00Z"))
                 .deprecatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .displayName("Claude Opus 5")
+                .displayName("Claude Opus 5.5")
                 .lifecycle(ModelInfo.Lifecycle.ACTIVE)
                 .line(ModelLine.HAIKU)
                 .maxInputTokens(0L)

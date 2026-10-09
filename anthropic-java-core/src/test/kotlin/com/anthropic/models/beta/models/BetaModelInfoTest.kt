@@ -13,7 +13,7 @@ internal class BetaModelInfoTest {
     fun create() {
         val betaModelInfo =
             BetaModelInfo.builder()
-                .id("claude-opus-5")
+                .id("claude-opus-5-5")
                 .addAllowedFallbackModel("string")
                 .capabilities(
                     BetaModelCapabilities.builder()
@@ -68,9 +68,9 @@ internal class BetaModelInfoTest {
                         )
                         .build()
                 )
-                .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .createdAt(OffsetDateTime.parse("2026-09-21T00:00:00Z"))
                 .deprecatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .displayName("Claude Opus 5")
+                .displayName("Claude Opus 5.5")
                 .lifecycle(BetaModelInfo.Lifecycle.ACTIVE)
                 .line(BetaModelLine.HAIKU)
                 .maxInputTokens(0L)
@@ -78,7 +78,7 @@ internal class BetaModelInfoTest {
                 .retiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
-        assertThat(betaModelInfo.id()).isEqualTo("claude-opus-5")
+        assertThat(betaModelInfo.id()).isEqualTo("claude-opus-5-5")
         assertThat(betaModelInfo.allowedFallbackModels().getOrNull()).containsExactly("string")
         assertThat(betaModelInfo.capabilities())
             .contains(
@@ -135,10 +135,10 @@ internal class BetaModelInfoTest {
                     .build()
             )
         assertThat(betaModelInfo.createdAt())
-            .isEqualTo(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+            .isEqualTo(OffsetDateTime.parse("2026-09-21T00:00:00Z"))
         assertThat(betaModelInfo.deprecatedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(betaModelInfo.displayName()).isEqualTo("Claude Opus 5")
+        assertThat(betaModelInfo.displayName()).isEqualTo("Claude Opus 5.5")
         assertThat(betaModelInfo.lifecycle()).isEqualTo(BetaModelInfo.Lifecycle.ACTIVE)
         assertThat(betaModelInfo.line()).contains(BetaModelLine.HAIKU)
         assertThat(betaModelInfo.maxInputTokens()).contains(0L)
@@ -152,7 +152,7 @@ internal class BetaModelInfoTest {
         val jsonMapper = jsonMapper()
         val betaModelInfo =
             BetaModelInfo.builder()
-                .id("claude-opus-5")
+                .id("claude-opus-5-5")
                 .addAllowedFallbackModel("string")
                 .capabilities(
                     BetaModelCapabilities.builder()
@@ -207,9 +207,9 @@ internal class BetaModelInfoTest {
                         )
                         .build()
                 )
-                .createdAt(OffsetDateTime.parse("2026-07-24T00:00:00Z"))
+                .createdAt(OffsetDateTime.parse("2026-09-21T00:00:00Z"))
                 .deprecatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .displayName("Claude Opus 5")
+                .displayName("Claude Opus 5.5")
                 .lifecycle(BetaModelInfo.Lifecycle.ACTIVE)
                 .line(BetaModelLine.HAIKU)
                 .maxInputTokens(0L)

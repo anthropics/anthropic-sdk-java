@@ -42,7 +42,7 @@ internal class DefaultHeadersTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .build()
         )
 
@@ -61,7 +61,7 @@ internal class DefaultHeadersTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .build()
         )
 
@@ -80,7 +80,7 @@ internal class DefaultHeadersTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .build()
         )
 
@@ -103,7 +103,7 @@ internal class DefaultHeadersTest {
             MessageCreateParams.builder()
                 .maxTokens(1024L)
                 .addUserMessage("Hello, world")
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .build()
         )
 
@@ -122,7 +122,7 @@ internal class DefaultHeadersTest {
                 MessageCreateParams.builder()
                     .maxTokens(1024L)
                     .addUserMessage("Hello, world")
-                    .model(Model.CLAUDE_OPUS_5)
+                    .model(Model.CLAUDE_OPUS_5_5)
                     .build()
             )
             .close()

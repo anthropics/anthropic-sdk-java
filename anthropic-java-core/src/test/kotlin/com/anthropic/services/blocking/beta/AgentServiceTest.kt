@@ -38,7 +38,7 @@ internal class AgentServiceTest {
                 AgentCreateParams.builder()
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-                    .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                    .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                     .name("My First Agent")
                     .description("A general-purpose starter agent.")
                     .addMcpServer(
@@ -160,7 +160,7 @@ internal class AgentServiceTest {
                     )
                     .model(
                         BetaManagedAgentsModelConfigParams.builder()
-                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                             .effort(
                                 BetaManagedAgentsModelConfigParams.Effort
                                     .BetaManagedAgentsEffortLevel

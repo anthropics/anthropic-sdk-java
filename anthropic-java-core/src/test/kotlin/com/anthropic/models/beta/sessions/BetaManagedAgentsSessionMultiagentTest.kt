@@ -41,7 +41,7 @@ internal class BetaManagedAgentsSessionMultiagentTest {
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .effort(
                                     BetaManagedAgentsEffortLow.of(
                                         BetaManagedAgentsEffortLow.Type.LOW
@@ -123,7 +123,7 @@ internal class BetaManagedAgentsSessionMultiagentTest {
                             )
                             .model(
                                 BetaManagedAgentsModelConfig.builder()
-                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                     .effort(
                                         BetaManagedAgentsEffortLow.of(
                                             BetaManagedAgentsEffortLow.Type.LOW
@@ -195,7 +195,7 @@ internal class BetaManagedAgentsSessionMultiagentTest {
     fun ofMultiagent20261001() {
         val multiagent20261001 =
             BetaManagedAgentsSessionMultiagent20261001.builder()
-                .enabledAdvisor("claude-fable-5")
+                .enabledAdvisor("claude-opus-5-5")
                 .subagents(
                     BetaManagedAgentsSessionMultiagentSubagentsEnabled.builder()
                         .inlineAgents(
@@ -214,7 +214,7 @@ internal class BetaManagedAgentsSessionMultiagentTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -289,7 +289,7 @@ internal class BetaManagedAgentsSessionMultiagentTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -362,7 +362,7 @@ internal class BetaManagedAgentsSessionMultiagentTest {
         val betaManagedAgentsSessionMultiagent =
             BetaManagedAgentsSessionMultiagent.ofMultiagent20261001(
                 BetaManagedAgentsSessionMultiagent20261001.builder()
-                    .enabledAdvisor("claude-fable-5")
+                    .enabledAdvisor("claude-opus-5-5")
                     .subagents(
                         BetaManagedAgentsSessionMultiagentSubagentsEnabled.builder()
                             .inlineAgents(
@@ -383,7 +383,7 @@ internal class BetaManagedAgentsSessionMultiagentTest {
                                     )
                                     .model(
                                         BetaManagedAgentsModelConfig.builder()
-                                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                             .effort(
                                                 BetaManagedAgentsEffortLow.of(
                                                     BetaManagedAgentsEffortLow.Type.LOW
@@ -460,7 +460,7 @@ internal class BetaManagedAgentsSessionMultiagentTest {
                                     )
                                     .model(
                                         BetaManagedAgentsModelConfig.builder()
-                                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                             .effort(
                                                 BetaManagedAgentsEffortLow.of(
                                                     BetaManagedAgentsEffortLow.Type.LOW
