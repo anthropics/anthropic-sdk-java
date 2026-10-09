@@ -12,15 +12,13 @@ internal fun HttpRequest.prepare(clientOptions: ClientOptions, params: Params): 
         .replaceAllQueryParams(params._queryParams())
         .putAllHeaders(clientOptions.headers)
         .replaceAllHeaders(params._headers())
-        // `Accept` is only a default. It is added here, not in `ClientOptions`, so that a value set
-        // on a derived builder replaces it.
-        .also {
-            if (
-                !headers.names().contains("Accept") &&
-                    !clientOptions.headers.names().contains("Accept") &&
-                    !params._headers().names().contains("Accept")
-            )
-                it.putHeader("Accept", "application/json")
+        .also { builder ->
+            val sources = listOf(headers, clientOptions.headers, params._headers())
+            for ((name, value) in DEFAULT_HEADERS) {
+                if (sources.none { it.names().contains(name) }) {
+                    builder.putHeader(name, value)
+                }
+            }
         }
         .build()
 
@@ -32,3 +30,9 @@ internal fun HttpRequest.prepareAsync(
     // This async version exists to make it easier to add async specific preparation logic in the
     // future.
     CompletableFuture.completedFuture(prepare(clientOptions, params))
+
+/**
+ * Headers that are only defaults. `prepare` adds them, not `ClientOptions`, so that a value set on
+ * a derived builder replaces them.
+ */
+private val DEFAULT_HEADERS: Map<String, String> = mapOf("Accept" to "application/json")

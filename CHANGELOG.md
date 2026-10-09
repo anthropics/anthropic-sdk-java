@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.71.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.71.1) (2026-10-09)
+
+### Chores
+
+* **internal:** keep the default request headers in one map
+
 ## [2.71.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.70.0...v2.71.0) (2026-10-09)
 
 ### Features
