@@ -6,6 +6,11 @@
 
 * **internal:** keep the default request headers in one map
 
+
+### Documentation
+
+* **api:** clarify when custom tool results can be sent
+
 ## [2.71.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.70.0...v2.71.0) (2026-10-09)
 
 ### Features
