@@ -13,6 +13,7 @@
 ### Chores
 
 * **internal:** generate the combined javadoc alongside compilation
+* **internal:** remove unused structured output test helpers
 
 ## [2.70.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.69.0...v2.70.0) (2026-10-08)
 

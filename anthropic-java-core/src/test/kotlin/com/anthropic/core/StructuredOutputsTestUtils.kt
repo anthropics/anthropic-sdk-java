@@ -1,63 +1,30 @@
 package com.anthropic.core
 
 import java.lang.reflect.Method
-import java.util.Optional
-import kotlin.apply
 import kotlin.collections.all
 import kotlin.collections.contains
 import kotlin.collections.drop
-import kotlin.collections.filter
 import kotlin.collections.find
 import kotlin.collections.firstOrNull
-import kotlin.collections.getOrNull
 import kotlin.collections.indices
 import kotlin.collections.joinToString
 import kotlin.collections.map
-import kotlin.collections.plus
-import kotlin.collections.toList
-import kotlin.collections.toMutableList
-import kotlin.collections.toSet
-import kotlin.jvm.java
 import kotlin.jvm.javaClass
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.jvm.javaMethod
-import kotlin.to
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.fail
-import org.mockito.Mockito.verifyNoMoreInteractions
-import org.mockito.Mockito.`when`
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
 
 // Constants for values that can be used in many of the tests as sample input or output values.
 //
 // Where a function returns `Optional<T>`, `JsonField<T>` or `JsonValue` There is no need to provide
 // a value that matches the type `<T>`, a simple `String` value of `"a-string"` will work OK.
 internal const val STRING = "a-string"
-internal val NULLABLE_STRING: String? = null
-internal val OPTIONAL = Optional.of(STRING)
-internal val JSON_FIELD = JsonField.of(STRING)
 internal val JSON_VALUE = JsonValue.from(STRING)
-internal val NULLABLE = null
-internal const val BOOLEAN: Boolean = true
-internal val NULLABLE_BOOLEAN: Boolean? = null
 internal const val LONG: Long = 42L
-internal val NULLABLE_LONG: Long? = null
-internal const val DOUBLE: Double = 42.0
-internal val NULLABLE_DOUBLE: Double? = null
-internal val LIST = listOf(STRING)
-internal val SET = setOf(STRING)
-internal val MAP = mapOf(STRING to STRING)
-internal val CLASS = X::class.java
-
-/**
- * Defines a test case where a function in a delegator returns a value from a corresponding function
- * in a delegate.
- */
-internal data class DelegationReadTestCase(val functionName: String, val expectedValue: Any)
 
 /**
  * Defines a test case where a function in a delegator passes its parameters through to a
@@ -145,61 +112,6 @@ internal fun checkAllDelegation(
                 missingFunctions.joinToString("\n") { " - $it" }
         }
         .isEmpty()
-}
-
-/**
- * Checks that the delegator function calls the corresponding delegate function and no other
- * functions on the delegate. The test case defines the function name and the sample return value.
- * All functions take no arguments.
- */
-internal fun checkOneDelegationRead(
-    delegator: Any,
-    mockDelegate: Any,
-    testCase: DelegationReadTestCase,
-) {
-    // Stub the method in the mock delegate using reflection
-    val delegateMethod = mockDelegate::class.java.getMethod(testCase.functionName)
-    `when`(delegateMethod.invoke(mockDelegate)).thenReturn(testCase.expectedValue)
-
-    // Call the corresponding method on the delegator using reflection
-    val delegatorMethod = delegator::class.java.getMethod(testCase.functionName)
-    val result = delegatorMethod.invoke(delegator)
-
-    // Verify that the corresponding method on the mock delegate was called exactly once
-    verify(mockDelegate, times(1)).apply { delegateMethod.invoke(mockDelegate) }
-    verifyNoMoreInteractions(mockDelegate)
-
-    // Assert that the result matches the expected value
-    assertThat(result).isEqualTo(testCase.expectedValue)
-}
-
-/**
- * Checks that the delegator function calls the corresponding delegate function and no other
- * functions on the delegate. The test case defines the function name and sample parameter values.
- */
-internal fun checkOneDelegationWrite(
-    delegator: Any,
-    mockDelegate: Any,
-    testCase: DelegationWriteTestCase,
-) {
-    invokeMethod(findDelegationMethod(delegator, testCase), delegator, testCase)
-
-    // Verify that the corresponding method on the mock delegate was called exactly once.
-    verify(mockDelegate, times(1)).apply {
-        invokeMethod(findDelegationMethod(mockDelegate, testCase), mockDelegate, testCase)
-    }
-    verifyNoMoreInteractions(mockDelegate)
-}
-
-private fun invokeMethod(method: Method, target: Any, testCase: DelegationWriteTestCase) {
-    val numParams = testCase.inputValues.size
-
-    when (numParams) {
-        0 -> method.invoke(target)
-        1 -> method.invoke(target, testCase.inputValues[0])
-        2 -> method.invoke(target, testCase.inputValues[0], testCase.inputValues.getOrNull(1))
-        else -> fail { "Unexpected number of function parameters ($numParams)." }
-    }
 }
 
 /**
@@ -295,95 +207,3 @@ private fun toJavaType(type: Class<*>) =
         Double::class.javaObjectType -> Double::class.javaPrimitiveType!!
         else -> type
     }
-
-/**
- * Checks that all delegating functions in a delegator class have corresponding unit tests. The
- * read-only functions should take no parameters; only return a value.
- *
- * @param delegatorClass The delegator class whose functions are tested. Every named function in
- *   this class must be identified in one of the given sources of function names or a failure will
- *   occur.
- * @param delegationTestCases The tests cases that identify the names of delegating functions for
- *   which parameterized unit tests have been defined.
- * @param exceptionalTestedFns The names of delegating functions that are tested separately, not as
- *   parameterized unit tests. This is usually because they require special handling in the test.
- * @param nonDelegatingFns The names of functions that do not perform any delegation and for which
- *   delegation tests are not required.
- */
-internal fun checkAllDelegatorReadFunctionsAreTested(
-    delegatorClass: KClass<*>,
-    delegationTestCases: List<DelegationReadTestCase>,
-    exceptionalTestedFns: Set<String>,
-    nonDelegatingFns: Set<String>,
-) {
-    val testedFns = delegationTestCases.map { it.functionName }.toSet() + exceptionalTestedFns
-    val delegatorFunctions = delegatorClass.declaredFunctions
-    val untestedFunctions =
-        delegatorFunctions.filter { it.name !in testedFns && it.name !in nonDelegatingFns }
-
-    assertThat(untestedFunctions)
-        .describedAs(
-            "Delegation is not tested for function(s):\n" +
-                untestedFunctions.joinToString("\n") { " - $it" }
-        )
-        .isEmpty()
-}
-
-/**
- * Checks that all delegating functions in a delegator class have corresponding unit tests. The
- * write-only functions should take parameters and return no value.
- *
- * @param delegatorClass The delegator class whose functions are tested. Every named function in
- *   this class must be identified in one of the given sources of function names or a failure will
- *   occur.
- * @param delegationTestCases The tests cases that identify the names of delegating functions for
- *   which parameterized unit tests have been defined.
- * @param exceptionalTestedFns The names of delegating functions that are tested separately, not as
- *   parameterized unit tests. This is usually because they require special handling in the test. If
- *   functions are overloaded, repeat the name for of the function for each overload.
- * @param nonDelegatingFns The names of functions that do not perform any delegation and for which
- *   delegation tests are not required.
- */
-internal fun checkAllDelegatorWriteFunctionsAreTested(
-    delegatorClass: KClass<*>,
-    delegationTestCases: List<DelegationWriteTestCase>,
-    exceptionalTestedFns: List<String>,
-    nonDelegatingFns: Set<String>,
-) {
-    // There are exceptional test cases for some functions. Most other functions are part of the
-    // list of those using the parameterized test. There are many overloaded functions, so the
-    // approach here is to build a list (_not_ a set) of all function names and then "subtract"
-    // those for which tests are defined and see what remains. For example, there could be eight
-    // `addMessage` functions, so there must be eight tests defined for functions named `addMessage`
-    // that will be subtracted from the list of functions matching that name. Parameter types are
-    // not checked, as that is awkward and probably overkill. Therefore, this scheme is not reliable
-    // if a function is tested more than once.
-    val testedFns =
-        (delegationTestCases.map { it.functionName } + exceptionalTestedFns).toMutableList()
-    // Only interested in the names of the functions (which may contain duplicates): parameters are
-    // not matched, so any signatures could be misleading when reporting errors.
-    val delegatorFns = delegatorClass.declaredFunctions.map { it.name }.toMutableList()
-
-    // Making modifications to the list, so clone it with `toList()` before iterating.
-    for (fnName in delegatorFns.toList()) {
-        if (fnName in testedFns) {
-            testedFns.remove(fnName)
-            delegatorFns.remove(fnName)
-        }
-        if (fnName in nonDelegatingFns) {
-            delegatorFns.remove(fnName)
-        }
-    }
-
-    // If there are function names remaining in `delegatorFns`, then there are tests missing.
-    assertThat(delegatorFns)
-        .describedAs { "Delegation is not tested for functions $delegatorFns." }
-        .isEmpty()
-
-    // If there are function names remaining in `testedFns`, then there are more tests than there
-    // should be. Functions might be tested twice, or there may be tests for functions that have
-    // since been removed from the delegate (though those tests probably failed).
-    assertThat(testedFns)
-        .describedAs { "Unexpected or redundant tests for functions $testedFns." }
-        .isEmpty()
-}
