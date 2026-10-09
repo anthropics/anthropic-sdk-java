@@ -1,6 +1,11 @@
 # Changelog
 
-## [2.71.1](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.71.1) (2026-10-09)
+## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-09)
+
+### Features
+
+* **api:** add organization_type_not_supported error to spend limit lists
+
 
 ### Chores
 
