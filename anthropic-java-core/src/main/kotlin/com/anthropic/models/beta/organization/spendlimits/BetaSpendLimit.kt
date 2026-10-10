@@ -111,8 +111,8 @@ private constructor(
 
     /**
      * Read-only. `false` when extra usage is switched off for this organization (`organization`
-     * limit) or for this member (`user` limit); `amount` is kept and applies again when it's
-     * switched back on. Always `true` for other limits.
+     * limit); `amount` is kept and applies again when it's switched back on. Always `true` for
+     * other limits.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -331,8 +331,8 @@ private constructor(
 
         /**
          * Read-only. `false` when extra usage is switched off for this organization (`organization`
-         * limit) or for this member (`user` limit); `amount` is kept and applies again when it's
-         * switched back on. Always `true` for other limits.
+         * limit); `amount` is kept and applies again when it's switched back on. Always `true` for
+         * other limits.
          */
         fun isEnabled(isEnabled: Boolean) = isEnabled(JsonField.of(isEnabled))
 

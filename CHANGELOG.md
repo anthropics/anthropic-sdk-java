@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-09)
+## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-10)
 
 ### Features
 
@@ -18,6 +18,7 @@
 ### Documentation
 
 * **api:** clarify when custom tool results can be sent
+* **api:** say is_enabled is always true for user spend limits
 
 ## [2.71.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.70.0...v2.71.0) (2026-10-09)
 
