@@ -202,8 +202,14 @@ class BetaMessageAccumulator private constructor() {
             val newCompactionBlock =
                 oldCompactionBlock
                     .toBuilder()
-                    .content(compactionDelta.content())
-                    .encryptedContent(compactionDelta.encryptedContent())
+                    .apply {
+                        if (!compactionDelta._content().isMissing()) {
+                            content(compactionDelta.content())
+                        }
+                        if (!compactionDelta._encryptedContent().isMissing()) {
+                            encryptedContent(compactionDelta.encryptedContent())
+                        }
+                    }
                     .build()
 
             return BetaContentBlock.ofCompaction(newCompactionBlock)

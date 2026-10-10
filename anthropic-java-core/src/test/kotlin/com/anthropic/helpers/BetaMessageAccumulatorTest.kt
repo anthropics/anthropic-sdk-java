@@ -8,6 +8,7 @@ import com.anthropic.core.JsonValue
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.messages.*
+import com.anthropic.models.beta.messages.BetaContentBlock
 import com.anthropic.models.beta.messages.BetaRawContentBlockStartEvent.ContentBlock
 import com.anthropic.models.messages.Model
 import com.fasterxml.jackson.databind.JsonNode
@@ -448,6 +449,133 @@ internal class BetaMessageAccumulatorTest {
         assertThat(compaction1.isCompaction()).isTrue()
         assertThat(compaction1.compaction().get().content().get())
             .isEqualTo("Summary of the conversation so far.")
+    }
+
+    @Test
+    fun compactionPartialDeltaPreservesEncryptedMetadata() {
+        val original =
+            compactionBlock("original")
+                .toBuilder()
+                .encryptedContent("checkpoint")
+                .signature("signature")
+                .build()
+        val result =
+            BetaMessageAccumulator.mergeCompactionDelta(
+                    BetaContentBlock.ofCompaction(original),
+                    BetaCompactionContentBlockDelta.builder()
+                        .content("updated")
+                        .encryptedContent(NOT_SET)
+                        .build(),
+                )
+                .asCompaction()
+        assertThat(result.content()).contains("updated")
+        assertThat(result.encryptedContent()).contains("checkpoint")
+        assertThat(result.signature()).contains("signature")
+        assertThat(result.toParam().encryptedContent()).contains("checkpoint")
+        assertThat(original.content()).contains("original")
+    }
+
+    @Test
+    fun compactionMetadataOnlyDeltaPreservesSummary() {
+        val result =
+            BetaMessageAccumulator.mergeCompactionDelta(
+                    BetaContentBlock.ofCompaction(compactionBlock("summary")),
+                    BetaCompactionContentBlockDelta.builder()
+                        .content(NOT_SET)
+                        .encryptedContent("updated-checkpoint")
+                        .build(),
+                )
+                .asCompaction()
+        assertThat(result.content()).contains("summary")
+        assertThat(result.encryptedContent()).contains("updated-checkpoint")
+    }
+
+    @Test
+    fun compactionMissingDeltaFieldsRemainMissing() {
+        val original =
+            BetaCompactionBlock.builder().content(NOT_SET).encryptedContent(NOT_SET).build()
+        val result =
+            BetaMessageAccumulator.mergeCompactionDelta(
+                    BetaContentBlock.ofCompaction(original),
+                    BetaCompactionContentBlockDelta.builder()
+                        .content(NOT_SET)
+                        .encryptedContent(NOT_SET)
+                        .build(),
+                )
+                .asCompaction()
+        assertThat(result._content().isMissing()).isTrue()
+        assertThat(result._encryptedContent().isMissing()).isTrue()
+    }
+
+    @Test
+    fun compactionExplicitNullClearsOnlyThePresentField() {
+        val result =
+            BetaMessageAccumulator.mergeCompactionDelta(
+                    BetaContentBlock.ofCompaction(
+                        compactionBlock("summary")
+                            .toBuilder()
+                            .encryptedContent("checkpoint")
+                            .build()
+                    ),
+                    BetaCompactionContentBlockDelta.builder()
+                        .content(null as String?)
+                        .encryptedContent(NOT_SET)
+                        .build(),
+                )
+                .asCompaction()
+        assertThat(result._content().isNull()).isTrue()
+        assertThat(result.encryptedContent()).contains("checkpoint")
+    }
+
+    @Test
+    fun compactionExplicitEmptyAndNullValuesStillReplace() {
+        val result =
+            BetaMessageAccumulator.mergeCompactionDelta(
+                    BetaContentBlock.ofCompaction(
+                        compactionBlock("summary")
+                            .toBuilder()
+                            .encryptedContent("checkpoint")
+                            .build()
+                    ),
+                    BetaCompactionContentBlockDelta.builder()
+                        .content("")
+                        .encryptedContent(null as String?)
+                        .build(),
+                )
+                .asCompaction()
+        assertThat(result.content()).contains("")
+        assertThat(result._encryptedContent().isNull()).isTrue()
+    }
+
+    @Test
+    fun streamedPartialCompactionDeltaKeepsCheckpointForReplay() {
+        val accumulator = BetaMessageAccumulator.create()
+        accumulator.accumulate(messageStartEvent())
+        accumulator.accumulate(compactionContentBlockStartEvent(0L))
+        accumulator.accumulate(compactionContentBlockDeltaEvent(0L, "summary", "checkpoint"))
+        accumulator.accumulate(
+            BetaRawMessageStreamEvent.ofContentBlockDelta(
+                BetaRawContentBlockDeltaEvent.builder()
+                    .index(0L)
+                    .delta(
+                        BetaRawContentBlockDelta.ofCompaction(
+                            BetaCompactionContentBlockDelta.builder()
+                                .content("updated")
+                                .encryptedContent(NOT_SET)
+                                .build()
+                        )
+                    )
+                    .build()
+            )
+        )
+        accumulator.accumulate(contentBlockStopEvent(0L))
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(BetaStopReason.END_TURN))
+        )
+        accumulator.accumulate(messageStopEvent())
+        val block = accumulator.message().content().single().asCompaction()
+        assertThat(block.content()).contains("updated")
+        assertThat(block.toParam().encryptedContent()).contains("checkpoint")
     }
 
     @Test
