@@ -23,6 +23,7 @@
 * **docs:** update model examples
 * include the license files in the published packages
 * **internal:** keep the default request headers in one map
+* **internal:** narrow the tripwire test rule in the contributor guides
 
 
 ### Documentation
