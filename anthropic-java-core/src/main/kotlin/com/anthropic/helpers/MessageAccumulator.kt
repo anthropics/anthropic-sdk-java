@@ -18,12 +18,7 @@ import com.anthropic.models.messages.InputJsonDelta
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.MessageDeltaUsage
 import com.anthropic.models.messages.RawContentBlockDelta
-import com.anthropic.models.messages.RawContentBlockDeltaEvent
 import com.anthropic.models.messages.RawContentBlockStartEvent
-import com.anthropic.models.messages.RawContentBlockStopEvent
-import com.anthropic.models.messages.RawMessageDeltaEvent
-import com.anthropic.models.messages.RawMessageStartEvent
-import com.anthropic.models.messages.RawMessageStopEvent
 import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.models.messages.RedactedThinkingBlock
 import com.anthropic.models.messages.ServerToolUseBlock
@@ -257,7 +252,7 @@ class MessageAccumulator private constructor() {
     /**
      * Accumulates a streamed event and uses it to construct a [Message]. When all events, including
      * the `message_stop` event, have been accumulated, the message can be retrieved by calling
-     * [message].
+     * [message]. An event the accumulator doesn't handle is ignored.
      *
      * @return The given [event] for convenience, such as when chaining method calls.
      * @throws AnthropicInvalidDataException If [accumulate] is called again after the final
@@ -265,13 +260,9 @@ class MessageAccumulator private constructor() {
      *   accumulate a single [Message].
      */
     fun accumulate(event: RawMessageStreamEvent): RawMessageStreamEvent {
-        if (message != null) {
-            throw AnthropicInvalidDataException("'message_stop' event already received.")
-        }
-
-        event.accept(
-            object : RawMessageStreamEvent.Visitor<Unit> {
-                override fun visitMessageStart(messageStart: RawMessageStartEvent) {
+        when {
+            event.isMessageStart() ->
+                event.asMessageStart().requireNotStopped { messageStart ->
                     if (messageBuilder != null) {
                         throw AnthropicInvalidDataException(
                             "'message_start' event already received."
@@ -281,7 +272,8 @@ class MessageAccumulator private constructor() {
                     messageUsage = messageStart.message().usage()
                 }
 
-                override fun visitMessageDelta(messageDelta: RawMessageDeltaEvent) {
+            event.isMessageDelta() ->
+                event.asMessageDelta().requireNotStopped { messageDelta ->
                     val delta = messageDelta.delta()
 
                     // The Anthropic API allows that there may be "one or more `message_delta`
@@ -319,7 +311,8 @@ class MessageAccumulator private constructor() {
                     messageUsage = mergeMessageUsage(requireMessageUsage(), messageDelta.usage())
                 }
 
-                override fun visitMessageStop(messageStop: RawMessageStopEvent) {
+            event.isMessageStop() ->
+                event.asMessageStop().requireNotStopped {
                     // A content block that never received its `content_block_stop` event still
                     // needs its buffered delta text folded in.
                     for (index in messageContentDeltaText.keys.toList()) {
@@ -343,7 +336,8 @@ class MessageAccumulator private constructor() {
                     messageBuilder = null
                 }
 
-                override fun visitContentBlockStart(contentBlockStart: RawContentBlockStartEvent) {
+            event.isContentBlockStart() ->
+                event.asContentBlockStart().requireNotStopped { contentBlockStart ->
                     val index = contentBlockStart.index()
 
                     if (messageContent[index] != null) {
@@ -429,7 +423,8 @@ class MessageAccumulator private constructor() {
                             )
                 }
 
-                override fun visitContentBlockDelta(contentBlockDelta: RawContentBlockDeltaEvent) {
+            event.isContentBlockDelta() ->
+                event.asContentBlockDelta().requireNotStopped { contentBlockDelta ->
                     val index = contentBlockDelta.index()
                     val oldContentBlock =
                         messageContent[index]
@@ -481,7 +476,8 @@ class MessageAccumulator private constructor() {
                             )
                 }
 
-                override fun visitContentBlockStop(contentBlockStop: RawContentBlockStopEvent) {
+            event.isContentBlockStop() ->
+                event.asContentBlockStop().requireNotStopped { contentBlockStop ->
                     val index = contentBlockStop.index()
 
                     // Check only that there was a corresponding `content_block_start` event with
@@ -553,8 +549,8 @@ class MessageAccumulator private constructor() {
                             }
                     }
                 }
-            }
-        )
+            else -> {}
+        }
 
         return event
     }
@@ -572,6 +568,13 @@ class MessageAccumulator private constructor() {
             contentBlock.isThinking() -> mergeThinking(contentBlock, deltaText.toString())
             else -> contentBlock
         }
+    }
+
+    private inline fun <T> T.requireNotStopped(block: (T) -> Unit) {
+        if (message != null) {
+            throw AnthropicInvalidDataException("'message_stop' event already received.")
+        }
+        block(this)
     }
 
     private fun requireMessageBuilder() =

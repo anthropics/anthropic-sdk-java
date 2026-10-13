@@ -267,7 +267,7 @@ class BetaMessageAccumulator private constructor() {
     /**
      * Accumulates a streamed event and uses it to construct a [BetaMessage]. When all events,
      * including the `message_stop` event, have been accumulated, the message can be retrieved by
-     * calling [message].
+     * calling [message]. An event the accumulator doesn't handle is ignored.
      *
      * @return The given [event] for convenience, such as when chaining method calls.
      * @throws AnthropicInvalidDataException If [accumulate] is called again after the final
@@ -275,13 +275,9 @@ class BetaMessageAccumulator private constructor() {
      *   accumulate a single [BetaMessage].
      */
     fun accumulate(event: BetaRawMessageStreamEvent): BetaRawMessageStreamEvent {
-        if (message != null) {
-            throw AnthropicInvalidDataException("'message_stop' event already received.")
-        }
-
-        event.accept(
-            object : BetaRawMessageStreamEvent.Visitor<Unit> {
-                override fun visitMessageStart(messageStart: BetaRawMessageStartEvent) {
+        when {
+            event.isMessageStart() ->
+                event.asMessageStart().requireNotStopped { messageStart ->
                     if (messageBuilder != null) {
                         throw AnthropicInvalidDataException(
                             "'message_start' event already received."
@@ -291,7 +287,8 @@ class BetaMessageAccumulator private constructor() {
                     messageUsage = messageStart.message().usage()
                 }
 
-                override fun visitMessageDelta(messageDelta: BetaRawMessageDeltaEvent) {
+            event.isMessageDelta() ->
+                event.asMessageDelta().requireNotStopped { messageDelta ->
                     val delta = messageDelta.delta()
 
                     // The Anthropic API allows that there may be "one or more `message_delta`
@@ -338,7 +335,8 @@ class BetaMessageAccumulator private constructor() {
                     messageUsage = mergeMessageUsage(requireMessageUsage(), messageDelta.usage())
                 }
 
-                override fun visitMessageStop(messageStop: BetaRawMessageStopEvent) {
+            event.isMessageStop() ->
+                event.asMessageStop().requireNotStopped {
                     // A content block that never received its `content_block_stop` event still
                     // needs its buffered delta text folded in.
                     for (index in messageContentDeltaText.keys.toList()) {
@@ -362,9 +360,8 @@ class BetaMessageAccumulator private constructor() {
                     messageBuilder = null
                 }
 
-                override fun visitContentBlockStart(
-                    contentBlockStart: BetaRawContentBlockStartEvent
-                ) {
+            event.isContentBlockStart() ->
+                event.asContentBlockStart().requireNotStopped { contentBlockStart ->
                     val index = contentBlockStart.index()
 
                     if (messageContent[index] != null) {
@@ -489,9 +486,8 @@ class BetaMessageAccumulator private constructor() {
                     }
                 }
 
-                override fun visitContentBlockDelta(
-                    contentBlockDelta: BetaRawContentBlockDeltaEvent
-                ) {
+            event.isContentBlockDelta() ->
+                event.asContentBlockDelta().requireNotStopped { contentBlockDelta ->
                     val index = contentBlockDelta.index()
                     val oldContentBlock =
                         messageContent[index]
@@ -548,7 +544,8 @@ class BetaMessageAccumulator private constructor() {
                             )
                 }
 
-                override fun visitContentBlockStop(contentBlockStop: BetaRawContentBlockStopEvent) {
+            event.isContentBlockStop() ->
+                event.asContentBlockStop().requireNotStopped { contentBlockStop ->
                     val index = contentBlockStop.index()
 
                     // Check only that there was a corresponding `content_block_start` event with
@@ -628,8 +625,8 @@ class BetaMessageAccumulator private constructor() {
                             }
                     }
                 }
-            }
-        )
+            else -> {}
+        }
 
         return event
     }
@@ -647,6 +644,13 @@ class BetaMessageAccumulator private constructor() {
             contentBlock.isThinking() -> mergeThinking(contentBlock, deltaText.toString())
             else -> contentBlock
         }
+    }
+
+    private inline fun <T> T.requireNotStopped(block: (T) -> Unit) {
+        if (message != null) {
+            throw AnthropicInvalidDataException("'message_stop' event already received.")
+        }
+        block(this)
     }
 
     private fun requireMessageBuilder() =

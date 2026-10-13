@@ -12,6 +12,11 @@
 * **client:** treat proxy-authorization as a sensitive header
 
 
+### Bug Fixes
+
+* **client:** ignore events of an unknown type in the message accumulators
+
+
 ### Chores
 
 * **docs:** correct prefill, thinking, fallback and model descriptions
