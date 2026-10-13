@@ -5,6 +5,7 @@
 ### Features
 
 * **api:** add organization_type_not_supported error to spend limit lists
+* **client:** add a followRedirects request option
 
 
 ### Bug Fixes

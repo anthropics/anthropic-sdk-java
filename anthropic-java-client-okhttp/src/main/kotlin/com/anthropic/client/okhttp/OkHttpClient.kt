@@ -215,6 +215,8 @@ private constructor(
                 .callTimeout(it.request())
         }
 
+        requestOptions.followRedirects?.let { clientBuilder.followRedirects(it) }
+
         val client = clientBuilder.build()
         return client.newCall(request.toRequest(client))
     }

@@ -1,6 +1,7 @@
 package com.anthropic.client.okhttp
 
 import com.anthropic.backends.Backend
+import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
@@ -54,6 +55,28 @@ internal class OkHttpClientTest {
     fun beforeEach(wmRuntimeInfo: WireMockRuntimeInfo) {
         baseUrl = wmRuntimeInfo.httpBaseUrl
         httpClient = OkHttpClient.builder().backend(TestBackend(baseUrl)).build()
+    }
+
+    @Test
+    fun execute_followsRedirectsUnlessFollowRedirectsIsFalse() {
+        stubFor(
+            post(urlPathEqualTo("/something"))
+                .willReturn(aResponse().withStatus(307).withHeader("Location", "/elsewhere"))
+        )
+        stubFor(post(urlPathEqualTo("/elsewhere")).willReturn(ok()))
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl(baseUrl)
+                .addPathSegment("something")
+                .build()
+
+        val followed = httpClient.execute(request)
+        val notFollowed =
+            httpClient.execute(request, RequestOptions.builder().followRedirects(false).build())
+
+        assertThat(followed.statusCode()).isEqualTo(200)
+        assertThat(notFollowed.statusCode()).isEqualTo(307)
     }
 
     @Test

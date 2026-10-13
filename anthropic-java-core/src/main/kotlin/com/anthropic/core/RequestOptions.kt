@@ -7,6 +7,7 @@ class RequestOptions
 private constructor(
     val responseValidation: Boolean?,
     val timeout: Timeout?,
+    val followRedirects: Boolean?,
     val fallbackState: BetaFallbackState?,
 ) {
 
@@ -86,6 +87,7 @@ private constructor(
             timeout =
                 if (options.timeout != null && timeout != null) timeout.assign(options.timeout)
                 else timeout ?: options.timeout,
+            followRedirects = followRedirects ?: options.followRedirects,
             fallbackState = fallbackState ?: options.fallbackState,
         )
 
@@ -93,12 +95,14 @@ private constructor(
 
         private var responseValidation: Boolean? = null
         private var timeout: Timeout? = null
+        private var followRedirects: Boolean? = null
         private var fallbackState: BetaFallbackState? = null
 
         @JvmSynthetic
         internal fun from(requestOptions: RequestOptions) = apply {
             responseValidation = requestOptions.responseValidation
             timeout = requestOptions.timeout
+            followRedirects = requestOptions.followRedirects
             fallbackState = requestOptions.fallbackState
         }
 
@@ -118,6 +122,15 @@ private constructor(
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
         fun timeout(timeout: Duration) = timeout(Timeout.builder().request(timeout).build())
+
+        /**
+         * Whether to follow redirects.
+         *
+         * Defaults to true.
+         */
+        fun followRedirects(followRedirects: Boolean) = apply {
+            this.followRedirects = followRedirects
+        }
 
         /**
          * Sticky state for [com.anthropic.helpers.BetaRefusalFallbackInterceptor].
@@ -164,6 +177,7 @@ private constructor(
             timeout(Timeout.builder().read(timeout).request(timeout).build())
         }
 
-        fun build(): RequestOptions = RequestOptions(responseValidation, timeout, fallbackState)
+        fun build(): RequestOptions =
+            RequestOptions(responseValidation, timeout, followRedirects, fallbackState)
     }
 }
