@@ -9,6 +9,7 @@
 
 ### Chores
 
+* **ci:** speed up breaking change detection
 * **internal:** give lint more memory in CI
 
 ## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-14)
