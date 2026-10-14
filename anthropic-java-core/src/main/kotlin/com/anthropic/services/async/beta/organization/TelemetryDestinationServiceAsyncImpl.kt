@@ -19,7 +19,7 @@ import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaDeletedTelemetryDestination
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestination
-import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestinationTest
+import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestinationTestResponse
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationCreateParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationDeleteParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationListPageAsync
@@ -101,7 +101,7 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
     override fun test(
         params: TelemetryDestinationTestParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BetaTelemetryDestinationTest> =
+    ): CompletableFuture<BetaTelemetryDestinationTestResponse> =
         // post /v1/organizations/telemetry_destinations/{destination_id}/test?beta=true
         withRawResponse().test(params, requestOptions).thenParse()
 
@@ -325,13 +325,13 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
             }
         }
 
-        private val testHandler: Handler<BetaTelemetryDestinationTest> =
-            jsonHandler<BetaTelemetryDestinationTest>(clientOptions.jsonMapper)
+        private val testHandler: Handler<BetaTelemetryDestinationTestResponse> =
+            jsonHandler<BetaTelemetryDestinationTestResponse>(clientOptions.jsonMapper)
 
         override fun test(
             params: TelemetryDestinationTestParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> {
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTestResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("destinationId", params.destinationId().getOrNull())

@@ -5,16 +5,16 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class BetaTelemetryDestinationTestTest {
+internal class BetaTelemetryDestinationTestResponseTest {
 
     @Test
     fun create() {
-        val betaTelemetryDestinationTest =
-            BetaTelemetryDestinationTest.builder()
+        val betaTelemetryDestinationTestResponse =
+            BetaTelemetryDestinationTestResponse.builder()
                 .result(BetaTelemetryDestinationTestSuccess.builder().build())
                 .build()
 
-        assertThat(betaTelemetryDestinationTest.result())
+        assertThat(betaTelemetryDestinationTestResponse.result())
             .isEqualTo(
                 BetaTelemetryDestinationTestResult.ofSuccess(
                     BetaTelemetryDestinationTestSuccess.builder().build()
@@ -25,17 +25,18 @@ internal class BetaTelemetryDestinationTestTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val betaTelemetryDestinationTest =
-            BetaTelemetryDestinationTest.builder()
+        val betaTelemetryDestinationTestResponse =
+            BetaTelemetryDestinationTestResponse.builder()
                 .result(BetaTelemetryDestinationTestSuccess.builder().build())
                 .build()
 
-        val roundtrippedBetaTelemetryDestinationTest =
+        val roundtrippedBetaTelemetryDestinationTestResponse =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(betaTelemetryDestinationTest),
-                jacksonTypeRef<BetaTelemetryDestinationTest>(),
+                jsonMapper.writeValueAsString(betaTelemetryDestinationTestResponse),
+                jacksonTypeRef<BetaTelemetryDestinationTestResponse>(),
             )
 
-        assertThat(roundtrippedBetaTelemetryDestinationTest).isEqualTo(betaTelemetryDestinationTest)
+        assertThat(roundtrippedBetaTelemetryDestinationTestResponse)
+            .isEqualTo(betaTelemetryDestinationTestResponse)
     }
 }

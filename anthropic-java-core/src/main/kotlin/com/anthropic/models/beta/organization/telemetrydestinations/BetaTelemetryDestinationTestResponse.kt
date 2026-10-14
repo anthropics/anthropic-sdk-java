@@ -15,7 +15,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 /** The result of one test span sent to a destination. */
-class BetaTelemetryDestinationTest
+class BetaTelemetryDestinationTestResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val result: JsonField<BetaTelemetryDestinationTestResult>,
@@ -75,7 +75,8 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [BetaTelemetryDestinationTest].
+         * Returns a mutable builder for constructing an instance of
+         * [BetaTelemetryDestinationTestResponse].
          *
          * The following fields are required:
          * ```java
@@ -85,7 +86,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
 
         /**
-         * Returns an immutable instance of [BetaTelemetryDestinationTest] with the required
+         * Returns an immutable instance of [BetaTelemetryDestinationTestResponse] with the required
          * [result] set to the given value.
          */
         @JvmStatic
@@ -102,7 +103,7 @@ private constructor(
             of(BetaTelemetryDestinationTestResult.ofFailure(failure))
     }
 
-    /** A builder for [BetaTelemetryDestinationTest]. */
+    /** A builder for [BetaTelemetryDestinationTestResponse]. */
     class Builder internal constructor() {
 
         private var result: JsonField<BetaTelemetryDestinationTestResult>? = null
@@ -110,10 +111,13 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(betaTelemetryDestinationTest: BetaTelemetryDestinationTest) = apply {
-            result = betaTelemetryDestinationTest.result
-            type = betaTelemetryDestinationTest.type
-            additionalProperties = betaTelemetryDestinationTest.additionalProperties.toMutableMap()
+        internal fun from(
+            betaTelemetryDestinationTestResponse: BetaTelemetryDestinationTestResponse
+        ) = apply {
+            result = betaTelemetryDestinationTestResponse.result
+            type = betaTelemetryDestinationTestResponse.type
+            additionalProperties =
+                betaTelemetryDestinationTestResponse.additionalProperties.toMutableMap()
         }
 
         /**
@@ -190,7 +194,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BetaTelemetryDestinationTest].
+         * Returns an immutable instance of [BetaTelemetryDestinationTestResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -201,8 +205,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BetaTelemetryDestinationTest =
-            BetaTelemetryDestinationTest(
+        fun build(): BetaTelemetryDestinationTestResponse =
+            BetaTelemetryDestinationTestResponse(
                 checkRequired("result", result),
                 type,
                 additionalProperties.toMutableMap(),
@@ -219,7 +223,7 @@ private constructor(
      * @throws AnthropicInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BetaTelemetryDestinationTest = apply {
+    fun validate(): BetaTelemetryDestinationTestResponse = apply {
         if (validated) {
             return@apply
         }
@@ -256,7 +260,7 @@ private constructor(
             return true
         }
 
-        return other is BetaTelemetryDestinationTest &&
+        return other is BetaTelemetryDestinationTestResponse &&
             result == other.result &&
             type == other.type &&
             additionalProperties == other.additionalProperties
@@ -267,5 +271,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaTelemetryDestinationTest{result=$result, type=$type, additionalProperties=$additionalProperties}"
+        "BetaTelemetryDestinationTestResponse{result=$result, type=$type, additionalProperties=$additionalProperties}"
 }

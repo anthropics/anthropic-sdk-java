@@ -5,7 +5,7 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaDeletedTelemetryDestination
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestination
-import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestinationTest
+import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestinationTestResponse
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationCreateParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationDeleteParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationListPageAsync
@@ -229,7 +229,7 @@ interface TelemetryDestinationServiceAsync {
      * between tests of one destination; a request that comes sooner may be answered with
      * status 429.
      */
-    fun test(destinationId: String): CompletableFuture<BetaTelemetryDestinationTest> =
+    fun test(destinationId: String): CompletableFuture<BetaTelemetryDestinationTestResponse> =
         test(destinationId, TelemetryDestinationTestParams.none())
 
     /** @see test */
@@ -237,32 +237,32 @@ interface TelemetryDestinationServiceAsync {
         destinationId: String,
         params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BetaTelemetryDestinationTest> =
+    ): CompletableFuture<BetaTelemetryDestinationTestResponse> =
         test(params.toBuilder().destinationId(destinationId).build(), requestOptions)
 
     /** @see test */
     fun test(
         destinationId: String,
         params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
-    ): CompletableFuture<BetaTelemetryDestinationTest> =
+    ): CompletableFuture<BetaTelemetryDestinationTestResponse> =
         test(destinationId, params, RequestOptions.none())
 
     /** @see test */
     fun test(
         params: TelemetryDestinationTestParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BetaTelemetryDestinationTest>
+    ): CompletableFuture<BetaTelemetryDestinationTestResponse>
 
     /** @see test */
     fun test(
         params: TelemetryDestinationTestParams
-    ): CompletableFuture<BetaTelemetryDestinationTest> = test(params, RequestOptions.none())
+    ): CompletableFuture<BetaTelemetryDestinationTestResponse> = test(params, RequestOptions.none())
 
     /** @see test */
     fun test(
         destinationId: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<BetaTelemetryDestinationTest> =
+    ): CompletableFuture<BetaTelemetryDestinationTestResponse> =
         test(destinationId, TelemetryDestinationTestParams.none(), requestOptions)
 
     /**
@@ -462,7 +462,7 @@ interface TelemetryDestinationServiceAsync {
          */
         fun test(
             destinationId: String
-        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> =
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTestResponse>> =
             test(destinationId, TelemetryDestinationTestParams.none())
 
         /** @see test */
@@ -470,33 +470,33 @@ interface TelemetryDestinationServiceAsync {
             destinationId: String,
             params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> =
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTestResponse>> =
             test(params.toBuilder().destinationId(destinationId).build(), requestOptions)
 
         /** @see test */
         fun test(
             destinationId: String,
             params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
-        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> =
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTestResponse>> =
             test(destinationId, params, RequestOptions.none())
 
         /** @see test */
         fun test(
             params: TelemetryDestinationTestParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>>
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTestResponse>>
 
         /** @see test */
         fun test(
             params: TelemetryDestinationTestParams
-        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> =
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTestResponse>> =
             test(params, RequestOptions.none())
 
         /** @see test */
         fun test(
             destinationId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> =
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTestResponse>> =
             test(destinationId, TelemetryDestinationTestParams.none(), requestOptions)
     }
 }

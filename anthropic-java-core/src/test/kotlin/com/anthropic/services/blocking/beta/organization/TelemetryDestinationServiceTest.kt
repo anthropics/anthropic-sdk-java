@@ -154,7 +154,7 @@ internal class TelemetryDestinationServiceTest {
                 .build()
         val telemetryDestinationService = client.beta().organization().telemetryDestinations()
 
-        val betaTelemetryDestinationTest =
+        val betaTelemetryDestinationTestResponse =
             telemetryDestinationService.test(
                 TelemetryDestinationTestParams.builder()
                     .destinationId("destination_id")
@@ -162,6 +162,6 @@ internal class TelemetryDestinationServiceTest {
                     .build()
             )
 
-        betaTelemetryDestinationTest.validate()
+        betaTelemetryDestinationTestResponse.validate()
     }
 }

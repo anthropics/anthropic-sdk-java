@@ -18,7 +18,7 @@ import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaDeletedTelemetryDestination
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestination
-import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestinationTest
+import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestinationTestResponse
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationCreateParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationDeleteParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationListPage
@@ -94,7 +94,7 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
     override fun test(
         params: TelemetryDestinationTestParams,
         requestOptions: RequestOptions,
-    ): BetaTelemetryDestinationTest =
+    ): BetaTelemetryDestinationTestResponse =
         // post /v1/organizations/telemetry_destinations/{destination_id}/test?beta=true
         withRawResponse().test(params, requestOptions).parse()
 
@@ -300,13 +300,13 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
             }
         }
 
-        private val testHandler: Handler<BetaTelemetryDestinationTest> =
-            jsonHandler<BetaTelemetryDestinationTest>(clientOptions.jsonMapper)
+        private val testHandler: Handler<BetaTelemetryDestinationTestResponse> =
+            jsonHandler<BetaTelemetryDestinationTestResponse>(clientOptions.jsonMapper)
 
         override fun test(
             params: TelemetryDestinationTestParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<BetaTelemetryDestinationTest> {
+        ): HttpResponseFor<BetaTelemetryDestinationTestResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("destinationId", params.destinationId().getOrNull())

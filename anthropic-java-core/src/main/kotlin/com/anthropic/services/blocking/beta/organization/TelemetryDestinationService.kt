@@ -5,7 +5,7 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaDeletedTelemetryDestination
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestination
-import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestinationTest
+import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestinationTestResponse
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationCreateParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationDeleteParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationListPage
@@ -215,7 +215,7 @@ interface TelemetryDestinationService {
      * between tests of one destination; a request that comes sooner may be answered with
      * status 429.
      */
-    fun test(destinationId: String): BetaTelemetryDestinationTest =
+    fun test(destinationId: String): BetaTelemetryDestinationTestResponse =
         test(destinationId, TelemetryDestinationTestParams.none())
 
     /** @see test */
@@ -223,27 +223,30 @@ interface TelemetryDestinationService {
         destinationId: String,
         params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): BetaTelemetryDestinationTest =
+    ): BetaTelemetryDestinationTestResponse =
         test(params.toBuilder().destinationId(destinationId).build(), requestOptions)
 
     /** @see test */
     fun test(
         destinationId: String,
         params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
-    ): BetaTelemetryDestinationTest = test(destinationId, params, RequestOptions.none())
+    ): BetaTelemetryDestinationTestResponse = test(destinationId, params, RequestOptions.none())
 
     /** @see test */
     fun test(
         params: TelemetryDestinationTestParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): BetaTelemetryDestinationTest
+    ): BetaTelemetryDestinationTestResponse
 
     /** @see test */
-    fun test(params: TelemetryDestinationTestParams): BetaTelemetryDestinationTest =
+    fun test(params: TelemetryDestinationTestParams): BetaTelemetryDestinationTestResponse =
         test(params, RequestOptions.none())
 
     /** @see test */
-    fun test(destinationId: String, requestOptions: RequestOptions): BetaTelemetryDestinationTest =
+    fun test(
+        destinationId: String,
+        requestOptions: RequestOptions,
+    ): BetaTelemetryDestinationTestResponse =
         test(destinationId, TelemetryDestinationTestParams.none(), requestOptions)
 
     /**
@@ -453,7 +456,7 @@ interface TelemetryDestinationService {
          * otherwise the same as [TelemetryDestinationService.test].
          */
         @MustBeClosed
-        fun test(destinationId: String): HttpResponseFor<BetaTelemetryDestinationTest> =
+        fun test(destinationId: String): HttpResponseFor<BetaTelemetryDestinationTestResponse> =
             test(destinationId, TelemetryDestinationTestParams.none())
 
         /** @see test */
@@ -462,7 +465,7 @@ interface TelemetryDestinationService {
             destinationId: String,
             params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BetaTelemetryDestinationTest> =
+        ): HttpResponseFor<BetaTelemetryDestinationTestResponse> =
             test(params.toBuilder().destinationId(destinationId).build(), requestOptions)
 
         /** @see test */
@@ -470,7 +473,7 @@ interface TelemetryDestinationService {
         fun test(
             destinationId: String,
             params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
-        ): HttpResponseFor<BetaTelemetryDestinationTest> =
+        ): HttpResponseFor<BetaTelemetryDestinationTestResponse> =
             test(destinationId, params, RequestOptions.none())
 
         /** @see test */
@@ -478,20 +481,21 @@ interface TelemetryDestinationService {
         fun test(
             params: TelemetryDestinationTestParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BetaTelemetryDestinationTest>
+        ): HttpResponseFor<BetaTelemetryDestinationTestResponse>
 
         /** @see test */
         @MustBeClosed
         fun test(
             params: TelemetryDestinationTestParams
-        ): HttpResponseFor<BetaTelemetryDestinationTest> = test(params, RequestOptions.none())
+        ): HttpResponseFor<BetaTelemetryDestinationTestResponse> =
+            test(params, RequestOptions.none())
 
         /** @see test */
         @MustBeClosed
         fun test(
             destinationId: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<BetaTelemetryDestinationTest> =
+        ): HttpResponseFor<BetaTelemetryDestinationTestResponse> =
             test(destinationId, TelemetryDestinationTestParams.none(), requestOptions)
     }
 }
