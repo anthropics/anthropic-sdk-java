@@ -30,6 +30,7 @@
 * include the license files in the published packages
 * **internal:** keep the default request headers in one map
 * **internal:** narrow the tripwire test rule in the contributor guides
+* **tests:** keep the requests of tests that run at the same time out of the OpenTelemetry propagation tests
 
 
 ### Documentation

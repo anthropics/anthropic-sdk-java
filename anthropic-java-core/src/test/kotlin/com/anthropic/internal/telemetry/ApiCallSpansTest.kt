@@ -419,10 +419,14 @@ internal class ApiCallSpansTest : TracingTestSupport() {
             )
             globalOnly.messages().create(messageParams())
 
-            assertThat(recorder.spans).hasSize(2)
+            // The tests of other classes that run at the same time record with this tracer
+            // provider too, while it is registered.
+            val port = baseUrl.substringAfterLast(':').toLong()
+            val spans = recorder.spans.filter { it.long("server.port") == port }
+            assertThat(spans).hasSize(2)
             val requests = findAll(postRequestedFor(urlPathEqualTo("/v1/messages")))
             assertThat(requests.last().getHeader("traceparent"))
-                .contains(recorder.spans.last().spanContext.spanId)
+                .contains(spans.last().spanContext.spanId)
         } finally {
             GlobalOpenTelemetry.resetForTest()
             registerGlobal()
@@ -501,13 +505,20 @@ internal class ApiCallSpansTest : TracingTestSupport() {
             .allSatisfy { assertThat(it.containsHeader("traceparent")).isFalse() }
     }
 
-    /** Injects `x-custom-trace`, and counts the times it is asked to. */
-    private class CountingPropagator : TextMapPropagator {
+    /**
+     * Injects `x-custom-trace` into the requests of the trace [traceId], and counts the times it is
+     * asked to. While it is registered, the tests of other classes that run at the same time inject
+     * with it too: it leaves their requests as they are, and does not count them.
+     */
+    private class CountingPropagator(private val traceId: String) : TextMapPropagator {
         val injected = AtomicInteger()
 
         override fun fields(): Collection<String> = listOf("x-custom-trace")
 
         override fun <C> inject(context: Context, carrier: C?, setter: TextMapSetter<C>) {
+            if (Span.fromContext(context).spanContext.traceId != traceId) {
+                return
+            }
             injected.incrementAndGet()
             setter.set(carrier, "x-custom-trace", "custom")
         }
@@ -549,7 +560,7 @@ internal class ApiCallSpansTest : TracingTestSupport() {
                     )
                 )
                 .with(Baggage.builder().put("tenant", "acme").build())
-        val custom = CountingPropagator()
+        val custom = CountingPropagator(parent.spanContext.traceId)
         GlobalOpenTelemetry.resetForTest()
         try {
             GlobalOpenTelemetry.set(
