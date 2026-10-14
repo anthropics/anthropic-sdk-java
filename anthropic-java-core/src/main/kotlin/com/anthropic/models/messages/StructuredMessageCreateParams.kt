@@ -114,6 +114,13 @@ internal constructor(
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
+     * @see MessageCreateParams.speed
+     */
+    fun speed(): Optional<MessageCreateParams.Speed> = delegate.speed()
+
+    /**
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      * @see MessageCreateParams.stopSequences
      */
     fun stopSequences(): Optional<List<String>> = delegate.stopSequences()
@@ -245,6 +252,13 @@ internal constructor(
      * Unlike [serviceTier], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _serviceTier(): JsonField<MessageCreateParams.ServiceTier> = delegate._serviceTier()
+
+    /**
+     * Returns the raw JSON value of [speed].
+     *
+     * Unlike [speed], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _speed(): JsonField<MessageCreateParams.Speed> = delegate._speed()
 
     /**
      * Returns the raw JSON value of [stopSequences].
@@ -674,6 +688,21 @@ internal constructor(
         fun serviceTier(serviceTier: JsonField<MessageCreateParams.ServiceTier>) = apply {
             delegate.serviceTier(serviceTier)
         }
+
+        /** @see MessageCreateParams.Builder.speed */
+        fun speed(speed: MessageCreateParams.Speed?) = apply { delegate.speed(speed) }
+
+        /** Alias for calling [Builder.speed] with `speed.orElse(null)`. */
+        fun speed(speed: Optional<MessageCreateParams.Speed>) = speed(speed.getOrNull())
+
+        /**
+         * Sets [Builder.speed] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.speed] with a well-typed [MessageCreateParams.Speed]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun speed(speed: JsonField<MessageCreateParams.Speed>) = apply { delegate.speed(speed) }
 
         /** @see MessageCreateParams.Builder.stopSequences */
         fun stopSequences(stopSequences: List<String>) = apply {

@@ -91,6 +91,7 @@ internal class ServiceParamsTest {
                         .build()
                 )
                 .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                .speed(MessageCreateParams.Speed.STANDARD)
                 .addStopSequence("string")
                 .systemOfTextBlockParams(
                     listOf(

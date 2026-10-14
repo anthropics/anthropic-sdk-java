@@ -78,6 +78,7 @@ internal class MessageServiceAsyncTest {
                             .build()
                     )
                     .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                    .speed(MessageCreateParams.Speed.STANDARD)
                     .addStopSequence("string")
                     .systemOfTextBlockParams(
                         listOf(
@@ -205,6 +206,7 @@ internal class MessageServiceAsyncTest {
                             .build()
                     )
                     .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                    .speed(MessageCreateParams.Speed.STANDARD)
                     .addStopSequence("string")
                     .systemOfTextBlockParams(
                         listOf(
@@ -312,6 +314,7 @@ internal class MessageServiceAsyncTest {
                             )
                             .build()
                     )
+                    .speed(MessageCountTokensParams.Speed.STANDARD)
                     .systemOfTextBlockParams(
                         listOf(
                             TextBlockParam.builder()
