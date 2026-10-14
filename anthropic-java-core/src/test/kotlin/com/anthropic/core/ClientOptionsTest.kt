@@ -8,6 +8,7 @@ import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.Interceptor
+import com.anthropic.core.opentelemetry.OpenTelemetryOptions
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.util.concurrent.CompletableFuture
@@ -33,6 +34,33 @@ internal class ClientOptionsTest {
                 .build()
 
         assertThat(clientOptions.headers.values("User-Agent")).containsExactly("My User Agent")
+    }
+
+    @Test
+    fun openTelemetry_defaultsToNone() {
+        val clientOptions = ClientOptions.builder().httpClient(httpClient).build()
+
+        assertThat(clientOptions.openTelemetry).isEqualTo(OpenTelemetryOptions.none())
+        assertThat(clientOptions.openTelemetryProviderName).isEqualTo("anthropic")
+        assertThat(clientOptions.openTelemetryPlatform()).isEmpty()
+    }
+
+    @Test
+    fun toBuilder_openTelemetryIsPreserved() {
+        val openTelemetry = OpenTelemetryOptions.ofEnabled(false)
+        var clientOptions =
+            ClientOptions.builder()
+                .httpClient(httpClient)
+                .openTelemetry(openTelemetry)
+                .openTelemetryProviderName("aws.bedrock")
+                .openTelemetryPlatform("bedrock")
+                .build()
+
+        clientOptions = clientOptions.toBuilder().build()
+
+        assertThat(clientOptions.openTelemetry).isEqualTo(openTelemetry)
+        assertThat(clientOptions.openTelemetryProviderName).isEqualTo("aws.bedrock")
+        assertThat(clientOptions.openTelemetryPlatform()).contains("bedrock")
     }
 
     @Test

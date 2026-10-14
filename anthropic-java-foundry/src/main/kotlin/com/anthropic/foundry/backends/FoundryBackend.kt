@@ -4,6 +4,7 @@ import com.anthropic.backends.Backend
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicInvalidDataException
+import java.util.Optional
 import java.util.function.Supplier
 
 /**
@@ -49,6 +50,8 @@ private constructor(
         val raw = (baseUrl ?: "https://$resource.services.ai.azure.com").trimEnd('/')
         return if (raw.endsWith("/anthropic")) raw else "$raw/anthropic"
     }
+
+    override fun openTelemetryPlatform(): Optional<String> = Optional.of("foundry")
 
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val pathSegments = request.pathSegments

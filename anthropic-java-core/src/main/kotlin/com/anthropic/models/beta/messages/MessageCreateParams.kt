@@ -1935,9 +1935,7 @@ private constructor(
          *
          * Produced by `com.anthropic.mcp.BetaMcp.mcpTool` from the `anthropic-java-mcp` module.
          */
-        fun addTool(tool: McpBetaTool) = apply {
-            addTool(BetaRunnableTool.of(tool.definition, tool.runner))
-        }
+        fun addTool(tool: McpBetaTool) = apply { addTool(BetaRunnableTool.ofMcp(tool)) }
 
         /** Adds multiple MCP tools to [tools]. See [addTool] for details. */
         fun addTools(tools: List<McpBetaTool>) = apply { tools.forEach { addTool(it) } }

@@ -23,6 +23,9 @@ import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.helpers.warnIfThinkingEnabled
+import com.anthropic.internal.telemetry.recordCountTokensResponse
+import com.anthropic.internal.telemetry.startCountTokens
+import com.anthropic.internal.telemetry.startMessagesCreate
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.MessageCountTokensParams
 import com.anthropic.models.messages.MessageCreateParams
@@ -116,7 +119,9 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                         isStreaming = false,
                         model = params.model().toString(),
                     )
-            return traceApiCallAsync(clientOptions, params) { client ->
+            val recording =
+                startMessagesCreate(clientOptions, requestOptions, params, stream = false)
+            return traceApiCallAsync(clientOptions, recording?.call) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
                     .thenApply { response ->
@@ -128,6 +133,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                         it.validate()
                                     }
                                 }
+                                .also { recording?.recordResponse(it) }
                         }
                     }
             }
@@ -168,7 +174,9 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                         isStreaming = true,
                         model = params.model().toString(),
                     )
-            return traceApiCallAsync(clientOptions, params) { client ->
+            val recording =
+                startMessagesCreate(clientOptions, requestOptions, params, stream = true)
+            return traceApiCallAsync(clientOptions, recording?.call) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
                     .thenApply { response ->
@@ -182,6 +190,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                         streamResponse
                                     }
                                 }
+                                .also { recording?.recordStream() }
                         }
                     }
             }
@@ -205,7 +214,8 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return traceApiCallAsync(clientOptions, params) { client ->
+            val call = startCountTokens(clientOptions, requestOptions, params)
+            return traceApiCallAsync(clientOptions, call) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
                     .thenApply { response ->
@@ -217,6 +227,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                         it.validate()
                                     }
                                 }
+                                .also { recordCountTokensResponse(clientOptions, call, it) }
                         }
                     }
             }

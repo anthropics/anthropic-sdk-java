@@ -1140,6 +1140,13 @@ internal class BetaMessageAccumulatorTest {
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, "{\"hel"))
         accumulator.accumulate(textContentBlockDeltaEvent(3L, "3-TWO."))
 
+        // The message so far has the text that arrived, and the input that the tool use block
+        // started with. Reading it leaves the rest of the accumulation as it was.
+        val contentSoFar = accumulator.partialMessage()!!.content()
+        assertThat(contentSoFar.size).isEqualTo(2)
+        assertThat(contentSoFar[0].asToolUse()._input()).isEqualTo(SET_TO_NULL)
+        assertThat(contentSoFar[1].asText().text()).isEqualTo("3-ONE.3-TWO.")
+
         accumulator.accumulate(citationContentBlockDeltaEvent(3L, 234L))
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, "lo\":\"wo"))
         accumulator.accumulate(textContentBlockDeltaEvent(3L, "3-THREE."))

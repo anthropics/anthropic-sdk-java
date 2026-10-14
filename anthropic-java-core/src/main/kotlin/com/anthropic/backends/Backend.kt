@@ -2,6 +2,7 @@ package com.anthropic.backends
 
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.HttpResponse
+import java.util.Optional
 
 /**
  * An interface that represents adaptations required to support different backend AI services.
@@ -72,6 +73,22 @@ interface Backend {
     fun prepareResponse(response: HttpResponse): HttpResponse {
         return response
     }
+
+    /**
+     * The `gen_ai.provider.name` attribute of the OpenTelemetry spans of a client that uses this
+     * backend: the platform that serves the requests. `aws.bedrock` on Amazon Bedrock, including
+     * its Mantle endpoint, `gcp.vertex_ai` on Vertex AI, and `anthropic` for every other backend,
+     * because Anthropic runs the service each of them calls.
+     */
+    fun openTelemetryProviderName(): String = "anthropic"
+
+    /**
+     * The platform of this backend in the instrumentation scope of the OpenTelemetry spans of a
+     * client that uses it: `bedrock` gives the spans the scope `com.anthropic.sdk.java.bedrock`.
+     * Empty for a backend with no platform of its own, whose spans have the scope
+     * `com.anthropic.sdk.java`.
+     */
+    fun openTelemetryPlatform(): Optional<String> = Optional.empty()
 
     /**
      * Closes any streams and releases any resources used by this backend. For example, an

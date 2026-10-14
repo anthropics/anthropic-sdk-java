@@ -109,6 +109,8 @@ private constructor(
         return "https://aws-external-anthropic.${region.id()}.api.aws"
     }
 
+    override fun openTelemetryPlatform(): Optional<String> = Optional.of("aws")
+
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val builder = request.toBuilder()
 

@@ -19,6 +19,7 @@ import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
+import com.anthropic.internal.telemetry.startBatchesCreate
 import com.anthropic.models.beta.messages.batches.BatchCancelParams
 import com.anthropic.models.beta.messages.batches.BatchCreateParams
 import com.anthropic.models.beta.messages.batches.BatchDeleteParams
@@ -121,7 +122,8 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return traceApiCall(clientOptions, params) { client ->
+            val call = startBatchesCreate(clientOptions, requestOptions, params)
+            return traceApiCall(clientOptions, call) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
                     response

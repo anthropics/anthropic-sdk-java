@@ -2,6 +2,7 @@ package com.anthropic.aws.auth
 
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.internal.telemetry.traceContextHeaderNames
 import java.io.ByteArrayOutputStream
 import software.amazon.awssdk.auth.credentials.AwsCredentials
 import software.amazon.awssdk.http.ContentStreamProvider
@@ -32,7 +33,9 @@ object AwsAuthUtil {
      * Signs an HTTP request using AWS SigV4 with the given credentials, region, and service name.
      *
      * The `connection` header is excluded from signing because it may be stripped by proxies and
-     * must not be part of the SigV4 signature.
+     * must not be part of the SigV4 signature. The trace context headers
+     * ([traceContextHeaderNames]) are excluded too, because an HTTP client instrumentation may
+     * replace them after signing. They are sent all the same.
      *
      * A `content-type` header is only required when the request has a body. Body-less requests
      * (e.g. `GET`, `DELETE`) are signed without one, as SigV4 does not require it.
@@ -60,10 +63,17 @@ object AwsAuthUtil {
                         }
                         // Body-less request (e.g. GET, DELETE): no content type required.
                     }
+                    // The trace context headers may be replaced by an HTTP client
+                    // instrumentation after signing, so they must not be included in the SigV4
+                    // signature either. They stay on the request that is sent.
+                    val unsigned = traceContextHeaderNames()
                     request.headers.names().forEach { name ->
                         // The `connection` header may be stripped by proxies, so it must
                         // not be included in the SigV4 signature.
-                        if (!name.equals("connection", ignoreCase = true)) {
+                        if (
+                            !name.equals("connection", ignoreCase = true) &&
+                                name.lowercase() !in unsigned
+                        ) {
                             request.headers.values(name).forEach { value ->
                                 appendHeader(name, value)
                             }

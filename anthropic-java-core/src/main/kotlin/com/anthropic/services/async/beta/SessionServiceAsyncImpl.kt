@@ -17,6 +17,8 @@ import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
+import com.anthropic.internal.telemetry.recordSessionsCreateResponse
+import com.anthropic.internal.telemetry.startSessionsCreate
 import com.anthropic.models.beta.sessions.BetaManagedAgentsDeletedSession
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSession
 import com.anthropic.models.beta.sessions.SessionArchiveParams
@@ -158,7 +160,8 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return traceApiCallAsync(clientOptions, params) { client ->
+            val call = startSessionsCreate(clientOptions, requestOptions, params)
+            return traceApiCallAsync(clientOptions, call) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
                     .thenApply { response ->
@@ -171,6 +174,7 @@ class SessionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                                     }
                                 }
                                 .also { client.recordCreatedId("anthropic.session.id", it._id()) }
+                                .also { recordSessionsCreateResponse(clientOptions, call, it) }
                         }
                     }
             }

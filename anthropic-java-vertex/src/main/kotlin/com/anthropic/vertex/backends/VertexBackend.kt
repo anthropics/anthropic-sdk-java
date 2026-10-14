@@ -11,6 +11,7 @@ import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.vertex.backends.VertexBackend.Builder
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.google.auth.oauth2.GoogleCredentials
+import java.util.Optional
 
 /**
  * The Google Cloud Vertex AI backend that manages the Google OAuth2 credentials and other
@@ -53,6 +54,10 @@ private constructor(
                 "eu" -> "https://aiplatform.eu.rep.googleapis.com"
                 else -> "https://$region-aiplatform.googleapis.com"
             }
+
+    override fun openTelemetryProviderName(): String = "gcp.vertex_ai"
+
+    override fun openTelemetryPlatform(): Optional<String> = Optional.of("vertex")
 
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val pathSegments = request.pathSegments

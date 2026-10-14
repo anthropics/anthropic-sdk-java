@@ -237,6 +237,18 @@ class MessageAccumulator private constructor() {
     fun message() = checkNotNull(message) { "'message_stop' event not yet received." }
 
     /**
+     * The message as far as the events have delivered it, for the SDK's own tracing: the final
+     * message once the `message_stop` event has been accumulated; before that, the message of the
+     * `message_start` event with the usage and the stop reason of the `message_delta` events so
+     * far, and the content blocks as far as their events have arrived; and `null` before the
+     * `message_start` event. A `tool_use` block has the `input` of its `content_block_start` event
+     * until its `content_block_stop` event. Reading it changes nothing of what is accumulated.
+     */
+    @JvmSynthetic
+    internal fun partialMessage(): Message? =
+        message ?: messageBuilder?.content(contentSoFar())?.usage(requireMessageUsage())?.build()
+
+    /**
      * Gets the final accumulated message wrapped in a [StructuredMessage] that provides type-safe
      * access to structured output content. Until the `message_stop` event has been received, a
      * message will not be available. Wait until all events have been handled by [accumulate] before
@@ -560,15 +572,28 @@ class MessageAccumulator private constructor() {
      * folded in, clearing the buffer. Deltas are buffered only after the block type is checked, so
      * the block is a text block or a thinking block whenever a buffer exists.
      */
-    private fun foldDeltaText(index: Long, contentBlock: ContentBlock): ContentBlock {
-        val deltaText = messageContentDeltaText.remove(index) ?: return contentBlock
+    private fun foldDeltaText(index: Long, contentBlock: ContentBlock): ContentBlock =
+        withDeltaText(contentBlock, messageContentDeltaText.remove(index))
 
-        return when {
+    /** Returns [contentBlock] with [deltaText], its buffered delta text if it has any, appended. */
+    private fun withDeltaText(contentBlock: ContentBlock, deltaText: StringBuilder?): ContentBlock =
+        when {
+            deltaText == null -> contentBlock
             contentBlock.isText() -> mergeText(contentBlock, deltaText.toString())
             contentBlock.isThinking() -> mergeThinking(contentBlock, deltaText.toString())
             else -> contentBlock
         }
-    }
+
+    /**
+     * The content blocks so far in the indexed order, each with the delta text that it has buffered
+     * until its `content_block_stop` event. The buffers stay as they are.
+     */
+    private fun contentSoFar(): List<ContentBlock> =
+        messageContent.entries
+            .sortedBy { it.key }
+            .map { (index, contentBlock) ->
+                withDeltaText(contentBlock, messageContentDeltaText[index])
+            }
 
     private inline fun <T> T.requireNotStopped(block: (T) -> Unit) {
         if (message != null) {

@@ -21,6 +21,9 @@ import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
 import com.anthropic.helpers.BetaToolRunner
 import com.anthropic.helpers.warnIfThinkingEnabled
+import com.anthropic.internal.telemetry.recordCountTokensResponse
+import com.anthropic.internal.telemetry.startCountTokens
+import com.anthropic.internal.telemetry.startMessagesCreate
 import com.anthropic.models.beta.messages.*
 import com.anthropic.services.blocking.beta.messages.BatchService
 import com.anthropic.services.blocking.beta.messages.BatchServiceImpl
@@ -63,7 +66,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
     override fun toolRunner(
         params: ToolRunnerCreateParams,
         requestOptions: RequestOptions,
-    ): BetaToolRunner = BetaToolRunner(this, params, requestOptions)
+    ): BetaToolRunner = BetaToolRunner(this, clientOptions, params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MessageService.WithRawResponse {
@@ -110,7 +113,9 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                         isStreaming = false,
                         model = params.model().toString(),
                     )
-            return traceApiCall(clientOptions, params) { client ->
+            val recording =
+                startMessagesCreate(clientOptions, requestOptions, params, stream = false)
+            return traceApiCall(clientOptions, recording?.call) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
                     response
@@ -120,6 +125,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                                 it.validate()
                             }
                         }
+                        .also { recording?.recordResponse(it) }
                 }
             }
         }
@@ -160,7 +166,9 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                         isStreaming = true,
                         model = params.model().toString(),
                     )
-            return traceApiCall(clientOptions, params) { client ->
+            val recording =
+                startMessagesCreate(clientOptions, requestOptions, params, stream = true)
+            return traceApiCall(clientOptions, recording?.call) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
                     response
@@ -172,6 +180,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                                 streamResponse
                             }
                         }
+                        .also { recording?.recordBetaStream(requestOptions.streamAccumulator) }
                 }
             }
         }
@@ -195,7 +204,8 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return traceApiCall(clientOptions, params) { client ->
+            val call = startCountTokens(clientOptions, requestOptions, params)
+            return traceApiCall(clientOptions, call) { client ->
                 val response = client.execute(request, requestOptions)
                 errorHandler.handle(response).parseable {
                     response
@@ -205,6 +215,7 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                                 it.validate()
                             }
                         }
+                        .also { recordCountTokensResponse(clientOptions, call, it) }
                 }
             }
         }

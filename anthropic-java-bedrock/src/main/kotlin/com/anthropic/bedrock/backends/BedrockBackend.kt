@@ -11,6 +11,7 @@ import com.anthropic.core.http.json
 import com.anthropic.core.jsonMapper
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicInvalidDataException
+import com.anthropic.internal.telemetry.traceContextHeaderNames
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.io.ByteArrayOutputStream
 import java.io.FilterInputStream
@@ -20,6 +21,7 @@ import java.io.InterruptedIOException
 import java.io.PipedInputStream
 import java.io.PipedOutputStream
 import java.util.Base64
+import java.util.Optional
 import java.util.concurrent.CancellationException
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
@@ -160,6 +162,10 @@ private constructor(
         // desired in this SDK.
         "https://$SERVICE_NAME.$region.amazonaws.com"
 
+    override fun openTelemetryProviderName(): String = "aws.bedrock"
+
+    override fun openTelemetryPlatform(): Optional<String> = Optional.of("bedrock")
+
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val pathSegments = request.pathSegments
 
@@ -277,8 +283,16 @@ private constructor(
                             )
                         }
                     }
+                    // The trace context headers may be replaced by an HTTP client
+                    // instrumentation after signing, so they must not be included in the
+                    // signature. They stay on the request that is sent.
+                    val unsigned = traceContextHeaderNames()
                     request.headers.names().forEach { name ->
-                        request.headers.values(name).forEach { value -> appendHeader(name, value) }
+                        if (name.lowercase() !in unsigned) {
+                            request.headers.values(name).forEach { value ->
+                                appendHeader(name, value)
+                            }
+                        }
                     }
                 }
                 .build()

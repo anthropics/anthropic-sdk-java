@@ -68,9 +68,9 @@ private constructor(
         }
 
         /**
-         * The most content that one span holds in [OpenTelemetryContentMode.CONTENT] mode. Content
-         * over it is removed from the span, which then has the `anthropic.content.truncated`
-         * attribute. Defaults to 0.75 MB.
+         * The most content, in bytes of UTF-8, that one span holds in
+         * [OpenTelemetryContentMode.CONTENT] mode. Content over it is removed from the span, which
+         * then has the `anthropic.content.truncated` attribute. Defaults to 0.75 MB.
          *
          * @throws IllegalArgumentException if [maxContentBytes] is less than 1.
          */

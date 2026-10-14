@@ -91,6 +91,8 @@ private constructor(
             .replace("{workspaceId}", workspaceId)
     }
 
+    override fun openTelemetryPlatform(): Optional<String> = Optional.of("googlecloud")
+
     override fun prepareRequest(request: HttpRequest): HttpRequest {
         val builder = request.toBuilder()
 

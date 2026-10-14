@@ -22,6 +22,7 @@ import com.anthropic.core.http.toAsync
 import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
+import com.anthropic.internal.telemetry.startBatchesCreate
 import com.anthropic.models.beta.messages.batches.BatchCancelParams
 import com.anthropic.models.beta.messages.batches.BatchCreateParams
 import com.anthropic.models.beta.messages.batches.BatchDeleteParams
@@ -131,7 +132,8 @@ class BatchServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return traceApiCallAsync(clientOptions, params) { client ->
+            val call = startBatchesCreate(clientOptions, requestOptions, params)
+            return traceApiCallAsync(clientOptions, call) { client ->
                 request
                     .thenComposeAsync { client.executeAsync(it, requestOptions) }
                     .thenApply { response ->

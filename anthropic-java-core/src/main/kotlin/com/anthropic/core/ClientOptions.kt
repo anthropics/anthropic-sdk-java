@@ -153,6 +153,11 @@ private constructor(
      * [OpenTelemetryOptions.fromEnv].
      */
     @get:JvmName("openTelemetry") val openTelemetry: OpenTelemetryOptions,
+    /**
+     * The `gen_ai.provider.name` attribute of this client's spans. The client builder sets it from
+     * its backend. See [com.anthropic.backends.Backend.openTelemetryProviderName].
+     */
+    @get:JvmName("openTelemetryProviderName") val openTelemetryProviderName: String,
     private val openTelemetryPlatform: String?,
     private val webhookKey: String?,
     private val credentialResult: CredentialResult?,
@@ -215,6 +220,7 @@ private constructor(
         private var maxRetries: Int = 2
         private var logLevel: LogLevel = LogLevel.fromEnv()
         private var openTelemetry: OpenTelemetryOptions = OpenTelemetryOptions.none()
+        private var openTelemetryProviderName: String = "anthropic"
         private var openTelemetryPlatform: String? = null
         private var credentialResult: CredentialResult? = null
         private var webhookKey: String? = null
@@ -236,6 +242,7 @@ private constructor(
             maxRetries = clientOptions.maxRetries
             logLevel = clientOptions.logLevel
             openTelemetry = clientOptions.openTelemetry
+            openTelemetryProviderName = clientOptions.openTelemetryProviderName
             openTelemetryPlatform = clientOptions.openTelemetryPlatform
             webhookKey = clientOptions.webhookKey
             credentialResult = clientOptions.credentialResult
@@ -416,6 +423,14 @@ private constructor(
          * A short form of [openTelemetry] with [OpenTelemetryOptions.ofEnabled].
          */
         fun openTelemetry(enabled: Boolean) = openTelemetry(OpenTelemetryOptions.ofEnabled(enabled))
+
+        /**
+         * The `gen_ai.provider.name` attribute of this client's spans. The client builder sets it
+         * from its backend. See [com.anthropic.backends.Backend.openTelemetryProviderName].
+         */
+        fun openTelemetryProviderName(openTelemetryProviderName: String) = apply {
+            this.openTelemetryProviderName = openTelemetryProviderName
+        }
 
         /**
          * The platform in the instrumentation scope of this client's spans. The client of another
@@ -664,6 +679,7 @@ private constructor(
                 maxRetries,
                 logLevel,
                 openTelemetry,
+                openTelemetryProviderName,
                 openTelemetryPlatform,
                 webhookKey,
                 credentialResult,

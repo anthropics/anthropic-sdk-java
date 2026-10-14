@@ -21,7 +21,11 @@ import com.anthropic.core.http.parseable
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicIoException
 import com.anthropic.errors.AnthropicServiceException
+import com.anthropic.internal.telemetry.GEN_AI_CONVERSATION_ID
+import com.anthropic.internal.telemetry.GEN_AI_PROVIDER_NAME
 import com.anthropic.internal.telemetry.logTelemetryFailure
+import com.anthropic.internal.telemetry.recordsContent
+import com.anthropic.internal.telemetry.setCommonApiCallAttributes
 import io.opentelemetry.api.GlobalOpenTelemetry
 import io.opentelemetry.api.OpenTelemetry
 import io.opentelemetry.api.common.AttributeKey
@@ -113,7 +117,7 @@ internal fun traceRawApiCall(
 
 /**
  * [traceApiCall] for an asynchronous method, whose span starts once the request is prepared and
- * [send] sends it. Cancelling the returned future ends the span as cancelled.
+ * [send] sends it. Canceling the returned future ends the span as canceled.
  */
 @JvmSynthetic
 internal fun <T> traceApiCallAsync(
@@ -167,7 +171,7 @@ private fun <T> traceApiCallAsync(
         // Whatever ending the span throws, the returned future completes: it would hang otherwise.
         try {
             if (response.isCancelled) {
-                // The application cancelled the returned future before the span started.
+                // The application canceled the returned future before the span started.
                 fail(CancellationException())
             }
             if (error != null) {
@@ -199,8 +203,8 @@ internal fun traceRawApiCallAsync(
         .thenParse()
 
 /**
- * A future of the parsed body of this future's response. Cancelling it cancels this one, so that
- * the span ends as cancelled.
+ * A future of the parsed body of this future's response. Canceling it cancels this one, so that the
+ * span ends as canceled.
  */
 @Suppress("ForbiddenMethodCall") // The callbacks run SDK code, as the services' callbacks do.
 @JvmSynthetic
@@ -388,8 +392,7 @@ internal class ApiCall(
                     request,
                     queryParams,
                     contentQueryParams,
-                    clientOptions.openTelemetry.traces().contentMode() ==
-                        OpenTelemetryContentMode.CONTENT,
+                    recordsContent(clientOptions),
                 )
             )
         }
@@ -461,6 +464,8 @@ private class TracedHttpResponseFor<T>(
                 return@lazy data
             }
             // The stream takes the span with it, and ends it once read or closed.
+            val outcome = ApiCallOutcome.Responded(response)
+            setCommonApiCallAttributes(call.span, call.clientOptions, outcome)
             @Suppress("UNCHECKED_CAST")
             val stream =
                 endApiCallSpanWhenStreamEnds(
@@ -512,6 +517,7 @@ private fun endApiCall(call: ApiCall, outcome: ApiCallOutcome) {
     if (!call.markEnded()) {
         return
     }
+    setCommonApiCallAttributes(call.span, call.clientOptions, outcome)
     // Ending the span runs the application's span processors, whose failure is not the call's.
     try {
         call.recordResendCount()
@@ -545,7 +551,12 @@ private fun startApiCallSpan(
         tracer.spanBuilder(spanData.name).setSpanKind(SpanKind.CLIENT).setParent(parentOtelContext)
     builder.setAttribute(HTTP_REQUEST_METHOD, method.name)
     builder.setAttribute(HTTP_ROUTE, spanData.route)
+    builder.setAttribute(GEN_AI_PROVIDER_NAME, clientOptions.openTelemetryProviderName)
     builder.setAllAttributes(serverAttributes(clientOptions.baseUrl()))
+    // A Session thread is a conversation, unless the application names the conversation itself.
+    (requestOptions.openTelemetry?.conversationId()?.getOrNull()
+            ?: spanData.attributes[ANTHROPIC_SESSION_THREAD_ID])
+        ?.let { builder.setAttribute(GEN_AI_CONVERSATION_ID, it) }
     builder.setAllAttributes(attributes)
     spanData.attributes.forEach { (attribute, id) -> builder.setAttribute(attribute, id) }
     // Starting the span runs the application's sampler, span processors and propagator, whose
@@ -674,7 +685,7 @@ private fun urlAttributes(
 ): Attributes {
     val baseUrl =
         try {
-            URI(request.baseUrl)
+            URI(request.baseUrl.orEmpty())
         } catch (e: URISyntaxException) {
             return Attributes.empty()
         }
@@ -795,7 +806,7 @@ internal sealed class ApiCallOutcome {
 
 /**
  * Ends [span] with [outcome]: status `ERROR` with `error.type` when the call failed, none when the
- * application cancelled it, `OK` otherwise. Does nothing to a span that is not recording.
+ * application canceled it, `OK` otherwise. Does nothing to a span that is not recording.
  */
 @JvmSynthetic
 internal fun endApiCallSpan(span: Span, outcome: ApiCallOutcome) {
@@ -1024,29 +1035,49 @@ private class StreamSpanEnd(
 
 /**
  * Gives [span] the status `ERROR`, with `error.type` set to [type] or else derived from [error]. A
- * cancellation by the application, which cancelled a future or interrupted the thread, is not a
+ * cancellation by the application, which canceled a future or interrupted the thread, is not a
  * failure, and leaves the status unset.
  */
 @JvmSynthetic
 internal fun setErrorStatus(span: Span, error: Throwable, type: String? = null) {
-    val cause = unwrapFutureException(error)
-    if (
-        cause is CancellationException ||
-            cause is InterruptedException ||
-            Thread.currentThread().isInterrupted
-    ) {
+    if (isCancellation(error)) {
         return
     }
     span.setStatus(StatusCode.ERROR)
-    span.setAttribute(ERROR_TYPE, type ?: errorType(cause))
+    span.setAttribute(ERROR_TYPE, type ?: errorType(unwrapFutureException(error)))
 }
 
 /**
- * The `error.type` of an operation that failed with [error]: for an error response, its status
- * code.
+ * Whether [error], what an operation threw, is the application canceling it: it canceled a future,
+ * or interrupted the thread.
  */
-private fun errorType(error: Throwable): String =
-    when {
+@JvmSynthetic
+internal fun isCancellation(error: Throwable): Boolean {
+    val cause = unwrapFutureException(error)
+    return cause is CancellationException ||
+        cause is InterruptedException ||
+        Thread.currentThread().isInterrupted
+}
+
+/**
+ * The `error.type` of an operation that failed with [error]. An error from the API has the type of
+ * its error envelope when the API sent one, and its status code otherwise.
+ */
+private fun errorType(error: Throwable): String {
+    // The envelope is the body of an error response, or the data of a stream's `error` event.
+    val envelopeType =
+        (error as? AnthropicServiceException)
+            ?.body()
+            ?.asObject()
+            ?.getOrNull()
+            ?.get("error")
+            ?.asObject()
+            ?.getOrNull()
+            ?.get("type")
+            ?.asString()
+            ?.getOrNull()
+    return when {
+        envelopeType != null -> envelopeType
         // A stream's error event arrives with the stream's successful status.
         error is AnthropicServiceException && error.statusCode() >= 400 ->
             error.statusCode().toString()
@@ -1055,6 +1086,7 @@ private fun errorType(error: Throwable): String =
         error is AnthropicIoException || error is IOException -> "connection_error"
         else -> "client_error"
     }
+}
 
 /** The error that a future's [error] wraps, or [error] itself. */
 @JvmSynthetic
@@ -1125,6 +1157,12 @@ internal val URL_SCHEME: AttributeKey<String> = AttributeKey.stringKey("url.sche
 /** Where a request finds the API call that sends it, in the call's OpenTelemetry context. */
 @get:JvmSynthetic
 internal val API_CALL: ContextKey<ApiCall> = ContextKey.named("anthropic-api-call")
+
+/**
+ * The `anthropic.session.thread.id` attribute, which the params of a method give the span when its
+ * path has the ID of a Session thread.
+ */
+private const val ANTHROPIC_SESSION_THREAD_ID = "anthropic.session.thread.id"
 
 private const val INSTRUMENTATION_SCOPE = "com.anthropic.sdk.java"
 

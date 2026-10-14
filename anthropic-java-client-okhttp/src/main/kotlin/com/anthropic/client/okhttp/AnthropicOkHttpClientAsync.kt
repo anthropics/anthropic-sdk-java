@@ -536,6 +536,8 @@ class AnthropicOkHttpClientAsync private constructor() {
                     .build()
 
             clientOptions.baseUrl(backend.baseUrl())
+            clientOptions.openTelemetryProviderName(backend.openTelemetryProviderName())
+            clientOptions.openTelemetryPlatform(backend.openTelemetryPlatform())
             (backend as? AnthropicBackend)?.applyCredentials(rawHttpClient, clientOptions)
 
             return AnthropicClientAsyncImpl(clientOptions.httpClient(rawHttpClient).build())
