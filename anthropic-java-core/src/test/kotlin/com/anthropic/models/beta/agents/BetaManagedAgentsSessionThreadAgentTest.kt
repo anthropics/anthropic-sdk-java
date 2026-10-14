@@ -13,6 +13,9 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
             BetaManagedAgentsSessionThreadAgent.builder()
                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                 .description("A focused research subagent.")
+                .executionIdentity(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")
@@ -72,6 +75,12 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
             .isEqualTo("agent_011CZkYqphY8vELVzwCUpqiQ")
         assertThat(betaManagedAgentsSessionThreadAgent.description())
             .contains("A focused research subagent.")
+        assertThat(betaManagedAgentsSessionThreadAgent.executionIdentity())
+            .isEqualTo(
+                BetaManagedAgentsExecutionIdentity.ofServiceAccount(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
+            )
         assertThat(betaManagedAgentsSessionThreadAgent.mcpServers())
             .containsExactly(
                 BetaManagedAgentsMcpServerUrlDefinition.builder()
@@ -144,6 +153,9 @@ internal class BetaManagedAgentsSessionThreadAgentTest {
             BetaManagedAgentsSessionThreadAgent.builder()
                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                 .description("A focused research subagent.")
+                .executionIdentity(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")

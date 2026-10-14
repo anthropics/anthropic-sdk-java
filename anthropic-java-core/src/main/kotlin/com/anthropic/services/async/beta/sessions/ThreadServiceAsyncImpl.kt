@@ -14,6 +14,8 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.sessions.threads.BetaManagedAgentsSessionThread
 import com.anthropic.models.beta.sessions.threads.ThreadArchiveParams
@@ -54,21 +56,21 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsSessionThread> =
         // get /v1/sessions/{session_id}/threads/{thread_id}?beta=true
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: ThreadListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ThreadListPageAsync> =
         // get /v1/sessions/{session_id}/threads?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).thenParse()
 
     override fun archive(
         params: ThreadArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsSessionThread> =
         // post /v1/sessions/{session_id}/threads/{thread_id}/archive?beta=true
-        withRawResponse().archive(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().archive(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ThreadServiceAsync.WithRawResponse {
@@ -112,19 +114,21 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { retrieveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val listHandler: Handler<ThreadListPageResponse> =
@@ -149,27 +153,29 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { listHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
-                            .let {
-                                ThreadListPageAsync.builder()
-                                    .service(ThreadServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
+                                .let {
+                                    ThreadListPageAsync.builder()
+                                        .service(ThreadServiceAsyncImpl(clientOptions))
+                                        .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                        .params(params)
+                                        .response(it)
+                                        .build()
+                                }
+                        }
                     }
-                }
+            }
         }
 
         private val archiveHandler: Handler<BetaManagedAgentsSessionThread> =
@@ -197,19 +203,21 @@ class ThreadServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { archiveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { archiveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
     }
 }

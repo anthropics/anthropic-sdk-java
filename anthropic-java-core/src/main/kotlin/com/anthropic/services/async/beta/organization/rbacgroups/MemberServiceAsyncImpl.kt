@@ -13,6 +13,8 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.organization.rbacgroups.members.BetaRbacGroupMember
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberAddParams
@@ -42,21 +44,21 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
         requestOptions: RequestOptions,
     ): CompletableFuture<MemberListPageAsync> =
         // get /v1/organizations/rbac_groups/{rbac_group_id}/members?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).thenParse()
 
     override fun add(
         params: MemberAddParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaRbacGroupMember> =
         // post /v1/organizations/rbac_groups/{rbac_group_id}/members?beta=true
-        withRawResponse().add(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().add(params, requestOptions).thenParse()
 
     override fun remove(
         params: MemberRemoveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<MemberRemoveResponse> =
         // delete /v1/organizations/rbac_groups/{rbac_group_id}/members/{user_id}?beta=true
-        withRawResponse().remove(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().remove(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MemberServiceAsync.WithRawResponse {
@@ -92,27 +94,29 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { listHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
-                            .let {
-                                MemberListPageAsync.builder()
-                                    .service(MemberServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
+                                .let {
+                                    MemberListPageAsync.builder()
+                                        .service(MemberServiceAsyncImpl(clientOptions))
+                                        .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                        .params(params)
+                                        .response(it)
+                                        .build()
+                                }
+                        }
                     }
-                }
+            }
         }
 
         private val addHandler: Handler<BetaRbacGroupMember> =
@@ -137,19 +141,27 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { addHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { addHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                                .also {
+                                    client.recordCreatedId(
+                                        "anthropic.organization.rbac_group.member.id",
+                                        it._userId(),
+                                    )
+                                }
+                        }
                     }
-                }
+            }
         }
 
         private val removeHandler: Handler<MemberRemoveResponse> =
@@ -175,19 +187,21 @@ class MemberServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { removeHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { removeHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
     }
 }

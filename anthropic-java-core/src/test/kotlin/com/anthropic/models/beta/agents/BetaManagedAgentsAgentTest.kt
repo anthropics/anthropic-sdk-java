@@ -18,6 +18,9 @@ internal class BetaManagedAgentsAgentTest {
                 .archivedAt(null)
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .description("A general-purpose starter agent.")
+                .executionIdentity(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")
@@ -125,6 +128,12 @@ internal class BetaManagedAgentsAgentTest {
             .isEqualTo(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
         assertThat(betaManagedAgentsAgent.description())
             .contains("A general-purpose starter agent.")
+        assertThat(betaManagedAgentsAgent.executionIdentity())
+            .isEqualTo(
+                BetaManagedAgentsExecutionIdentity.ofServiceAccount(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
+            )
         assertThat(betaManagedAgentsAgent.mcpServers())
             .containsExactly(
                 BetaManagedAgentsMcpServerUrlDefinition.builder()
@@ -249,6 +258,9 @@ internal class BetaManagedAgentsAgentTest {
                 .archivedAt(null)
                 .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .description("A general-purpose starter agent.")
+                .executionIdentity(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")

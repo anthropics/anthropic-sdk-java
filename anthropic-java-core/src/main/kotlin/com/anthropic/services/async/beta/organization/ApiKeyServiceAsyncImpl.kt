@@ -13,6 +13,8 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.organization.apikeys.ApiKeyListPageAsync
 import com.anthropic.models.beta.organization.apikeys.ApiKeyListPageResponse
@@ -41,21 +43,21 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaApiKey> =
         // get /v1/organizations/api_keys/{api_key_id}?beta=true
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: ApiKeyUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaApiKey> =
         // post /v1/organizations/api_keys/{api_key_id}?beta=true
-        withRawResponse().update(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: ApiKeyListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<ApiKeyListPageAsync> =
         // get /v1/organizations/api_keys?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ApiKeyServiceAsync.WithRawResponse {
@@ -90,19 +92,21 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { retrieveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val updateHandler: Handler<BetaApiKey> =
@@ -126,19 +130,21 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { updateHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { updateHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val listHandler: Handler<ApiKeyListPageResponse> =
@@ -157,27 +163,29 @@ class ApiKeyServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { listHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
-                            .let {
-                                ApiKeyListPageAsync.builder()
-                                    .service(ApiKeyServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
+                                .let {
+                                    ApiKeyListPageAsync.builder()
+                                        .service(ApiKeyServiceAsyncImpl(clientOptions))
+                                        .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                        .params(params)
+                                        .response(it)
+                                        .build()
+                                }
+                        }
                     }
-                }
+            }
         }
     }
 }

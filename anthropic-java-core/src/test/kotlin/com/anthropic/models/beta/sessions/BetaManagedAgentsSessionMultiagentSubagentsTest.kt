@@ -15,6 +15,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentInlineAgentsEnabled
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSubagentsDisabled
+import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
@@ -34,6 +35,9 @@ internal class BetaManagedAgentsSessionMultiagentSubagentsTest {
                     BetaManagedAgentsSessionThreadAgent.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                         .description("A focused research subagent.")
+                        .executionIdentity(
+                            BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                        )
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
@@ -116,6 +120,9 @@ internal class BetaManagedAgentsSessionMultiagentSubagentsTest {
                         BetaManagedAgentsSessionThreadAgent.builder()
                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                             .description("A focused research subagent.")
+                            .executionIdentity(
+                                BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                            )
                             .addMcpServer(
                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                     .name("example-mcp")

@@ -13,6 +13,7 @@ import com.anthropic.core.checkKnown
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -67,6 +68,16 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun description(): Optional<String> = body.description()
+
+    /**
+     * Execution principal for runs of this agent. Full replacement. Omit to preserve; send null or
+     * `{"type": "service_account"}` to restore the default.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun executionIdentity(): Optional<BetaManagedAgentsExecutionIdentityParams> =
+        body.executionIdentity()
 
     /**
      * MCP servers. Full replacement. Omit to preserve; send empty array or `null` to clear. Names
@@ -159,6 +170,15 @@ private constructor(
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _description(): JsonField<String> = body._description()
+
+    /**
+     * Returns the raw JSON value of [executionIdentity].
+     *
+     * Unlike [executionIdentity], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _executionIdentity(): JsonField<BetaManagedAgentsExecutionIdentityParams> =
+        body._executionIdentity()
 
     /**
      * Returns the raw JSON value of [mcpServers].
@@ -309,10 +329,10 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [description]
+         * - [executionIdentity]
          * - [mcpServers]
          * - [metadata]
          * - [model]
-         * - [multiagent]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -331,6 +351,59 @@ private constructor(
          * value.
          */
         fun description(description: JsonField<String>) = apply { body.description(description) }
+
+        /**
+         * Execution principal for runs of this agent. Full replacement. Omit to preserve; send null
+         * or `{"type": "service_account"}` to restore the default.
+         */
+        fun executionIdentity(executionIdentity: BetaManagedAgentsExecutionIdentityParams?) =
+            apply {
+                body.executionIdentity(executionIdentity)
+            }
+
+        /** Alias for calling [Builder.executionIdentity] with `executionIdentity.orElse(null)`. */
+        fun executionIdentity(
+            executionIdentity: Optional<BetaManagedAgentsExecutionIdentityParams>
+        ) = executionIdentity(executionIdentity.getOrNull())
+
+        /**
+         * Sets [Builder.executionIdentity] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.executionIdentity] with a well-typed
+         * [BetaManagedAgentsExecutionIdentityParams] value instead. This method is primarily for
+         * setting the field to an undocumented or not yet supported value.
+         */
+        fun executionIdentity(
+            executionIdentity: JsonField<BetaManagedAgentsExecutionIdentityParams>
+        ) = apply { body.executionIdentity(executionIdentity) }
+
+        /**
+         * Alias for calling [executionIdentity] with
+         * `BetaManagedAgentsExecutionIdentityParams.ofAwsRole(awsRole)`.
+         */
+        fun executionIdentity(awsRole: BetaManagedAgentsAwsRoleExecutionIdentityParams) = apply {
+            body.executionIdentity(awsRole)
+        }
+
+        /**
+         * Alias for calling [executionIdentity] with the following:
+         * ```java
+         * BetaManagedAgentsAwsRoleExecutionIdentityParams.builder()
+         *     .roleArn(roleArn)
+         *     .build()
+         * ```
+         */
+        fun awsRoleExecutionIdentity(roleArn: String) = apply {
+            body.awsRoleExecutionIdentity(roleArn)
+        }
+
+        /**
+         * Alias for calling [executionIdentity] with
+         * `BetaManagedAgentsExecutionIdentityParams.ofServiceAccount(serviceAccount)`.
+         */
+        fun executionIdentity(
+            serviceAccount: BetaManagedAgentsServiceAccountExecutionIdentityParams
+        ) = apply { body.executionIdentity(serviceAccount) }
 
         /**
          * MCP servers. Full replacement. Omit to preserve; send empty array or `null` to clear.
@@ -777,11 +850,19 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.agents.update",
+            route = "/v1/agents/{agent_id}",
+            attributes = mapOf("gen_ai.agent.id" to _pathParam(0)),
+        )
+
     /** Request parameters for updating an `agent`. Omit a field to preserve its current value. */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val description: JsonField<String>,
+        private val executionIdentity: JsonField<BetaManagedAgentsExecutionIdentityParams>,
         private val mcpServers: JsonField<List<BetaManagedAgentsUrlMcpServerParams>>,
         private val metadata: JsonField<Metadata>,
         private val model: JsonField<Model>,
@@ -799,6 +880,10 @@ private constructor(
             @JsonProperty("description")
             @ExcludeMissing
             description: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("execution_identity")
+            @ExcludeMissing
+            executionIdentity: JsonField<BetaManagedAgentsExecutionIdentityParams> =
+                JsonMissing.of(),
             @JsonProperty("mcp_servers")
             @ExcludeMissing
             mcpServers: JsonField<List<BetaManagedAgentsUrlMcpServerParams>> = JsonMissing.of(),
@@ -818,6 +903,7 @@ private constructor(
             @JsonProperty("version") @ExcludeMissing version: JsonField<Int> = JsonMissing.of(),
         ) : this(
             description,
+            executionIdentity,
             mcpServers,
             metadata,
             model,
@@ -837,6 +923,16 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun description(): Optional<String> = description.getOptional("description")
+
+        /**
+         * Execution principal for runs of this agent. Full replacement. Omit to preserve; send null
+         * or `{"type": "service_account"}` to restore the default.
+         *
+         * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun executionIdentity(): Optional<BetaManagedAgentsExecutionIdentityParams> =
+            executionIdentity.getOptional("execution_identity")
 
         /**
          * MCP servers. Full replacement. Omit to preserve; send empty array or `null` to clear.
@@ -935,6 +1031,17 @@ private constructor(
         fun _description(): JsonField<String> = description
 
         /**
+         * Returns the raw JSON value of [executionIdentity].
+         *
+         * Unlike [executionIdentity], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("execution_identity")
+        @ExcludeMissing
+        fun _executionIdentity(): JsonField<BetaManagedAgentsExecutionIdentityParams> =
+            executionIdentity
+
+        /**
          * Returns the raw JSON value of [mcpServers].
          *
          * Unlike [mcpServers], this method doesn't throw if the JSON field has an unexpected type.
@@ -1025,6 +1132,8 @@ private constructor(
         class Builder internal constructor() {
 
             private var description: JsonField<String> = JsonMissing.of()
+            private var executionIdentity: JsonField<BetaManagedAgentsExecutionIdentityParams> =
+                JsonMissing.of()
             private var mcpServers: JsonField<MutableList<BetaManagedAgentsUrlMcpServerParams>>? =
                 null
             private var metadata: JsonField<Metadata> = JsonMissing.of()
@@ -1040,6 +1149,7 @@ private constructor(
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 description = body.description
+                executionIdentity = body.executionIdentity
                 mcpServers =
                     body.mcpServers.map { it.toMutableList() }.takeUnless { it.isMissing() }
                 metadata = body.metadata
@@ -1069,6 +1179,64 @@ private constructor(
             fun description(description: JsonField<String>) = apply {
                 this.description = description
             }
+
+            /**
+             * Execution principal for runs of this agent. Full replacement. Omit to preserve; send
+             * null or `{"type": "service_account"}` to restore the default.
+             */
+            fun executionIdentity(executionIdentity: BetaManagedAgentsExecutionIdentityParams?) =
+                executionIdentity(JsonField.ofNullable(executionIdentity))
+
+            /**
+             * Alias for calling [Builder.executionIdentity] with `executionIdentity.orElse(null)`.
+             */
+            fun executionIdentity(
+                executionIdentity: Optional<BetaManagedAgentsExecutionIdentityParams>
+            ) = executionIdentity(executionIdentity.getOrNull())
+
+            /**
+             * Sets [Builder.executionIdentity] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.executionIdentity] with a well-typed
+             * [BetaManagedAgentsExecutionIdentityParams] value instead. This method is primarily
+             * for setting the field to an undocumented or not yet supported value.
+             */
+            fun executionIdentity(
+                executionIdentity: JsonField<BetaManagedAgentsExecutionIdentityParams>
+            ) = apply { this.executionIdentity = executionIdentity }
+
+            /**
+             * Alias for calling [executionIdentity] with
+             * `BetaManagedAgentsExecutionIdentityParams.ofAwsRole(awsRole)`.
+             */
+            fun executionIdentity(awsRole: BetaManagedAgentsAwsRoleExecutionIdentityParams) =
+                executionIdentity(BetaManagedAgentsExecutionIdentityParams.ofAwsRole(awsRole))
+
+            /**
+             * Alias for calling [executionIdentity] with the following:
+             * ```java
+             * BetaManagedAgentsAwsRoleExecutionIdentityParams.builder()
+             *     .roleArn(roleArn)
+             *     .build()
+             * ```
+             */
+            fun awsRoleExecutionIdentity(roleArn: String) =
+                executionIdentity(
+                    BetaManagedAgentsAwsRoleExecutionIdentityParams.builder()
+                        .roleArn(roleArn)
+                        .build()
+                )
+
+            /**
+             * Alias for calling [executionIdentity] with
+             * `BetaManagedAgentsExecutionIdentityParams.ofServiceAccount(serviceAccount)`.
+             */
+            fun executionIdentity(
+                serviceAccount: BetaManagedAgentsServiceAccountExecutionIdentityParams
+            ) =
+                executionIdentity(
+                    BetaManagedAgentsExecutionIdentityParams.ofServiceAccount(serviceAccount)
+                )
 
             /**
              * MCP servers. Full replacement. Omit to preserve; send empty array or `null` to clear.
@@ -1422,6 +1590,7 @@ private constructor(
             fun build(): Body =
                 Body(
                     description,
+                    executionIdentity,
                     (mcpServers ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
                     model,
@@ -1452,6 +1621,7 @@ private constructor(
             }
 
             description()
+            executionIdentity().ifPresent { it.validate() }
             mcpServers().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
             model().ifPresent { it.validate() }
@@ -1481,6 +1651,7 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (description.asKnown().isPresent) 1 else 0) +
+                (executionIdentity.asKnown().getOrNull()?.validity() ?: 0) +
                 (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (model.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1498,6 +1669,7 @@ private constructor(
 
             return other is Body &&
                 description == other.description &&
+                executionIdentity == other.executionIdentity &&
                 mcpServers == other.mcpServers &&
                 metadata == other.metadata &&
                 model == other.model &&
@@ -1513,6 +1685,7 @@ private constructor(
         private val hashCode: Int by lazy {
             Objects.hash(
                 description,
+                executionIdentity,
                 mcpServers,
                 metadata,
                 model,
@@ -1529,7 +1702,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{description=$description, mcpServers=$mcpServers, metadata=$metadata, model=$model, multiagent=$multiagent, name=$name, skills=$skills, system=$system, tools=$tools, version=$version, additionalProperties=$additionalProperties}"
+            "Body{description=$description, executionIdentity=$executionIdentity, mcpServers=$mcpServers, metadata=$metadata, model=$model, multiagent=$multiagent, name=$name, skills=$skills, system=$system, tools=$tools, version=$version, additionalProperties=$additionalProperties}"
     }
 
     /**

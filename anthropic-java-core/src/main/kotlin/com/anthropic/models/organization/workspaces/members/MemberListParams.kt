@@ -3,6 +3,7 @@ package com.anthropic.models.organization.workspaces.members
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -248,6 +249,14 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.workspaces.members.list",
+            route = "/v1/organizations/workspaces/{workspace_id}/members",
+            attributes = mapOf("anthropic.organization.workspace.id" to _pathParam(0)),
+            queryParams = listOf("after_id", "before_id", "limit"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -3,6 +3,7 @@ package com.anthropic.models.beta.vaults.credentials
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
@@ -312,6 +313,14 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.vaults.credentials.list",
+            route = "/v1/vaults/{vault_id}/credentials",
+            attributes = mapOf("anthropic.vault.id" to _pathParam(0)),
+            queryParams = listOf("include_archived", "limit", "page"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

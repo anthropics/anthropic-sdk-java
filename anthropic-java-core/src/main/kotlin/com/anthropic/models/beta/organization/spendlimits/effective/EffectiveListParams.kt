@@ -5,6 +5,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -270,6 +271,13 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.spend_limits.effective.list",
+            route = "/v1/organizations/spend_limits/effective",
+            queryParams = listOf("limit", "page", "period", "user_ids"),
+        )
 
     class Period private constructor(private val value: JsonField<String>) : Enum {
 

@@ -7,9 +7,11 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
 import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsEffortLow
+import com.anthropic.models.beta.agents.BetaManagedAgentsExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
+import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -21,6 +23,9 @@ internal class BetaManagedAgentsInlineAgentTest {
         val betaManagedAgentsInlineAgent =
             BetaManagedAgentsInlineAgent.builder()
                 .description(null)
+                .executionIdentity(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")
@@ -73,6 +78,12 @@ internal class BetaManagedAgentsInlineAgentTest {
                 .build()
 
         assertThat(betaManagedAgentsInlineAgent.description()).isEmpty
+        assertThat(betaManagedAgentsInlineAgent.executionIdentity())
+            .isEqualTo(
+                BetaManagedAgentsExecutionIdentity.ofServiceAccount(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
+            )
         assertThat(betaManagedAgentsInlineAgent.mcpServers())
             .containsExactly(
                 BetaManagedAgentsMcpServerUrlDefinition.builder()
@@ -139,6 +150,9 @@ internal class BetaManagedAgentsInlineAgentTest {
         val betaManagedAgentsInlineAgent =
             BetaManagedAgentsInlineAgent.builder()
                 .description(null)
+                .executionIdentity(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")

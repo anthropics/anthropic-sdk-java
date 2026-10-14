@@ -6,6 +6,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -340,6 +341,13 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.analytics.artifacts.list",
+            route = "/v1/organizations/analytics/artifacts",
+            queryParams = listOf("date", "filter", "group_by", "limit", "page"),
+        )
 
     class GroupBy private constructor(private val value: JsonField<String>) : Enum {
 

@@ -8,6 +8,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -367,6 +368,12 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.plugin_marketplaces.validate_repository",
+            route = "/v1/organizations/plugin_marketplaces/validate_repository",
+        )
 
     /**
      * The repository to validate: its URL, and optionally the branch or commit to read.

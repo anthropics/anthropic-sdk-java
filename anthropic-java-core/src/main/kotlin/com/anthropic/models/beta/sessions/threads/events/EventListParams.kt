@@ -4,6 +4,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
@@ -304,6 +305,18 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.sessions.threads.events.list",
+            route = "/v1/sessions/{session_id}/threads/{thread_id}/events",
+            attributes =
+                mapOf(
+                    "anthropic.session.id" to _pathParam(0),
+                    "anthropic.session.thread.id" to _pathParam(1),
+                ),
+            queryParams = listOf("limit", "page"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -5,6 +5,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -342,6 +343,14 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.plugins.installation_settings.list",
+            route = "/v1/organizations/plugins/{plugin_id}/installation_settings",
+            attributes = mapOf("anthropic.organization.plugin.id" to _pathParam(0)),
+            queryParams = listOf("limit", "organization_id", "page", "target_type"),
+        )
 
     /**
      * Only settings for this kind of target: `organization` (the organization-wide setting) or

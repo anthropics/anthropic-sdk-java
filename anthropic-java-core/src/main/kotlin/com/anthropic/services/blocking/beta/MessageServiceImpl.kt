@@ -17,6 +17,7 @@ import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.json
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
 import com.anthropic.helpers.BetaToolRunner
 import com.anthropic.helpers.warnIfThinkingEnabled
@@ -109,15 +110,17 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                         isStreaming = false,
                         model = params.model().toString(),
                     )
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { createHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -157,17 +160,19 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                         isStreaming = true,
                         model = params.model().toString(),
                     )
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .let { createStreamingHandler.handle(it) }
-                    .let { streamResponse ->
-                        if (requestOptions.responseValidation!!) {
-                            streamResponse.map { it.validate() }
-                        } else {
-                            streamResponse
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .let { createStreamingHandler.handle(it) }
+                        .let { streamResponse ->
+                            if (requestOptions.responseValidation!!) {
+                                streamResponse.map { it.validate() }
+                            } else {
+                                streamResponse
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -190,15 +195,17 @@ class MessageServiceImpl internal constructor(private val clientOptions: ClientO
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { countTokensHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { countTokensHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
     }

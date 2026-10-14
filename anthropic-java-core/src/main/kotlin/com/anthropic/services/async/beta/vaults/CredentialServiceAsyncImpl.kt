@@ -14,6 +14,8 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsCredential
 import com.anthropic.models.beta.vaults.credentials.BetaManagedAgentsCredentialValidation
@@ -54,49 +56,49 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsCredential> =
         // post /v1/vaults/{vault_id}/credentials?beta=true
-        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().create(params, requestOptions).thenParse()
 
     override fun retrieve(
         params: CredentialRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsCredential> =
         // get /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: CredentialUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsCredential> =
         // post /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true
-        withRawResponse().update(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: CredentialListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<CredentialListPageAsync> =
         // get /v1/vaults/{vault_id}/credentials?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: CredentialDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsDeletedCredential> =
         // delete /v1/vaults/{vault_id}/credentials/{credential_id}?beta=true
-        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun archive(
         params: CredentialArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsCredential> =
         // post /v1/vaults/{vault_id}/credentials/{credential_id}/archive?beta=true
-        withRawResponse().archive(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().archive(params, requestOptions).thenParse()
 
     override fun mcpOAuthValidate(
         params: CredentialMcpOAuthValidateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaManagedAgentsCredentialValidation> =
         // post /v1/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate?beta=true
-        withRawResponse().mcpOAuthValidate(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().mcpOAuthValidate(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         CredentialServiceAsync.WithRawResponse {
@@ -134,19 +136,27 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { createHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { createHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                                .also {
+                                    client.recordCreatedId(
+                                        "anthropic.vault.credential.id",
+                                        it._id(),
+                                    )
+                                }
+                        }
                     }
-                }
+            }
         }
 
         private val retrieveHandler: Handler<BetaManagedAgentsCredential> =
@@ -172,19 +182,21 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { retrieveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val updateHandler: Handler<BetaManagedAgentsCredential> =
@@ -211,19 +223,21 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { updateHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { updateHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val listHandler: Handler<CredentialListPageResponse> =
@@ -248,27 +262,29 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { listHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
-                            .let {
-                                CredentialListPageAsync.builder()
-                                    .service(CredentialServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
+                                .let {
+                                    CredentialListPageAsync.builder()
+                                        .service(CredentialServiceAsyncImpl(clientOptions))
+                                        .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                        .params(params)
+                                        .response(it)
+                                        .build()
+                                }
+                        }
                     }
-                }
+            }
         }
 
         private val deleteHandler: Handler<BetaManagedAgentsDeletedCredential> =
@@ -295,19 +311,21 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { deleteHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { deleteHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val archiveHandler: Handler<BetaManagedAgentsCredential> =
@@ -335,19 +353,21 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { archiveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { archiveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val mcpOAuthValidateHandler: Handler<BetaManagedAgentsCredentialValidation> =
@@ -375,19 +395,21 @@ class CredentialServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { mcpOAuthValidateHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { mcpOAuthValidateHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
     }
 }

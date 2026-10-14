@@ -13,6 +13,8 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.organization.spendlimits.BetaSpendLimit
 import com.anthropic.models.beta.organization.spendlimits.SpendLimitDeleteParams
@@ -59,28 +61,28 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSpendLimit> =
         // get /v1/organizations/spend_limits/{spend_limit_id}?beta=true
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: SpendLimitListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<SpendLimitListPageAsync> =
         // get /v1/organizations/spend_limits?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).thenParse()
 
     override fun delete(
         params: SpendLimitDeleteParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<SpendLimitDeleteResponse> =
         // delete /v1/organizations/spend_limits/{spend_limit_id}?beta=true
-        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().delete(params, requestOptions).thenParse()
 
     override fun set(
         params: SpendLimitSetParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaSpendLimit> =
         // post /v1/organizations/spend_limits?beta=true
-        withRawResponse().set(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().set(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         SpendLimitServiceAsync.WithRawResponse {
@@ -128,19 +130,21 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { retrieveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val listHandler: Handler<SpendLimitListPageResponse> =
@@ -160,27 +164,29 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { listHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
-                            .let {
-                                SpendLimitListPageAsync.builder()
-                                    .service(SpendLimitServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
+                                .let {
+                                    SpendLimitListPageAsync.builder()
+                                        .service(SpendLimitServiceAsyncImpl(clientOptions))
+                                        .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                        .params(params)
+                                        .response(it)
+                                        .build()
+                                }
+                        }
                     }
-                }
+            }
         }
 
         private val deleteHandler: Handler<SpendLimitDeleteResponse> =
@@ -204,19 +210,21 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { deleteHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { deleteHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val setHandler: Handler<BetaSpendLimit> =
@@ -236,19 +244,27 @@ class SpendLimitServiceAsyncImpl internal constructor(private val clientOptions:
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { setHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { setHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                                .also {
+                                    client.recordCreatedId(
+                                        "anthropic.organization.spend_limit.id",
+                                        it._id(),
+                                    )
+                                }
+                        }
                     }
-                }
+            }
         }
     }
 }

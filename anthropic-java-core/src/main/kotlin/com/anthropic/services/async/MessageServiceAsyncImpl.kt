@@ -19,6 +19,8 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.helpers.warnIfThinkingEnabled
 import com.anthropic.models.messages.Message
@@ -52,7 +54,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
         requestOptions: RequestOptions,
     ): CompletableFuture<Message> =
         // post /v1/messages
-        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().create(params, requestOptions).thenParse()
 
     override fun createStreaming(
         params: MessageCreateParams,
@@ -69,7 +71,7 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
         requestOptions: RequestOptions,
     ): CompletableFuture<MessageTokensCount> =
         // post /v1/messages/count_tokens
-        withRawResponse().countTokens(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().countTokens(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MessageServiceAsync.WithRawResponse {
@@ -114,19 +116,21 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                         isStreaming = false,
                         model = params.model().toString(),
                     )
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { createHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { createHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val createStreamingHandler: Handler<StreamResponse<RawMessageStreamEvent>> =
@@ -164,21 +168,23 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                         isStreaming = true,
                         model = params.model().toString(),
                     )
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .let { createStreamingHandler.handle(it) }
-                            .let { streamResponse ->
-                                if (requestOptions.responseValidation!!) {
-                                    streamResponse.map { it.validate() }
-                                } else {
-                                    streamResponse
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .let { createStreamingHandler.handle(it) }
+                                .let { streamResponse ->
+                                    if (requestOptions.responseValidation!!) {
+                                        streamResponse.map { it.validate() }
+                                    } else {
+                                        streamResponse
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val countTokensHandler: Handler<MessageTokensCount> =
@@ -199,19 +205,21 @@ class MessageServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { countTokensHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { countTokensHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
@@ -281,6 +282,17 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.skills.versions.delete",
+            route = "/v1/skills/{skill_id}/versions/{version}",
+            attributes =
+                mapOf(
+                    "anthropic.skill.id" to _pathParam(0),
+                    "anthropic.skill.version.id" to _pathParam(1),
+                ),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

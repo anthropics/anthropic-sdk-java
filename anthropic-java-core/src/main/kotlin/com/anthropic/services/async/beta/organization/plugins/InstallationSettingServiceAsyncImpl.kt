@@ -14,6 +14,8 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.organization.plugins.installationsettings.BetaDeletedPluginInstallationSetting
 import com.anthropic.models.beta.organization.plugins.installationsettings.BetaPluginInstallationSetting
@@ -54,21 +56,21 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
         requestOptions: RequestOptions,
     ): CompletableFuture<InstallationSettingListPageAsync> =
         // get /v1/organizations/plugins/{plugin_id}/installation_settings?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).thenParse()
 
     override fun remove(
         params: InstallationSettingRemoveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaDeletedPluginInstallationSetting> =
         // delete /v1/organizations/plugins/{plugin_id}/installation_settings/{target}?beta=true
-        withRawResponse().remove(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().remove(params, requestOptions).thenParse()
 
     override fun set(
         params: InstallationSettingSetParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginInstallationSetting> =
         // post /v1/organizations/plugins/{plugin_id}/installation_settings/{target}?beta=true
-        withRawResponse().set(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().set(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         InstallationSettingServiceAsync.WithRawResponse {
@@ -105,27 +107,29 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { listHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
-                            .let {
-                                InstallationSettingListPageAsync.builder()
-                                    .service(InstallationSettingServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
+                                .let {
+                                    InstallationSettingListPageAsync.builder()
+                                        .service(InstallationSettingServiceAsyncImpl(clientOptions))
+                                        .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                        .params(params)
+                                        .response(it)
+                                        .build()
+                                }
+                        }
                     }
-                }
+            }
         }
 
         private val removeHandler: Handler<BetaDeletedPluginInstallationSetting> =
@@ -152,19 +156,21 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { removeHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { removeHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val setHandler: Handler<BetaPluginInstallationSetting> =
@@ -191,19 +197,21 @@ internal constructor(private val clientOptions: ClientOptions) : InstallationSet
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { setHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { setHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
     }
 }

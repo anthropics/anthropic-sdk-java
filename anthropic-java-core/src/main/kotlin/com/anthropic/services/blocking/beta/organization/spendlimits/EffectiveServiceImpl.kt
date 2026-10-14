@@ -11,6 +11,7 @@ import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
 import com.anthropic.models.beta.organization.spendlimits.effective.EffectiveListPage
 import com.anthropic.models.beta.organization.spendlimits.effective.EffectiveListPageResponse
@@ -65,22 +66,24 @@ class EffectiveServiceImpl internal constructor(private val clientOptions: Clien
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { listHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
-                    .let {
-                        EffectiveListPage.builder()
-                            .service(EffectiveServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
+                        .let {
+                            EffectiveListPage.builder()
+                                .service(EffectiveServiceImpl(clientOptions))
+                                .params(params)
+                                .response(it)
+                                .build()
+                        }
+                }
             }
         }
     }

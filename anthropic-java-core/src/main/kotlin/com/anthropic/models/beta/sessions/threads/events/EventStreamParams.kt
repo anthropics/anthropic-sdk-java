@@ -4,6 +4,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaType
@@ -318,6 +319,18 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.sessions.threads.events.stream",
+            route = "/v1/sessions/{session_id}/threads/{thread_id}/stream",
+            attributes =
+                mapOf(
+                    "anthropic.session.id" to _pathParam(0),
+                    "anthropic.session.thread.id" to _pathParam(1),
+                ),
+            queryParams = listOf("event_deltas"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

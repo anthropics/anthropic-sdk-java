@@ -10,9 +10,12 @@ import com.anthropic.core.http.PhantomReachableClosingHttpClient
 import com.anthropic.core.http.QueryParams
 import com.anthropic.core.http.RetryingHttpClient
 import com.anthropic.core.http.intercept
+import com.anthropic.core.opentelemetry.OpenTelemetryOptions
+import com.anthropic.core.opentelemetry.TracingHttpClient
 import com.anthropic.internal.core.http.AuthorizingHttpClient
 import com.anthropic.internal.core.http.HeaderAuthHttpClient
 import com.fasterxml.jackson.databind.json.JsonMapper
+import io.opentelemetry.api.GlobalOpenTelemetry
 import java.time.Clock
 import java.time.Duration
 import java.util.Optional
@@ -141,6 +144,16 @@ private constructor(
      * Defaults to [LogLevel.fromEnv].
      */
     @get:JvmName("logLevel") val logLevel: LogLevel,
+    /**
+     * OpenTelemetry tracing of this client's API calls. Each call emits a span when the application
+     * has registered a tracer provider with [GlobalOpenTelemetry], or has set
+     * [OpenTelemetryOptions.tracerProvider].
+     *
+     * [fromEnv] sets the options that a system property or an environment variable sets. See
+     * [OpenTelemetryOptions.fromEnv].
+     */
+    @get:JvmName("openTelemetry") val openTelemetry: OpenTelemetryOptions,
+    private val openTelemetryPlatform: String?,
     private val webhookKey: String?,
     private val credentialResult: CredentialResult?,
 ) {
@@ -157,6 +170,13 @@ private constructor(
      * Defaults to the production environment: `https://api.anthropic.com`.
      */
     fun baseUrl(): String = baseUrl ?: PRODUCTION_URL
+
+    /**
+     * The platform in the instrumentation scope of this client's spans. The client of another
+     * platform sets the platform's name, and its spans then have the scope
+     * `com.anthropic.sdk.java.<platform>`, in place of `com.anthropic.sdk.java`.
+     */
+    fun openTelemetryPlatform(): Optional<String> = Optional.ofNullable(openTelemetryPlatform)
 
     fun webhookKey(): Optional<String> = Optional.ofNullable(webhookKey)
 
@@ -194,6 +214,8 @@ private constructor(
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
         private var logLevel: LogLevel = LogLevel.fromEnv()
+        private var openTelemetry: OpenTelemetryOptions = OpenTelemetryOptions.none()
+        private var openTelemetryPlatform: String? = null
         private var credentialResult: CredentialResult? = null
         private var webhookKey: String? = null
 
@@ -213,6 +235,8 @@ private constructor(
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
             logLevel = clientOptions.logLevel
+            openTelemetry = clientOptions.openTelemetry
+            openTelemetryPlatform = clientOptions.openTelemetryPlatform
             webhookKey = clientOptions.webhookKey
             credentialResult = clientOptions.credentialResult
         }
@@ -374,6 +398,41 @@ private constructor(
          */
         fun logLevel(logLevel: LogLevel) = apply { this.logLevel = logLevel }
 
+        /**
+         * OpenTelemetry tracing of this client's API calls. Each call emits a span when the
+         * application has registered a tracer provider with [GlobalOpenTelemetry], or has set
+         * [OpenTelemetryOptions.tracerProvider].
+         *
+         * [fromEnv] sets the options that a system property or an environment variable sets. See
+         * [OpenTelemetryOptions.fromEnv].
+         */
+        fun openTelemetry(openTelemetry: OpenTelemetryOptions) = apply {
+            this.openTelemetry = openTelemetry
+        }
+
+        /**
+         * Enables or disables the spans of this client's API calls.
+         *
+         * A short form of [openTelemetry] with [OpenTelemetryOptions.ofEnabled].
+         */
+        fun openTelemetry(enabled: Boolean) = openTelemetry(OpenTelemetryOptions.ofEnabled(enabled))
+
+        /**
+         * The platform in the instrumentation scope of this client's spans. The client of another
+         * platform sets the platform's name, and its spans then have the scope
+         * `com.anthropic.sdk.java.<platform>`, in place of `com.anthropic.sdk.java`.
+         */
+        fun openTelemetryPlatform(openTelemetryPlatform: String?) = apply {
+            this.openTelemetryPlatform = openTelemetryPlatform
+        }
+
+        /**
+         * Alias for calling [Builder.openTelemetryPlatform] with
+         * `openTelemetryPlatform.orElse(null)`.
+         */
+        fun openTelemetryPlatform(openTelemetryPlatform: Optional<String>) =
+            openTelemetryPlatform(openTelemetryPlatform.getOrNull())
+
         @JvmSynthetic
         internal fun credentials(credentials: CredentialResult?) = apply {
             this.credentialResult = credentials
@@ -476,9 +535,14 @@ private constructor(
          * |`webhookKey`|`anthropic.webhookSigningKey`|`ANTHROPIC_WEBHOOK_SIGNING_KEY`|false   |-            |
          *
          * System properties take precedence over environment variables.
+         *
+         * Also sets the options of `openTelemetry` that a system property or an environment
+         * variable sets, and leaves its other options as they are. See
+         * [OpenTelemetryOptions.fromEnv].
          */
         fun fromEnv() = apply {
             logLevel(LogLevel.fromEnv())
+            openTelemetry(openTelemetry.withEnv())
             (System.getProperty("anthropic.webhookSigningKey")
                     ?: System.getenv("ANTHROPIC_WEBHOOK_SIGNING_KEY"))
                 ?.let { webhookKey(it) }
@@ -546,7 +610,15 @@ private constructor(
             val interceptedHttpClient =
                 interceptors.intercept(
                     LoggingHttpClient.builder()
-                        .httpClient(rawHttpClient)
+                        // The tracing client is innermost: on every attempt it restores the call's
+                        // context, which async steps above it lose, and adds the `traceparent`
+                        // header before the transport signs the request.
+                        .httpClient(
+                            // A performance optimization: with spans off, the tracing client would
+                            // pass every request through unchanged.
+                            if (openTelemetry.traces().enabled()) TracingHttpClient(rawHttpClient)
+                            else rawHttpClient
+                        )
                         .clock(clock)
                         .level(logLevel)
                         .build()
@@ -591,6 +663,8 @@ private constructor(
                 timeout,
                 maxRetries,
                 logLevel,
+                openTelemetry,
+                openTelemetryPlatform,
                 webhookKey,
                 credentialResult,
             )

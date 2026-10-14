@@ -13,6 +13,7 @@ import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -421,6 +422,13 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.vaults.credentials.create",
+            route = "/v1/vaults/{vault_id}/credentials",
+            attributes = mapOf("anthropic.vault.id" to _pathParam(0)),
+        )
 
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)

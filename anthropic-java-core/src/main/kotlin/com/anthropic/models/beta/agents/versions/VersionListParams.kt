@@ -3,6 +3,7 @@ package com.anthropic.models.beta.agents.versions
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
@@ -288,6 +289,14 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.agents.versions.list",
+            route = "/v1/agents/{agent_id}/versions",
+            attributes = mapOf("gen_ai.agent.id" to _pathParam(0)),
+            queryParams = listOf("limit", "page"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -5,6 +5,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import java.util.Objects
@@ -282,6 +283,14 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.workspaces.rate_limits.list",
+            route = "/v1/organizations/workspaces/{workspace_id}/rate_limits",
+            attributes = mapOf("anthropic.organization.workspace.id" to _pathParam(0)),
+            queryParams = listOf("group_type", "include_inherited", "limit", "page"),
+        )
 
     /** Filter by group type. */
     class GroupType private constructor(private val value: JsonField<String>) : Enum {

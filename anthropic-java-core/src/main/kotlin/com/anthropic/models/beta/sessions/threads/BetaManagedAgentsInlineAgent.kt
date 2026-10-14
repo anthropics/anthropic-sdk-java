@@ -15,11 +15,14 @@ import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
+import com.anthropic.models.beta.agents.BetaManagedAgentsAwsRoleExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsCustomSkill
 import com.anthropic.models.beta.agents.BetaManagedAgentsCustomTool
+import com.anthropic.models.beta.agents.BetaManagedAgentsExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpToolset
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
+import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -44,6 +47,7 @@ class BetaManagedAgentsInlineAgent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val description: JsonField<String>,
+    private val executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity>,
     private val mcpServers: JsonField<List<BetaManagedAgentsMcpServerUrlDefinition>>,
     private val model: JsonField<BetaManagedAgentsModelConfig>,
     private val name: JsonField<String>,
@@ -59,6 +63,9 @@ private constructor(
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("execution_identity")
+        @ExcludeMissing
+        executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity> = JsonMissing.of(),
         @JsonProperty("mcp_servers")
         @ExcludeMissing
         mcpServers: JsonField<List<BetaManagedAgentsMcpServerUrlDefinition>> = JsonMissing.of(),
@@ -70,13 +77,33 @@ private constructor(
         @JsonProperty("system") @ExcludeMissing system: JsonField<String> = JsonMissing.of(),
         @JsonProperty("tools") @ExcludeMissing tools: JsonField<List<Tool>> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(description, mcpServers, model, name, skills, system, tools, type, mutableMapOf())
+    ) : this(
+        description,
+        executionIdentity,
+        mcpServers,
+        model,
+        name,
+        skills,
+        system,
+        tools,
+        type,
+        mutableMapOf(),
+    )
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun description(): Optional<String> = description.getOptional("description")
+
+    /**
+     * The session's execution principal.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun executionIdentity(): BetaManagedAgentsExecutionIdentity =
+        executionIdentity.getRequired("execution_identity")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -136,6 +163,16 @@ private constructor(
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+
+    /**
+     * Returns the raw JSON value of [executionIdentity].
+     *
+     * Unlike [executionIdentity], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("execution_identity")
+    @ExcludeMissing
+    fun _executionIdentity(): JsonField<BetaManagedAgentsExecutionIdentity> = executionIdentity
 
     /**
      * Returns the raw JSON value of [mcpServers].
@@ -203,6 +240,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .description()
+         * .executionIdentity()
          * .mcpServers()
          * .model()
          * .name()
@@ -218,6 +256,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var description: JsonField<String>? = null
+        private var executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity>? = null
         private var mcpServers: JsonField<MutableList<BetaManagedAgentsMcpServerUrlDefinition>>? =
             null
         private var model: JsonField<BetaManagedAgentsModelConfig>? = null
@@ -231,6 +270,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(betaManagedAgentsInlineAgent: BetaManagedAgentsInlineAgent) = apply {
             description = betaManagedAgentsInlineAgent.description
+            executionIdentity = betaManagedAgentsInlineAgent.executionIdentity
             mcpServers =
                 betaManagedAgentsInlineAgent.mcpServers
                     .map { it.toMutableList() }
@@ -263,6 +303,49 @@ private constructor(
          * value.
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
+
+        /** The session's execution principal. */
+        fun executionIdentity(executionIdentity: BetaManagedAgentsExecutionIdentity) =
+            executionIdentity(JsonField.of(executionIdentity))
+
+        /**
+         * Sets [Builder.executionIdentity] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.executionIdentity] with a well-typed
+         * [BetaManagedAgentsExecutionIdentity] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun executionIdentity(executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity>) =
+            apply {
+                this.executionIdentity = executionIdentity
+            }
+
+        /**
+         * Alias for calling [executionIdentity] with
+         * `BetaManagedAgentsExecutionIdentity.ofAwsRole(awsRole)`.
+         */
+        fun executionIdentity(awsRole: BetaManagedAgentsAwsRoleExecutionIdentity) =
+            executionIdentity(BetaManagedAgentsExecutionIdentity.ofAwsRole(awsRole))
+
+        /**
+         * Alias for calling [executionIdentity] with the following:
+         * ```java
+         * BetaManagedAgentsAwsRoleExecutionIdentity.builder()
+         *     .roleArn(roleArn)
+         *     .build()
+         * ```
+         */
+        fun awsRoleExecutionIdentity(roleArn: String) =
+            executionIdentity(
+                BetaManagedAgentsAwsRoleExecutionIdentity.builder().roleArn(roleArn).build()
+            )
+
+        /**
+         * Alias for calling [executionIdentity] with
+         * `BetaManagedAgentsExecutionIdentity.ofServiceAccount(serviceAccount)`.
+         */
+        fun executionIdentity(serviceAccount: BetaManagedAgentsServiceAccountExecutionIdentity) =
+            executionIdentity(BetaManagedAgentsExecutionIdentity.ofServiceAccount(serviceAccount))
 
         fun mcpServers(mcpServers: List<BetaManagedAgentsMcpServerUrlDefinition>) =
             mcpServers(JsonField.of(mcpServers))
@@ -434,6 +517,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .description()
+         * .executionIdentity()
          * .mcpServers()
          * .model()
          * .name()
@@ -447,6 +531,7 @@ private constructor(
         fun build(): BetaManagedAgentsInlineAgent =
             BetaManagedAgentsInlineAgent(
                 checkRequired("description", description),
+                checkRequired("executionIdentity", executionIdentity),
                 checkRequired("mcpServers", mcpServers).map { it.toImmutable() },
                 checkRequired("model", model),
                 checkRequired("name", name),
@@ -474,6 +559,7 @@ private constructor(
         }
 
         description()
+        executionIdentity().validate()
         mcpServers().forEach { it.validate() }
         model().validate()
         name()
@@ -504,6 +590,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (description.asKnown().isPresent) 1 else 0) +
+            (executionIdentity.asKnown().getOrNull()?.validity() ?: 0) +
             (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (model.asKnown().getOrNull()?.validity() ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
@@ -1289,6 +1376,7 @@ private constructor(
 
         return other is BetaManagedAgentsInlineAgent &&
             description == other.description &&
+            executionIdentity == other.executionIdentity &&
             mcpServers == other.mcpServers &&
             model == other.model &&
             name == other.name &&
@@ -1302,6 +1390,7 @@ private constructor(
     private val hashCode: Int by lazy {
         Objects.hash(
             description,
+            executionIdentity,
             mcpServers,
             model,
             name,
@@ -1316,5 +1405,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsInlineAgent{description=$description, mcpServers=$mcpServers, model=$model, name=$name, skills=$skills, system=$system, tools=$tools, type=$type, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsInlineAgent{description=$description, executionIdentity=$executionIdentity, mcpServers=$mcpServers, model=$model, name=$name, skills=$skills, system=$system, tools=$tools, type=$type, additionalProperties=$additionalProperties}"
 }

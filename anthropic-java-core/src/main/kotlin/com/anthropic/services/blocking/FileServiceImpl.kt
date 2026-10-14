@@ -14,6 +14,8 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.multipartFormData
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.traceApiCall
+import com.anthropic.core.opentelemetry.traceRawApiCall
 import com.anthropic.core.prepare
 import com.anthropic.models.files.DeletedFile
 import com.anthropic.models.files.FileDeleteParams
@@ -92,22 +94,24 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { listHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
-                    .let {
-                        FileListPage.builder()
-                            .service(FileServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
+                        .let {
+                            FileListPage.builder()
+                                .service(FileServiceImpl(clientOptions))
+                                .params(params)
+                                .response(it)
+                                .build()
+                        }
+                }
             }
         }
 
@@ -131,15 +135,17 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { deleteHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { deleteHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -161,8 +167,10 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response)
+            return traceRawApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response)
+            }
         }
 
         private val retrieveMetadataHandler: Handler<FileMetadata> =
@@ -184,15 +192,17 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveMetadataHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { retrieveMetadataHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -212,15 +222,18 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { uploadHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { uploadHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                        .also { client.recordCreatedId("anthropic.file.id", it._id()) }
+                }
             }
         }
     }

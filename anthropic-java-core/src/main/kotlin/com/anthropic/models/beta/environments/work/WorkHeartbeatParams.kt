@@ -5,6 +5,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
@@ -341,6 +342,18 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.environments.work.heartbeat",
+            route = "/v1/environments/{environment_id}/work/{work_id}/heartbeat",
+            attributes =
+                mapOf(
+                    "anthropic.environment.id" to _pathParam(0),
+                    "anthropic.environment.work.id" to _pathParam(1),
+                ),
+            queryParams = listOf("desired_ttl_seconds", "expected_last_heartbeat"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

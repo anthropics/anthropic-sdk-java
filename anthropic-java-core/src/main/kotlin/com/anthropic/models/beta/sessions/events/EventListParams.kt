@@ -5,6 +5,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -434,6 +435,24 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.sessions.events.list",
+            route = "/v1/sessions/{session_id}/events",
+            attributes = mapOf("anthropic.session.id" to _pathParam(0)),
+            queryParams =
+                listOf(
+                    "created_at[gt]",
+                    "created_at[gte]",
+                    "created_at[lt]",
+                    "created_at[lte]",
+                    "limit",
+                    "order",
+                    "page",
+                    "types",
+                ),
+        )
 
     /**
      * Sort direction for results, ordered by the event's `processed_at`. Defaults to `asc`

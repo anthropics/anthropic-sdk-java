@@ -15,7 +15,9 @@ import com.anthropic.core.http.HttpClient
 import com.anthropic.core.http.Interceptor
 import com.anthropic.core.http.ProxyAuthenticator
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.OpenTelemetryOptions
 import com.fasterxml.jackson.databind.json.JsonMapper
+import io.opentelemetry.api.GlobalOpenTelemetry
 import java.net.Proxy
 import java.time.Clock
 import java.time.Duration
@@ -333,6 +335,25 @@ class AnthropicOkHttpClientAsync private constructor() {
          * Defaults to [LogLevel.fromEnv].
          */
         fun logLevel(logLevel: LogLevel) = apply { clientOptions.logLevel(logLevel) }
+
+        /**
+         * OpenTelemetry tracing of this client's API calls. Each call emits a span when the
+         * application has registered a tracer provider with [GlobalOpenTelemetry], or has set
+         * [OpenTelemetryOptions.tracerProvider].
+         *
+         * [fromEnv] sets the options that a system property or an environment variable sets. See
+         * [OpenTelemetryOptions.fromEnv].
+         */
+        fun openTelemetry(openTelemetry: OpenTelemetryOptions) = apply {
+            clientOptions.openTelemetry(openTelemetry)
+        }
+
+        /**
+         * Enables or disables the spans of this client's API calls.
+         *
+         * A short form of [openTelemetry] with [OpenTelemetryOptions.ofEnabled].
+         */
+        fun openTelemetry(enabled: Boolean) = apply { clientOptions.openTelemetry(enabled) }
 
         fun apiKey(apiKey: String?) = apply { ensureDefaultBackendBuilder("apiKey").apiKey(apiKey) }
 

@@ -1,6 +1,8 @@
 package com.anthropic.core
 
+import com.anthropic.core.opentelemetry.OpenTelemetryRequestOptions
 import com.anthropic.helpers.BetaFallbackState
+import io.opentelemetry.context.Context
 import java.time.Duration
 
 class RequestOptions
@@ -9,6 +11,9 @@ private constructor(
     val timeout: Timeout?,
     val followRedirects: Boolean?,
     val fallbackState: BetaFallbackState?,
+    val openTelemetry: OpenTelemetryRequestOptions?,
+    /** The OpenTelemetry context of the API call that sends the request, while its span is open. */
+    @get:JvmSynthetic internal val apiCallOtelContext: Context? = null,
 ) {
 
     companion object {
@@ -89,6 +94,20 @@ private constructor(
                 else timeout ?: options.timeout,
             followRedirects = followRedirects ?: options.followRedirects,
             fallbackState = fallbackState ?: options.fallbackState,
+            openTelemetry = openTelemetry ?: options.openTelemetry,
+            apiCallOtelContext = apiCallOtelContext ?: options.apiCallOtelContext,
+        )
+
+    /** These options for a request that the API call with [apiCallOtelContext] sends. */
+    @JvmSynthetic
+    internal fun withApiCallOtelContext(apiCallOtelContext: Context): RequestOptions =
+        RequestOptions(
+            responseValidation,
+            timeout,
+            followRedirects,
+            fallbackState,
+            openTelemetry,
+            apiCallOtelContext,
         )
 
     class Builder internal constructor() {
@@ -97,6 +116,8 @@ private constructor(
         private var timeout: Timeout? = null
         private var followRedirects: Boolean? = null
         private var fallbackState: BetaFallbackState? = null
+        private var openTelemetry: OpenTelemetryRequestOptions? = null
+        private var apiCallOtelContext: Context? = null
 
         @JvmSynthetic
         internal fun from(requestOptions: RequestOptions) = apply {
@@ -104,6 +125,8 @@ private constructor(
             timeout = requestOptions.timeout
             followRedirects = requestOptions.followRedirects
             fallbackState = requestOptions.fallbackState
+            openTelemetry = requestOptions.openTelemetry
+            apiCallOtelContext = requestOptions.apiCallOtelContext
         }
 
         /**
@@ -130,6 +153,11 @@ private constructor(
          */
         fun followRedirects(followRedirects: Boolean) = apply {
             this.followRedirects = followRedirects
+        }
+
+        /** The OpenTelemetry tracing of this request. */
+        fun openTelemetry(openTelemetry: OpenTelemetryRequestOptions) = apply {
+            this.openTelemetry = openTelemetry
         }
 
         /**
@@ -178,6 +206,13 @@ private constructor(
         }
 
         fun build(): RequestOptions =
-            RequestOptions(responseValidation, timeout, followRedirects, fallbackState)
+            RequestOptions(
+                responseValidation,
+                timeout,
+                followRedirects,
+                fallbackState,
+                openTelemetry,
+                apiCallOtelContext,
+            )
     }
 }

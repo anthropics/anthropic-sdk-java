@@ -15,6 +15,8 @@ import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.multipartFormData
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.organization.pluginmarketplaces.BetaPluginMarketplace
 import com.anthropic.models.beta.organization.pluginmarketplaces.BetaPluginMarketplaceValidationReport
@@ -54,35 +56,35 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginMarketplace> =
         // get /v1/organizations/plugin_marketplaces/{marketplace_id}?beta=true
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun update(
         params: PluginMarketplaceUpdateParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginMarketplace> =
         // post /v1/organizations/plugin_marketplaces/{marketplace_id}?beta=true
-        withRawResponse().update(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().update(params, requestOptions).thenParse()
 
     override fun list(
         params: PluginMarketplaceListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<PluginMarketplaceListPageAsync> =
         // get /v1/organizations/plugin_marketplaces?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).thenParse()
 
     override fun validateArchive(
         params: PluginMarketplaceValidateArchiveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginMarketplaceValidationReport> =
         // post /v1/organizations/plugin_marketplaces/validate_archive?beta=true
-        withRawResponse().validateArchive(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().validateArchive(params, requestOptions).thenParse()
 
     override fun validateRepository(
         params: PluginMarketplaceValidateRepositoryParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaPluginMarketplaceValidationReport> =
         // post /v1/organizations/plugin_marketplaces/validate_repository?beta=true
-        withRawResponse().validateRepository(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().validateRepository(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         PluginMarketplaceServiceAsync.WithRawResponse {
@@ -118,19 +120,21 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { retrieveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val updateHandler: Handler<BetaPluginMarketplace> =
@@ -155,19 +159,21 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { updateHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { updateHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val listHandler: Handler<PluginMarketplaceListPageResponse> =
@@ -187,27 +193,29 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { listHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
-                            .let {
-                                PluginMarketplaceListPageAsync.builder()
-                                    .service(PluginMarketplaceServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
+                                .let {
+                                    PluginMarketplaceListPageAsync.builder()
+                                        .service(PluginMarketplaceServiceAsyncImpl(clientOptions))
+                                        .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                        .params(params)
+                                        .response(it)
+                                        .build()
+                                }
+                        }
                     }
-                }
+            }
         }
 
         private val validateArchiveHandler: Handler<BetaPluginMarketplaceValidationReport> =
@@ -233,19 +241,21 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { validateArchiveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { validateArchiveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val validateRepositoryHandler: Handler<BetaPluginMarketplaceValidationReport> =
@@ -271,19 +281,21 @@ internal constructor(private val clientOptions: ClientOptions) : PluginMarketpla
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { validateRepositoryHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { validateRepositoryHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
     }
 }

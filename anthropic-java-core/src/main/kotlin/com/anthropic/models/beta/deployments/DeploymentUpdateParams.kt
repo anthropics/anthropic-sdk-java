@@ -14,6 +14,7 @@ import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -804,6 +805,13 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.deployments.update",
+            route = "/v1/deployments/{deployment_id}",
+            attributes = mapOf("anthropic.deployment.id" to _pathParam(0)),
+        )
 
     /**
      * Request parameters for updating a `deployment`. Omit a field to preserve its current value.

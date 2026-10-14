@@ -5,6 +5,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -470,6 +471,28 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.sessions.list",
+            route = "/v1/sessions",
+            queryParams =
+                listOf(
+                    "agent_id",
+                    "agent_version",
+                    "created_at[gt]",
+                    "created_at[gte]",
+                    "created_at[lt]",
+                    "created_at[lte]",
+                    "deployment_id",
+                    "include_archived",
+                    "limit",
+                    "memory_store_id",
+                    "order",
+                    "page",
+                    "statuses",
+                ),
+        )
 
     /** Sort direction for results, ordered by `created_at`. Defaults to `desc` (newest first). */
     class Order private constructor(private val value: JsonField<String>) : Enum {

@@ -15,6 +15,7 @@ import com.anthropic.core.checkRequired
 import com.anthropic.core.getOrThrow
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -1615,6 +1616,9 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(name = "anthropic.messages.create", route = "/v1/messages")
 
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)

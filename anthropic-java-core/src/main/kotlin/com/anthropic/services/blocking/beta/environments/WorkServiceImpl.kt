@@ -14,6 +14,7 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
 import com.anthropic.models.beta.environments.work.BetaSelfHostedWork
 import com.anthropic.models.beta.environments.work.BetaSelfHostedWorkHeartbeatResponse
@@ -132,15 +133,17 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { retrieveHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -168,15 +171,17 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { updateHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { updateHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -202,22 +207,24 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { listHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
-                    .let {
-                        WorkListPage.builder()
-                            .service(WorkServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
+                        .let {
+                            WorkListPage.builder()
+                                .service(WorkServiceImpl(clientOptions))
+                                .params(params)
+                                .response(it)
+                                .build()
+                        }
+                }
             }
         }
 
@@ -246,15 +253,17 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { ackHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { ackHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -283,15 +292,17 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { heartbeatHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { heartbeatHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -317,15 +328,17 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { pollHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.ifPresent { it.validate() }
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { pollHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.ifPresent { it.validate() }
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -351,15 +364,17 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { statsHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { statsHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -388,15 +403,17 @@ class WorkServiceImpl internal constructor(private val clientOptions: ClientOpti
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { stopHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { stopHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
     }

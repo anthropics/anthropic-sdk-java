@@ -5,6 +5,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
@@ -238,6 +239,17 @@ private constructor(
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.rbac_groups.members.remove",
+            route = "/v1/organizations/rbac_groups/{rbac_group_id}/members/{user_id}",
+            attributes =
+                mapOf(
+                    "anthropic.organization.rbac_group.id" to _pathParam(0),
+                    "anthropic.organization.rbac_group.member.id" to _pathParam(1),
+                ),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

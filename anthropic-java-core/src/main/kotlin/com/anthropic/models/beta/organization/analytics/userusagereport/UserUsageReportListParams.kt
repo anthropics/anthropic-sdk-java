@@ -6,6 +6,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsClaudeTagCategory
@@ -714,6 +715,34 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.analytics.user_usage_report.list",
+            route = "/v1/organizations/analytics/user_usage_report",
+            queryParams =
+                listOf(
+                    "bucket_width",
+                    "claude_tag_categories",
+                    "claude_tag_user_ids",
+                    "context_windows",
+                    "ending_at",
+                    "exclude_deleted_users",
+                    "group_by",
+                    "inference_geos",
+                    "limit",
+                    "models",
+                    "order",
+                    "order_by",
+                    "page",
+                    "products",
+                    "rbac_group_ids",
+                    "slack_channel_ids",
+                    "speeds",
+                    "starting_at",
+                    "user_ids",
+                ),
+        )
 
     /**
      * Time-bucket granularity. When set, each row's `starting_at` and `ending_at` are populated and

@@ -41,6 +41,7 @@ internal class AgentServiceTest {
                     .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                     .name("My First Agent")
                     .description("A general-purpose starter agent.")
+                    .awsRoleExecutionIdentity("role_arn")
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
                             .name("example-mcp")
@@ -146,6 +147,7 @@ internal class AgentServiceTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .description("updated")
+                    .awsRoleExecutionIdentity("role_arn")
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
                             .name("example-mcp")

@@ -3,6 +3,7 @@ package com.anthropic.models.beta.organization.rbacroles.permissions
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -226,6 +227,14 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.rbac_roles.permissions.list",
+            route = "/v1/organizations/rbac_roles/{rbac_role_id}/permissions",
+            attributes = mapOf("anthropic.organization.rbac_role.id" to _pathParam(0)),
+            queryParams = listOf("limit", "page"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

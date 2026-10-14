@@ -10,6 +10,7 @@ import com.anthropic.core.checkKnown
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -334,6 +335,12 @@ private constructor(
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.invites.create",
+            route = "/v1/organizations/invites",
+        )
 
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)

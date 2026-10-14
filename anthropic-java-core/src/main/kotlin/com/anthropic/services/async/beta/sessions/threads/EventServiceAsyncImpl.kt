@@ -19,6 +19,8 @@ import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.sessions.threads.BetaManagedAgentsStreamSessionThreadEvents
 import com.anthropic.models.beta.sessions.threads.events.EventListPageAsync
@@ -52,7 +54,7 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
         requestOptions: RequestOptions,
     ): CompletableFuture<EventListPageAsync> =
         // get /v1/sessions/{session_id}/threads/{thread_id}/events?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).thenParse()
 
     override fun streamStreaming(
         params: EventStreamParams,
@@ -101,27 +103,29 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { listHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
-                            .let {
-                                EventListPageAsync.builder()
-                                    .service(EventServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
+                                .let {
+                                    EventListPageAsync.builder()
+                                        .service(EventServiceAsyncImpl(clientOptions))
+                                        .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                        .params(params)
+                                        .response(it)
+                                        .build()
+                                }
+                        }
                     }
-                }
+            }
         }
 
         private val streamStreamingHandler:
@@ -153,21 +157,23 @@ class EventServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .let { streamStreamingHandler.handle(it) }
-                            .let { streamResponse ->
-                                if (requestOptions.responseValidation!!) {
-                                    streamResponse.map { it.validate() }
-                                } else {
-                                    streamResponse
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .let { streamStreamingHandler.handle(it) }
+                                .let { streamResponse ->
+                                    if (requestOptions.responseValidation!!) {
+                                        streamResponse.map { it.validate() }
+                                    } else {
+                                        streamResponse
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
     }
 }

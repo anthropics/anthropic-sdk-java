@@ -38,6 +38,7 @@ class BetaManagedAgentsSessionThreadAgent
 private constructor(
     private val id: JsonField<String>,
     private val description: JsonField<String>,
+    private val executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity>,
     private val mcpServers: JsonField<List<BetaManagedAgentsMcpServerUrlDefinition>>,
     private val model: JsonField<BetaManagedAgentsModelConfig>,
     private val name: JsonField<String>,
@@ -55,6 +56,9 @@ private constructor(
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("execution_identity")
+        @ExcludeMissing
+        executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity> = JsonMissing.of(),
         @JsonProperty("mcp_servers")
         @ExcludeMissing
         mcpServers: JsonField<List<BetaManagedAgentsMcpServerUrlDefinition>> = JsonMissing.of(),
@@ -70,6 +74,7 @@ private constructor(
     ) : this(
         id,
         description,
+        executionIdentity,
         mcpServers,
         model,
         name,
@@ -92,6 +97,16 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun description(): Optional<String> = description.getOptional("description")
+
+    /**
+     * Execution principal snapshotted from the agent at session creation. Always present; `{"type":
+     * "service_account"}` when runs carry no customer-named principal.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun executionIdentity(): BetaManagedAgentsExecutionIdentity =
+        executionIdentity.getRequired("execution_identity")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -157,6 +172,16 @@ private constructor(
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+
+    /**
+     * Returns the raw JSON value of [executionIdentity].
+     *
+     * Unlike [executionIdentity], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("execution_identity")
+    @ExcludeMissing
+    fun _executionIdentity(): JsonField<BetaManagedAgentsExecutionIdentity> = executionIdentity
 
     /**
      * Returns the raw JSON value of [mcpServers].
@@ -240,6 +265,7 @@ private constructor(
          * ```java
          * .id()
          * .description()
+         * .executionIdentity()
          * .mcpServers()
          * .model()
          * .name()
@@ -258,6 +284,7 @@ private constructor(
 
         private var id: JsonField<String>? = null
         private var description: JsonField<String>? = null
+        private var executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity>? = null
         private var mcpServers: JsonField<MutableList<BetaManagedAgentsMcpServerUrlDefinition>>? =
             null
         private var model: JsonField<BetaManagedAgentsModelConfig>? = null
@@ -275,6 +302,7 @@ private constructor(
         ) = apply {
             id = betaManagedAgentsSessionThreadAgent.id
             description = betaManagedAgentsSessionThreadAgent.description
+            executionIdentity = betaManagedAgentsSessionThreadAgent.executionIdentity
             mcpServers =
                 betaManagedAgentsSessionThreadAgent.mcpServers
                     .map { it.toMutableList() }
@@ -319,6 +347,52 @@ private constructor(
          * value.
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
+
+        /**
+         * Execution principal snapshotted from the agent at session creation. Always present;
+         * `{"type": "service_account"}` when runs carry no customer-named principal.
+         */
+        fun executionIdentity(executionIdentity: BetaManagedAgentsExecutionIdentity) =
+            executionIdentity(JsonField.of(executionIdentity))
+
+        /**
+         * Sets [Builder.executionIdentity] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.executionIdentity] with a well-typed
+         * [BetaManagedAgentsExecutionIdentity] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun executionIdentity(executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity>) =
+            apply {
+                this.executionIdentity = executionIdentity
+            }
+
+        /**
+         * Alias for calling [executionIdentity] with
+         * `BetaManagedAgentsExecutionIdentity.ofAwsRole(awsRole)`.
+         */
+        fun executionIdentity(awsRole: BetaManagedAgentsAwsRoleExecutionIdentity) =
+            executionIdentity(BetaManagedAgentsExecutionIdentity.ofAwsRole(awsRole))
+
+        /**
+         * Alias for calling [executionIdentity] with the following:
+         * ```java
+         * BetaManagedAgentsAwsRoleExecutionIdentity.builder()
+         *     .roleArn(roleArn)
+         *     .build()
+         * ```
+         */
+        fun awsRoleExecutionIdentity(roleArn: String) =
+            executionIdentity(
+                BetaManagedAgentsAwsRoleExecutionIdentity.builder().roleArn(roleArn).build()
+            )
+
+        /**
+         * Alias for calling [executionIdentity] with
+         * `BetaManagedAgentsExecutionIdentity.ofServiceAccount(serviceAccount)`.
+         */
+        fun executionIdentity(serviceAccount: BetaManagedAgentsServiceAccountExecutionIdentity) =
+            executionIdentity(BetaManagedAgentsExecutionIdentity.ofServiceAccount(serviceAccount))
 
         fun mcpServers(mcpServers: List<BetaManagedAgentsMcpServerUrlDefinition>) =
             mcpServers(JsonField.of(mcpServers))
@@ -496,6 +570,7 @@ private constructor(
          * ```java
          * .id()
          * .description()
+         * .executionIdentity()
          * .mcpServers()
          * .model()
          * .name()
@@ -512,6 +587,7 @@ private constructor(
             BetaManagedAgentsSessionThreadAgent(
                 checkRequired("id", id),
                 checkRequired("description", description),
+                checkRequired("executionIdentity", executionIdentity),
                 checkRequired("mcpServers", mcpServers).map { it.toImmutable() },
                 checkRequired("model", model),
                 checkRequired("name", name),
@@ -541,6 +617,7 @@ private constructor(
 
         id()
         description()
+        executionIdentity().validate()
         mcpServers().forEach { it.validate() }
         model().validate()
         name()
@@ -569,6 +646,7 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
+            (executionIdentity.asKnown().getOrNull()?.validity() ?: 0) +
             (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (model.asKnown().getOrNull()?.validity() ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
@@ -1497,6 +1575,7 @@ private constructor(
         return other is BetaManagedAgentsSessionThreadAgent &&
             id == other.id &&
             description == other.description &&
+            executionIdentity == other.executionIdentity &&
             mcpServers == other.mcpServers &&
             model == other.model &&
             name == other.name &&
@@ -1512,6 +1591,7 @@ private constructor(
         Objects.hash(
             id,
             description,
+            executionIdentity,
             mcpServers,
             model,
             name,
@@ -1527,5 +1607,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsSessionThreadAgent{id=$id, description=$description, mcpServers=$mcpServers, model=$model, name=$name, skills=$skills, system=$system, tools=$tools, type=$type, version=$version, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsSessionThreadAgent{id=$id, description=$description, executionIdentity=$executionIdentity, mcpServers=$mcpServers, model=$model, name=$name, skills=$skills, system=$system, tools=$tools, type=$type, version=$version, additionalProperties=$additionalProperties}"
 }

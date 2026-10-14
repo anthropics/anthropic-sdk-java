@@ -15,6 +15,7 @@ import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -790,6 +791,9 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(name = "anthropic.deployments.create", route = "/v1/deployments")
 
     /** Request parameters for creating a `deployment`. */
     class Body

@@ -3,6 +3,7 @@ package com.anthropic.models.beta.messages.batches
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
@@ -308,6 +309,13 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.messages.batches.list",
+            route = "/v1/messages/batches",
+            queryParams = listOf("after_id", "before_id", "limit"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

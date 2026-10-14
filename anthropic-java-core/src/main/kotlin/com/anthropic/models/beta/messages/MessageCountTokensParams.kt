@@ -15,6 +15,7 @@ import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toField
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
@@ -1449,6 +1450,9 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(name = "anthropic.messages.count_tokens", route = "/v1/messages/count_tokens")
 
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)

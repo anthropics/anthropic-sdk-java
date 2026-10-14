@@ -19,6 +19,9 @@ internal class AgentListPageResponseTest {
                         .archivedAt(null)
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .description("A general-purpose starter agent.")
+                        .executionIdentity(
+                            BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                        )
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
@@ -141,6 +144,9 @@ internal class AgentListPageResponseTest {
                     .archivedAt(null)
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .description("A general-purpose starter agent.")
+                    .executionIdentity(
+                        BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                    )
                     .addMcpServer(
                         BetaManagedAgentsMcpServerUrlDefinition.builder()
                             .name("example-mcp")
@@ -260,6 +266,9 @@ internal class AgentListPageResponseTest {
                         .archivedAt(null)
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .description("A general-purpose starter agent.")
+                        .executionIdentity(
+                            BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                        )
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")

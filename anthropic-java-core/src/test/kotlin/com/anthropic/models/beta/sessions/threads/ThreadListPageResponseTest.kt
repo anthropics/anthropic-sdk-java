@@ -13,6 +13,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsEffortLow
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
+import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsCacheCreationUsage
 import com.anthropic.models.beta.sessions.BetaManagedAgentsServerToolUsage
@@ -35,6 +36,10 @@ internal class ThreadListPageResponseTest {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -153,6 +158,9 @@ internal class ThreadListPageResponseTest {
                         BetaManagedAgentsSessionThreadAgent.builder()
                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                             .description("A focused research subagent.")
+                            .executionIdentity(
+                                BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                            )
                             .addMcpServer(
                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                     .name("example-mcp")
@@ -276,6 +284,10 @@ internal class ThreadListPageResponseTest {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -393,6 +405,9 @@ internal class ThreadListPageResponseTest {
                         BetaManagedAgentsSessionThreadAgent.builder()
                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                             .description("A focused research subagent.")
+                            .executionIdentity(
+                                BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                            )
                             .addMcpServer(
                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                     .name("example-mcp")
@@ -513,6 +528,10 @@ internal class ThreadListPageResponseTest {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")

@@ -3,6 +3,7 @@ package com.anthropic.models.skills.versions
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -261,6 +262,14 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.skills.versions.list",
+            route = "/v1/skills/{skill_id}/versions",
+            attributes = mapOf("anthropic.skill.id" to _pathParam(0)),
+            queryParams = listOf("limit", "page"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

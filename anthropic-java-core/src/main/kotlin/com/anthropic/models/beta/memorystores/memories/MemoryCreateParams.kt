@@ -8,6 +8,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -409,6 +410,14 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.memory_stores.memories.create",
+            route = "/v1/memory_stores/{memory_store_id}/memories",
+            attributes = mapOf("gen_ai.memory.store.id" to _pathParam(0)),
+            queryParams = listOf("view"),
+        )
 
     /**
      * Request parameters for [Create a memory](/en/api/beta/memory_stores/memories/create). The

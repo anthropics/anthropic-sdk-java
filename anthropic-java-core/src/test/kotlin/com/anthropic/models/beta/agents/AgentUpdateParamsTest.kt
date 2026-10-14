@@ -18,6 +18,7 @@ internal class AgentUpdateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .description("updated")
+            .awsRoleExecutionIdentity("role_arn")
             .addMcpServer(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
@@ -108,6 +109,7 @@ internal class AgentUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .description("updated")
+                .awsRoleExecutionIdentity("role_arn")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -215,6 +217,7 @@ internal class AgentUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .description("updated")
+                .awsRoleExecutionIdentity("role_arn")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -293,6 +296,8 @@ internal class AgentUpdateParamsTest {
         val body = params._body()
 
         assertThat(body.description()).contains("updated")
+        assertThat(body.executionIdentity())
+            .contains(BetaManagedAgentsExecutionIdentityParams.ofAwsRole("role_arn"))
         assertThat(body.mcpServers().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()

@@ -6,6 +6,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.organization.analytics.BetaAnalyticsClaudeTagCategory
@@ -642,6 +643,31 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.analytics.usage_report.list",
+            route = "/v1/organizations/analytics/usage_report",
+            queryParams =
+                listOf(
+                    "bucket_width",
+                    "claude_tag_categories",
+                    "claude_tag_user_ids",
+                    "context_windows",
+                    "ending_at",
+                    "group_by",
+                    "inference_geos",
+                    "limit",
+                    "models",
+                    "page",
+                    "products",
+                    "rbac_group_ids",
+                    "slack_channel_ids",
+                    "speeds",
+                    "starting_at",
+                    "user_ids",
+                ),
+        )
 
     /** Time bucket granularity. */
     class BucketWidth private constructor(private val value: JsonField<String>) : Enum {

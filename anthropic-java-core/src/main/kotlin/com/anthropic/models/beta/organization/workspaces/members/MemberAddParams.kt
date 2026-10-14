@@ -8,6 +8,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.organization.workspaces.BetaNoBillingWorkspaceRole
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -294,6 +295,13 @@ private constructor(
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.workspaces.members.add",
+            route = "/v1/organizations/workspaces/{workspace_id}/members",
+            attributes = mapOf("anthropic.organization.workspace.id" to _pathParam(0)),
+        )
 
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)

@@ -11,6 +11,7 @@ open module com.anthropic.core {
     requires com.github.victools.jsonschema.module.swagger.two;
     requires transitive com.google.errorprone.annotations;
     requires transitive com.standardwebhooks;
+    requires transitive io.opentelemetry.api;
     requires transitive io.swagger.v3.oas.annotations;
     requires kotlin.reflect;
     requires transitive kotlin.stdlib;
@@ -22,12 +23,14 @@ open module com.anthropic.core {
     exports com.anthropic.core.auth;
     exports com.anthropic.core.handlers;
     exports com.anthropic.core.http;
+    exports com.anthropic.core.opentelemetry;
     exports com.anthropic.credentials;
     exports com.anthropic.errors;
     exports com.anthropic.helpers;
     exports com.anthropic.internal.config;
     exports com.anthropic.internal.core.http;
     exports com.anthropic.internal.credentials;
+    exports com.anthropic.internal.telemetry;
     exports com.anthropic.models;
     exports com.anthropic.models.beta;
     exports com.anthropic.models.beta.agents;

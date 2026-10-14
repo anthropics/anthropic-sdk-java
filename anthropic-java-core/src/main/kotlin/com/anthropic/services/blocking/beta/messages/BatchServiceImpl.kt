@@ -17,6 +17,7 @@ import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.json
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
 import com.anthropic.models.beta.messages.batches.BatchCancelParams
 import com.anthropic.models.beta.messages.batches.BatchCreateParams
@@ -120,15 +121,18 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { createHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                        .also { client.recordCreatedId("anthropic.message.batch.id", it._id()) }
+                }
             }
         }
 
@@ -153,15 +157,17 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { retrieveHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -182,22 +188,24 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { listHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
-                    .let {
-                        BatchListPage.builder()
-                            .service(BatchServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
+                        .let {
+                            BatchListPage.builder()
+                                .service(BatchServiceImpl(clientOptions))
+                                .params(params)
+                                .response(it)
+                                .build()
+                        }
+                }
             }
         }
 
@@ -223,15 +231,17 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { deleteHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { deleteHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -258,15 +268,17 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { cancelHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { cancelHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -294,17 +306,19 @@ class BatchServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .let { resultsStreamingHandler.handle(it) }
-                    .let { streamResponse ->
-                        if (requestOptions.responseValidation!!) {
-                            streamResponse.map { it.validate() }
-                        } else {
-                            streamResponse
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .let { resultsStreamingHandler.handle(it) }
+                        .let { streamResponse ->
+                            if (requestOptions.responseValidation!!) {
+                                streamResponse.map { it.validate() }
+                            } else {
+                                streamResponse
+                            }
                         }
-                    }
+                }
             }
         }
     }

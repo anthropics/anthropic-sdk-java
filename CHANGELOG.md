@@ -1,11 +1,13 @@
 # Changelog
 
-## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-13)
+## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-14)
 
 ### Features
 
+* **api:** add execution_identity to Managed Agents agents
 * **api:** add organization_type_not_supported error to spend limit lists
 * **client:** add a followRedirects request option
+* **client:** add OpenTelemetry spans for API calls
 
 
 ### Bug Fixes
