@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.73.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.72.0...v2.73.0) (2026-10-14)
+
+### Features
+
+* **api:** return a Console organization's usage-tier spend cap as a read-only spend limit
+
 ## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-14)
 
 ### Features
