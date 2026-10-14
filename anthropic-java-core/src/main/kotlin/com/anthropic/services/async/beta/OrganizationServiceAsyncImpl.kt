@@ -11,6 +11,8 @@ import com.anthropic.core.http.HttpResponse
 import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.organization.BetaOrganization
 import com.anthropic.models.beta.organization.OrganizationRetrieveParams
@@ -40,6 +42,8 @@ import com.anthropic.services.async.beta.organization.ServiceAccountServiceAsync
 import com.anthropic.services.async.beta.organization.ServiceAccountServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.SpendLimitServiceAsync
 import com.anthropic.services.async.beta.organization.SpendLimitServiceAsyncImpl
+import com.anthropic.services.async.beta.organization.TelemetryDestinationServiceAsync
+import com.anthropic.services.async.beta.organization.TelemetryDestinationServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.UserServiceAsync
 import com.anthropic.services.async.beta.organization.UserServiceAsyncImpl
 import com.anthropic.services.async.beta.organization.WorkspaceServiceAsync
@@ -104,6 +108,10 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
         PluginMarketplaceServiceAsyncImpl(clientOptions)
     }
 
+    private val telemetryDestinations: TelemetryDestinationServiceAsync by lazy {
+        TelemetryDestinationServiceAsyncImpl(clientOptions)
+    }
+
     override fun withRawResponse(): OrganizationServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrganizationServiceAsync =
@@ -139,12 +147,14 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
 
     override fun pluginMarketplaces(): PluginMarketplaceServiceAsync = pluginMarketplaces
 
+    override fun telemetryDestinations(): TelemetryDestinationServiceAsync = telemetryDestinations
+
     override fun retrieve(
         params: OrganizationRetrieveParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<BetaOrganization> =
         // get /v1/organizations/me?beta=true
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieve(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         OrganizationServiceAsync.WithRawResponse {
@@ -212,6 +222,11 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
             PluginMarketplaceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val telemetryDestinations:
+            TelemetryDestinationServiceAsync.WithRawResponse by lazy {
+            TelemetryDestinationServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): OrganizationServiceAsync.WithRawResponse =
@@ -251,6 +266,9 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
         override fun pluginMarketplaces(): PluginMarketplaceServiceAsync.WithRawResponse =
             pluginMarketplaces
 
+        override fun telemetryDestinations(): TelemetryDestinationServiceAsync.WithRawResponse =
+            telemetryDestinations
+
         private val retrieveHandler: Handler<BetaOrganization> =
             jsonHandler<BetaOrganization>(clientOptions.jsonMapper)
 
@@ -267,19 +285,21 @@ class OrganizationServiceAsyncImpl internal constructor(private val clientOption
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { retrieveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
     }
 }

@@ -75,7 +75,7 @@ internal class BatchServiceTest {
                                             )
                                             .build()
                                     )
-                                    .model(Model.CLAUDE_OPUS_5)
+                                    .model(Model.CLAUDE_OPUS_5_5)
                                     .cacheControl(
                                         BetaCacheControlEphemeral.builder()
                                             .ttl(BetaCacheControlEphemeral.Ttl.TTL_5M)

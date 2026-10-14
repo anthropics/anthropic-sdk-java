@@ -4,6 +4,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
@@ -279,6 +280,17 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.tunnels.certificates.retrieve",
+            route = "/v1/tunnels/{tunnel_id}/certificates/{certificate_id}",
+            attributes =
+                mapOf(
+                    "anthropic.tunnel.id" to _pathParam(0),
+                    "anthropic.tunnel.certificate.id" to _pathParam(1),
+                ),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

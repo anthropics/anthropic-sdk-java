@@ -3,6 +3,7 @@ package com.anthropic.models.beta.organization
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import java.util.Objects
 
 /** Retrieve information about the organization associated with the authenticated API key. */
@@ -152,6 +153,9 @@ private constructor(
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(name = "anthropic.organization.retrieve", route = "/v1/organizations/me")
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

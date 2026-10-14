@@ -19,6 +19,8 @@ import com.anthropic.core.http.json
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
 import com.anthropic.core.http.toAsync
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
@@ -45,7 +47,7 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
         requestOptions: RequestOptions,
     ): CompletableFuture<Completion> =
         // post /v1/complete
-        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().create(params, requestOptions).thenParse()
 
     @Deprecated(
         "Use the [Messages API](https://platform.claude.com/docs/en/api/messages/create) instead."
@@ -99,19 +101,21 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
                         isStreaming = false,
                         model = params.model().toString(),
                     )
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { createHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { createHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val createStreamingHandler: Handler<StreamResponse<Completion>> =
@@ -150,21 +154,23 @@ class CompletionServiceAsyncImpl internal constructor(private val clientOptions:
                         isStreaming = true,
                         model = params.model().toString(),
                     )
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .let { createStreamingHandler.handle(it) }
-                            .let { streamResponse ->
-                                if (requestOptions.responseValidation!!) {
-                                    streamResponse.map { it.validate() }
-                                } else {
-                                    streamResponse
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .let { createStreamingHandler.handle(it) }
+                                .let { streamResponse ->
+                                    if (requestOptions.responseValidation!!) {
+                                        streamResponse.map { it.validate() }
+                                    } else {
+                                        streamResponse
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
     }
 }

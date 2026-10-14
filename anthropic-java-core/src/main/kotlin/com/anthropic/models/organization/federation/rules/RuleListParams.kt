@@ -3,6 +3,7 @@ package com.anthropic.models.organization.federation.rules
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -242,6 +243,13 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.federation.rules.list",
+            route = "/v1/organizations/federation_rules",
+            queryParams = listOf("include_archived", "issuer_id", "limit", "page"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

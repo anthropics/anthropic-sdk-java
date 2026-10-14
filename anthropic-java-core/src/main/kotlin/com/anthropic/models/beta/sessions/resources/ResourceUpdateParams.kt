@@ -8,6 +8,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -352,6 +353,17 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.sessions.resources.update",
+            route = "/v1/sessions/{session_id}/resources/{resource_id}",
+            attributes =
+                mapOf(
+                    "anthropic.session.id" to _pathParam(0),
+                    "anthropic.session.resource.id" to _pathParam(1),
+                ),
+        )
 
     /** Request parameters for updating a session resource. */
     class Body

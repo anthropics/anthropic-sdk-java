@@ -11,6 +11,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsEffortLow
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
+import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
@@ -26,6 +27,9 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                     BetaManagedAgentsSessionThreadAgent.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                         .description("A focused research subagent.")
+                        .executionIdentity(
+                            BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                        )
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
@@ -35,7 +39,7 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .effort(
                                     BetaManagedAgentsEffortLow.of(
                                         BetaManagedAgentsEffortLow.Type.LOW
@@ -97,6 +101,9 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                     BetaManagedAgentsSessionThreadAgent.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                         .description("A focused research subagent.")
+                        .executionIdentity(
+                            BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                        )
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
@@ -106,7 +113,7 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .effort(
                                     BetaManagedAgentsEffortLow.of(
                                         BetaManagedAgentsEffortLow.Type.LOW
@@ -173,6 +180,9 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                     BetaManagedAgentsSessionThreadAgent.builder()
                         .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                         .description("A focused research subagent.")
+                        .executionIdentity(
+                            BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                        )
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
@@ -182,7 +192,7 @@ internal class BetaManagedAgentsSessionMultiagentCoordinatorTest {
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .effort(
                                     BetaManagedAgentsEffortLow.of(
                                         BetaManagedAgentsEffortLow.Type.LOW

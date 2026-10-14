@@ -18,6 +18,7 @@ internal class AgentUpdateParamsTest {
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
             .description("updated")
+            .awsRoleExecutionIdentity("role_arn")
             .addMcpServer(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
@@ -32,7 +33,7 @@ internal class AgentUpdateParamsTest {
             )
             .model(
                 BetaManagedAgentsModelConfigParams.builder()
-                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                     .effort(
                         BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW
                     )
@@ -108,6 +109,7 @@ internal class AgentUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .description("updated")
+                .awsRoleExecutionIdentity("role_arn")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -122,7 +124,7 @@ internal class AgentUpdateParamsTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                         .effort(
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW
@@ -215,6 +217,7 @@ internal class AgentUpdateParamsTest {
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                 .description("updated")
+                .awsRoleExecutionIdentity("role_arn")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -229,7 +232,7 @@ internal class AgentUpdateParamsTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                         .effort(
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW
@@ -293,6 +296,8 @@ internal class AgentUpdateParamsTest {
         val body = params._body()
 
         assertThat(body.description()).contains("updated")
+        assertThat(body.executionIdentity())
+            .contains(BetaManagedAgentsExecutionIdentityParams.ofAwsRole("role_arn"))
         assertThat(body.mcpServers().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()
@@ -311,7 +316,7 @@ internal class AgentUpdateParamsTest {
             .contains(
                 AgentUpdateParams.Model.ofBetaManagedAgentsModelConfigParams(
                     BetaManagedAgentsModelConfigParams.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                         .effort(
                             BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel
                                 .LOW

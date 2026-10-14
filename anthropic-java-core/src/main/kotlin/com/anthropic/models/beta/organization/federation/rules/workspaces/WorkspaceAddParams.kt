@@ -8,6 +8,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -319,6 +320,13 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.federation.rules.workspaces.add",
+            route = "/v1/organizations/federation_rules/{federation_rule_id}/workspaces",
+            attributes = mapOf("anthropic.organization.federation_rule.id" to _pathParam(0)),
+        )
 
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)

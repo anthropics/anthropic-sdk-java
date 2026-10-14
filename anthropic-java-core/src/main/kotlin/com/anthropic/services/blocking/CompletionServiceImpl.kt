@@ -17,6 +17,7 @@ import com.anthropic.core.http.StreamResponse
 import com.anthropic.core.http.json
 import com.anthropic.core.http.map
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
 import com.anthropic.models.completions.Completion
 import com.anthropic.models.completions.CompletionCreateParams
@@ -93,15 +94,17 @@ class CompletionServiceImpl internal constructor(private val clientOptions: Clie
                         isStreaming = false,
                         model = params.model().toString(),
                     )
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { createHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
                         }
-                    }
+                }
             }
         }
 
@@ -141,17 +144,19 @@ class CompletionServiceImpl internal constructor(private val clientOptions: Clie
                         isStreaming = true,
                         model = params.model().toString(),
                     )
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .let { createStreamingHandler.handle(it) }
-                    .let { streamResponse ->
-                        if (requestOptions.responseValidation!!) {
-                            streamResponse.map { it.validate() }
-                        } else {
-                            streamResponse
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .let { createStreamingHandler.handle(it) }
+                        .let { streamResponse ->
+                            if (requestOptions.responseValidation!!) {
+                                streamResponse.map { it.validate() }
+                            } else {
+                                streamResponse
+                            }
                         }
-                    }
+                }
             }
         }
     }

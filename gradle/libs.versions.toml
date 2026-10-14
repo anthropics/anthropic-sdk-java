@@ -86,6 +86,14 @@ kotlin-stdlib-compat = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.
 ktfmt = { module = "com.facebook:ktfmt", version = "0.61" }
 mcp = { module = "io.modelcontextprotocol.sdk:mcp", version = "1.1.1" }
 mockito-core = { module = "org.mockito:mockito-core", version = "5.23.0" }
+# The OpenTelemetry API we build against. The SDK reads the global instance with
+# `GlobalOpenTelemetry.getOrNoop` (added in 1.57.0), which never registers one as `get` does,
+# and falls back to a no-op instance on older versions. Every 1.x release runs on Java 8 and
+# keeps the API backwards compatible. Gradle resolves the newest version in the graph, and Maven
+# the nearest, so an application that depends on a newer API keeps it.
+opentelemetry-api = { module = "io.opentelemetry:opentelemetry-api", version = "1.62.0" }
+# Tests record spans with the OpenTelemetry SDK, on the test classpath only.
+opentelemetry-sdk-trace = { module = "io.opentelemetry:opentelemetry-sdk-trace", version = "1.62.0" }
 r8 = { module = "com.android.tools:r8", version = "9.1.31" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version = "5.23.0" }
 # Pinned to 4.x: newer versions ship inline functions compiled for JVM 11, which can't be inlined

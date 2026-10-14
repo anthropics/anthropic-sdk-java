@@ -3,6 +3,7 @@ package com.anthropic.models.organization.externalkeys
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -177,6 +178,13 @@ private constructor(
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.external_keys.retrieve",
+            route = "/v1/organizations/external_keys/{external_key_id}",
+            attributes = mapOf("anthropic.organization.external_key.id" to _pathParam(0)),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

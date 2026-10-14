@@ -5,6 +5,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -16,11 +17,9 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * List the organization's spend limits.
  *
- * A Claude Console organization's limits come in an order that is stable across pages. A Claude
- * Enterprise organization's are grouped by scope type, in the order `organization`, `seat_tier`,
- * `rbac_group`, `organization_service`, `user`; within a type they come in a fixed order that is
- * not creation order. Listing Claude Console limits is in an early access preview. To request
- * access, contact your Anthropic account team.
+ * Limits are grouped by scope type, in the order `organization`, `seat_tier`, `rbac_group`,
+ * `organization_service`, `user`; within a type they come in a fixed order that is not creation
+ * order. Supported for Claude Enterprise organizations only, not for Claude Console organizations.
  */
 class SpendLimitListParams
 private constructor(
@@ -38,11 +37,7 @@ private constructor(
     /** Opaque cursor from a previous response's `next_page` field. */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
-    /**
-     * Return only limits with these scope types. A Claude Console organization has `organization`
-     * and `workspace` limits; a Claude Enterprise organization has `organization`, `seat_tier`,
-     * `rbac_group`, `organization_service` and `user` limits. Omit for all.
-     */
+    /** Return only limits with these scope types. Omit for all. */
     fun scopeType(): Optional<List<ScopeType>> = Optional.ofNullable(scopeType)
 
     /**
@@ -105,12 +100,7 @@ private constructor(
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
 
-        /**
-         * Return only limits with these scope types. A Claude Console organization has
-         * `organization` and `workspace` limits; a Claude Enterprise organization has
-         * `organization`, `seat_tier`, `rbac_group`, `organization_service` and `user` limits. Omit
-         * for all.
-         */
+        /** Return only limits with these scope types. Omit for all. */
         fun scopeType(scopeType: List<ScopeType>?) = apply {
             this.scopeType = scopeType?.toMutableList()
         }
@@ -294,6 +284,13 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.spend_limits.list",
+            route = "/v1/organizations/spend_limits",
+            queryParams = listOf("limit", "page", "scope_type"),
+        )
 
     class ScopeType private constructor(private val value: JsonField<String>) : Enum {
 

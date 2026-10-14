@@ -3,6 +3,7 @@ package com.anthropic.models.beta.environments.work
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
@@ -315,6 +316,14 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.environments.work.poll",
+            route = "/v1/environments/{environment_id}/work/poll",
+            attributes = mapOf("anthropic.environment.id" to _pathParam(0)),
+            queryParams = listOf("block_ms", "reclaim_older_than_ms"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -56,7 +56,7 @@ internal class MessageBatchSucceededResultTest {
                             .build()
                     )
                     .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
-                    .model(Model.CLAUDE_OPUS_5)
+                    .model(Model.CLAUDE_OPUS_5_5)
                     .stopDetails(
                         RefusalStopDetails.builder()
                             .category(RefusalStopDetails.Category.CYBER)
@@ -126,7 +126,7 @@ internal class MessageBatchSucceededResultTest {
                             .build()
                     )
                     .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
-                    .model(Model.CLAUDE_OPUS_5)
+                    .model(Model.CLAUDE_OPUS_5_5)
                     .stopDetails(
                         RefusalStopDetails.builder()
                             .category(RefusalStopDetails.Category.CYBER)
@@ -200,7 +200,7 @@ internal class MessageBatchSucceededResultTest {
                             .build()
                     )
                     .diagnostics(Diagnostics.builder().modelChangedCacheMissReason(0L).build())
-                    .model(Model.CLAUDE_OPUS_5)
+                    .model(Model.CLAUDE_OPUS_5_5)
                     .stopDetails(
                         RefusalStopDetails.builder()
                             .category(RefusalStopDetails.Category.CYBER)

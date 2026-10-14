@@ -3,6 +3,7 @@ package com.anthropic.models.organization.serviceaccounts
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -228,6 +229,13 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.service_accounts.list",
+            route = "/v1/organizations/service_accounts",
+            queryParams = listOf("include_archived", "limit", "page"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

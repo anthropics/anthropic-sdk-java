@@ -14,6 +14,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsEffortLow
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
+import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsFileResource
 import com.anthropic.models.beta.sessions.resources.BetaManagedAgentsGitHubRepositoryResource
@@ -36,6 +37,10 @@ internal class SessionListPageResponseTest {
                             BetaManagedAgentsSessionAgent.builder()
                                 .id("agent_011CZkYpogX7uDKUyvBTophP")
                                 .description("A general-purpose starter agent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -45,7 +50,7 @@ internal class SessionListPageResponseTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -61,6 +66,11 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsSessionThreadAgent.builder()
                                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                                 .description("A focused research subagent.")
+                                                .executionIdentity(
+                                                    BetaManagedAgentsServiceAccountExecutionIdentity
+                                                        .builder()
+                                                        .build()
+                                                )
                                                 .addMcpServer(
                                                     BetaManagedAgentsMcpServerUrlDefinition
                                                         .builder()
@@ -77,7 +87,7 @@ internal class SessionListPageResponseTest {
                                                 )
                                                 .model(
                                                     BetaManagedAgentsModelConfig.builder()
-                                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                         .effort(
                                                             BetaManagedAgentsEffortLow.of(
                                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -305,6 +315,9 @@ internal class SessionListPageResponseTest {
                         BetaManagedAgentsSessionAgent.builder()
                             .id("agent_011CZkYpogX7uDKUyvBTophP")
                             .description("A general-purpose starter agent.")
+                            .executionIdentity(
+                                BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                            )
                             .addMcpServer(
                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                     .name("example-mcp")
@@ -314,7 +327,7 @@ internal class SessionListPageResponseTest {
                             )
                             .model(
                                 BetaManagedAgentsModelConfig.builder()
-                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                     .effort(
                                         BetaManagedAgentsEffortLow.of(
                                             BetaManagedAgentsEffortLow.Type.LOW
@@ -330,6 +343,11 @@ internal class SessionListPageResponseTest {
                                         BetaManagedAgentsSessionThreadAgent.builder()
                                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                             .description("A focused research subagent.")
+                                            .executionIdentity(
+                                                BetaManagedAgentsServiceAccountExecutionIdentity
+                                                    .builder()
+                                                    .build()
+                                            )
                                             .addMcpServer(
                                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                                     .name("example-mcp")
@@ -344,7 +362,7 @@ internal class SessionListPageResponseTest {
                                             )
                                             .model(
                                                 BetaManagedAgentsModelConfig.builder()
-                                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                     .effort(
                                                         BetaManagedAgentsEffortLow.of(
                                                             BetaManagedAgentsEffortLow.Type.LOW
@@ -568,6 +586,10 @@ internal class SessionListPageResponseTest {
                             BetaManagedAgentsSessionAgent.builder()
                                 .id("agent_011CZkYpogX7uDKUyvBTophP")
                                 .description("A general-purpose starter agent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -577,7 +599,7 @@ internal class SessionListPageResponseTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -593,6 +615,11 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsSessionThreadAgent.builder()
                                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                                 .description("A focused research subagent.")
+                                                .executionIdentity(
+                                                    BetaManagedAgentsServiceAccountExecutionIdentity
+                                                        .builder()
+                                                        .build()
+                                                )
                                                 .addMcpServer(
                                                     BetaManagedAgentsMcpServerUrlDefinition
                                                         .builder()
@@ -609,7 +636,7 @@ internal class SessionListPageResponseTest {
                                                 )
                                                 .model(
                                                     BetaManagedAgentsModelConfig.builder()
-                                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                         .effort(
                                                             BetaManagedAgentsEffortLow.of(
                                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -835,6 +862,9 @@ internal class SessionListPageResponseTest {
                         BetaManagedAgentsSessionAgent.builder()
                             .id("agent_011CZkYpogX7uDKUyvBTophP")
                             .description("A general-purpose starter agent.")
+                            .executionIdentity(
+                                BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                            )
                             .addMcpServer(
                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                     .name("example-mcp")
@@ -844,7 +874,7 @@ internal class SessionListPageResponseTest {
                             )
                             .model(
                                 BetaManagedAgentsModelConfig.builder()
-                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                     .effort(
                                         BetaManagedAgentsEffortLow.of(
                                             BetaManagedAgentsEffortLow.Type.LOW
@@ -860,6 +890,11 @@ internal class SessionListPageResponseTest {
                                         BetaManagedAgentsSessionThreadAgent.builder()
                                             .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                             .description("A focused research subagent.")
+                                            .executionIdentity(
+                                                BetaManagedAgentsServiceAccountExecutionIdentity
+                                                    .builder()
+                                                    .build()
+                                            )
                                             .addMcpServer(
                                                 BetaManagedAgentsMcpServerUrlDefinition.builder()
                                                     .name("example-mcp")
@@ -874,7 +909,7 @@ internal class SessionListPageResponseTest {
                                             )
                                             .model(
                                                 BetaManagedAgentsModelConfig.builder()
-                                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                     .effort(
                                                         BetaManagedAgentsEffortLow.of(
                                                             BetaManagedAgentsEffortLow.Type.LOW
@@ -1094,6 +1129,10 @@ internal class SessionListPageResponseTest {
                             BetaManagedAgentsSessionAgent.builder()
                                 .id("agent_011CZkYpogX7uDKUyvBTophP")
                                 .description("A general-purpose starter agent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -1103,7 +1142,7 @@ internal class SessionListPageResponseTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -1119,6 +1158,11 @@ internal class SessionListPageResponseTest {
                                             BetaManagedAgentsSessionThreadAgent.builder()
                                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                                 .description("A focused research subagent.")
+                                                .executionIdentity(
+                                                    BetaManagedAgentsServiceAccountExecutionIdentity
+                                                        .builder()
+                                                        .build()
+                                                )
                                                 .addMcpServer(
                                                     BetaManagedAgentsMcpServerUrlDefinition
                                                         .builder()
@@ -1135,7 +1179,7 @@ internal class SessionListPageResponseTest {
                                                 )
                                                 .model(
                                                     BetaManagedAgentsModelConfig.builder()
-                                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                                         .effort(
                                                             BetaManagedAgentsEffortLow.of(
                                                                 BetaManagedAgentsEffortLow.Type.LOW

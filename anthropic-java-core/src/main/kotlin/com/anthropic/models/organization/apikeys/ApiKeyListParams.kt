@@ -5,6 +5,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 import java.util.Objects
@@ -278,6 +279,21 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.api_keys.list",
+            route = "/v1/organizations/api_keys",
+            queryParams =
+                listOf(
+                    "after_id",
+                    "before_id",
+                    "created_by_user_id",
+                    "limit",
+                    "status",
+                    "workspace_id",
+                ),
+        )
 
     /** Filter by API key status. */
     class Status private constructor(private val value: JsonField<String>) : Enum {

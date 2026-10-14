@@ -72,7 +72,7 @@ internal class BetaMessageBatchSucceededResultTest {
                             .build()
                     )
                     .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
-                    .model(Model.CLAUDE_OPUS_5)
+                    .model(Model.CLAUDE_OPUS_5_5)
                     .stopDetails(
                         BetaRefusalStopDetails.builder()
                             .category(BetaRefusalStopDetails.Category.CYBER)
@@ -184,7 +184,7 @@ internal class BetaMessageBatchSucceededResultTest {
                             .build()
                     )
                     .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
-                    .model(Model.CLAUDE_OPUS_5)
+                    .model(Model.CLAUDE_OPUS_5_5)
                     .stopDetails(
                         BetaRefusalStopDetails.builder()
                             .category(BetaRefusalStopDetails.Category.CYBER)
@@ -300,7 +300,7 @@ internal class BetaMessageBatchSucceededResultTest {
                             .build()
                     )
                     .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
-                    .model(Model.CLAUDE_OPUS_5)
+                    .model(Model.CLAUDE_OPUS_5_5)
                     .stopDetails(
                         BetaRefusalStopDetails.builder()
                             .category(BetaRefusalStopDetails.Category.CYBER)

@@ -9,6 +9,7 @@ import com.anthropic.models.beta.messages.BetaTool
 import com.anthropic.models.beta.messages.BetaToolResultBlockParam
 import java.util.function.Function
 import java.util.function.Supplier
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * A tool that [BetaToolRunner] can run when the model calls it.
@@ -21,12 +22,23 @@ class BetaRunnableTool
 private constructor(
     private val definition: BetaTool,
     private val parametersType: Class<*>?,
+    private val fromMcp: Boolean = false,
     private val run: Function<in String, out BetaToolResultBlockParam.Content>,
 ) {
 
     @JvmSynthetic internal fun name(): String = definition.name()
 
     @JvmSynthetic internal fun definition(): BetaTool = definition
+
+    /**
+     * The description in the tool's definition: what the application gave, or, for a tool that an
+     * MCP helper made, the MCP server's. `null` when the definition has none that is a string.
+     */
+    @JvmSynthetic
+    internal fun description(): String? = definition._description().asString().getOrNull()
+
+    /** Whether an MCP helper made the tool, which then runs against the MCP server. */
+    @JvmSynthetic internal fun isFromMcp(): Boolean = fromMcp
 
     /** The class the tool was derived from, if it was derived from one. */
     @JvmSynthetic internal fun parametersType(): Class<*>? = parametersType
@@ -73,7 +85,12 @@ private constructor(
         fun of(
             definition: BetaTool,
             run: Function<in String, out BetaToolResultBlockParam.Content>,
-        ): BetaRunnableTool = BetaRunnableTool(definition, null, run)
+        ): BetaRunnableTool = BetaRunnableTool(definition, null, run = run)
+
+        /** Creates the tool that an MCP helper made as [tool]. */
+        @JvmSynthetic
+        internal fun ofMcp(tool: McpBetaTool): BetaRunnableTool =
+            BetaRunnableTool(tool.definition, null, fromMcp = true, run = tool.runner)
 
         @JvmSynthetic
         internal fun <T : Any> ofSupplier(

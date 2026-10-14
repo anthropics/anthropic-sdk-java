@@ -2,7 +2,6 @@ package com.anthropic.internal.credentials
 
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonValue
-import com.anthropic.core.RequestOptions
 import com.anthropic.core.auth.AccessToken
 import com.anthropic.core.auth.AccessTokenProvider
 import com.anthropic.core.http.HttpClient
@@ -137,7 +136,7 @@ internal class UserOAuthCredentials(
         }
 
         val request = buildRefreshRequest(baseUrl, refreshToken, clientId)
-        return httpClient!!.executeAsync(request, RequestOptions.none()).thenApplyAsync { response
+        return httpClient!!.executeAsync(request, TOKEN_REQUEST_OPTIONS).thenApplyAsync { response
             ->
             val refreshed = parseRefreshResponse(response)
             val newExpiresAt =
@@ -167,7 +166,7 @@ internal class UserOAuthCredentials(
         clientId: String,
     ): RefreshResponse {
         val request = buildRefreshRequest(baseUrl, refreshToken, clientId)
-        val response = httpClient!!.execute(request, RequestOptions.none())
+        val response = httpClient!!.execute(request, TOKEN_REQUEST_OPTIONS)
         return parseRefreshResponse(response)
     }
 

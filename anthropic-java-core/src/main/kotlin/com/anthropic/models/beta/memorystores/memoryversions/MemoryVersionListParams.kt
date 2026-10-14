@@ -3,6 +3,7 @@ package com.anthropic.models.beta.memorystores.memoryversions
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import com.anthropic.models.beta.memorystores.memories.BetaManagedAgentsMemoryView
@@ -444,6 +445,26 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.memory_stores.memory_versions.list",
+            route = "/v1/memory_stores/{memory_store_id}/memory_versions",
+            attributes = mapOf("gen_ai.memory.store.id" to _pathParam(0)),
+            queryParams =
+                listOf(
+                    "api_key_id",
+                    "created_at[gte]",
+                    "created_at[lte]",
+                    "limit",
+                    "memory_id",
+                    "operation",
+                    "page",
+                    "service_account_id",
+                    "session_id",
+                    "view",
+                ),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

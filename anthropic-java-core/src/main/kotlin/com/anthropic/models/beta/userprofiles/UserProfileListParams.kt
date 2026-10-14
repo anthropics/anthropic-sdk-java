@@ -5,6 +5,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -315,6 +316,13 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.user_profiles.list",
+            route = "/v1/user_profiles",
+            queryParams = listOf("limit", "order", "order_by", "page"),
+        )
 
     /** The sort direction, applied to the field that `order_by` selects. Defaults to `desc`. */
     class Order private constructor(private val value: JsonField<String>) : Enum {

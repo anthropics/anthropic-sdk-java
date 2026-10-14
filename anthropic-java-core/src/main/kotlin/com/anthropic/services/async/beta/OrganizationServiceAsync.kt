@@ -18,6 +18,7 @@ import com.anthropic.services.async.beta.organization.RbacGroupServiceAsync
 import com.anthropic.services.async.beta.organization.RbacRoleServiceAsync
 import com.anthropic.services.async.beta.organization.ServiceAccountServiceAsync
 import com.anthropic.services.async.beta.organization.SpendLimitServiceAsync
+import com.anthropic.services.async.beta.organization.TelemetryDestinationServiceAsync
 import com.anthropic.services.async.beta.organization.UserServiceAsync
 import com.anthropic.services.async.beta.organization.WorkspaceServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -66,6 +67,8 @@ interface OrganizationServiceAsync {
     fun plugins(): PluginServiceAsync
 
     fun pluginMarketplaces(): PluginMarketplaceServiceAsync
+
+    fun telemetryDestinations(): TelemetryDestinationServiceAsync
 
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): CompletableFuture<BetaOrganization> =
@@ -130,6 +133,8 @@ interface OrganizationServiceAsync {
         fun plugins(): PluginServiceAsync.WithRawResponse
 
         fun pluginMarketplaces(): PluginMarketplaceServiceAsync.WithRawResponse
+
+        fun telemetryDestinations(): TelemetryDestinationServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/me?beta=true`, but is otherwise

@@ -71,6 +71,13 @@ tasks.named<Jar>("jar") {
     }
 }
 
+tasks.withType<Jar>().configureEach {
+    // Under the module's name, because an Android build fails on two jars that hold the same path.
+    into("META-INF/licenses/${project.name}") {
+        from(rootDir.listFiles { _, name -> name.startsWith("LICENSE") })
+    }
+}
+
 // A module opts in by having a `src/main/java9/module-info.java`.
 configureModuleInfo()
 

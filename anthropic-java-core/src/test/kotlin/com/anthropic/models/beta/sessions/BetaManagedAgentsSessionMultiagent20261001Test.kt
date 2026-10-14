@@ -13,6 +13,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentAdvisor
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentInlineAgentsEnabled
+import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
@@ -24,7 +25,7 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
     fun create() {
         val betaManagedAgentsSessionMultiagent20261001 =
             BetaManagedAgentsSessionMultiagent20261001.builder()
-                .enabledAdvisor("claude-fable-5")
+                .enabledAdvisor("claude-opus-5-5")
                 .subagents(
                     BetaManagedAgentsSessionMultiagentSubagentsEnabled.builder()
                         .inlineAgents(
@@ -34,6 +35,10 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -43,7 +48,7 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -109,6 +114,10 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -118,7 +127,7 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -178,7 +187,7 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                 .build()
 
         assertThat(betaManagedAgentsSessionMultiagent20261001.advisor())
-            .isEqualTo(BetaManagedAgentsMultiagentAdvisor.ofEnabled("claude-fable-5"))
+            .isEqualTo(BetaManagedAgentsMultiagentAdvisor.ofEnabled("claude-opus-5-5"))
         assertThat(betaManagedAgentsSessionMultiagent20261001.subagents())
             .isEqualTo(
                 BetaManagedAgentsSessionMultiagentSubagents.ofEnabled(
@@ -190,6 +199,10 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -199,7 +212,7 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -268,6 +281,10 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -277,7 +294,7 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -342,7 +359,7 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsSessionMultiagent20261001 =
             BetaManagedAgentsSessionMultiagent20261001.builder()
-                .enabledAdvisor("claude-fable-5")
+                .enabledAdvisor("claude-opus-5-5")
                 .subagents(
                     BetaManagedAgentsSessionMultiagentSubagentsEnabled.builder()
                         .inlineAgents(
@@ -352,6 +369,10 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -361,7 +382,7 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -427,6 +448,10 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -436,7 +461,7 @@ internal class BetaManagedAgentsSessionMultiagent20261001Test {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW

@@ -27,6 +27,7 @@
     <ID>NullableToStringCall:BetaToolRunner.kt$BetaToolRunner$${e.message}</ID>
     <ID>NullableToStringCall:HttpRequest.kt$HttpRequest$$baseUrl</ID>
     <ID>NullableToStringCall:NoCredentialsException.kt$CredentialSource$$detail</ID>
+    <ID>NullableToStringCall:OpenTelemetryOptions.kt$OpenTelemetryOptions$$tracerProvider</ID>
     <ID>OptionalOrElseNull:AnthropicBackend.kt$AnthropicBackend.Builder$orElse(null)</ID>
     <ID>OptionalOrElseNull:CredentialResolver.kt$CredentialResolver$orElse(null)</ID>
     <ID>OptionalOrElseNull:MessageServiceAsyncImpl.kt$MessageServiceAsyncImpl.WithRawResponseImpl$orElse(null)</ID>

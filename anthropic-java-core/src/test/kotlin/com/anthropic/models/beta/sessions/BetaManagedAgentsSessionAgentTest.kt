@@ -9,9 +9,11 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
 import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsCustomSkill
 import com.anthropic.models.beta.agents.BetaManagedAgentsEffortLow
+import com.anthropic.models.beta.agents.BetaManagedAgentsExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
+import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
@@ -25,6 +27,9 @@ internal class BetaManagedAgentsSessionAgentTest {
             BetaManagedAgentsSessionAgent.builder()
                 .id("agent_011CZkYpogX7uDKUyvBTophP")
                 .description("A general-purpose starter agent.")
+                .executionIdentity(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")
@@ -34,7 +39,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfig.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                         .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                         .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -46,6 +51,10 @@ internal class BetaManagedAgentsSessionAgentTest {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -55,7 +64,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -162,6 +171,12 @@ internal class BetaManagedAgentsSessionAgentTest {
         assertThat(betaManagedAgentsSessionAgent.id()).isEqualTo("agent_011CZkYpogX7uDKUyvBTophP")
         assertThat(betaManagedAgentsSessionAgent.description())
             .contains("A general-purpose starter agent.")
+        assertThat(betaManagedAgentsSessionAgent.executionIdentity())
+            .isEqualTo(
+                BetaManagedAgentsExecutionIdentity.ofServiceAccount(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
+            )
         assertThat(betaManagedAgentsSessionAgent.mcpServers())
             .containsExactly(
                 BetaManagedAgentsMcpServerUrlDefinition.builder()
@@ -173,7 +188,7 @@ internal class BetaManagedAgentsSessionAgentTest {
         assertThat(betaManagedAgentsSessionAgent.model())
             .isEqualTo(
                 BetaManagedAgentsModelConfig.builder()
-                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                     .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                     .inferenceGeo("inference_geo")
                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -187,6 +202,10 @@ internal class BetaManagedAgentsSessionAgentTest {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -196,7 +215,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW
@@ -317,6 +336,9 @@ internal class BetaManagedAgentsSessionAgentTest {
             BetaManagedAgentsSessionAgent.builder()
                 .id("agent_011CZkYpogX7uDKUyvBTophP")
                 .description("A general-purpose starter agent.")
+                .executionIdentity(
+                    BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                )
                 .addMcpServer(
                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                         .name("example-mcp")
@@ -326,7 +348,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                 )
                 .model(
                     BetaManagedAgentsModelConfig.builder()
-                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                         .effort(BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW))
                         .inferenceGeo("inference_geo")
                         .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
@@ -338,6 +360,10 @@ internal class BetaManagedAgentsSessionAgentTest {
                             BetaManagedAgentsSessionThreadAgent.builder()
                                 .id("agent_011CZkYqphY8vELVzwCUpqiQ")
                                 .description("A focused research subagent.")
+                                .executionIdentity(
+                                    BetaManagedAgentsServiceAccountExecutionIdentity.builder()
+                                        .build()
+                                )
                                 .addMcpServer(
                                     BetaManagedAgentsMcpServerUrlDefinition.builder()
                                         .name("example-mcp")
@@ -347,7 +373,7 @@ internal class BetaManagedAgentsSessionAgentTest {
                                 )
                                 .model(
                                     BetaManagedAgentsModelConfig.builder()
-                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                        .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                         .effort(
                                             BetaManagedAgentsEffortLow.of(
                                                 BetaManagedAgentsEffortLow.Type.LOW

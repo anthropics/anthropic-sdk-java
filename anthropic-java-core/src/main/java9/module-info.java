@@ -11,6 +11,7 @@ open module com.anthropic.core {
     requires com.github.victools.jsonschema.module.swagger.two;
     requires transitive com.google.errorprone.annotations;
     requires transitive com.standardwebhooks;
+    requires transitive io.opentelemetry.api;
     requires transitive io.swagger.v3.oas.annotations;
     requires kotlin.reflect;
     requires transitive kotlin.stdlib;
@@ -22,12 +23,14 @@ open module com.anthropic.core {
     exports com.anthropic.core.auth;
     exports com.anthropic.core.handlers;
     exports com.anthropic.core.http;
+    exports com.anthropic.core.opentelemetry;
     exports com.anthropic.credentials;
     exports com.anthropic.errors;
     exports com.anthropic.helpers;
     exports com.anthropic.internal.config;
     exports com.anthropic.internal.core.http;
     exports com.anthropic.internal.credentials;
+    exports com.anthropic.internal.telemetry;
     exports com.anthropic.models;
     exports com.anthropic.models.beta;
     exports com.anthropic.models.beta.agents;
@@ -79,6 +82,8 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.organization.spendlimits;
     exports com.anthropic.models.beta.organization.spendlimits.effective;
     exports com.anthropic.models.beta.organization.spendlimits.increaserequests;
+    exports com.anthropic.models.beta.organization.telemetrydestinations;
+    exports com.anthropic.models.beta.organization.telemetrydestinations.workspaces;
     exports com.anthropic.models.beta.organization.users;
     exports com.anthropic.models.beta.organization.workspaces;
     exports com.anthropic.models.beta.organization.workspaces.members;
@@ -137,6 +142,7 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.beta.organization.rbacroles;
     exports com.anthropic.services.async.beta.organization.serviceaccounts;
     exports com.anthropic.services.async.beta.organization.spendlimits;
+    exports com.anthropic.services.async.beta.organization.telemetrydestinations;
     exports com.anthropic.services.async.beta.organization.workspaces;
     exports com.anthropic.services.async.beta.sessions;
     exports com.anthropic.services.async.beta.sessions.threads;
@@ -167,6 +173,7 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.beta.organization.rbacroles;
     exports com.anthropic.services.blocking.beta.organization.serviceaccounts;
     exports com.anthropic.services.blocking.beta.organization.spendlimits;
+    exports com.anthropic.services.blocking.beta.organization.telemetrydestinations;
     exports com.anthropic.services.blocking.beta.organization.workspaces;
     exports com.anthropic.services.blocking.beta.sessions;
     exports com.anthropic.services.blocking.beta.sessions.threads;

@@ -1,5 +1,6 @@
 package com.anthropic.helpers
 
+import com.anthropic.core.ClientOptions
 import com.anthropic.core.JsonMissing
 import com.anthropic.core.JsonNull
 import com.anthropic.core.JsonSchemaLocalValidation
@@ -44,6 +45,7 @@ import org.mockito.kotlin.whenever
 internal class BetaToolRunnerTest {
 
     private val messageService = mock<MessageService>()
+    private val clientOptions = ClientOptions.builder().httpClient(FakeHttpClient()).build()
     private val initialMessageParams =
         MessageCreateParams.builder()
             .model(Model.CLAUDE_SONNET_4_5)
@@ -63,6 +65,7 @@ internal class BetaToolRunnerTest {
     private val toolRunner =
         BetaToolRunner(
             messageService,
+            clientOptions,
             ToolRunnerCreateParams.builder()
                 .initialMessageParams(initialMessageParams)
                 .maxIterations(2)
@@ -212,6 +215,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(paramsWithRemoval)
                     .maxIterations(2)
@@ -303,6 +307,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(paramsWithChanges)
                     .maxIterations(2)
@@ -1277,6 +1282,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(messageParams)
                     .maxIterations(2)
@@ -1363,6 +1369,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(messageParams)
                     .maxIterations(2)
@@ -1520,7 +1527,8 @@ internal class BetaToolRunnerTest {
                 ),
                 BetaRawMessageStreamEvent.ofMessageStop(BetaRawMessageStopEvent.builder().build()),
             )
-        whenever(messageService.createStreaming(initialMessageParams, requestOptions))
+        // The runner adds its accumulator to the request options, so they are not the same object.
+        whenever(messageService.createStreaming(any<MessageCreateParams>(), any()))
             .thenReturn(
                 object : StreamResponse<BetaRawMessageStreamEvent> {
                     override fun stream(): Stream<BetaRawMessageStreamEvent> = events.stream()
@@ -1589,6 +1597,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(
                         initialMessageParams.toBuilder().container("pinned-container-id").build()
@@ -1625,6 +1634,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(
                         initialMessageParams
@@ -1759,6 +1769,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(
                         initialMessageParams
@@ -1801,6 +1812,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(
                         initialMessageParams
@@ -1874,6 +1886,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(
                         initialMessageParams
@@ -1920,6 +1933,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(4)
@@ -1961,6 +1975,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(4)
@@ -2030,6 +2045,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(4)
@@ -2071,6 +2087,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(4)
@@ -3382,6 +3399,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(3)
@@ -3504,6 +3522,7 @@ internal class BetaToolRunnerTest {
         val toolRunner =
             BetaToolRunner(
                 messageService,
+                clientOptions,
                 ToolRunnerCreateParams.builder()
                     .initialMessageParams(initialMessageParams)
                     .maxIterations(3)
@@ -3629,6 +3648,7 @@ internal class BetaToolRunnerTest {
     ) =
         BetaToolRunner(
             messageService,
+            clientOptions,
             ToolRunnerCreateParams.builder()
                 .initialMessageParams(params)
                 .maxIterations(maxIterations)

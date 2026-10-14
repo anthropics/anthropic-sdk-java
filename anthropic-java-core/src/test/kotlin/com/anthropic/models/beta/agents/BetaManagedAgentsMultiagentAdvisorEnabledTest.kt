@@ -10,16 +10,16 @@ internal class BetaManagedAgentsMultiagentAdvisorEnabledTest {
     @Test
     fun create() {
         val betaManagedAgentsMultiagentAdvisorEnabled =
-            BetaManagedAgentsMultiagentAdvisorEnabled.of("claude-fable-5")
+            BetaManagedAgentsMultiagentAdvisorEnabled.of("claude-opus-5-5")
 
-        assertThat(betaManagedAgentsMultiagentAdvisorEnabled.model()).isEqualTo("claude-fable-5")
+        assertThat(betaManagedAgentsMultiagentAdvisorEnabled.model()).isEqualTo("claude-opus-5-5")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsMultiagentAdvisorEnabled =
-            BetaManagedAgentsMultiagentAdvisorEnabled.of("claude-fable-5")
+            BetaManagedAgentsMultiagentAdvisorEnabled.of("claude-opus-5-5")
 
         val roundtrippedBetaManagedAgentsMultiagentAdvisorEnabled =
             jsonMapper.readValue(

@@ -18,12 +18,7 @@ import com.anthropic.models.messages.InputJsonDelta
 import com.anthropic.models.messages.Message
 import com.anthropic.models.messages.MessageDeltaUsage
 import com.anthropic.models.messages.RawContentBlockDelta
-import com.anthropic.models.messages.RawContentBlockDeltaEvent
 import com.anthropic.models.messages.RawContentBlockStartEvent
-import com.anthropic.models.messages.RawContentBlockStopEvent
-import com.anthropic.models.messages.RawMessageDeltaEvent
-import com.anthropic.models.messages.RawMessageStartEvent
-import com.anthropic.models.messages.RawMessageStopEvent
 import com.anthropic.models.messages.RawMessageStreamEvent
 import com.anthropic.models.messages.RedactedThinkingBlock
 import com.anthropic.models.messages.ServerToolUseBlock
@@ -242,6 +237,18 @@ class MessageAccumulator private constructor() {
     fun message() = checkNotNull(message) { "'message_stop' event not yet received." }
 
     /**
+     * The message as far as the events have delivered it, for the SDK's own tracing: the final
+     * message once the `message_stop` event has been accumulated; before that, the message of the
+     * `message_start` event with the usage and the stop reason of the `message_delta` events so
+     * far, and the content blocks as far as their events have arrived; and `null` before the
+     * `message_start` event. A `tool_use` block has the `input` of its `content_block_start` event
+     * until its `content_block_stop` event. Reading it changes nothing of what is accumulated.
+     */
+    @JvmSynthetic
+    internal fun partialMessage(): Message? =
+        message ?: messageBuilder?.content(contentSoFar())?.usage(requireMessageUsage())?.build()
+
+    /**
      * Gets the final accumulated message wrapped in a [StructuredMessage] that provides type-safe
      * access to structured output content. Until the `message_stop` event has been received, a
      * message will not be available. Wait until all events have been handled by [accumulate] before
@@ -257,7 +264,7 @@ class MessageAccumulator private constructor() {
     /**
      * Accumulates a streamed event and uses it to construct a [Message]. When all events, including
      * the `message_stop` event, have been accumulated, the message can be retrieved by calling
-     * [message].
+     * [message]. An event the accumulator doesn't handle is ignored.
      *
      * @return The given [event] for convenience, such as when chaining method calls.
      * @throws AnthropicInvalidDataException If [accumulate] is called again after the final
@@ -265,13 +272,9 @@ class MessageAccumulator private constructor() {
      *   accumulate a single [Message].
      */
     fun accumulate(event: RawMessageStreamEvent): RawMessageStreamEvent {
-        if (message != null) {
-            throw AnthropicInvalidDataException("'message_stop' event already received.")
-        }
-
-        event.accept(
-            object : RawMessageStreamEvent.Visitor<Unit> {
-                override fun visitMessageStart(messageStart: RawMessageStartEvent) {
+        when {
+            event.isMessageStart() ->
+                event.asMessageStart().requireNotStopped { messageStart ->
                     if (messageBuilder != null) {
                         throw AnthropicInvalidDataException(
                             "'message_start' event already received."
@@ -281,7 +284,8 @@ class MessageAccumulator private constructor() {
                     messageUsage = messageStart.message().usage()
                 }
 
-                override fun visitMessageDelta(messageDelta: RawMessageDeltaEvent) {
+            event.isMessageDelta() ->
+                event.asMessageDelta().requireNotStopped { messageDelta ->
                     val delta = messageDelta.delta()
 
                     // The Anthropic API allows that there may be "one or more `message_delta`
@@ -319,7 +323,8 @@ class MessageAccumulator private constructor() {
                     messageUsage = mergeMessageUsage(requireMessageUsage(), messageDelta.usage())
                 }
 
-                override fun visitMessageStop(messageStop: RawMessageStopEvent) {
+            event.isMessageStop() ->
+                event.asMessageStop().requireNotStopped {
                     // A content block that never received its `content_block_stop` event still
                     // needs its buffered delta text folded in.
                     for (index in messageContentDeltaText.keys.toList()) {
@@ -343,7 +348,8 @@ class MessageAccumulator private constructor() {
                     messageBuilder = null
                 }
 
-                override fun visitContentBlockStart(contentBlockStart: RawContentBlockStartEvent) {
+            event.isContentBlockStart() ->
+                event.asContentBlockStart().requireNotStopped { contentBlockStart ->
                     val index = contentBlockStart.index()
 
                     if (messageContent[index] != null) {
@@ -429,7 +435,8 @@ class MessageAccumulator private constructor() {
                             )
                 }
 
-                override fun visitContentBlockDelta(contentBlockDelta: RawContentBlockDeltaEvent) {
+            event.isContentBlockDelta() ->
+                event.asContentBlockDelta().requireNotStopped { contentBlockDelta ->
                     val index = contentBlockDelta.index()
                     val oldContentBlock =
                         messageContent[index]
@@ -481,7 +488,8 @@ class MessageAccumulator private constructor() {
                             )
                 }
 
-                override fun visitContentBlockStop(contentBlockStop: RawContentBlockStopEvent) {
+            event.isContentBlockStop() ->
+                event.asContentBlockStop().requireNotStopped { contentBlockStop ->
                     val index = contentBlockStop.index()
 
                     // Check only that there was a corresponding `content_block_start` event with
@@ -553,8 +561,8 @@ class MessageAccumulator private constructor() {
                             }
                     }
                 }
-            }
-        )
+            else -> {}
+        }
 
         return event
     }
@@ -564,14 +572,34 @@ class MessageAccumulator private constructor() {
      * folded in, clearing the buffer. Deltas are buffered only after the block type is checked, so
      * the block is a text block or a thinking block whenever a buffer exists.
      */
-    private fun foldDeltaText(index: Long, contentBlock: ContentBlock): ContentBlock {
-        val deltaText = messageContentDeltaText.remove(index) ?: return contentBlock
+    private fun foldDeltaText(index: Long, contentBlock: ContentBlock): ContentBlock =
+        withDeltaText(contentBlock, messageContentDeltaText.remove(index))
 
-        return when {
+    /** Returns [contentBlock] with [deltaText], its buffered delta text if it has any, appended. */
+    private fun withDeltaText(contentBlock: ContentBlock, deltaText: StringBuilder?): ContentBlock =
+        when {
+            deltaText == null -> contentBlock
             contentBlock.isText() -> mergeText(contentBlock, deltaText.toString())
             contentBlock.isThinking() -> mergeThinking(contentBlock, deltaText.toString())
             else -> contentBlock
         }
+
+    /**
+     * The content blocks so far in the indexed order, each with the delta text that it has buffered
+     * until its `content_block_stop` event. The buffers stay as they are.
+     */
+    private fun contentSoFar(): List<ContentBlock> =
+        messageContent.entries
+            .sortedBy { it.key }
+            .map { (index, contentBlock) ->
+                withDeltaText(contentBlock, messageContentDeltaText[index])
+            }
+
+    private inline fun <T> T.requireNotStopped(block: (T) -> Unit) {
+        if (message != null) {
+            throw AnthropicInvalidDataException("'message_stop' event already received.")
+        }
+        block(this)
     }
 
     private fun requireMessageBuilder() =

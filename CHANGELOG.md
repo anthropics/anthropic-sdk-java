@@ -1,5 +1,45 @@
 # Changelog
 
+## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-14)
+
+### Features
+
+* **api:** add execution_identity to Managed Agents agents
+* **api:** add organization_type_not_supported error to spend limit lists
+* **api:** add telemetry destination test endpoint
+* **api:** add telemetry destinations to the Admin API
+* **client:** add a followRedirects request option
+* **client:** emit OpenTelemetry spans for API calls, streams and tool runs. They are on by default and need no setup in the SDK: the spans appear once the application has registered a tracer provider with the OpenTelemetry API, or has set one with `OpenTelemetryOptions.tracerProvider`, and there are none without one. Requests carry the trace context in `traceparent`, and in the other headers that the registered propagator writes. This adds a dependency on `io.opentelemetry:opentelemetry-api` (1.62.0). `openTelemetry(false)`, or `ANTHROPIC_OPEN_TELEMETRY=false` for a client built with `fromEnv()`, turns all of it off; `OpenTelemetryOptions.builder().propagation(false)`, or `ANTHROPIC_OPEN_TELEMETRY_PROPAGATION=false` with `fromEnv()`, keeps the spans and sends no trace headers
+
+
+### Bug Fixes
+
+* **api:** rename telemetry destination test response model
+* **client:** don't follow redirects on token requests
+* **client:** treat proxy-authorization as a sensitive header
+
+
+### Bug Fixes
+
+* **client:** ignore events of an unknown type in the message accumulators
+
+
+### Chores
+
+* **docs:** correct prefill, thinking, fallback and model descriptions
+* **docs:** document the scope required to assign the managed role
+* **docs:** update model examples
+* include the license files in the published packages
+* **internal:** keep the default request headers in one map
+* **internal:** narrow the tripwire test rule in the contributor guides
+* **tests:** keep the requests of tests that run at the same time out of the OpenTelemetry propagation tests
+
+
+### Documentation
+
+* **api:** clarify when custom tool results can be sent
+* **api:** say is_enabled is always true for user spend limits
+
 ## [2.71.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.70.0...v2.71.0) (2026-10-09)
 
 ### Features

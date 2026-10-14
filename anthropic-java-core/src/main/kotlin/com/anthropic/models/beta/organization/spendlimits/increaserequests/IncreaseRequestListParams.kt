@@ -3,6 +3,7 @@ package com.anthropic.models.beta.organization.spendlimits.increaserequests
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
@@ -250,6 +251,13 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.spend_limits.increase_requests.list",
+            route = "/v1/organizations/spend_limit_increase_requests",
+            queryParams = listOf("actor_ids", "limit", "page", "status"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

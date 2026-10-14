@@ -20,6 +20,7 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentAdvisorDisabl
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentInlineAgentsEnabled
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSubagentsEnabled
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentWorkflowsEnabled
+import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -37,6 +38,9 @@ internal class VersionListPageResponseTest {
                         .archivedAt(null)
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .description("A general-purpose starter agent.")
+                        .executionIdentity(
+                            BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                        )
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
@@ -51,7 +55,7 @@ internal class VersionListPageResponseTest {
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .effort(
                                     BetaManagedAgentsEffortLow.of(
                                         BetaManagedAgentsEffortLow.Type.LOW
@@ -159,6 +163,9 @@ internal class VersionListPageResponseTest {
                     .archivedAt(null)
                     .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .description("A general-purpose starter agent.")
+                    .executionIdentity(
+                        BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                    )
                     .addMcpServer(
                         BetaManagedAgentsMcpServerUrlDefinition.builder()
                             .name("example-mcp")
@@ -173,7 +180,7 @@ internal class VersionListPageResponseTest {
                     )
                     .model(
                         BetaManagedAgentsModelConfig.builder()
-                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                            .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                             .effort(
                                 BetaManagedAgentsEffortLow.of(BetaManagedAgentsEffortLow.Type.LOW)
                             )
@@ -278,6 +285,9 @@ internal class VersionListPageResponseTest {
                         .archivedAt(null)
                         .createdAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                         .description("A general-purpose starter agent.")
+                        .executionIdentity(
+                            BetaManagedAgentsServiceAccountExecutionIdentity.builder().build()
+                        )
                         .addMcpServer(
                             BetaManagedAgentsMcpServerUrlDefinition.builder()
                                 .name("example-mcp")
@@ -292,7 +302,7 @@ internal class VersionListPageResponseTest {
                         )
                         .model(
                             BetaManagedAgentsModelConfig.builder()
-                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                                 .effort(
                                     BetaManagedAgentsEffortLow.of(
                                         BetaManagedAgentsEffortLow.Type.LOW

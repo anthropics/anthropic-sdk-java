@@ -3,6 +3,7 @@ package com.anthropic.models.beta.organization.externalkeys
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -200,6 +201,13 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.external_keys.list",
+            route = "/v1/organizations/external_keys",
+            queryParams = listOf("limit", "page"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

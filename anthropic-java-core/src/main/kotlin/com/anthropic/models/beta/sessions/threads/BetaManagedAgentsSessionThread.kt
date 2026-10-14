@@ -12,6 +12,7 @@ import com.anthropic.core.getOrThrow
 import com.anthropic.core.getProperty
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.agents.BetaManagedAgentsAdvisor
+import com.anthropic.models.beta.agents.BetaManagedAgentsExecutionIdentity
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -711,6 +712,17 @@ private constructor(
                 advisor != null -> Optional.empty()
                 inline != null -> inline.description()
                 else -> _json.getProperty<String>("description").asKnown()
+            }
+
+        fun executionIdentity(): Optional<BetaManagedAgentsExecutionIdentity> =
+            when {
+                agent != null -> Optional.of(agent.executionIdentity())
+                advisor != null -> Optional.empty()
+                inline != null -> Optional.of(inline.executionIdentity())
+                else ->
+                    _json
+                        .getProperty<BetaManagedAgentsExecutionIdentity>("execution_identity")
+                        .asKnown()
             }
 
         fun mcpServers(): Optional<List<BetaManagedAgentsMcpServerUrlDefinition>> =

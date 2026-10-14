@@ -16,9 +16,10 @@ internal class AgentCreateParamsTest {
         AgentCreateParams.builder()
             .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
             .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-            .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+            .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
             .name("My First Agent")
             .description("A general-purpose starter agent.")
+            .awsRoleExecutionIdentity("role_arn")
             .addMcpServer(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
@@ -86,9 +87,10 @@ internal class AgentCreateParamsTest {
             AgentCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-                .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                 .name("My First Agent")
                 .description("A general-purpose starter agent.")
+                .awsRoleExecutionIdentity("role_arn")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -170,7 +172,7 @@ internal class AgentCreateParamsTest {
     fun headersWithoutOptionalFields() {
         val params =
             AgentCreateParams.builder()
-                .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                 .name("My First Agent")
                 .build()
 
@@ -185,9 +187,10 @@ internal class AgentCreateParamsTest {
             AgentCreateParams.builder()
                 .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                 .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
-                .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                 .name("My First Agent")
                 .description("A general-purpose starter agent.")
+                .awsRoleExecutionIdentity("role_arn")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -254,10 +257,12 @@ internal class AgentCreateParamsTest {
 
         assertThat(body.model())
             .isEqualTo(
-                AgentCreateParams.Model.ofBetaManagedAgents(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                AgentCreateParams.Model.ofBetaManagedAgents(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
             )
         assertThat(body.name()).isEqualTo("My First Agent")
         assertThat(body.description()).contains("A general-purpose starter agent.")
+        assertThat(body.executionIdentity())
+            .contains(BetaManagedAgentsExecutionIdentityParams.ofAwsRole("role_arn"))
         assertThat(body.mcpServers().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()
@@ -337,7 +342,7 @@ internal class AgentCreateParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             AgentCreateParams.builder()
-                .model(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                 .name("My First Agent")
                 .build()
 
@@ -345,7 +350,7 @@ internal class AgentCreateParamsTest {
 
         assertThat(body.model())
             .isEqualTo(
-                AgentCreateParams.Model.ofBetaManagedAgents(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                AgentCreateParams.Model.ofBetaManagedAgents(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
             )
         assertThat(body.name()).isEqualTo("My First Agent")
     }

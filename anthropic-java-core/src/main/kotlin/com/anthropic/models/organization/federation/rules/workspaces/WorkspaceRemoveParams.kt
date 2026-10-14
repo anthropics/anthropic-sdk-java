@@ -5,6 +5,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import java.util.Objects
 import java.util.Optional
@@ -244,6 +245,18 @@ private constructor(
     override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.federation.rules.workspaces.remove",
+            route =
+                "/v1/organizations/federation_rules/{federation_rule_id}/workspaces/{workspace_id}",
+            attributes =
+                mapOf(
+                    "anthropic.organization.federation_rule.id" to _pathParam(0),
+                    "anthropic.organization.federation_rule.workspace.id" to _pathParam(1),
+                ),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -855,6 +855,13 @@ internal class MessageAccumulatorTest {
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, "{\"hel"))
         accumulator.accumulate(textContentBlockDeltaEvent(3L, "3-TWO."))
 
+        // The message so far has the text that arrived, and the input that the tool use block
+        // started with. Reading it leaves the rest of the accumulation as it was.
+        val contentSoFar = accumulator.partialMessage()!!.content()
+        assertThat(contentSoFar.size).isEqualTo(2)
+        assertThat(contentSoFar[0].asToolUse()._input()).isEqualTo(SET_TO_NULL)
+        assertThat(contentSoFar[1].asText().text()).isEqualTo("3-ONE.3-TWO.")
+
         accumulator.accumulate(citationContentBlockDeltaEvent(3L, 234L))
         accumulator.accumulate(toolUseContentBlockDeltaEvent(1L, "lo\":\"wo"))
         accumulator.accumulate(textContentBlockDeltaEvent(3L, "3-THREE."))
@@ -1055,12 +1062,36 @@ internal class MessageAccumulatorTest {
     }
 
     @Test
+    fun accumulateUnknownEventTypes() {
+        val accumulator = MessageAccumulator.create()
+
+        accumulator.accumulate(unknownEvent())
+        accumulator.accumulate(messageStartEvent())
+        accumulator.accumulate(textContentBlockStartEvent(0L, "ONE."))
+        accumulator.accumulate(unknownEvent())
+        accumulator.accumulate(textContentBlockDeltaEvent(0L, "TWO."))
+        accumulator.accumulate(contentBlockStopEvent(0L))
+        accumulator.accumulate(
+            messageDeltaEvent(stopReason = JsonField.of(StopReason.END_TURN), outputTokens = 9L)
+        )
+        accumulator.accumulate(messageStopEvent())
+        accumulator.accumulate(unknownEvent())
+
+        val message = accumulator.message()
+
+        assertThat(message.content().single().asText().text()).isEqualTo("ONE.TWO.")
+        assertThat(message.stopReason()).contains(StopReason.END_TURN)
+        assertThat(message.usage().outputTokens()).isEqualTo(9L)
+    }
+
+    @Test
     fun fixtureCreation() {
         // A quick smoke test to ensure that all the test fixture factory functions work without
         // throwing any exceptions unless expected to do so.
 
         // MESSAGE EVENTS
         assertThatNoException().isThrownBy { messageStartEvent() }
+        assertThatNoException().isThrownBy { unknownEvent() }
 
         assertThatNoException().isThrownBy {
             messageDeltaEvent(stopReason = JsonField.of(StopReason.END_TURN))
@@ -1192,6 +1223,13 @@ internal class MessageAccumulatorTest {
                 )
                 .build()
         )
+
+    private fun unknownEvent() =
+        jsonMapper()
+            .readValue(
+                """{"type":"zz_future_event","index":0,"usage":{"output_tokens":1}}""",
+                RawMessageStreamEvent::class.java,
+            )
 
     private fun messageStopEvent() =
         RawMessageStreamEvent.ofMessageStop(RawMessageStopEvent.builder().build())

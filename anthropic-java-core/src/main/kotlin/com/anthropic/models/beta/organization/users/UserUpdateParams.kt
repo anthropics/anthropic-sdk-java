@@ -9,6 +9,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -36,7 +37,8 @@ private constructor(
      *
      * The accepted values depend on the organization type. Console and API organizations accept
      * `user`, `developer`, `billing`, and `claude_code_user`; `admin` cannot be assigned through
-     * the API. Claude Enterprise organizations accept `user` and `managed`.
+     * the API. Claude Enterprise organizations accept `user` and `managed`; changing a User's role
+     * to `managed` requires the `write:rbac_groups` scope in addition to `write:members`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -109,7 +111,9 @@ private constructor(
          *
          * The accepted values depend on the organization type. Console and API organizations accept
          * `user`, `developer`, `billing`, and `claude_code_user`; `admin` cannot be assigned
-         * through the API. Claude Enterprise organizations accept `user` and `managed`.
+         * through the API. Claude Enterprise organizations accept `user` and `managed`; changing a
+         * User's role to `managed` requires the `write:rbac_groups` scope in addition to
+         * `write:members`.
          */
         fun role(role: Role) = apply { body.role(role) }
 
@@ -271,6 +275,13 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.users.update",
+            route = "/v1/organizations/users/{user_id}",
+            attributes = mapOf("anthropic.organization.user.id" to _pathParam(0)),
+        )
+
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -288,7 +299,9 @@ private constructor(
          *
          * The accepted values depend on the organization type. Console and API organizations accept
          * `user`, `developer`, `billing`, and `claude_code_user`; `admin` cannot be assigned
-         * through the API. Claude Enterprise organizations accept `user` and `managed`.
+         * through the API. Claude Enterprise organizations accept `user` and `managed`; changing a
+         * User's role to `managed` requires the `write:rbac_groups` scope in addition to
+         * `write:members`.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -351,7 +364,8 @@ private constructor(
              * The accepted values depend on the organization type. Console and API organizations
              * accept `user`, `developer`, `billing`, and `claude_code_user`; `admin` cannot be
              * assigned through the API. Claude Enterprise organizations accept `user` and
-             * `managed`.
+             * `managed`; changing a User's role to `managed` requires the `write:rbac_groups` scope
+             * in addition to `write:members`.
              */
             fun role(role: Role) = role(JsonField.of(role))
 
@@ -457,7 +471,8 @@ private constructor(
      *
      * The accepted values depend on the organization type. Console and API organizations accept
      * `user`, `developer`, `billing`, and `claude_code_user`; `admin` cannot be assigned through
-     * the API. Claude Enterprise organizations accept `user` and `managed`.
+     * the API. Claude Enterprise organizations accept `user` and `managed`; changing a User's role
+     * to `managed` requires the `write:rbac_groups` scope in addition to `write:members`.
      */
     class Role private constructor(private val value: JsonField<String>) : Enum {
 

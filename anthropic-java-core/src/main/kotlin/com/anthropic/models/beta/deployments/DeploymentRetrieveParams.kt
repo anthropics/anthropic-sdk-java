@@ -3,6 +3,7 @@ package com.anthropic.models.beta.deployments
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
@@ -248,6 +249,13 @@ private constructor(
             .build()
 
     override fun _queryParams(): QueryParams = additionalQueryParams
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.deployments.retrieve",
+            route = "/v1/deployments/{deployment_id}",
+            attributes = mapOf("anthropic.deployment.id" to _pathParam(0)),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

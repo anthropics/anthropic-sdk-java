@@ -2,12 +2,24 @@ package com.anthropic.helpers
 
 import com.anthropic.core.*
 import com.anthropic.core.http.StreamResponse
+import com.anthropic.core.opentelemetry.setErrorStatus
 import com.anthropic.core.outputTypeFromJson
 import com.anthropic.core.toJsonString
+import com.anthropic.internal.telemetry.ToolUseSpan
+import com.anthropic.internal.telemetry.endToolUseSpan
+import com.anthropic.internal.telemetry.logTelemetryFailure
+import com.anthropic.internal.telemetry.startToolRunnerSpan
+import com.anthropic.internal.telemetry.startToolUseSpan
+import com.anthropic.internal.telemetry.toolRunOutcome
 import com.anthropic.models.beta.messages.*
 import com.anthropic.services.blocking.beta.MessageService
+import io.opentelemetry.api.trace.Span
+import io.opentelemetry.api.trace.StatusCode
+import io.opentelemetry.context.Context
+import io.opentelemetry.context.Scope
 import java.util.Optional
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import java.util.stream.Stream
 import kotlin.jvm.optionals.asSequence
 import kotlin.jvm.optionals.getOrNull
@@ -17,6 +29,26 @@ import kotlin.jvm.optionals.getOrNull
  * message once the caller has moved on.
  */
 private typealias Send<T> = suspend SequenceScope<T>.(MessageCreateParams) -> BetaMessage
+
+/** The open tool runner span. It does not refer to the runner, so it can outlive it. */
+private class ToolRunnerSpanEnd(private val clientOptions: ClientOptions) : AutoCloseable {
+    private val span = AtomicReference<Span?>()
+
+    fun get(): Span? = span.get()
+
+    fun set(span: Span) = this.span.set(span)
+
+    /** Ends the span, unless it has ended. */
+    override fun close() {
+        val span = span.getAndSet(null) ?: return
+        // Ending the span runs the application's span processors, whose failure is not the loop's.
+        try {
+            span.end()
+        } catch (e: Exception) {
+            logTelemetryFailure(clientOptions, "Could not end the span of the tool runner", e)
+        }
+    }
+}
 
 /**
  * A [BetaToolRunner] handles the automatic conversation loop between the assistant and tools.
@@ -30,11 +62,13 @@ private typealias Send<T> = suspend SequenceScope<T>.(MessageCreateParams) -> Be
 class BetaToolRunner
 internal constructor(
     private val messageService: MessageService,
+    private val clientOptions: ClientOptions,
     private val params: ToolRunnerCreateParams,
     private val requestOptions: RequestOptions,
 ) : Iterable<BetaMessage> {
 
     private var consumed = AtomicBoolean()
+    private val toolRunnerSpan = ToolRunnerSpanEnd(clientOptions)
     private var currentParams = params.initialMessageParams
     private var nextParams: MessageCreateParams? = null
     private var lastToolResponse: BetaMessageParam? = null
@@ -86,7 +120,10 @@ internal constructor(
                         object : StreamResponse<BetaRawMessageStreamEvent> {
 
                             private val delegate =
-                                messageService.createStreaming(requestParams, requestOptions)
+                                messageService.createStreaming(
+                                    requestParams,
+                                    requestOptions.withStreamAccumulator(accumulator),
+                                )
 
                             override fun stream(): Stream<BetaRawMessageStreamEvent> =
                                 delegate.stream().peek(accumulator::accumulate)
@@ -99,60 +136,121 @@ internal constructor(
                 }
         }
 
-    /** The conversation loop, which [iterator] and [streaming] share. */
+    /** The conversation loop, which [iterator] and [streaming] share, in the tool runner span. */
     private fun <T> runLoop(send: Send<T>): Iterator<T> {
         if (consumed.getAndSet(true)) {
             throw IllegalStateException("Cannot iterate the same `BetaToolRunner` twice")
         }
 
-        return iterator {
-            var paramsBuilder = params.initialMessageParams.toBuilderWithToolRunnerHeader()
-            val maxIterations = params.maxIterations().orElse(Long.MAX_VALUE)
-            var iteration = 0L
-            var lastStopReason = Optional.empty<BetaStopReason>()
+        return inToolRunnerSpan(
+            iterator {
+                var paramsBuilder = params.initialMessageParams.toBuilderWithToolRunnerHeader()
+                val maxIterations = params.maxIterations().orElse(Long.MAX_VALUE)
+                var iteration = 0L
+                var lastStopReason = Optional.empty<BetaStopReason>()
 
-            while (iteration < maxIterations) {
-                currentParams = paramsBuilder.buildWithPendingToolChanges(lastStopReason)
-                val compactionConfig = compactionToSend(lastStopReason)
-                if (compactionConfig != null) {
-                    paramsBuilder = compact(send, compactionConfig)
-                    continue
-                }
-                iteration++
+                try {
+                    while (iteration < maxIterations) {
+                        currentParams = paramsBuilder.buildWithPendingToolChanges(lastStopReason)
+                        val compactionConfig = compactionToSend(lastStopReason)
+                        if (compactionConfig != null) {
+                            paramsBuilder = compact(send, compactionConfig)
+                            continue
+                        }
+                        iteration++
 
-                val message = send(currentParams)
-                val nextStep = determineNextStepFromStopReason(message.stopReason())
-                lastStopReason = message.stopReason()
+                        val message = send(currentParams)
+                        val nextStep = determineNextStepFromStopReason(message.stopReason())
+                        lastStopReason = message.stopReason()
 
-                val nextParams = nextParams
-                if (nextParams != null) {
-                    paramsBuilder = nextParams.toBuilderWithToolRunnerHeader()
-                    this@BetaToolRunner.nextParams = null
-                    continue
-                }
+                        val nextParams = nextParams
+                        if (nextParams != null) {
+                            paramsBuilder = nextParams.toBuilderWithToolRunnerHeader()
+                            this@BetaToolRunner.nextParams = null
+                            continue
+                        }
 
-                val toolResponse =
-                    if (nextStep == NextStep.RUN_TOOLS) generateToolResponse(message.toParam())
-                    else null
-                if (
-                    nextStep == NextStep.STOP ||
-                        (nextStep == NextStep.RUN_TOOLS && toolResponse == null)
-                ) {
-                    val finalCompactionConfig = compactionToSendAfterFinalTurn(message)
-                    if (finalCompactionConfig != null) {
-                        currentParams =
-                            paramsBuilder
-                                .addMessage(message.toParamKeepingUnknownBlocks())
-                                .adoptContainer(message)
-                                .build()
-                        currentParams = compact(send, finalCompactionConfig).build()
+                        val toolResponse =
+                            if (nextStep == NextStep.RUN_TOOLS)
+                                generateToolResponse(message.toParam())
+                            else null
+                        if (
+                            nextStep == NextStep.STOP ||
+                                (nextStep == NextStep.RUN_TOOLS && toolResponse == null)
+                        ) {
+                            val finalCompactionConfig = compactionToSendAfterFinalTurn(message)
+                            if (finalCompactionConfig != null) {
+                                currentParams =
+                                    paramsBuilder
+                                        .addMessage(message.toParamKeepingUnknownBlocks())
+                                        .adoptContainer(message)
+                                        .build()
+                                currentParams = compact(send, finalCompactionConfig).build()
+                            }
+                            break
+                        }
+                        paramsBuilder.addMessage(message).adoptContainer(message)
+                        toolResponse?.let { paramsBuilder.addMessage(it) }
                     }
-                    break
+                    toolRunnerSpan.get()?.setStatus(StatusCode.OK)
+                } catch (e: Throwable) {
+                    toolRunnerSpan.get()?.let { setErrorStatus(it, e) }
+                    throw e
+                } finally {
+                    toolRunnerSpan.close()
                 }
-                paramsBuilder.addMessage(message).adoptContainer(message)
-                toolResponse?.let { paramsBuilder.addMessage(it) }
+            }
+        )
+    }
+
+    /**
+     * [steps], the loop, with the tool runner span current in every step. A step is all that the
+     * runner does between two returns of control to the application: it sends a request, executes
+     * tools, and keeps the conversation, and none of these is wrapped on its own. The span starts
+     * with the first step, as a child of the span that is current then. Each step makes it current
+     * anew, because the application may ask for the next message from any context. What the
+     * application does between two steps runs outside the span.
+     */
+    private fun <T> inToolRunnerSpan(steps: Iterator<T>): Iterator<T> =
+        object : Iterator<T> {
+            private val started = AtomicBoolean()
+
+            private fun <R> step(run: () -> R): R {
+                if (!started.getAndSet(true)) {
+                    startToolRunnerSpan(
+                            clientOptions,
+                            modelName(),
+                            params.initialMessageParams,
+                            requestOptions.openTelemetry?.conversationId()?.getOrNull(),
+                        )
+                        ?.let {
+                            toolRunnerSpan.set(it)
+                            // An application that stops iterating never reaches the loop's end, so
+                            // the span ends, with no status, once the runner is reclaimed. Java 8
+                            // has no `Cleaner`, and such a span never ends there.
+                            closeWhenPhantomReachable(this@BetaToolRunner, toolRunnerSpan)
+                        }
+                }
+                return withToolRunnerSpanCurrent(run)
+            }
+
+            override fun hasNext(): Boolean = step(steps::hasNext)
+
+            override fun next(): T = step {
+                if (!steps.hasNext()) {
+                    throw NoSuchElementException()
+                }
+                steps.next()
             }
         }
+
+    /**
+     * Runs [run] with the tool runner span current, on top of the context that is current in the
+     * caller. Without an open tool runner span, [run] runs in the caller's context as it is.
+     */
+    private fun <R> withToolRunnerSpanCurrent(run: () -> R): R {
+        val openToolRunnerSpan = toolRunnerSpan.get() ?: return run()
+        return Context.current().with(openToolRunnerSpan).makeCurrent().use { run() }
     }
 
     /** Returns the current params being used by [BetaToolRunner]. */
@@ -252,7 +350,7 @@ internal constructor(
      * Gives the model an MCP [tool], which the runner runs when the model calls it. See [addTool].
      */
     fun addTool(tool: McpBetaTool) {
-        addTool(BetaRunnableTool.of(tool.definition, tool.runner))
+        addTool(BetaRunnableTool.ofMcp(tool))
     }
 
     /**
@@ -576,6 +674,17 @@ internal constructor(
         }
     }
 
+    /** The model of the runner's first request, or `null` when the params don't name one. */
+    private fun modelName(): String? {
+        val model = params.initialMessageParams._model()
+        return model.asKnown().getOrNull()?._value()?.asString()?.getOrNull()
+            ?: model.asString().getOrNull()
+    }
+
+    /**
+     * The tool executions are children of the span that is current: the tool runner span, or, when
+     * the application runs the tools while no loop runs, the application's.
+     */
     private fun generateToolResponse(lastMessage: BetaMessageParam): BetaMessageParam? {
         if (lastMessage.roleString() != "assistant") {
             return null
@@ -686,7 +795,21 @@ internal constructor(
         when (toolUse.name()) {
             // Memory tool commands have the same type (`"tool_use"`) as other tool use blocks, but
             // the tool name is always `"memory"`.
-            "memory" -> generateMemoryToolUseResult(toolUse)
+            "memory" -> {
+                val command =
+                    outputTypeFromJson(
+                        toJsonString(toolUse._input()),
+                        BetaMemoryTool20250818Command::class.java,
+                    )
+                // Allow an exception if this is not set. `ToolRunnerCreateParams.Builder` should
+                // ensure that it is present if the request declared a memory tool. Like a command
+                // that does not parse, it fails the loop rather than becoming an error result.
+                val handler = params.betaMemoryToolHandler().get()
+                // The memory tool's definition has no description.
+                runTool(ToolUseSpan.CUSTOM, toolUse, description = null) {
+                    generateMemoryToolUseResult(toolUse, command, handler)
+                }
+            }
             else -> generateGenericToolUseResult(toolUse, toolsByName, availableToolNames)
         }
 
@@ -695,6 +818,7 @@ internal constructor(
         toolsByName: Map<String, BetaRunnableTool>,
         availableToolNames: Set<String>,
     ): BetaToolResultBlockParam {
+        // A call to a tool the application did not supply executes nothing, so it has no span.
         val tool =
             toolsByName[toolUse.name()].takeIf { toolUse.name() in availableToolNames }
                 ?: return BetaToolResultBlockParam.builder()
@@ -702,76 +826,105 @@ internal constructor(
                     .content("Error: Tool '${toolUse.name()}' not found")
                     .isError(true)
                     .build()
-        val content =
-            try {
-                tool.run(toolUse._input())
-            } catch (e: Exception) {
-                return BetaToolResultBlockParam.builder()
-                    .toolUseId(toolUse.id())
-                    .content("Error: ${e.message}")
-                    .isError(true)
-                    .build()
-            }
-
-        return BetaToolResultBlockParam.builder().toolUseId(toolUse.id()).content(content).build()
+        val kind = if (tool.isFromMcp()) ToolUseSpan.MCP else ToolUseSpan.CUSTOM
+        return runTool(kind, toolUse, tool.description()) {
+            BetaToolResultBlockParam.builder()
+                .toolUseId(toolUse.id())
+                .content(tool.run(toolUse._input()))
+                .build()
+        }
     }
 
     /**
-     * Generates a tool use result for a memory tool command. There can be only one memory tool and
-     * its name must be `"memory"`.
+     * Runs [run], which executes the tool that [toolUse] calls and makes the result to send back,
+     * inside the tool's span, of [kind] and a child of the span that is current, which has
+     * [description], the description in the tool's definition. The tool's code runs with the tool's
+     * span current. A run that throws sends back its error message as an error result.
+     */
+    private fun runTool(
+        kind: ToolUseSpan,
+        toolUse: BetaToolUseBlockParam,
+        description: String?,
+        run: () -> BetaToolResultBlockParam,
+    ): BetaToolResultBlockParam {
+        val parentOtelContext = Context.current()
+        val toolSpan =
+            startToolUseSpan(
+                clientOptions,
+                kind,
+                toolUse,
+                description,
+                requestOptions.openTelemetry?.conversationId()?.getOrNull(),
+                parentOtelContext,
+            )
+        // What the run threw. The result then reports it, and the span tells from it whether the
+        // application canceled the run.
+        var error: Throwable? = null
+        var result: BetaToolResultBlockParam? = null
+        try {
+            result =
+                (toolSpan?.let { parentOtelContext.with(it).makeCurrent() } ?: Scope.noop()).use {
+                    try {
+                        run()
+                    } catch (e: Exception) {
+                        error = e
+                        BetaToolResultBlockParam.builder()
+                            .toolUseId(toolUse.id())
+                            .content("Error: ${e.message}")
+                            .isError(true)
+                            .build()
+                    }
+                }
+            return result
+        } catch (e: Throwable) {
+            error = e
+            throw e
+        } finally {
+            toolSpan?.let {
+                val outcome = toolRunOutcome(result, error)
+                endToolUseSpan(clientOptions, it, toolUse, outcome)
+            }
+        }
+    }
+
+    /**
+     * Generates a tool use result for [command], the memory tool command that [toolUse] carries, by
+     * running it against [handler]. There can be only one memory tool and its name must be
+     * `"memory"`.
      */
     private fun generateMemoryToolUseResult(
-        toolUse: BetaToolUseBlockParam
+        toolUse: BetaToolUseBlockParam,
+        command: BetaMemoryTool20250818Command,
+        handler: BetaMemoryToolHandler,
     ): BetaToolResultBlockParam {
-        val command =
-            outputTypeFromJson(
-                toJsonString(toolUse._input()),
-                BetaMemoryTool20250818Command::class.java,
-            )
-        // Allow an exception if this is not set. `ToolRunnerCreateParams.Builder` should ensure
-        // that it is present if the request declared a memory tool.
-        val handler = params.betaMemoryToolHandler().get()
         val memoryToolOutput =
-            try {
-                command.accept(
-                    object : BetaMemoryTool20250818Command.Visitor<String> {
-                        override fun visitView(view: BetaMemoryTool20250818ViewCommand): String =
-                            handler.view(view.path(), view.viewRange())
+            command.accept(
+                object : BetaMemoryTool20250818Command.Visitor<String> {
+                    override fun visitView(view: BetaMemoryTool20250818ViewCommand): String =
+                        handler.view(view.path(), view.viewRange())
 
-                        override fun visitCreate(
-                            create: BetaMemoryTool20250818CreateCommand
-                        ): String = handler.create(create.path(), create.fileText())
+                    override fun visitCreate(create: BetaMemoryTool20250818CreateCommand): String =
+                        handler.create(create.path(), create.fileText())
 
-                        override fun visitStrReplace(
-                            strReplace: BetaMemoryTool20250818StrReplaceCommand
-                        ): String =
-                            handler.strReplace(
-                                strReplace.path(),
-                                strReplace.oldStr(),
-                                strReplace.newStr(),
-                            )
+                    override fun visitStrReplace(
+                        strReplace: BetaMemoryTool20250818StrReplaceCommand
+                    ): String =
+                        handler.strReplace(
+                            strReplace.path(),
+                            strReplace.oldStr(),
+                            strReplace.newStr(),
+                        )
 
-                        override fun visitInsert(
-                            insert: BetaMemoryTool20250818InsertCommand
-                        ): String =
-                            handler.insert(insert.path(), insert.insertLine(), insert.insertText())
+                    override fun visitInsert(insert: BetaMemoryTool20250818InsertCommand): String =
+                        handler.insert(insert.path(), insert.insertLine(), insert.insertText())
 
-                        override fun visitDelete(
-                            delete: BetaMemoryTool20250818DeleteCommand
-                        ): String = handler.delete(delete.path())
+                    override fun visitDelete(delete: BetaMemoryTool20250818DeleteCommand): String =
+                        handler.delete(delete.path())
 
-                        override fun visitRename(
-                            rename: BetaMemoryTool20250818RenameCommand
-                        ): String = handler.rename(rename.oldPath(), rename.newPath())
-                    }
-                )
-            } catch (e: Exception) {
-                return BetaToolResultBlockParam.builder()
-                    .toolUseId(toolUse.id())
-                    .content("Error: ${e.message}")
-                    .isError(true)
-                    .build()
-            }
+                    override fun visitRename(rename: BetaMemoryTool20250818RenameCommand): String =
+                        handler.rename(rename.oldPath(), rename.newPath())
+                }
+            )
 
         return BetaToolResultBlockParam.builder()
             .toolUseId(toolUse.id())

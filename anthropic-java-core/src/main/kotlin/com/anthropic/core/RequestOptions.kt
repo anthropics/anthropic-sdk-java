@@ -1,13 +1,26 @@
 package com.anthropic.core
 
+import com.anthropic.core.opentelemetry.OpenTelemetryRequestOptions
 import com.anthropic.helpers.BetaFallbackState
+import com.anthropic.helpers.BetaMessageAccumulator
+import io.opentelemetry.context.Context
 import java.time.Duration
 
 class RequestOptions
 private constructor(
     val responseValidation: Boolean?,
     val timeout: Timeout?,
+    val followRedirects: Boolean?,
     val fallbackState: BetaFallbackState?,
+    val openTelemetry: OpenTelemetryRequestOptions?,
+    /**
+     * The accumulator that an SDK helper feeds with the events of the API call's streamed Message
+     * as the application reads them. The call's span reads the Message from it, in place of an
+     * accumulator of its own, so that the stream is accumulated once.
+     */
+    @get:JvmSynthetic internal val streamAccumulator: BetaMessageAccumulator? = null,
+    /** The OpenTelemetry context of the API call that sends the request, while its span is open. */
+    @get:JvmSynthetic internal val apiCallOtelContext: Context? = null,
 ) {
 
     companion object {
@@ -86,20 +99,59 @@ private constructor(
             timeout =
                 if (options.timeout != null && timeout != null) timeout.assign(options.timeout)
                 else timeout ?: options.timeout,
+            followRedirects = followRedirects ?: options.followRedirects,
             fallbackState = fallbackState ?: options.fallbackState,
+            openTelemetry = openTelemetry ?: options.openTelemetry,
+            streamAccumulator = streamAccumulator ?: options.streamAccumulator,
+            apiCallOtelContext = apiCallOtelContext ?: options.apiCallOtelContext,
+        )
+
+    /**
+     * These options for an API call whose streamed Message an SDK helper accumulates in
+     * [accumulator], which it feeds with every event that the application reads.
+     */
+    @JvmSynthetic
+    internal fun withStreamAccumulator(accumulator: BetaMessageAccumulator): RequestOptions =
+        copy(streamAccumulator = accumulator)
+
+    /** These options for a request that the API call with [apiCallOtelContext] sends. */
+    @JvmSynthetic
+    internal fun withApiCallOtelContext(apiCallOtelContext: Context): RequestOptions =
+        copy(apiCallOtelContext = apiCallOtelContext)
+
+    private fun copy(
+        streamAccumulator: BetaMessageAccumulator? = this.streamAccumulator,
+        apiCallOtelContext: Context? = this.apiCallOtelContext,
+    ): RequestOptions =
+        RequestOptions(
+            responseValidation,
+            timeout,
+            followRedirects,
+            fallbackState,
+            openTelemetry,
+            streamAccumulator,
+            apiCallOtelContext,
         )
 
     class Builder internal constructor() {
 
         private var responseValidation: Boolean? = null
         private var timeout: Timeout? = null
+        private var followRedirects: Boolean? = null
         private var fallbackState: BetaFallbackState? = null
+        private var openTelemetry: OpenTelemetryRequestOptions? = null
+        private var streamAccumulator: BetaMessageAccumulator? = null
+        private var apiCallOtelContext: Context? = null
 
         @JvmSynthetic
         internal fun from(requestOptions: RequestOptions) = apply {
             responseValidation = requestOptions.responseValidation
             timeout = requestOptions.timeout
+            followRedirects = requestOptions.followRedirects
             fallbackState = requestOptions.fallbackState
+            openTelemetry = requestOptions.openTelemetry
+            streamAccumulator = requestOptions.streamAccumulator
+            apiCallOtelContext = requestOptions.apiCallOtelContext
         }
 
         /**
@@ -118,6 +170,20 @@ private constructor(
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
         fun timeout(timeout: Duration) = timeout(Timeout.builder().request(timeout).build())
+
+        /**
+         * Whether to follow redirects.
+         *
+         * Defaults to true.
+         */
+        fun followRedirects(followRedirects: Boolean) = apply {
+            this.followRedirects = followRedirects
+        }
+
+        /** The OpenTelemetry tracing of this request. */
+        fun openTelemetry(openTelemetry: OpenTelemetryRequestOptions) = apply {
+            this.openTelemetry = openTelemetry
+        }
 
         /**
          * Sticky state for [com.anthropic.helpers.BetaRefusalFallbackInterceptor].
@@ -164,6 +230,15 @@ private constructor(
             timeout(Timeout.builder().read(timeout).request(timeout).build())
         }
 
-        fun build(): RequestOptions = RequestOptions(responseValidation, timeout, fallbackState)
+        fun build(): RequestOptions =
+            RequestOptions(
+                responseValidation,
+                timeout,
+                followRedirects,
+                fallbackState,
+                openTelemetry,
+                streamAccumulator,
+                apiCallOtelContext,
+            )
     }
 }

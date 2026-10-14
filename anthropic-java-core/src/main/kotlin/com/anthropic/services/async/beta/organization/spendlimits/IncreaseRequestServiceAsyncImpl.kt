@@ -13,6 +13,8 @@ import com.anthropic.core.http.HttpResponse.Handler
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.core.http.json
 import com.anthropic.core.http.parseable
+import com.anthropic.core.opentelemetry.thenParse
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.core.prepareAsync
 import com.anthropic.models.beta.organization.spendlimits.increaserequests.BetaSpendLimitIncreaseRequest
 import com.anthropic.models.beta.organization.spendlimits.increaserequests.IncreaseRequestApproveParams
@@ -46,14 +48,14 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
     ): CompletableFuture<BetaSpendLimitIncreaseRequest> =
         // get
         // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}?beta=true
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().retrieve(params, requestOptions).thenParse()
 
     override fun list(
         params: IncreaseRequestListParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<IncreaseRequestListPageAsync> =
         // get /v1/organizations/spend_limit_increase_requests?beta=true
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().list(params, requestOptions).thenParse()
 
     override fun approve(
         params: IncreaseRequestApproveParams,
@@ -61,7 +63,7 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
     ): CompletableFuture<IncreaseRequestApproveResponse> =
         // post
         // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/approve?beta=true
-        withRawResponse().approve(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().approve(params, requestOptions).thenParse()
 
     override fun deny(
         params: IncreaseRequestDenyParams,
@@ -69,7 +71,7 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
     ): CompletableFuture<BetaSpendLimitIncreaseRequest> =
         // post
         // /v1/organizations/spend_limit_increase_requests/{spend_limit_increase_request_id}/deny?beta=true
-        withRawResponse().deny(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().deny(params, requestOptions).thenParse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         IncreaseRequestServiceAsync.WithRawResponse {
@@ -107,19 +109,21 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { retrieveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val listHandler: Handler<IncreaseRequestListPageResponse> =
@@ -138,27 +142,29 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { listHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
-                            .let {
-                                IncreaseRequestListPageAsync.builder()
-                                    .service(IncreaseRequestServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
+                                .let {
+                                    IncreaseRequestListPageAsync.builder()
+                                        .service(IncreaseRequestServiceAsyncImpl(clientOptions))
+                                        .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                        .params(params)
+                                        .response(it)
+                                        .build()
+                                }
+                        }
                     }
-                }
+            }
         }
 
         private val approveHandler: Handler<IncreaseRequestApproveResponse> =
@@ -186,19 +192,21 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { approveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { approveHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
 
         private val denyHandler: Handler<BetaSpendLimitIncreaseRequest> =
@@ -226,19 +234,21 @@ internal constructor(private val clientOptions: ClientOptions) : IncreaseRequest
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { denyHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
+            return traceApiCallAsync(clientOptions, params) { client ->
+                request
+                    .thenComposeAsync { client.executeAsync(it, requestOptions) }
+                    .thenApply { response ->
+                        errorHandler.handle(response).parseable {
+                            response
+                                .use { denyHandler.handle(it) }
+                                .also {
+                                    if (requestOptions.responseValidation!!) {
+                                        it.validate()
+                                    }
                                 }
-                            }
+                        }
                     }
-                }
+            }
         }
     }
 }

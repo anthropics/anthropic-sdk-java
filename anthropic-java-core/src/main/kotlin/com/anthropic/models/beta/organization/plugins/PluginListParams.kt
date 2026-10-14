@@ -5,6 +5,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.anthropic.models.beta.AnthropicBeta
@@ -425,6 +426,25 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.plugins.list",
+            route = "/v1/organizations/plugins",
+            queryParams =
+                listOf(
+                    "created_at[gt]",
+                    "created_at[gte]",
+                    "created_at[lt]",
+                    "created_at[lte]",
+                    "limit",
+                    "marketplace_id",
+                    "organization_id",
+                    "owner_type",
+                    "owner_user_id",
+                    "page",
+                ),
+        )
 
     /**
      * `organization` for Plugins in the organization's plugin marketplaces, `user` for Plugins in

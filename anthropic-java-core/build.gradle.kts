@@ -66,6 +66,7 @@ dependencies {
     // structured-output classes with Swagger annotations (e.g. `@Schema`), which
     // `jsonschema-module-swagger2` below reads when generating tool JSON schemas.
     api(libs.swagger.annotations)
+    api(libs.opentelemetry.api)
 
     implementation(libs.jackson.annotations)
     implementation(libs.jackson.datatype.jdk8)
@@ -88,4 +89,5 @@ dependencies {
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.junit.jupiter)
     testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.opentelemetry.sdk.trace)
 }

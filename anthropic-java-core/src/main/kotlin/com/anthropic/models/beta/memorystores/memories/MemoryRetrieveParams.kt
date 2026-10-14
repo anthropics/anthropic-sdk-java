@@ -4,6 +4,7 @@ import com.anthropic.core.Params
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.models.beta.AnthropicBeta
 import java.util.Objects
@@ -302,6 +303,18 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.memory_stores.memories.retrieve",
+            route = "/v1/memory_stores/{memory_store_id}/memories/{memory_id}",
+            attributes =
+                mapOf(
+                    "gen_ai.memory.store.id" to _pathParam(0),
+                    "gen_ai.memory.record.id" to _pathParam(1),
+                ),
+            queryParams = listOf("view"),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

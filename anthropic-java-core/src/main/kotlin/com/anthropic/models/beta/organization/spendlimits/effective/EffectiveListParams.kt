@@ -5,6 +5,7 @@ import com.anthropic.core.JsonField
 import com.anthropic.core.Params
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 import com.anthropic.core.toImmutable
 import com.anthropic.errors.AnthropicInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -17,8 +18,8 @@ import kotlin.jvm.optionals.getOrNull
  *
  * Returns one row per (member, period) the member resolves a spend limit for, with the `source`
  * scope the spend limit was inherited from. Paginates by member, so a member's periods never split
- * across pages. Listing Claude Console limits is in an early access preview. To request access,
- * contact your Anthropic account team.
+ * across pages. Supported for Claude Enterprise organizations only, not for Claude Console
+ * organizations.
  */
 class EffectiveListParams
 private constructor(
@@ -270,6 +271,13 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    override fun _spanData(): SpanData =
+        SpanData(
+            name = "anthropic.organization.spend_limits.effective.list",
+            route = "/v1/organizations/spend_limits/effective",
+            queryParams = listOf("limit", "page", "period", "user_ids"),
+        )
 
     class Period private constructor(private val value: JsonField<String>) : Enum {
 

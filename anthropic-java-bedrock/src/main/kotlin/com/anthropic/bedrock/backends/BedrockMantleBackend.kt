@@ -84,6 +84,10 @@ private constructor(
         return "https://bedrock-mantle.${region.id()}.api.aws/anthropic"
     }
 
+    override fun openTelemetryProviderName(): String = "aws.bedrock"
+
+    override fun openTelemetryPlatform(): Optional<String> = Optional.of("bedrock")
+
     override fun prepareRequest(request: HttpRequest): HttpRequest =
         // A user-supplied "anthropic-version" (e.g. set by an interceptor) wins over the default.
         if (request.headers.names().contains(HEADER_VERSION)) request

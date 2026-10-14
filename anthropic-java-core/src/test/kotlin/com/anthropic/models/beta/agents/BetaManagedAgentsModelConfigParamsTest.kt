@@ -11,14 +11,14 @@ internal class BetaManagedAgentsModelConfigParamsTest {
     fun create() {
         val betaManagedAgentsModelConfigParams =
             BetaManagedAgentsModelConfigParams.builder()
-                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                 .effort(BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW)
                 .inferenceGeo("inference_geo")
                 .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)
                 .build()
 
         assertThat(betaManagedAgentsModelConfigParams.id())
-            .isEqualTo(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+            .isEqualTo(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
         assertThat(betaManagedAgentsModelConfigParams.effort())
             .contains(
                 BetaManagedAgentsModelConfigParams.Effort.ofBetaManagedAgentsEffortLevel(
@@ -35,7 +35,7 @@ internal class BetaManagedAgentsModelConfigParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsModelConfigParams =
             BetaManagedAgentsModelConfigParams.builder()
-                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5)
+                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                 .effort(BetaManagedAgentsModelConfigParams.Effort.BetaManagedAgentsEffortLevel.LOW)
                 .inferenceGeo("inference_geo")
                 .speed(BetaManagedAgentsModelConfigParams.Speed.STANDARD)

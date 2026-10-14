@@ -11,11 +11,11 @@ internal class BetaManagedAgentsAdvisorParamsTest {
     fun create() {
         val betaManagedAgentsAdvisorParams =
             BetaManagedAgentsAdvisorParams.builder()
-                .model("claude-fable-5")
+                .model("claude-opus-5-5")
                 .type(BetaManagedAgentsAdvisorParams.Type.ADVISOR)
                 .build()
 
-        assertThat(betaManagedAgentsAdvisorParams.model()).isEqualTo("claude-fable-5")
+        assertThat(betaManagedAgentsAdvisorParams.model()).isEqualTo("claude-opus-5-5")
         assertThat(betaManagedAgentsAdvisorParams.type())
             .isEqualTo(BetaManagedAgentsAdvisorParams.Type.ADVISOR)
     }
@@ -25,7 +25,7 @@ internal class BetaManagedAgentsAdvisorParamsTest {
         val jsonMapper = jsonMapper()
         val betaManagedAgentsAdvisorParams =
             BetaManagedAgentsAdvisorParams.builder()
-                .model("claude-fable-5")
+                .model("claude-opus-5-5")
                 .type(BetaManagedAgentsAdvisorParams.Type.ADVISOR)
                 .build()
 

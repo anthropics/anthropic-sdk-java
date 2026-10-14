@@ -54,7 +54,7 @@ internal class BetaMessageTest {
                         .build()
                 )
                 .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .stopDetails(
                     BetaRefusalStopDetails.builder()
                         .category(BetaRefusalStopDetails.Category.CYBER)
@@ -168,7 +168,7 @@ internal class BetaMessageTest {
             )
         assertThat(betaMessage.diagnostics())
             .contains(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
-        assertThat(betaMessage.model()).isEqualTo(Model.CLAUDE_OPUS_5)
+        assertThat(betaMessage.model()).isEqualTo(Model.CLAUDE_OPUS_5_5)
         assertThat(betaMessage.stopDetails())
             .contains(
                 BetaRefusalStopDetails.builder()
@@ -285,7 +285,7 @@ internal class BetaMessageTest {
                         .build()
                 )
                 .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .stopDetails(
                     BetaRefusalStopDetails.builder()
                         .category(BetaRefusalStopDetails.Category.CYBER)
@@ -418,7 +418,7 @@ internal class BetaMessageTest {
                         .build()
                 )
                 .diagnostics(BetaDiagnostics.builder().modelChangedCacheMissReason(0L).build())
-                .model(Model.CLAUDE_OPUS_5)
+                .model(Model.CLAUDE_OPUS_5_5)
                 .stopDetails(
                     BetaRefusalStopDetails.builder()
                         .category(BetaRefusalStopDetails.Category.CYBER)

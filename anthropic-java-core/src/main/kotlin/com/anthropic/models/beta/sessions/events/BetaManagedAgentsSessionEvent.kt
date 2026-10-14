@@ -929,7 +929,8 @@ private constructor(
 
     /**
      * Event emitted when the agent calls a custom tool. The session goes idle until the client
-     * sends a `user.custom_tool_result` event with the result.
+     * sends a `user.custom_tool_result` event with the result. The client can send it as soon as
+     * this event arrives, without waiting for `session.status_idle`.
      */
     fun agentCustomToolUse(): Optional<BetaManagedAgentsAgentCustomToolUseEvent> =
         Optional.ofNullable(agentCustomToolUse)
@@ -1256,7 +1257,8 @@ private constructor(
 
     /**
      * Event emitted when the agent calls a custom tool. The session goes idle until the client
-     * sends a `user.custom_tool_result` event with the result.
+     * sends a `user.custom_tool_result` event with the result. The client can send it as soon as
+     * this event arrives, without waiting for `session.status_idle`.
      */
     fun asAgentCustomToolUse(): BetaManagedAgentsAgentCustomToolUseEvent =
         agentCustomToolUse.getOrThrow("agentCustomToolUse")
@@ -1917,7 +1919,8 @@ private constructor(
 
         /**
          * Event emitted when the agent calls a custom tool. The session goes idle until the client
-         * sends a `user.custom_tool_result` event with the result.
+         * sends a `user.custom_tool_result` event with the result. The client can send it as soon
+         * as this event arrives, without waiting for `session.status_idle`.
          */
         @JvmStatic
         fun ofAgentCustomToolUse(agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent) =
@@ -2235,7 +2238,8 @@ private constructor(
 
         /**
          * Event emitted when the agent calls a custom tool. The session goes idle until the client
-         * sends a `user.custom_tool_result` event with the result.
+         * sends a `user.custom_tool_result` event with the result. The client can send it as soon
+         * as this event arrives, without waiting for `session.status_idle`.
          */
         fun visitAgentCustomToolUse(agentCustomToolUse: BetaManagedAgentsAgentCustomToolUseEvent): T
 

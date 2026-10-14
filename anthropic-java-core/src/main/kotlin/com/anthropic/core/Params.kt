@@ -2,6 +2,7 @@ package com.anthropic.core
 
 import com.anthropic.core.http.Headers
 import com.anthropic.core.http.QueryParams
+import com.anthropic.core.opentelemetry.SpanData
 
 /** An interface representing parameters passed to a service method. */
 interface Params {
@@ -13,4 +14,7 @@ interface Params {
      * params.
      */
     fun _queryParams(): QueryParams
+
+    /** The data for the OpenTelemetry span of a call to the method with these parameters. */
+    fun _spanData(): SpanData
 }

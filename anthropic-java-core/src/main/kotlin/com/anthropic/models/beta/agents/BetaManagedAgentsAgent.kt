@@ -39,6 +39,7 @@ private constructor(
     private val archivedAt: JsonField<OffsetDateTime>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val description: JsonField<String>,
+    private val executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity>,
     private val mcpServers: JsonField<List<BetaManagedAgentsMcpServerUrlDefinition>>,
     private val metadata: JsonField<Metadata>,
     private val model: JsonField<BetaManagedAgentsModelConfig>,
@@ -65,6 +66,9 @@ private constructor(
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("execution_identity")
+        @ExcludeMissing
+        executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity> = JsonMissing.of(),
         @JsonProperty("mcp_servers")
         @ExcludeMissing
         mcpServers: JsonField<List<BetaManagedAgentsMcpServerUrlDefinition>> = JsonMissing.of(),
@@ -89,6 +93,7 @@ private constructor(
         archivedAt,
         createdAt,
         description,
+        executionIdentity,
         mcpServers,
         metadata,
         model,
@@ -130,6 +135,16 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun description(): Optional<String> = description.getOptional("description")
+
+    /**
+     * Execution principal for runs of this agent. Always present; `{"type": "service_account"}`
+     * when runs carry no customer-named principal.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun executionIdentity(): BetaManagedAgentsExecutionIdentity =
+        executionIdentity.getRequired("execution_identity")
 
     /**
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
@@ -239,6 +254,16 @@ private constructor(
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
 
     /**
+     * Returns the raw JSON value of [executionIdentity].
+     *
+     * Unlike [executionIdentity], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("execution_identity")
+    @ExcludeMissing
+    fun _executionIdentity(): JsonField<BetaManagedAgentsExecutionIdentity> = executionIdentity
+
+    /**
      * Returns the raw JSON value of [mcpServers].
      *
      * Unlike [mcpServers], this method doesn't throw if the JSON field has an unexpected type.
@@ -346,6 +371,7 @@ private constructor(
          * .archivedAt()
          * .createdAt()
          * .description()
+         * .executionIdentity()
          * .mcpServers()
          * .metadata()
          * .model()
@@ -369,6 +395,7 @@ private constructor(
         private var archivedAt: JsonField<OffsetDateTime>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var description: JsonField<String>? = null
+        private var executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity>? = null
         private var mcpServers: JsonField<MutableList<BetaManagedAgentsMcpServerUrlDefinition>>? =
             null
         private var metadata: JsonField<Metadata>? = null
@@ -389,6 +416,7 @@ private constructor(
             archivedAt = betaManagedAgentsAgent.archivedAt
             createdAt = betaManagedAgentsAgent.createdAt
             description = betaManagedAgentsAgent.description
+            executionIdentity = betaManagedAgentsAgent.executionIdentity
             mcpServers =
                 betaManagedAgentsAgent.mcpServers
                     .map { it.toMutableList() }
@@ -464,6 +492,52 @@ private constructor(
          * value.
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
+
+        /**
+         * Execution principal for runs of this agent. Always present; `{"type": "service_account"}`
+         * when runs carry no customer-named principal.
+         */
+        fun executionIdentity(executionIdentity: BetaManagedAgentsExecutionIdentity) =
+            executionIdentity(JsonField.of(executionIdentity))
+
+        /**
+         * Sets [Builder.executionIdentity] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.executionIdentity] with a well-typed
+         * [BetaManagedAgentsExecutionIdentity] value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun executionIdentity(executionIdentity: JsonField<BetaManagedAgentsExecutionIdentity>) =
+            apply {
+                this.executionIdentity = executionIdentity
+            }
+
+        /**
+         * Alias for calling [executionIdentity] with
+         * `BetaManagedAgentsExecutionIdentity.ofAwsRole(awsRole)`.
+         */
+        fun executionIdentity(awsRole: BetaManagedAgentsAwsRoleExecutionIdentity) =
+            executionIdentity(BetaManagedAgentsExecutionIdentity.ofAwsRole(awsRole))
+
+        /**
+         * Alias for calling [executionIdentity] with the following:
+         * ```java
+         * BetaManagedAgentsAwsRoleExecutionIdentity.builder()
+         *     .roleArn(roleArn)
+         *     .build()
+         * ```
+         */
+        fun awsRoleExecutionIdentity(roleArn: String) =
+            executionIdentity(
+                BetaManagedAgentsAwsRoleExecutionIdentity.builder().roleArn(roleArn).build()
+            )
+
+        /**
+         * Alias for calling [executionIdentity] with
+         * `BetaManagedAgentsExecutionIdentity.ofServiceAccount(serviceAccount)`.
+         */
+        fun executionIdentity(serviceAccount: BetaManagedAgentsServiceAccountExecutionIdentity) =
+            executionIdentity(BetaManagedAgentsExecutionIdentity.ofServiceAccount(serviceAccount))
 
         fun mcpServers(mcpServers: List<BetaManagedAgentsMcpServerUrlDefinition>) =
             mcpServers(JsonField.of(mcpServers))
@@ -717,6 +791,7 @@ private constructor(
          * .archivedAt()
          * .createdAt()
          * .description()
+         * .executionIdentity()
          * .mcpServers()
          * .metadata()
          * .model()
@@ -738,6 +813,7 @@ private constructor(
                 checkRequired("archivedAt", archivedAt),
                 checkRequired("createdAt", createdAt),
                 checkRequired("description", description),
+                checkRequired("executionIdentity", executionIdentity),
                 checkRequired("mcpServers", mcpServers).map { it.toImmutable() },
                 checkRequired("metadata", metadata),
                 checkRequired("model", model),
@@ -772,6 +848,7 @@ private constructor(
         archivedAt()
         createdAt()
         description()
+        executionIdentity().validate()
         mcpServers().forEach { it.validate() }
         metadata().validate()
         model().validate()
@@ -805,6 +882,7 @@ private constructor(
             (if (archivedAt.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
+            (executionIdentity.asKnown().getOrNull()?.validity() ?: 0) +
             (mcpServers.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (model.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1846,6 +1924,7 @@ private constructor(
             archivedAt == other.archivedAt &&
             createdAt == other.createdAt &&
             description == other.description &&
+            executionIdentity == other.executionIdentity &&
             mcpServers == other.mcpServers &&
             metadata == other.metadata &&
             model == other.model &&
@@ -1866,6 +1945,7 @@ private constructor(
             archivedAt,
             createdAt,
             description,
+            executionIdentity,
             mcpServers,
             metadata,
             model,
@@ -1884,5 +1964,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaManagedAgentsAgent{id=$id, archivedAt=$archivedAt, createdAt=$createdAt, description=$description, mcpServers=$mcpServers, metadata=$metadata, model=$model, multiagent=$multiagent, name=$name, skills=$skills, system=$system, tools=$tools, type=$type, updatedAt=$updatedAt, version=$version, additionalProperties=$additionalProperties}"
+        "BetaManagedAgentsAgent{id=$id, archivedAt=$archivedAt, createdAt=$createdAt, description=$description, executionIdentity=$executionIdentity, mcpServers=$mcpServers, metadata=$metadata, model=$model, multiagent=$multiagent, name=$name, skills=$skills, system=$system, tools=$tools, type=$type, updatedAt=$updatedAt, version=$version, additionalProperties=$additionalProperties}"
 }
