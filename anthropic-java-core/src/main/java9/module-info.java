@@ -82,6 +82,8 @@ open module com.anthropic.core {
     exports com.anthropic.models.beta.organization.spendlimits;
     exports com.anthropic.models.beta.organization.spendlimits.effective;
     exports com.anthropic.models.beta.organization.spendlimits.increaserequests;
+    exports com.anthropic.models.beta.organization.telemetrydestinations;
+    exports com.anthropic.models.beta.organization.telemetrydestinations.workspaces;
     exports com.anthropic.models.beta.organization.users;
     exports com.anthropic.models.beta.organization.workspaces;
     exports com.anthropic.models.beta.organization.workspaces.members;
@@ -140,6 +142,7 @@ open module com.anthropic.core {
     exports com.anthropic.services.async.beta.organization.rbacroles;
     exports com.anthropic.services.async.beta.organization.serviceaccounts;
     exports com.anthropic.services.async.beta.organization.spendlimits;
+    exports com.anthropic.services.async.beta.organization.telemetrydestinations;
     exports com.anthropic.services.async.beta.organization.workspaces;
     exports com.anthropic.services.async.beta.sessions;
     exports com.anthropic.services.async.beta.sessions.threads;
@@ -170,6 +173,7 @@ open module com.anthropic.core {
     exports com.anthropic.services.blocking.beta.organization.rbacroles;
     exports com.anthropic.services.blocking.beta.organization.serviceaccounts;
     exports com.anthropic.services.blocking.beta.organization.spendlimits;
+    exports com.anthropic.services.blocking.beta.organization.telemetrydestinations;
     exports com.anthropic.services.blocking.beta.organization.workspaces;
     exports com.anthropic.services.blocking.beta.sessions;
     exports com.anthropic.services.blocking.beta.sessions.threads;

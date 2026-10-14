@@ -41,6 +41,8 @@ import com.anthropic.services.blocking.beta.organization.ServiceAccountService
 import com.anthropic.services.blocking.beta.organization.ServiceAccountServiceImpl
 import com.anthropic.services.blocking.beta.organization.SpendLimitService
 import com.anthropic.services.blocking.beta.organization.SpendLimitServiceImpl
+import com.anthropic.services.blocking.beta.organization.TelemetryDestinationService
+import com.anthropic.services.blocking.beta.organization.TelemetryDestinationServiceImpl
 import com.anthropic.services.blocking.beta.organization.UserService
 import com.anthropic.services.blocking.beta.organization.UserServiceImpl
 import com.anthropic.services.blocking.beta.organization.WorkspaceService
@@ -90,6 +92,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
         PluginMarketplaceServiceImpl(clientOptions)
     }
 
+    private val telemetryDestinations: TelemetryDestinationService by lazy {
+        TelemetryDestinationServiceImpl(clientOptions)
+    }
+
     override fun withRawResponse(): OrganizationService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrganizationService =
@@ -124,6 +130,8 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
     override fun plugins(): PluginService = plugins
 
     override fun pluginMarketplaces(): PluginMarketplaceService = pluginMarketplaces
+
+    override fun telemetryDestinations(): TelemetryDestinationService = telemetryDestinations
 
     override fun retrieve(
         params: OrganizationRetrieveParams,
@@ -198,6 +206,10 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
             PluginMarketplaceServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val telemetryDestinations: TelemetryDestinationService.WithRawResponse by lazy {
+            TelemetryDestinationServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): OrganizationService.WithRawResponse =
@@ -236,6 +248,9 @@ class OrganizationServiceImpl internal constructor(private val clientOptions: Cl
 
         override fun pluginMarketplaces(): PluginMarketplaceService.WithRawResponse =
             pluginMarketplaces
+
+        override fun telemetryDestinations(): TelemetryDestinationService.WithRawResponse =
+            telemetryDestinations
 
         private val retrieveHandler: Handler<BetaOrganization> =
             jsonHandler<BetaOrganization>(clientOptions.jsonMapper)

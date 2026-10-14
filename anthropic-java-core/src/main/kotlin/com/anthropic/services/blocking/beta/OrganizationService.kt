@@ -18,6 +18,7 @@ import com.anthropic.services.blocking.beta.organization.RbacGroupService
 import com.anthropic.services.blocking.beta.organization.RbacRoleService
 import com.anthropic.services.blocking.beta.organization.ServiceAccountService
 import com.anthropic.services.blocking.beta.organization.SpendLimitService
+import com.anthropic.services.blocking.beta.organization.TelemetryDestinationService
 import com.anthropic.services.blocking.beta.organization.UserService
 import com.anthropic.services.blocking.beta.organization.WorkspaceService
 import com.google.errorprone.annotations.MustBeClosed
@@ -66,6 +67,8 @@ interface OrganizationService {
     fun plugins(): PluginService
 
     fun pluginMarketplaces(): PluginMarketplaceService
+
+    fun telemetryDestinations(): TelemetryDestinationService
 
     /** Retrieve information about the organization associated with the authenticated API key. */
     fun retrieve(): BetaOrganization = retrieve(OrganizationRetrieveParams.none())
@@ -128,6 +131,8 @@ interface OrganizationService {
         fun plugins(): PluginService.WithRawResponse
 
         fun pluginMarketplaces(): PluginMarketplaceService.WithRawResponse
+
+        fun telemetryDestinations(): TelemetryDestinationService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/organizations/me?beta=true`, but is otherwise
