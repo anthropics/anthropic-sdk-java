@@ -6,6 +6,11 @@
 
 * **api:** return a Console organization's usage-tier spend cap as a read-only spend limit
 
+
+### Chores
+
+* **internal:** give lint more memory in CI
+
 ## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-14)
 
 ### Features

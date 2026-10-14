@@ -12,9 +12,14 @@ if [[ -n "${CI:-}" ]]; then
     # When detekt checks only the changed files it cannot show a problem that an
     # edit causes in a file that did not change, so in CI it checks every file.
     gradle_tasks=(detektMain detektTest)
+    # detekt runs in the Gradle daemon. Checking every file of a large SDK needs
+    # more heap than gradle.properties allows, and a CI machine with over 16 GB.
+    # The flag replaces that file's org.gradle.jvmargs, so it repeats the rest.
+    gradle_flags=("-Dorg.gradle.jvmargs=-Xmx16g -XX:+UseParallelGC -XX:ReservedCodeCacheSize=512m -XX:MaxMetaspaceSize=1G")
 else
     echo "==> detekt checks only the files that changed since it last passed; run ./gradlew lint to have detekt check every file"
     gradle_tasks=(detektChangedMain detektChangedTest)
+    gradle_flags=()
 fi
 
 # Whether a file is formatted does not depend on any other file, so lintKotlin
@@ -22,4 +27,4 @@ fi
 gradle_tasks+=(lintKotlin lintJava)
 
 echo "==> Running gradlew ${gradle_tasks[*]}"
-./gradlew "${gradle_tasks[@]}"
+./gradlew "${gradle_flags[@]}" "${gradle_tasks[@]}"
