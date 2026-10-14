@@ -5,11 +5,13 @@ import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaDeletedTelemetryDestination
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestination
+import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestinationTest
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationCreateParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationDeleteParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationListPageAsync
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationListParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationRetrieveParams
+import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationTestParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationUpdateParams
 import com.anthropic.services.async.beta.organization.telemetrydestinations.WorkspaceServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -219,6 +221,51 @@ interface TelemetryDestinationServiceAsync {
         delete(destinationId, TelemetryDestinationDeleteParams.none(), requestOptions)
 
     /**
+     * Send one test span, named `anthropic.test`, to the destination with its registered headers,
+     * once and without retries, and report the destination's answer. The response is 200 whether or
+     * not the destination answered with a 2xx status: its `result` has the type `success`, or the
+     * type `failure` and the reason in `error`. The destination's configuration, `state` and
+     * `delivery_health` do not change. A disabled destination can be tested too. Wait 10 seconds
+     * between tests of one destination; a request that comes sooner may be answered with
+     * status 429.
+     */
+    fun test(destinationId: String): CompletableFuture<BetaTelemetryDestinationTest> =
+        test(destinationId, TelemetryDestinationTestParams.none())
+
+    /** @see test */
+    fun test(
+        destinationId: String,
+        params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<BetaTelemetryDestinationTest> =
+        test(params.toBuilder().destinationId(destinationId).build(), requestOptions)
+
+    /** @see test */
+    fun test(
+        destinationId: String,
+        params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
+    ): CompletableFuture<BetaTelemetryDestinationTest> =
+        test(destinationId, params, RequestOptions.none())
+
+    /** @see test */
+    fun test(
+        params: TelemetryDestinationTestParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<BetaTelemetryDestinationTest>
+
+    /** @see test */
+    fun test(
+        params: TelemetryDestinationTestParams
+    ): CompletableFuture<BetaTelemetryDestinationTest> = test(params, RequestOptions.none())
+
+    /** @see test */
+    fun test(
+        destinationId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<BetaTelemetryDestinationTest> =
+        test(destinationId, TelemetryDestinationTestParams.none(), requestOptions)
+
+    /**
      * A view of [TelemetryDestinationServiceAsync] that provides access to raw HTTP responses for
      * each method.
      */
@@ -407,5 +454,49 @@ interface TelemetryDestinationServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<BetaDeletedTelemetryDestination>> =
             delete(destinationId, TelemetryDestinationDeleteParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post
+         * /v1/organizations/telemetry_destinations/{destination_id}/test?beta=true`, but is
+         * otherwise the same as [TelemetryDestinationServiceAsync.test].
+         */
+        fun test(
+            destinationId: String
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> =
+            test(destinationId, TelemetryDestinationTestParams.none())
+
+        /** @see test */
+        fun test(
+            destinationId: String,
+            params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> =
+            test(params.toBuilder().destinationId(destinationId).build(), requestOptions)
+
+        /** @see test */
+        fun test(
+            destinationId: String,
+            params: TelemetryDestinationTestParams = TelemetryDestinationTestParams.none(),
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> =
+            test(destinationId, params, RequestOptions.none())
+
+        /** @see test */
+        fun test(
+            params: TelemetryDestinationTestParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>>
+
+        /** @see test */
+        fun test(
+            params: TelemetryDestinationTestParams
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> =
+            test(params, RequestOptions.none())
+
+        /** @see test */
+        fun test(
+            destinationId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BetaTelemetryDestinationTest>> =
+            test(destinationId, TelemetryDestinationTestParams.none(), requestOptions)
     }
 }

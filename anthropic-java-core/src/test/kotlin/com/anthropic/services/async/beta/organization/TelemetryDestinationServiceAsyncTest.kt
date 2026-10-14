@@ -11,6 +11,7 @@ import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetr
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationCreateParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationDeleteParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationRetrieveParams
+import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationTestParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationUpdateParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -147,5 +148,26 @@ internal class TelemetryDestinationServiceAsyncTest {
 
         val betaDeletedTelemetryDestination = betaDeletedTelemetryDestinationFuture.get()
         betaDeletedTelemetryDestination.validate()
+    }
+
+    @Test
+    fun test() {
+        val client =
+            AnthropicOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("my-anthropic-api-key")
+                .build()
+        val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
+
+        val betaTelemetryDestinationTestFuture =
+            telemetryDestinationServiceAsync.test(
+                TelemetryDestinationTestParams.builder()
+                    .destinationId("destination_id")
+                    .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
+                    .build()
+            )
+
+        val betaTelemetryDestinationTest = betaTelemetryDestinationTestFuture.get()
+        betaTelemetryDestinationTest.validate()
     }
 }

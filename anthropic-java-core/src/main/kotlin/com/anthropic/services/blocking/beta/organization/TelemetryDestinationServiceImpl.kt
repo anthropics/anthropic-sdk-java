@@ -18,12 +18,14 @@ import com.anthropic.core.opentelemetry.traceApiCall
 import com.anthropic.core.prepare
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaDeletedTelemetryDestination
 import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestination
+import com.anthropic.models.beta.organization.telemetrydestinations.BetaTelemetryDestinationTest
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationCreateParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationDeleteParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationListPage
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationListPageResponse
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationListParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationRetrieveParams
+import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationTestParams
 import com.anthropic.models.beta.organization.telemetrydestinations.TelemetryDestinationUpdateParams
 import com.anthropic.services.blocking.beta.organization.telemetrydestinations.WorkspaceService
 import com.anthropic.services.blocking.beta.organization.telemetrydestinations.WorkspaceServiceImpl
@@ -88,6 +90,13 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
     ): BetaDeletedTelemetryDestination =
         // delete /v1/organizations/telemetry_destinations/{destination_id}?beta=true
         withRawResponse().delete(params, requestOptions).parse()
+
+    override fun test(
+        params: TelemetryDestinationTestParams,
+        requestOptions: RequestOptions,
+    ): BetaTelemetryDestinationTest =
+        // post /v1/organizations/telemetry_destinations/{destination_id}/test?beta=true
+        withRawResponse().test(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         TelemetryDestinationService.WithRawResponse {
@@ -282,6 +291,43 @@ internal constructor(private val clientOptions: ClientOptions) : TelemetryDestin
                 errorHandler.handle(response).parseable {
                     response
                         .use { deleteHandler.handle(it) }
+                        .also {
+                            if (requestOptions.responseValidation!!) {
+                                it.validate()
+                            }
+                        }
+                }
+            }
+        }
+
+        private val testHandler: Handler<BetaTelemetryDestinationTest> =
+            jsonHandler<BetaTelemetryDestinationTest>(clientOptions.jsonMapper)
+
+        override fun test(
+            params: TelemetryDestinationTestParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BetaTelemetryDestinationTest> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("destinationId", params.destinationId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "organizations", "telemetry_destinations")
+                    .addPathParam("destinationId", params._pathParam(0))
+                    .addPathSegments("test")
+                    .putQueryParam("beta", "true")
+                    .putAllHeaders(DEFAULT_HEADERS)
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return traceApiCall(clientOptions, params) { client ->
+                val response = client.execute(request, requestOptions)
+                errorHandler.handle(response).parseable {
+                    response
+                        .use { testHandler.handle(it) }
                         .also {
                             if (requestOptions.responseValidation!!) {
                                 it.validate()
