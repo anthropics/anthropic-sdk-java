@@ -25,6 +25,9 @@ internal data class TokenResponse(
     @JsonProperty("token_type") val tokenType: String? = null,
 )
 
+@get:JvmSynthetic
+internal val TOKEN_REQUEST_OPTIONS = RequestOptions.builder().followRedirects(false).build()
+
 /**
  * [AccessTokenProvider] for workload identity federation.
  *
@@ -60,14 +63,14 @@ internal class WorkloadIdentityCredentials(
             .getAsync()
             .thenCompose { identityToken ->
                 val request = buildRequest(baseUrl, identityToken)
-                httpClient.executeAsync(request, RequestOptions.none())
+                httpClient.executeAsync(request, TOKEN_REQUEST_OPTIONS)
             }
             .thenApply { response -> parseResponse(response) }
     }
 
     private fun exchangeToken(baseUrl: String, identityToken: String): AccessToken {
         val request = buildRequest(baseUrl, identityToken)
-        val response = httpClient.execute(request, RequestOptions.none())
+        val response = httpClient.execute(request, TOKEN_REQUEST_OPTIONS)
         return parseResponse(response)
     }
 

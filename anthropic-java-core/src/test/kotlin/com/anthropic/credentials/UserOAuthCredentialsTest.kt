@@ -575,13 +575,16 @@ internal class UserOAuthCredentialsTest {
 
     private class MockHttpClient(private val syncHandler: (HttpRequest) -> HttpResponse) :
         HttpClient {
-        override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse =
-            syncHandler(request)
+        override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
+            assertThat(requestOptions.followRedirects).isFalse()
+            return syncHandler(request)
+        }
 
         override fun executeAsync(
             request: HttpRequest,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> = CompletableFuture.completedFuture(syncHandler(request))
+        ): CompletableFuture<HttpResponse> =
+            CompletableFuture.completedFuture(execute(request, requestOptions))
 
         override fun close() {}
     }
