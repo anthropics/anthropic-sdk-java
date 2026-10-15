@@ -113,6 +113,11 @@ import kotlin.streams.asSequence
  * surfaced to the client and reported once per interceptor with a warning on [System.err]; one that
  * exhausts the chain is surfaced silently — its terminal `message_delta` already reports every hop.
  *
+ * A `speed: "fast"` request that falls back to an entry with no `speed`, and is rejected with a 429
+ * or 529, is retried once on that entry without `speed`; if that streaming fallback is then retried
+ * without its prefill, that retry omits `speed` too. Set `speed` to `fast` on the entry to keep it
+ * fast-only.
+ *
  * To keep later requests on the model that accepted, pass a [BetaFallbackState] via the
  * [RequestOptions.Builder.fallbackState] request option; requests sharing that state start directly
  * at the pinned fallback. Reuse one state across whatever scope the pin should apply to — typically
@@ -216,14 +221,14 @@ private constructor(
                     prepare(request, requestOptions)
                         ?: return httpClient.execute(request, requestOptions)
 
+                val send = { hopRequest: HttpRequest ->
+                    httpClient.execute(hopRequest, requestOptions)
+                }
                 var index = preparedRequest.initialIndex
                 val initialRequest = preparedRequest.request(index)
-                var response = httpClient.execute(initialRequest, requestOptions)
+                var response = sendHop(fallbacks.getOrNull(index), initialRequest, send)
                 if (preparedRequest.isStreaming) {
-                    return spliceRefusedStream(preparedRequest, initialRequest, response) {
-                        hopRequest ->
-                        httpClient.execute(hopRequest, requestOptions)
-                    }
+                    return spliceRefusedStream(preparedRequest, initialRequest, response, send)
                 }
 
                 val seams = mutableListOf<Seam>()
@@ -246,9 +251,10 @@ private constructor(
 
                     response.close()
                     response =
-                        httpClient.execute(
+                        sendHop(
+                            fallbacks[index],
                             preparedRequest.request(index, fallbackCreditToken),
-                            requestOptions,
+                            send,
                         )
                 }
                 return prependSeamIfStitched(response, seams)
@@ -263,8 +269,14 @@ private constructor(
                         ?: return httpClient.executeAsync(request, requestOptions)
 
                 val initialRequest = preparedRequest.request(preparedRequest.initialIndex)
-                return httpClient.executeAsync(initialRequest, requestOptions).thenCompose {
-                    response ->
+                val initialResponse =
+                    sendHopAsync(
+                        fallbacks.getOrNull(preparedRequest.initialIndex),
+                        initialRequest,
+                    ) {
+                        httpClient.executeAsync(it, requestOptions)
+                    }
+                return initialResponse.thenCompose { response ->
                     if (preparedRequest.isStreaming) {
                         // Hop requests are issued lazily while the spliced body is being read,
                         // which already blocks the reading thread on network I/O, so joining the
@@ -319,8 +331,12 @@ private constructor(
         val nextSeams = seams + Seam(fromModel, preparedRequest.modelAt(nextIndex), category)
 
         bufferedResponse.close()
-        return httpClient
-            .executeAsync(preparedRequest.request(nextIndex, fallbackCreditToken), requestOptions)
+        return sendHopAsync(
+                fallbacks[nextIndex],
+                preparedRequest.request(nextIndex, fallbackCreditToken),
+            ) {
+                httpClient.executeAsync(it, requestOptions)
+            }
             .thenCompose { nextResponse ->
                 retryRefusalAsync(
                     httpClient,
@@ -880,6 +896,61 @@ private fun creditTokenParam(token: String): BetaFallbackCreditTokenParam =
         .build()
 
 /**
+ * Sends [request], built from [entry] (`null` for the original request). One that is `fast` only
+ * because the original request was, and is rejected with a 429 or 529, is resent once without
+ * `speed` unless [beforeResend] returns `false`, and that response stands in for the first.
+ */
+private fun sendHop(
+    entry: BetaFallbackParam?,
+    request: HttpRequest,
+    send: (HttpRequest) -> HttpResponse,
+    beforeResend: () -> Boolean = { true },
+): HttpResponse {
+    val response = send(request)
+    val resend = withoutRejectedFastSpeed(entry, request, response) ?: return response
+    if (!beforeResend()) {
+        return response
+    }
+    response.close()
+    return send(resend)
+}
+
+/** The async form of [sendHop]. */
+private fun sendHopAsync(
+    entry: BetaFallbackParam?,
+    request: HttpRequest,
+    send: (HttpRequest) -> CompletableFuture<HttpResponse>,
+): CompletableFuture<HttpResponse> =
+    send(request).thenCompose { response ->
+        val resend =
+            withoutRejectedFastSpeed(entry, request, response)
+                ?: return@thenCompose CompletableFuture.completedFuture(response)
+        response.close()
+        send(resend)
+    }
+
+/** Returns the request [sendHop] resends in place of [response], or `null` to keep [response]. */
+private fun withoutRejectedFastSpeed(
+    entry: BetaFallbackParam?,
+    request: HttpRequest,
+    response: HttpResponse,
+): HttpRequest? {
+    if (entry == null || (response.statusCode() != 429 && response.statusCode() != 529)) {
+        return null
+    }
+    if (jsonMapper().valueToTree<ObjectNode>(entry).has("speed")) {
+        return null
+    }
+    val body = request.body?.json(ObjectNode::class.java) ?: return null
+    if (body.path("speed").asText() != "fast") {
+        return null
+    }
+    // Removed rather than set to `standard`: the fallback model may not accept `speed` at all.
+    body.remove("speed")
+    return request.toBuilder().body(HttpRequestBody.ofJson(body)).build()
+}
+
+/**
  * Splices the fallback chain's events onto a stream that ends in a retryable refusal.
  *
  * The spliced body is produced lazily as it's read: the refused stream's events pass through in
@@ -1028,13 +1099,20 @@ private class FallbackStreamSplicer(
             // prefill claim); a 400 on that form means the server rejected the prefill, so the hop
             // is retried once without it — the same-body form the token always supports.
             var continuation = base + partial
+            // Given a `null` speed once a resend drops `speed`, so the retry without the prefill
+            // isn't sent fast only to be rejected and resent again.
+            var hopEntry = entry
             var hopResponse: HttpResponse? = null
             var failed = false
             for (attempt in 0..1) {
-                val hopRequest = buildFallbackRequest(entry, refusal.token, continuation)
+                val hopRequest = buildFallbackRequest(hopEntry, refusal.token, continuation)
                 val response =
                     try {
-                        executeHop(hopRequest)
+                        sendHop(hopEntry, hopRequest, executeHop) {
+                            hopEntry =
+                                entry.toBuilder().speed(null as BetaFallbackParam.Speed?).build()
+                            !closed.get()
+                        }
                     } catch (e: Throwable) {
                         val cause = (e as? CompletionException)?.cause ?: e
                         warn("fallback request to $model failed: $cause")

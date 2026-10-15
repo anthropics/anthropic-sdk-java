@@ -21,6 +21,7 @@ import com.anthropic.models.beta.messages.BetaTextBlockParam
 import com.anthropic.models.beta.messages.BetaThinkingBlockParam
 import com.anthropic.models.beta.messages.BetaToolUseBlockParam
 import com.anthropic.models.beta.messages.MessageCreateParams
+import com.fasterxml.jackson.databind.node.ObjectNode
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import kotlin.jvm.optionals.getOrNull
@@ -29,6 +30,7 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.junit.jupiter.api.parallel.Resources
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
 
 internal class BetaRefusalFallbackInterceptorTest {
@@ -396,6 +398,180 @@ internal class BetaRefusalFallbackInterceptorTest {
                 .intercept(httpClient)
 
         val response = interceptedClient.execute(messagesRequest(), RequestOptions.none(), async)
+
+        assertThat(response.statusCode()).isEqualTo(429)
+        assertThat(httpClient.requests).hasSize(1)
+    }
+
+    @ParameterizedTest
+    @CsvSource("429, false", "429, true", "529, false", "529, true")
+    fun resendsARejectedFastFallbackOnceWithoutSpeed(status: Int, async: Boolean) {
+        val httpClient =
+            FakeHttpClient(
+                refusal("primary-model", "credit-token"),
+                status to API_ERROR,
+                message("fallback-model"),
+            )
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        val response =
+            interceptedClient.execute(
+                messagesRequest(bodyWithSpeed("fast")),
+                RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+                async,
+            )
+
+        assertThat(httpClient.models())
+            .containsExactly("primary-model", "fallback-model", "fallback-model")
+        val rejected = httpClient.jsonBodies[1]
+        val resent = httpClient.jsonBodies[2]
+        assertThat(rejected.path("speed").asText()).isEqualTo("fast")
+        assertThat(resent.has("speed")).isFalse()
+        assertThat(resent.path("fallback_credit_token").path("token").asText())
+            .isEqualTo("credit-token")
+        assertThat(resent).isEqualTo(rejected.without<ObjectNode>("speed"))
+        assertThat(httpClient.requests[2].headers).isEqualTo(httpClient.requests[1].headers)
+        assertThat(httpClient.issued[1].closed.get()).isTrue()
+
+        val message = response.json(BetaMessage::class.java)
+        assertThat(message.content()[0].asFallback().to().model().asString())
+            .isEqualTo("fallback-model")
+        assertThat(message.content()[1].asText().text()).isEqualTo("ok")
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        // The entry asks for `fast` itself, or replaces it.
+        "fast, fast, 429, false",
+        "fast, fast, 429, true",
+        "fast, standard, 429, false",
+        "fast, standard, 429, true",
+        // The request isn't fast.
+        ", , 429, false",
+        ", , 429, true",
+        "standard, , 529, false",
+        "standard, , 529, true",
+        // The fallback fails for another reason.
+        "fast, , 400, false",
+        "fast, , 400, true",
+        "fast, , 500, false",
+        "fast, , 500, true",
+    )
+    fun doesNotResendAnyOtherFailedFallback(
+        requestSpeed: String?,
+        entrySpeed: String?,
+        status: Int,
+        async: Boolean,
+    ) {
+        // The last response is a spare: an unwanted resend would be served, not fail on its own.
+        val httpClient =
+            FakeHttpClient(
+                refusal("primary-model", "credit-token"),
+                status to API_ERROR,
+                message("fallback-model"),
+            )
+        val entry = fallback("fallback-model").toBuilder()
+        entrySpeed?.let { entry.speed(BetaFallbackParam.Speed.of(it)) }
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(entry.build())
+                .build()
+                .intercept(httpClient)
+
+        val response =
+            interceptedClient.execute(
+                messagesRequest(bodyWithSpeed(requestSpeed)),
+                RequestOptions.builder().fallbackState(BetaFallbackState.create()).build(),
+                async,
+            )
+
+        assertThat(response.statusCode()).isEqualTo(status)
+        assertThat(httpClient.models()).containsExactly("primary-model", "fallback-model")
+        assertThat(httpClient.jsonBodies[1].path("speed").asText(null))
+            .isEqualTo(entrySpeed ?: requestSpeed)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun returnsTheErrorWhenTheResendWithoutSpeedIsRejectedToo(async: Boolean) {
+        // The last response is a spare: a second resend would be served, not fail on its own.
+        val httpClient =
+            FakeHttpClient(
+                refusal("primary-model", "credit-token"),
+                429 to API_ERROR,
+                429 to API_ERROR,
+                message("fallback-model"),
+            )
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        val fallbackState = BetaFallbackState.create()
+        val response =
+            interceptedClient.execute(
+                messagesRequest(bodyWithSpeed("fast")),
+                RequestOptions.builder().fallbackState(fallbackState).build(),
+                async,
+            )
+
+        assertThat(response.statusCode()).isEqualTo(429)
+        assertThat(httpClient.jsonBodies.map { it.path("speed").asText(null) })
+            .containsExactly("fast", "fast", null)
+        assertThat(httpClient.issued[2].closed.get()).isFalse()
+        assertThat(fallbackState.index()).isEqualTo(0)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun resendsARejectedFastRequestThatStartsOnThePinnedFallback(async: Boolean) {
+        val httpClient = FakeHttpClient(429 to API_ERROR, message("fallback-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        val fallbackState = BetaFallbackState.create()
+        fallbackState.index(0)
+        val response =
+            interceptedClient.execute(
+                messagesRequest(bodyWithSpeed("fast")),
+                RequestOptions.builder().fallbackState(fallbackState).build(),
+                async,
+            )
+
+        assertThat(response.json(BetaMessage::class.java).content().single().asText().text())
+            .isEqualTo("ok")
+        assertThat(httpClient.models()).containsExactly("fallback-model", "fallback-model")
+        assertThat(httpClient.jsonBodies[0].path("speed").asText()).isEqualTo("fast")
+        assertThat(httpClient.jsonBodies[1])
+            .isEqualTo(httpClient.jsonBodies[0].without<ObjectNode>("speed"))
+        assertThat(httpClient.issued[0].closed.get()).isTrue()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun doesNotResendARejectedFastOriginalRequest(async: Boolean) {
+        // The last response is a spare: an unwanted resend would be served, not fail on its own.
+        val httpClient = FakeHttpClient(429 to API_ERROR, message("primary-model"))
+        val interceptedClient =
+            BetaRefusalFallbackInterceptor.builder()
+                .addFallback(fallback("fallback-model"))
+                .build()
+                .intercept(httpClient)
+
+        val response =
+            interceptedClient.execute(
+                messagesRequest(bodyWithSpeed("fast")),
+                RequestOptions.none(),
+                async,
+            )
 
         assertThat(response.statusCode()).isEqualTo(429)
         assertThat(httpClient.requests).hasSize(1)
@@ -1077,6 +1253,15 @@ internal class BetaRefusalFallbackInterceptorTest {
         BetaFallbackParam.builder().model(model).build()
 
     private fun betweenToolsThinking(): JsonValue = JsonValue.from(mapOf("type" to "between_tools"))
+
+    private val API_ERROR = """{"type":"error","error":{"type":"api_error","message":"no"}}"""
+
+    /** The original request body, carrying the given `speed` (`null` omits it). */
+    private fun bodyWithSpeed(speed: String?): MessageCreateParams.Body {
+        val body = messagesBody().toBuilder()
+        speed?.let { body.speed(MessageCreateParams.Speed.of(it)) }
+        return body.build()
+    }
 
     /** An `output_config` patch setting only `effort`. */
     private fun highEffort(): BetaOutputConfig =
