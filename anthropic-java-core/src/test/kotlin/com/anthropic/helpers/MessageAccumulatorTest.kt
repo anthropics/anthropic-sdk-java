@@ -569,8 +569,8 @@ internal class MessageAccumulatorTest {
     @Test
     fun messageDeltaWithoutOptionalUsageKeysKeepsMessageStartValues() {
         // A `message_delta` omits every usage key that does not apply to the response, and never
-        // re-sends `service_tier`, `cache_creation` or `inference_geo`, so all of those must
-        // survive from `message_start`.
+        // re-sends `service_tier`, `cache_creation`, `inference_geo` or `speed`, so all of those
+        // must survive from `message_start`.
         val accumulator = MessageAccumulator.create()
         val startUsage =
             usage(INPUT_TOKENS)
@@ -615,6 +615,7 @@ internal class MessageAccumulatorTest {
         assertThat(message.usage().serviceTier()).hasValue(Usage.ServiceTier.STANDARD)
         assertThat(message.usage().cacheCreation().get().ephemeral5mInputTokens()).isEqualTo(0L)
         assertThat(message.usage().inferenceGeo()).hasValue("inference_geo")
+        assertThat(message.usage().speed()).hasValue(Usage.Speed.FAST)
         assertThat(message.container()).isEmpty()
     }
 
@@ -1388,6 +1389,7 @@ internal class MessageAccumulatorTest {
                 ServerToolUsage.builder().webFetchRequests(0L).webSearchRequests(0L).build()
             )
             .serviceTier(Usage.ServiceTier.STANDARD)
+            .speed(Usage.Speed.FAST)
             .build()
 
     private fun textDelta(text: String) = TextDelta.builder().text(text).build()

@@ -23,7 +23,7 @@ private constructor(
     /** Unique identifier of the deployment. */
     fun deploymentId(): Optional<String> = Optional.ofNullable(deploymentId)
 
-    /** Optional header to specify the beta version(s) you want to use. */
+    /** This endpoint is in beta: requests must send `managed-agents-2026-04-01` in this header. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -75,7 +75,9 @@ private constructor(
         /** Alias for calling [Builder.deploymentId] with `deploymentId.orElse(null)`. */
         fun deploymentId(deploymentId: Optional<String>) = deploymentId(deploymentId.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * This endpoint is in beta: requests must send `managed-agents-2026-04-01` in this header.
+         */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */

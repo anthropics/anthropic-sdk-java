@@ -132,6 +132,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -270,6 +271,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -408,6 +410,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -546,6 +549,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -684,6 +688,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -822,6 +827,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -960,6 +966,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -1098,6 +1105,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -1236,6 +1244,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -1374,6 +1383,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -1512,6 +1522,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -1650,6 +1661,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -1788,6 +1800,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -1926,6 +1939,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -2064,6 +2078,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -2202,6 +2217,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -2338,6 +2354,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -2473,6 +2490,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -2608,6 +2626,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -2743,6 +2762,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(
@@ -2878,6 +2898,7 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .serviceTier(MessageCreateParams.ServiceTier.AUTO)
+                        .speed(MessageCreateParams.Speed.STANDARD)
                         .addStopSequence("string")
                         .systemOfTextBlockParams(
                             listOf(

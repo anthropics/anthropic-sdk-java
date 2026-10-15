@@ -45,7 +45,10 @@ private constructor(
      */
     fun workspaceIds(): Optional<List<String>> = Optional.ofNullable(workspaceIds)
 
-    /** Optional header to specify the beta version(s) you want to use. */
+    /**
+     * This endpoint is in beta: requests must send `telemetry-destinations-2026-08-11` in this
+     * header.
+     */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /** Additional headers to send with the request. */
@@ -134,7 +137,10 @@ private constructor(
             workspaceIds = (workspaceIds ?: mutableListOf()).apply { add(workspaceId) }
         }
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * This endpoint is in beta: requests must send `telemetry-destinations-2026-08-11` in this
+         * header.
+         */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */

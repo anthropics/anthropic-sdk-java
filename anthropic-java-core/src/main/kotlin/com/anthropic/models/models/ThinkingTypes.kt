@@ -22,6 +22,7 @@ class ThinkingTypes
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val adaptive: JsonField<CapabilitySupport>,
+    private val betweenTools: JsonField<CapabilitySupport>,
     private val disabled: JsonField<CapabilitySupport>,
     private val enabled: JsonField<CapabilitySupport>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -32,13 +33,16 @@ private constructor(
         @JsonProperty("adaptive")
         @ExcludeMissing
         adaptive: JsonField<CapabilitySupport> = JsonMissing.of(),
+        @JsonProperty("between_tools")
+        @ExcludeMissing
+        betweenTools: JsonField<CapabilitySupport> = JsonMissing.of(),
         @JsonProperty("disabled")
         @ExcludeMissing
         disabled: JsonField<CapabilitySupport> = JsonMissing.of(),
         @JsonProperty("enabled")
         @ExcludeMissing
         enabled: JsonField<CapabilitySupport> = JsonMissing.of(),
-    ) : this(adaptive, disabled, enabled, mutableMapOf())
+    ) : this(adaptive, betweenTools, disabled, enabled, mutableMapOf())
 
     /**
      * Whether the model accepts thinking with type 'adaptive' (the model decides whether and how
@@ -50,9 +54,22 @@ private constructor(
     fun adaptive(): CapabilitySupport = adaptive.getRequired("adaptive")
 
     /**
+     * Whether the model accepts thinking with type 'between_tools' (thinking turned off, and any
+     * short progress updates the model writes between tool calls come back as thinking blocks).
+     * False exactly when a request that sends it gets a 400 from this model. A request that sends
+     * 'between_tools' can still be rejected for another reason, such as an effort level the model
+     * does not allow with thinking off.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun betweenTools(): CapabilitySupport = betweenTools.getRequired("between_tools")
+
+    /**
      * Whether the model accepts thinking with type 'disabled' (thinking turned off). False exactly
      * when a request that sends it gets a 400 from this model. True on a model that does not
-     * support thinking.
+     * support thinking. A request that sends 'disabled' can still be rejected for another reason,
+     * such as an effort level the model does not allow with thinking off.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -76,6 +93,15 @@ private constructor(
     @JsonProperty("adaptive")
     @ExcludeMissing
     fun _adaptive(): JsonField<CapabilitySupport> = adaptive
+
+    /**
+     * Returns the raw JSON value of [betweenTools].
+     *
+     * Unlike [betweenTools], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("between_tools")
+    @ExcludeMissing
+    fun _betweenTools(): JsonField<CapabilitySupport> = betweenTools
 
     /**
      * Returns the raw JSON value of [disabled].
@@ -113,6 +139,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .adaptive()
+         * .betweenTools()
          * .disabled()
          * .enabled()
          * ```
@@ -124,6 +151,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var adaptive: JsonField<CapabilitySupport>? = null
+        private var betweenTools: JsonField<CapabilitySupport>? = null
         private var disabled: JsonField<CapabilitySupport>? = null
         private var enabled: JsonField<CapabilitySupport>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -131,6 +159,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(thinkingTypes: ThinkingTypes) = apply {
             adaptive = thinkingTypes.adaptive
+            betweenTools = thinkingTypes.betweenTools
             disabled = thinkingTypes.disabled
             enabled = thinkingTypes.enabled
             additionalProperties = thinkingTypes.additionalProperties.toMutableMap()
@@ -152,9 +181,30 @@ private constructor(
         fun adaptive(adaptive: JsonField<CapabilitySupport>) = apply { this.adaptive = adaptive }
 
         /**
+         * Whether the model accepts thinking with type 'between_tools' (thinking turned off, and
+         * any short progress updates the model writes between tool calls come back as thinking
+         * blocks). False exactly when a request that sends it gets a 400 from this model. A request
+         * that sends 'between_tools' can still be rejected for another reason, such as an effort
+         * level the model does not allow with thinking off.
+         */
+        fun betweenTools(betweenTools: CapabilitySupport) = betweenTools(JsonField.of(betweenTools))
+
+        /**
+         * Sets [Builder.betweenTools] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.betweenTools] with a well-typed [CapabilitySupport]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun betweenTools(betweenTools: JsonField<CapabilitySupport>) = apply {
+            this.betweenTools = betweenTools
+        }
+
+        /**
          * Whether the model accepts thinking with type 'disabled' (thinking turned off). False
          * exactly when a request that sends it gets a 400 from this model. True on a model that
-         * does not support thinking.
+         * does not support thinking. A request that sends 'disabled' can still be rejected for
+         * another reason, such as an effort level the model does not allow with thinking off.
          */
         fun disabled(disabled: CapabilitySupport) = disabled(JsonField.of(disabled))
 
@@ -209,6 +259,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .adaptive()
+         * .betweenTools()
          * .disabled()
          * .enabled()
          * ```
@@ -218,6 +269,7 @@ private constructor(
         fun build(): ThinkingTypes =
             ThinkingTypes(
                 checkRequired("adaptive", adaptive),
+                checkRequired("betweenTools", betweenTools),
                 checkRequired("disabled", disabled),
                 checkRequired("enabled", enabled),
                 additionalProperties.toMutableMap(),
@@ -240,6 +292,7 @@ private constructor(
         }
 
         adaptive().validate()
+        betweenTools().validate()
         disabled().validate()
         enabled().validate()
         validated = true
@@ -261,6 +314,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (adaptive.asKnown().getOrNull()?.validity() ?: 0) +
+            (betweenTools.asKnown().getOrNull()?.validity() ?: 0) +
             (disabled.asKnown().getOrNull()?.validity() ?: 0) +
             (enabled.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -271,17 +325,18 @@ private constructor(
 
         return other is ThinkingTypes &&
             adaptive == other.adaptive &&
+            betweenTools == other.betweenTools &&
             disabled == other.disabled &&
             enabled == other.enabled &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(adaptive, disabled, enabled, additionalProperties)
+        Objects.hash(adaptive, betweenTools, disabled, enabled, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ThinkingTypes{adaptive=$adaptive, disabled=$disabled, enabled=$enabled, additionalProperties=$additionalProperties}"
+        "ThinkingTypes{adaptive=$adaptive, betweenTools=$betweenTools, disabled=$disabled, enabled=$enabled, additionalProperties=$additionalProperties}"
 }

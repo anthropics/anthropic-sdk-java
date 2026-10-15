@@ -427,6 +427,9 @@ private constructor(
         fun workspaceScope(workspaceId: String) =
             scope(BetaSpendLimitWorkspaceScope.builder().workspaceId(workspaceId).build())
 
+        /** Alias for calling [scope] with `Scope.ofUsageTier(usageTier)`. */
+        fun scope(usageTier: BetaSpendLimitUsageTierScope) = scope(Scope.ofUsageTier(usageTier))
+
         fun source(source: Source) = source(JsonField.of(source))
 
         /**
@@ -511,6 +514,9 @@ private constructor(
          */
         fun workspaceSource(workspaceId: String) =
             source(BetaSpendLimitWorkspaceScope.builder().workspaceId(workspaceId).build())
+
+        /** Alias for calling [source] with `Source.ofUsageTier(usageTier)`. */
+        fun source(usageTier: BetaSpendLimitUsageTierScope) = source(Source.ofUsageTier(usageTier))
 
         fun spendLimitId(spendLimitId: String) = spendLimitId(JsonField.of(spendLimitId))
 
@@ -1020,6 +1026,7 @@ private constructor(
         private val organizationService: BetaSpendLimitOrganizationServiceScope? = null,
         private val organization: BetaSpendLimitOrganizationScope? = null,
         private val workspace: BetaSpendLimitWorkspaceScope? = null,
+        private val usageTier: BetaSpendLimitUsageTierScope? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -1031,6 +1038,7 @@ private constructor(
                 organizationService != null -> Type.ORGANIZATION_SERVICE
                 organization != null -> Type.ORGANIZATION
                 workspace != null -> Type.WORKSPACE
+                usageTier != null -> Type.USAGE_TIER
                 else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
             }
 
@@ -1050,6 +1058,14 @@ private constructor(
         /** Scope selecting one workspace of a Claude Console organization. */
         fun workspace(): Optional<BetaSpendLimitWorkspaceScope> = Optional.ofNullable(workspace)
 
+        /**
+         * Scope of the monthly spend cap Anthropic sets for a Claude Console organization from its
+         * usage tier, or a higher cap Anthropic granted the organization. Read-only; its
+         * `created_at` and `updated_at` are the organization's creation time, so `amount` can
+         * change while `updated_at` stays the same.
+         */
+        fun usageTier(): Optional<BetaSpendLimitUsageTierScope> = Optional.ofNullable(usageTier)
+
         fun isUser(): Boolean = user != null
 
         fun isSeatTier(): Boolean = seatTier != null
@@ -1061,6 +1077,8 @@ private constructor(
         fun isOrganization(): Boolean = organization != null
 
         fun isWorkspace(): Boolean = workspace != null
+
+        fun isUsageTier(): Boolean = usageTier != null
 
         /** Scope selecting a single member of the organization. */
         fun asUser(): BetaSpendLimitUserScope = user.getOrThrow("user")
@@ -1077,6 +1095,14 @@ private constructor(
 
         /** Scope selecting one workspace of a Claude Console organization. */
         fun asWorkspace(): BetaSpendLimitWorkspaceScope = workspace.getOrThrow("workspace")
+
+        /**
+         * Scope of the monthly spend cap Anthropic sets for a Claude Console organization from its
+         * usage tier, or a higher cap Anthropic granted the organization. Read-only; its
+         * `created_at` and `updated_at` are the organization's creation time, so `amount` can
+         * change while `updated_at` stays the same.
+         */
+        fun asUsageTier(): BetaSpendLimitUsageTierScope = usageTier.getOrThrow("usageTier")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -1117,6 +1143,7 @@ private constructor(
                 organizationService != null -> visitor.visitOrganizationService(organizationService)
                 organization != null -> visitor.visitOrganization(organization)
                 workspace != null -> visitor.visitWorkspace(workspace)
+                usageTier != null -> visitor.visitUsageTier(usageTier)
                 else -> visitor.unknown(_json)
             }
 
@@ -1143,6 +1170,7 @@ private constructor(
                 organizationService != null -> organizationService.validate()
                 organization != null -> organization.validate()
                 workspace != null -> workspace.validate()
+                usageTier != null -> usageTier.validate()
                 else -> throw AnthropicInvalidDataException("Unknown Scope: $_json")
             }
             validated = true
@@ -1171,6 +1199,7 @@ private constructor(
                 organizationService != null -> organizationService.validity()
                 organization != null -> organization.validity()
                 workspace != null -> workspace.validity()
+                usageTier != null -> usageTier.validity()
                 else -> 0
             }
 
@@ -1185,11 +1214,20 @@ private constructor(
                 rbacGroup == other.rbacGroup &&
                 organizationService == other.organizationService &&
                 organization == other.organization &&
-                workspace == other.workspace
+                workspace == other.workspace &&
+                usageTier == other.usageTier
         }
 
         override fun hashCode(): Int =
-            Objects.hash(user, seatTier, rbacGroup, organizationService, organization, workspace)
+            Objects.hash(
+                user,
+                seatTier,
+                rbacGroup,
+                organizationService,
+                organization,
+                workspace,
+                usageTier,
+            )
 
         override fun toString(): String =
             when {
@@ -1199,6 +1237,7 @@ private constructor(
                 organizationService != null -> "Scope{organizationService=$organizationService}"
                 organization != null -> "Scope{organization=$organization}"
                 workspace != null -> "Scope{workspace=$workspace}"
+                usageTier != null -> "Scope{usageTier=$usageTier}"
                 _json != null -> "Scope{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Scope")
             }
@@ -1262,6 +1301,15 @@ private constructor(
             @JvmStatic
             fun ofWorkspace(workspaceId: String) =
                 ofWorkspace(BetaSpendLimitWorkspaceScope.of(workspaceId))
+
+            /**
+             * Scope of the monthly spend cap Anthropic sets for a Claude Console organization from
+             * its usage tier, or a higher cap Anthropic granted the organization. Read-only; its
+             * `created_at` and `updated_at` are the organization's creation time, so `amount` can
+             * change while `updated_at` stays the same.
+             */
+            @JvmStatic
+            fun ofUsageTier(usageTier: BetaSpendLimitUsageTierScope) = Scope(usageTier = usageTier)
         }
 
         /** An interface that defines how to map each variant of [Scope] to a value of type [T]. */
@@ -1282,6 +1330,14 @@ private constructor(
 
             /** Scope selecting one workspace of a Claude Console organization. */
             fun visitWorkspace(workspace: BetaSpendLimitWorkspaceScope): T
+
+            /**
+             * Scope of the monthly spend cap Anthropic sets for a Claude Console organization from
+             * its usage tier, or a higher cap Anthropic granted the organization. Read-only; its
+             * `created_at` and `updated_at` are the organization's creation time, so `amount` can
+             * change while `updated_at` stays the same.
+             */
+            fun visitUsageTier(usageTier: BetaSpendLimitUsageTierScope): T
 
             /**
              * Maps an unknown variant of [Scope] to a value of type [T].
@@ -1336,6 +1392,10 @@ private constructor(
                         return tryDeserialize(node, jacksonTypeRef<BetaSpendLimitWorkspaceScope>())
                             ?.let { Scope(workspace = it, _json = json) } ?: Scope(_json = json)
                     }
+                    "usage_tier" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaSpendLimitUsageTierScope>())
+                            ?.let { Scope(usageTier = it, _json = json) } ?: Scope(_json = json)
+                    }
                 }
 
                 return Scope(_json = json)
@@ -1357,6 +1417,7 @@ private constructor(
                         generator.writeObject(value.organizationService)
                     value.organization != null -> generator.writeObject(value.organization)
                     value.workspace != null -> generator.writeObject(value.workspace)
+                    value.usageTier != null -> generator.writeObject(value.usageTier)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Scope")
                 }
@@ -1389,6 +1450,8 @@ private constructor(
 
                 @JvmField val WORKSPACE = Type(JsonField.of("workspace"))
 
+                @JvmField val USAGE_TIER = Type(JsonField.of("usage_tier"))
+
                 @JvmStatic
                 fun of(value: String): Type =
                     // Intern known values so `==` works
@@ -1399,6 +1462,7 @@ private constructor(
                         "organization_service" -> ORGANIZATION_SERVICE
                         "organization" -> ORGANIZATION
                         "workspace" -> WORKSPACE
+                        "usage_tier" -> USAGE_TIER
                         else -> Type(JsonField.of(value))
                     }
 
@@ -1416,6 +1480,7 @@ private constructor(
                 ORGANIZATION_SERVICE,
                 ORGANIZATION,
                 WORKSPACE,
+                USAGE_TIER,
             }
 
             /**
@@ -1434,6 +1499,7 @@ private constructor(
                 ORGANIZATION_SERVICE,
                 ORGANIZATION,
                 WORKSPACE,
+                USAGE_TIER,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
@@ -1453,6 +1519,7 @@ private constructor(
                     ORGANIZATION_SERVICE -> Value.ORGANIZATION_SERVICE
                     ORGANIZATION -> Value.ORGANIZATION
                     WORKSPACE -> Value.WORKSPACE
+                    USAGE_TIER -> Value.USAGE_TIER
                     else -> Value._UNKNOWN
                 }
 
@@ -1473,6 +1540,7 @@ private constructor(
                     ORGANIZATION_SERVICE -> Known.ORGANIZATION_SERVICE
                     ORGANIZATION -> Known.ORGANIZATION
                     WORKSPACE -> Known.WORKSPACE
+                    USAGE_TIER -> Known.USAGE_TIER
                     else -> throw AnthropicInvalidDataException("Unknown Type: $value")
                 }
 
@@ -1551,6 +1619,7 @@ private constructor(
         private val organizationService: BetaSpendLimitOrganizationServiceScope? = null,
         private val organization: BetaSpendLimitOrganizationScope? = null,
         private val workspace: BetaSpendLimitWorkspaceScope? = null,
+        private val usageTier: BetaSpendLimitUsageTierScope? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -1562,6 +1631,7 @@ private constructor(
                 organizationService != null -> Type.ORGANIZATION_SERVICE
                 organization != null -> Type.ORGANIZATION
                 workspace != null -> Type.WORKSPACE
+                usageTier != null -> Type.USAGE_TIER
                 else -> Type.of(_json?.asObject()?.getOrNull()?.get("type") ?: JsonMissing.of())
             }
 
@@ -1581,6 +1651,14 @@ private constructor(
         /** Scope selecting one workspace of a Claude Console organization. */
         fun workspace(): Optional<BetaSpendLimitWorkspaceScope> = Optional.ofNullable(workspace)
 
+        /**
+         * Scope of the monthly spend cap Anthropic sets for a Claude Console organization from its
+         * usage tier, or a higher cap Anthropic granted the organization. Read-only; its
+         * `created_at` and `updated_at` are the organization's creation time, so `amount` can
+         * change while `updated_at` stays the same.
+         */
+        fun usageTier(): Optional<BetaSpendLimitUsageTierScope> = Optional.ofNullable(usageTier)
+
         fun isUser(): Boolean = user != null
 
         fun isSeatTier(): Boolean = seatTier != null
@@ -1592,6 +1670,8 @@ private constructor(
         fun isOrganization(): Boolean = organization != null
 
         fun isWorkspace(): Boolean = workspace != null
+
+        fun isUsageTier(): Boolean = usageTier != null
 
         /** Scope selecting a single member of the organization. */
         fun asUser(): BetaSpendLimitUserScope = user.getOrThrow("user")
@@ -1608,6 +1688,14 @@ private constructor(
 
         /** Scope selecting one workspace of a Claude Console organization. */
         fun asWorkspace(): BetaSpendLimitWorkspaceScope = workspace.getOrThrow("workspace")
+
+        /**
+         * Scope of the monthly spend cap Anthropic sets for a Claude Console organization from its
+         * usage tier, or a higher cap Anthropic granted the organization. Read-only; its
+         * `created_at` and `updated_at` are the organization's creation time, so `amount` can
+         * change while `updated_at` stays the same.
+         */
+        fun asUsageTier(): BetaSpendLimitUsageTierScope = usageTier.getOrThrow("usageTier")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -1648,6 +1736,7 @@ private constructor(
                 organizationService != null -> visitor.visitOrganizationService(organizationService)
                 organization != null -> visitor.visitOrganization(organization)
                 workspace != null -> visitor.visitWorkspace(workspace)
+                usageTier != null -> visitor.visitUsageTier(usageTier)
                 else -> visitor.unknown(_json)
             }
 
@@ -1674,6 +1763,7 @@ private constructor(
                 organizationService != null -> organizationService.validate()
                 organization != null -> organization.validate()
                 workspace != null -> workspace.validate()
+                usageTier != null -> usageTier.validate()
                 else -> throw AnthropicInvalidDataException("Unknown Source: $_json")
             }
             validated = true
@@ -1702,6 +1792,7 @@ private constructor(
                 organizationService != null -> organizationService.validity()
                 organization != null -> organization.validity()
                 workspace != null -> workspace.validity()
+                usageTier != null -> usageTier.validity()
                 else -> 0
             }
 
@@ -1716,11 +1807,20 @@ private constructor(
                 rbacGroup == other.rbacGroup &&
                 organizationService == other.organizationService &&
                 organization == other.organization &&
-                workspace == other.workspace
+                workspace == other.workspace &&
+                usageTier == other.usageTier
         }
 
         override fun hashCode(): Int =
-            Objects.hash(user, seatTier, rbacGroup, organizationService, organization, workspace)
+            Objects.hash(
+                user,
+                seatTier,
+                rbacGroup,
+                organizationService,
+                organization,
+                workspace,
+                usageTier,
+            )
 
         override fun toString(): String =
             when {
@@ -1730,6 +1830,7 @@ private constructor(
                 organizationService != null -> "Source{organizationService=$organizationService}"
                 organization != null -> "Source{organization=$organization}"
                 workspace != null -> "Source{workspace=$workspace}"
+                usageTier != null -> "Source{usageTier=$usageTier}"
                 _json != null -> "Source{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Source")
             }
@@ -1793,6 +1894,15 @@ private constructor(
             @JvmStatic
             fun ofWorkspace(workspaceId: String) =
                 ofWorkspace(BetaSpendLimitWorkspaceScope.of(workspaceId))
+
+            /**
+             * Scope of the monthly spend cap Anthropic sets for a Claude Console organization from
+             * its usage tier, or a higher cap Anthropic granted the organization. Read-only; its
+             * `created_at` and `updated_at` are the organization's creation time, so `amount` can
+             * change while `updated_at` stays the same.
+             */
+            @JvmStatic
+            fun ofUsageTier(usageTier: BetaSpendLimitUsageTierScope) = Source(usageTier = usageTier)
         }
 
         /** An interface that defines how to map each variant of [Source] to a value of type [T]. */
@@ -1813,6 +1923,14 @@ private constructor(
 
             /** Scope selecting one workspace of a Claude Console organization. */
             fun visitWorkspace(workspace: BetaSpendLimitWorkspaceScope): T
+
+            /**
+             * Scope of the monthly spend cap Anthropic sets for a Claude Console organization from
+             * its usage tier, or a higher cap Anthropic granted the organization. Read-only; its
+             * `created_at` and `updated_at` are the organization's creation time, so `amount` can
+             * change while `updated_at` stays the same.
+             */
+            fun visitUsageTier(usageTier: BetaSpendLimitUsageTierScope): T
 
             /**
              * Maps an unknown variant of [Source] to a value of type [T].
@@ -1868,6 +1986,10 @@ private constructor(
                         return tryDeserialize(node, jacksonTypeRef<BetaSpendLimitWorkspaceScope>())
                             ?.let { Source(workspace = it, _json = json) } ?: Source(_json = json)
                     }
+                    "usage_tier" -> {
+                        return tryDeserialize(node, jacksonTypeRef<BetaSpendLimitUsageTierScope>())
+                            ?.let { Source(usageTier = it, _json = json) } ?: Source(_json = json)
+                    }
                 }
 
                 return Source(_json = json)
@@ -1889,6 +2011,7 @@ private constructor(
                         generator.writeObject(value.organizationService)
                     value.organization != null -> generator.writeObject(value.organization)
                     value.workspace != null -> generator.writeObject(value.workspace)
+                    value.usageTier != null -> generator.writeObject(value.usageTier)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Source")
                 }
@@ -1921,6 +2044,8 @@ private constructor(
 
                 @JvmField val WORKSPACE = Type(JsonField.of("workspace"))
 
+                @JvmField val USAGE_TIER = Type(JsonField.of("usage_tier"))
+
                 @JvmStatic
                 fun of(value: String): Type =
                     // Intern known values so `==` works
@@ -1931,6 +2056,7 @@ private constructor(
                         "organization_service" -> ORGANIZATION_SERVICE
                         "organization" -> ORGANIZATION
                         "workspace" -> WORKSPACE
+                        "usage_tier" -> USAGE_TIER
                         else -> Type(JsonField.of(value))
                     }
 
@@ -1948,6 +2074,7 @@ private constructor(
                 ORGANIZATION_SERVICE,
                 ORGANIZATION,
                 WORKSPACE,
+                USAGE_TIER,
             }
 
             /**
@@ -1966,6 +2093,7 @@ private constructor(
                 ORGANIZATION_SERVICE,
                 ORGANIZATION,
                 WORKSPACE,
+                USAGE_TIER,
                 /** An enum member indicating that [Type] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
@@ -1985,6 +2113,7 @@ private constructor(
                     ORGANIZATION_SERVICE -> Value.ORGANIZATION_SERVICE
                     ORGANIZATION -> Value.ORGANIZATION
                     WORKSPACE -> Value.WORKSPACE
+                    USAGE_TIER -> Value.USAGE_TIER
                     else -> Value._UNKNOWN
                 }
 
@@ -2005,6 +2134,7 @@ private constructor(
                     ORGANIZATION_SERVICE -> Known.ORGANIZATION_SERVICE
                     ORGANIZATION -> Known.ORGANIZATION
                     WORKSPACE -> Known.WORKSPACE
+                    USAGE_TIER -> Known.USAGE_TIER
                     else -> throw AnthropicInvalidDataException("Unknown Type: $value")
                 }
 

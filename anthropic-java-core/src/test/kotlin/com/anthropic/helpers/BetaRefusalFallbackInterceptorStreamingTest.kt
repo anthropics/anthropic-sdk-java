@@ -25,6 +25,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.junit.jupiter.api.parallel.Resources
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
 
 /**
@@ -184,6 +185,284 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
 
         assertThat(httpClient.jsonBodies[1].path("thinking").toString())
             .isEqualTo("""{"type":"disabled"}""")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun anEntryWithANullSpeedRemovesSpeedFromTheHop(async: Boolean) {
+        val refusal = messageStart() + refusalDelta("tok_abc")
+        val httpClient = FakeHttpClient(sse(refusal), sse(STREAM_B))
+        val entry =
+            BetaFallbackParam.builder()
+                .model(FALLBACK_MODEL)
+                .speed(null as BetaFallbackParam.Speed?)
+                .build()
+
+        val response =
+            httpClient.intercepted(entry).execute(fastStreamingRequest(), withState(), async)
+        response.body().readBytes() // drive the splice so the hop request goes out
+
+        assertThat(httpClient.jsonBodies[0].path("speed").asText()).isEqualTo("fast")
+        val hopBody = httpClient.jsonBodies[1]
+        assertThat(hopBody.has("speed")).isFalse()
+        assertThat(hopBody.path("model").asText()).isEqualTo(FALLBACK_MODEL)
+        assertThat(hopBody.path("fallback_credit_token").path("token").asText())
+            .isEqualTo("tok_abc")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun anEntryThatSetsSpeedOverridesItOnTheHop(async: Boolean) {
+        val httpClient = FakeHttpClient(sse(STREAM_A), sse(STREAM_B))
+        val entry =
+            BetaFallbackParam.builder()
+                .model(FALLBACK_MODEL)
+                .speed(BetaFallbackParam.Speed.STANDARD)
+                .build()
+
+        val response =
+            httpClient.intercepted(entry).execute(fastStreamingRequest(), withState(), async)
+        response.body().readBytes() // drive the splice so the hop request goes out
+
+        assertThat(httpClient.jsonBodies[1].path("speed").asText()).isEqualTo("standard")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun anEntryWithoutSpeedKeepsTheOriginalOnTheHop(async: Boolean) {
+        val httpClient = FakeHttpClient(sse(STREAM_A), sse(STREAM_B))
+
+        val response =
+            httpClient
+                .intercepted(FALLBACK_MODEL)
+                .execute(fastStreamingRequest(), withState(), async)
+        response.body().readBytes() // drive the splice so the hop request goes out
+
+        assertThat(httpClient.jsonBodies[1].path("speed").asText()).isEqualTo("fast")
+    }
+
+    @ParameterizedTest
+    @CsvSource("429, false", "429, true", "529, false", "529, true")
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun resendsARejectedFastHopOnceWithoutSpeed(status: Int, async: Boolean) {
+        val httpClient = FakeHttpClient(sse(STREAM_A), json(status, API_ERROR), sse(STREAM_B))
+
+        var events: List<ObjectNode>? = null
+        val stderr = captureStderr {
+            events =
+                consume(
+                    httpClient.intercepted(FALLBACK_MODEL),
+                    async,
+                    request = fastStreamingRequest(),
+                )
+        }
+
+        assertThat(httpClient.requests).hasSize(3)
+        val rejected = httpClient.jsonBodies[1]
+        val resent = httpClient.jsonBodies[2]
+        assertThat(rejected.path("speed").asText()).isEqualTo("fast")
+        assertThat(resent.has("speed")).isFalse()
+        assertThat(resent.path("model").asText()).isEqualTo(FALLBACK_MODEL)
+        assertThat(resent.path("fallback_credit_token").path("token").asText()).isNotEmpty()
+        assertThat(resent).isEqualTo(rejected.without<ObjectNode>("speed"))
+        assertThat(httpClient.requests[2].headers).isEqualTo(httpClient.requests[1].headers)
+        assertThat(httpClient.issued[1].closed.get()).isTrue()
+
+        // The recovered hop is not a failure: one boundary, a normal completion.
+        assertThat(stderr).doesNotContain("fallback request to")
+        assertThat(events!!.count { blockType(it) == "fallback" }).isEqualTo(1)
+        val delta = events!!.single { it.path("type").asText() == "message_delta" }
+        assertThat(delta.path("delta").path("stop_reason").asText()).isEqualTo("end_turn")
+        assertThat(iterations(delta))
+            .containsExactly("message" to FABLE_MODEL, "fallback_message" to FALLBACK_MODEL)
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        // The entry asks for `fast` itself, or replaces it.
+        "fast, fast, 429, false",
+        "fast, fast, 429, true",
+        "fast, standard, 429, false",
+        "fast, standard, 429, true",
+        // The request isn't fast.
+        ", , 429, false",
+        ", , 429, true",
+        "standard, , 529, false",
+        "standard, , 529, true",
+        // The hop fails for another reason.
+        "fast, , 400, false",
+        "fast, , 400, true",
+        "fast, , 500, false",
+        "fast, , 500, true",
+    )
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun doesNotResendAnyOtherFailedHop(
+        requestSpeed: String?,
+        entrySpeed: String?,
+        status: Int,
+        async: Boolean,
+    ) {
+        // No partial output, so a 400 isn't retried without the prefill either. The last response
+        // is a spare: an unwanted resend would be served, not swallowed as one more failed hop.
+        val refusal = messageStart() + refusalDelta("tok_abc")
+        val httpClient = FakeHttpClient(sse(refusal), json(status, API_ERROR), sse(STREAM_B))
+        val entry = BetaFallbackParam.builder().model(FALLBACK_MODEL)
+        entrySpeed?.let { entry.speed(BetaFallbackParam.Speed.of(it)) }
+
+        var events: List<ObjectNode>? = null
+        val stderr = captureStderr {
+            events =
+                consume(
+                    httpClient.intercepted(entry.build()),
+                    async,
+                    request =
+                        streamingRequest {
+                            requestSpeed?.let { speed(MessageCreateParams.Speed.of(it)) }
+                        },
+                )
+        }
+
+        assertThat(httpClient.requests).hasSize(2)
+        assertThat(httpClient.jsonBodies[1].path("speed").asText(null))
+            .isEqualTo(entrySpeed ?: requestSpeed)
+        assertThat(stderr).contains("fallback request to $FALLBACK_MODEL failed: HTTP $status")
+        val delta = events!!.single { it.path("type").asText() == "message_delta" }
+        assertThat(delta.path("delta").path("stop_reason").asText()).isEqualTo("refusal")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun doesNotResendARejectedFastOriginalStream(async: Boolean) {
+        // The last response is a spare: an unwanted resend would be served, not fail on its own.
+        val httpClient = FakeHttpClient(json(429, API_ERROR), sse(STREAM_B))
+
+        val response =
+            httpClient
+                .intercepted(FALLBACK_MODEL)
+                .execute(fastStreamingRequest(), withState(), async)
+
+        assertThat(response.statusCode()).isEqualTo(429)
+        assertThat(httpClient.requests).hasSize(1)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun skipsTheHopWhenTheResendWithoutSpeedIsRejectedToo(async: Boolean) {
+        val httpClient =
+            FakeHttpClient(sse(STREAM_A), json(429, API_ERROR), json(429, API_ERROR), sse(STREAM_B))
+
+        var events: List<ObjectNode>? = null
+        val stderr = captureStderr {
+            events =
+                consume(
+                    httpClient.intercepted(FALLBACK_MODEL, SECOND_MODEL),
+                    async,
+                    request = fastStreamingRequest(),
+                )
+        }
+
+        // One resend, then the hop counts as failed; the next entry starts fast again.
+        assertThat(stderr).contains("fallback request to $FALLBACK_MODEL failed: HTTP 429")
+        assertThat(
+                httpClient.jsonBodies.map {
+                    it.path("model").asText() to it.path("speed").asText(null)
+                }
+            )
+            .containsExactly(
+                "primary-model" to "fast",
+                FALLBACK_MODEL to "fast",
+                FALLBACK_MODEL to null,
+                SECOND_MODEL to "fast",
+            )
+        assertThat(httpClient.jsonBodies[3].path("fallback_credit_token"))
+            .isEqualTo(httpClient.jsonBodies[1].path("fallback_credit_token"))
+        val delta = events!!.single { it.path("type").asText() == "message_delta" }
+        assertThat(iterations(delta))
+            .containsExactly("message" to FABLE_MODEL, "fallback_message" to SECOND_MODEL)
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun aHopResentWithoutSpeedStaysWithoutItWhenRetriedWithoutThePartial(async: Boolean) {
+        val httpClient =
+            FakeHttpClient(
+                sse(STREAM_A),
+                json(429, API_ERROR),
+                json(400, INVALID_REQUEST_ERROR),
+                sse(STREAM_B),
+            )
+
+        var events: List<ObjectNode>? = null
+        captureStderr {
+            events =
+                consume(
+                    httpClient.intercepted(FALLBACK_MODEL),
+                    async,
+                    request = fastStreamingRequest(),
+                )
+        }
+
+        assertThat(httpClient.jsonBodies.drop(1).map { speedAndHasPartial(it) })
+            .containsExactly("fast" to true, null to true, null to false)
+        assertThat(httpClient.jsonBodies.drop(1).map { it.path("fallback_credit_token") }.toSet())
+            .hasSize(1)
+        val delta = events!!.single { it.path("type").asText() == "message_delta" }
+        assertThat(delta.path("delta").path("stop_reason").asText()).isEqualTo("end_turn")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    @ResourceLock(Resources.SYSTEM_ERR)
+    fun aHopRetriedWithoutThePartialIsStillResentWithoutSpeed(async: Boolean) {
+        val httpClient =
+            FakeHttpClient(
+                sse(STREAM_A),
+                json(400, INVALID_REQUEST_ERROR),
+                json(429, API_ERROR),
+                sse(STREAM_B),
+            )
+
+        var events: List<ObjectNode>? = null
+        captureStderr {
+            events =
+                consume(
+                    httpClient.intercepted(FALLBACK_MODEL),
+                    async,
+                    request = fastStreamingRequest(),
+                )
+        }
+
+        assertThat(httpClient.jsonBodies.drop(1).map { speedAndHasPartial(it) })
+            .containsExactly("fast" to true, "fast" to false, null to false)
+        val delta = events!!.single { it.path("type").asText() == "message_delta" }
+        assertThat(delta.path("delta").path("stop_reason").asText()).isEqualTo("end_turn")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun resendsARejectedFastStreamThatStartsOnThePinnedEntry(async: Boolean) {
+        val httpClient = FakeHttpClient(json(429, API_ERROR), sse(STREAM_B))
+        val fallbackState = BetaFallbackState.create()
+        fallbackState.index(0)
+
+        val response =
+            httpClient
+                .intercepted(FALLBACK_MODEL)
+                .execute(
+                    fastStreamingRequest(),
+                    RequestOptions.builder().fallbackState(fallbackState).build(),
+                    async,
+                )
+
+        assertThat(response.body().readBytes().decodeToString()).isEqualTo(STREAM_B)
+        assertThat(httpClient.requests).hasSize(2)
+        assertThat(httpClient.jsonBodies[0].path("model").asText()).isEqualTo(FALLBACK_MODEL)
+        assertThat(httpClient.jsonBodies[0].path("speed").asText()).isEqualTo("fast")
+        assertThat(httpClient.jsonBodies[1])
+            .isEqualTo(httpClient.jsonBodies[0].without<ObjectNode>("speed"))
+        assertThat(httpClient.issued[0].closed.get()).isTrue()
     }
 
     @ParameterizedTest
@@ -499,6 +778,39 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
 
         assertThat(reader.isAlive).isFalse()
         assertThat(httpClient.issued).hasSize(2)
+        assertThat(httpClient.issued[1].closed.get()).isTrue()
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun closingDuringARejectedFastHopReleasesItsResponseWithoutResending(async: Boolean) {
+        val hopStarted = CountDownLatch(1)
+        val closeDone = CountDownLatch(1)
+        // The last response is a spare: an unwanted resend would be served, not fail on its own.
+        val httpClient =
+            FakeHttpClient(
+                sse(STREAM_A),
+                {
+                    hopStarted.countDown()
+                    closeDone.await(5, TimeUnit.SECONDS)
+                    json(429, API_ERROR)
+                },
+                sse(STREAM_B),
+            )
+        val response =
+            httpClient
+                .intercepted(FALLBACK_MODEL)
+                .execute(fastStreamingRequest(), withState(), async)
+
+        val reader = Thread { response.body().readBytes() }
+        reader.start()
+        assertThat(hopStarted.await(5, TimeUnit.SECONDS)).isTrue()
+        response.close()
+        closeDone.countDown()
+        reader.join(5_000)
+
+        assertThat(reader.isAlive).isFalse()
+        assertThat(httpClient.requests).hasSize(2)
         assertThat(httpClient.issued[1].closed.get()).isTrue()
     }
 
@@ -1019,6 +1331,8 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
     private val INVALID_REQUEST_ERROR =
         """{"type":"error","error":{"type":"invalid_request_error","message":"bad request"}}"""
 
+    private val API_ERROR = """{"type":"error","error":{"type":"api_error","message":"no"}}"""
+
     private fun messageStart(): String =
         event(
             """{"type":"message_start","message":{"id":"msg_a","type":"message","role":"assistant","model":"$FABLE_MODEL","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":12,"output_tokens":1}}}"""
@@ -1048,11 +1362,19 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
             it.path("type").asText() to it.path("model").asText()
         }
 
+    /** A hop body's `speed` (`null` if absent), and whether it appends the refused partial. */
+    private fun speedAndHasPartial(hopBody: ObjectNode): Pair<String?, Boolean> =
+        hopBody.path("speed").asText(null) to
+            (hopBody.path("messages").last().path("role").asText() == "assistant")
+
     private fun FakeHttpClient.intercepted(vararg fallbackModels: String): HttpClient =
         BetaRefusalFallbackInterceptor.builder()
             .fallbacks(fallbackModels.map { BetaFallbackParam.builder().model(it).build() })
             .build()
             .intercept(this)
+
+    private fun FakeHttpClient.intercepted(fallback: BetaFallbackParam): HttpClient =
+        BetaRefusalFallbackInterceptor.builder().addFallback(fallback).build().intercept(this)
 
     /**
      * A fresh-state request option — the default for tests, so they don't pollute the stderr of
@@ -1066,8 +1388,9 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
         httpClient: HttpClient,
         async: Boolean,
         requestOptions: RequestOptions = withState(),
+        request: HttpRequest = streamingRequest(),
     ): List<ObjectNode> {
-        val response = httpClient.execute(streamingRequest(), requestOptions, async)
+        val response = httpClient.execute(request, requestOptions, async)
         return response
             .body()
             .readBytes()
@@ -1088,6 +1411,10 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
 
     private fun betweenToolsStreamingRequest(): HttpRequest = streamingRequest {
         putAdditionalProperty("thinking", betweenToolsThinking())
+    }
+
+    private fun fastStreamingRequest(): HttpRequest = streamingRequest {
+        speed(MessageCreateParams.Speed.FAST)
     }
 
     private fun streamingRequest(

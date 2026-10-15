@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.73.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.72.0...v2.73.0) (2026-10-15)
+
+### Features
+
+* **api:** add between_tools to thinking types in model capabilities
+* **api:** add the speed parameter and usage.speed to Messages
+* **api:** return a Console organization's usage-tier spend cap as a read-only spend limit
+
+
+### Chores
+
+* **ci:** speed up breaking change detection
+* **docs:** describe headers on Managed Agents and telemetry endpoints
+* **internal:** baseline lint findings on constructor properties
+* **internal:** give lint more memory in CI
+* **tests:** cover the OpenTelemetry propagation option
+
+
+### Documentation
+
+* **api:** note that some models need a beta header to use speed
+
 ## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-14)
 
 ### Features
@@ -9,7 +31,9 @@
 * **api:** add telemetry destination test endpoint
 * **api:** add telemetry destinations to the Admin API
 * **client:** add a followRedirects request option
-* **client:** emit OpenTelemetry spans for API calls, streams and tool runs. They are on by default and need no setup in the SDK: the spans appear once the application has registered a tracer provider with the OpenTelemetry API, or has set one with `OpenTelemetryOptions.tracerProvider`, and there are none without one. Requests carry the trace context in `traceparent`, and in the other headers that the registered propagator writes. This adds a dependency on `io.opentelemetry:opentelemetry-api` (1.62.0). `openTelemetry(false)`, or `ANTHROPIC_OPEN_TELEMETRY=false` for a client built with `fromEnv()`, turns all of it off; `OpenTelemetryOptions.builder().propagation(false)`, or `ANTHROPIC_OPEN_TELEMETRY_PROPAGATION=false` with `fromEnv()`, keeps the spans and sends no trace headers
+* **client:** add native support for OpenTelemetry tracing
+
+  If your app registers a global tracer provider, the SDK will create spans with it after upgrading, and they'll be exported with the rest of your traces. Requests will also get trace context headers from the global propagator. To disable, call `.openTelemetry(false)` on the client builder, or set `ANTHROPIC_OPEN_TELEMETRY=false` for a client built with `fromEnv()`. Learn more in the [documentation](https://platform.claude.com/docs/en/manage-claude/opentelemetry/sdk).
 
 
 ### Bug Fixes

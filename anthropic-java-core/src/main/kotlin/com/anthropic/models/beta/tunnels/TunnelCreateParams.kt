@@ -37,7 +37,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Optional header to specify the beta version(s) you want to use. */
+    /** This endpoint is in beta: requests must send `mcp-tunnels-2026-06-22` in this header. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -100,7 +100,7 @@ private constructor(
             additionalQueryParams = tunnelCreateParams.additionalQueryParams.toBuilder()
         }
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /** This endpoint is in beta: requests must send `mcp-tunnels-2026-06-22` in this header. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */

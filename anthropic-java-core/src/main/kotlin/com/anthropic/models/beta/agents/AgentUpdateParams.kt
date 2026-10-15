@@ -49,7 +49,7 @@ private constructor(
     /** Unique identifier of the agent to update. */
     fun agentId(): Optional<String> = Optional.ofNullable(agentId)
 
-    /** Optional header to specify the beta version(s) you want to use. */
+    /** This endpoint is in beta: requests must send `managed-agents-2026-04-01` in this header. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -287,7 +287,9 @@ private constructor(
         /** Alias for calling [Builder.agentId] with `agentId.orElse(null)`. */
         fun agentId(agentId: Optional<String>) = agentId(agentId.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * This endpoint is in beta: requests must send `managed-agents-2026-04-01` in this header.
+         */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */

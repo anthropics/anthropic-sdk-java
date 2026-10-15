@@ -52,6 +52,7 @@ internal class ModelInfoTest {
                                 .types(
                                     ThinkingTypes.builder()
                                         .adaptive(CapabilitySupport.of(true))
+                                        .betweenTools(CapabilitySupport.of(true))
                                         .disabled(CapabilitySupport.of(true))
                                         .enabled(CapabilitySupport.of(true))
                                         .build()
@@ -111,6 +112,7 @@ internal class ModelInfoTest {
                             .types(
                                 ThinkingTypes.builder()
                                     .adaptive(CapabilitySupport.of(true))
+                                    .betweenTools(CapabilitySupport.of(true))
                                     .disabled(CapabilitySupport.of(true))
                                     .enabled(CapabilitySupport.of(true))
                                     .build()
@@ -175,6 +177,7 @@ internal class ModelInfoTest {
                                 .types(
                                     ThinkingTypes.builder()
                                         .adaptive(CapabilitySupport.of(true))
+                                        .betweenTools(CapabilitySupport.of(true))
                                         .disabled(CapabilitySupport.of(true))
                                         .enabled(CapabilitySupport.of(true))
                                         .build()

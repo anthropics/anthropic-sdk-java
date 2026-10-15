@@ -47,7 +47,10 @@ private constructor(
     /** ID of the destination (`tdst_...`). */
     fun destinationId(): Optional<String> = Optional.ofNullable(destinationId)
 
-    /** Optional header to specify the beta version(s) you want to use. */
+    /**
+     * This endpoint is in beta: requests must send `telemetry-destinations-2026-08-11` in this
+     * header.
+     */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -210,7 +213,10 @@ private constructor(
         fun destinationId(destinationId: Optional<String>) =
             destinationId(destinationId.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * This endpoint is in beta: requests must send `telemetry-destinations-2026-08-11` in this
+         * header.
+         */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */

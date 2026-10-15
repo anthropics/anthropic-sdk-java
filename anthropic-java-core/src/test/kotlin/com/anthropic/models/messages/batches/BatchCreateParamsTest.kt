@@ -74,6 +74,7 @@ internal class BatchCreateParamsTest {
                                     .build()
                             )
                             .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
+                            .speed(BatchCreateParams.Request.Params.Speed.STANDARD)
                             .addStopSequence("string")
                             .stream(false)
                             .systemOfTextBlockParams(
@@ -211,6 +212,7 @@ internal class BatchCreateParamsTest {
                                         .build()
                                 )
                                 .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
+                                .speed(BatchCreateParams.Request.Params.Speed.STANDARD)
                                 .addStopSequence("string")
                                 .stream(false)
                                 .systemOfTextBlockParams(
@@ -383,6 +385,7 @@ internal class BatchCreateParamsTest {
                                         .build()
                                 )
                                 .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
+                                .speed(BatchCreateParams.Request.Params.Speed.STANDARD)
                                 .addStopSequence("string")
                                 .stream(false)
                                 .systemOfTextBlockParams(
@@ -515,6 +518,7 @@ internal class BatchCreateParamsTest {
                                     .build()
                             )
                             .serviceTier(BatchCreateParams.Request.Params.ServiceTier.AUTO)
+                            .speed(BatchCreateParams.Request.Params.Speed.STANDARD)
                             .addStopSequence("string")
                             .stream(false)
                             .systemOfTextBlockParams(
