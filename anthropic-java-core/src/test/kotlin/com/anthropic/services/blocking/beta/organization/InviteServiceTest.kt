@@ -9,13 +9,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class InviteServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val inviteService = client.beta().organization().invites()
 
         val betaOrganizationInvite =
@@ -32,11 +33,6 @@ internal class InviteServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val inviteService = client.beta().organization().invites()
 
         val betaOrganizationInvite = inviteService.retrieve("invite_id")
@@ -46,11 +42,6 @@ internal class InviteServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val inviteService = client.beta().organization().invites()
 
         val page = inviteService.list()
@@ -60,11 +51,6 @@ internal class InviteServiceTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val inviteService = client.beta().organization().invites()
 
         val invite = inviteService.delete("invite_id")

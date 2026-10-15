@@ -16,13 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class UserProfileServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileServiceAsync = client.beta().userProfiles()
 
         val betaUserProfileFuture =
@@ -59,11 +60,6 @@ internal class UserProfileServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileServiceAsync = client.beta().userProfiles()
 
         val betaUserProfileFuture =
@@ -81,11 +77,6 @@ internal class UserProfileServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileServiceAsync = client.beta().userProfiles()
 
         val betaUserProfileFuture =
@@ -127,11 +118,6 @@ internal class UserProfileServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileServiceAsync = client.beta().userProfiles()
 
         val pageFuture = userProfileServiceAsync.list()
@@ -142,11 +128,6 @@ internal class UserProfileServiceAsyncTest {
 
     @Test
     fun createEnrollmentUrl() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileServiceAsync = client.beta().userProfiles()
 
         val betaUserProfileEnrollmentUrlFuture =

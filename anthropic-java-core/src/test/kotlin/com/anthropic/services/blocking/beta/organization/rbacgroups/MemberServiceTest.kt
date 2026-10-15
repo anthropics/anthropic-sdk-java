@@ -10,13 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class MemberServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberService = client.beta().organization().rbacGroups().members()
 
         val page = memberService.list("rbac_group_id")
@@ -26,11 +27,6 @@ internal class MemberServiceTest {
 
     @Test
     fun add() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberService = client.beta().organization().rbacGroups().members()
 
         val betaRbacGroupMember =
@@ -46,11 +42,6 @@ internal class MemberServiceTest {
 
     @Test
     fun remove() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberService = client.beta().organization().rbacGroups().members()
 
         val member =

@@ -11,13 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class IncreaseRequestServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val increaseRequestServiceAsync =
             client.beta().organization().spendLimits().increaseRequests()
 
@@ -30,11 +31,6 @@ internal class IncreaseRequestServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val increaseRequestServiceAsync =
             client.beta().organization().spendLimits().increaseRequests()
 
@@ -46,11 +42,6 @@ internal class IncreaseRequestServiceAsyncTest {
 
     @Test
     fun approve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val increaseRequestServiceAsync =
             client.beta().organization().spendLimits().increaseRequests()
 
@@ -70,11 +61,6 @@ internal class IncreaseRequestServiceAsyncTest {
 
     @Test
     fun deny() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val increaseRequestServiceAsync =
             client.beta().organization().spendLimits().increaseRequests()
 

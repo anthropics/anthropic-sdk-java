@@ -9,13 +9,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class InviteServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val inviteServiceAsync = client.organization().invites()
 
         val organizationInviteFuture =
@@ -33,11 +34,6 @@ internal class InviteServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val inviteServiceAsync = client.organization().invites()
 
         val organizationInviteFuture = inviteServiceAsync.retrieve("invite_id")
@@ -48,11 +44,6 @@ internal class InviteServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val inviteServiceAsync = client.organization().invites()
 
         val pageFuture = inviteServiceAsync.list()
@@ -63,11 +54,6 @@ internal class InviteServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val inviteServiceAsync = client.organization().invites()
 
         val inviteFuture = inviteServiceAsync.delete("invite_id")

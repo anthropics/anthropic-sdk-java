@@ -11,13 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class InstallationSettingServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val installationSettingService =
             client.beta().organization().plugins().installationSettings()
 
@@ -28,11 +29,6 @@ internal class InstallationSettingServiceTest {
 
     @Test
     fun remove() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val installationSettingService =
             client.beta().organization().plugins().installationSettings()
 
@@ -50,11 +46,6 @@ internal class InstallationSettingServiceTest {
 
     @Test
     fun set() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val installationSettingService =
             client.beta().organization().plugins().installationSettings()
 

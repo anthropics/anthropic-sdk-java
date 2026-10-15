@@ -13,13 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class RuleServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val ruleService = client.organization().federation().rules()
 
         val federationRule =
@@ -58,11 +59,6 @@ internal class RuleServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val ruleService = client.organization().federation().rules()
 
         val federationRule = ruleService.retrieve("federation_rule_id")
@@ -72,11 +68,6 @@ internal class RuleServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val ruleService = client.organization().federation().rules()
 
         val federationRule =
@@ -115,11 +106,6 @@ internal class RuleServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val ruleService = client.organization().federation().rules()
 
         val page = ruleService.list()
@@ -129,11 +115,6 @@ internal class RuleServiceTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val ruleService = client.organization().federation().rules()
 
         val federationRule = ruleService.archive("federation_rule_id")

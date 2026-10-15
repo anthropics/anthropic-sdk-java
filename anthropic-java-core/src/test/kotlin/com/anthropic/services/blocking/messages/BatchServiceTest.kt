@@ -27,13 +27,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class BatchServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchService = client.messages().batches()
 
         val messageBatch =
@@ -187,11 +188,6 @@ internal class BatchServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchService = client.messages().batches()
 
         val messageBatch =
@@ -207,11 +203,6 @@ internal class BatchServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchService = client.messages().batches()
 
         val page = batchService.list()
@@ -221,11 +212,6 @@ internal class BatchServiceTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchService = client.messages().batches()
 
         val deletedMessageBatch =
@@ -241,11 +227,6 @@ internal class BatchServiceTest {
 
     @Test
     fun cancel() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchService = client.messages().batches()
 
         val messageBatch =
@@ -261,11 +242,6 @@ internal class BatchServiceTest {
 
     @Test
     fun resultsStreaming() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchService = client.messages().batches()
 
         val messageBatchIndividualResponseStreamResponse =

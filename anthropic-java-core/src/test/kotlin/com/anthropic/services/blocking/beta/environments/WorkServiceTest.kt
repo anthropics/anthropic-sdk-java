@@ -20,13 +20,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class WorkServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workService = client.beta().environments().work()
 
         val betaSelfHostedWork =
@@ -44,11 +45,6 @@ internal class WorkServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workService = client.beta().environments().work()
 
         val betaSelfHostedWork =
@@ -73,11 +69,6 @@ internal class WorkServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workService = client.beta().environments().work()
 
         val page = workService.list("env_011CZkZ9X2dpNyB7HsEFoRfW")
@@ -87,11 +78,6 @@ internal class WorkServiceTest {
 
     @Test
     fun ack() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workService = client.beta().environments().work()
 
         val betaSelfHostedWork =
@@ -108,11 +94,6 @@ internal class WorkServiceTest {
 
     @Test
     fun heartbeat() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workService = client.beta().environments().work()
 
         val betaSelfHostedWorkHeartbeatResponse =
@@ -131,11 +112,6 @@ internal class WorkServiceTest {
 
     @Test
     fun poll() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workService = client.beta().environments().work()
 
         val betaSelfHostedWork =
@@ -155,11 +131,6 @@ internal class WorkServiceTest {
 
     @Test
     fun stats() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workService = client.beta().environments().work()
 
         val betaSelfHostedWorkQueueStats =
@@ -176,11 +147,6 @@ internal class WorkServiceTest {
 
     @Test
     fun stop() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workService = client.beta().environments().work()
 
         val betaSelfHostedWork =

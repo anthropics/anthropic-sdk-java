@@ -13,13 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class PluginServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val pluginServiceAsync = client.beta().organization().plugins()
 
         val betaPluginFuture =
@@ -38,11 +39,6 @@ internal class PluginServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val pluginServiceAsync = client.beta().organization().plugins()
 
         val betaPluginFuture =
@@ -60,11 +56,6 @@ internal class PluginServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val pluginServiceAsync = client.beta().organization().plugins()
 
         val betaPluginFuture =
@@ -82,11 +73,6 @@ internal class PluginServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val pluginServiceAsync = client.beta().organization().plugins()
 
         val pageFuture = pluginServiceAsync.list()
@@ -97,11 +83,6 @@ internal class PluginServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val pluginServiceAsync = client.beta().organization().plugins()
 
         val betaDeletedPluginFuture =

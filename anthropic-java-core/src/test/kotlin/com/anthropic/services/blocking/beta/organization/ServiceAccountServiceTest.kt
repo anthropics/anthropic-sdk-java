@@ -13,13 +13,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class ServiceAccountServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.beta().organization().serviceAccounts()
 
         val betaServiceAccount =
@@ -37,11 +38,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.beta().organization().serviceAccounts()
 
         val betaServiceAccount =
@@ -57,11 +53,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.beta().organization().serviceAccounts()
 
         val betaServiceAccount =
@@ -79,11 +70,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.beta().organization().serviceAccounts()
 
         val page = serviceAccountService.list()
@@ -93,11 +79,6 @@ internal class ServiceAccountServiceTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountService = client.beta().organization().serviceAccounts()
 
         val betaServiceAccount =

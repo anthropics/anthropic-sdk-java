@@ -18,13 +18,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class EnvironmentServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val environmentServiceAsync = client.beta().environments()
 
         val betaEnvironmentFuture =
@@ -72,11 +73,6 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val environmentServiceAsync = client.beta().environments()
 
         val betaEnvironmentFuture =
@@ -94,11 +90,6 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val environmentServiceAsync = client.beta().environments()
 
         val betaEnvironmentFuture =
@@ -147,11 +138,6 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val environmentServiceAsync = client.beta().environments()
 
         val pageFuture = environmentServiceAsync.list()
@@ -162,11 +148,6 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val environmentServiceAsync = client.beta().environments()
 
         val betaEnvironmentDeleteResponseFuture =
@@ -184,11 +165,6 @@ internal class EnvironmentServiceAsyncTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val environmentServiceAsync = client.beta().environments()
 
         val betaEnvironmentFuture =

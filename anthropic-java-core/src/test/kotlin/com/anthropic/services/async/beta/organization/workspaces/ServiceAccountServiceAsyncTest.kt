@@ -14,13 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class ServiceAccountServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountServiceAsync = client.beta().organization().workspaces().serviceAccounts()
 
         val betaServiceAccountWorkspaceMemberFuture =
@@ -38,11 +39,6 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountServiceAsync = client.beta().organization().workspaces().serviceAccounts()
 
         val betaServiceAccountWorkspaceMemberFuture =
@@ -61,11 +57,6 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountServiceAsync = client.beta().organization().workspaces().serviceAccounts()
 
         val pageFuture = serviceAccountServiceAsync.list("workspace_id")
@@ -76,11 +67,6 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun add() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountServiceAsync = client.beta().organization().workspaces().serviceAccounts()
 
         val betaServiceAccountWorkspaceMemberFuture =
@@ -99,11 +85,6 @@ internal class ServiceAccountServiceAsyncTest {
 
     @Test
     fun remove() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val serviceAccountServiceAsync = client.beta().organization().workspaces().serviceAccounts()
 
         val serviceAccountFuture =

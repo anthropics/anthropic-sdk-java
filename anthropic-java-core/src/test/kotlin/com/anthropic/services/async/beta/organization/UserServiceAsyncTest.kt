@@ -9,13 +9,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class UserServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userServiceAsync = client.beta().organization().users()
 
         val betaOrganizationUserFuture = userServiceAsync.retrieve("user_id")
@@ -26,11 +27,6 @@ internal class UserServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userServiceAsync = client.beta().organization().users()
 
         val betaOrganizationUserFuture =
@@ -47,11 +43,6 @@ internal class UserServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userServiceAsync = client.beta().organization().users()
 
         val pageFuture = userServiceAsync.list()
@@ -62,11 +53,6 @@ internal class UserServiceAsyncTest {
 
     @Test
     fun remove() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userServiceAsync = client.beta().organization().users()
 
         val userFuture = userServiceAsync.remove("user_id")

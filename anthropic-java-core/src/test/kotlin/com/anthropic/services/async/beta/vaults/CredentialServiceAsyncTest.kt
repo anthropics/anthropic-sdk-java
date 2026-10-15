@@ -21,13 +21,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class CredentialServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialServiceAsync = client.beta().vaults().credentials()
 
         val betaManagedAgentsCredentialFuture =
@@ -58,11 +59,6 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialServiceAsync = client.beta().vaults().credentials()
 
         val betaManagedAgentsCredentialFuture =
@@ -81,11 +77,6 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialServiceAsync = client.beta().vaults().credentials()
 
         val betaManagedAgentsCredentialFuture =
@@ -133,11 +124,6 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialServiceAsync = client.beta().vaults().credentials()
 
         val pageFuture = credentialServiceAsync.list("vlt_011CZkZDLs7fYzm1hXNPeRjv")
@@ -148,11 +134,6 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialServiceAsync = client.beta().vaults().credentials()
 
         val betaManagedAgentsDeletedCredentialFuture =
@@ -171,11 +152,6 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialServiceAsync = client.beta().vaults().credentials()
 
         val betaManagedAgentsCredentialFuture =
@@ -194,11 +170,6 @@ internal class CredentialServiceAsyncTest {
 
     @Test
     fun mcpOAuthValidate() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialServiceAsync = client.beta().vaults().credentials()
 
         val betaManagedAgentsCredentialValidationFuture =

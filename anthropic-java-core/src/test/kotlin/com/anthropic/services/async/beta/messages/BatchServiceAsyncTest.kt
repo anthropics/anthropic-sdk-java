@@ -40,13 +40,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class BatchServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchServiceAsync = client.beta().messages().batches()
 
         val betaMessageBatchFuture =
@@ -270,11 +271,6 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchServiceAsync = client.beta().messages().batches()
 
         val betaMessageBatchFuture =
@@ -292,11 +288,6 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchServiceAsync = client.beta().messages().batches()
 
         val pageFuture = batchServiceAsync.list()
@@ -307,11 +298,6 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchServiceAsync = client.beta().messages().batches()
 
         val betaDeletedMessageBatchFuture =
@@ -329,11 +315,6 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun cancel() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchServiceAsync = client.beta().messages().batches()
 
         val betaMessageBatchFuture =
@@ -351,11 +332,6 @@ internal class BatchServiceAsyncTest {
 
     @Test
     fun resultsStreaming() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val batchServiceAsync = client.beta().messages().batches()
 
         val betaMessageBatchIndividualResponseStreamResponse =

@@ -16,13 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class UserProfileServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileService = client.beta().userProfiles()
 
         val betaUserProfile =
@@ -58,11 +59,6 @@ internal class UserProfileServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileService = client.beta().userProfiles()
 
         val betaUserProfile =
@@ -79,11 +75,6 @@ internal class UserProfileServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileService = client.beta().userProfiles()
 
         val betaUserProfile =
@@ -124,11 +115,6 @@ internal class UserProfileServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileService = client.beta().userProfiles()
 
         val page = userProfileService.list()
@@ -138,11 +124,6 @@ internal class UserProfileServiceTest {
 
     @Test
     fun createEnrollmentUrl() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val userProfileService = client.beta().userProfiles()
 
         val betaUserProfileEnrollmentUrl =

@@ -19,13 +19,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class TelemetryDestinationServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
 
         val betaTelemetryDestinationFuture =
@@ -57,11 +58,6 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
 
         val betaTelemetryDestinationFuture =
@@ -78,11 +74,6 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
 
         val betaTelemetryDestinationFuture =
@@ -116,11 +107,6 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
 
         val pageFuture = telemetryDestinationServiceAsync.list()
@@ -131,11 +117,6 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
 
         val betaDeletedTelemetryDestinationFuture =
@@ -152,11 +133,6 @@ internal class TelemetryDestinationServiceAsyncTest {
 
     @Test
     fun test() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val telemetryDestinationServiceAsync = client.beta().organization().telemetryDestinations()
 
         val betaTelemetryDestinationTestResponseFuture =

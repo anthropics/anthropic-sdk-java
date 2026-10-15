@@ -11,13 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class WorkspaceServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceService = client.organization().serviceAccounts().workspaces()
 
         val page = workspaceService.list("service_account_id")
@@ -27,11 +28,6 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun add() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceService = client.organization().serviceAccounts().workspaces()
 
         val serviceAccountWorkspaceMember =
@@ -48,11 +44,6 @@ internal class WorkspaceServiceTest {
 
     @Test
     fun remove() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val workspaceService = client.organization().serviceAccounts().workspaces()
 
         val workspace =

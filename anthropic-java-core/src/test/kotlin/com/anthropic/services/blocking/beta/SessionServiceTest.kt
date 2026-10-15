@@ -27,13 +27,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class SessionServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionService = client.beta().sessions()
 
         val betaManagedAgentsSession =
@@ -86,11 +87,6 @@ internal class SessionServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionService = client.beta().sessions()
 
         val betaManagedAgentsSession =
@@ -107,11 +103,6 @@ internal class SessionServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionService = client.beta().sessions()
 
         val betaManagedAgentsSession =
@@ -188,11 +179,6 @@ internal class SessionServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionService = client.beta().sessions()
 
         val page = sessionService.list()
@@ -202,11 +188,6 @@ internal class SessionServiceTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionService = client.beta().sessions()
 
         val betaManagedAgentsDeletedSession =
@@ -223,11 +204,6 @@ internal class SessionServiceTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val sessionService = client.beta().sessions()
 
         val betaManagedAgentsSession =

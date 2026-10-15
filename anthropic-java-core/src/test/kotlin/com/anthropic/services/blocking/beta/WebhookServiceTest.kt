@@ -14,9 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class WebhookServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun parseUnverified() {
-        val client = AnthropicOkHttpClient.builder().apiKey("my-anthropic-api-key").build()
         val webhookService = client.beta().webhooks()
 
         val payload =
@@ -27,7 +32,6 @@ internal class WebhookServiceTest {
 
     @Test
     fun unwrap() {
-        val client = AnthropicOkHttpClient.builder().apiKey("my-anthropic-api-key").build()
         val webhookService = client.beta().webhooks()
 
         val payload =

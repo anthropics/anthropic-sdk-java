@@ -14,13 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class ResourceServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val resourceService = client.beta().sessions().resources()
 
         val resource =
@@ -38,11 +39,6 @@ internal class ResourceServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val resourceService = client.beta().sessions().resources()
 
         val resource =
@@ -61,11 +57,6 @@ internal class ResourceServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val resourceService = client.beta().sessions().resources()
 
         val page = resourceService.list("sesn_011CZkZAtmR3yMPDzynEDxu7")
@@ -75,11 +66,6 @@ internal class ResourceServiceTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val resourceService = client.beta().sessions().resources()
 
         val betaManagedAgentsDeleteSessionResource =
@@ -97,11 +83,6 @@ internal class ResourceServiceTest {
 
     @Test
     fun add() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val resourceService = client.beta().sessions().resources()
 
         val betaManagedAgentsFileResource =

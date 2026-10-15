@@ -16,13 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class RuleServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val ruleServiceAsync = client.beta().organization().federation().rules()
 
         val betaFederationRuleFuture =
@@ -68,11 +69,6 @@ internal class RuleServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val ruleServiceAsync = client.beta().organization().federation().rules()
 
         val betaFederationRuleFuture =
@@ -89,11 +85,6 @@ internal class RuleServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val ruleServiceAsync = client.beta().organization().federation().rules()
 
         val betaFederationRuleFuture =
@@ -139,11 +130,6 @@ internal class RuleServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val ruleServiceAsync = client.beta().organization().federation().rules()
 
         val pageFuture = ruleServiceAsync.list()
@@ -154,11 +140,6 @@ internal class RuleServiceAsyncTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val ruleServiceAsync = client.beta().organization().federation().rules()
 
         val betaFederationRuleFuture =

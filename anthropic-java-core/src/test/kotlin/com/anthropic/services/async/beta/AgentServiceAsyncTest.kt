@@ -24,13 +24,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class AgentServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val agentServiceAsync = client.beta().agents()
 
         val betaManagedAgentsAgentFuture =
@@ -112,11 +113,6 @@ internal class AgentServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val agentServiceAsync = client.beta().agents()
 
         val betaManagedAgentsAgentFuture =
@@ -135,11 +131,6 @@ internal class AgentServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val agentServiceAsync = client.beta().agents()
 
         val betaManagedAgentsAgentFuture =
@@ -234,11 +225,6 @@ internal class AgentServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val agentServiceAsync = client.beta().agents()
 
         val pageFuture = agentServiceAsync.list()
@@ -249,11 +235,6 @@ internal class AgentServiceAsyncTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val agentServiceAsync = client.beta().agents()
 
         val betaManagedAgentsAgentFuture =

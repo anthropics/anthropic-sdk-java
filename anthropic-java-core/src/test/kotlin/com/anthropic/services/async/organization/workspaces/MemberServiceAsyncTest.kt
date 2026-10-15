@@ -14,13 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class MemberServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberServiceAsync = client.organization().workspaces().members()
 
         val workspaceMemberFuture =
@@ -34,11 +35,6 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberServiceAsync = client.organization().workspaces().members()
 
         val workspaceMemberFuture =
@@ -56,11 +52,6 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberServiceAsync = client.organization().workspaces().members()
 
         val pageFuture = memberServiceAsync.list("workspace_id")
@@ -71,11 +62,6 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun add() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberServiceAsync = client.organization().workspaces().members()
 
         val workspaceMemberFuture =
@@ -93,11 +79,6 @@ internal class MemberServiceAsyncTest {
 
     @Test
     fun remove() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val memberServiceAsync = client.organization().workspaces().members()
 
         val memberFuture =

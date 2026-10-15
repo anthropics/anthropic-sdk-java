@@ -21,13 +21,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class CredentialServiceTest {
 
+    private val client =
+        AnthropicOkHttpClient.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialService = client.beta().vaults().credentials()
 
         val betaManagedAgentsCredential =
@@ -57,11 +58,6 @@ internal class CredentialServiceTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialService = client.beta().vaults().credentials()
 
         val betaManagedAgentsCredential =
@@ -79,11 +75,6 @@ internal class CredentialServiceTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialService = client.beta().vaults().credentials()
 
         val betaManagedAgentsCredential =
@@ -130,11 +121,6 @@ internal class CredentialServiceTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialService = client.beta().vaults().credentials()
 
         val page = credentialService.list("vlt_011CZkZDLs7fYzm1hXNPeRjv")
@@ -144,11 +130,6 @@ internal class CredentialServiceTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialService = client.beta().vaults().credentials()
 
         val betaManagedAgentsDeletedCredential =
@@ -166,11 +147,6 @@ internal class CredentialServiceTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialService = client.beta().vaults().credentials()
 
         val betaManagedAgentsCredential =
@@ -188,11 +164,6 @@ internal class CredentialServiceTest {
 
     @Test
     fun mcpOAuthValidate() {
-        val client =
-            AnthropicOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val credentialService = client.beta().vaults().credentials()
 
         val betaManagedAgentsCredentialValidation =

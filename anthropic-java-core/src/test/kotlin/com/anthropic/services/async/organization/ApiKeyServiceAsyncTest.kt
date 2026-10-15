@@ -9,13 +9,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class ApiKeyServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val apiKeyServiceAsync = client.organization().apiKeys()
 
         val apiKeyFuture = apiKeyServiceAsync.retrieve("api_key_id")
@@ -26,11 +27,6 @@ internal class ApiKeyServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val apiKeyServiceAsync = client.organization().apiKeys()
 
         val apiKeyFuture =
@@ -48,11 +44,6 @@ internal class ApiKeyServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val apiKeyServiceAsync = client.organization().apiKeys()
 
         val pageFuture = apiKeyServiceAsync.list()

@@ -11,13 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class IssuerServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val issuerServiceAsync = client.organization().federation().issuers()
 
         val federationIssuerFuture =
@@ -42,11 +43,6 @@ internal class IssuerServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val issuerServiceAsync = client.organization().federation().issuers()
 
         val federationIssuerFuture = issuerServiceAsync.retrieve("federation_issuer_id")
@@ -57,11 +53,6 @@ internal class IssuerServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val issuerServiceAsync = client.organization().federation().issuers()
 
         val federationIssuerFuture =
@@ -88,11 +79,6 @@ internal class IssuerServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val issuerServiceAsync = client.organization().federation().issuers()
 
         val pageFuture = issuerServiceAsync.list()
@@ -103,11 +89,6 @@ internal class IssuerServiceAsyncTest {
 
     @Test
     fun archive() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val issuerServiceAsync = client.organization().federation().issuers()
 
         val federationIssuerFuture = issuerServiceAsync.archive("federation_issuer_id")

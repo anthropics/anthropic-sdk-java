@@ -11,13 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class SpendLimitServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val spendLimitServiceAsync = client.beta().organization().spendLimits()
 
         val betaSpendLimitFuture = spendLimitServiceAsync.retrieve("spend_limit_id")
@@ -28,11 +29,6 @@ internal class SpendLimitServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val spendLimitServiceAsync = client.beta().organization().spendLimits()
 
         val pageFuture = spendLimitServiceAsync.list()
@@ -43,11 +39,6 @@ internal class SpendLimitServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val spendLimitServiceAsync = client.beta().organization().spendLimits()
 
         val spendLimitFuture = spendLimitServiceAsync.delete("spend_limit_id")
@@ -58,11 +49,6 @@ internal class SpendLimitServiceAsyncTest {
 
     @Test
     fun set() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val spendLimitServiceAsync = client.beta().organization().spendLimits()
 
         val betaSpendLimitFuture =

@@ -10,13 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(TestServerExtension::class)
 internal class RbacGroupServiceAsyncTest {
 
+    private val client =
+        AnthropicOkHttpClientAsync.builder()
+            .baseUrl(TestServerExtension.BASE_URL)
+            .apiKey("my-anthropic-api-key")
+            .build()
+
     @Test
     fun create() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacGroupServiceAsync = client.beta().organization().rbacGroups()
 
         val betaRbacGroupFuture =
@@ -30,11 +31,6 @@ internal class RbacGroupServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacGroupServiceAsync = client.beta().organization().rbacGroups()
 
         val betaRbacGroupFuture = rbacGroupServiceAsync.retrieve("rbac_group_id")
@@ -45,11 +41,6 @@ internal class RbacGroupServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacGroupServiceAsync = client.beta().organization().rbacGroups()
 
         val betaRbacGroupFuture =
@@ -66,11 +57,6 @@ internal class RbacGroupServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacGroupServiceAsync = client.beta().organization().rbacGroups()
 
         val pageFuture = rbacGroupServiceAsync.list()
@@ -81,11 +67,6 @@ internal class RbacGroupServiceAsyncTest {
 
     @Test
     fun delete() {
-        val client =
-            AnthropicOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("my-anthropic-api-key")
-                .build()
         val rbacGroupServiceAsync = client.beta().organization().rbacGroups()
 
         val rbacGroupFuture = rbacGroupServiceAsync.delete("rbac_group_id")
