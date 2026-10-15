@@ -39,7 +39,10 @@ private constructor(
      */
     fun expectedContentSha256(): Optional<String> = Optional.ofNullable(expectedContentSha256)
 
-    /** Optional header to specify the beta version(s) you want to use. */
+    /**
+     * This endpoint is in beta: requests must send `agent-memory-2026-07-22` or
+     * `managed-agents-2026-04-01` in this header.
+     */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -125,7 +128,10 @@ private constructor(
         fun expectedContentSha256(expectedContentSha256: Optional<String>) =
             expectedContentSha256(expectedContentSha256.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * This endpoint is in beta: requests must send `agent-memory-2026-07-22` or
+         * `managed-agents-2026-04-01` in this header.
+         */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */

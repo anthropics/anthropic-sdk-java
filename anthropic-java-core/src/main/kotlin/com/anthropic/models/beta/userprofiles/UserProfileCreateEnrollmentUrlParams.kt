@@ -25,7 +25,10 @@ private constructor(
     /** The ID of the user profile to create an enrollment URL for (`uprof_...`). */
     fun userProfileId(): Optional<String> = Optional.ofNullable(userProfileId)
 
-    /** Optional header to specify the beta version(s) you want to use. */
+    /**
+     * This endpoint is in beta: requests must send `user-profiles-2026-03-24`,
+     * `user-profiles-2026-08-18`, or `user-profiles-2026-09-04` in this header.
+     */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -90,7 +93,10 @@ private constructor(
         fun userProfileId(userProfileId: Optional<String>) =
             userProfileId(userProfileId.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * This endpoint is in beta: requests must send `user-profiles-2026-03-24`,
+         * `user-profiles-2026-08-18`, or `user-profiles-2026-09-04` in this header.
+         */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */

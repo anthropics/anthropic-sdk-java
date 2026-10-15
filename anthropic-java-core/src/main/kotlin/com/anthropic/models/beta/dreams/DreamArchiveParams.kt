@@ -34,7 +34,7 @@ private constructor(
     /** The ID of the dream to archive (`drm_...`). */
     fun dreamId(): Optional<String> = Optional.ofNullable(dreamId)
 
-    /** Optional header to specify the beta version(s) you want to use. */
+    /** This endpoint is in beta: requests must send `dreaming-2026-04-21` in this header. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -91,7 +91,7 @@ private constructor(
         /** Alias for calling [Builder.dreamId] with `dreamId.orElse(null)`. */
         fun dreamId(dreamId: Optional<String>) = dreamId(dreamId.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /** This endpoint is in beta: requests must send `dreaming-2026-04-21` in this header. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */

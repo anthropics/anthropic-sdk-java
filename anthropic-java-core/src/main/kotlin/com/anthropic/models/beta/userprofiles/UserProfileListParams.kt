@@ -46,7 +46,10 @@ private constructor(
      */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
-    /** Optional header to specify the beta version(s) you want to use. */
+    /**
+     * This endpoint is in beta: requests must send `user-profiles-2026-03-24`,
+     * `user-profiles-2026-08-18`, or `user-profiles-2026-09-04` in this header.
+     */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -136,7 +139,10 @@ private constructor(
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */
         fun page(page: Optional<String>) = page(page.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /**
+         * This endpoint is in beta: requests must send `user-profiles-2026-03-24`,
+         * `user-profiles-2026-08-18`, or `user-profiles-2026-09-04` in this header.
+         */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */

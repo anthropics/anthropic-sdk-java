@@ -34,7 +34,7 @@ private constructor(
     /** ID of the certificate (`tcrt_...`). */
     fun certificateId(): Optional<String> = Optional.ofNullable(certificateId)
 
-    /** Optional header to specify the beta version(s) you want to use. */
+    /** This endpoint is in beta: requests must send `mcp-tunnels-2026-06-22` in this header. */
     fun betas(): Optional<List<AnthropicBeta>> = Optional.ofNullable(betas)
 
     /**
@@ -97,7 +97,7 @@ private constructor(
         fun certificateId(certificateId: Optional<String>) =
             certificateId(certificateId.getOrNull())
 
-        /** Optional header to specify the beta version(s) you want to use. */
+        /** This endpoint is in beta: requests must send `mcp-tunnels-2026-06-22` in this header. */
         fun betas(betas: List<AnthropicBeta>?) = apply { this.betas = betas?.toMutableList() }
 
         /** Alias for calling [Builder.betas] with `betas.orElse(null)`. */
