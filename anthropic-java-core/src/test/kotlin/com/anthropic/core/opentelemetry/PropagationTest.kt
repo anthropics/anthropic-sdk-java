@@ -152,7 +152,6 @@ internal class PropagationTest {
                     .sleeper(NoSleep)
                     .maxRetries(1)
                     .openTelemetry(openTelemetry)
-                    .apiKey("my-anthropic-api-key")
                     .build()
             )
         PARENT_SPAN.makeCurrent().use {
