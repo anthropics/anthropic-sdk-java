@@ -97,10 +97,10 @@ import kotlin.streams.asSequence
  * — and the fallback's events are spliced onto the still-open stream, so the client sees one
  * continuous message in the server-side `fallbacks` wire shape: a `fallback` content block at each
  * model boundary, monotonic block indices, and per-hop `usage.iterations` on the final
- * `message_delta`. Only `model` is honored from each entry on this path (a `between_tools` thinking
- * config is sent as `disabled` whatever the entry sets): the credit token is redeemable only
- * against the refused request's body, so the other per-entry overrides (`max_tokens`, `thinking`,
- * ...) would be rejected.
+ * `message_delta`. Only `model` and `speed` are honored from each entry on this path (a
+ * `between_tools` thinking config is sent as `disabled` whatever the entry sets). The other
+ * per-entry overrides are ignored, because the credit token is tied to the refused request's body.
+ * A `speed` value replaces the request's, and a `null` `speed` omits it.
  *
  * The fallback-credit beta the credit tokens require is sent by default on every request the
  * interceptor handles — the original request included, since refusals only carry a
@@ -1003,7 +1003,8 @@ private class FallbackStreamSplicer(
             mutableListOf(toMessageIterationUsage(initial.model ?: "", initialRefusal.usage))
 
         for (hop in firstHop until fallbacks.size) {
-            val model = fallbacks[hop].model().asString()
+            val entry = fallbacks[hop]
+            val model = entry.model().asString()
             val hasNext = hop + 1 < fallbacks.size
             pin(hop)
 
@@ -1030,7 +1031,7 @@ private class FallbackStreamSplicer(
             var hopResponse: HttpResponse? = null
             var failed = false
             for (attempt in 0..1) {
-                val hopRequest = buildFallbackRequest(model, refusal.token, continuation)
+                val hopRequest = buildFallbackRequest(entry, refusal.token, continuation)
                 val response =
                     try {
                         executeHop(hopRequest)
@@ -1278,7 +1279,7 @@ private class FallbackStreamSplicer(
     // --- fallback request construction (appended-assistant continuation) ---
 
     private fun buildFallbackRequest(
-        model: String,
+        entry: BetaFallbackParam,
         creditToken: String,
         continuation: List<ObjectNode>,
     ): HttpRequest {
@@ -1286,19 +1287,16 @@ private class FallbackStreamSplicer(
         // against.
         val body = initialRequest.body!!.json(ObjectNode::class.java)
 
-        body.put("model", model)
+        // The other per-entry overrides are not applied, because the credit token is tied to the
+        // refused request's body. `speed` and a `between_tools` thinking config are the exceptions,
+        // because the fallback model may not accept them.
+        body.mergeFlat(jsonMapper.valueToTree<ObjectNode>(entry).retain("model", "speed"))
         body.degradeBetweenToolsThinking()
         body.set<ObjectNode>(
             "fallback_credit_token",
             jsonMapper.valueToTree(creditTokenParam(creditToken)),
         )
 
-        // Append the continuation (decided by the chain loop) as a trailing assistant turn;
-        // everything else — max_tokens included — must stay identical to the refused request: the
-        // token is only redeemable against the same body, so model, fallback_credit_token, and the
-        // one appended assistant turn are the only permitted deltas; anything else is a 400. This
-        // is also why the per-entry BetaFallbackParam overrides are ignored on the streaming path
-        // (the `between_tools` thinking degrade above aside).
         if (continuation.isNotEmpty()) {
             val messages = body.get("messages") as? ArrayNode ?: body.putArray("messages")
             val turn = jsonMapper.createObjectNode()

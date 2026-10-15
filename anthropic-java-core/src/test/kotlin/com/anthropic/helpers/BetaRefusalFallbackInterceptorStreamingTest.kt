@@ -188,6 +188,60 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
 
     @ParameterizedTest
     @ValueSource(booleans = [false, true])
+    fun anEntryWithANullSpeedRemovesSpeedFromTheHop(async: Boolean) {
+        val refusal = messageStart() + refusalDelta("tok_abc")
+        val httpClient = FakeHttpClient(sse(refusal), sse(STREAM_B))
+        val entry =
+            BetaFallbackParam.builder()
+                .model(FALLBACK_MODEL)
+                .speed(null as BetaFallbackParam.Speed?)
+                .build()
+
+        val response =
+            httpClient.intercepted(entry).execute(fastStreamingRequest(), withState(), async)
+        response.body().readBytes() // drive the splice so the hop request goes out
+
+        assertThat(httpClient.jsonBodies[0].path("speed").asText()).isEqualTo("fast")
+        val hopBody = httpClient.jsonBodies[1]
+        assertThat(hopBody.has("speed")).isFalse()
+        assertThat(hopBody.path("model").asText()).isEqualTo(FALLBACK_MODEL)
+        assertThat(hopBody.path("fallback_credit_token").path("token").asText())
+            .isEqualTo("tok_abc")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun anEntryThatSetsSpeedOverridesItOnTheHop(async: Boolean) {
+        val httpClient = FakeHttpClient(sse(STREAM_A), sse(STREAM_B))
+        val entry =
+            BetaFallbackParam.builder()
+                .model(FALLBACK_MODEL)
+                .speed(BetaFallbackParam.Speed.STANDARD)
+                .build()
+
+        val response =
+            httpClient.intercepted(entry).execute(fastStreamingRequest(), withState(), async)
+        response.body().readBytes() // drive the splice so the hop request goes out
+
+        assertThat(httpClient.jsonBodies[1].path("speed").asText()).isEqualTo("standard")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
+    fun anEntryWithoutSpeedKeepsTheOriginalOnTheHop(async: Boolean) {
+        val httpClient = FakeHttpClient(sse(STREAM_A), sse(STREAM_B))
+
+        val response =
+            httpClient
+                .intercepted(FALLBACK_MODEL)
+                .execute(fastStreamingRequest(), withState(), async)
+        response.body().readBytes() // drive the splice so the hop request goes out
+
+        assertThat(httpClient.jsonBodies[1].path("speed").asText()).isEqualTo("fast")
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [false, true])
     fun trimsReplayedFallbackTurnsOnTheStreamingPath(async: Boolean) {
         val httpClient = FakeHttpClient(sse(STREAM_A), sse(STREAM_B))
         // A turn served by a fallback on an earlier request, echoed back into this stream's
@@ -1054,6 +1108,9 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
             .build()
             .intercept(this)
 
+    private fun FakeHttpClient.intercepted(fallback: BetaFallbackParam): HttpClient =
+        BetaRefusalFallbackInterceptor.builder().addFallback(fallback).build().intercept(this)
+
     /**
      * A fresh-state request option — the default for tests, so they don't pollute the stderr of
      * concurrently running tests asserting on the missing-state warning.
@@ -1088,6 +1145,10 @@ internal class BetaRefusalFallbackInterceptorStreamingTest {
 
     private fun betweenToolsStreamingRequest(): HttpRequest = streamingRequest {
         putAdditionalProperty("thinking", betweenToolsThinking())
+    }
+
+    private fun fastStreamingRequest(): HttpRequest = streamingRequest {
+        speed(MessageCreateParams.Speed.FAST)
     }
 
     private fun streamingRequest(
