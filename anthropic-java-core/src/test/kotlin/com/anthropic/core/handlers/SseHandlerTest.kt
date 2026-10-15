@@ -23,95 +23,98 @@ internal class SseHandlerTest {
     ) {
         EVENT_AND_DATA(
             buildString {
-                append("event: completion\n")
+                append("event: event\n")
                 append("data: {\"foo\":true}\n")
                 append("\n")
             },
-            listOf(sseMessageBuilder().event("completion").data("{\"foo\":true}").build()),
+            listOf(sseMessageBuilder().event("event").data("{\"foo\":true}").build()),
         ),
         EVENT_MISSING_DATA(
             buildString {
-                append("event: completion\n")
+                append("event: event\n")
                 append("\n")
             },
-            listOf(sseMessageBuilder().event("completion").build()),
+            listOf(),
+        ),
+        EVENT_AND_EMPTY_DATA(
+            buildString {
+                append("event: event\n")
+                append("data:\n")
+                append("\n")
+                append("event: event\n")
+                append("data: {\"foo\":true}\n")
+                append("\n")
+            },
+            listOf(sseMessageBuilder().event("event").data("{\"foo\":true}").build()),
         ),
         MULTIPLE_EVENTS_AND_DATA(
             buildString {
-                append("event: completion\n")
+                append("event: event\n")
                 append("data: {\"foo\":true}\n")
                 append("\n")
-                append("event: message_start\n")
+                append("event: event\n")
                 append("data: {\"bar\":false}\n")
                 append("\n")
             },
             listOf(
-                sseMessageBuilder().event("completion").data("{\"foo\":true}").build(),
-                sseMessageBuilder().event("message_start").data("{\"bar\":false}").build(),
+                sseMessageBuilder().event("event").data("{\"foo\":true}").build(),
+                sseMessageBuilder().event("event").data("{\"bar\":false}").build(),
             ),
         ),
         MULTIPLE_EVENTS_MISSING_DATA(
             buildString {
-                append("event: completion\n")
+                append("event: event\n")
                 append("\n")
-                append("event: message_start\n")
+                append("event: event\n")
                 append("\n")
             },
-            listOf(
-                sseMessageBuilder().event("completion").build(),
-                sseMessageBuilder().event("message_start").build(),
-            ),
+            listOf(),
         ),
         DATA_JSON_ESCAPED_DOUBLE_NEW_LINE(
             buildString {
-                append("event: completion\n")
+                append("event: event\n")
                 append("data: {\n")
                 append("data: \"foo\":\n")
                 append("data: true}\n")
                 append("\n\n")
             },
-            listOf(sseMessageBuilder().event("completion").data("{\n\"foo\":\ntrue}").build()),
+            listOf(sseMessageBuilder().event("event").data("{\n\"foo\":\ntrue}").build()),
         ),
         MULTIPLE_DATA_LINES(
             buildString {
-                append("event: completion\n")
+                append("event: event\n")
                 append("data: {\n")
                 append("data: \"foo\":\n")
                 append("data: true}\n")
                 append("\n\n")
             },
-            listOf(sseMessageBuilder().event("completion").data("{\n\"foo\":\ntrue}").build()),
+            listOf(sseMessageBuilder().event("event").data("{\n\"foo\":\ntrue}").build()),
         ),
         SPECIAL_NEW_LINE_CHARACTER(
             buildString {
-                append("event: completion\n")
+                append("event: event\n")
                 append("data: {\"content\":\" culpa\"}\n")
                 append("\n")
-                append("event: message_start\n")
+                append("event: event\n")
                 append("data: {\"content\":\" \u2028\"}\n")
                 append("\n")
-                append("event: completion\n")
+                append("event: event\n")
                 append("data: {\"content\":\"foo\"}\n")
                 append("\n")
             },
             listOf(
-                sseMessageBuilder().event("completion").data("{\"content\":\" culpa\"}").build(),
-                sseMessageBuilder()
-                    .event("message_start")
-                    .data("{\"content\":\" \u2028\"}")
-                    .build(),
-                sseMessageBuilder().event("completion").data("{\"content\":\"foo\"}").build(),
+                sseMessageBuilder().event("event").data("{\"content\":\" culpa\"}").build(),
+                sseMessageBuilder().event("event").data("{\"content\":\" \u2028\"}").build(),
+                sseMessageBuilder().event("event").data("{\"content\":\"foo\"}").build(),
             ),
         ),
         MULTI_BYTE_CHARACTER(
             buildString {
-                append("event: completion\n")
+                append("event: event\n")
                 append("data: {\"content\":\"\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u0438\"}\n")
                 append("\n")
             },
-            listOf(
-                sseMessageBuilder().event("completion").data("{\"content\":\"известни\"}").build()
-            ),
+            listOf(sseMessageBuilder().event("event").data("{\"content\":\"известни\"}").build()),
         ),
         ERROR_EVENT(
             buildString {
