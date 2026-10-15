@@ -13,6 +13,7 @@
 
 * **ci:** speed up breaking change detection
 * **docs:** describe headers on Managed Agents and telemetry endpoints
+* **internal:** baseline lint findings on constructor properties
 * **internal:** give lint more memory in CI
 
 
