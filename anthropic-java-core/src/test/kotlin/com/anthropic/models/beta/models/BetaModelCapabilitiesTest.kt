@@ -54,6 +54,7 @@ internal class BetaModelCapabilitiesTest {
                         .types(
                             BetaThinkingTypes.builder()
                                 .adaptive(BetaCapabilitySupport.of(true))
+                                .betweenTools(BetaCapabilitySupport.of(true))
                                 .disabled(BetaCapabilitySupport.of(true))
                                 .enabled(BetaCapabilitySupport.of(true))
                                 .build()
@@ -111,6 +112,7 @@ internal class BetaModelCapabilitiesTest {
                     .types(
                         BetaThinkingTypes.builder()
                             .adaptive(BetaCapabilitySupport.of(true))
+                            .betweenTools(BetaCapabilitySupport.of(true))
                             .disabled(BetaCapabilitySupport.of(true))
                             .enabled(BetaCapabilitySupport.of(true))
                             .build()
@@ -167,6 +169,7 @@ internal class BetaModelCapabilitiesTest {
                         .types(
                             BetaThinkingTypes.builder()
                                 .adaptive(BetaCapabilitySupport.of(true))
+                                .betweenTools(BetaCapabilitySupport.of(true))
                                 .disabled(BetaCapabilitySupport.of(true))
                                 .enabled(BetaCapabilitySupport.of(true))
                                 .build()

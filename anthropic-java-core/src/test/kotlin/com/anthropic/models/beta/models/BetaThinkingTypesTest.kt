@@ -12,11 +12,13 @@ internal class BetaThinkingTypesTest {
         val betaThinkingTypes =
             BetaThinkingTypes.builder()
                 .adaptive(BetaCapabilitySupport.of(true))
+                .betweenTools(BetaCapabilitySupport.of(true))
                 .disabled(BetaCapabilitySupport.of(true))
                 .enabled(BetaCapabilitySupport.of(true))
                 .build()
 
         assertThat(betaThinkingTypes.adaptive()).isEqualTo(BetaCapabilitySupport.of(true))
+        assertThat(betaThinkingTypes.betweenTools()).isEqualTo(BetaCapabilitySupport.of(true))
         assertThat(betaThinkingTypes.disabled()).isEqualTo(BetaCapabilitySupport.of(true))
         assertThat(betaThinkingTypes.enabled()).isEqualTo(BetaCapabilitySupport.of(true))
     }
@@ -27,6 +29,7 @@ internal class BetaThinkingTypesTest {
         val betaThinkingTypes =
             BetaThinkingTypes.builder()
                 .adaptive(BetaCapabilitySupport.of(true))
+                .betweenTools(BetaCapabilitySupport.of(true))
                 .disabled(BetaCapabilitySupport.of(true))
                 .enabled(BetaCapabilitySupport.of(true))
                 .build()
