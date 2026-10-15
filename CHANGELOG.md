@@ -22,7 +22,9 @@
 * **api:** add telemetry destination test endpoint
 * **api:** add telemetry destinations to the Admin API
 * **client:** add a followRedirects request option
-* **client:** emit OpenTelemetry spans for API calls, streams and tool runs. They are on by default and need no setup in the SDK: the spans appear once the application has registered a tracer provider with the OpenTelemetry API, or has set one with `OpenTelemetryOptions.tracerProvider`, and there are none without one. Requests carry the trace context in `traceparent`, and in the other headers that the registered propagator writes. This adds a dependency on `io.opentelemetry:opentelemetry-api` (1.62.0). `openTelemetry(false)`, or `ANTHROPIC_OPEN_TELEMETRY=false` for a client built with `fromEnv()`, turns all of it off; `OpenTelemetryOptions.builder().propagation(false)`, or `ANTHROPIC_OPEN_TELEMETRY_PROPAGATION=false` with `fromEnv()`, keeps the spans and sends no trace headers
+* **client:** add native support for OpenTelemetry tracing
+
+  If your app registers a global tracer provider, the SDK will create spans with it after upgrading, and they'll be exported with the rest of your traces. Requests will also get trace context headers from the global propagator. To disable, call `.openTelemetry(false)` on the client builder, or set `ANTHROPIC_OPEN_TELEMETRY=false` for a client built with `fromEnv()`. Learn more in the [documentation](https://platform.claude.com/docs/en/manage-claude/opentelemetry/sdk).
 
 
 ### Bug Fixes
