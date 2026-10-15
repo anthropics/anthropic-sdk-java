@@ -1064,6 +1064,10 @@ private constructor(
              * The inference speed mode for this request. `"fast"` enables high
              * output-tokens-per-second inference.
              *
+             * Some models require the `fast-mode-2026-02-01` beta header for any `speed` value. See
+             * [fast mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode) for
+             * which models.
+             *
              * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
@@ -1923,6 +1927,10 @@ private constructor(
                 /**
                  * The inference speed mode for this request. `"fast"` enables high
                  * output-tokens-per-second inference.
+                 *
+                 * Some models require the `fast-mode-2026-02-01` beta header for any `speed` value.
+                 * See [fast mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode)
+                 * for which models.
                  */
                 fun speed(speed: Speed?) = speed(JsonField.ofNullable(speed))
 
@@ -2736,6 +2744,10 @@ private constructor(
             /**
              * The inference speed mode for this request. `"fast"` enables high
              * output-tokens-per-second inference.
+             *
+             * Some models require the `fast-mode-2026-02-01` beta header for any `speed` value. See
+             * [fast mode](https://platform.claude.com/docs/en/build-with-claude/fast-mode) for
+             * which models.
              */
             class Speed private constructor(private val value: JsonField<String>) : Enum {
 

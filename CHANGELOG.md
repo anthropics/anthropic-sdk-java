@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.73.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.72.0...v2.73.0) (2026-10-14)
+## [2.73.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.72.0...v2.73.0) (2026-10-15)
 
 ### Features
 
@@ -12,6 +12,11 @@
 
 * **ci:** speed up breaking change detection
 * **internal:** give lint more memory in CI
+
+
+### Documentation
+
+* **api:** note that some models need a beta header to use speed
 
 ## [2.72.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.71.0...v2.72.0) (2026-10-14)
 
