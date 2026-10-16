@@ -57,7 +57,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * A timestamp in RFC 3339 format
+     * When the credential's access token expires, in RFC 3339. Absent if the expiry isn't known.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -179,7 +179,10 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** A timestamp in RFC 3339 format */
+        /**
+         * When the credential's access token expires, in RFC 3339. Absent if the expiry isn't
+         * known.
+         */
         fun expiresAt(expiresAt: OffsetDateTime?) = expiresAt(JsonField.ofNullable(expiresAt))
 
         /** Alias for calling [Builder.expiresAt] with `expiresAt.orElse(null)`. */
