@@ -14,6 +14,7 @@
 
 ### Chores
 
+* **docs:** correct plugin manifest_version and reach descriptions
 * **internal:** check constructor properties in the custom lint rules
 * **tests:** declare the client once per service test class
 

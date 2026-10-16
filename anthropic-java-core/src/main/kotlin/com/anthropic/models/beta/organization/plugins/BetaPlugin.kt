@@ -192,7 +192,8 @@ private constructor(
     fun latestVersionId(): String = latestVersionId.getRequired("latest_version_id")
 
     /**
-     * The version string the served version's manifest declares.
+     * The served version's manifest `version`, normalized for display, or `null` (the Plugin
+     * Version's `manifest_version` says how and when).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -253,9 +254,19 @@ private constructor(
     fun owner(): Owner = owner.getRequired("owner")
 
     /**
-     * How far the served version reaches: `remote` when it declares an MCP server or a CLI,
-     * `privileged` when it declares a hook, monitor, language server or settings but nothing
-     * remote, `contained` otherwise; null when not classifiable.
+     * How far the served version reaches, or `null` if it is not classified.
+     *
+     * `remote` means it declares an MCP server or a CLI. `privileged` means it declares no MCP
+     * server or CLI, but declares a hook, monitor, language server, or settings, or has a skill,
+     * command, or other Markdown file whose frontmatter pre-approves tools (`allowed-tools` with
+     * any value other than an empty one or one that names only `AskUserQuestion`, `TodoWrite`, and
+     * `ToolSearch`). Otherwise it is `contained`.
+     *
+     * If the frontmatter of a skill, command, or other Markdown file that could change the value
+     * could not be read, or was past a size limit, the version is `null` or `privileged` (or
+     * `remote`, if it declares an MCP server or a CLI), not `contained`. The value is normally
+     * worked out when a version is stored, under the rules of that time, so an older version can be
+     * `null`, or `contained` where the same files stored today would be `privileged` or `null`.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -699,7 +710,10 @@ private constructor(
             this.latestVersionId = latestVersionId
         }
 
-        /** The version string the served version's manifest declares. */
+        /**
+         * The served version's manifest `version`, normalized for display, or `null` (the Plugin
+         * Version's `manifest_version` says how and when).
+         */
         fun manifestVersion(manifestVersion: String?) =
             manifestVersion(JsonField.ofNullable(manifestVersion))
 
@@ -861,9 +875,20 @@ private constructor(
         fun userOwner(userId: String) = owner(BetaPluginOwnerUser.builder().userId(userId).build())
 
         /**
-         * How far the served version reaches: `remote` when it declares an MCP server or a CLI,
-         * `privileged` when it declares a hook, monitor, language server or settings but nothing
-         * remote, `contained` otherwise; null when not classifiable.
+         * How far the served version reaches, or `null` if it is not classified.
+         *
+         * `remote` means it declares an MCP server or a CLI. `privileged` means it declares no MCP
+         * server or CLI, but declares a hook, monitor, language server, or settings, or has a
+         * skill, command, or other Markdown file whose frontmatter pre-approves tools
+         * (`allowed-tools` with any value other than an empty one or one that names only
+         * `AskUserQuestion`, `TodoWrite`, and `ToolSearch`). Otherwise it is `contained`.
+         *
+         * If the frontmatter of a skill, command, or other Markdown file that could change the
+         * value could not be read, or was past a size limit, the version is `null` or `privileged`
+         * (or `remote`, if it declares an MCP server or a CLI), not `contained`. The value is
+         * normally worked out when a version is stored, under the rules of that time, so an older
+         * version can be `null`, or `contained` where the same files stored today would be
+         * `privileged` or `null`.
          */
         fun reach(reach: Reach?) = reach(JsonField.ofNullable(reach))
 
@@ -1996,9 +2021,19 @@ private constructor(
     }
 
     /**
-     * How far the served version reaches: `remote` when it declares an MCP server or a CLI,
-     * `privileged` when it declares a hook, monitor, language server or settings but nothing
-     * remote, `contained` otherwise; null when not classifiable.
+     * How far the served version reaches, or `null` if it is not classified.
+     *
+     * `remote` means it declares an MCP server or a CLI. `privileged` means it declares no MCP
+     * server or CLI, but declares a hook, monitor, language server, or settings, or has a skill,
+     * command, or other Markdown file whose frontmatter pre-approves tools (`allowed-tools` with
+     * any value other than an empty one or one that names only `AskUserQuestion`, `TodoWrite`, and
+     * `ToolSearch`). Otherwise it is `contained`.
+     *
+     * If the frontmatter of a skill, command, or other Markdown file that could change the value
+     * could not be read, or was past a size limit, the version is `null` or `privileged` (or
+     * `remote`, if it declares an MCP server or a CLI), not `contained`. The value is normally
+     * worked out when a version is stored, under the rules of that time, so an older version can be
+     * `null`, or `contained` where the same files stored today would be `privileged` or `null`.
      */
     class Reach private constructor(private val value: JsonField<String>) : Enum {
 
