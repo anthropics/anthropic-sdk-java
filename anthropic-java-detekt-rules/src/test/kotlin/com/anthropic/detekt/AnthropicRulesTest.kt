@@ -263,7 +263,12 @@ internal class AnthropicRulesTest(private val env: KotlinCoreEnvironment) {
                     private fun privFun() = 1
                     fun publicFun() = 1
 
-                    class Thing internal constructor() {
+                    class Thing
+                    internal constructor(
+                        internal val leakCtorVal: Int,
+                        internal var leakCtorVar: Int,
+                        @get:JvmSynthetic internal val okCtorVal: Int,
+                    ) {
                         internal val leakVal = 1
                         @get:JvmSynthetic internal val okVal = 1
                         @JvmSynthetic internal val okVal2 = 1
@@ -275,13 +280,17 @@ internal class AnthropicRulesTest(private val env: KotlinCoreEnvironment) {
                     }
 
                     private class Hidden { internal fun unreachable() = 1 }
-                    internal class InternalContainer { internal fun unreachable() = 1 }
+                    internal class InternalContainer(internal val unreachableCtorVal: Int) {
+                        internal fun unreachable() = 1
+                    }
                     """
                         .trimIndent()
                 )
         assertThat(findings.map { it.message })
-            .hasSize(4)
+            .hasSize(6)
             .anyMatch { it.contains("leakFun") }
+            .anyMatch { it.contains("leakCtorVal") && it.contains("@get:JvmSynthetic") }
+            .anyMatch { it.contains("leakCtorVar") && it.contains("@set:JvmSynthetic") }
             .anyMatch { it.contains("leakVal") && it.contains("@get:JvmSynthetic") }
             .anyMatch { it.contains("leakVar") && it.contains("@set:JvmSynthetic") }
             .anyMatch { it.contains("internal set on leakSetter") }
@@ -294,7 +303,11 @@ internal class AnthropicRulesTest(private val env: KotlinCoreEnvironment) {
                 .compileAndLintWithContext(
                     env,
                     """
-                    class Thing {
+                    class Thing(
+                        val ctorPair: Pair<Int, Int>,
+                        private val privCtorPair: Pair<Int, Int>,
+                        ctorParam: Pair<Int, Int>,
+                    ) {
                         fun seq(): Sequence<String> = emptySequence()
                         fun pair(): Pair<Int, Int> = 1 to 1
                         fun lambda(f: (Int) -> String) = f(1)
@@ -310,7 +323,8 @@ internal class AnthropicRulesTest(private val env: KotlinCoreEnvironment) {
                         .trimIndent(),
                 )
         assertThat(findings.map { it.message })
-            .hasSize(4)
+            .hasSize(5)
+            .anyMatch { it.contains("`ctorPair`") && it.contains("kotlin.Pair") }
             .anyMatch { it.contains("`seq`") && it.contains("kotlin.sequences.Sequence") }
             .anyMatch { it.contains("`pair`") && it.contains("kotlin.Pair") }
             .anyMatch { it.contains("`lambda`") && it.contains("->") }
@@ -325,7 +339,12 @@ internal class AnthropicRulesTest(private val env: KotlinCoreEnvironment) {
                 .compileAndLintWithContext(
                     env,
                     """
-                    class Thing {
+                    class Thing(
+                        val ctorBad: String?,
+                        private val privateCtorOk: String?,
+                        @get:JvmSynthetic val syntheticCtorOk: String?,
+                        ctorParamOk: String?,
+                    ) {
                         private val backing: String? = null
                         fun bad(): String? = null
                         val alsoBad: Int? = null
@@ -340,7 +359,8 @@ internal class AnthropicRulesTest(private val env: KotlinCoreEnvironment) {
                         .trimIndent(),
                 )
         assertThat(findings.map { it.message })
-            .hasSize(3)
+            .hasSize(4)
+            .anyMatch { it.contains("`ctorBad`") && it.contains("Optional<String>") }
             .anyMatch { it.contains("`bad`") }
             .anyMatch { it.contains("`alsoBad`") }
             .anyMatch { it.contains("`inferredBad`") && it.contains("Optional<String>") }
@@ -398,7 +418,12 @@ internal class AnthropicRulesTest(private val env: KotlinCoreEnvironment) {
             PublicPropertyMissingJvmName(Config.empty)
                 .lint(
                     """
-                    class Thing {
+                    class Thing(
+                        val ctorBad: String,
+                        @get:JvmName("ctorGood") val ctorGood: String,
+                        private val ctorHidden: String,
+                        ctorParam: String,
+                    ) {
                         val bad: String = ""
                         @get:JvmName("good") val good: String = ""
                         val goodAccessor: String @JvmName("goodAccessor") get() = ""
@@ -408,12 +433,13 @@ internal class AnthropicRulesTest(private val env: KotlinCoreEnvironment) {
                     interface Iface { val ifaceProp: String }
                     abstract class Base { abstract val absProp: String; open val openProp: String = "" }
                     object Constants { val skip: String = "" }
-                    private class Hidden { val skip: String = "" }
+                    private class Hidden(val ctorSkip: String) { val skip: String = "" }
                     """
                         .trimIndent()
                 )
         assertThat(findings.map { it.message })
-            .hasSize(4)
+            .hasSize(5)
+            .anyMatch { it.contains("`ctorBad`") && it.contains("@get:JvmName") }
             .anyMatch { it.contains("`bad`") && it.contains("@get:JvmName") }
             .anyMatch { it.contains("`ifaceProp`") && it.contains("fun ifaceProp()") }
             .anyMatch { it.contains("`absProp`") && it.contains("fun absProp()") }

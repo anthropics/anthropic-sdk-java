@@ -10,6 +10,7 @@ import io.gitlab.arturbosch.detekt.api.Severity
 import io.gitlab.arturbosch.detekt.api.internal.RequiresTypeResolution
 import org.jetbrains.kotlin.psi.KtCallableDeclaration
 import org.jetbrains.kotlin.psi.KtNamedFunction
+import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.resolve.BindingContext
 
@@ -40,6 +41,12 @@ class NullablePublicReturn(config: Config) : Rule(config) {
         super.visitProperty(property)
         if (property.isLocal) return
         check(property)
+    }
+
+    override fun visitParameter(parameter: KtParameter) {
+        super.visitParameter(parameter)
+        if (!parameter.hasValOrVar()) return
+        check(parameter)
     }
 
     private fun check(declaration: KtCallableDeclaration) {

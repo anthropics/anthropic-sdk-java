@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.psi.KtCallableDeclaration
 import org.jetbrains.kotlin.psi.KtFunctionType
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtNullableType
+import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.KtTypeReference
 import org.jetbrains.kotlin.psi.KtUserType
@@ -57,6 +58,12 @@ class KotlinOnlyTypeInPublicApi(config: Config) : Rule(config) {
         super.visitProperty(property)
         if (property.isLocal) return
         check(property, property.typeReference)
+    }
+
+    override fun visitParameter(parameter: KtParameter) {
+        super.visitParameter(parameter)
+        if (!parameter.hasValOrVar()) return
+        check(parameter, parameter.typeReference)
     }
 
     private fun check(declaration: KtCallableDeclaration, typeRef: KtTypeReference?) {

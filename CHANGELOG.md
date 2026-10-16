@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.74.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.73.0...v2.74.0) (2026-10-15)
+## [2.74.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.73.0...v2.74.0) (2026-10-16)
 
 ### Features
 
@@ -9,6 +9,7 @@
 
 ### Chores
 
+* **internal:** check constructor properties in the custom lint rules
 * **tests:** declare the client once per service test class
 
 ## [2.73.0](https://github.com/anthropics/anthropic-sdk-java/compare/v2.72.0...v2.73.0) (2026-10-15)
