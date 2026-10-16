@@ -40,7 +40,11 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Updated OAuth client secret.
+     * A new OAuth client secret to replace the stored one.
+     *
+     * The credential must already use `client_secret_basic` or `client_secret_post`. It keeps its
+     * current `token_endpoint_auth` type, even if the `type` sent with this secret is the other
+     * one.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -124,7 +128,13 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** Updated OAuth client secret. */
+        /**
+         * A new OAuth client secret to replace the stored one.
+         *
+         * The credential must already use `client_secret_basic` or `client_secret_post`. It keeps
+         * its current `token_endpoint_auth` type, even if the `type` sent with this secret is the
+         * other one.
+         */
         fun clientSecret(clientSecret: String?) = clientSecret(JsonField.ofNullable(clientSecret))
 
         /** Alias for calling [Builder.clientSecret] with `clientSecret.orElse(null)`. */

@@ -35,7 +35,8 @@ private constructor(
     ) : this(token, mcpServerUrl, type, mutableMapOf())
 
     /**
-     * Static bearer token value.
+     * The static bearer token to send to the MCP server, such as an API key or personal access
+     * token.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -126,7 +127,10 @@ private constructor(
                 betaManagedAgentsStaticBearerCreateParams.additionalProperties.toMutableMap()
         }
 
-        /** Static bearer token value. */
+        /**
+         * The static bearer token to send to the MCP server, such as an API key or personal access
+         * token.
+         */
         fun token(token: String) = token(JsonField.of(token))
 
         /**

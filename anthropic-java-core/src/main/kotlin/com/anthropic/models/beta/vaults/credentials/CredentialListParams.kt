@@ -26,13 +26,17 @@ private constructor(
     /** Identifier of the vault to list credentials for. */
     fun vaultId(): Optional<String> = Optional.ofNullable(vaultId)
 
-    /** Whether to include archived credentials in the results. */
+    /** Whether to include archived credentials in the results. Defaults to `false`. */
     fun includeArchived(): Optional<Boolean> = Optional.ofNullable(includeArchived)
 
     /** Maximum number of credentials to return per page. Defaults to 20, maximum 100. */
     fun limit(): Optional<Int> = Optional.ofNullable(limit)
 
-    /** Opaque pagination token from a previous `list_credentials` response. */
+    /**
+     * The `next_page` value from a previous
+     * [List Credentials](https://platform.claude.com/docs/en/api/beta/vaults/credentials/list)
+     * response, to get the next page. Leave it out to get the first page.
+     */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
     /** This endpoint is in beta: requests must send `managed-agents-2026-04-01` in this header. */
@@ -93,7 +97,7 @@ private constructor(
         /** Alias for calling [Builder.vaultId] with `vaultId.orElse(null)`. */
         fun vaultId(vaultId: Optional<String>) = vaultId(vaultId.getOrNull())
 
-        /** Whether to include archived credentials in the results. */
+        /** Whether to include archived credentials in the results. Defaults to `false`. */
         fun includeArchived(includeArchived: Boolean?) = apply {
             this.includeArchived = includeArchived
         }
@@ -122,7 +126,11 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Int>) = limit(limit.getOrNull())
 
-        /** Opaque pagination token from a previous `list_credentials` response. */
+        /**
+         * The `next_page` value from a previous
+         * [List Credentials](https://platform.claude.com/docs/en/api/beta/vaults/credentials/list)
+         * response, to get the next page. Leave it out to get the first page.
+         */
         fun page(page: String?) = apply { this.page = page }
 
         /** Alias for calling [Builder.page] with `page.orElse(null)`. */

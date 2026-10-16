@@ -48,7 +48,7 @@ private constructor(
     ) : this(refreshToken, scope, tokenEndpointAuth, mutableMapOf())
 
     /**
-     * Updated OAuth refresh token.
+     * The new OAuth refresh token to replace the stored one.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -56,7 +56,7 @@ private constructor(
     fun refreshToken(): Optional<String> = refreshToken.getOptional("refresh_token")
 
     /**
-     * Updated OAuth scope for the refresh request.
+     * The new OAuth scope for refresh requests. Send an empty string to clear the stored scope.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -137,7 +137,7 @@ private constructor(
                 betaManagedAgentsMcpOAuthRefreshUpdateParams.additionalProperties.toMutableMap()
         }
 
-        /** Updated OAuth refresh token. */
+        /** The new OAuth refresh token to replace the stored one. */
         fun refreshToken(refreshToken: String?) = refreshToken(JsonField.ofNullable(refreshToken))
 
         /** Alias for calling [Builder.refreshToken] with `refreshToken.orElse(null)`. */
@@ -154,7 +154,9 @@ private constructor(
             this.refreshToken = refreshToken
         }
 
-        /** Updated OAuth scope for the refresh request. */
+        /**
+         * The new OAuth scope for refresh requests. Send an empty string to clear the stored scope.
+         */
         fun scope(scope: String?) = scope(JsonField.ofNullable(scope))
 
         /** Alias for calling [Builder.scope] with `scope.orElse(null)`. */

@@ -65,7 +65,8 @@ private constructor(
     )
 
     /**
-     * OAuth client ID.
+     * The OAuth client ID to use when refreshing the access token. It can't be changed after the
+     * credential is created.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -73,7 +74,8 @@ private constructor(
     fun clientId(): String = clientId.getRequired("client_id")
 
     /**
-     * OAuth refresh token.
+     * The OAuth refresh token that the API uses to get a new access token when the current one
+     * expires.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -214,7 +216,10 @@ private constructor(
                 betaManagedAgentsMcpOAuthRefreshParams.additionalProperties.toMutableMap()
         }
 
-        /** OAuth client ID. */
+        /**
+         * The OAuth client ID to use when refreshing the access token. It can't be changed after
+         * the credential is created.
+         */
         fun clientId(clientId: String) = clientId(JsonField.of(clientId))
 
         /**
@@ -225,7 +230,10 @@ private constructor(
          */
         fun clientId(clientId: JsonField<String>) = apply { this.clientId = clientId }
 
-        /** OAuth refresh token. */
+        /**
+         * The OAuth refresh token that the API uses to get a new access token when the current one
+         * expires.
+         */
         fun refreshToken(refreshToken: String) = refreshToken(JsonField.of(refreshToken))
 
         /**

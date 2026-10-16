@@ -34,7 +34,7 @@ private constructor(
     ) : this(data, nextPage, mutableMapOf())
 
     /**
-     * List of credentials.
+     * The credentials on this page, newest first.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -102,7 +102,7 @@ private constructor(
             additionalProperties = credentialListPageResponse.additionalProperties.toMutableMap()
         }
 
-        /** List of credentials. */
+        /** The credentials on this page, newest first. */
         fun data(data: List<BetaManagedAgentsCredential>) = data(JsonField.of(data))
 
         /**

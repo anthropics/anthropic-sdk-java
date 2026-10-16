@@ -49,7 +49,7 @@ private constructor(
     fun type(): Type = type.getRequired("type")
 
     /**
-     * Updated OAuth access token.
+     * The new OAuth access token to replace the stored one.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -177,7 +177,7 @@ private constructor(
          */
         fun type(type: JsonField<Type>) = apply { this.type = type }
 
-        /** Updated OAuth access token. */
+        /** The new OAuth access token to replace the stored one. */
         fun accessToken(accessToken: String?) = accessToken(JsonField.ofNullable(accessToken))
 
         /** Alias for calling [Builder.accessToken] with `accessToken.orElse(null)`. */

@@ -12,7 +12,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Archive Credential */
+/** Archive a Credential */
 class CredentialArchiveParams
 private constructor(
     private val vaultId: String,

@@ -16,6 +16,7 @@
 
 * **docs:** add credential expiry descriptions to the Managed Agents API reference
 * **docs:** correct plugin manifest_version and reach descriptions
+* **docs:** improve Managed Agents vault and credential descriptions
 * **internal:** check constructor properties in the custom lint rules
 * **tests:** declare the client once per service test class
 

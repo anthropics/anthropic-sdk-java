@@ -31,7 +31,7 @@ interface CredentialServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): CredentialServiceAsync
 
-    /** Create Credential */
+    /** Create a Credential */
     fun create(
         vaultId: String,
         params: CredentialCreateParams,
@@ -56,7 +56,7 @@ interface CredentialServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsCredential>
 
-    /** Get Credential */
+    /** Retrieve a Credential */
     fun retrieve(
         credentialId: String,
         params: CredentialRetrieveParams,
@@ -81,7 +81,7 @@ interface CredentialServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsCredential>
 
-    /** Update Credential */
+    /** Update a Credential */
     fun update(
         credentialId: String,
         params: CredentialUpdateParams,
@@ -141,7 +141,7 @@ interface CredentialServiceAsync {
     ): CompletableFuture<CredentialListPageAsync> =
         list(vaultId, CredentialListParams.none(), requestOptions)
 
-    /** Delete Credential */
+    /** Delete a Credential */
     fun delete(
         credentialId: String,
         params: CredentialDeleteParams,
@@ -167,7 +167,7 @@ interface CredentialServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsDeletedCredential>
 
-    /** Archive Credential */
+    /** Archive a Credential */
     fun archive(
         credentialId: String,
         params: CredentialArchiveParams,
@@ -192,7 +192,7 @@ interface CredentialServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaManagedAgentsCredential>
 
-    /** Validate Credential */
+    /** Validate an MCP OAuth Credential */
     fun mcpOAuthValidate(
         credentialId: String,
         params: CredentialMcpOAuthValidateParams,

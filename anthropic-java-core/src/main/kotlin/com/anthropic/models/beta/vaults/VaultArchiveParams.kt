@@ -11,7 +11,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Archive Vault */
+/** Archive a Vault */
 class VaultArchiveParams
 private constructor(
     private val vaultId: String?,

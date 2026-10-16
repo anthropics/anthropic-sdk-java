@@ -12,7 +12,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Validate Credential */
+/** Validate an MCP OAuth Credential */
 class CredentialMcpOAuthValidateParams
 private constructor(
     private val vaultId: String,

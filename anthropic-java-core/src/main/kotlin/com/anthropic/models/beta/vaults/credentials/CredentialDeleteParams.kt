@@ -12,7 +12,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Delete Credential */
+/** Delete a Credential */
 class CredentialDeleteParams
 private constructor(
     private val vaultId: String,

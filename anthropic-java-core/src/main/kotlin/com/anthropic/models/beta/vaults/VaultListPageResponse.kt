@@ -34,7 +34,7 @@ private constructor(
     ) : this(data, nextPage, mutableMapOf())
 
     /**
-     * List of vaults.
+     * The vaults on this page, newest first.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -98,7 +98,7 @@ private constructor(
             additionalProperties = vaultListPageResponse.additionalProperties.toMutableMap()
         }
 
-        /** List of vaults. */
+        /** The vaults on this page, newest first. */
         fun data(data: List<BetaManagedAgentsVault>) = data(JsonField.of(data))
 
         /**

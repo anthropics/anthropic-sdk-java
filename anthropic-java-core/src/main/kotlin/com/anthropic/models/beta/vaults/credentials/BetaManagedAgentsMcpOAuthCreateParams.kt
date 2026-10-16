@@ -47,7 +47,7 @@ private constructor(
     ) : this(accessToken, mcpServerUrl, type, expiresAt, refresh, mutableMapOf())
 
     /**
-     * OAuth access token.
+     * The OAuth access token to send to the MCP server.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -180,7 +180,7 @@ private constructor(
                 betaManagedAgentsMcpOAuthCreateParams.additionalProperties.toMutableMap()
         }
 
-        /** OAuth access token. */
+        /** The OAuth access token to send to the MCP server. */
         fun accessToken(accessToken: String) = accessToken(JsonField.of(accessToken))
 
         /**

@@ -31,7 +31,7 @@ private constructor(
     ) : this(id, type, mutableMapOf())
 
     /**
-     * Unique identifier of the deleted credential.
+     * The unique ID of the deleted credential (`vcrd_...`).
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -101,7 +101,7 @@ private constructor(
                     betaManagedAgentsDeletedCredential.additionalProperties.toMutableMap()
             }
 
-        /** Unique identifier of the deleted credential. */
+        /** The unique ID of the deleted credential (`vcrd_...`). */
         fun id(id: String) = id(JsonField.of(id))
 
         /**

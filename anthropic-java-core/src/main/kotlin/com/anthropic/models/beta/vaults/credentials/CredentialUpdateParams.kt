@@ -32,7 +32,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Update Credential */
+/** Update a Credential */
 class CredentialUpdateParams
 private constructor(
     private val vaultId: String,
@@ -63,8 +63,8 @@ private constructor(
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /**
-     * Updated authentication configuration. The `type` is immutable; the variant sent must match
-     * the stored credential's type.
+     * New authentication settings for the credential. The `type` must match the credential's
+     * current type, which can't be changed.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -213,8 +213,8 @@ private constructor(
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /**
-         * Updated authentication configuration. The `type` is immutable; the variant sent must
-         * match the stored credential's type.
+         * New authentication settings for the credential. The `type` must match the credential's
+         * current type, which can't be changed.
          */
         fun auth(auth: Auth) = apply { body.auth(auth) }
 
@@ -474,8 +474,8 @@ private constructor(
         ) : this(auth, displayName, metadata, mutableMapOf())
 
         /**
-         * Updated authentication configuration. The `type` is immutable; the variant sent must
-         * match the stored credential's type.
+         * New authentication settings for the credential. The `type` must match the credential's
+         * current type, which can't be changed.
          *
          * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -557,8 +557,8 @@ private constructor(
             }
 
             /**
-             * Updated authentication configuration. The `type` is immutable; the variant sent must
-             * match the stored credential's type.
+             * New authentication settings for the credential. The `type` must match the
+             * credential's current type, which can't be changed.
              */
             fun auth(auth: Auth) = auth(JsonField.of(auth))
 
@@ -711,8 +711,8 @@ private constructor(
     }
 
     /**
-     * Updated authentication configuration. The `type` is immutable; the variant sent must match
-     * the stored credential's type.
+     * New authentication settings for the credential. The `type` must match the credential's
+     * current type, which can't be changed.
      */
     @JsonDeserialize(using = Auth.Deserializer::class)
     @JsonSerialize(using = Auth.Serializer::class)

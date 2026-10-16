@@ -33,8 +33,8 @@ private constructor(
     ) : this(httpResponse, method, mutableMapOf())
 
     /**
-     * The captured HTTP error response. Null when no HTTP response was received (timeout, DNS,
-     * TLS).
+     * The HTTP error response from the MCP server, or `null` if the MCP server didn't return one
+     * for the failing step, for example after a timeout or a DNS or TLS failure.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -107,8 +107,8 @@ private constructor(
         }
 
         /**
-         * The captured HTTP error response. Null when no HTTP response was received (timeout, DNS,
-         * TLS).
+         * The HTTP error response from the MCP server, or `null` if the MCP server didn't return
+         * one for the failing step, for example after a timeout or a DNS or TLS failure.
          */
         fun httpResponse(httpResponse: BetaManagedAgentsRefreshHttpResponse?) =
             httpResponse(JsonField.ofNullable(httpResponse))
