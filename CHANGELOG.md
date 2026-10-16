@@ -7,6 +7,11 @@
 * **client:** yield server-sent events with unrecognized event names
 
 
+### Bug Fixes
+
+* **client:** treat x-amz-security-token as a sensitive header
+
+
 ### Chores
 
 * **internal:** check constructor properties in the custom lint rules
