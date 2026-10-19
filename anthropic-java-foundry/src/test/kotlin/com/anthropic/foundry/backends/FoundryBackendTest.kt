@@ -12,6 +12,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mockito
 
 @ResourceLock("environment")
@@ -30,6 +32,15 @@ internal class FoundryBackendTest {
         private const val ENV_BASE_URL = "ANTHROPIC_FOUNDRY_BASE_URL"
 
         private val TOKEN_SUPPLIER: Supplier<String> = Supplier { TOKEN }
+
+        @JvmStatic
+        fun userProfilesPaths(): List<List<String>> =
+            listOf(
+                listOf("v1", "user_profiles"),
+                listOf("v1", "user_profiles", "uprof_123"),
+                listOf("v1", "user_profiles", "uprof_123", "enrollment_url"),
+                listOf("v1", "user_profiles", "uprof_123", "action_urls"),
+            )
     }
 
     @Test
@@ -323,6 +334,17 @@ internal class FoundryBackendTest {
         val preparedRequest = backend.prepareRequest(request)
 
         assertThat(preparedRequest.pathSegments).containsExactly("v1", "files")
+    }
+
+    @ParameterizedTest
+    @MethodSource("userProfilesPaths")
+    fun prepareRequestUserProfiles(pathSegments: List<String>) {
+        val backend = createBackendWithApiKeyAndResource()
+        val request = createRequest(null, *pathSegments.toTypedArray())
+
+        val preparedRequest = backend.prepareRequest(request)
+
+        assertThat(preparedRequest.pathSegments).containsExactlyElementsOf(pathSegments)
     }
 
     @Test

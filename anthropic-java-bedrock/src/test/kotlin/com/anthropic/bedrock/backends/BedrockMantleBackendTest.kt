@@ -2,6 +2,7 @@ package com.anthropic.bedrock.backends
 
 import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.core.http.bodyToJson
 import com.anthropic.core.http.json
 import com.anthropic.core.jsonMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
@@ -15,6 +16,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledIf
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mockito
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsSessionCredentials
@@ -39,6 +43,9 @@ internal class BedrockMantleBackendTest {
         private const val ENV_API_KEY = "AWS_BEARER_TOKEN_BEDROCK"
         private const val ENV_API_KEY_FALLBACK = "ANTHROPIC_AWS_API_KEY"
 
+        private const val HEADER_USER_PROFILE_ID = "anthropic-user-profile-id"
+        private const val USER_PROFILE_ID = "uprof_123"
+
         private val hasRegionInEnvironment by lazy {
             try {
                 DefaultAwsRegionProviderChain.builder().build().region
@@ -56,6 +63,83 @@ internal class BedrockMantleBackendTest {
                 false
             }
         }
+
+        private fun apiRequest(jsonBody: String, vararg pathSegments: String): HttpRequest.Builder =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .baseUrl("https://bedrock-mantle.us-east-1.api.aws/anthropic")
+                .addPathSegments(*pathSegments)
+                .body(json(jsonMapper(), jsonMapper().readTree(jsonBody)))
+
+        @JvmStatic
+        fun messagesRequestsWithUserProfileIdHeader(): List<Arguments> =
+            listOf(
+                Arguments.of(
+                    "messages",
+                    apiRequest("""{"model":"claude"}""", "v1", "messages")
+                        .putHeader(HEADER_USER_PROFILE_ID, USER_PROFILE_ID)
+                        .build(),
+                    """{"model":"claude","user_profile_id":"uprof_123"}""",
+                ),
+                Arguments.of(
+                    "beta messages",
+                    apiRequest("""{"model":"claude"}""", "v1", "messages")
+                        .putQueryParam("beta", "true")
+                        .putHeader(HEADER_USER_PROFILE_ID, USER_PROFILE_ID)
+                        .build(),
+                    """{"model":"claude","user_profile_id":"uprof_123"}""",
+                ),
+                Arguments.of(
+                    "streaming messages",
+                    apiRequest("""{"model":"claude","stream":true}""", "v1", "messages")
+                        .putHeader(HEADER_USER_PROFILE_ID, USER_PROFILE_ID)
+                        .build(),
+                    """{"model":"claude","stream":true,"user_profile_id":"uprof_123"}""",
+                ),
+                Arguments.of(
+                    "count tokens",
+                    apiRequest("""{"model":"claude"}""", "v1", "messages", "count_tokens")
+                        .putHeader(HEADER_USER_PROFILE_ID, USER_PROFILE_ID)
+                        .build(),
+                    """{"model":"claude","user_profile_id":"uprof_123"}""",
+                ),
+                Arguments.of(
+                    "two header values",
+                    apiRequest("""{"model":"claude"}""", "v1", "messages")
+                        .putHeader(HEADER_USER_PROFILE_ID, USER_PROFILE_ID)
+                        .putHeader(HEADER_USER_PROFILE_ID, "uprof_456")
+                        .build(),
+                    """{"model":"claude","user_profile_id":"uprof_123, uprof_456"}""",
+                ),
+                Arguments.of(
+                    "user profile ID already in the body",
+                    apiRequest(
+                            """{"model":"claude","user_profile_id":"uprof_body"}""",
+                            "v1",
+                            "messages",
+                        )
+                        .putHeader(HEADER_USER_PROFILE_ID, USER_PROFILE_ID)
+                        .build(),
+                    """{"model":"claude","user_profile_id":"uprof_body"}""",
+                ),
+            )
+
+        @JvmStatic
+        fun otherRequestsWithUserProfileIdHeader(): List<Arguments> =
+            listOf(
+                Arguments.of(
+                    "message batches",
+                    apiRequest("""{"requests":[]}""", "v1", "messages", "batches")
+                        .putHeader(HEADER_USER_PROFILE_ID, USER_PROFILE_ID)
+                        .build(),
+                ),
+                Arguments.of(
+                    "body that is not a JSON object",
+                    apiRequest("""["claude"]""", "v1", "messages")
+                        .putHeader(HEADER_USER_PROFILE_ID, USER_PROFILE_ID)
+                        .build(),
+                ),
+            )
     }
 
     @BeforeEach
@@ -352,6 +436,46 @@ internal class BedrockMantleBackendTest {
         val reprepared = backend.prepareRequest(prepared)
 
         assertThat(reprepared.headers.values("anthropic-version")).containsExactly("2023-06-01")
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("messagesRequestsWithUserProfileIdHeader")
+    fun prepareRequestSendsUserProfileIdInBodyNotHeader(
+        name: String,
+        request: HttpRequest,
+        expectedBody: String,
+    ) {
+        val backend =
+            BedrockMantleBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
+
+        val prepared = backend.prepareRequest(request)
+
+        assertThat(prepared.headers.names()).doesNotContain(HEADER_USER_PROFILE_ID)
+        assertThat(bodyToJson(jsonMapper(), prepared.body))
+            .isEqualTo(jsonMapper().readTree(expectedBody))
+    }
+
+    @Test
+    fun prepareRequestWithoutUserProfileIdLeavesBodyUnchanged() {
+        val backend =
+            BedrockMantleBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
+        val request = apiRequest("""{"model":"claude"}""", "v1", "messages").build()
+
+        val prepared = backend.prepareRequest(request)
+
+        assertThat(prepared.body).isSameAs(request.body)
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("otherRequestsWithUserProfileIdHeader")
+    fun prepareRequestLeavesUserProfileIdHeaderOnOtherRequests(name: String, request: HttpRequest) {
+        val backend =
+            BedrockMantleBackend.builder().apiKey(API_KEY).region(Region.US_EAST_1).build()
+
+        val prepared = backend.prepareRequest(request)
+
+        assertThat(prepared.headers.values(HEADER_USER_PROFILE_ID)).containsExactly(USER_PROFILE_ID)
+        assertThat(prepared.body).isSameAs(request.body)
     }
 
     // --- Skip auth tests ---

@@ -75,7 +75,8 @@ private constructor(
                 } // Ignore any other path segments, e.g., `count_tokens` is supported.
             }
             "skills",
-            "files" -> {
+            "files",
+            "user_profiles" -> {
                 // Do nothing special.
             }
             // Services such as `complete`, `experimental`, `organization` and `models` are not

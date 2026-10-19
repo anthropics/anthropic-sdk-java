@@ -5,6 +5,7 @@ import com.anthropic.aws.backends.AwsBackend.Companion.providerOf
 import com.anthropic.backends.Backend
 import com.anthropic.core.checkRequired
 import com.anthropic.core.http.HttpRequest
+import com.anthropic.errors.AnthropicException
 import java.util.Optional
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.AwsCredentials
@@ -112,6 +113,15 @@ private constructor(
     override fun openTelemetryPlatform(): Optional<String> = Optional.of("aws")
 
     override fun prepareRequest(request: HttpRequest): HttpRequest {
+        val pathSegments = request.pathSegments
+
+        if (
+            pathSegments.getOrNull(1) == "user_profiles" &&
+                pathSegments.getOrNull(3) == "action_urls"
+        ) {
+            throw AnthropicException("User profile action URLs are not supported for AWS.")
+        }
+
         val builder = request.toBuilder()
 
         // User-supplied headers (e.g. set by an interceptor) win over the defaults.
